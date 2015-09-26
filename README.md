@@ -1,2 +1,52 @@
-# md380tools
-Python tools for the TYT-MD380 and Connect Systems CS700.
+#MD380/CS700 USB Tools
+
+by Travis Goodspeed, KK4VCZ  
+forked from Ubertooth code by Jared Boone
+
+This code is used to upload or download codeplugs into a TYT-MD380 DMR
+radio.  I believe it will also work for the CS700, but have not tested
+that.
+
+Specifications:
+
+* The MD380 uses a custom variant of DFU that isn't quite compatible
+  with the spec.  Their code seems to be forked from an STMicro
+  example for the STM32 chip.
+
+* Universal Serial Bus Device Class Specification for Device
+  Firmware Upgrade, version 1.1:
+  http://www.usb.org/developers/devclass_docs/DFU_1.1.pdf
+
+
+Requirements:
+
+* Python 2.7 or newer:
+  http://www.python.org
+
+* PyUSB 1.0:  (0.4 does not work.)
+  http://sourceforge.net/apps/mediawiki/pyusb/
+
+* libusb 1.0: (0.4 does not work.)
+  http://www.libusb.org/
+
+This project should work across Linux, Mac OS, and Windows, but has
+not been tested on all platforms.
+
+Usage:
+
+To download a raw (headerless) codeplug into the MD380.
+
+    m380-dfu write <filename.bin>
+
+To upload code from a device, starting at flash address 0x4000:
+
+    md380-dfu read <filename.bin>
+
+To exit programming mode:
+
+    md380-dfu detach
+
+To sign a binary firmware file:
+
+    m380-dfu sign <filename.bin>
+
