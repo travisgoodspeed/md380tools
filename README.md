@@ -38,7 +38,7 @@ To download a raw (headerless) codeplug into the MD380.
 
     m380-dfu write <filename.bin>
 
-To upload code from a device, starting at flash address 0x4000:
+To upload a codeplug from the MD380.
 
     md380-dfu read <filename.bin>
 
