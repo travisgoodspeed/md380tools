@@ -187,7 +187,7 @@ class DFU(object):
             if self.verbose: print "Sent custom %02x %02x." % (a,b);
             self.enter_dfu_mode();
         else:
-            if self.verbose: print "Failed to send custom."
+            print "Failed to send custom %02x %02x." % (a,b);
             return False;
         return True;
     def md380_reboot(self):
@@ -348,23 +348,30 @@ def hexdump(string):
 
 def test(dfu):
     """I'm trying to get this to dump code memory.  Seems stuck in SPI Flash region."""
-    dfu.md380_custom(0x91,0x01); #Programming Mode
-    dfu.md380_custom(0xa2,0x01);
-    dfu.md380_custom(0xa2,0x31);
-
-    dfu.md380_custom(0xa2,0x03);
-    dfu.md380_custom(0xa2,0x07);
-    dfu.md380_custom(0x91,0x31);
-
-    dfu.set_address(0x00000000); # Zero address, used by configuration tool.
-
-    #dfu.set_address(0x08010000); # Code mem.
-    #dfu.set_address(0x08010000); # Code mem.
-
+#    dfu.md380_custom(0x91,0x01); #Programming Mode
+    #dfu.md380_custom(0xa2,0x01); #Returns "DR780...", seems to crash client.
+    #hexdump(dfu.get_command());  #Gets a string.
+    dfu.md380_custom(0xa2,0x31); #Only firmware update.
+#    dfu.get_command();  #Gets a string.
+#    time.sleep(2);
+    dfu.md380_custom(0xa2,0x02); #Only config.
+    dfu.md380_custom(0xa2,0x31); #Only firmware.
+    dfu.md380_custom(0xa2,0x03); #both
+    dfu.md380_custom(0xa2,0x04); #Only config.
+    dfu.md380_custom(0xa2,0x07); #Both
+#    dfu.md380_custom(0x91,0x31); #Only firmware update.
     
-    block_size=1024
+#    dfu.md380_custom(0xa2,0x37); #New
+    
+#    dfu.set_address(0x0800C000); # Zero address, used by configuration tool.
+#    dfu.set_address(0x20661c00); # Zero address, used by configuration tool.
+    dfu.set_address(0x00000000); # Zero address, used by configuration tool.
+    
+#    block_size=4096
+#    block_size=8096*2*2
+    block_size=0xC000;
     try:
-        for block_number in range(10,11):
+        for block_number in range(2,3):
             data = dfu.upload(block_number, block_size)
             status, timeout, state, discarded = dfu.get_status()
             print "Status is: %x %x %x %x" % (status, timeout, state, discarded);
@@ -379,6 +386,38 @@ def test(dfu):
         #dfu.md380_reboot()
     finally:
         print "Done."
+
+def upload_bootloader(dfu,filename):
+    """I'm trying to get this to dump code memory.  Seems stuck in SPI Flash region."""
+#    dfu.md380_custom(0xa2,0x31); #Only firmware update.
+#    dfu.md380_custom(0xa2,0x02); #Only config.
+#    dfu.md380_custom(0xa2,0x31); #Only firmware.
+#    dfu.md380_custom(0xa2,0x03); #both
+#    dfu.md380_custom(0xa2,0x04); #Only config.
+#    dfu.md380_custom(0xa2,0x07); #Both
+    dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.
+    
+    # Bootloader stretches from 0x08000000 to 0x0800C000, but our
+    # address and block number are ignored, so we set the block size
+    # ot 0xC000 to yank the entire thing in one go.  The application
+    # comes later, I think.
+    block_size=0xC000;
+    
+    f=None;
+    if filename!=None:
+        f=open(filename,'wb');
+
+    try:
+        data = dfu.upload(2, block_size)
+        status, timeout, state, discarded = dfu.get_status()
+        if len(data) == block_size:
+            if f!=None: f.write(data)
+            hexdump(data);
+        else:
+            raise Exception('Upload failed to read full block.  Got %i bytes.' % len(data))
+    finally:
+        print "Done."
+
 
 def upload_codeplug(dfu,filename):
     """Uploads a codeplug from the radio to the host."""
@@ -395,11 +434,11 @@ def upload_codeplug(dfu,filename):
     dfu.md380_custom(0xa2,0x07);
     
     dfu.set_address(0x00000000); # Zero address, used by configuration tool.
-    #dfu.set_address(0x08010000); # Code mem.
-
+    
     f = open(filename, 'wb')
     block_size=1024
     try:
+        # Codeplug region is 0 to 3ffffff, but only the first 256k are used.
         for block_number in range(2,0x102):
             data = dfu.upload(block_number, block_size)
             status, timeout, state, discarded = dfu.get_status()
@@ -498,8 +537,9 @@ Write a codeplug to the radio.
 Read a codeplug and write it to a file.
     md380-dfu read <filename.bin>
 
-Add DFU signature to firmware file:
-    md380-dfu sign <binary firmware filename>
+Dump the bootloader from Flash memory.
+    md380-dfu readboot <filename.bin>
+
 
 Detach the bootloader and execute the application firmware:
     md380-dfu detach
@@ -515,6 +555,10 @@ if __name__ == '__main__':
                 dfu = init_dfu()
                 upload_codeplug(dfu, sys.argv[2])
                 print('Read complete')
+            elif sys.argv[1] == 'readboot':
+                import usb.core
+                dfu = init_dfu()
+                upload_bootloader(dfu, sys.argv[2])
             elif sys.argv[1] == 'write':
                 import usb.core
                 f = open(sys.argv[2], 'rb')
