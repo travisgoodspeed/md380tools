@@ -7,7 +7,7 @@ This code is used to upload or download codeplugs into a TYT-MD380 DMR
 radio.  I believe it will also work for the CS700, but have not tested
 that.
 
-Specifications:
+##Specifications:##
 
 * The MD380 uses a custom variant of DFU that isn't quite compatible
   with the spec.  Their code seems to be forked from an STMicro
@@ -18,7 +18,7 @@ Specifications:
   http://www.usb.org/developers/devclass_docs/DFU_1.1.pdf
 
 
-Requirements:
+##Requirements:##
 
 * Python 2.7 or newer:
   http://www.python.org
@@ -32,7 +32,7 @@ Requirements:
 This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.
 
-Usage:
+##Usage:##
 
 To download a raw (headerless) codeplug into the MD380.
 
@@ -45,8 +45,4 @@ To upload code from a device, starting at flash address 0x4000:
 To exit programming mode:
 
     md380-dfu detach
-
-To sign a binary firmware file:
-
-    m380-dfu sign <filename.bin>
 
