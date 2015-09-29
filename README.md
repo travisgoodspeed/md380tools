@@ -42,7 +42,11 @@ To upload a codeplug from the MD380.
 
     md380-dfu read <filename.bin>
 
-To exit programming mode:
+To dump the bootloader from the MD380.  (Only in radio mode.)
+
+    md380-dfu readboot <filename.bin>
+
+To exit programming mode, returning to radio mode.
 
     md380-dfu detach
 
