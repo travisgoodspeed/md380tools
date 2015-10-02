@@ -95,6 +95,10 @@ struct {
 
 """
 
+def blankbcd(num):
+    """Sets an LBCD value to 0xFFFF"""
+    num[0].set_bits(0xFF);
+    num[1].set_bits(0xFF);
 
 def do_download(radio):
     """This is your download function"""
@@ -270,14 +274,15 @@ class MD380Radio(chirp_common.CloneModeRadio):
         # These need to be 16665 when unused.
         if mem.tmode=="Tone":
             _mem.tone=mem.ctone*10;
-            _mem.rtone="\xff\xff\xff\xff";
+            blankbcd(_mem.rtone);
         elif mem.tmode=="TSQL":
             _mem.tone=mem.ctone*10;
             _mem.rtone=mem.rtone*10;
         else:
-            _mem.tone="\xff\xff\xff\xff";
-            _mem.rtone="\xff\xff\xff\xff";
+            blankbcd(_mem.tone);
+            blankbcd(_mem.rtone);
         
+        print "Should be setting mode to %s" % mem.mode;
     def get_settings(self):
         _identity = self._memobj.identity
         _info = self._memobj.info
