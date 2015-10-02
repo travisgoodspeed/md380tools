@@ -60,8 +60,8 @@ struct {
   char unknown[14]; //Certainly analog or digital settings, but I don't know the bits yet.
   lbcd rxfreq[4];      //Conversion factor is unknown.
   lbcd txfreq[4];      //Stored as frequency, not offset.
-  lbcd tone[2];        //Transmitter tone.
-  lbcd rtone[2];       //Receiver tone.
+  lbcd rxtone[2];       //Receiver tone.
+  lbcd txtone[2];        //Transmitter tone.
   char yourguess[4];
   char name[32];    //UTF16-LE
 } memory[999];
@@ -214,20 +214,13 @@ class MD380Radio(chirp_common.CloneModeRadio):
         # Create a high-level memory object to return to the UI
         mem = chirp_common.Memory()
 
-        mem.number = number                 # Set the memory number
-        # Convert your low-level frequency to Hertz
-        mem.freq = int(_mem.rxfreq)*10
+        mem.number = number;
+        mem.freq = int(_mem.rxfreq)*10;
         
-        tone=int(_mem.tone)/10.0
-        rtone=int(_mem.rtone)/10.0
+        rxtone=int(_mem.rxtone)/10.0;
+        txtone=int(_mem.txtone)/10.0;
 
-        if tone!=1666.5:
-            mem.ctone=tone;
-            mem.tmode="TSQL";
-        if rtone!=1666.5:
-            mem.rtone=rtone;
-            mem.tmode="Tone";
-
+        
         # Anything with an unset frequency is unused.
         # Maybe we should be looking at the mode instead?
         if mem.freq >500e6:
@@ -235,10 +228,26 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.empty = True;
             mem.name="Empty";
             mem.mode="NFM";
-            mem.duplex="split"
+            mem.duplex="off"
             mem.offset=mem.freq;
             _mem.mode=0x61; #Narrow FM.
-#            return mem;
+        
+        mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
+        
+        print "Tones for %s are %s and %s" %(
+            mem.name, txtone, rxtone);
+        mem.rtone=88.5
+        mem.ctone=88.5
+        if rxtone==1666.5 and txtone!=1666.5:
+            mem.rtone=txtone;
+            mem.ctone=txtone;  #Just one tone here, because the radio can't store a second.
+            mem.tmode="Tone";
+        elif txtone!=1666.5 and rxtone!=1666.5:
+            mem.ctone=rxtone;
+            mem.rtone=txtone;
+            mem.tmode="TSQL";
+        else:
+            mem.tmode="";
 
         mem.offset = int(_mem.txfreq)*10; #In split mode, offset is the TX freq.
         if mem.offset==mem.freq:
@@ -252,8 +261,6 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.offset=5e6;
         else:
             mem.duplex="split";
-
-        mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
         
         mem.mode="DIG";
         rmode=_mem.mode&0x0F;
@@ -291,20 +298,30 @@ class MD380Radio(chirp_common.CloneModeRadio):
             _mem.txfreq = _mem.rxfreq;
         _mem.name = asctoutf(mem.name,32);
         
-        print "Tones in mode %s of %s and %s" % (
-            mem.tmode, mem.ctone, mem.rtone);
+        print "Tones in mode %s of %s and %s for %s" % (
+            mem.tmode, mem.ctone, mem.rtone, mem.name);
         # These need to be 16665 when unused.
-        if mem.tmode=="Tone":
-            _mem.tone=mem.ctone*10;
-            blankbcd(_mem.rtone);
-        elif mem.tmode=="TSQL":
-            _mem.tone=mem.ctone*10;
-            _mem.rtone=mem.rtone*10;
-        else:
-            blankbcd(_mem.tone);
-            blankbcd(_mem.rtone);
+        _mem.rxtone=mem.rtone*10;
+        _mem.txtone=mem.ctone*10;
         
-        print "Should be setting mode to %s" % mem.mode;
+        if mem.tmode=="Tone":
+            blankbcd(_mem.rxtone);
+        elif mem.tmode=="TSQL":
+            pass;
+        else:
+            blankbcd(_mem.rxtone);
+            blankbcd(_mem.txtone);
+        
+        if mem.mode=="FM":
+            _mem.mode=0x69;
+        elif mem.mode=="NFM":
+            _mem.mode=0x61;
+        elif mem.mode=="DIG":
+            _mem.mode=0x62;
+        else:
+            _mem.mode=0x69;
+        #TODO handle timeslot.
+
     def get_settings(self):
         _identity = self._memobj.identity
         _info = self._memobj.info
