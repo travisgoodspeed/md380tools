@@ -36,11 +36,11 @@ not been tested on all platforms.
 
 To download a raw (headerless) codeplug into the MD380.
 
-    m380-dfu write <filename.bin>
+    m380-dfu write <filename.img>
 
 To upload a codeplug from the MD380.
 
-    md380-dfu read <filename.bin>
+    md380-dfu read <filename.img>
 
 To dump the bootloader from the MD380.  (Only in radio mode.)
 
@@ -50,3 +50,15 @@ To exit programming mode, returning to radio mode.
 
     md380-dfu detach
 
+##Chirp Driver:##
+
+Also included is a partial driver for the MD380 in Chirp.  This driver
+doesn't yet support the essential DMR features, but it does handle
+analog channels and banks well enough to load analog repeaters into
+your radio.
+
+This driver can't yet communicate with the radio, so use `md380-dfu
+read foo.img` to read an image out of the radio, then open it in Chirp
+after installing `chirp/md380.py` as a driver.  Once you've made your
+changes, you can load the image back in by running `md380-dfu write
+foo.img`.
