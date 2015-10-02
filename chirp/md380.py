@@ -18,6 +18,9 @@
 # This is an incomplete and bug-ridden attempt at a chirp driver for
 # the TYT MD-380 by Travis Goodspeed, KK4VCZ.  To use this plugin,
 # copy or symlink it into the drivers/ directory of Chirp.
+#
+# You probably want to read your radio's image with 'md380-dfu read
+# radio.img' and then open it as a file with chirpw.
 
 
 from chirp import chirp_common, directory, memmap
@@ -36,7 +39,7 @@ CHARSET = ["%i" % int(x) for x in range(0, 10)] + \
     [" ", ] + \
     [chr(x) for x in range(ord("a"), ord("z") + 1)] + \
     list(".,:;*#_-/&()@!?^ +") + list("\x00" * 100)
-DUPLEX = ["split"];
+DUPLEX = ["", "-", "+", "split", "off"];
 #TODO 'DMR' should be added as a valid mode.
 MODES = ["DIG", "NFM", "FM"];
 
@@ -167,7 +170,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
     def get_features(self):
         rf = chirp_common.RadioFeatures()
         rf.has_bank = False
-        rf.memory_bounds = (0, 998)  # This radio supports memories 0-9
+        rf.memory_bounds = (1, 999)  # This radio supports memories 0-9
         rf.valid_bands = [(400000000, 480000000),  # Supports 70-centimeters
                           ]
         rf.valid_characters = "".join(CHARSET);
@@ -175,6 +178,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_tuning_step = False;
         rf.has_ctone=True;
         rf.valid_modes = list(MODES);
+        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
         rf.valid_duplexes = list(DUPLEX)
         rf.valid_name_length = 16
         return rf
@@ -196,14 +200,14 @@ class MD380Radio(chirp_common.CloneModeRadio):
     # Return a raw representation of the memory object, which
     # is very helpful for development
     def get_raw_memory(self, number):
-        return repr(self._memobj.memory[number])
+        return repr(self._memobj.memory[number-1])
 
     # Extract a high-level memory object from the low-level memory map
     # This is called to populate a memory in the UI
     def get_memory(self, number):
         # Get a low-level memory object mapped to the image
-        _mem = self._memobj.memory[number]
-
+        _mem = self._memobj.memory[number-1]
+        
         # Create a high-level memory object to return to the UI
         mem = chirp_common.Memory()
 
@@ -215,11 +219,14 @@ class MD380Radio(chirp_common.CloneModeRadio):
         
         tone=int(_mem.tone)/10.0
         rtone=int(_mem.rtone)/10.0
-        if tone!=1666.5:
-            mem.ctone=tone;
-        if rtone!=1666.5:
-            mem.rtone=rtone;
-        
+        try:
+            if tone!=1666.5:
+                mem.ctone=tone;
+            if rtone!=1666.5:
+                mem.rtone=rtone;
+        except:
+            print "Failed to set tones to %s and %s." %(tone,rtone);
+
         # Anything with an unset frequency is unused.
         # Maybe we should be looking at the mode instead?
         if mem.freq >500e6:
@@ -250,7 +257,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
     # This is called when a user edits a memory in the UI
     def set_memory(self, mem):
         # Get a low-level memory object mapped to the image
-        _mem = self._memobj.memory[mem.number]
+        _mem = self._memobj.memory[mem.number-1]
 
         # Convert to low-level frequency representation
         _mem.rxfreq = mem.freq/10;
@@ -261,8 +268,8 @@ class MD380Radio(chirp_common.CloneModeRadio):
         _mem.name = asctoutf(mem.name,32);
         
         # These need to be 16665 when unused.
-        _mem.tone=mem.ctone;
-        _mem.rtone=mem.rtone;
+        _mem.tone=mem.ctone*10;
+        _mem.rtone=mem.rtone*10;
         
     def get_settings(self):
         _identity = self._memobj.identity
