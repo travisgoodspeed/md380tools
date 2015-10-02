@@ -159,8 +159,19 @@ def asctoutf(ascstring,size=None):
 
     return toret;
     
+class MD380Bank(chirp_common.NamedBank):
+    """A VX3 Bank"""
+    def get_name(self):
+        _bank = self._radio._memobj.bank[self.index];
+        name = utftoasc(str(_bank.name));
+        return name.rstrip();
 
-class MD380BankModel(chirp_common.BankModel):
+    def set_name(self, name):
+        name = name.upper()
+        _bank = self._model._radio._memobj.bank_names[self.index]
+        _bank.name = [CHARSET.index(x) for x in name.ljust(6)[:6]]
+
+class MD380BankModel(chirp_common.MTOBankModel):
     """An MD380 Bank model"""
     def get_num_mappings(self):
         return 9
@@ -168,7 +179,9 @@ class MD380BankModel(chirp_common.BankModel):
     def get_mappings(self):
         banks = []
         for i in range(0, self.get_num_mappings()):
-            bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
+            #bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
+            bank = MD380Bank(self, "%i" % (i+1), "MG%i" % (i+1))
+            bank._radio=self._radio;
             bank.index = i
             banks.append(bank)
         return banks
@@ -245,6 +258,8 @@ class MD380Radio(chirp_common.CloneModeRadio):
     def get_features(self):
         rf = chirp_common.RadioFeatures()
         rf.has_bank = True
+        rf.has_bank_index = True
+        rf.has_bank_names = True
         rf.memory_bounds = (1, 999)  # This radio supports memories 0-9
         rf.valid_bands = [(400000000, 480000000),  # Supports 70-centimeters
                           ]
