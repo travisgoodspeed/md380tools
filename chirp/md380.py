@@ -168,8 +168,8 @@ class MD380Bank(chirp_common.NamedBank):
 
     def set_name(self, name):
         name = name.upper()
-        _bank = self._model._radio._memobj.bank_names[self.index]
-        _bank.name = [CHARSET.index(x) for x in name.ljust(6)[:6]]
+        _bank = self._radio._memobj.bank[self.index];
+        _bank.name = asctoutf(name,32);
 
 class MD380BankModel(chirp_common.MTOBankModel):
     """An MD380 Bank model"""
