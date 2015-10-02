@@ -39,9 +39,10 @@ CHARSET = ["%i" % int(x) for x in range(0, 10)] + \
     [" ", ] + \
     [chr(x) for x in range(ord("a"), ord("z") + 1)] + \
     list(".,:;*#_-/&()@!?^ +") + list("\x00" * 100)
-DUPLEX = ["", "-", "+", "split", "off"];
+DUPLEX = ["", "-", "+", "split"];
 #TODO 'DMR' should be added as a valid mode.
 MODES = ["DIG", "NFM", "FM"];
+TMODES = ["", "Tone", "TSQL"]
 
 # Here is where we define the memory map for the radio. Since
 # We often just know small bits of it, we can use #seekto to skip
@@ -260,6 +261,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_bank = True
         rf.has_bank_index = True
         rf.has_bank_names = True
+        rf.valid_tmodes = TMODES
         rf.memory_bounds = (1, 999)  # This radio supports memories 0-9
         rf.valid_bands = [(400000000, 480000000),  # Supports 70-centimeters
                           ]
@@ -315,7 +317,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.empty = True;
             mem.name="Empty";
             mem.mode="NFM";
-            mem.duplex="off"
+            mem.duplex=""
             mem.offset=mem.freq;
             _mem.mode=0x61; #Narrow FM.
         
@@ -338,7 +340,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
 
         mem.offset = int(_mem.txfreq)*10; #In split mode, offset is the TX freq.
         if mem.offset==mem.freq:
-            mem.duplex="off"; #Same freq.
+            mem.duplex=""; #Same freq.
             mem.offset=0;
         elif mem.offset==mem.freq+5e6:
             mem.duplex="+";
