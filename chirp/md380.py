@@ -216,8 +216,6 @@ class MD380Radio(chirp_common.CloneModeRadio):
 
         mem.number = number                 # Set the memory number
         # Convert your low-level frequency to Hertz
-        #mem.freq = int(_mem.rxfreq)
-        mem.freq = int(_mem.rxfreq)*10
         mem.freq = int(_mem.rxfreq)*10
         
         tone=int(_mem.tone)/10.0
@@ -239,11 +237,22 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.mode="NFM";
             mem.duplex="split"
             mem.offset=mem.freq;
-            _mem.mode=0x61;
-            return mem;
-        
-        mem.duplex="split"; #This radio is always split.
+            _mem.mode=0x61; #Narrow FM.
+#            return mem;
+
         mem.offset = int(_mem.txfreq)*10; #In split mode, offset is the TX freq.
+        if mem.offset==mem.freq:
+            mem.duplex="off"; #Same freq.
+            mem.offset=0;
+        elif mem.offset==mem.freq+5e6:
+            mem.duplex="+";
+            mem.offset=5e6;
+        elif mem.offset==mem.freq-5e6:
+            mem.duplex="-";
+            mem.offset=5e6;
+        else:
+            mem.duplex="split";
+
         mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
         
         mem.mode="DIG";
@@ -272,7 +281,14 @@ class MD380Radio(chirp_common.CloneModeRadio):
         
         # Janky offset support.
         # TODO Emulate modes other than split.
-        _mem.txfreq = mem.offset/10;
+        if mem.duplex=="split":
+            _mem.txfreq = mem.offset/10;
+        elif mem.duplex=="+":
+            _mem.txfreq = mem.freq/10+mem.offset/10;
+        elif mem.duplex=="-":
+            _mem.txfreq = mem.freq/10-mem.offset/10;
+        else:
+            _mem.txfreq = _mem.rxfreq;
         _mem.name = asctoutf(mem.name,32);
         
         print "Tones in mode %s of %s and %s" % (
