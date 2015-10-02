@@ -85,6 +85,13 @@ struct {
     ul16 line1[10];
 } textlines;
 
+#seekto 0x149e0;
+struct {
+  char name[32];    //UTF16-LE
+  ul16 members[16]; //16 members for 16 positions on the dial
+} bank[9];
+
+
 #seekto 0x2084;
 struct {
     ul32 dmrid;
@@ -153,6 +160,71 @@ def asctoutf(ascstring,size=None):
     return toret;
     
 
+class MD380BankModel(chirp_common.BankModel):
+    """An MD380 Bank model"""
+    def get_num_mappings(self):
+        return 9
+
+    def get_mappings(self):
+        banks = []
+        for i in range(0, self.get_num_mappings()):
+            bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
+            bank.index = i
+            banks.append(bank)
+        return banks
+
+    def add_memory_to_mapping(self, memory, bank):
+        _members = self._radio._memobj.bank[bank.index].members
+        #_bank_used = self._radio._memobj.bank_used[bank.index]
+        for i in range(0, 16):
+            if _members.members[i] == 0x0000:
+                _members.members[i] = memory.number - 1
+                _bank_used.in_use = 0x0000
+                break
+
+    def remove_memory_from_mapping(self, memory, bank):
+        _members = self._radio._memobj.bank[bank.index].members
+
+        found = False
+        remaining_members = 0
+        for i in range(0, len(_members)):
+            if _members[i] == (memory.number - 1):
+                _members[i] = 0x0000
+                found = True
+            elif _members[i] != 0x0000:
+                remaining_members += 1
+
+        if not found:
+            raise Exception("Memory {num} not in " +
+                            "bank {bank}".format(num=memory.number,
+                                                 bank=bank))
+        #if not remaining_members:
+        #    _bank_used.in_use = 0x0000
+
+    def get_mapping_memories(self, bank):
+        memories = []
+        
+        _members = self._radio._memobj.bank[bank.index].members
+        #_bank_used = self._radio._memobj.bank_used[bank.index]
+
+        #if _bank_used.in_use == 0x0000:
+        #    return memories
+
+        for number in _members:
+            if number == 0x0000:
+                continue
+            memories.append(self._radio.get_memory(number+1))
+        return memories
+
+    def get_memory_mappings(self, memory):
+        banks = []
+        for bank in self.get_mappings():
+            if memory.number in [x.number for x in
+                                 self.get_mapping_memories(bank)]:
+                banks.append(bank)
+        return banks
+
+
 # Uncomment this to actually register this radio in CHIRP
 @directory.register
 class MD380Radio(chirp_common.CloneModeRadio):
@@ -172,7 +244,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
     # how many memories it has, what bands it supports, etc
     def get_features(self):
         rf = chirp_common.RadioFeatures()
-        rf.has_bank = False
+        rf.has_bank = True
         rf.memory_bounds = (1, 999)  # This radio supports memories 0-9
         rf.valid_bands = [(400000000, 480000000),  # Supports 70-centimeters
                           ]
@@ -234,8 +306,8 @@ class MD380Radio(chirp_common.CloneModeRadio):
         
         mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
         
-        print "Tones for %s are %s and %s" %(
-            mem.name, txtone, rxtone);
+        #print "Tones for %s are %s and %s" %(
+        #    mem.name, txtone, rxtone);
         mem.rtone=88.5
         mem.ctone=88.5
         if rxtone==1666.5 and txtone!=1666.5:
@@ -298,8 +370,8 @@ class MD380Radio(chirp_common.CloneModeRadio):
             _mem.txfreq = _mem.rxfreq;
         _mem.name = asctoutf(mem.name,32);
         
-        print "Tones in mode %s of %s and %s for %s" % (
-            mem.tmode, mem.ctone, mem.rtone, mem.name);
+        #print "Tones in mode %s of %s and %s for %s" % (
+        #    mem.tmode, mem.ctone, mem.rtone, mem.name);
         # These need to be 16665 when unused.
         _mem.rxtone=mem.rtone*10;
         _mem.txtone=mem.ctone*10;
@@ -357,3 +429,6 @@ class MD380Radio(chirp_common.CloneModeRadio):
             except Exception, e:
                 LOG.debug(element.get_name())
                 raise
+
+    def get_bank_model(self):
+        return MD380BankModel(self)
