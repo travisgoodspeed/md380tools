@@ -63,7 +63,6 @@ struct {
   lbcd tone[2];        //Transmitter tone.
   lbcd rtone[2];       //Receiver tone.
   char yourguess[4];
-
   char name[32];    //UTF16-LE
 } memory[999];
 
@@ -236,6 +235,11 @@ class MD380Radio(chirp_common.CloneModeRadio):
         if mem.freq >500e6:
             mem.freq=400e6;
             mem.empty = True;
+            mem.name="Empty";
+            mem.mode="NFM";
+            mem.duplex="split"
+            mem.offset=mem.freq;
+            _mem.mode=0x61;
             return mem;
         
         mem.duplex="split"; #This radio is always split.
