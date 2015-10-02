@@ -90,7 +90,7 @@ struct {
 struct {
   char name[32];    //UTF16-LE
   ul16 members[16]; //16 members for 16 positions on the dial
-} bank[9];
+} bank[99];
 
 
 #seekto 0x2084;
@@ -175,7 +175,7 @@ class MD380Bank(chirp_common.NamedBank):
 class MD380BankModel(chirp_common.MTOBankModel):
     """An MD380 Bank model"""
     def get_num_mappings(self):
-        return 9
+        return 99
 
     def get_mappings(self):
         banks = []
