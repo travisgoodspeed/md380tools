@@ -60,8 +60,8 @@ struct {
   char unknown[14]; //Certainly analog or digital settings, but I don't know the bits yet.
   lbcd rxfreq[4];      //Conversion factor is unknown.
   lbcd txfreq[4];      //Stored as frequency, not offset.
+  lbcd tone[2];        //Transmitter tone.
   lbcd rtone[2];       //Receiver tone.
-  lbcd tone[2];        //Stored as tone in tenths of a Hertz.
   char yourguess[4];
 
   char name[32];    //UTF16-LE
@@ -219,13 +219,11 @@ class MD380Radio(chirp_common.CloneModeRadio):
         
         tone=int(_mem.tone)/10.0
         rtone=int(_mem.rtone)/10.0
-        try:
-            if tone!=1666.5:
-                mem.ctone=tone;
-            if rtone!=1666.5:
-                mem.rtone=rtone;
-        except:
-            print "Failed to set tones to %s and %s." %(tone,rtone);
+
+        if tone!=1666.5:
+            mem.ctone=tone;
+        if rtone!=1666.5:
+            mem.rtone=rtone;
 
         # Anything with an unset frequency is unused.
         # Maybe we should be looking at the mode instead?
@@ -267,9 +265,18 @@ class MD380Radio(chirp_common.CloneModeRadio):
         _mem.txfreq = mem.offset/10;
         _mem.name = asctoutf(mem.name,32);
         
+        print "Tones in mode %s of %s and %s" % (
+            mem.tmode, mem.ctone, mem.rtone);
         # These need to be 16665 when unused.
-        _mem.tone=mem.ctone*10;
-        _mem.rtone=mem.rtone*10;
+        if mem.tmode=="Tone":
+            _mem.tone=mem.ctone*10;
+            _mem.rtone="\xff\xff\xff\xff";
+        elif mem.tmode=="TSQL":
+            _mem.tone=mem.ctone*10;
+            _mem.rtone=mem.rtone*10;
+        else:
+            _mem.tone="\xff\xff\xff\xff";
+            _mem.rtone="\xff\xff\xff\xff";
         
     def get_settings(self):
         _identity = self._memobj.identity
