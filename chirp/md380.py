@@ -191,7 +191,7 @@ class MD380BankModel(chirp_common.MTOBankModel):
         #_bank_used = self._radio._memobj.bank_used[bank.index]
         for i in range(0, 16):
             if _members[i] == 0x0000:
-                _members[i] = memory.number - 1
+                _members[i] = memory.number
                 #_bank_used.in_use = 0x0000
                 break
 
@@ -201,7 +201,7 @@ class MD380BankModel(chirp_common.MTOBankModel):
         found = False
         remaining_members = 0
         for i in range(0, len(_members)):
-            if _members[i] == (memory.number - 1):
+            if _members[i] == (memory.number):
                 _members[i] = 0x0000
                 found = True
             elif _members[i] != 0x0000:
@@ -226,7 +226,7 @@ class MD380BankModel(chirp_common.MTOBankModel):
         for number in _members:
             if number == 0x0000:
                 continue
-            memories.append(self._radio.get_memory(number+1))
+            memories.append(self._radio.get_memory(number))
         return memories
 
     def get_memory_mappings(self, memory):
@@ -407,7 +407,9 @@ class MD380Radio(chirp_common.CloneModeRadio):
             _mem.mode=0x62;
         else:
             _mem.mode=0x69;
-        #TODO handle timeslot.
+        if _mem.slot==0xff:
+            _mem.slot=0x14;  #TODO Make this 0x18 for S2.
+        #TODO _mem.unknown must be set!
 
     def get_settings(self):
         _identity = self._memobj.identity
