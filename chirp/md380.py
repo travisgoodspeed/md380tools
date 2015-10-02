@@ -177,9 +177,9 @@ class MD380BankModel(chirp_common.BankModel):
         _members = self._radio._memobj.bank[bank.index].members
         #_bank_used = self._radio._memobj.bank_used[bank.index]
         for i in range(0, 16):
-            if _members.members[i] == 0x0000:
-                _members.members[i] = memory.number - 1
-                _bank_used.in_use = 0x0000
+            if _members[i] == 0x0000:
+                _members[i] = memory.number - 1
+                #_bank_used.in_use = 0x0000
                 break
 
     def remove_memory_from_mapping(self, memory, bank):
