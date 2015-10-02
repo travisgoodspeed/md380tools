@@ -226,8 +226,10 @@ class MD380Radio(chirp_common.CloneModeRadio):
 
         if tone!=1666.5:
             mem.ctone=tone;
+            mem.tmode="TSQL";
         if rtone!=1666.5:
             mem.rtone=rtone;
+            mem.tmode="Tone";
 
         # Anything with an unset frequency is unused.
         # Maybe we should be looking at the mode instead?
