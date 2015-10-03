@@ -58,7 +58,11 @@ struct {
   //First byte is 62 for digital, 61 for analog
   u8 mode;  //61 for digital, 61 for nbfm, 69 for wbfm
   u8 slot;  //14 for S1, 18 for S2
-  char unknown[14]; //Certainly analog or digital settings, but I don't know the bits yet.
+  char priv; //Upper nybble is 0 for cleartex, 1 for Basic Privacy, 2 for Enhanced Privacy.
+             //Low nybble is key index.  (E is slot 15, 0 is slot 1.)
+  char wase0; //Unknown, normally E0
+  char power; //24 for high power, 04 for low power
+  char unknown[11]; //Certainly analog or digital settings, but I don't know the bits yet.
   lbcd rxfreq[4];      //Conversion factor is unknown.
   lbcd txfreq[4];      //Stored as frequency, not offset.
   lbcd rxtone[2];       //Receiver tone.
@@ -282,7 +286,16 @@ class MD380Radio(chirp_common.CloneModeRadio):
     
     # Do a download of the radio from the serial port
     def sync_in(self):
-        self._mmap = do_download(self)
+        try:
+            self._mmap = do_download(self)
+        except errors.RadioError:
+            raise
+        except Exception, e:
+            raise errors.RadioError("Failed to communicate with radio: %s" % e)
+        hexdump(self._mmap);
+        
+        #if len(self._memobj)!=262144:
+        #    raise errors.RadioError("Incorrect 'Model' selected.")
         self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
     
     # Do an upload of the radio to the serial port
