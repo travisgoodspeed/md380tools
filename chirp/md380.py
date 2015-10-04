@@ -91,8 +91,8 @@ struct {
   char unknown2[3];
   lbcd rxfreq[4];
   lbcd txfreq[4];      //Stored as frequency, not offset.
-  lbcd rxtone[2];      //Receiver tone.  (0xFFFF when unused.)
-  lbcd txtone[2];      //Transmitter tone.
+  lbcd ctone[2];      //Receiver tone.  (0xFFFF when unused.)
+  lbcd rtone[2];      //Transmitter tone.
   char yourguess[4];
   char name[32];    //UTF16-LE
 } memory[999];
@@ -308,9 +308,11 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_settings = True;
         rf.has_tuning_step = False;
         rf.has_ctone=True;
+        rf.has_dtcs=False;
+        rf.has_cross=False;
         rf.valid_modes = list(MODES);
 #        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
-        rf.valid_tmodes = ["", "Tone", "TSQL", "Cross"]
+        rf.valid_tmodes = ["", "Tone", "TSQL"]
         rf.valid_duplexes = list(DUPLEX)
         rf.valid_name_length = 16
         return rf
@@ -353,10 +355,11 @@ class MD380Radio(chirp_common.CloneModeRadio):
         mem = chirp_common.Memory()
 
         mem.number = number;
+        mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
         mem.freq = int(_mem.rxfreq)*10;
         
-        rxtone=int(_mem.rxtone)/10.0;
-        txtone=int(_mem.txtone)/10.0;
+        ctone=int(_mem.ctone)/10.0;
+        rtone=int(_mem.rtone)/10.0;
 
         
         # Anything with an unset frequency is unused.
@@ -370,19 +373,19 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.offset=mem.freq;
             _mem.mode=0x61; #Narrow FM.
         
-        mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
+
         
         #print "Tones for %s are %s and %s" %(
-        #    mem.name, txtone, rxtone);
-        mem.rtone=88.5
-        mem.ctone=88.5
-        if rxtone==1666.5 and txtone!=1666.5:
-            mem.rtone=txtone;
-            #mem.ctone=txtone;  #Just one tone here, because the radio can't store a second.
+        #    mem.name, rtone, ctone);
+        #mem.rtone=91.5
+        #mem.ctone=97.4 #88.5
+        if ctone==1666.5 and rtone!=1666.5:
+            mem.rtone=rtone;
+            #mem.ctone=rtone;  #Just one tone here, because the radio can't store a second.
             mem.tmode="Tone";
-        elif txtone!=1666.5 and rxtone!=1666.5:
-            mem.ctone=rxtone;
-            mem.rtone=txtone;
+        elif ctone!=1666.5 and rtone!=1666.5:
+            mem.ctone=ctone;
+            mem.rtone=rtone;
             mem.tmode="TSQL";
         else:
             mem.tmode="";
@@ -439,16 +442,16 @@ class MD380Radio(chirp_common.CloneModeRadio):
         #print "Tones in mode %s of %s and %s for %s" % (
         #    mem.tmode, mem.ctone, mem.rtone, mem.name);
         # These need to be 16665 when unused.
-        _mem.rxtone=mem.rtone*10;
-        _mem.txtone=mem.ctone*10;
+        _mem.ctone=mem.ctone*10;
+        _mem.rtone=mem.rtone*10;
         
         if mem.tmode=="Tone":
-            blankbcd(_mem.rxtone);
+            blankbcd(_mem.ctone); #No receiving tone.
         elif mem.tmode=="TSQL":
             pass;
         else:
-            blankbcd(_mem.rxtone);
-            blankbcd(_mem.txtone);
+            blankbcd(_mem.ctone);
+            blankbcd(_mem.rtone);
         
         if mem.mode=="FM":
             _mem.mode=0x69;
@@ -461,7 +464,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         
         if _mem.slot==0xff:
             _mem.slot=0x14;  #TODO Make this 0x18 for S2.
-        #TODO _mem.unknown must be set!
+
 
     def get_settings(self):
         _general = self._memobj.general
