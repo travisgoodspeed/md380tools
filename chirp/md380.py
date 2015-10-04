@@ -61,6 +61,14 @@ struct {
   char name[32]; //U16L chars, of course.
 } contacts[999];
 
+
+#seekto 0x00018860;
+struct {
+  char name[32];    //UTF16L, like always.
+  u8 flags[10];     //last channel, priority, hold timing, sample time.
+  ul16 members[31]; //Just a list; unused entries are zeroed.
+} scanlists[20];
+
 #seekto 0x0001EE00;
 struct {
   //First byte is 62 for digital, 61 for analog
@@ -115,11 +123,25 @@ struct {
 } bank[99];
 
 
-#seekto 0x2084;
+#seekto 0x2000;
 struct {
-    ul32 dmrid;
-//    u8 unknown0[36];
-//    ul16 dmrname[16];
+    u8 unknownff;
+    bbcd prog_yr[2];
+    bbcd prog_mon;
+    bbcd prog_day;
+    bbcd prog_hour;
+    bbcd prog_min;
+    bbcd prog_sec;
+    u8 unknownver[4];       //Probably version numbers.
+    u8 unknownff2[52];    //Maybe unused?  All FF.
+    char line1[20];         //Top line of text at startup.
+    char line2[20];         //Bottom line of text at startup.
+    u8 unknownff3[24];      //all FF
+    u8 flags1; //FE
+    u8 flags2; //6B for no beeps, 6F will all beeps.
+    u8 flags3; //EE
+    u8 flags4; //FF 
+    ul32 dmrid; //0x2084
 } identity;
 
 """
