@@ -75,7 +75,7 @@ struct {
   u8 mode;   //Upper nybble is 6 for normal squeld, 4 for tight squelch
              //Low nybble is
              //61 for digital, 61 for nbfm, 69 for wbfm
-  u8 colorslot;  //Upper nybble is the color color,   TODO
+  u8 slot;       //Upper nybble is the color color,   TODO
                  //lower nybble is bitfield:
                  // |4 for S1, |8 for S2              TODO
                  // |2 for RX-ONLY
@@ -309,7 +309,8 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_tuning_step = False;
         rf.has_ctone=True;
         rf.valid_modes = list(MODES);
-        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
+#        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
+        rf.valid_tmodes = ["", "Tone", "TSQL", "Cross"]
         rf.valid_duplexes = list(DUPLEX)
         rf.valid_name_length = 16
         return rf
@@ -327,10 +328,10 @@ class MD380Radio(chirp_common.CloneModeRadio):
             raise
         except Exception, e:
             raise errors.RadioError("Failed to communicate with radio: %s" % e)
-        hexdump(self._mmap);
+        #hexdump(self._mmap);
         
-        #if len(self._memobj)!=262144:
-        #    raise errors.RadioError("Incorrect 'Model' selected.")
+        if len(self._mmap)!=262144:
+            raise errors.RadioError("Incorrect 'Model' selected.")
         self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
     
     # Do an upload of the radio to the serial port
@@ -470,6 +471,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         info = RadioSettingGroup("info", "Model Info")
         general = RadioSettingGroup("general", "General Settings");
         
+        
         #top = RadioSettings(identity, basic)
         top = RadioSettings(general)
         general.append(RadioSetting(
@@ -503,7 +505,6 @@ class MD380Radio(chirp_common.CloneModeRadio):
                     _general.line2=asctoutf(str(newval),20);
                 else:
                     print("Setting %s <= %s" % (setting, newval))
-                    #setattr(_identity, setting, newval)
                     setattr(_general, setting, newval)
             except Exception, e:
                 LOG.debug(element.get_name())
