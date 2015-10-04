@@ -53,10 +53,18 @@ TMODES = ["", "Tone", "TSQL"]
 MEM_FORMAT = """
 
 
-#seekto 0x0001ee00;
+#seekto 0x0005F80;
+struct {
+  ul24 callid;   //DMR Call ID
+  u8   flags;    //c2 for private with no tone
+                 //e1 for a group call with an rx tone.
+  char name[32]; //U16L chars, of course.
+} contacts[999];
+
+#seekto 0x0001EE00;
 struct {
   //First byte is 62 for digital, 61 for analog
-  u8 mode;   //Uppeer nybble is 6 for normal squeld, 4 for tight squelch
+  u8 mode;   //Upper nybble is 6 for normal squeld, 4 for tight squelch
              //Low nybble is
              //61 for digital, 61 for nbfm, 69 for wbfm
   u8 colorslot;  //Upper nybble is the color color,   TODO
