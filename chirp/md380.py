@@ -110,11 +110,6 @@ struct {
     u8 empty_10f2c[4];
 } info;
 
-#seekto 0x2040;
-struct {
-    ul16 line0[10];
-    ul16 line1[10];
-} textlines;
 
 #seekto 0x149e0;
 struct {
@@ -382,7 +377,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         mem.ctone=88.5
         if rxtone==1666.5 and txtone!=1666.5:
             mem.rtone=txtone;
-            mem.ctone=txtone;  #Just one tone here, because the radio can't store a second.
+            #mem.ctone=txtone;  #Just one tone here, because the radio can't store a second.
             mem.tmode="Tone";
         elif txtone!=1666.5 and rxtone!=1666.5:
             mem.ctone=rxtone;
@@ -462,6 +457,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
             _mem.mode=0x62;
         else:
             _mem.mode=0x69;
+        
         if _mem.slot==0xff:
             _mem.slot=0x14;  #TODO Make this 0x18 for S2.
         #TODO _mem.unknown must be set!
@@ -469,7 +465,6 @@ class MD380Radio(chirp_common.CloneModeRadio):
     def get_settings(self):
         _identity = self._memobj.identity
         _info = self._memobj.info
-        _textlines = self._memobj.textlines #Startup lines of text.
         
         basic = RadioSettingGroup("basic", "Basic")
         info = RadioSettingGroup("info", "Model Info")
@@ -480,11 +475,16 @@ class MD380Radio(chirp_common.CloneModeRadio):
         identity.append(RadioSetting(
                 "dmrid", "DMR Radio ID",
                 RadioSettingValueInteger(0, 100000000, _identity.dmrid)));
+        identity.append(RadioSetting(
+                "line1", "Startup Line 1",
+                RadioSettingValueString(0, 10, utftoasc(str(_identity.line1)))));
+        identity.append(RadioSetting(
+                "line2", "Startup Line 2",
+                RadioSettingValueString(0, 10, utftoasc(str(_identity.line2)))));
         return top
     def set_settings(self, settings):
         _identity = self._memobj.identity
         _info = self._memobj.info
-        #_bandlimits = self._memobj.bandlimits
         for element in settings:
             if not isinstance(element, RadioSetting):
                 self.set_settings(element)
@@ -497,7 +497,13 @@ class MD380Radio(chirp_common.CloneModeRadio):
                 newval = element.value
                 
                 #LOG.debug("Setting %s(%s) <= %s" % (setting, oldval, newval))
-                setattr(_identity, setting, newval)
+                if setting=="line1":
+                    _identity.line1=asctoutf(str(newval),20);
+                elif setting=="line2":
+                    _identity.line2=asctoutf(str(newval),20);
+                else:
+                    print("Setting %s <= %s" % (setting, newval))
+                    setattr(_identity, setting, newval)
             except Exception, e:
                 LOG.debug(element.get_name())
                 raise
