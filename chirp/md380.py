@@ -197,7 +197,7 @@ def asctoutf(ascstring,size=None):
     while len(toret)<size:
         toret=toret+"\x00";
 
-    return toret;
+    return toret[:32];
     
 class MD380Bank(chirp_common.NamedBank):
     """A VX3 Bank"""
@@ -309,7 +309,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_settings = True;
         rf.has_tuning_step = False;
         rf.has_ctone=True;
-        rf.has_dtcs=False;
+        rf.has_dtcs=False;   #TODO Enable DTCS support.
         rf.has_cross=False;
         rf.valid_modes = list(MODES);
         rf.valid_skips = [""]; #["", "S"]
