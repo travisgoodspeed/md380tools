@@ -56,17 +56,27 @@ MEM_FORMAT = """
 #seekto 0x0001ee00;
 struct {
   //First byte is 62 for digital, 61 for analog
-  u8 mode;  //61 for digital, 61 for nbfm, 69 for wbfm
-  u8 slot;  //14 for S1, 18 for S2
+  u8 mode;   //Uppeer nybble is 6 for normal squeld, 4 for tight squelch
+             //Low nybble is
+             //61 for digital, 61 for nbfm, 69 for wbfm
+  u8 colorslot;  //Upper nybble is the color color,   TODO
+                 //lower nybble is bitfield:
+                 // |4 for S1, |8 for S2              TODO
+                 // |2 for RX-ONLY
   char priv; //Upper nybble is 0 for cleartex, 1 for Basic Privacy, 2 for Enhanced Privacy.
              //Low nybble is key index.  (E is slot 15, 0 is slot 1.)
   char wase0; //Unknown, normally E0
-  char power; //24 for high power, 04 for low power
-  char unknown[11]; //Certainly analog or digital settings, but I don't know the bits yet.
-  lbcd rxfreq[4];      //Conversion factor is unknown.
+  char power; //24 for high power, 04 for low power TODO
+  char wasc3; //Unknown, normally C3
+  ul16 contact; //Digital contact name.  (TX group.)  TODO
+  char unknown[3]; //Certainly analog or digital settings, but I don't know the bits yet.
+  u8 scanlist;  //Not yet supported.
+  u8 grouplist; //DMR Group list index. TODO
+  char unknown2[3];
+  lbcd rxfreq[4];
   lbcd txfreq[4];      //Stored as frequency, not offset.
-  lbcd rxtone[2];       //Receiver tone.
-  lbcd txtone[2];        //Transmitter tone.
+  lbcd rxtone[2];      //Receiver tone.  (0xFFFF when unused.)
+  lbcd txtone[2];      //Transmitter tone.
   char yourguess[4];
   char name[32];    //UTF16-LE
 } memory[999];
