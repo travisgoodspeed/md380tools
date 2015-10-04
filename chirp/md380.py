@@ -137,7 +137,7 @@ struct {
     u8 flags3; //EE
     u8 flags4; //FF 
     ul32 dmrid; //0x2084
-} identity;
+} general;
 
 """
 
@@ -463,27 +463,27 @@ class MD380Radio(chirp_common.CloneModeRadio):
         #TODO _mem.unknown must be set!
 
     def get_settings(self):
-        _identity = self._memobj.identity
+        _general = self._memobj.general
         _info = self._memobj.info
         
         basic = RadioSettingGroup("basic", "Basic")
         info = RadioSettingGroup("info", "Model Info")
-        identity = RadioSettingGroup("identity", "Identity");
+        general = RadioSettingGroup("general", "General Settings");
         
         #top = RadioSettings(identity, basic)
-        top = RadioSettings(identity)
-        identity.append(RadioSetting(
+        top = RadioSettings(general)
+        general.append(RadioSetting(
                 "dmrid", "DMR Radio ID",
-                RadioSettingValueInteger(0, 100000000, _identity.dmrid)));
-        identity.append(RadioSetting(
+                RadioSettingValueInteger(0, 100000000, _general.dmrid)));
+        general.append(RadioSetting(
                 "line1", "Startup Line 1",
-                RadioSettingValueString(0, 10, utftoasc(str(_identity.line1)))));
-        identity.append(RadioSetting(
+                RadioSettingValueString(0, 10, utftoasc(str(_general.line1)))));
+        general.append(RadioSetting(
                 "line2", "Startup Line 2",
-                RadioSettingValueString(0, 10, utftoasc(str(_identity.line2)))));
+                RadioSettingValueString(0, 10, utftoasc(str(_general.line2)))));
         return top
     def set_settings(self, settings):
-        _identity = self._memobj.identity
+        _general = self._memobj.general
         _info = self._memobj.info
         for element in settings:
             if not isinstance(element, RadioSetting):
@@ -498,12 +498,13 @@ class MD380Radio(chirp_common.CloneModeRadio):
                 
                 #LOG.debug("Setting %s(%s) <= %s" % (setting, oldval, newval))
                 if setting=="line1":
-                    _identity.line1=asctoutf(str(newval),20);
+                    _general.line1=asctoutf(str(newval),20);
                 elif setting=="line2":
-                    _identity.line2=asctoutf(str(newval),20);
+                    _general.line2=asctoutf(str(newval),20);
                 else:
                     print("Setting %s <= %s" % (setting, newval))
-                    setattr(_identity, setting, newval)
+                    #setattr(_identity, setting, newval)
+                    setattr(_general, setting, newval)
             except Exception, e:
                 LOG.debug(element.get_name())
                 raise
