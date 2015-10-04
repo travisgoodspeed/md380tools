@@ -300,6 +300,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_bank = True
         rf.has_bank_index = True
         rf.has_bank_names = True
+        rf.can_odd_split = True
         rf.valid_tmodes = TMODES
         rf.memory_bounds = (1, 999)  # This radio supports memories 0-9
         rf.valid_bands = [(400000000, 480000000),  # Supports 70-centimeters
@@ -311,6 +312,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_dtcs=False;
         rf.has_cross=False;
         rf.valid_modes = list(MODES);
+        rf.valid_skips = [""]; #["", "S"]
 #        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
         rf.valid_tmodes = ["", "Tone", "TSQL"]
         rf.valid_duplexes = list(DUPLEX)
@@ -400,6 +402,12 @@ class MD380Radio(chirp_common.CloneModeRadio):
         elif mem.offset==mem.freq-5e6:
             mem.duplex="-";
             mem.offset=5e6;
+        elif mem.offset==mem.freq+6e5:
+            mem.duplex="+";
+            mem.offset=6e5;
+        elif mem.offset==mem.freq-6e5:
+            mem.duplex="-";
+            mem.offset=6e5;
         else:
             mem.duplex="split";
         
