@@ -222,8 +222,8 @@ class MD380BankModel(chirp_common.MTOBankModel):
             #bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
             bank = MD380Bank(self, "%i" % (i+1), "MG%i" % (i+1))
             bank._radio=self._radio;
-            bank.index = i
-            banks.append(bank)
+            bank.index = i;
+            banks.append(bank);
         return banks
 
     def add_memory_to_mapping(self, memory, bank):
