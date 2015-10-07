@@ -142,7 +142,19 @@ struct {
     u8 flags3; //EE
     u8 flags4; //FF 
     ul32 dmrid; //0x2084
+    u8 flags5[13];  //Unknown settings, seem mostly used.
+    u8 screenlit; //00 for infinite delay, 01 for 5s, 02 for 10s, 03 for 15s.
+    u8 unknownff4[2];
+    u8 unknownzeroes[8];
+    u8 unknownff5[16];
+    u32 radioname[32]; //Like all other strings.
 } general;
+
+
+#seekto 0x2f003;
+u8 selectedzone;
+
+
 
 """
 
