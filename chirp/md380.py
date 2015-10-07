@@ -52,6 +52,11 @@ TMODES = ["", "Tone", "TSQL"]
 # getting there slowly.
 MEM_FORMAT = """
 
+#seekto 0x2180;
+struct {
+  char messages[288]; // 144 half-length characters, like always.
+} messages[50];
+
 
 #seekto 0x0005F80;
 struct {
