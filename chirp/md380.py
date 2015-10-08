@@ -304,10 +304,13 @@ class MD380Radio(chirp_common.CloneModeRadio):
     FILE_EXTENSION = "img"
     BAUD_RATE = 9600    # This is a lie.
     
-    _memsize=262144
+    _memsize=262144;
     @classmethod
     def match_model(cls, filedata, filename):
-        return len(filedata) == cls._memsize
+        return (
+               len(filedata) == cls._memsize
+            or len(filedata) == cls._memsize+565
+            );
     
     
     # Return information about this radio's features, including
@@ -338,8 +341,13 @@ class MD380Radio(chirp_common.CloneModeRadio):
     
     # Processes the mmap from a file.
     def process_mmap(self):
-        self._memobj = bitwise.parse(
-            MEM_FORMAT, self._mmap)
+        if(len(self._mmap)==self._memsize):
+            self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
+        elif(len(self._mmap)==self._memsize+565):
+            self._memobj = bitwise.parse(MEM_FORMAT, self._mmap[549:])
+
+        #self._memobj = bitwise.parse(
+        #    MEM_FORMAT, self._mmap)
     
     # Do a download of the radio from the serial port
     def sync_in(self):
@@ -351,10 +359,10 @@ class MD380Radio(chirp_common.CloneModeRadio):
             raise errors.RadioError("Failed to communicate with radio: %s" % e)
         #hexdump(self._mmap);
         
-        if len(self._mmap)!=262144:
+        if(len(self._mmap)==self._memsize):
+            self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
+        else:
             raise errors.RadioError("Incorrect 'Model' selected.")
-        self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
-    
     # Do an upload of the radio to the serial port
     def sync_out(self):
         do_upload(self)
