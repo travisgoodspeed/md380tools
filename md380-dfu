@@ -34,8 +34,17 @@ import time
 from optparse import OptionParser
 import dfu_suffix
 
+
+# The tricky thing is that *THREE* different applications all show up
+# as this same VID/PID pair.
+#
+# 1. The Tytera application image.
+# 2. The Tytera bootloader at 0x08000000
+# 3. The mask-rom bootloader from the STM32F405.
 md380_vendor   = 0x0483
 md380_product  = 0xdf11
+
+
 #application_offset = 0x08000000
 #ram_offset = 0x20000000
 #application_size   = 0x00040000
@@ -348,11 +357,11 @@ def hexdump(string):
 
 def test(dfu):
     """I'm trying to get this to dump code memory.  Seems stuck in SPI Flash region."""
-    dfu.md380_custom(0x91,0x01); #Programming Mode
-    dfu.md380_custom(0x91,0x31); #Mystery!
-    dfu.md380_custom(0x91,0x02); #Mystery!
+    #dfu.md380_custom(0x91,0x01); #Programming Mode
+    #dfu.md380_custom(0x91,0x31); #Mystery!
+    #dfu.md380_custom(0x91,0x02); #Mystery!
  
-    #dfu.set_address(0x0800d000); # Zero address, used by configuration tool.
+    #dfu.set_address(0x0800d000);
     
     block_size=1024
     try:
@@ -374,13 +383,13 @@ def test(dfu):
 
 def upload_bootloader(dfu,filename):
     """I'm trying to get this to dump code memory.  Seems stuck in SPI Flash region."""
-    dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.
+    #dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.
     
     # Bootloader stretches from 0x08000000 to 0x0800C000, but our
     # address and block number are ignored, so we set the block size
     # ot 0xC000 to yank the entire thing in one go.  The application
     # comes later, I think.
-    block_size=0xC000;
+    block_size=0x2FFF; #0xC000;
     
     f=None;
     if filename!=None:
@@ -391,12 +400,15 @@ def upload_bootloader(dfu,filename):
         data = dfu.upload(2, block_size)
         status, timeout, state, discarded = dfu.get_status()
         if len(data) == block_size:
-            if f!=None:
-                f.write(data)
-            else:
-                hexdump(data);
+            print "Got it all\!";
         else:
-            raise Exception('Upload failed to read full block.  Got %i bytes.' % len(data))
+            print "Only got %i bytes.  Older versions would give it all." % len(data);
+            #raise Exception('Upload failed to read full block.  Got %i bytes.' % len(data))
+        if f!=None:
+            f.write(data)
+        else:
+            hexdump(data);
+        
     finally:
         print "Done."
 
