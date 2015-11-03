@@ -36,7 +36,7 @@ from optparse import OptionParser
 stm32_vendor   = 0x0483
 stm32_product  = 0xdf11
 
-ram_offset = 0x20000000 #RAM
+ram_offset = 0x20002000 #RAM
 ram_size=0x1E000
 application_offset = 0x08000000 #Flash
 application_size = 0x100000  #1MB
