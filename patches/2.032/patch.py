@@ -31,6 +31,11 @@ class Patcher():
         print "Patching byte at %08x to %02x" % (adr,new)
         self.bytes[adr-self.offset]=new;
         self.assertbyte(adr,new);
+    def ffrange(self, start,end):
+        """Patches a range to FF."""
+        print "Patching range from %08x to %08x to FF." % (start,end)
+        for adr in range(start,end):
+            self.bytes[adr-self.offset]=0xFF;
     def sethword(self, adr, new, old=None):
         """Patches a byte pair from the old value to the new value."""
         if old!=None:
@@ -68,3 +73,14 @@ if __name__ == '__main__':
     patcher.export("prom-private.img");
     
 
+    #This corrupts a bit of the startup image, which begins at 0x08094610.
+    patcher.nopout(0x08094610);
+    patcher.nopout(0x08094612);
+    patcher.nopout(0x08094614);
+    patcher.nopout(0x08094616);
+    patcher.nopout(0x08094618);
+    
+    #This cuts out the Chinese font, freeing ~200k for code patches.
+    patcher.ffrange(0x809c714,0x80d0f80);
+    patcher.export("experiment.img");
+    
