@@ -57,4 +57,38 @@ class Patcher():
         outfile.write(self.bytes);
         outfile.close();
 
-        
+    def sprite2str(self,adr,width,size):
+        """Extracts a sprite as ASCII art."""
+        sprite="";
+        for i in range(0,size):
+            b=self.getbyte(adr+i);
+            if i%width==0:
+                sprite=sprite+"\n";
+            for j in range(0,8):
+                c='.';
+                if b&(128>>j)>0: #Most significant bit is on the left.
+                    c='X';
+                sprite=sprite+c;
+        return sprite;
+    def str2sprite(self,adr,sprite):
+        """Writes ASCII art into memory as a sprite."""
+        b=0; #Current byte.
+        i=0; #Pixel index.
+        j=0; #Byte index.
+        for c in sprite:
+            if c=='X':
+                b=b|1;
+            elif c=='.':
+                pass;
+            else:
+                continue;
+            i=i+1;
+            if i%8==0:
+                self.setbyte(adr+j,b&0xFF);
+                b=0;
+                j=j+1;
+            b=(b<<1);
+
+        return;
+            
+    

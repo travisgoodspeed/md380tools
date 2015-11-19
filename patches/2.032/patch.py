@@ -21,18 +21,11 @@ if __name__ == '__main__':
     
     #This corrupts the first row of the startup image, which begins at 0x08094610.
     #patcher.ffrange(0x08094610, 0x08094610+0x14);
-
-    sprite="";
-    for i in range(0,768):
-        b=patcher.getbyte(0x08094610+i);
-        if i%0x14==0:
-            sprite=sprite+"\n";
-        for j in range(0,8):
-            c=' ';
-            if b&(128>>j)>0:
-                c='X';
-            sprite=sprite+c;
-    print sprite;
+    fhello=open("welcome.txt","rb");
+    hello=fhello.read();
+    patcher.str2sprite(0x08094610,hello);
+    print patcher.sprite2str(0x08094610,0x14,760);
+    
     
     #This cuts out the Chinese font, freeing ~200k for code patches.
     patcher.ffrange(0x809c714,0x80d0f80);
