@@ -64,7 +64,7 @@ struct {
   u8   flags;    //c2 for private with no tone
                  //e1 for a group call with an rx tone.
   char name[32]; //U16L chars, of course.
-} contacts[999];
+} contacts[1000];
 
 
 #seekto 0x00018860;
@@ -77,7 +77,7 @@ struct {
 #seekto 0x0001EE00;
 struct {
   //First byte is 62 for digital, 61 for analog
-  u8 mode;   //Upper nybble is 6 for normal squeld, 4 for tight squelch
+  u8 mode;   //Upper nybble is 6 for normal squelch, 4 for tight squelch
              //Low nybble is
              //61 for digital, 61 for nbfm, 69 for wbfm
   u8 slot;       //Upper nybble is the color color,   TODO
@@ -100,7 +100,7 @@ struct {
   lbcd rtone[2];      //Transmitter tone.
   char yourguess[4];
   char name[32];    //UTF16-LE
-} memory[999];
+} memory[1000];
 
 
 #seekto 0x1200;
