@@ -20,7 +20,6 @@ wrapped: patches
 flash: patches
 	sudo stm32-dfu erase
 	sleep 25
-	#TODO Replace this with a custom bootloader.
-	sudo stm32-dfu writeflash ~/jailbreak.bin
-	sudo stm32-dfu write experiment.img 0x0800C000
+	stm32-dfu writeflash ~/jailbreak.bin
+	stm32-dfu write experiment.img 0x0800C000
 

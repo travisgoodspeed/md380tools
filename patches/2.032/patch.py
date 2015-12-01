@@ -44,19 +44,26 @@ if __name__ == '__main__':
     patcher.setword(0x0800C020,
                     patcher.getword(0x0800C004),
                     0x00000000);
+
+    #This makes the app its own sideload.  Don't ship with it!
+    #patcher.setword(0x0809D004,
+    #                patcher.getword(0x0800C020),
+    #                0xFFFFFFFF);
+    
     
     #This makes RESET point to our stub below.
     patcher.setword(0x0800C004,
-                    0x0809cf00);
+                    0x0809cf00+1
+    );
     
     
     #This stub calls the target RESET vector.
     #ldr r0, [pc, 0x100]         ; [0x809d004:4]
     patcher.sethword(0x0809cf00,
-                     0x4804);
-    #wa bl [r0] @ 0x0809cf02 
+                     0x4840);
+    #bx r0
     patcher.sethword(0x0809cf02,
-                     0x4700);
+                     0x4700);  #4700 for "bx r0"
     
     patcher.export("experiment.img");
     

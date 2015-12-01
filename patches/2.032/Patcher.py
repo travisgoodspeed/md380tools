@@ -59,7 +59,7 @@ class Patcher():
             self.assertbyte(adr+2,(old>>16)&0xFF);
             self.assertbyte(adr+3,(old>>24)&0xFF);
         
-        print "Patching hword at %08x to %04x" % (adr,new)
+        print "Patching word at %08x to %08x" % (adr,new)
         self.bytes[adr-self.offset]=new&0xFF;
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
         self.bytes[adr-self.offset+2]=(new>>16)&0xFF;
