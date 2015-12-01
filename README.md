@@ -1,11 +1,22 @@
 #MD380/CS700 USB Tools
 
 by Travis Goodspeed, KK4VCZ  
-forked from Ubertooth code by Jared Boone
 
 This code is used to upload or download codeplugs into a TYT-MD380 DMR
 radio.  I believe it will also work for the CS700, but have not tested
 that.
+
+##License:##
+
+The majority of this software is licensed in exchange for two liters
+of India Pale Ale, to be delivered at a neighborly bar, preferably
+without a a god-damned squary-stary-box.
+
+The DFU tools are GPL licensed, forked from old examples in the
+Ubertooth Project.
+
+Tytera's firmware is of unknown license and is not included in this
+repository.
 
 ##Specifications:##
 
