@@ -152,6 +152,9 @@ def main():
     parser.add_argument('--addr', '-a', dest='addr', type=hex_int,
                         default=0x800c000,
                         help='base address in flash')
+    parser.add_argument('--offset', '-o', dest='offset', type=hex_int,
+                        default=0,
+                        help='offset to skip in app binary')
     parser.add_argument('input', nargs=1, help='input file')
     parser.add_argument('output', nargs=1, help='output file')
     args = parser.parse_args()
@@ -165,8 +168,13 @@ def main():
         input = f.read()
 
     if args.wrap:
+        if args.offset > 0:
+            print('INFO: skipping 0x%x bytes in input file' % args.offset)
         md = MD380FW(args.addr)
-        md.app = input
+        md.app = input[args.offset:]
+        if len(md.app) == 0:
+            sys.stderr.write('ERROR: seeking beyond end of input file\n')
+            sys.exit(5)
         output = md.wrap()
         print('INFO: base address 0x{:x}'.format(md.start))
         print('INFO: length 0x{:x}'.format(len(md.app)))
