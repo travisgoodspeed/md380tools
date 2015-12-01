@@ -50,6 +50,15 @@ To exit programming mode, returning to radio mode.
 
     md380-dfu detach
 
+To extract the raw app binary from an ecrypted Tytera firmware image:
+
+	md380-fw --unwrap MD-380-D2.32\(AD\).bin app.bin
+
+To wrap a raw app binary into a flashable Tytera firmware image:
+
+    md380-fw --wrap app-patched.bin MD-380-D2.32-patched.bin
+
+
 ##Chirp Driver:##
 
 Also included is a partial driver for the MD380 in Chirp.  This driver
