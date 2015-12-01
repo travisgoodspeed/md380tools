@@ -1,10 +1,11 @@
 
 all: patches
 clean:
-	rm -f unwrapped.bin
+	rm -f *~ *.bin *.img
 
-unwrapped.bin: MD-380-D2.32(AD).bin
-	../../md380-fw --unwrap "MD-380-D2.32(AD).bin" unwrapped.img
+unwrapped.bin:
+	cd ../../firmware && make D002.032.bin
+	../../md380-fw --unwrap ../../firmware/D002.032.bin unwrapped.img
 
 patches: unwrapped.bin
 	./patch.py
