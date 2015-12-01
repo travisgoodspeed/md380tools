@@ -18,7 +18,7 @@ wrapped: patches
 
 
 flash: patches
-	sudo stm32-dfu erase
+	stm32-dfu erase
 	sleep 25
 	stm32-dfu writeflash ~/jailbreak.bin
 	stm32-dfu write experiment.img 0x0800C000

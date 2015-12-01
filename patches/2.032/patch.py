@@ -49,21 +49,37 @@ if __name__ == '__main__':
     #patcher.setword(0x0809D004,
     #                patcher.getword(0x0800C020),
     #                0xFFFFFFFF);
-    
-    
+
     #This makes RESET point to our stub below.
     patcher.setword(0x0800C004,
                     0x0809cf00+1
     );
     
     
-    #This stub calls the target RESET vector.
-    #ldr r0, [pc, 0x100]         ; [0x809d004:4]
-    patcher.sethword(0x0809cf00,
-                     0x4840);
-    #bx r0
-    patcher.sethword(0x0809cf02,
-                     0x4700);  #4700 for "bx r0"
+    #This stub calls the target RESET vector,
+    #if it's not FFFFFFFF.
+    patcher.sethword(0x0809cf00, 0x4840);
+    patcher.sethword(0x0809cf02, 0x2100);
+    patcher.sethword(0x0809cf04, 0x3901);
+    patcher.sethword(0x0809cf06, 0x4508);
+    patcher.sethword(0x0809cf08, 0xd100);
+    patcher.sethword(0x0809cf0a, 0x483c);
+    patcher.sethword(0x0809cf0c, 0x4700);
+    # [0x0809cf00]> pd 7
+    #             0x0809cf00      4048           ldr r0, [pc, 0x100]         ; [0x809d004:4]=-1
+    #             0x0809cf02      0021           movs r1, 0
+    #             0x0809cf04      0139           subs r1, 1
+    #             0x0809cf06      0845           cmp r0, r1
+    #         ,=< 0x0809cf08      00d1           bne 0x809cf0c
+    #         |   0x0809cf0a      3c48           ldr r0, [pc, 0xf0]          ; [0x809cffc:4]=0x80fa969 
+    #         `-> 0x0809cf0c      0047           bx r0
+    # [0x0809cf00]> 
+
+    
+    #Stores the RESET handler for our stub.
+    patcher.setword(0x809cffc,
+                    patcher.getword(0x0800C020),
+                    0xFFFFFFFF);
     
     patcher.export("experiment.img");
     
