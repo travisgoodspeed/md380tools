@@ -24,7 +24,7 @@
 
 
 from chirp import chirp_common, directory, memmap
-from chirp import bitwise
+from chirp import bitwise, errors
 from chirp.settings import RadioSetting, RadioSettingGroup, \
     RadioSettingValueInteger, RadioSettingValueList, \
     RadioSettingValueBoolean, RadioSettingValueString, \
@@ -77,29 +77,29 @@ struct {
 #seekto 0x0001EE00;
 struct {
   //First byte is 62 for digital, 61 for analog
-  u8 mode;   //Upper nybble is 6 for normal squeld, 4 for tight squelch
-             //Low nybble is
-             //61 for digital, 61 for nbfm, 69 for wbfm
+  u8 mode;        //Upper nybble is 6 for normal squeld, 4 for tight squelch
+                 //Low nybble is
+                 //61 for digital, 61 for nbfm, 69 for wbfm
   u8 slot;       //Upper nybble is the color color,   TODO
                  //lower nybble is bitfield:
                  // |4 for S1, |8 for S2              TODO
                  // |2 for RX-ONLY
-  char priv; //Upper nybble is 0 for cleartex, 1 for Basic Privacy, 2 for Enhanced Privacy.
-             //Low nybble is key index.  (E is slot 15, 0 is slot 1.)
-  char wase0; //Unknown, normally E0
-  char power; //24 for high power, 04 for low power TODO
-  char wasc3; //Unknown, normally C3
-  ul16 contact; //Digital contact name.  (TX group.)  TODO
-  char unknown[3]; //Certainly analog or digital settings, but I don't know the bits yet.
-  u8 scanlist;  //Not yet supported.
-  u8 grouplist; //DMR Group list index. TODO
+  char priv;           //Upper nybble is 0 for cleartex, 1 for Basic Privacy, 2 for Enhanced Privacy.
+                       //Low nybble is key index.  (E is slot 15, 0 is slot 1.)
+  char wase0;          //Unknown, normally E0
+  char power;          //24 for high power, 04 for low power TODO
+  char wasc3;          //Unknown, normally C3
+  ul16 contact;        //Digital contact name.  (TX group.)  TODO
+  char unknown[3];     //Certainly analog or digital settings, but I don't know the bits yet.
+  u8 scanlist;         //Not yet supported.
+  u8 grouplist;        //DMR Group list index. TODO
   char unknown2[3];
   lbcd rxfreq[4];
   lbcd txfreq[4];      //Stored as frequency, not offset.
-  lbcd ctone[2];      //Receiver tone.  (0xFFFF when unused.)
-  lbcd rtone[2];      //Transmitter tone.
+  lbcd ctone[2];       //Receiver tone.  (0xFFFF when unused.)
+  lbcd rtone[2];       //Transmitter tone.
   char yourguess[4];
-  char name[32];    //UTF16-LE
+  char name[32];       //UTF16-LE
 } memory[999];
 
 
@@ -164,9 +164,9 @@ def blankbcd(num):
     num[1].set_bits(0xFF);
 
 def do_download(radio):
-    """This is your download function"""
+    """Dummy function that will someday download from the radio."""
     # NOTE: Remove this in your real implementation!
-    return memmap.MemoryMap("\x00" * 262144)
+    #return memmap.MemoryMap("\x00" * 262144)
 
     # Get the serial port connection
     serial = radio.pipe
@@ -182,9 +182,9 @@ def do_download(radio):
 
 
 def do_upload(radio):
-    """This is your upload function"""
+    """Dummy function that will someday upload to the radio."""
     # NOTE: Remove this in your real implementation!
-    raise Exception("This template driver does not really work!")
+    #raise Exception("This template driver does not really work!")
 
     # Get the serial port connection
     serial = radio.pipe
@@ -214,7 +214,7 @@ def asctoutf(ascstring,size=None):
     while len(toret)<size:
         toret=toret+"\x00";
 
-    return toret[:32];
+    return toret[:size];
     
 class MD380Bank(chirp_common.NamedBank):
     """A VX3 Bank"""
@@ -232,14 +232,17 @@ class MD380BankModel(chirp_common.MTOBankModel):
     """An MD380 Bank model"""
     def get_num_mappings(self):
         return 99
+        #return len(self.get_mappings());
 
     def get_mappings(self):
         banks = []
-        for i in range(0, self.get_num_mappings()):
+        for i in range(0, 99):
             #bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
             bank = MD380Bank(self, "%i" % (i+1), "MG%i" % (i+1))
             bank._radio=self._radio;
             bank.index = i;
+            #print "Bank #%i has name %s" % (i,bank.get_name());
+            #if len(bank.get_name())>0:
             banks.append(bank);
         return banks
 
@@ -281,9 +284,13 @@ class MD380BankModel(chirp_common.MTOBankModel):
         #    return memories
 
         for number in _members:
+            #Zero items are not memories.
             if number == 0x0000:
                 continue
-            memories.append(self._radio.get_memory(number))
+            
+            mem=self._radio.get_memory(number);
+            print "Appending memory %i" % number;
+            memories.append(mem)
         return memories
 
     def get_memory_mappings(self, memory):
@@ -351,21 +358,24 @@ class MD380Radio(chirp_common.CloneModeRadio):
     
     # Do a download of the radio from the serial port
     def sync_in(self):
-        try:
-            self._mmap = do_download(self)
-        except errors.RadioError:
-            raise
-        except Exception, e:
-            raise errors.RadioError("Failed to communicate with radio: %s" % e)
-        #hexdump(self._mmap);
+        pass;
+    
+#         try:
+#             self._mmap = do_download(self)
+#         except errors.RadioError:
+#             raise
+#         except Exception, e:
+#             raise errors.RadioError("Failed to communicate with radio: %s" % e)
+#         #hexdump(self._mmap);
         
-        if(len(self._mmap)==self._memsize):
-            self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
-        else:
-            raise errors.RadioError("Incorrect 'Model' selected.")
+#         if(len(self._mmap)==self._memsize):
+#             self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
+#         else:
+#             raise errors.RadioError("Incorrect 'Model' selected.")
     # Do an upload of the radio to the serial port
     def sync_out(self):
-        do_upload(self)
+        #do_upload(self)
+        pass;
 
     # Return a raw representation of the memory object, which
     # is very helpful for development
