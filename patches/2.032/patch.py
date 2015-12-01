@@ -3,14 +3,16 @@
 # Applies to version 2.032
 
 
-# This patcher assumes a static offset of the start of flash memory at
-# 0x08000000, so a bootloader of some sort should be included.
-
 
 class Patcher():
     """MD380 Firmware Patching Tool"""
     
-    offset=0x08000000;
+    # #Includes Bootloader
+    # offset=0x08000000;
+    
+    #Just the application.
+    offset=0x0800C000;
+    
     
     def getbyte(self,adr):
         """Reads a byte from the firmware address."""
@@ -56,13 +58,13 @@ class Patcher():
         outfile.close();
 
 if __name__ == '__main__':
-    print "Creating patches from flash.bin.";
-    patcher=Patcher("original.bin");
+    print "Creating patches from unwrapped.img.";
+    patcher=Patcher("unwrapped.img");
     
     patcher.nopout(0x0803ee36,0xd1ef);  #Matches first group for public calls.
-    patcher.export("prom-public.bin");
+    patcher.export("prom-public.img");
 
     patcher.nopout(0x0803ef10,0xd11f);  #Matches private calls too.
-    patcher.export("prom-private.bin");
+    patcher.export("prom-private.img");
     
 
