@@ -62,3 +62,12 @@ read foo.img` to read an image out of the radio, then open it in Chirp
 after installing `chirp/md380.py` as a driver.  Once you've made your
 changes, you can load the image back in by running `md380-dfu write
 foo.img`.
+
+
+##More Info##
+
+An article on reversing the MD380 will be out in the next PoC||GTFO,
+sometime in January 2016.
+
+Pat Hickey has some notes and tools up in his own repository,
+https://github.com/pchickey/md380-re
