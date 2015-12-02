@@ -389,7 +389,7 @@ def upload_bootloader(dfu,filename):
     # address and block number are ignored, so we set the block size
     # ot 0xC000 to yank the entire thing in one go.  The application
     # comes later, I think.
-    block_size=0x2FFF; #0xC000;
+    block_size=0xC000; #0xC000;
     
     f=None;
     if filename!=None:
@@ -400,7 +400,7 @@ def upload_bootloader(dfu,filename):
         data = dfu.upload(2, block_size)
         status, timeout, state, discarded = dfu.get_status()
         if len(data) == block_size:
-            print "Got it all\!";
+            print "Got it all!";
         else:
             print "Only got %i bytes.  Older versions would give it all." % len(data);
             #raise Exception('Upload failed to read full block.  Got %i bytes.' % len(data))

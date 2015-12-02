@@ -1,5 +1,5 @@
 
-all: patches
+all: wrapped
 clean:
 	rm -f *~ *.bin *.img
 
