@@ -1,10 +1,10 @@
 #MD380/CS700 USB Tools
 
-by Travis Goodspeed, KK4VCZ  
+by Travis Goodspeed, KK4VCZ
 
 This code is used to upload or download codeplugs into a TYT-MD380 DMR
-radio.  I believe it will also work for the CS700, but have not tested
-that.
+radio.  Some parts of this can be adapted for the CS700 and CS750,
+but that work has yet to be done.
 
 ##License:##
 
@@ -53,7 +53,7 @@ To upload a codeplug from the MD380.
 
     md380-dfu read <filename.img>
 
-To dump the bootloader from the MD380.  (Only in radio mode.)
+To dump the bootloader from the MD380.  (Only in radio mode, only on Mac.)
 
     md380-dfu readboot <filename.bin>
 
@@ -63,12 +63,19 @@ To exit programming mode, returning to radio mode.
 
 To extract the raw app binary from an ecrypted Tytera firmware image:
 
-	md380-fw --unwrap MD-380-D2.32\(AD\).bin app.bin
+    md380-fw --unwrap MD-380-D2.32\(AD\).bin app.bin
 
 To wrap a raw app binary into a flashable Tytera firmware image:
 
     md380-fw --wrap app-patched.bin MD-380-D2.32-patched.bin
 
+
+##Firmware Patching:##
+
+This archive does not ship with firmware.  Instead it grabs firmware
+from the Internet, decrypts it, and applies patches to that revision.
+
+You can reproduce the patched firmware with `make clean all`.
 
 ##Chirp Driver:##
 
