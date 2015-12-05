@@ -7,22 +7,30 @@ from Patcher import Patcher
 if __name__ == '__main__':
     print "Creating patches from unwrapped.img.";
     patcher=Patcher("unwrapped.img");
-
-    #All patched images should be indicated by a patched welcome screen.
+    
+    #Old logo patcher, no longer used.
     #fhello=open("welcome.txt","rb");
     #hello=fhello.read();
     #patcher.str2sprite(0x08094610,hello);
     #print patcher.sprite2str(0x08094610,0x14,760);
     
+    #Old patch, matching on the first talkgroup.
+    #We don't use this anymore, because the new patch is better.
+    #patcher.nopout(0x0803ee36,0xd1ef);
     
-    patcher.nopout(0x0803ee36,0xd1ef);  #Matches first group for public calls.
+    # New patch for monitoring all talk groups , matched on first
+    # entry iff no other match.
+    #wa mov r5, 0 @ 0x0803ee86 # So the radio thinks it matched at zero.
+    patcher.sethword(0x0803ee86, 0x2500);
+    #wa b 0x0803ee38 @ 0x0803ee88 # Branch back to perform that match.
+    patcher.sethword(0x0803ee88,0xe7d6); #Jump back to matched condition.
     
-    #patcher.setbyte(0x0803ee1c,0x19,0x20);
-    #patcher.setbyte(0x0803ee1e,0xfe); #inf loop
-    #patcher.setbyte(0x0803ee1f,0xe7);
     patcher.export("prom-public.img");
-
-    patcher.nopout(0x0803ef10,0xd11f);  #Matches private calls too.
+    
+    # This should be changed to only show missed calls for private
+    # calls directed at the user, and to decode others without
+    # triggering a missed call.
+    patcher.nopout(0x0803ef10,0xd11f);  #Matches all private calls.
     patcher.export("prom-private.img");
 
     #Everything after here is experimental.
