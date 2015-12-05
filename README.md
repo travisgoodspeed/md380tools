@@ -69,6 +69,14 @@ To wrap a raw app binary into a flashable Tytera firmware image:
 
     md380-fw --wrap app-patched.bin MD-380-D2.32-patched.bin
 
+To export all sprites and glyphs from a raw firmware image:
+
+    md380-gfx --dir=imgout --firmware=patched.bin extract
+
+To re-import a single modified PPM sprite (must restore text header
+of the originally exported .ppm file; gimp et al. discard it):
+
+	md380-gfx --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
 
 ##Firmware Patching:##
 
