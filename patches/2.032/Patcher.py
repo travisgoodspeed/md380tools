@@ -44,6 +44,9 @@ class Patcher():
     def nopout(self, adr, old=None):
         """Nops out an instruction with 0xd11f."""
         self.sethword(adr,0x46c0,old);
+    def haltat(self, adr, old=None):
+        """Sets an infinite while loop with bytes "fe e7"."""
+        self.sethword(adr,0xe7fe,old);
 
     def __init__(self,filename,offset=0x08000000):
         """Opens the input file."""
