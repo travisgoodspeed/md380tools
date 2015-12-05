@@ -8,6 +8,7 @@ unwrapped.bin:
 	../../md380-fw --unwrap ../../firmware/D002.032.bin unwrapped.img
 
 patches: unwrapped.bin
+	../../md380-gfx --firmware=unwrapped.img --gfx=0x80f9ca8-poc.ppm write
 	./patch.py
 
 wrapped: patches

@@ -9,10 +9,10 @@ if __name__ == '__main__':
     patcher=Patcher("unwrapped.img");
 
     #All patched images should be indicated by a patched welcome screen.
-    fhello=open("welcome.txt","rb");
-    hello=fhello.read();
-    patcher.str2sprite(0x08094610,hello);
-    print patcher.sprite2str(0x08094610,0x14,760);
+    #fhello=open("welcome.txt","rb");
+    #hello=fhello.read();
+    #patcher.str2sprite(0x08094610,hello);
+    #print patcher.sprite2str(0x08094610,0x14,760);
     
     
     patcher.nopout(0x0803ee36,0xd1ef);  #Matches first group for public calls.
