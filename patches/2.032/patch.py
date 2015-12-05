@@ -16,6 +16,10 @@ if __name__ == '__main__':
     
     
     patcher.nopout(0x0803ee36,0xd1ef);  #Matches first group for public calls.
+    
+    #patcher.setbyte(0x0803ee1c,0x19,0x20);
+    #patcher.setbyte(0x0803ee1e,0xfe); #inf loop
+    #patcher.setbyte(0x0803ee1f,0xe7);
     patcher.export("prom-public.img");
 
     patcher.nopout(0x0803ef10,0xd11f);  #Matches private calls too.
