@@ -85,7 +85,7 @@ class Memory(object):
     def writebits(self, addr, bitdata):
         """Write a number of bits with zero-padding"""
         # TODO: masking instead of padding
-        bitdata += b'0' * (8 - len(bitdata) % 8)  # pad to full bytes
+        bitdata += b'0' * ((8 - len(bitdata)) % 8)  # pad to full bytes
         hexdata = hex(int(b'1'+bitdata, 2))[3:]  # 1+...[3:] to preserve leading zeros
         # Throw away python2.7's trailing long int marker
         if hexdata.endswith('L'):
@@ -127,12 +127,12 @@ class MD380Graphics(Memory):
     def glyphparse(self, addr):
         """Parse a font glyph structure and return image"""
         s = struct.Struct('<bbbbL')
-        width, height, xbytes, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
+        width, height, bytesperline, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
     
         img = {'address': addr, 'width': width, 'height': height, 'palette': None, 'pixels': []}
     
         for y in xrange(height):
-            linebits = self.readbits(pixptr+y*xbytes, width)
+            linebits = self.readbits(pixptr+y*bytesperline, width)
             line = [int(color) for color in linebits]
             img['pixels'].append(line)
         
@@ -286,11 +286,11 @@ class MD380Graphics(Memory):
         out += '%d %d\n' % (gfx['width'], gfx['height'])
         for line in gfx['pixels']:
             bitline = ''.join([str(pixel) for pixel in line])
-            bitline += '0' * (8 - len(bitline) % 8)  # pad to full byte
+            bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
             hexline = hex(int('1'+bitline, 2))[3:]
             # Throw away python2.7's trailing long int marker
             if hexline.endswith('L'):
-                hexdata = hexline[:-1]
+                hexline = hexline[:-1]
             byteline = binascii.unhexlify(hexline)
             out += byteline
         return out
@@ -437,7 +437,7 @@ def main():
     parser.add_argument('command', nargs=1, help='function to perform')
     args = parser.parse_args()
 
-    print "DEBUG: args: %s" % repr(args)
+    #print "DEBUG: args: %s" % repr(args)
 
     sys.stdout.write('DEBUG: reading "%s"\n' % args.firmware)
     with open(args.firmware, 'rb') as f:
