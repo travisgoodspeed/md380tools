@@ -13,6 +13,16 @@ class Patcher():
         """Reads a byte from the firmware address."""
         b=self.bytes[adr-self.offset];
         return b;
+    def getword(self,adr):
+        """Reads a byte from the firmware address."""
+        w=(
+            self.bytes[adr-self.offset]+
+            (self.bytes[adr-self.offset+1]<<8)+
+            (self.bytes[adr-self.offset+2]<<16)+
+            (self.bytes[adr-self.offset+3]<<24)
+            );
+            
+        return w;
     
     def assertbyte(self, adr, val):
         """Asserts that a byte has a given value."""
@@ -39,6 +49,21 @@ class Patcher():
         print "Patching hword at %08x to %04x" % (adr,new)
         self.bytes[adr-self.offset]=new&0xFF;
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
+        self.assertbyte(adr,new&0xFF);
+        self.assertbyte(adr+1,(new>>8)&0xFF);
+    def setword(self, adr, new, old=None):
+        """Patches a 32-bit word from the old value to the new value."""
+        if old!=None:
+            self.assertbyte(adr,old&0xFF);
+            self.assertbyte(adr+1,(old>>8)&0xFF);
+            self.assertbyte(adr+2,(old>>16)&0xFF);
+            self.assertbyte(adr+3,(old>>24)&0xFF);
+        
+        print "Patching hword at %08x to %04x" % (adr,new)
+        self.bytes[adr-self.offset]=new&0xFF;
+        self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
+        self.bytes[adr-self.offset+2]=(new>>16)&0xFF;
+        self.bytes[adr-self.offset+3]=(new>>24)&0xFF;
         self.assertbyte(adr,new&0xFF);
         self.assertbyte(adr+1,(new>>8)&0xFF);
     def nopout(self, adr, old=None):

@@ -14,6 +14,7 @@ patches: unwrapped.bin
 wrapped: patches
 	../../md380-fw --wrap prom-public.img prom-public.bin
 	../../md380-fw --wrap prom-private.img prom-private.bin
+	../../md380-fw --wrap experiment.img experiment.bin
 
 
 flash: patches

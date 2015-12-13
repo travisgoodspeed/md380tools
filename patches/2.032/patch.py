@@ -39,5 +39,19 @@ if __name__ == '__main__':
     
     #This cuts out the Chinese font, freeing ~200k for code patches.
     patcher.ffrange(0x809c714,0x80d0f80);
+    
+    #This mirrors the RESET vector to 0x080C020, for use in booting.
+    patcher.setword(0x0800C020,
+                    patcher.getword(0x0800C004),
+                    0x00000000);
+    
+    #This stub calls the target RESET vector.
+    #ldr r0, [pc, 0x100]         ; [0x809d004:4]
+    patcher.sethword(0x0809cf00,
+                     0x4804);
+    #wa bl [r0] @ 0x0809cf02 
+    patcher.sethword(0x0809cf02,
+                     0x4700);
+    
     patcher.export("experiment.img");
     
