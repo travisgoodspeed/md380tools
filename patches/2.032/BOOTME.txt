@@ -1,0 +1,16 @@
+Howdy y'all,
+
+These are some rough notes on the format for linking a child
+application into the MD380 firmware.  These notes are for MD380
+version 2.32, and we'll probably do it differently when patching later
+versions.
+
+The child application must:
+1) Be linked to begin at 0x0809D000.  (Reset handler at 0x0809D004.)
+2) Its RESET handler must set the stack address and relocate the
+   interrupt table.
+3) If the PTT button is *NOT* held, your application should jump to
+   the address held in 0x0800C020.
+
+Cheers,
+--Travis
