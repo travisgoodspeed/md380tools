@@ -45,6 +45,11 @@ if __name__ == '__main__':
                     patcher.getword(0x0800C004),
                     0x00000000);
     
+    #This makes RESET point to our stub below.
+    patcher.setword(0x0800C004,
+                    0x0809cf00);
+    
+    
     #This stub calls the target RESET vector.
     #ldr r0, [pc, 0x100]         ; [0x809d004:4]
     patcher.sethword(0x0809cf00,
