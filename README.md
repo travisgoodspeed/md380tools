@@ -85,6 +85,29 @@ from the Internet, decrypts it, and applies patches to that revision.
 
 You can reproduce the patched firmware with `make clean all`.
 
+Files from this process include:
+
+* unwrapped.img: factory firmware after decrypting.
+* prom-public.img and prom-public.bin: patched to monitor all talk groups.
+* prom-private.img and prom-private.bin: patched to monitor all talk groups, private calls.
+* experiment.img and experiment.bin: patched to monitor all talk groups, private calls, and sideload alternate firmware.
+
+You can install any of these patched firmware files into your MD380 by using the respective .bin file with the Tytera Windows firmware upgrade tool, "upgrade.exe", available inside their firmware upgrade downloads. Here are the steps:
+
+* Turn off your MD380 using the volume knob.
+* Attach the Tytera USB cable to the SP and MIC ports of your MD380.
+* Attach the Tytera USB cable to your host computer.
+* Hold down the PTT and the button above the PTT button (*not* the button with the "M" on it).
+* Turn on your MD380 using the volume knob.
+* Release the buttons on the radio.
+* The status LED should be on and alternating between red and green, indicating you're in flash upgrade mode.
+* Start the Tytera "Upgrade.exe" program.
+* Click "Open Update File" and choose one of the .bin files produced from the process above.
+* Click "Download Update File" and wait for the flash update process to finish. It takes less than a minute.
+* Turn off your MD380 using the volume knob.
+* Disconnect the USB cable from your MD380 and host computer.
+* Turn the MD380 back on, and you should see the "PoC||GTFO" welcome screen. You're running patched firmware!
+
 ##Chirp Driver:##
 
 Also included is a partial driver for the MD380 in Chirp.  This driver
