@@ -131,18 +131,6 @@ Status.create_from_map()
 class DFU(object):
     verbose=False;
     def __init__(self, device,alt):
-#         for cfg in device:
-#             sys.stdout.write(str(cfg.bConfigurationValue) + '\n')
-#             for intf in cfg:
-#                 sys.stdout.write('\t' + \
-#                          str(intf.bInterfaceNumber) + \
-#                          ',' + \
-#                          str(intf.bAlternateSetting) + \
-#                          '\n')
-#                 for ep in intf:
-#                     sys.stdout.write('\t\t Endpoint ' + \
-#                              str(ep.bEndpointAddress) + \
-#                              '\n')
         device.set_interface_altsetting(interface = 0, alternate_setting = alt)
         self._device = device
 
@@ -244,6 +232,15 @@ class DFU(object):
 
     def abort(self):
         self._device.ctrl_transfer(0x21, Request.ABORT, 0, 0, None)
+
+    def wait_till_ready(self,desired_state=State.dfuIDLE):
+        state = 11
+        status, timeout, state, discarded = dfu.get_status()
+        while state != State.dfuIDLE:
+            dfu.clear_status()
+            status, timeout, state, discarded = dfu.get_status()
+        return
+
 
     def enter_dfu_mode(self):
         action_map = {
@@ -447,6 +444,84 @@ def upload_codeplug(dfu,filename):
         #dfu.md380_reboot()
     finally:
         print "Done."
+def download_firmware(dfu, data):
+    """ Download new firmware binary to the radio. """
+    addresses = [
+            0x0800c000,
+            0x08010000,
+            0x08020000,
+            0x08040000,
+            0x08060000,
+            0x08080000,
+            0x080a0000,
+            0x080c0000,
+            0x080e0000]
+    sizes = [0x4000, #0c
+            0x10000, #1
+            0x20000, #2
+            0x20000, #4
+            0x20000, #6
+            0x20000, #8
+            0x20000, #a
+            0x20000, #c
+            0x20000] #e
+    block_ends  = [0x11, 0x41, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81]
+    try:
+        print("Beginning firmware upgrade.")
+        status, timeout, state, discarded = dfu.get_status()
+        assert state == State.dfuIDLE
+
+        dfu.md380_custom(0x91,0x01)
+        dfu.md380_custom(0x91,0x31)
+
+        for address in addresses:
+            if dfu.verbose: print("Erasing address@ 0x%x" % address)
+            dfu.erase_block( address )
+
+        block_size = 1024
+        block_start = 2
+        address_idx = 0
+
+        if data[0:14] == "OutSecurityBin": #skip header if present
+            if dfu.verbose: print("Skipping 0x100 byte header in data file")
+            header, data = data[:0x100], data[0x100:]
+
+        print("Writing firmware:")
+
+        assert len(addresses) == len(sizes)
+        numaddresses = len(addresses)
+
+        while address_idx < numaddresses: #for each section
+            print("%0d%% complete" % (address_idx*100/numaddresses) )
+            address = addresses[ address_idx ]
+            size = sizes[ address_idx ]
+            dfu.set_address( address )
+
+            if address_idx != len(addresses) -1:
+                assert address + size == addresses[ address_idx + 1]
+
+            datawritten = 0
+            block_number = block_start
+
+            while len(data) > 0 and size > datawritten: #for each block
+                assert block_number <= block_ends[ address_idx ]
+                packet, data = data[:block_size], data[block_size:]
+
+                if len(packet) < block_size:
+                    packet += '\xFF' * (block_size - len(packet))
+
+                dfu.download(block_number, packet)
+                dfu.wait_till_ready()
+
+                datawritten += len(packet)
+                block_number += 1
+                #if dfu.verbose: sys.stdout.write('.'); sys.stdout.flush()
+            #if dfu.verbose: sys.stdout.write('_\n'); sys.stdout.flush()
+            address_idx += 1
+        print("100% complete, now safe to disconnect and/or reboot radio")
+    except Exception as e:
+        print(e)
+
 
 
 def upload(dfu, flash_address, length, path):
@@ -556,6 +631,14 @@ if __name__ == '__main__':
                 import usb.core
                 dfu = init_dfu()
                 upload_bootloader(dfu, sys.argv[2])
+
+            elif sys.argv[1] == "upgrade":
+                import usb.core
+                with open(sys.argv[2], 'rb') as f:
+                    data = f.read();
+                    dfu = init_dfu();
+                    download_firmware(dfu, data);
+
             elif sys.argv[1] == 'write':
                 import usb.core
                 f = open(sys.argv[2], 'rb')
