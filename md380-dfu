@@ -601,10 +601,13 @@ def usage():
 Usage: md380-dfu <command> <arguments>
 
 Write a codeplug to the radio.
-    md380-dfu write <filename.bin>
+    md380-dfu write <codeplug.bin>
+
+Write firmware to the radio.
+    md380-dfu upgrade <firmware.bin>
 
 Read a codeplug and write it to a file.
-    md380-dfu read <filename.bin>
+    md380-dfu read <codeplug.bin>
 
 Dump the bootloader from Flash memory.
     md380-dfu readboot <filename.bin>
