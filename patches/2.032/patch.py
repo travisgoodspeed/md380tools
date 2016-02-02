@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # Promiscuous Mode Patch for MD380 Firmware
 # Applies to version 2.032
 
