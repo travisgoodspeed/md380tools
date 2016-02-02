@@ -1,19 +1,34 @@
-#MD380/CS700 USB Tools
+#MD380 USB Tools
 
 by Travis Goodspeed, KK4VCZ
 
-This code is used to upload or download codeplugs into a TYT-MD380 DMR
-radio.  Some parts of this can be adapted for the CS700 and CS750,
-but that work has yet to be done.
+This repository contains tools for working with codeplugs and firmware
+of the Tytera MD380, which is also sold under a variety of different
+brand names.  The codeplug format is sufficiently similar to the
+radios from Connect Systems (CS700, etc) that these tools might
+someday be made compatible.
+
+Tools:
+* `md380-dfu` reads and writes MD380 codeplugs and firmware.
+* `stm32-dfu` modifies firmware for jailbroken devices. (No longer required.)
+* `md380-fw` wraps and unwraps devices firmware.
+* `md380-gfx` modifies firmware graphics.
+
+These tools are all wrapped into a `Makefile`, which will download the
+official firmware, patch and flash it.  Run `make flash` after booting
+into the recovery bootloader by holding PTT and the button just above
+it during power-on.
 
 ##License:##
 
 The majority of this software is licensed in exchange for two liters
-of India Pale Ale, to be delivered at a neighborly bar, preferably
-without a a god-damned squary-stary-box.
+of India Pale Ale, to be delivered at a neighborly bar, preferably one
+without a god-damned squary-stary-box.
 
 The DFU tools are GPL licensed, forked from old examples in the
-Ubertooth Project.
+Ubertooth Project.  If you want md380-dfu or stm32-dfu under different
+terms, you should probably discuss it with the Great Scott Gadgets
+folks over some beer.
 
 Tytera's firmware is of unknown license and is not included in this
 repository.
@@ -76,7 +91,7 @@ To export all sprites and glyphs from a raw firmware image:
 To re-import a single modified PPM sprite (must restore text header
 of the originally exported .ppm file; gimp et al. discard it):
 
-	md380-gfx --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
+    md380-gfx --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
 
 ##Firmware Patching:##
 
@@ -92,7 +107,10 @@ Files from this process include:
 * prom-private.img and prom-private.bin: patched to monitor all talk groups, private calls.
 * experiment.img and experiment.bin: patched to monitor all talk groups, private calls, and sideload alternate firmware.
 
-You can install any of these patched firmware files into your MD380 by using the respective .bin file with the Tytera Windows firmware upgrade tool, "upgrade.exe", available inside their firmware upgrade downloads. Here are the steps:
+You can install any of these patched firmware files into your MD380 by
+using the respective .bin file with the Tytera Windows firmware
+upgrade tool, "upgrade.exe", available inside their firmware upgrade
+downloads. Here are the steps:
 
 * Turn off your MD380 using the volume knob.
 * Attach the Tytera USB cable to the SP and MIC ports of your MD380.
