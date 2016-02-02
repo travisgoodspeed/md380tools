@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # Copyright 2011 Dominic Spill
 # Copyright 2010 TheSeven
