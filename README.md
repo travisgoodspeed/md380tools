@@ -142,8 +142,8 @@ foo.img`.
 
 ##More Info##
 
-An article on reversing the MD380 will be out in the next PoC||GTFO,
-sometime in January 2016.
+An article by Travis Goodspeed on jailbreaking the MD380 was released
+as PoC||GTFO 10:8.  (`pocorgtfo10.pdf` page 76.)
 
 Pat Hickey has some notes and tools up in his own repository,
 https://github.com/pchickey/md380-re
