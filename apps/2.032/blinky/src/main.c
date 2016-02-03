@@ -86,7 +86,7 @@ static void led_setup(void) {
   /* GPIOD Periph clock enable */
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
 
-  /* Configure PD12, PD13, PD14 and PD15 in output pushpull mode */
+  /* PE 0 and 1 to in/out mode */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -104,7 +104,12 @@ static void green_led(int on) {
   }
 }
 
+
 static void red_led(int on) {
+  /* The RED LED is supposed to be on pin A0 by the schematic, but in
+     point of fact it's on E1.  Expect more hassles like this.
+  */
+  
   if (on) {
     GPIO_SetBits(GPIOE, GPIO_Pin_1);
   } else {
@@ -134,7 +139,7 @@ int main(void)
   
   for(int i=0; i<5; i++) {
 
-    red_led(1);
+    //red_led(1);
     green_led(1);
 
     sleep(500);
