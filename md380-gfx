@@ -250,7 +250,7 @@ class MD380Graphics(Memory):
         height = int(height)
         maxc = int(ppml[i+1])
         assert maxc == 255
-        data = ''.join(ppml[i+2:])
+        data = '\n'.join(ppml[i+2:])
         paletteidx = {}
         pixels = []
         palette = []
