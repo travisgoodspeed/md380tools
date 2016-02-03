@@ -12,8 +12,8 @@ The child application must:
 3) If the PTT button is *NOT* held, your application should jump to
    the address held in 0x0800C020.
 
-To install your application:
-1) 'make clean flash' to install experiment.img.
+To install your application through DFU on a jailbroken MD380:
+1) 'make clean dfuflash' to install experiment.img.
 2) Flash your application on top of it, without an erase.
    stm32-dfu write blink_sideload.bin 0x0809D000
 
