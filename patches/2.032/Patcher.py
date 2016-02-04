@@ -41,6 +41,17 @@ class Patcher():
         print "Patching range from %08x to %08x to FF." % (start,end)
         for adr in range(start,end):
             self.bytes[adr-self.offset]=0xFF;
+    def setstring(self, adr, newstring):
+        """Patches a string"""
+        print "Patching string at %08x to '%s'." % (adr,newstring)
+        for c in newstring:
+            self.bytes[adr-self.offset]=ord(c);
+            self.bytes[adr-self.offset+1]=0;
+            adr=adr+2;
+        #Null terminate.
+        self.bytes[adr-self.offset]=0;
+        self.bytes[adr-self.offset+1]=0;
+        
     def sethword(self, adr, new, old=None):
         """Patches a byte pair from the old value to the new value."""
         if old!=None:
@@ -118,5 +129,5 @@ class Patcher():
             b=(b<<1);
 
         return;
-            
+    
     

@@ -45,10 +45,6 @@ if __name__ == '__main__':
                     patcher.getword(0x0800C004),
                     0x00000000);
 
-    #This makes the app its own sideload.  Don't ship with it!
-    #patcher.setword(0x0809D004,
-    #                patcher.getword(0x0800C020),
-    #                0xFFFFFFFF);
 
     #This makes RESET point to our stub below.
     patcher.setword(0x0800C004,
@@ -80,6 +76,13 @@ if __name__ == '__main__':
     patcher.setword(0x809cffc,
                     patcher.getword(0x0800C020),
                     0xFFFFFFFF);
+    
+    
+    #Marks the version as "md380tools"
+    patcher.setstring(0x080d14d8,
+                      "MD380Tools Ver.");
+    #patcher.setstring(0x080d1d68,
+    #                  "kk4vcz's md380tools");
     
     patcher.export("experiment.img");
     
