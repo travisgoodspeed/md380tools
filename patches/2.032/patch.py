@@ -84,5 +84,9 @@ if __name__ == '__main__':
     #patcher.setstring(0x080d1d68,
     #                  "kk4vcz's md380tools");
     
+    #Fixes a typo in 2.032.  Unneeded in 2.034.
+    patcher.setstring(0x080d17e8,
+                      "Repeater Slot"); #was 'Repeatar Slot'
+    
     patcher.export("experiment.img");
     
