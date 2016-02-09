@@ -24,14 +24,29 @@ if __name__ == '__main__':
     patcher.sethword(0x0803ee86, 0x2500);
     #wa b 0x0803ee38 @ 0x0803ee88 # Branch back to perform that match.
     patcher.sethword(0x0803ee88,0xe7d6); #Jump back to matched condition.
+    #patcher.export("prom-public.img");
     
-    patcher.export("prom-public.img");
+#     #These aren't quite enough to skip the Color Code check.  Not sure why.
+#     patcher.nopout(0x0803ea62,0xf040);  #Main CC check.
+#     patcher.nopout(0x0803ea64,0x80fd);
+#     patcher.nopout(0x0803e994,0xf040);  #Late Entry CC check.
+#     patcher.nopout(0x0803e996,0x8164);
+#     patcher.sethword(0x0803fd8e,0xe02d, #Check in dmr_dll_parser().
+#                      0xd02d);
+#     patcher.nopout(0x0803eafe,0xf100); #Disable CRC check, in case CC is included.
+#     patcher.nopout(0x0803eb00,0x80af);
+    
+    
+    #patcher.export("prom-colors.img");
+    
     
     # This should be changed to only show missed calls for private
     # calls directed at the user, and to decode others without
     # triggering a missed call.
     patcher.nopout(0x0803ef10,0xd11f);  #Matches all private calls.
-    patcher.export("prom-private.img");
+    #patcher.export("prom-private.img");
+    
+    
 
     #Everything after here is experimental.
     #Everything after here is experimental.
@@ -79,13 +94,18 @@ if __name__ == '__main__':
     
     
     #Marks the version as "md380tools"
-    patcher.setstring(0x080d14d8,
+    patcher.setwstring(0x080d14d8,
                       "MD380Tools Ver.");
-    #patcher.setstring(0x080d1d68,
-    #                  "kk4vcz's md380tools");
+    
+    #Change the manufacturer string.
+    patcher.setstring(0x080f9e4c,
+                      "Travis Goodspeed KK4VCZ");
+    #Change the device name.
+    patcher.setstring(0x080d1820,
+                      "Patched MD380");
     
     #Fixes a typo in 2.032.  Unneeded in 2.034.
-    patcher.setstring(0x080d17e8,
+    patcher.setwstring(0x080d17e8,
                       "Repeater Slot"); #was 'Repeatar Slot'
     
     patcher.export("experiment.img");

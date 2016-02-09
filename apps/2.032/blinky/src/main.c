@@ -1,46 +1,16 @@
-/**
-  ******************************************************************************
-  * @file    IO_Toggle/main.c 
-  * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    19-September-2011
-  * @brief   Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************  
-  */ 
-
-/* Includes ------------------------------------------------------------------*/
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
-/** @addtogroup STM32F4_Discovery_Peripheral_Examples
-  * @{
-  */
+#include <stdio.h>
 
-/** @addtogroup IO_Toggle
-  * @{
-  */ 
 
-/* Private typedef -----------------------------------------------------------*/
 GPIO_InitTypeDef  GPIO_InitStructure;
 
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
 void Delay(__IO uint32_t nCount);
-/* Private functions ---------------------------------------------------------*/
 
+
+//Firmware calls to 2.032.
+int (*spiflash_read)(char *dst, long adr, long len) = 0x0802fd83;
 
 /**
   * @brief  Delay Function.
@@ -117,6 +87,78 @@ static void red_led(int on) {
   }
 }
 
+//Must be const, because globals will be wacked.
+//const wchar_t mfgstr[]=L"Travis KK4VCZ";
+const char mfgstr[]="Travis Goodspeed KK4VCZ"; //"\x1c\x03T\0r\0a\0v\0i\0s\0 \0K\0K\x004\0V\0C\0Z\0";
+
+/* This copies a character string into a USB Descriptor string, which
+   is a UTF16 little-endian string preceeded by a one-byte length and
+   a byte of 0x03. */
+const char *loadusbstr(char *usbstring,
+		       char *newstring,
+		       long *len){
+  int i=0;
+  *len=2;
+  
+  usbstring[1]=3;//Type
+
+  while(newstring[i]){
+    usbstring[2+2*i]=newstring[i];//The character.
+    usbstring[3+2*i]=0;           //The null byte.
+    i++;
+  }
+  *len=2*i+2;
+  usbstring[0]=*len;
+  return usbstring;
+}
+
+
+//const 
+char hexes[]="0123456789abcdef"; //Needs to be const for problems.
+
+/* This writes a 32-bit hexadecimal value into a human-readable
+   string.  We do it manually to avoid heap operations. */
+void strhex(char *string, long value){
+  char b;
+  for(int i=0;i<4;i++){
+    b=value>>(24-i*8);
+    string[2*i]=hexes[(b>>4)&0xF];
+    string[2*i+1]=hexes[b&0xF];
+  }
+}
+
+const char *getmfgstr(int speed, long *len){
+  //This will be turned off by another thread,
+  //but when we call it often the light becomes visible.
+  green_led(1);
+  
+  static long adr=0; //This address is known to be free.
+  long val;
+  char *usbstring=(char*) 0x2001c080;
+  char buffer[]="@________ : ________";
+  
+  //Read four bytes from SPI Flash.
+  spiflash_read(&val,adr,4);
+  
+  //Print them into the manufacturer string.
+  strhex(buffer+1, adr);
+  strhex(buffer+12, val);
+  
+  //Look forward a bit.
+  adr+=4;
+  
+  //Return the string as our value.
+  return loadusbstr(usbstring,buffer,len);
+}
+
+void wipe_mem(){
+  long *start=(long*) 0x10000000;
+  long *end=(long*)   0x10010000;
+  while(start<end)
+    *start++=0xdeadbeef;
+}
+
+
 
 
 /**
@@ -133,6 +175,8 @@ int main(void)
         system_stm32f4xx.c file
      */
   
+  //Initialize RAM to zero, to figure out what's free later.
+  //wipe_mem();
   
   led_setup();
   
@@ -160,6 +204,10 @@ int main(void)
   
   //Done with the blinking, so start the radio application.
   abort_to_mfgr_app();
+
+  //These never get run, but we call them anyways to keep them in the
+  //binary.
+  getmfgstr(0,&main);
 }
 
 

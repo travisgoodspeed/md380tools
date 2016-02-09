@@ -12,6 +12,7 @@ PROJ_NAME=main
 
 CC=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
+OBJDUMP=arm-none-eabi-objdump
 
 CFLAGS  = -g -O2 -Wall -Tmd380_applet.ld 
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
@@ -63,10 +64,11 @@ $(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4
 #	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
-
+	$(OBJDUMP) -t main.elf >main.img.sym
 
 
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.bin *.elf *.hex *~
+	rm -f *.img *.bin *.elf *.hex *~ *.sym
+
 
