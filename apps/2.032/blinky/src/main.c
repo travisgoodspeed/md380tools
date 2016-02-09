@@ -1,49 +1,16 @@
-/**
-  ******************************************************************************
-  * @file    IO_Toggle/main.c 
-  * @author  MCD Application Team
-  * @version V1.0.0
-  * @date    19-September-2011
-  * @brief   Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-  *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************  
-  */ 
-
-/* Includes ------------------------------------------------------------------*/
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
-
 #include <stdio.h>
 
-/** @addtogroup STM32F4_Discovery_Peripheral_Examples
-  * @{
-  */
 
-/** @addtogroup IO_Toggle
-  * @{
-  */ 
-
-/* Private typedef -----------------------------------------------------------*/
 GPIO_InitTypeDef  GPIO_InitStructure;
 
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
 void Delay(__IO uint32_t nCount);
-/* Private functions ---------------------------------------------------------*/
 
+
+//Firmware calls to 2.032.
+int (*spiflash_read)(char *dst, long adr, long len) = 0x0802fd83;
 
 /**
   * @brief  Delay Function.
@@ -165,28 +132,20 @@ const char *getmfgstr(int speed, long *len){
   //but when we call it often the light becomes visible.
   green_led(1);
   
-  //Only buffer that we know is free.
-  //This is used by the MD380 firmware.
-  //long *adr=(long*) 0x20004834; //Hope this adr is free.
-  long *adr=(long*) 0x2001fffc; //This address is known to be free.
-  long *val;
+  static long adr=0; //This address is known to be free.
+  long val;
   char *usbstring=(char*) 0x2001c080;
   char buffer[]="@________ : ________";
   
-  if(*adr&0x3 || *adr<0x10000000 || *adr>0x10030000)
-    *adr=0x10000000;
+  //Read four bytes from SPI Flash.
+  spiflash_read(&val,adr,4);
   
-  val=(long*) *adr;
+  //Print them into the manufacturer string.
+  strhex(buffer+1, adr);
+  strhex(buffer+12, val);
   
-  //Can we overwrite it?
-  //*val=0xcafebabe;
-  
-  strhex(buffer+1,(long) *adr);
-  strhex(buffer+12,(long) *val);
-
-
-  adr[0]+=4;
-  
+  //Look forward a bit.
+  adr+=4;
   
   //Return the string as our value.
   return loadusbstr(usbstring,buffer,len);
@@ -198,6 +157,9 @@ void wipe_mem(){
   while(start<end)
     *start++=0xdeadbeef;
 }
+
+
+
 
 /**
   * @brief  Main program
