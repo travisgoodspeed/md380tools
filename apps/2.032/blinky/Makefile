@@ -30,7 +30,7 @@ CFLAGS += -Iinc -Ilib -Ilib/inc
 CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals 
 
 SRCS += lib/startup_stm32f4xx.s # add startup file to build
-#SRCS += src/rcc.c
+SRCS += src/md380-2.032.c             # MD380 library functions.
 
 OBJS = $(SRCS:.c=.o)
 
@@ -59,7 +59,6 @@ wrapped: lib proj
 	../../../md380-fw --wrap experiment.img experiment.bin
 flash: wrapped
 	../../../md380-dfu upgrade experiment.bin
-
 
 $(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4

@@ -3,23 +3,15 @@
 
 #include <stdio.h>
 
+#include "md380.h"
+
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
 void Delay(__IO uint32_t nCount);
 
 
-//Firmware calls to 2.032.
-const int (*spiflash_read)(char *dst, long adr, long len) = 0x0802fd83;
-const void (*gfx_drawtext)(char *str,          //16-bit, little endian.
-		     short sx, short sy, //Source coords, maybe?
-		     short x, short y,   //X and Y position
-		     int maxlen) = 0x0800D88B;
-const void (*gfx_drawbmp)(char *bmp,
-			  int idx,
-			  uint64_t pos) = 0x08022887;
 
-const char *welcomebmp=0x080f9ca8;
 /**
   * @brief  Delay Function.
   * @param  nCount:specifies the Delay time length.
@@ -186,7 +178,7 @@ void wipe_mem(){
 }
 
 
-void drawtext(char *text,
+void drawtext(wchar_t *text,
 	      int x, int y){
   //static char buf[512];
   //str2wide(buf,text);
@@ -267,7 +259,7 @@ int main(void)
 
   //These never get run, but we call them anyways to keep them in the
   //binary.
-  getmfgstr(0,&main);
+  getmfgstr(0,(void*) NULL);
   demo();
 }
 
