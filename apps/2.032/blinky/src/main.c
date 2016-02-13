@@ -194,9 +194,9 @@ void drawtext(wchar_t *text,
 void demo(){
   char *botlinetext=(char*) 0x2001cee0;
   
-  drawtext(L"MD380Tools",
+  drawtext(L"MD380Tools ",
 	   160,20);
-  drawtext(L"by KK4VCZ",
+  drawtext(L"by KK4VCZ  ",
 	   160,60);
   drawtext(L"and Friends",
 	   160,100);
