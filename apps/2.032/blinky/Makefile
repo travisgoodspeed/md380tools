@@ -48,7 +48,7 @@ experiment.img:
 	cp ../../../patches/2.032/experiment.img ./
 
 
-lib:
+lib: src/version.h
 	$(MAKE) -C lib
 
 proj: 	$(PROJ_NAME).elf experiment.img
@@ -66,9 +66,11 @@ $(PROJ_NAME).elf: $(SRCS)
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
 	$(OBJDUMP) -t main.elf >main.img.sym
 
-
+src/version.h: src/*.c src/*.h
+	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.bin *.elf *.hex *~ *.sym
+	rm -f *.img *.bin *.elf *.hex *~ *.sym src/*~ src/version.h
+
 
 

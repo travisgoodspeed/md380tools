@@ -116,7 +116,8 @@ if __name__== '__main__':
                     sapplet.getadr("getmfgstr"));
     merger.hookstub(0x08021894, #startup_botline
                     sapplet.getadr("demo"));
-    
+    merger.hookstub(0x080154de,
+                    sapplet.getadr("loadfirmwareversion"));
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
           sys.argv[1],

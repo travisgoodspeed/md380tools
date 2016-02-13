@@ -8,8 +8,10 @@
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
 #include <stdio.h>
+#include <string.h>
 
 #include "md380.h"
+#include "version.h"
 
 
 GPIO_InitTypeDef  GPIO_InitStructure;
@@ -152,6 +154,7 @@ void strhex(char *string, long value){
   }
 }
 
+
 const char *getmfgstr(int speed, long *len){
   //This will be turned off by another thread,
   //but when we call it often the light becomes visible.
@@ -176,6 +179,12 @@ const char *getmfgstr(int speed, long *len){
   return loadusbstr(usbstring,buffer,len);
 }
 
+void loadfirmwareversion(){
+  wchar_t *buf=(wchar_t*) 0x2001cc0c;
+  memcpy(buf,VERSIONDATE,22);
+  return;
+}
+
 void wipe_mem(){
   long *start=(long*) 0x10000000;
   long *end=(long*)   0x10010000;
@@ -186,8 +195,6 @@ void wipe_mem(){
 
 void drawtext(wchar_t *text,
 	      int x, int y){
-  //static char buf[512];
-  //str2wide(buf,text);
   gfx_drawtext(text,
 	       0,0,
 	       x,y,
@@ -269,25 +276,3 @@ int main(void)
   demo();
 }
 
-
-
-#ifdef  USE_FULL_ASSERT
-
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-  /* Infinite loop */
-  while (1)
-  {
-  }
-}
-#endif
