@@ -72,7 +72,7 @@ class Merger():
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
         self.assertbyte(adr,new&0xFF);
         self.assertbyte(adr+1,(new>>8)&0xFF);
-    def hook(self, adr, handler):
+    def hookstub(self, adr, handler):
         """Hooks a function by placing an unconditional branch at adr to
            handler.  The recipient function must have an identical calling
            convention. """
@@ -80,10 +80,19 @@ class Merger():
         handler = handler | 1; #Destination address must be odd.
         print "I ought to be hooking a branch at %08x to %08x." % (adr,handler);
         
+        #FIXME This clobbers r0, should use a different register.
         self.sethword(adr,0x4801); # ldr r0, [pc, 4]
         self.sethword(adr+2,0x4700); # bx r0
-        self.setword(adr+6,handler); # bx r0
-        
+        self.sethword(adr+4,0x4600); #NOP
+        self.sethword(adr+6,0x4600); #NOP, might be overwritten
+        if adr&2>0:
+            self.setword(adr+6,handler); # bx r0
+        else:
+            self.setword(adr+8,handler); # bx r0
+    def hookbl(self,adr,handler):
+        """Hooks a function by replacing a relative BL."""
+        print "UH OH"
+        sys.exit(1);
 
 if __name__== '__main__':
     print "Merging an applet."
@@ -103,8 +112,10 @@ if __name__== '__main__':
     sapplet=Symbols("%s.sym"%sys.argv[2]);
     
     #Patch some symbols
-    merger.hook(0x080969de,
-                sapplet.getadr("getmfgstr"));
+    merger.hookstub(0x080969de,    #USB manufacturer string handler function.
+                    sapplet.getadr("getmfgstr"));
+    merger.hookstub(0x08021894, #startup_botline
+                    sapplet.getadr("demo"));
     
     print "Merging %s into %s at %08x" % (
           sys.argv[2],

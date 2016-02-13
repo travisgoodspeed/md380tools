@@ -10,8 +10,16 @@ void Delay(__IO uint32_t nCount);
 
 
 //Firmware calls to 2.032.
-int (*spiflash_read)(char *dst, long adr, long len) = 0x0802fd83;
+const int (*spiflash_read)(char *dst, long adr, long len) = 0x0802fd83;
+const void (*gfx_drawtext)(char *str,          //16-bit, little endian.
+		     short sx, short sy, //Source coords, maybe?
+		     short x, short y,   //X and Y position
+		     int maxlen) = 0x0800D88B;
+const void (*gfx_drawbmp)(char *bmp,
+			  int idx,
+			  uint64_t pos) = 0x08022887;
 
+const char *welcomebmp=0x080f9ca8;
 /**
   * @brief  Delay Function.
   * @param  nCount:specifies the Delay time length.
@@ -25,7 +33,8 @@ void Delay(__IO uint32_t nCount)
 }
 
 void sleep(__IO uint32_t ms){
-  Delay(0x3FFFFF);
+  //Delay(0x3FFFFF);
+  Delay(0x3fff*ms);
 }
 
 
@@ -112,6 +121,24 @@ const char *loadusbstr(char *usbstring,
   return usbstring;
 }
 
+/* This copies a character string into a USB Descriptor string, which
+   is a UTF16 little-endian string preceeded by a one-byte length and
+   a byte of 0x03. */
+const char *str2wide(char *widestring,
+		     char *src){
+  int i=0;
+  
+  while(src[i]){
+    widestring[2*i]=src[i];//The character.
+    widestring[2*i+1]=0;           //The null byte.
+    i++;
+  }
+  widestring[2*i]=0;
+  widestring[2*i+1]=0;
+  
+  return widestring;
+}
+
 
 //const 
 char hexes[]="0123456789abcdef"; //Needs to be const for problems.
@@ -159,6 +186,36 @@ void wipe_mem(){
 }
 
 
+void gfx_drawascii(char *text,
+		   int x, int y){
+  static char buf[512];
+  str2wide(buf,text);
+  gfx_drawtext(buf,
+	       0,0,
+	       x,y,
+	       strlen(text));
+	       
+}
+
+/* Displays a startup demo on the device's screen, including some of
+   the setting information and a picture or two. */
+void demo(){
+  char *botlinetext=(char*) 0x2001cee0;
+  
+  gfx_drawascii("MD380Tools",
+		160,20);
+  gfx_drawascii("by KK4VCZ",
+		160,60);
+  sleep(1000);
+  
+  for(int i=0;i<0x60;i+=3){
+    gfx_drawbmp(welcomebmp,0,i);
+    sleep(30);
+  }
+  
+  //Restore the bottom line of text before we return.
+  spiflash_read(botlinetext, 0x2054, 20);
+}
 
 
 /**
@@ -181,7 +238,7 @@ int main(void)
   led_setup();
   
   
-  for(int i=0; i<5; i++) {
+  for(int i=0; i<1; i++) {
 
     //red_led(1);
     green_led(1);
@@ -196,9 +253,9 @@ int main(void)
     red_led(1);
 
     sleep(500);
-
+    
     red_led(0);
-
+    
     sleep(500);
   }
   
@@ -208,6 +265,7 @@ int main(void)
   //These never get run, but we call them anyways to keep them in the
   //binary.
   getmfgstr(0,&main);
+  demo();
 }
 
 
