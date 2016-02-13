@@ -1,3 +1,9 @@
+/*! \file main.c
+  \brief MD380Tools Main Application
+  
+*/
+
+
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
@@ -285,13 +291,3 @@ void assert_failed(uint8_t* file, uint32_t line)
   }
 }
 #endif
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
-
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
