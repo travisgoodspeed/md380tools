@@ -186,14 +186,14 @@ void wipe_mem(){
 }
 
 
-void gfx_drawascii(char *text,
-		   int x, int y){
-  static char buf[512];
-  str2wide(buf,text);
-  gfx_drawtext(buf,
+void drawtext(char *text,
+	      int x, int y){
+  //static char buf[512];
+  //str2wide(buf,text);
+  gfx_drawtext(text,
 	       0,0,
 	       x,y,
-	       strlen(text));
+	       15); //strlen(text));
 	       
 }
 
@@ -202,10 +202,13 @@ void gfx_drawascii(char *text,
 void demo(){
   char *botlinetext=(char*) 0x2001cee0;
   
-  gfx_drawascii("MD380Tools",
-		160,20);
-  gfx_drawascii("by KK4VCZ",
-		160,60);
+  drawtext(L"MD380Tools",
+	   160,20);
+  drawtext(L"by KK4VCZ",
+	   160,60);
+  drawtext(L"and Friends",
+	   160,100);
+  
   sleep(1000);
   
   for(int i=0;i<0x60;i+=3){

@@ -17,6 +17,7 @@ OBJDUMP=arm-none-eabi-objdump
 CFLAGS  = -g -O2 -Wall -Tmd380_applet.ld 
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS += -fshort-wchar
 
 ###################################################
 
