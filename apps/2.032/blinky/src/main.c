@@ -13,6 +13,7 @@
 #include "md380.h"
 #include "version.h"
 #include "tooldfu.h"
+#include "config.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -164,10 +165,35 @@ void strhex(char *string, long value){
   }
 }
 
+/* This writes a 32-bit hexadecimal value into a human-readable
+   string.  We do it manually to avoid heap operations. */
+void wstrhex(wchar_t *string, long value){
+  char b;
+  for(int i=0;i<4;i++){
+    b=value>>(24-i*8);
+    string[2*i]=hexes[(b>>4)&0xF];
+    string[2*i+1]=hexes[b&0xF];
+  }
+}
+
+
+//TODO Move this to the right place.
+int (*usb_upld_handle)(int, char*, int, int)=0x0808d3d9;//2.032
+
+int usb_upld_hook(int iface, char *packet, int bRequest, int something){
+  /* This hooks the USB Device Firmware Update upload function,
+     so that we can transfer data out of the radio without asking
+     the host's permission.
+  */
+  
+  //Return control the original function.
+  return usb_upld_handle(iface, packet, bRequest, something);
+}
 
 //TODO Move these to the appropriate headers.
 int (*usb_dnld_handle)()=0x0808ccbf;//2.032
 int *dnld_tohook=(int*) 0x20000e9c;//2.032
+
 
 int usb_dnld_hook(){
   /* These are global buffers to the packet data, its length, and the
@@ -210,8 +236,9 @@ int usb_dnld_hook(){
     *blockadr=0;
     *packetlen=0;
     return 0;
-
   }else{
+    /* For all other blocks, we default to the internal handler.
+     */
     return usb_dnld_handle();
   }
 }
