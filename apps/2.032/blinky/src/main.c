@@ -12,7 +12,7 @@
 
 #include "md380.h"
 #include "version.h"
-
+#include "tooldfu.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -35,6 +35,16 @@ void Delay(__IO uint32_t nCount)
 void sleep(__IO uint32_t ms){
   //Delay(0x3FFFFF);
   Delay(0x3fff*ms);
+}
+
+
+void drawtext(wchar_t *text,
+	      int x, int y){
+  gfx_drawtext(text,
+	       0,0,
+	       x,y,
+	       15); //strlen(text));
+	       
 }
 
 
@@ -155,6 +165,66 @@ void strhex(char *string, long value){
 }
 
 
+//TODO Move these to the appropriate headers.
+int (*usb_dnld_handle)()=0x0808ccbf;//2.032
+int *dnld_tohook=(int*) 0x20000e9c;//2.032
+
+int usb_dnld_hook(){
+  /* These are global buffers to the packet data, its length, and the
+     block address that it runs to.  The stock firmware has a bug
+     in that it assumes the packet size is always 2048 bytes.
+  */
+  static char *packet=(char*) 0x200199f0;//2.032
+  static int *packetlen=(int*) 0x2001d20c;//2.032
+  static int *blockadr=(int*) 0x2001d208;//2.032
+  static char *dfu_state=(char*) 0x2001d405;
+  
+  char *thingy=(char*) 0x2001d276;
+  char *thingy2=(char*) 0x2001d041;
+  
+  /* DFU transfers begin at block 2, and special commands hook block
+     0.  We'll use block 1, because it handily fits in the gap without
+     breaking backward compatibility with the older code.
+   */
+  if(*blockadr==1){
+    switch(packet[0]){
+    case TDFU_PRINT:
+      drawtext((wchar_t *) (packet+3),
+	       //L"Missing.",
+	       packet[1],packet[2]);
+      break;
+    }
+    
+    /*
+    //No idea why.
+    thingy[0]=0;//0,0 for successful write
+    thingy[1]=0;
+    */
+    thingy2[0]=0;
+    thingy2[1]=0;
+    thingy2[2]=0;
+    thingy2[3]=3;
+    *dfu_state=3;
+    
+    
+    *blockadr=0;
+    *packetlen=0;
+    return 0;
+
+  }else{
+    return usb_dnld_handle();
+  }
+}
+
+//! Hooks the USB DFU DNLD event handler in RAM.
+void hookusb(){
+  //Be damned sure to call this *after* the table has been
+  //initialized.
+  *dnld_tohook= usb_dnld_hook;
+  return;
+}
+
+
 const char *getmfgstr(int speed, long *len){
   //This will be turned off by another thread,
   //but when we call it often the light becomes visible.
@@ -181,6 +251,7 @@ const char *getmfgstr(int speed, long *len){
 
 void loadfirmwareversion(){
   wchar_t *buf=(wchar_t*) 0x2001cc0c;
+  hookusb();
   memcpy(buf,VERSIONDATE,22);
   return;
 }
@@ -193,19 +264,13 @@ void wipe_mem(){
 }
 
 
-void drawtext(wchar_t *text,
-	      int x, int y){
-  gfx_drawtext(text,
-	       0,0,
-	       x,y,
-	       15); //strlen(text));
-	       
-}
 
 /* Displays a startup demo on the device's screen, including some of
    the setting information and a picture or two. */
 void demo(){
   char *botlinetext=(char*) 0x2001cee0;
+  
+  hookusb();
   
   drawtext(L"MD380Tools ",
 	   160,20);
