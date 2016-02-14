@@ -694,8 +694,8 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'test':
                 import usb.core
                 dfu = init_dfu()
-                dfu.md380_custom(0x91,0x01); #Programming Mode
-                dfu.md380_custom(0x91,0x01); #Programming Mode
+                #dfu.md380_custom(0x91,0x01); #Programming Mode
+                #dfu.md380_custom(0x91,0x01); #Programming Mode
                 test(dfu);
             elif sys.argv[1] == 'reboot':
                 import usb.core
@@ -703,7 +703,7 @@ if __name__ == '__main__':
                 dfu.md380_custom(0x91,0x01); #Programming Mode
                 dfu.md380_custom(0x91,0x01); #Programming Mode
                 #dfu.md380_custom(0x91,0x01); #Programming Mode
-                dfu.drawtext("Rebooting",160,50);
+                #dfu.drawtext("Rebooting",160,50);
                 dfu.md380_reboot()
             elif sys.argv[1] == 'abort':
                 import usb.core
