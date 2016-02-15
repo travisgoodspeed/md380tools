@@ -47,6 +47,17 @@ class Merger():
         """Asserts that a byte has a given value."""
         assert self.getbyte(adr)==val;
         return;
+    def getword(self,adr):
+        """Reads a byte from the firmware address."""
+        w=(
+            self.bytes[adr-self.offset]+
+            (self.bytes[adr-self.offset+1]<<8)+
+            (self.bytes[adr-self.offset+2]<<16)+
+            (self.bytes[adr-self.offset+3]<<24)
+            );
+            
+        return w;
+    
     def setword(self, adr, new, old=None):
         """Patches a 32-bit word from the old value to the new value."""
         if old!=None:
@@ -72,7 +83,7 @@ class Merger():
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
         self.assertbyte(adr,new&0xFF);
         self.assertbyte(adr+1,(new>>8)&0xFF);
-    def hook(self, adr, handler):
+    def hookstub(self, adr, handler):
         """Hooks a function by placing an unconditional branch at adr to
            handler.  The recipient function must have an identical calling
            convention. """
@@ -80,10 +91,44 @@ class Merger():
         handler = handler | 1; #Destination address must be odd.
         print "I ought to be hooking a branch at %08x to %08x." % (adr,handler);
         
+        #FIXME This clobbers r0, should use a different register.
         self.sethword(adr,0x4801); # ldr r0, [pc, 4]
         self.sethword(adr+2,0x4700); # bx r0
-        self.setword(adr+6,handler); # bx r0
+        self.sethword(adr+4,0x4600); #NOP
+        self.sethword(adr+6,0x4600); #NOP, might be overwritten
+        if adr&2>0:
+            self.setword(adr+6,handler); # bx r0
+        else:
+            self.setword(adr+8,handler); # bx r0
+    def calcbl(self,adr,target):
+        """Calculates the Thumb code to branch to a target."""
+        offset=target-adr;
+        #print "offset=%08x" % offset;
+        offset=offset-4;    #PC points to the next ins.
+        offset=(offset>>1); #LSBit is ignored.
+        hi=0xF000 | ((offset&0xfff100)>>11); #Hi address setter, but at lower adr.
+        lo=0xF800 | (offset&0x7ff);            #Low adr setter goes next.
+        #print "%04x %04x" % (hi,lo);
+        word=((lo<<16) | hi);
+        #print "%08x" % word
+        return word;
+
+    def hookbl(self,adr,handler,oldhandler=None):
+        """Hooks a function by replacing a 32-bit relative BL."""
         
+        print "I ought to be redirecting a bl at %08x to %08x." % (adr,handler);
+        
+        #TODO This is sometimes tricked by old data.
+        # Fix it by ensuring no old data.
+        #if oldhandler!=None:
+        #    #Verify the old handler.
+        #    if self.calcbl(adr,oldhandler)!=self.getword(adr):
+        #        print "The old handler looks wrong.";
+        #        print "Damn, we're in a tight spot!";
+        #        sys.exit(1);
+        
+        self.setword(adr,
+                     self.calcbl(adr,handler));
 
 if __name__== '__main__':
     print "Merging an applet."
@@ -103,9 +148,15 @@ if __name__== '__main__':
     sapplet=Symbols("%s.sym"%sys.argv[2]);
     
     #Patch some symbols
-    merger.hook(0x080969de,
-                sapplet.getadr("getmfgstr"));
-    
+    merger.hookstub(0x080969de,    #USB manufacturer string handler function.
+                    sapplet.getadr("getmfgstr"));
+    merger.hookstub(0x08021894, #startup_botline
+                    sapplet.getadr("demo"));
+    merger.hookstub(0x080154de,
+                    sapplet.getadr("loadfirmwareversion"));
+    merger.hookbl(0x0808cc36, #Call to usb_dfu_upload().
+                  sapplet.getadr("usb_upld_hook"),
+                  0x0808d3d8); #Old handler adr.
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
           sys.argv[1],

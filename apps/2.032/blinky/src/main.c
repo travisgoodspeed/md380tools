@@ -1,16 +1,25 @@
+/*! \file main.c
+  \brief MD380Tools Main Application
+  
+*/
+
+
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
 #include <stdio.h>
+#include <string.h>
 
+#include "md380.h"
+#include "version.h"
+#include "tooldfu.h"
+#include "config.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
 void Delay(__IO uint32_t nCount);
 
 
-//Firmware calls to 2.032.
-int (*spiflash_read)(char *dst, long adr, long len) = 0x0802fd83;
 
 /**
   * @brief  Delay Function.
@@ -25,7 +34,18 @@ void Delay(__IO uint32_t nCount)
 }
 
 void sleep(__IO uint32_t ms){
-  Delay(0x3FFFFF);
+  //Delay(0x3FFFFF);
+  Delay(0x3fff*ms);
+}
+
+
+void drawtext(wchar_t *text,
+	      int x, int y){
+  gfx_drawtext(text,
+	       0,0,
+	       x,y,
+	       15); //strlen(text));
+	       
 }
 
 
@@ -112,6 +132,24 @@ const char *loadusbstr(char *usbstring,
   return usbstring;
 }
 
+/* This copies a character string into a USB Descriptor string, which
+   is a UTF16 little-endian string preceeded by a one-byte length and
+   a byte of 0x03. */
+const char *str2wide(char *widestring,
+		     char *src){
+  int i=0;
+  
+  while(src[i]){
+    widestring[2*i]=src[i];//The character.
+    widestring[2*i+1]=0;           //The null byte.
+    i++;
+  }
+  widestring[2*i]=0;
+  widestring[2*i+1]=0;
+  
+  return widestring;
+}
+
 
 //const 
 char hexes[]="0123456789abcdef"; //Needs to be const for problems.
@@ -126,6 +164,114 @@ void strhex(char *string, long value){
     string[2*i+1]=hexes[b&0xF];
   }
 }
+
+/* This writes a 32-bit hexadecimal value into a human-readable
+   string.  We do it manually to avoid heap operations. */
+void wstrhex(wchar_t *string, long value){
+  char b;
+  for(int i=0;i<4;i++){
+    b=value>>(24-i*8);
+    string[2*i]=hexes[(b>>4)&0xF];
+    string[2*i+1]=hexes[b&0xF];
+  }
+}
+
+
+//TODO Move this to the right place.
+
+//! Handle to the original (unhooked) upload handler.
+int (*usb_upld_handle)(void*, char*, int, int)=0x0808d3d9;//2.032
+//! This returns a USB packet to the host from the upload handler.
+int (*usb_send_packet)(void*, char*, uint16_t)=0x080577af;//2.032
+
+int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
+  /* This hooks the USB Device Firmware Update upload function,
+     so that we can transfer data out of the radio without asking
+     the host's permission.
+  */
+  
+  //Really ought to do this with a struct instead of casts.
+  uint16_t blockadr = *(short*)(packet+2);
+  uint16_t index = *(short*)(packet+4);     //Generally unused.
+  uint16_t length= *(short*)(packet+6);
+  
+  /* The DFU protocol specifies reads from block 0 as something
+     special, but it doesn't say way to do about an address of 1.
+     Shall I take it over?  Don't mind if I do!
+   */
+  if(blockadr==1){
+    switch(index){
+    case 0:
+      //    case TDFU_PEEK://0001, gives len from current working address.
+      usb_send_packet(iface, (char*) 0x2001d098, length);
+      break;
+    default:
+      usb_send_packet(iface, packet, length);
+      break;
+    }
+    //It's exceedingly rude to return without sending a packet.  Don't
+    //be rude!
+    return 0;
+  }
+  
+  //Return control the original function.
+  return usb_upld_handle(iface, packet, bRequest, something);
+}
+
+//TODO Move these to the appropriate headers.
+int (*usb_dnld_handle)()=0x0808ccbf;//2.032
+int *dnld_tohook=(int*) 0x20000e9c;//2.032
+
+
+int usb_dnld_hook(){
+  /* These are global buffers to the packet data, its length, and the
+     block address that it runs to.  The stock firmware has a bug
+     in that it assumes the packet size is always 2048 bytes.
+  */
+  static char *packet=(char*) 0x200199f0;//2.032
+  static int *packetlen=(int*) 0x2001d20c;//2.032
+  static int *blockadr=(int*) 0x2001d208;//2.032
+  static char *dfu_state=(char*) 0x2001d405;
+  
+  char *thingy=(char*) 0x2001d276;
+  char *thingy2=(char*) 0x2001d041;
+  
+  /* DFU transfers begin at block 2, and special commands hook block
+     0.  We'll use block 1, because it handily fits in the gap without
+     breaking backward compatibility with the older code.
+   */
+  if(*blockadr==1){
+    switch(packet[0]){
+    case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
+      drawtext((wchar_t *) (packet+3),
+	       packet[1],packet[2]);
+      break;
+    }
+    
+    thingy2[0]=0;
+    thingy2[1]=0;
+    thingy2[2]=0;
+    thingy2[3]=3;
+    *dfu_state=3;
+    
+    *blockadr=0;
+    *packetlen=0;
+    return 0;
+  }else{
+    /* For all other blocks, we default to the internal handler.
+     */
+    return usb_dnld_handle();
+  }
+}
+
+//! Hooks the USB DFU DNLD event handler in RAM.
+void hookusb(){
+  //Be damned sure to call this *after* the table has been
+  //initialized.
+  *dnld_tohook= usb_dnld_hook;
+  return;
+}
+
 
 const char *getmfgstr(int speed, long *len){
   //This will be turned off by another thread,
@@ -151,6 +297,13 @@ const char *getmfgstr(int speed, long *len){
   return loadusbstr(usbstring,buffer,len);
 }
 
+void loadfirmwareversion(){
+  wchar_t *buf=(wchar_t*) 0x2001cc0c;
+  hookusb();
+  memcpy(buf,VERSIONDATE,22);
+  return;
+}
+
 void wipe_mem(){
   long *start=(long*) 0x10000000;
   long *end=(long*)   0x10010000;
@@ -159,6 +312,31 @@ void wipe_mem(){
 }
 
 
+
+/* Displays a startup demo on the device's screen, including some of
+   the setting information and a picture or two. */
+void demo(){
+  char *botlinetext=(char*) 0x2001cee0;
+  
+  hookusb();
+  
+  drawtext(L"MD380Tools ",
+	   160,20);
+  drawtext(L"by KK4VCZ  ",
+	   160,60);
+  drawtext(L"and Friends",
+	   160,100);
+  
+  sleep(1000);
+  
+  for(int i=0;i<0x60;i+=3){
+    gfx_drawbmp(welcomebmp,0,i);
+    sleep(30);
+  }
+  
+  //Restore the bottom line of text before we return.
+  spiflash_read(botlinetext, 0x2054, 20);
+}
 
 
 /**
@@ -181,7 +359,7 @@ int main(void)
   led_setup();
   
   
-  for(int i=0; i<5; i++) {
+  for(int i=0; i<1; i++) {
 
     //red_led(1);
     green_led(1);
@@ -196,9 +374,9 @@ int main(void)
     red_led(1);
 
     sleep(500);
-
+    
     red_led(0);
-
+    
     sleep(500);
   }
   
@@ -207,38 +385,7 @@ int main(void)
 
   //These never get run, but we call them anyways to keep them in the
   //binary.
-  getmfgstr(0,&main);
+  getmfgstr(0,(void*) NULL);
+  demo();
 }
 
-
-
-#ifdef  USE_FULL_ASSERT
-
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-  /* Infinite loop */
-  while (1)
-  {
-  }
-}
-#endif
-
-/**
-  * @}
-  */ 
-
-/**
-  * @}
-  */ 
-
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

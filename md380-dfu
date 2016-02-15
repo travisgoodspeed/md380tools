@@ -130,12 +130,13 @@ Status.create_from_map()
 
 class DFU(object):
     verbose=False;
-    def __init__(self, device,alt):
+    def __init__(self, device, alt):
         device.set_interface_altsetting(interface = 0, alternate_setting = alt)
         self._device = device
 
     def detach(self):
         self._device.ctrl_transfer(0x21, Request.DETACH, 0, 0, None)
+    
 
     def download(self, block_number, data):
         self._device.ctrl_transfer(0x21, Request.DNLOAD, block_number, 0, data)
@@ -187,6 +188,7 @@ class DFU(object):
             print "Failed to send custom %02x %02x." % (a,b);
             return False;
         return True;
+    
     def md380_reboot(self):
         """Sends the MD380's secret reboot command.""";
         a=0x91;
@@ -198,12 +200,12 @@ class DFU(object):
             pass;
         return True;
 
-    def upload(self, block_number, length):
+    def upload(self, block_number, length, index=0):
         if self.verbose: print "Fetching block 0x%x."%block_number
         data = self._device.ctrl_transfer(0xA1, #request type
                                           Request.UPLOAD, #request
                                           block_number, #wValue
-                                          0,            #index
+                                          index,            #index
                                           length)       #length
         return data
     
@@ -266,6 +268,30 @@ class DFU(object):
 
     def _wait(self):
         time.sleep(0.1)
+    
+    def widestr(self,str):
+        tr="";
+        for c in str:
+            tr=tr+c+"\0";
+        return tr+"\0\0";
+
+    def drawtext(self,str,a,b):
+        """Sends a new MD380 command to draw text on the screen.."""
+        cmd=0x80;
+        a=a&0xFF
+        b=b&0xFF
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd)+chr(a)+chr(b)+self.widestr(str))
+        self.get_status(); #this changes state
+        time.sleep(0.1);
+        status=self.get_status(); #this gets the status
+        if status[2]==State.dfuDNLOAD_IDLE:
+            if self.verbose: print "Sent custom %02x %02x." % (a,b);
+            self.enter_dfu_mode();
+        else:
+            print "Failed to send custom %02x %02x." % (a,b);
+            return False;
+        print "Done.";
+        return True;
 
 def download(dfu, data, flash_address):
     block_size = 1 << 8
@@ -353,33 +379,31 @@ def hexdump(string):
     print buf;
 
 def test(dfu):
-    """I'm trying to get this to dump code memory.  Seems stuck in SPI Flash region."""
-    #dfu.md380_custom(0x91,0x01); #Programming Mode
-    #dfu.md380_custom(0x91,0x31); #Mystery!
-    #dfu.md380_custom(0x91,0x02); #Mystery!
- 
-    #dfu.set_address(0x0800d000);
-    
-    block_size=1024
-    try:
-        for block_number in range(2,5):
-            data = dfu.upload(block_number, block_size)
-            status, timeout, state, discarded = dfu.get_status()
-            print "Status is: %x %x %x %x" % (status, timeout, state, discarded);
-            #sys.stdout.write('.')
-            #sys.stdout.flush()
-            if len(data) == block_size:
-                #f.write(data)
-                hexdump(data);
-            else:
-                raise Exception('Upload failed to read full block.  Got %i bytes.' % len(data))
-            time.sleep(.1)
-        #dfu.md380_reboot()
-    finally:
-        print "Done."
-
+    """Goof off function, subject to change at any time."""
+    dfu.drawtext("Ugly code works!",160,50);
+    old1=0;
+    old2=0;
+    while 1:
+        data=dfu.upload(1,16,0);#Peek sixteen bytes.
+        llid0=(data[0]+
+               (data[1]<<8)+
+               (data[2]<<16)+
+               (data[3]<<24));
+        llid1=(data[4]+
+               (data[5]<<8)+
+               (data[6]<<16)+
+               (data[7]<<24));
+        llid2=(data[8]+
+               (data[9]<<8)+
+               (data[10]<<16)+
+               (data[11]<<24));
+        if old1!=llid1 or old2!=llid2:
+            old1=llid1;
+            old2=llid2;
+            print "DMR call from %i to %i." % (llid1,llid2);
+            sys.stdout.flush();
 def upload_bootloader(dfu,filename):
-    """I'm trying to get this to dump code memory.  Seems stuck in SPI Flash region."""
+    """Dumps the bootloader, but only on Mac."""
     #dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.
     
     # Bootloader stretches from 0x08000000 to 0x0800C000, but our
@@ -613,13 +637,16 @@ Dump the bootloader from Flash memory.
     md380-dfu readboot <filename.bin>
 
 
+
 Detach the bootloader and execute the application firmware:
     md380-dfu detach
 
 Close the bootloader session.
     md380-dfu reboot
 
-Modification of firmware is not yet supported, but will come soon.
+
+Upgrade to new firmware:
+    md380-dfu upgrade foo.bin
 """)
 
 if __name__ == '__main__':
@@ -687,10 +714,16 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'test':
                 import usb.core
                 dfu = init_dfu()
+                #dfu.md380_custom(0x91,0x01); #Programming Mode
+                #dfu.md380_custom(0x91,0x01); #Programming Mode
                 test(dfu);
             elif sys.argv[1] == 'reboot':
                 import usb.core
                 dfu = init_dfu()
+                dfu.md380_custom(0x91,0x01); #Programming Mode
+                dfu.md380_custom(0x91,0x01); #Programming Mode
+                #dfu.md380_custom(0x91,0x01); #Programming Mode
+                #dfu.drawtext("Rebooting",160,50);
                 dfu.md380_reboot()
             elif sys.argv[1] == 'abort':
                 import usb.core
