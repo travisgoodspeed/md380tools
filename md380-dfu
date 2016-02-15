@@ -381,6 +381,9 @@ def hexdump(string):
 def test(dfu):
     """Goof off function, subject to change at any time."""
     dfu.drawtext("Ugly code works!",160,50);
+    
+    #Set the target address to the list of DMR addresses.
+    dfu.set_address(0x2001d098);
     old1=0;
     old2=0;
     while 1:

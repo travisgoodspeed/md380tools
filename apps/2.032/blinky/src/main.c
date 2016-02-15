@@ -191,8 +191,14 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   */
   
   //Really ought to do this with a struct instead of casts.
+  
+  //This is 1 if we control it, 0 or >=2 if the old code should take it.
   uint16_t blockadr = *(short*)(packet+2);
-  uint16_t index = *(short*)(packet+4);     //Generally unused.
+
+  //Seems to be forced to zero.
+  uint16_t index = *(short*)(packet+4);
+
+  //We have to send this much.
   uint16_t length= *(short*)(packet+6);
   
   /* The DFU protocol specifies reads from block 0 as something
@@ -200,17 +206,10 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
      Shall I take it over?  Don't mind if I do!
    */
   if(blockadr==1){
-    switch(index){
-    case 0:
-      //    case TDFU_PEEK://0001, gives len from current working address.
-      usb_send_packet(iface, (char*) 0x2001d098, length);
-      break;
-    default:
-      usb_send_packet(iface, packet, length);
-      break;
-    }
-    //It's exceedingly rude to return without sending a packet.  Don't
-    //be rude!
+    usb_send_packet(iface,   //USB interface structure.
+		    //(char*) 0x2001d098,
+		    (char*) *((int*)0x2000112c), //TODO move to header. (usb_dfu_baseadr)
+		    length); //Length must match.
     return 0;
   }
   
