@@ -200,12 +200,12 @@ class DFU(object):
             pass;
         return True;
 
-    def upload(self, block_number, length):
+    def upload(self, block_number, length, index=0):
         if self.verbose: print "Fetching block 0x%x."%block_number
         data = self._device.ctrl_transfer(0xA1, #request type
                                           Request.UPLOAD, #request
                                           block_number, #wValue
-                                          0,            #index
+                                          index,            #index
                                           length)       #length
         return data
     
@@ -380,8 +380,28 @@ def hexdump(string):
 
 def test(dfu):
     """Goof off function, subject to change at any time."""
-    for y in range(50,160):
-        dfu.drawtext("Ugly code works!",160,y);
+    dfu.drawtext("Ugly code works!",160,50);
+    old1=0;
+    old2=0;
+    while 1:
+        data=dfu.upload(1,16,0);#Peek sixteen bytes.
+        llid0=(data[0]+
+               (data[1]<<8)+
+               (data[2]<<16)+
+               (data[3]<<24));
+        llid1=(data[4]+
+               (data[5]<<8)+
+               (data[6]<<16)+
+               (data[7]<<24));
+        llid2=(data[8]+
+               (data[9]<<8)+
+               (data[10]<<16)+
+               (data[11]<<24));
+        if old1!=llid1 or old2!=llid2:
+            old1=llid1;
+            old2=llid2;
+            print "DMR call from %i to %i." % (llid1,llid2);
+            sys.stdout.flush();
 def upload_bootloader(dfu,filename):
     """Dumps the bootloader, but only on Mac."""
     #dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.

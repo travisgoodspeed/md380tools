@@ -178,13 +178,41 @@ void wstrhex(wchar_t *string, long value){
 
 
 //TODO Move this to the right place.
-int (*usb_upld_handle)(int, char*, int, int)=0x0808d3d9;//2.032
 
-int usb_upld_hook(int iface, char *packet, int bRequest, int something){
+//! Handle to the original (unhooked) upload handler.
+int (*usb_upld_handle)(void*, char*, int, int)=0x0808d3d9;//2.032
+//! This returns a USB packet to the host from the upload handler.
+int (*usb_send_packet)(void*, char*, uint16_t)=0x080577af;//2.032
+
+int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   /* This hooks the USB Device Firmware Update upload function,
      so that we can transfer data out of the radio without asking
      the host's permission.
   */
+  
+  //Really ought to do this with a struct instead of casts.
+  uint16_t blockadr = *(short*)(packet+2);
+  uint16_t index = *(short*)(packet+4);     //Generally unused.
+  uint16_t length= *(short*)(packet+6);
+  
+  /* The DFU protocol specifies reads from block 0 as something
+     special, but it doesn't say way to do about an address of 1.
+     Shall I take it over?  Don't mind if I do!
+   */
+  if(blockadr==1){
+    switch(index){
+    case 0:
+      //    case TDFU_PEEK://0001, gives len from current working address.
+      usb_send_packet(iface, (char*) 0x2001d098, length);
+      break;
+    default:
+      usb_send_packet(iface, packet, length);
+      break;
+    }
+    //It's exceedingly rude to return without sending a packet.  Don't
+    //be rude!
+    return 0;
+  }
   
   //Return control the original function.
   return usb_upld_handle(iface, packet, bRequest, something);
@@ -214,24 +242,17 @@ int usb_dnld_hook(){
    */
   if(*blockadr==1){
     switch(packet[0]){
-    case TDFU_PRINT:
+    case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
       drawtext((wchar_t *) (packet+3),
-	       //L"Missing.",
 	       packet[1],packet[2]);
       break;
     }
     
-    /*
-    //No idea why.
-    thingy[0]=0;//0,0 for successful write
-    thingy[1]=0;
-    */
     thingy2[0]=0;
     thingy2[1]=0;
     thingy2[2]=0;
     thingy2[3]=3;
     *dfu_state=3;
-    
     
     *blockadr=0;
     *packetlen=0;
