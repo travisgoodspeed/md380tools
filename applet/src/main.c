@@ -179,10 +179,6 @@ void wstrhex(wchar_t *string, long value){
 
 //TODO Move this to the right place.
 
-//! Handle to the original (unhooked) upload handler.
-int (*usb_upld_handle)(void*, char*, int, int)=0x0808d3d9;//2.032
-//! This returns a USB packet to the host from the upload handler.
-int (*usb_send_packet)(void*, char*, uint16_t)=0x080577af;//2.032
 
 int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   /* This hooks the USB Device Firmware Update upload function,
@@ -191,8 +187,14 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   */
   
   //Really ought to do this with a struct instead of casts.
+  
+  //This is 1 if we control it, 0 or >=2 if the old code should take it.
   uint16_t blockadr = *(short*)(packet+2);
-  uint16_t index = *(short*)(packet+4);     //Generally unused.
+
+  //Seems to be forced to zero.
+  //uint16_t index = *(short*)(packet+4);
+
+  //We have to send this much.
   uint16_t length= *(short*)(packet+6);
   
   /* The DFU protocol specifies reads from block 0 as something
@@ -200,17 +202,10 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
      Shall I take it over?  Don't mind if I do!
    */
   if(blockadr==1){
-    switch(index){
-    case 0:
-      //    case TDFU_PEEK://0001, gives len from current working address.
-      usb_send_packet(iface, (char*) 0x2001d098, length);
-      break;
-    default:
-      usb_send_packet(iface, packet, length);
-      break;
-    }
-    //It's exceedingly rude to return without sending a packet.  Don't
-    //be rude!
+    usb_send_packet(iface,   //USB interface structure.
+		    //(char*) 0x2001d098,
+		    (char*) *((int*)0x2000112c), //TODO move to header. (usb_dfu_baseadr)
+		    length); //Length must match.
     return 0;
   }
   
@@ -218,9 +213,6 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   return usb_upld_handle(iface, packet, bRequest, something);
 }
 
-//TODO Move these to the appropriate headers.
-int (*usb_dnld_handle)()=0x0808ccbf;//2.032
-int *dnld_tohook=(int*) 0x20000e9c;//2.032
 
 
 int usb_dnld_hook(){
@@ -233,7 +225,8 @@ int usb_dnld_hook(){
   static int *blockadr=(int*) 0x2001d208;//2.032
   static char *dfu_state=(char*) 0x2001d405;
   
-  char *thingy=(char*) 0x2001d276;
+  //Don't know what these do.
+  //char *thingy=(char*) 0x2001d276;
   char *thingy2=(char*) 0x2001d041;
   
   /* DFU transfers begin at block 2, and special commands hook block
@@ -268,7 +261,7 @@ int usb_dnld_hook(){
 void hookusb(){
   //Be damned sure to call this *after* the table has been
   //initialized.
-  *dnld_tohook= usb_dnld_hook;
+  *dnld_tohook= (int) usb_dnld_hook;
   return;
 }
 
@@ -304,19 +297,12 @@ void loadfirmwareversion(){
   return;
 }
 
-void wipe_mem(){
-  long *start=(long*) 0x10000000;
-  long *end=(long*)   0x10010000;
-  while(start<end)
-    *start++=0xdeadbeef;
-}
-
 
 
 /* Displays a startup demo on the device's screen, including some of
    the setting information and a picture or two. */
 void demo(){
-  char *botlinetext=(char*) 0x2001cee0;
+
   
   hookusb();
   
@@ -329,6 +315,7 @@ void demo(){
   
   sleep(1000);
   
+  //Make the welcome image scroll across the screen.
   for(int i=0;i<0x60;i+=3){
     gfx_drawbmp(welcomebmp,0,i);
     sleep(30);
@@ -339,26 +326,20 @@ void demo(){
 }
 
 
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
-int main(void)
-{
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f4xx.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-        system_stm32f4xx.c file
-     */
-  
-  //Initialize RAM to zero, to figure out what's free later.
-  //wipe_mem();
-  
+/* Our RESET handler is called instead of the official one, so this
+   main() method comes before the official one.  Our global variables
+   have already been initialized, but the MD380 firmware has not yet
+   been initialized because we haven't called it.
+   
+   So the general idea is to initialize our stuff here, then trigger
+   an early callback later in the MD380's main() function to perform
+   any late hooks that must be applied to function pointers
+   initialized in the stock firmware.
+*/
+int main(void) {
   led_setup();
   
-  
+  //Blink the LEDs a few times to show that our code is starting.
   for(int i=0; i<1; i++) {
 
     //red_led(1);

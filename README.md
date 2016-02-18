@@ -8,13 +8,16 @@ brand names.  The codeplug format is sufficiently similar to the
 radios from Connect Systems (CS700, etc) that these tools might
 someday be made compatible.
 
-Tools:
+Client Tools:
 * `md380-dfu` reads and writes MD380 codeplugs and firmware.
+* `md380-tool` communicates with the patched firmware. (Fancy stuff!)
+
+Development Tools:
 * `stm32-dfu` modifies firmware for jailbroken devices. (No longer required.)
 * `md380-fw` wraps and unwraps devices firmware.
 * `md380-gfx` modifies firmware graphics.
 
-These tools are all wrapped into a `Makefile`, which will download the
+These tools are all wrapped into `Makefile`, which will download the
 official firmware, patch and flash it.  Run `make flash` after booting
 into the recovery bootloader by holding PTT and the button just above
 it during power-on.
@@ -57,6 +60,7 @@ repository.
 
 This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.
+
 
 ##Usage:##
 
