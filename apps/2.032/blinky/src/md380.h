@@ -13,5 +13,17 @@ extern void (*gfx_drawbmp)(char *bmp,
 				 int idx,
 				 uint64_t pos);
 
+//Pointer to the buffer that stores the bottom line of screen text.
+char *botlinetext;
+
+
+//ROM copy of the welcome bitmap.
 extern char *welcomebmp;
 
+//! Handle to the original (unhooked) upload handler.
+int (*usb_upld_handle)(void*, char*, int, int);
+//! This returns a USB packet to the host from the upload handler.
+int (*usb_send_packet)(void*, char*, uint16_t);
+
+int (*usb_dnld_handle)();
+int *dnld_tohook;
