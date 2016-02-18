@@ -36,8 +36,8 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped
 
 experiment.img:
-	cd ../../../patches/2.032 && make all
-	cp ../../../patches/2.032/experiment.img ./
+	cd ../patches/2.032 && make all
+	cp ../patches/2.032/experiment.img ./
 
 
 lib: src/version.h
@@ -48,10 +48,10 @@ proj: 	$(PROJ_NAME).elf experiment.img
 
 #The wrapped file is the one that works with the Windows updater.
 wrapped: lib proj
-	../../../md380-fw --wrap experiment.img experiment.bin
+	../md380-fw --wrap experiment.img experiment.bin
 #This flashses from unix.
 flash: wrapped
-	../../../md380-dfu upgrade experiment.bin
+	../md380-dfu upgrade experiment.bin
 
 $(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4
