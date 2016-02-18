@@ -20,6 +20,43 @@ import time, sys, struct, usb.core
 md380_vendor   = 0x0483
 md380_product  = 0xdf11
 
+class UsersDB():
+    """List of registered DMR-MARC users."""
+    users={};
+    def __init__(self, filename=None):
+        """Loads the database."""
+        import csv;
+        if filename==None:
+            filename=sys.path[0]+'/db/users.csv';
+        with open(filename,'rb') as csvfile:
+            reader=csv.reader(csvfile);
+            for row in reader:
+                self.users[int(row[0])]=row;
+    def getuser(self,id):
+        """Returns a user from the ID."""
+        try:
+            return self.users[id];
+        except:
+            call="";
+            name="";
+            nickname="";
+            city="";
+            state="";
+            country="";
+            comment="";
+            return ["%i"%id,call,name,nickname,city,state,country,comment];
+    def getusername(self,id):
+        """Returns a formatted username from the ID."""
+        user=self.getuser(id);
+        return("%s %s (%s)"%(
+                user[1],
+                user[2],
+                user[0]));
+    
+
+#Quick to load, so might as well do it early.
+users=UsersDB();
+
 
 class Tool(DFU):
     """Client class for extra features patched into the MD380's firmware.
@@ -45,7 +82,7 @@ class Tool(DFU):
 
 def calllog(dfu):
     """Prints a call log to stdout, fetched from the MD380's memory."""
-    dfu.drawtext("Ugly code works!",160,50);
+    dfu.drawtext("Hooking calls!",160,50);
     
     #Set the target address to the list of DMR addresses.
     dfu.set_address(0x2001d098);
@@ -68,7 +105,8 @@ def calllog(dfu):
         if old1!=llid1 or old2!=llid2:
             old1=llid1;
             old2=llid2;
-            print "DMR call from %i to %i." % (llid1,llid2);
+            print "DMR call from %s to %i." % (
+                users.getusername(llid1),llid2);
             sys.stdout.flush();
 
 def init_dfu(alt=0):
@@ -80,15 +118,16 @@ def init_dfu(alt=0):
 
     dfu = Tool(dev, alt)
     dev.default_timeout = 3000
-
+    
     try:
         dfu.enter_dfu_mode()
+        pass;
     except usb.core.USBError, e:
         if len(e.args) > 0 and e.args[0] == 'Pipe error':
             raise RuntimeError('Failed to enter DFU mode. Is bootloader running?')
         else:
             raise e
-
+    
     return dfu
 
 def usage():
