@@ -229,20 +229,3 @@ class DFU(object):
             tr=tr+c+"\0";
         return tr+"\0\0";
 
-    def drawtext(self,str,a,b):
-        """Sends a new MD380 command to draw text on the screen.."""
-        cmd=0x80;
-        a=a&0xFF
-        b=b&0xFF
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd)+chr(a)+chr(b)+self.widestr(str))
-        self.get_status(); #this changes state
-        time.sleep(0.1);
-        status=self.get_status(); #this gets the status
-        if status[2]==State.dfuDNLOAD_IDLE:
-            if self.verbose: print "Sent custom %02x %02x." % (a,b);
-            self.enter_dfu_mode();
-        else:
-            print "Failed to send custom %02x %02x." % (a,b);
-            return False;
-        print "Done.";
-        return True;

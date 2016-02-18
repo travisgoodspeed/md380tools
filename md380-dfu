@@ -139,33 +139,7 @@ def hexdump(string):
         
     print buf;
 
-def test(dfu):
-    """Goof off function, subject to change at any time."""
-    dfu.drawtext("Ugly code works!",160,50);
-    
-    #Set the target address to the list of DMR addresses.
-    dfu.set_address(0x2001d098);
-    old1=0;
-    old2=0;
-    while 1:
-        data=dfu.upload(1,16,0);#Peek sixteen bytes.
-        llid0=(data[0]+
-               (data[1]<<8)+
-               (data[2]<<16)+
-               (data[3]<<24));
-        llid1=(data[4]+
-               (data[5]<<8)+
-               (data[6]<<16)+
-               (data[7]<<24));
-        llid2=(data[8]+
-               (data[9]<<8)+
-               (data[10]<<16)+
-               (data[11]<<24));
-        if old1!=llid1 or old2!=llid2:
-            old1=llid1;
-            old2=llid2;
-            print "DMR call from %i to %i." % (llid1,llid2);
-            sys.stdout.flush();
+
 def upload_bootloader(dfu,filename):
     """Dumps the bootloader, but only on Mac."""
     #dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.
@@ -422,6 +396,7 @@ if __name__ == '__main__':
                 upload_codeplug(dfu, sys.argv[2])
                 print('Read complete')
             elif sys.argv[1] == 'readboot':
+                print "This only wokrs from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.";
                 import usb.core
                 dfu = init_dfu()
                 upload_bootloader(dfu, sys.argv[2])
