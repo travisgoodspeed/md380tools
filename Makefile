@@ -8,4 +8,5 @@ patches: firmwares
 firmwares:
 	cd firmware && make all
 flash:
-	cd patches/2.032 && make flash
+#	cd patches/2.032 && make flash
+	cd applet && make flash
