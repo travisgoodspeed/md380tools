@@ -137,6 +137,11 @@ Usage: md380-tool <command> <arguments>
 Print a log of incoming DMR calls to stdout.
     md380-dfu calllog
 
+Looks up the name by an ID number.
+    md380-dfu lookup 12345
+
+
+
 Dump the bootloader from Flash memory.
     md380-dfu readboot <filename.bin>
 
@@ -152,6 +157,9 @@ if __name__ == '__main__':
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'readboot':
                 print "I should be dumping memory to '%s'." % sys.argv[2];
+            elif sys.argv[1] == 'lookup':
+                print users.getusername(int(sys.argv[2]));
+
         else:
             usage();
     except RuntimeError, e:
