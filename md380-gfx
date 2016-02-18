@@ -422,7 +422,8 @@ def main():
     def hex_int(x):
         return int(x, 0)
 
-    parser = argparse.ArgumentParser(description='Wrap and unwrap MD-380 firmware')
+    parser = argparse.ArgumentParser(description='modifies firmware \
+                                     graphics on MD-380 firmware')
     parser.add_argument('--firmware', '-f', dest='firmware', type=str,
                         help='firmware image file to work on')
     parser.add_argument('--addr', '-a', dest='addr', type=hex_int,
