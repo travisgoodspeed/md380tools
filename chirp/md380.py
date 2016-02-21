@@ -329,9 +329,10 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.has_bank_names = True
         rf.can_odd_split = True
         rf.valid_tmodes = TMODES
-        rf.memory_bounds = (1, 999)  # This radio supports memories 0-9
-        #rf.valid_bands = [(400000000, 480000000),  # Supports 70-centimeters
-        rf.valid_bands = [(400000000, 480000000), (136000000, 174000000)  # Supports 70-centimeters
+        rf.memory_bounds = (1, 999)  # Maybe 1000?
+        
+        rf.valid_bands = [(400000000, 480000000), # 70cm model is most common.
+                          (136000000, 174000000)  # 2m model sold separately.
                           ]
         rf.valid_characters = "".join(CHARSET);
         rf.has_settings = True;
