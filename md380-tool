@@ -109,6 +109,22 @@ def calllog(dfu):
                 users.getusername(llid1),llid2);
             sys.stdout.flush();
 
+def bcd(b):
+    return int("%02x"%b);
+
+def calldate(dfu):
+    dfu.set_address(0x40002800);
+    data=dfu.upload(1,8,0);
+
+    print "%02d.%02d.%02d %02d:%02d:%02d" % (
+                                bcd(data[4] & (0x0f | 0x30)),
+                                bcd(data[5] & (0x0f )),
+                                bcd(data[6] ),
+                                bcd(data[2] & (0x0f )),
+                                bcd(data[1] & (0x0f |  0x70)),
+                                bcd(data[0] & (0x0f | 0x70)) )
+
+
 def init_dfu(alt=0):
     dev = usb.core.find(idVendor=md380_vendor,
                         idProduct=md380_product)
@@ -154,6 +170,9 @@ if __name__ == '__main__':
             if sys.argv[1] == 'calllog':
                 dfu=init_dfu();
                 calllog(dfu);
+            elif sys.argv[1] == 'date':
+                dfu=init_dfu();
+                calldate(dfu);
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'readboot':
                 print "I should be dumping memory to '%s'." % sys.argv[2];
