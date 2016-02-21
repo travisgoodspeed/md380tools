@@ -1,0 +1,172 @@
+#!/usr/bin/env python2
+
+# md380-tool by KK4VCZ and Friends
+
+# This is the client for the patched MD380 firmware.  It does all
+# sorts of clever things that the official clients can't, but it
+# probably has bugs and will do all sorts of unsavory things.  Do not
+# expose it to light, do not feed it after midnight, and *NEVER* give
+# it water.
+
+from DFU import DFU, State, Request
+import time, sys, struct, usb.core
+
+# The tricky thing is that *THREE* different applications all show up
+# as this same VID/PID pair.
+#
+# 1. The Tytera application image.
+# 2. The Tytera bootloader at 0x08000000
+# 3. The mask-rom bootloader from the STM32F405.
+md380_vendor   = 0x0483
+md380_product  = 0xdf11
+
+class UsersDB():
+    """List of registered DMR-MARC users."""
+    users={};
+    def __init__(self, filename=None):
+        """Loads the database."""
+        import csv;
+        if filename==None:
+            filename=sys.path[0]+'/db/users.csv';
+        with open(filename,'rb') as csvfile:
+            reader=csv.reader(csvfile);
+            for row in reader:
+                self.users[int(row[0])]=row;
+    def getuser(self,id):
+        """Returns a user from the ID."""
+        try:
+            return self.users[id];
+        except:
+            call="";
+            name="";
+            nickname="";
+            city="";
+            state="";
+            country="";
+            comment="";
+            return ["%i"%id,call,name,nickname,city,state,country,comment];
+    def getusername(self,id):
+        """Returns a formatted username from the ID."""
+        user=self.getuser(id);
+        return("%s %s (%s)"%(
+                user[1],
+                user[2],
+                user[0]));
+    
+
+#Quick to load, so might as well do it early.
+users=UsersDB();
+
+
+class Tool(DFU):
+    """Client class for extra features patched into the MD380's firmware.
+    None of this will work with the official firmware, of course."""
+    
+    def drawtext(self,str,a,b):
+        """Sends a new MD380 command to draw text on the screen.."""
+        cmd=0x80;
+        a=a&0xFF
+        b=b&0xFF
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd)+chr(a)+chr(b)+self.widestr(str))
+        self.get_status(); #this changes state
+        time.sleep(0.1);
+        status=self.get_status(); #this gets the status
+        if status[2]==State.dfuDNLOAD_IDLE:
+            if self.verbose: print "Sent custom %02x %02x." % (a,b);
+            self.enter_dfu_mode();
+        else:
+            print "Failed to send custom %02x %02x." % (a,b);
+            return False;
+        return True;
+
+
+def calllog(dfu):
+    """Prints a call log to stdout, fetched from the MD380's memory."""
+    dfu.drawtext("Hooking calls!",160,50);
+    
+    #Set the target address to the list of DMR addresses.
+    dfu.set_address(0x2001d098);
+    old1=0;
+    old2=0;
+    while 1:
+        data=dfu.upload(1,16,0);#Peek sixteen bytes.
+        llid0=(data[0]+
+               (data[1]<<8)+
+               (data[2]<<16)+
+               (data[3]<<24));
+        llid1=(data[4]+
+               (data[5]<<8)+
+               (data[6]<<16)+
+               (data[7]<<24));
+        llid2=(data[8]+
+               (data[9]<<8)+
+               (data[10]<<16)+
+               (data[11]<<24));
+        if old1!=llid1 or old2!=llid2:
+            old1=llid1;
+            old2=llid2;
+            print "DMR call from %s to %i." % (
+                users.getusername(llid1),llid2);
+            sys.stdout.flush();
+
+def init_dfu(alt=0):
+    dev = usb.core.find(idVendor=md380_vendor,
+                        idProduct=md380_product)
+    
+    if dev is None:
+        raise RuntimeError('Device not found')
+
+    dfu = Tool(dev, alt)
+    dev.default_timeout = 3000
+    
+    try:
+        dfu.enter_dfu_mode()
+        pass;
+    except usb.core.USBError, e:
+        if len(e.args) > 0 and e.args[0] == 'Pipe error':
+            raise RuntimeError('Failed to enter DFU mode. Is bootloader running?')
+        else:
+            raise e
+    
+    return dfu
+
+def usage():
+    print("""
+Usage: md380-tool <command> <arguments>
+
+Print a log of incoming DMR calls to stdout.
+    md380-dfu calllog
+
+Looks up the name by an ID number.
+    md380-dfu lookup 12345
+
+
+
+Dump the bootloader from Flash memory.
+    md380-dfu readboot <filename.bin>
+
+
+""")
+
+if __name__ == '__main__':
+    try:
+        if len(sys.argv) == 2:
+            if sys.argv[1] == 'calllog':
+                dfu=init_dfu();
+                calllog(dfu);
+        elif len(sys.argv) == 3:
+            if sys.argv[1] == 'readboot':
+                print "I should be dumping memory to '%s'." % sys.argv[2];
+            elif sys.argv[1] == 'lookup':
+                print users.getusername(int(sys.argv[2]));
+
+        else:
+            usage();
+    except RuntimeError, e:
+        print(e.args[0])
+        exit(1)
+    except Exception, e:
+        print e
+        #print dfu.get_status()
+        exit(1)
+
