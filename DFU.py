@@ -92,6 +92,26 @@ class DFU(object):
         self._device.ctrl_transfer(0x21, Request.DETACH, 0, 0, None)
     
 
+    def bcd(self,b):
+        """Converts a byte from BCD to integer."""
+        return int("%02x"%b);
+    def get_time(self):
+        """Returns a datetime object for the radio's current time."""
+        self.md380_custom(0x91,0x01); #Programming Mode
+        self.md380_custom(0xA2,0x08); #Access the clock memory.
+        time=self.upload(0,7);  #Read the time bytes as BCD.
+        #hexdump("Time is: "+time);
+        
+        
+        from datetime import datetime;
+        dt=datetime(self.bcd(time[0])*100+self.bcd(time[1]),
+                             self.bcd(time[2]),
+                             self.bcd(time[3]),
+                             self.bcd(time[4]),
+                             self.bcd(time[5]),
+                             self.bcd(time[6]));
+        return dt;
+
     def download(self, block_number, data):
         self._device.ctrl_transfer(0x21, Request.DNLOAD, block_number, 0, data)
         #time.sleep(0.1);
