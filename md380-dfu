@@ -375,6 +375,8 @@ Dump the bootloader from Flash memory.
     md380-dfu readboot <filename.bin>
 
 
+Print the time from the MD380.
+    md380-dfu time
 
 Detach the bootloader and execute the application firmware:
     md380-dfu detach
@@ -450,12 +452,13 @@ if __name__ == '__main__':
                 dfu = init_dfu()
                 dfu.set_address(0x08000000); #Radio Application
                 detach(dfu)
-            elif sys.argv[1] == 'test':
+            elif sys.argv[1] == 'time':
                 import usb.core
                 dfu = init_dfu()
-                #dfu.md380_custom(0x91,0x01); #Programming Mode
-                #dfu.md380_custom(0x91,0x01); #Programming Mode
-                test(dfu);
+		dfu.md380_custom(0x91,0x01); #Programming Mode
+		dfu.md380_custom(0xA2,0x08); #Access the clock memory.
+                time=dfu.upload(0,7);  #Read the time bytes as BCD.
+                hexdump(time);
             elif sys.argv[1] == 'reboot':
                 import usb.core
                 dfu = init_dfu()
