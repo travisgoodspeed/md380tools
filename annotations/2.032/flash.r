@@ -42,7 +42,7 @@ CCa 0x8026156 function return val  #0
 CCa 0x8026158 no idear ??????
 CCa 0x802615a RTC_CR to  r0... 0x8026588 .. 0x40002808 RTC control register (RTC_CR)
 CCa 0x802615e val RTC_CR in r0
-CCa 0x8026160 FMT bits  r0 ... 0x40 .. 0100 0000 clear Bit 6FMT: Hour format
+CCa 0x8026160 FMT bits  r0 ... 0x40 .. 0100 0000 clear Bit 6 FMT Hour format
 CCa 0x8026164 0x8026588  0x40002808 RTC control register (RTC_CR)
 CCa 0x8026168 reset RTC_CR with FMT is cleard
 CCa 0x802616a 0x8026588 0x40002808 RTC control register (RTC_CR)
