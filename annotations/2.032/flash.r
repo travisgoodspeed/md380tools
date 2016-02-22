@@ -29,4 +29,42 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
-
+CCa 0x8026136 Beginn Function ... Set RTC_CR (Hour format RTC_CR and RTC_PRER ) r0  arg[0] arg[1] arg[2]\narg[0] RTC_CR\arg[1] RTC_PRER\n arg[2] RTC_PRER 
+CCa 0x802613e 0x80265b0 - 0x40002824 RTC write protection register (RTC_WPR)
+CCa 0x8026142 0xca in r1
+CCa 0x8026144 r1 into 0x40002824
+CCa 0x8026146 0x80265b0  0x40002824 RTC write protection register (RTC_WPR)
+CCa 0x802614a 0x53 in r1
+CCa 0x802614c r1 into  0x40002824 ******* Enable Write
+CCa 0x802614e no idear ??????
+CCa 0x8026154 no idear ?????? why that?
+CCa 0x8026156 function return val  #0
+CCa 0x8026158 no idear ??????
+CCa 0x802615a RTC_CR to  r0... 0x8026588 .. 0x40002808 RTC control register (RTC_CR)
+CCa 0x802615e val RTC_CR in r0
+CCa 0x8026160 FMT bits  r0 ... 0x40 .. 0100 0000 clear Bit 6FMT: Hour format
+CCa 0x8026164 0x8026588  0x40002808 RTC control register (RTC_CR)
+CCa 0x8026168 reset RTC_CR with FMT is cleard
+CCa 0x802616a 0x8026588 0x40002808 RTC control register (RTC_CR)
+CCa 0x802616e val RTC_CR to r0
+CCa 0x8026170 value given via  address on function call
+CCa 0x8026172 or arg [0]  with old RTC_CR
+CCa 0x8026174 0x8026588  0x40002808 RTC control register (RTC_CR)
+CCa 0x8026178 r0 to in RTC_CR
+CCa 0x802617a arg [2] to r0
+CCa 0x802617c 0x8026590  0x40002810 RTC prescaler register (RTC_PRER)
+CCa 0x8026180 store val of arg [2]  RTC_PRER
+CCa 0x8026182 0x8026590  0x40002810 RTC prescaler register (RTC_PRER)
+CCa 0x8026186 val of RTC_PRER to r0
+CCa 0x8026188 arg [1] to r1
+CCa 0x802618a no idear ??????
+CCa 0x802618e 0x8026590  0x40002810 RTC prescaler register (RTC_PRER)
+CCa 0x8026192 r0 RTC_PRER
+CCa 0x8026194 ??????????
+CCa 0x8026198 #1 in r5
+CCa 0x802619a 0x80265b0  0x40002824 RTC write protection register (RTC_WPR)
+CCa 0x802619e 0xff
+CCa 0x80261a0 ******* Disable Write
+CCa 0x80261a2 r5 to r0
+CCa 0x80261a4 retrun ( 0 bad , 1  good)
+CCa 0x80261a6 end of function
