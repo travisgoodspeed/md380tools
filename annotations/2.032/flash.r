@@ -68,3 +68,47 @@ CCa 0x80261a0 ******* Disable Write
 CCa 0x80261a2 r5 to r0
 CCa 0x80261a4 retrun ( 0 bad , 1  good)
 CCa 0x80261a6 end of function
+
+
+CCa 0x080261b8 Begin Fuction ErrorStatus RTC_EnterInitMode(void)
+CCa 0x080261c4 read RTC_ISR in R2
+CCa 0x080261ce RTC_INIT_MASK in r1
+CCa 0x080261d2 r1 store to RTC_ISR
+CCa 0x080261d8 read RTC_ISR in R0
+CCa 0x080261da 0x40  INITF: Initialization flag When this bit is set to 1, the RTC is in initialization state, and the time, date and prescaler registers can be updated
+CCa 0x080261fa SUCCESS
+CCa 0x080261fe Error
+CCa 0x08026202 SUCCESS
+CCa 0x08026208 End Fuction
+
+CCa 0x0802620a Begin Fuction void RTC_ExitInitMode(void)
+CCa 0x08026210 0x80 RTC_ISR_INIT
+CCa 0x0802621a End Fuction
+
+CCa 0x0802621c ErrorStatus RTC_WaitForSynchro(void)
+CCa 0x08026244 r2 store to RTC_ISR 
+CCa 0x08026258 SYNCHRO_TIMEOUT ((uint32_t) 0x00020000)
+CCa 0x0802627e  End Fuction  
+
+CCa 0x08026280 ErrorStatus RTC_SetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
+CCa 0x0802631e call RTC_ExitInitMode(void)
+CCa 0x0802632c call RTC_WaitForSynchro
+CCa 0x08026348 End Fuction 
+
+
+CCa 0x0802634a void RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
+CCa 0x08026398 End Fuction
+
+
+CCa 0x0802639a ErrorStatus RTC_SetDate(uint32_t RTC_Format, RTC_DateTypeDef* RTC_DateStruct)
+CCa 0x0802645e End Fuction
+
+CCa 0x08026460 void RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef* RTC_DateStruct)
+CCa 0x080264aa End Fuction
+
+CCa 0x080264ac void RTC_WakeUpClockConfig(uint32_t RTC_WakeUpClock)
+CCa 0x080264e2 End Fuction
+
+CCa 0x080264e4 void RTC_SetWakeUpCounter(uint32_t RTC_WakeUpCounter)
+CCa 0x08026502  End Fuction
+
