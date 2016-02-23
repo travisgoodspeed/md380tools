@@ -112,3 +112,16 @@ CCa 0x080264e2 End Fuction
 CCa 0x080264e4 void RTC_SetWakeUpCounter(uint32_t RTC_WakeUpCounter)
 CCa 0x08026502  End Fuction
 
+CCa 0x08026504 ErrorStatus RTC_RefClockCmd(FunctionalState NewState)
+CCa 0x0802657c End Fuction
+
+
+CCa 0x08026596 something to store to RTC backup registers (RTC_BKPxR)
+CCa 0x080265ac End Function
+
+CCa 0x080265ba void RTC_ITConfig(uint32_t RTC_IT, FunctionalState NewState)
+CCa 0x0802660c End Function
+
+CCa 0x08026616  void RTC_ClearFlag(uint32_t RTC_FLAG)
+CCa 0x08026630 End Function
+
