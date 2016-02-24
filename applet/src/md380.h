@@ -4,6 +4,13 @@
 
 #include <stdio.h>
 
+//Graphics functions.
+#include "gfx.h"
+
+//Move these to their own module.
+void strhex(char *, long);
+void wstrhex(wchar_t *, long);
+
 extern int (*spiflash_read)(void *dst, long adr, long len);
 extern void (*gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
 				  short sx, short sy, //Source coords, maybe?

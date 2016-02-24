@@ -1,4 +1,4 @@
-SRCS = main.c stm32f4xx_it.c system_stm32f4xx.c
+SRCS = main.c usb.c gfx.c stm32f4xx_it.c system_stm32f4xx.c
 PROJ_NAME=main
 
 

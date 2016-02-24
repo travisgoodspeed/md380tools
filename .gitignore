@@ -55,3 +55,11 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Firmware stuff.
+*~
+*.img.sym
+*.img
+*.bin
+*.elf
+version.h
