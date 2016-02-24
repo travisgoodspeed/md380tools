@@ -18,6 +18,14 @@ extern void (*gfx_drawbmp)(char *bmp,
 				 int idx,
 				 uint64_t pos);
 
+//Function that handles checking a DMR contact.
+extern void* (*dmr_call_end)(void *pkt);
+//Function that handles a DMR call.
+extern void* (*dmr_call_start)(void *pkt);
+//Function that handles a DMR SMS.
+extern void* (*dmr_handle_data)(void *pkt, int len);
+
+
 //Pointer to the buffer that stores the bottom line of screen text.
 char *botlinetext;
 

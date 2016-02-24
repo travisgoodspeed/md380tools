@@ -157,6 +157,32 @@ if __name__== '__main__':
     merger.hookbl(0x0808cc36, #Call to usb_dfu_upload().
                   sapplet.getadr("usb_upld_hook"),
                   0x0808d3d8); #Old handler adr.
+    merger.hookbl(0x0803eb64, #Call to dmr_call_end()
+                  sapplet.getadr("dmr_call_end_hook"),
+                  0x0803f33c); #Old handler adr.
+#    merger.hookbl(0x0803eb7a, #Call to dmr_call_thing();
+#                  sapplet.getadr("dmr_call_thing_hook"),
+#                  0x0803f6d8); #Old handler adr.
+    merger.hookbl(0x0803e9ee, #Call to dmr_call_start();
+                  sapplet.getadr("dmr_call_start_hook"),
+                  0x0803ec86); #Old handler adr.
+    merger.hookbl(0x0803eb4e, #Call to dmr_call_start();
+                  sapplet.getadr("dmr_call_start_hook"),
+                  0x0803ec86); #Old handler adr.
+    merger.hookbl(0x0803ebc2, #First call to dmr_handle_data
+                  sapplet.getadr("dmr_handle_data_hook"),
+                  0x0804b66c);
+    merger.hookbl(0x0803ebda, #Second call to dmr_handle_data
+                  sapplet.getadr("dmr_handle_data_hook"),
+                  0x0804b66c);
+    merger.hookbl(0x0803ec20, #Third call to dmr_handle_data
+                  sapplet.getadr("dmr_handle_data_hook"),
+                  0x0804b66c);
+    
+    #Throwaway hook to see if adr is called.
+    #merger.hookstub(0x0804b66c,
+    #                sapplet.getadr("demo"));
+
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
           sys.argv[1],

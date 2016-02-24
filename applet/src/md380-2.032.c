@@ -24,6 +24,14 @@ void (*gfx_drawbmp)(char *bmp,
 			  int idx,
 			  uint64_t pos) = 0x08022887;
 
+//! Function that handles the end of a DMR call.
+void* (*dmr_call_end)(void *pkt) = 0x0803f33d;
+//! Function that handles a DMR call.
+void* (*dmr_call_start)(void *pkt) = 0x0803ec87;
+//! Function that handles a DMR SMS.
+void* (*dmr_handle_data)(void *pkt, int len) = 0x0804b66d;
+
+
 //! Handle to the original (unhooked) upload handler.
 int (*usb_upld_handle)(void*, char*, int, int)=0x0808d3d9;
 //! This returns a USB packet to the host from the upload handler.
