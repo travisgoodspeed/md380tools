@@ -60,7 +60,7 @@ $(PROJ_NAME).elf: $(SRCS)
 
 #Temporary file containing the build date.
 #Might use version numbers when we're ready for releases.
-src/version.h: src/*.c src/*.h
+src/version.h: src/*.c
 	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
 clean:
 	$(MAKE) -C lib clean

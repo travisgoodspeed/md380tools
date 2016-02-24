@@ -66,7 +66,7 @@ class Merger():
             self.assertbyte(adr+2,(old>>16)&0xFF);
             self.assertbyte(adr+3,(old>>24)&0xFF);
         
-        print "Patching word at %08x to %08x" % (adr,new)
+        #print "Patching word at %08x to %08x" % (adr,new)
         self.bytes[adr-self.offset]=new&0xFF;
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
         self.bytes[adr-self.offset+2]=(new>>16)&0xFF;
@@ -78,7 +78,7 @@ class Merger():
         if old!=None:
             self.assertbyte(adr,old&0xFF);
             self.assertbyte(adr+1,(old>>8)&0xFF);
-        print "Patching hword at %08x to %04x" % (adr,new)
+        #print "Patching hword at %08x to %04x" % (adr,new)
         self.bytes[adr-self.offset]=new&0xFF;
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
         self.assertbyte(adr,new&0xFF);
@@ -89,7 +89,7 @@ class Merger():
            convention. """
         adr=adr & ~1;          #Address must be even.
         handler = handler | 1; #Destination address must be odd.
-        print "I ought to be hooking a branch at %08x to %08x." % (adr,handler);
+        print "Inserting a stub hook at %08x to %08x." % (adr,handler);
         
         #FIXME This clobbers r0, should use a different register.
         self.sethword(adr,0x4801); # ldr r0, [pc, 4]
@@ -116,7 +116,7 @@ class Merger():
     def hookbl(self,adr,handler,oldhandler=None):
         """Hooks a function by replacing a 32-bit relative BL."""
         
-        print "I ought to be redirecting a bl at %08x to %08x." % (adr,handler);
+        print "Redirecting a bl at %08x to %08x." % (adr,handler);
         
         #TODO This is sometimes tricked by old data.
         # Fix it by ensuring no old data.

@@ -203,8 +203,7 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
    */
   if(blockadr==1){
     usb_send_packet(iface,   //USB interface structure.
-		    //(char*) 0x2001d098,
-		    (char*) *((int*)0x2000112c), //TODO move to header. (usb_dfu_baseadr)
+		    (char*) *((int*)0x2000112c), //2.032 DFU target adr.
 		    length); //Length must match.
     return 0;
   }
@@ -223,7 +222,7 @@ int usb_dnld_hook(){
   static char *packet=(char*) 0x200199f0;//2.032
   static int *packetlen=(int*) 0x2001d20c;//2.032
   static int *blockadr=(int*) 0x2001d208;//2.032
-  static char *dfu_state=(char*) 0x2001d405;
+  static char *dfu_state=(char*) 0x2001d405;//2.032
   
   //Don't know what these do.
   //char *thingy=(char*) 0x2001d276;
@@ -271,9 +270,12 @@ const char *getmfgstr(int speed, long *len){
   //but when we call it often the light becomes visible.
   green_led(1);
   
-  static long adr=0; //This address is known to be free.
+  //Hook the USB DNLOAD handler.
+  hookusb();
+  
+  static long adr=0;
   long val;
-  char *usbstring=(char*) 0x2001c080;
+  char *usbstring=(char*) 0x2001c080; //2.032
   char buffer[]="@________ : ________";
   
   //Read four bytes from SPI Flash.
@@ -292,7 +294,6 @@ const char *getmfgstr(int speed, long *len){
 
 void loadfirmwareversion(){
   wchar_t *buf=(wchar_t*) 0x2001cc0c;
-  hookusb();
   memcpy(buf,VERSIONDATE,22);
   return;
 }
@@ -302,10 +303,6 @@ void loadfirmwareversion(){
 /* Displays a startup demo on the device's screen, including some of
    the setting information and a picture or two. */
 void demo(){
-
-  
-  hookusb();
-  
   drawtext(L"MD380Tools ",
 	   160,20);
   drawtext(L"by KK4VCZ  ",
@@ -339,34 +336,12 @@ void demo(){
 int main(void) {
   led_setup();
   
-  //Blink the LEDs a few times to show that our code is starting.
-  for(int i=0; i<1; i++) {
-
-    //red_led(1);
-    green_led(1);
-
-    sleep(500);
-
-    red_led(0);
-    green_led(0);
-
-    sleep(500);
-
-    red_led(1);
-
-    sleep(500);
-    
-    red_led(0);
-    
-    sleep(500);
-  }
-  
   //Done with the blinking, so start the radio application.
   abort_to_mfgr_app();
 
   //These never get run, but we call them anyways to keep them in the
   //binary.
-  getmfgstr(0,(void*) NULL);
-  demo();
+  //getmfgstr(0,(void*) NULL);
+  //demo();
 }
 
