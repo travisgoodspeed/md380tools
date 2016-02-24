@@ -169,6 +169,7 @@ if __name__== '__main__':
     merger.hookbl(0x0803eb4e, #Call to dmr_call_start();
                   sapplet.getadr("dmr_call_start_hook"),
                   0x0803ec86); #Old handler adr.
+    #Three calls to dmr_handle_data, likely for diff reasons.
     merger.hookbl(0x0803ebc2, #First call to dmr_handle_data
                   sapplet.getadr("dmr_handle_data_hook"),
                   0x0804b66c);
@@ -178,9 +179,13 @@ if __name__== '__main__':
     merger.hookbl(0x0803ec20, #Third call to dmr_handle_data
                   sapplet.getadr("dmr_handle_data_hook"),
                   0x0804b66c);
+    #SMS handler function.
+    merger.hookbl(0x0803ebaa, #sms_arrive_hook().
+                  sapplet.getadr("dmr_sms_arrive_hook"),
+                  0x0803f03c);
     
     #Throwaway hook to see if adr is called.
-    #merger.hookstub(0x0804b66c,
+    #merger.hookstub(0x0803f03c,
     #                sapplet.getadr("demo"));
 
     print "Merging %s into %s at %08x" % (

@@ -65,3 +65,23 @@ void *dmr_handle_data_hook(void *pkt, int len){
   //Forward to the original function.
   return dmr_handle_data(pkt,len);
 }
+
+
+void *dmr_sms_arrive_hook(void *pkt){
+  /* This hooks the SMS arrival routine, but as best I can tell,
+     dmr_sms_arrive() only handles the header and not the actual
+     data payload, which is managed by dmr_handle_data() in each
+     fragment chunk.
+   */
+  
+  //Turn on the red LED to know that we're here.
+  red_led(1);
+  
+  //All but the top row is overwritten,
+  //so any status has to be logged here.
+  drawtext(L"dmr_sms_arrive",
+	   160,20);
+  
+  //Forward to the original function.
+  return dmr_sms_arrive(pkt);
+}

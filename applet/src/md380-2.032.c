@@ -21,8 +21,8 @@ void (*gfx_drawtext)(wchar_t *str,    //16-bit, little endian.
 		     short x, short y,   //X and Y position
 		     int maxlen) = 0x0800D88B;
 void (*gfx_drawbmp)(char *bmp,
-			  int idx,
-			  uint64_t pos) = 0x08022887;
+		    int idx,
+		    uint64_t pos) = 0x08022887;
 
 //! Function that handles the end of a DMR call.
 void* (*dmr_call_end)(void *pkt) = 0x0803f33d;
@@ -30,6 +30,8 @@ void* (*dmr_call_end)(void *pkt) = 0x0803f33d;
 void* (*dmr_call_start)(void *pkt) = 0x0803ec87;
 //! Function that handles a DMR SMS.
 void* (*dmr_handle_data)(void *pkt, int len) = 0x0804b66d;
+//! Function that handles an incoming SMS.
+void* (*dmr_sms_arrive)(void *pkt)=0x0803f03d;
 
 
 //! Handle to the original (unhooked) upload handler.
