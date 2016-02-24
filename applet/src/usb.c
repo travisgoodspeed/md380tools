@@ -18,7 +18,7 @@
 #include "version.h"
 #include "tooldfu.h"
 #include "config.h"
-
+#include "gfx.h"
 
 int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   /* This hooks the USB Device Firmware Update upload function,

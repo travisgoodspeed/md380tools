@@ -6,7 +6,7 @@
 #include "version.h"
 #include "tooldfu.h"
 #include "config.h"
-
+#include "gfx.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"

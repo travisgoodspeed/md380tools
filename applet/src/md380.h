@@ -4,8 +4,6 @@
 
 #include <stdio.h>
 
-//Graphics functions.
-#include "gfx.h"
 
 //Move these to their own module.
 void strhex(char *, long);

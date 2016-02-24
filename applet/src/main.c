@@ -14,6 +14,7 @@
 #include "version.h"
 #include "tooldfu.h"
 #include "config.h"
+#include "gfx.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
