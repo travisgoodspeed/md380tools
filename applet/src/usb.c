@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "printf.h"
+#include "dmesg.h"
 #include "md380.h"
 #include "version.h"
 #include "tooldfu.h"
@@ -63,6 +65,7 @@ int usb_dnld_hook(){
   static int *packetlen=(int*) 0x2001d20c;//2.032
   static int *blockadr=(int*) 0x2001d208;//2.032
   static char *dfu_state=(char*) 0x2001d405;//2.032
+  static char **dfu_target_adr=(char**) 0x2000112c; //2.032
   
   //Don't know what these do.
   //char *thingy=(char*) 0x2001d276;
@@ -74,6 +77,11 @@ int usb_dnld_hook(){
    */
   if(*blockadr==1){
     switch(packet[0]){
+    case TDFU_DMESG:
+      //The DMESG buffer might move, so this command
+      //sets the target address to the DMESG buffer.
+      *dfu_target_adr=dmesg_start;
+      break;
     case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
       drawtext((wchar_t *) (packet+3),
 	       packet[1],packet[2]);
