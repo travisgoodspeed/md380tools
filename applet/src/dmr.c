@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "md380.h"
+#include "printf.h"
 #include "version.h"
 #include "tooldfu.h"
 #include "config.h"
@@ -49,7 +50,7 @@ void *dmr_call_start_hook(void *pkt){
   return dmr_call_start(pkt);
 }
 
-void *dmr_handle_data_hook(void *pkt, int len){
+void *dmr_handle_data_hook(char *pkt, int len){
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
    */
@@ -57,10 +58,11 @@ void *dmr_handle_data_hook(void *pkt, int len){
   //Turn on the red LED to know that we're here.
   red_led(1);
   
-  //All but the top row is overwritten,
-  //so any status has to be logged here.
-  drawtext(L"dmr_handle_data",
-	   160,20);
+  printf("Data: ");
+  for(int i=0;i<len;i++){
+    printf(" %02x",pkt[i]&0xFF);
+  }
+  printf("\n");
   
   //Forward to the original function.
   return dmr_handle_data(pkt,len);
@@ -77,10 +79,7 @@ void *dmr_sms_arrive_hook(void *pkt){
   //Turn on the red LED to know that we're here.
   red_led(1);
   
-  //All but the top row is overwritten,
-  //so any status has to be logged here.
-  drawtext(L"dmr_sms_arrive",
-	   160,20);
+  printf("SMS header.\n");
   
   //Forward to the original function.
   return dmr_sms_arrive(pkt);

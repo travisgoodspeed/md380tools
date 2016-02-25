@@ -82,9 +82,9 @@ class Tool(DFU):
         """Returns the 1024 byte DMESG buffer."""
         cmd=0x00; #DMESG
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
-        #self.get_status(); #this changes state
-        #time.sleep(0.1);
-        #status=self.get_status(); #this gets the status
+        self.get_status(); #this changes state
+        time.sleep(0.1);
+        status=self.get_status(); #this gets the status
         return dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
 
 def calllog(dfu):

@@ -92,7 +92,7 @@ const char *str2wide(char *widestring,
   
   while(src[i]){
     widestring[2*i]=src[i];//The character.
-    widestring[2*i+1]=0;           //The null byte.
+    widestring[2*i+1]=0;   //The null byte.
     i++;
   }
   widestring[2*i]=0;
@@ -169,7 +169,7 @@ int main(void) {
   led_setup();
   
   //Done with the blinking, so start the radio application.
-  printf("Starting main application.\n");
+  printf("Starting main()\n");
   abort_to_mfgr_app();
 
   //These never get run, but we call them anyways to keep them in the
