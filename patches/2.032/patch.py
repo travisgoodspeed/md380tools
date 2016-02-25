@@ -78,6 +78,51 @@ if __name__ == '__main__':
     patcher.sethword(0x0809cf08, 0xd100);
     patcher.sethword(0x0809cf0a, 0x483c);
     patcher.sethword(0x0809cf0c, 0x4700);
+    #patcher.sethword(0x080172b2, 0x203a);  // edit menu
+    #patcher.sethword(0x0801729c, 0x203a);  // edit menu
+
+    patcher.sethword(    0x0800d8d4, 0xf8df); #  0xdff8
+    patcher.sethword(    0x0800d8d6, 0x0a6c+0x38); #  0x6c0a
+    patcher.sethword(    0x0800d8d8, 0x7881); #  0x8178
+    patcher.sethword(    0x0800d8da, 0xb289); #  0x89b2
+    patcher.sethword(    0x0800d8dc, 0x0020); #  0x2000
+
+    patcher.sethword(    0x0800d8de, 0xf009); #  0x09f0
+    patcher.sethword(    0x0800d8e0, 0xfd05); #  0xe9fc
+    patcher.sethword(    0x0800d8e2, 0x1d24); #  0x241d
+
+    patcher.sethword(    0x0800d8e4, 0x202e); #  0x2f20
+    patcher.sethword(    0x0800d8e6, 0x8020); #  0x2080
+    patcher.sethword(    0x0800d8e8, 0x1ca4); #  0xa41c
+
+    patcher.sethword(    0x0800d8ea, 0xf8df); #  0xdff8
+    patcher.sethword(    0x0800d8ec, 0x0a84+0xc); #  0x840a
+    patcher.sethword(    0x0800d8ee, 0x7841); #  0x4178
+    patcher.sethword(    0x0800d8f0, 0xb289); #  0x89b2
+    patcher.sethword(    0x0800d8f2, 0x0020); #  0x2000
+    patcher.sethword(    0x0800d8f4, 0xf009); #  0x09f0
+    patcher.sethword(    0x0800d8f6, 0xfcfa); #  0xf4fc
+    patcher.sethword(    0x0800d8f8, 0x1d24); #  241d
+
+    patcher.sethword(    0x0800d8fa, 0x202e); #  0x2f20
+    patcher.sethword(    0x0800d8fc, 0x8020); #  0x2080
+    patcher.sethword(    0x0800d8fe, 0x1ca4); #  0xa41c
+
+    patcher.sethword(    0x0800d900, 0x2032); #  0x3220
+    patcher.sethword(    0x0800d902, 0x8020); #  0x2080
+    patcher.sethword(    0x0800d904, 0x1ca4); #  0xa41c
+    patcher.sethword(    0x0800d906, 0x2030); #  0x3020
+    patcher.sethword(    0x0800d908, 0x8020); #  0x2080
+    patcher.sethword(    0x0800d90a, 0x1ca4); #  0xa41c
+    patcher.sethword(    0x0800d90c, 0xf8df); #  0xdff8
+    patcher.sethword(    0x0800d90e, 0x0a98-0x2c); #  0x980a
+    patcher.sethword(    0x0800d910, 0x78c1); #  0xc178
+    patcher.sethword(    0x0800d912, 0xb289); #  0x89b2
+    patcher.sethword(    0x0800d914, 0x0020); #  0x2000
+    patcher.sethword(    0x0800d916, 0xf009); #  0x09f0
+    patcher.sethword(    0x0800d918, 0xfce9); #  0xfffc
+    patcher.sethword(    0x0800d91a, 0x1d24); #  0x241d
+
     # [0x0809cf00]> pd 7
     #             0x0809cf00      4048           ldr r0, [pc, 0x100]         ; [0x809d004:4]=-1
     #             0x0809cf02      0021           movs r1, 0
