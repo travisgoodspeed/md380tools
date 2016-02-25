@@ -64,9 +64,9 @@ class Tool(DFU):
     
     def drawtext(self,str,a,b):
         """Sends a new MD380 command to draw text on the screen.."""
-        cmd=0x80;
-        a=a&0xFF
-        b=b&0xFF
+        cmd=0x80; #Drawtext
+        a=a&0xFF;
+        b=b&0xFF;
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd)+chr(a)+chr(b)+self.widestr(str))
         self.get_status(); #this changes state
         time.sleep(0.1);
@@ -78,7 +78,14 @@ class Tool(DFU):
             print "Failed to send custom %02x %02x." % (a,b);
             return False;
         return True;
-
+    def getdmesg(self):
+        """Returns the 1024 byte DMESG buffer."""
+        cmd=0x00; #DMESG
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
+        #self.get_status(); #this changes state
+        #time.sleep(0.1);
+        #status=self.get_status(); #this gets the status
+        return dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
 
 def calllog(dfu):
     """Prints a call log to stdout, fetched from the MD380's memory."""
@@ -108,6 +115,16 @@ def calllog(dfu):
             print "DMR call from %s to %i." % (
                 users.getusername(llid1),llid2);
             sys.stdout.flush();
+
+
+def dmesg(dfu):
+    """Prints the dmesg log from main memory."""
+    #dfu.drawtext("Hooking calls!",160,50);
+    
+    data=dfu.getdmesg();
+    for b in data:
+        sys.stdout.write(chr(b));
+    sys.stdout.flush;
 
 def bcd(b):
     return int("%02x"%b);
@@ -151,15 +168,18 @@ def usage():
 Usage: md380-tool <command> <arguments>
 
 Print a log of incoming DMR calls to stdout.
-    md380-dfu calllog
+    md380-tool calllog
 
 Looks up the name by an ID number.
-    md380-dfu lookup 12345
+    md380-tool lookup 12345
+
+Prints the dmesg buffer.
+    md380-tool dmesg
 
 
 
 Dump the bootloader from Flash memory.
-    md380-dfu readboot <filename.bin>
+    md380-tool readboot <filename.bin>
 
 
 """)
@@ -167,7 +187,10 @@ Dump the bootloader from Flash memory.
 if __name__ == '__main__':
     try:
         if len(sys.argv) == 2:
-            if sys.argv[1] == 'calllog':
+            if sys.argv[1] == 'dmesg':
+                dfu=init_dfu();
+                dmesg(dfu);
+            elif sys.argv[1] == 'calllog':
                 dfu=init_dfu();
                 calllog(dfu);
             elif sys.argv[1] == 'date':

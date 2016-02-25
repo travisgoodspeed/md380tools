@@ -165,11 +165,11 @@ void demo(){
    initialized in the stock firmware.
 */
 int main(void) {
-  //dmesg_init();
+  dmesg_init();
   led_setup();
   
   //Done with the blinking, so start the radio application.
-  //printf("Starting main application.\n");
+  printf("Starting main application.\n");
   abort_to_mfgr_app();
 
   //These never get run, but we call them anyways to keep them in the
