@@ -171,10 +171,5 @@ int main(void) {
   //Done with the blinking, so start the radio application.
   printf("Starting main()\n");
   abort_to_mfgr_app();
-
-  //These never get run, but we call them anyways to keep them in the
-  //binary.
-  //getmfgstr(0,(void*) NULL);
-  //demo();
 }
 

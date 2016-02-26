@@ -1,9 +1,17 @@
 /*! \file tooldfu.h
   \brief Custom DFU commands for the MD380.
+
+This header defines commands for the first byte of the download's
+data, which is sent to Block 1.  Return data is sent as an upload
+transaction from Block 1.
+
+For example, the TDFU_DMESG command is sent first as a DNLOAD of one
+byte to Block 1, which sets the DFU target address to the DMESG
+buffer.  Later reads grab 1024 bytes as an UPLOAD from Block 1,
+fetching the raw buffer.
 */
 
-//Command is the first byte of the download's data
-//or the index hword of the upload's header (16-bit)
+
 
 //Memory commands
 #define TDFU_DMESG 0x00
