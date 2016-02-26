@@ -27,7 +27,7 @@ void md380_putc ( void* p, char c){
   */
   
   dmesg_start[(dmesg_wcurs++)%DMESG_SIZE]=c;//Write the character.
-  dmesg_start[(dmesg_wcurs+1)%DMESG_SIZE]=0;//Ugly null terminator.
+  dmesg_start[(dmesg_wcurs)%DMESG_SIZE]=0;//Ugly null terminator.
   return;
 }
 
