@@ -34,7 +34,7 @@ terms, you should probably discuss it with the Great Scott Gadgets
 folks over some beer.
 
 Tytera's firmware is of unknown license and is not included in this
-repository.
+repository.  We use a heap-less printf library under the BSD license.
 
 ##Specifications:##
 
@@ -59,16 +59,32 @@ repository.
   http://www.libusb.org/
 
 This project should work across Linux, Mac OS, and Windows, but has
-not been tested on all platforms.
+not been tested on all platforms.  A separate client, MD380Tool,
+is under development for Android.
 
+##Convenient Usage:##
 
-##Usage:##
+Anything with `md380-tool` requires a recent version of our patched
+firmware.  You can check your version in Menu/Utilities/Radio
+Info/Version.  If it's a recent date you're good; if it's a number,
+you need to upgrade.
+
+To actively watch incoming calls, printing a call log with name and
+callsign:
+
+    md380-tool calllog
+
+To dump the recent dmesg log:
+
+    md380-tool dmesg
+
+##Advanced Usage:##
 
 To download a raw (headerless) codeplug into the MD380.
 
     m380-dfu write <filename.img>
 
-To upload a codeplug from the MD380.
+To upload a raw codeplug from the MD380.
 
     md380-dfu read <filename.img>
 
