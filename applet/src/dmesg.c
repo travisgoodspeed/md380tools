@@ -47,3 +47,11 @@ void dmesg_init(){
 void dmesg_flush(){
   dmesg_wcurs=0;
 }
+
+
+/* Convenience function to print in hex. */
+void printhex(char *buf, int len){
+  for(int i=0;i<len;i++){
+    printf(" %02x",buf[i]&0xFF);
+  }
+}

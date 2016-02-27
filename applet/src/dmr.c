@@ -13,6 +13,7 @@
 
 #include "md380.h"
 #include "printf.h"
+#include "dmesg.h"
 #include "version.h"
 #include "tooldfu.h"
 #include "config.h"
@@ -50,18 +51,20 @@ void *dmr_call_start_hook(void *pkt){
   return dmr_call_start(pkt);
 }
 
+
 void *dmr_handle_data_hook(char *pkt, int len){
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
+     
+     Packes are up to twelve bytes, but they are always preceeded by
+     two bytes of C5000 overhead.
    */
   
   //Turn on the red LED to know that we're here.
   red_led(1);
   
-  printf("Data: ");
-  for(int i=0;i<len;i++){
-    printf(" %02x",pkt[i]&0xFF);
-  }
+  printf("Data:       ");
+  printhex(pkt,len+2);
   printf("\n");
   
   //Forward to the original function.
@@ -74,12 +77,32 @@ void *dmr_sms_arrive_hook(void *pkt){
      dmr_sms_arrive() only handles the header and not the actual
      data payload, which is managed by dmr_handle_data() in each
      fragment chunk.
+
+     *pkt points to a twelve byte header with two bytes of C5000
+     overhead.  The body packets will arrive at dmr_handle_data_hook()
+     in chunks of up to twelve bytes, varying by data rate.
+     
+     A full transaction from 3147092 to 99 looks like this:
+
+             header
+             |    //flg\ /--dst-\ /--src-\ /flg\ /crc\
+SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
+       Data: 08 7a 45 00 00 5c 00 03 00 00 40 11 5c a8
+       Data: 08 7a 0c 30 05 54 0c 00 00 63 0f a7 0f a7
+       Data: 08 72 00 48 d1 dc 00 3e e0 00 92 04 0d 00
+       Data: 08 72 0a 00 54 00 68 00 69 00 73 00 20 00
+       Data: 08 72 69 00 73 00 20 00 61 00 20 00 74 00
+       Data: 08 7a 65 00 73 00 74 00 20 00 66 00 72 00
+       Data: 08 7a 6f 00 6d 00 20 00 6b 00 6b 00 34 00
+       Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
    */
   
   //Turn on the red LED to know that we're here.
   red_led(1);
   
-  printf("SMS header.\n");
+  printf("SMS header: ");
+  printhex((char*) pkt, 12+2);
+  printf("\n");
   
   //Forward to the original function.
   return dmr_sms_arrive(pkt);
