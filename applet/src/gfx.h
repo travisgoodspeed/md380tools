@@ -11,4 +11,6 @@ void drawascii(char *ascii,
 
 void green_led(int on);
 void red_led(int on);
+void lcd_background_led(int on);
+
 

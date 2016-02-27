@@ -57,3 +57,11 @@ void red_led(int on) {
     GPIO_ResetBits(GPIOE, GPIO_Pin_1);
   }
 }
+
+void lcd_background_led(int on) {
+  if (on) {
+    GPIO_SetBits(GPIOC, GPIO_Pin_6);
+  } else {
+    GPIO_ResetBits(GPIOC, GPIO_Pin_6);
+  }
+}
