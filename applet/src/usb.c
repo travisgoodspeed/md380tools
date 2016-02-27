@@ -39,14 +39,35 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   //We have to send this much.
   uint16_t length= *(short*)(packet+6);
   
+  //This is the target address of the Application's DFU engine.
+  char *dfutargetadr=(char*) *((int*)0x2000112c); //2.032 DFU target adr.
+  
   /* The DFU protocol specifies reads from block 0 as something
      special, but it doesn't say way to do about an address of 1.
      Shall I take it over?  Don't mind if I do!
    */
   if(blockadr==1){
+    //Some special addresses need help before the transfer.
+    if(dfutargetadr== dmesg_start && dmesg_wcurs==0){
+      /* We have an empty DMESG from the pointer, but we need to clear
+	 it so double-buffering won't confuse the host.
+      */
+      dmesg_start[0]=0;
+      dmesg_start[1]=0;
+    }
+    
+    
+    //Send the data and return.
     usb_send_packet(iface,   //USB interface structure.
-		    (char*) *((int*)0x2000112c), //2.032 DFU target adr.
+		    dfutargetadr,
 		    length); //Length must match.
+
+    //Some addresses have special features after the transfer, before
+    //the return.
+    if(dfutargetadr== dmesg_start){
+      //Clear the position, but not the buffer.
+      dmesg_wcurs=0;
+    }
     return 0;
   }
   

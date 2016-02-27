@@ -100,6 +100,8 @@ class Tool(DFU):
             else:
                 if b>0:
                     head=head+chr(b);
+                else:
+                    break;
         if head==None:
             return tail;
         return head+tail;
@@ -136,9 +138,14 @@ def calllog(dfu):
 
 def dmesg(dfu):
     """Prints the dmesg log from main memory."""
-    #dfu.drawtext("Hooking calls!",160,50);
+    #dfu.drawtext("Dumping dmesg",160,50);
     print dfu.getdmesg();
-    
+
+def dmesgtail(dfu):
+    """Keeps printing the dmesg buffer."""
+    while True:
+        sys.stdout.write(dfu.getdmesg());
+
 
 def bcd(b):
     return int("%02x"%b);
@@ -189,6 +196,8 @@ Looks up the name by an ID number.
 
 Prints the dmesg buffer.
     md380-tool dmesg
+Follow the dmesg buffer.
+    md380-tool dmesgtail
 
 
 
@@ -204,6 +213,9 @@ if __name__ == '__main__':
             if sys.argv[1] == 'dmesg':
                 dfu=init_dfu();
                 dmesg(dfu);
+            elif sys.argv[1] == 'dmesgtail':
+                dfu=init_dfu();
+                dmesgtail(dfu);
             elif sys.argv[1] == 'calllog':
                 dfu=init_dfu();
                 calllog(dfu);
