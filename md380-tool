@@ -152,7 +152,7 @@ def calldate(dfu):
                                 bcd(data[4] & (0x0f | 0x30)),
                                 bcd(data[5] & (0x0f )),
                                 bcd(data[6] ),
-                                bcd(data[2] & (0x0f )),
+                                bcd(data[2] ),
                                 bcd(data[1] & (0x0f |  0x70)),
                                 bcd(data[0] & (0x0f | 0x70)) )
 
