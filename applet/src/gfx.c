@@ -22,6 +22,20 @@ void drawtext(wchar_t *text,
 	       x,y,
 	       15); //strlen(text));
 }
+//! Draws text at an address by calling back to the MD380 function.
+void drawascii(char *ascii,
+	       int x, int y){
+  //Widen the string.  We really ought to do proper lengths.
+  wchar_t wide[15];
+  for(int i=0;i<15;i++)
+    wide[i]=ascii[i];
+  
+  //Draw the wide string, not the original.
+  gfx_drawtext(wide,
+	       0,0,
+	       x,y,
+	       15); //strlen(text));
+}
 
 void green_led(int on) {
   if (on) {

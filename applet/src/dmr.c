@@ -20,32 +20,68 @@
 #include "gfx.h"
 
 
-void *dmr_call_end_hook(void *pkt){
+void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
+     
+     pkt points to something like this:
+     
+                    /--dst-\ /--src-\
+     08 2a 00 00 00 00 00 63 30 05 54 7c 2c 36
    */
   
-  //Turn on the red LED to know that we're here.
-  red_led(1);
+  //Destination adr as Big Endian.
+  int dst=(pkt[7]|
+	   (pkt[6]<<8)|
+	   (pkt[5]<<16));
+  //Source comes next.
+  int src=(pkt[10]|
+	   (pkt[9]<<8)|
+	   (pkt[8]<<16));
   
-  //TODO log the call or display something for a jiffy.
+  printf("\n");
+  printhex((char*)pkt,14);
+  printf("\nDMR call from %d to %d ended.\n",
+	 src,dst);
   
   //Forward to the original function.
-  return dmr_call_end(pkt);
+  return dmr_call_end((void*)pkt);
 }
 
-void *dmr_call_start_hook(void *pkt){
+void *dmr_call_start_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
+     
+     It is called several times per call, presumably when the
+     addresses are resent for late entry.  If you need to trigger
+     something to happen just once per call, it's better to put that
+     in dmr_call_end_hook().
+     
+     pkt looks like this:
+     
+     overhead
+     /    /         /--dst-\ /--src-\
+     08 1a 00 00 00 00 00 63 30 05 54 73 e3 ae
+     10 00 00 00 00 00 00 63 30 05 54 73 2c 36
    */
   
-  //Turn on the red LED to know that we're here.
-  red_led(1);
+  //Destination adr as Big Endian.
+  int dst=(pkt[7]|
+	   (pkt[6]<<8)|
+	   (pkt[5]<<16));
   
   //All but the top row is overwritten,
   //so any status has to be logged here.
-  drawtext(L"dmr_call_start",
-	   160,20);
+  char buf[15];
+  
+  //Print the target adress to the screen.
+  sprintf(buf,
+	  "%d",dst);
+  drawascii(buf,
+	    160,20);
+  
+  //Just a dot for logging.
+  printf(".");
   
   //Forward to the original function.
   return dmr_call_start(pkt);
