@@ -157,15 +157,11 @@ def calldate(dfu):
 
 def calladc1(dfu):
     dfu.set_address(0x2001cfcc);
-    data=dfu.upload(1,8,0);
-
-    print "%02x %02x %02x %02x %02x %02x" % (
-                                data[0],
-                                data[1],
-                                data[2],
-                                data[3],
-                                data[4],
-                                data[5] )
+    data=dfu.upload(1,4,0);
+    # 7.2V ~ 2.4V PA1 (BATT) ... 2715  12BIT
+    # 3.3V
+    
+    print "%f Volt"  % ( 3.3 / 0xfff * ((data[3] << 8 )+ data[2]) * 3 )
 
 
 def init_dfu(alt=0):
