@@ -19,6 +19,8 @@
 #include "config.h"
 #include "gfx.h"
 
+/* Used to avoid duplicate call endings. */
+int incall=0;
 
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
@@ -28,6 +30,10 @@ void *dmr_call_end_hook(char *pkt){
      
                     /--dst-\ /--src-\
      08 2a 00 00 00 00 00 63 30 05 54 7c 2c 36
+     
+     In a clean, simplex call this only occurs once, but on a
+     real-world link, you'll find it called multiple times at the end
+     of the packet.
    */
   
   //Destination adr as Big Endian.
@@ -39,10 +45,12 @@ void *dmr_call_end_hook(char *pkt){
 	   (pkt[9]<<8)|
 	   (pkt[8]<<16));
   
-  printf("\n");
-  printhex((char*)pkt,14);
-  printf("\nDMR call from %d to %d ended.\n",
-	 src,dst);
+  //printf("\n");
+  //printhex((char*)pkt,14);
+  if(incall)
+    printf("\nCall from %d to %d ended.\n",
+	   src,dst);
+  incall=0;
   
   //Forward to the original function.
   return dmr_call_end((void*)pkt);
@@ -83,6 +91,9 @@ void *dmr_call_start_hook(char *pkt){
   //Just a dot for logging.
   printf(".");
   
+  //Record that we are in a call, for later logging.
+  incall=1;
+  
   //Forward to the original function.
   return dmr_call_start(pkt);
 }
@@ -121,7 +132,7 @@ void *dmr_sms_arrive_hook(void *pkt){
      A full transaction from 3147092 to 99 looks like this:
 
              header
-             |    //flg\ /--dst-\ /--src-\ /flg\ /crc\
+             |   / /flg\ /--dst-\ /--src-\ /flg\ /crc\
 SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
        Data: 08 7a 45 00 00 5c 00 03 00 00 40 11 5c a8
        Data: 08 7a 0c 30 05 54 0c 00 00 63 0f a7 0f a7
