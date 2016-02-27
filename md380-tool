@@ -155,6 +155,18 @@ def calldate(dfu):
                                 bcd(data[1] & (0x0f |  0x70)),
                                 bcd(data[0] & (0x0f | 0x70)) )
 
+def calladc1(dfu):
+    dfu.set_address(0x2001cfcc);
+    data=dfu.upload(1,8,0);
+
+    print "%02x %02x %02x %02x %02x %02x" % (
+                                data[0],
+                                data[1],
+                                data[2],
+                                data[3],
+                                data[4],
+                                data[5] )
+
 
 def init_dfu(alt=0):
     dev = usb.core.find(idVendor=md380_vendor,
@@ -210,6 +222,9 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'date':
                 dfu=init_dfu();
                 calldate(dfu);
+            elif sys.argv[1] == 'adc1':
+                dfu=init_dfu();
+                calladc1(dfu);         	    	
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'readboot':
                 print "I should be dumping memory to '%s'." % sys.argv[2];
