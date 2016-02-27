@@ -144,16 +144,25 @@ def bcd(b):
     return int("%02x"%b);
 
 def calldate(dfu):
-    dfu.set_address(0x40002800);
+    """Print Time and Date  to stdout, fetched from the MD380's RTC."""
+    dfu.set_address(0x40002800);  # 2.032
     data=dfu.upload(1,8,0);
 
     print "%02d.%02d.%02d %02d:%02d:%02d" % (
                                 bcd(data[4] & (0x0f | 0x30)),
                                 bcd(data[5] & (0x0f )),
                                 bcd(data[6] ),
-                                bcd(data[2] & (0x0f )),
+                                bcd(data[2] ),
                                 bcd(data[1] & (0x0f |  0x70)),
                                 bcd(data[0] & (0x0f | 0x70)) )
+
+def calladc1(dfu):
+    """Print ADC1 Voltage (Battery), fetched from the MD380's Memory (Update with DMA)."""
+    dfu.set_address(0x2001cfcc);   #  2.032
+    data=dfu.upload(1,4,0);
+    # 7.2V ~ 2.4V PA1 (BATT) ... 2715 ~ 6.5V ... 3.3V 12BIT
+    
+    print "%f Volt"  % ( 3.3 / 0xfff * ((data[3] << 8 )+ data[2]) * 3 )
 
 
 def init_dfu(alt=0):
@@ -210,6 +219,9 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'date':
                 dfu=init_dfu();
                 calldate(dfu);
+            elif sys.argv[1] == 'adc1':
+                dfu=init_dfu();
+                calladc1(dfu);         	    	
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'readboot':
                 print "I should be dumping memory to '%s'." % sys.argv[2];
