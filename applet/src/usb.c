@@ -48,12 +48,23 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
    */
   if(blockadr==1){
     //Some special addresses need help before the transfer.
-    if(dfutargetadr== dmesg_start && dmesg_wcurs==0){
-      /* We have an empty DMESG from the pointer, but we need to clear
-	 it so double-buffering won't confuse the host.
+    if(dfutargetadr== dmesg_start){
+      /* We can't send the DMESG buffer itself, because it's in the
+	 tightly coupled memory, so we'll memcpy() it to a buffer in
+	 SRAM and then transmit it.
       */
-      dmesg_start[0]=0;
-      dmesg_start[1]=0;
+      memcpy(dmesg_tx_buf,dmesg_start,DMESG_SIZE);
+      
+      //Wipe out the old buffer and set the pointer to the beginning.
+      for(int i=0;i<DMESG_SIZE;i++)
+	dmesg_start[i]=0;
+      dmesg_wcurs=0;
+      
+      //Send the doubled buffer and return.
+      usb_send_packet(iface,   //USB interface structure.
+		      dmesg_tx_buf,
+		      length); //Length must match.
+      return 0;
     }
     
     
@@ -61,13 +72,6 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
     usb_send_packet(iface,   //USB interface structure.
 		    dfutargetadr,
 		    length); //Length must match.
-
-    //Some addresses have special features after the transfer, before
-    //the return.
-    if(dfutargetadr== dmesg_start){
-      //Clear the position, but not the buffer.
-      dmesg_wcurs=0;
-    }
     return 0;
   }
   

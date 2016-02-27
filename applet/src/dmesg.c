@@ -7,14 +7,12 @@
 */
 
 #include "printf.h"
+#include "dmesg.h"
 
-//1kb buffer.  Verify that this is empty with reads.
-#define DMESG_START 0x2001d500
-#define DMESG_SIZE 1024
 
 //Pointers to the dmesg buffers.
-char *dmesg_start=(char*) DMESG_START;
-char *dmesg_end=(char*) DMESG_START+DMESG_SIZE;
+char *dmesg_tx_buf=(char*) DMESG_START;
+char dmesg_start[DMESG_SIZE];
 int dmesg_wcurs=0;
 
 /* We need to first create our new putc() function
