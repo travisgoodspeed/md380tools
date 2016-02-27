@@ -85,7 +85,24 @@ class Tool(DFU):
         self.get_status(); #this changes state
         time.sleep(0.1);
         status=self.get_status(); #this gets the status
-        return dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        
+        #Okay, so at this point we have the buffer, but it's a ring
+        #buffer that might have already looped, so we need to reorder
+        #if that is the case or crop it if it isn't.
+        tail="";
+        head=None;
+        for b in buf:
+            if head==None:
+                tail=tail+chr(b);
+                if b==0:
+                    head="";
+            else:
+                if b>0:
+                    head=head+chr(b);
+        if head==None:
+            return tail;
+        return head+tail;
 
 def calllog(dfu):
     """Prints a call log to stdout, fetched from the MD380's memory."""
@@ -120,11 +137,8 @@ def calllog(dfu):
 def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     #dfu.drawtext("Hooking calls!",160,50);
+    print dfu.getdmesg();
     
-    data=dfu.getdmesg();
-    for b in data:
-        sys.stdout.write(chr(b));
-    sys.stdout.flush;
 
 def bcd(b):
     return int("%02x"%b);
