@@ -8,6 +8,11 @@
   
   All hooked commands and transfers occur when block=1, as DFU
   normally uses block=0 for commands and block>=2 for transfers.
+  
+  You can use these command hooks to process things while the
+  radio is running, but the AMBE+ codec chip emulator will
+  take priority and block USB so, so you can't do it during
+  an audio transmission or reception.
 */
 
 
@@ -62,13 +67,13 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
       
       //Send the doubled buffer and return.
       usb_send_packet(iface,   //USB interface structure.
-		      dmesg_tx_buf,
+		      dmesg_tx_buf, //Send the copy, not the original.
 		      length); //Length must match.
       return 0;
     }
     
     
-    //Send the data and return.
+    //Send the data from internal memory and return.
     usb_send_packet(iface,   //USB interface structure.
 		    dfutargetadr,
 		    length); //Length must match.

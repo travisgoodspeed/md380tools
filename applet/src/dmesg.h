@@ -6,9 +6,11 @@
 #define DMESG_START 0x2001d500
 #define DMESG_SIZE 1024
 
-
+//This buffer is in TCRAM, cannot be DMAd.
 extern char dmesg_start[];
+//dmesg_start is copied here in SRAM for DMA over USB.
 extern char *dmesg_tx_buf;
+//Pointer to the current byte.  Loops as a ring buffer when full.
 extern int dmesg_wcurs;
 
 //Basic functions.
