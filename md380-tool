@@ -94,8 +94,9 @@ class Tool(DFU):
         head=None;
         for b in buf:
             if head==None:
-                tail=tail+chr(b);
-                if b==0:
+                if b>0:
+                    tail=tail+chr(b);
+                else:
                     head="";
             else:
                 if b>0:
