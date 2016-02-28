@@ -180,6 +180,17 @@ def getchannel(dfu):
     data=dfu.upload(1,4,0);
     print "%02d %02d %02d %02d" % ( data[3], data[2], data[1], data[0])
 
+def readword(dfu, address):
+        
+    print "%x"%(int(address, 0))
+
+    dfu.set_address(int(address,0));  # 2.032 
+    data=dfu.upload(1,4*4,0);
+    print "%x %02x %02x %02x %02x" % (int(address, 0), data[3], data[2], data[1], data[0])
+    print "%x %02x %02x %02x %02x" % (int(address, 0)+4, data[7], data[6], data[5], data[4])
+    print "%x %02x %02x %02x %02x" % (int(address, 0)+8, data[11], data[10], data[9], data[8])
+    print "%x %02x %02x %02x %02x" % (int(address, 0)+12, data[15], data[14], data[13], data[12])
+
 
 
 def init_dfu(alt=0):
@@ -248,11 +259,15 @@ if __name__ == '__main__':
                 dfu=init_dfu();
                 getchannel(dfu);
 
+
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'readboot':
                 print "I should be dumping memory to '%s'." % sys.argv[2];
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]));
+            elif sys.argv[1] == 'readword':
+                dfu=init_dfu();
+                readword(dfu, sys.argv[2]);
 
         else:
             usage();
