@@ -31,7 +31,8 @@ class UsersDB():
         with open(filename,'rb') as csvfile:
             reader=csv.reader(csvfile);
             for row in reader:
-                self.users[int(row[0])]=row;
+                if len(row)>0:
+                    self.users[int(row[0])]=row;
     def getuser(self,id):
         """Returns a user from the ID."""
         try:
