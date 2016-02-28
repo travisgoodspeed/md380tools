@@ -3,6 +3,7 @@
 */
 
 #include <stdio.h>
+#include <stdint.h>
 
 
 //Move these to their own module.
