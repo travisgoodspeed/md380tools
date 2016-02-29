@@ -151,7 +151,9 @@ CCa 0x08026662 ... maybe STM32LIB
 
 CCa 0x08044620 set A7 POW_C
 
-af+ 0x08026ab0 6 gpio_read r0 base addr but only 16bit
+af+ 0x08026ab0 6  GPIO_ReadInputData()
+CCa 0x08026ab0 GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
+
 af+ 0x08026ab6 4 gpio_write_set r0 base addr , val in r1
 af+ 0x08026aba 4 gpio_write_reset r0 base addr , val in r1
 
