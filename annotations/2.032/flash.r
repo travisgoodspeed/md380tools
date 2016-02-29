@@ -88,6 +88,9 @@ CCa 0x0804b584 Reset BSHIFT
 CCa 0x0804b5b2 Set PLL_DAT/DMR_SDI
 CCa 0x0804b5bc Reset PLL_DAT/DMR_SDI
 
+CCa 0x080443f8 Crate Process -LED Process- Thread Start  addr 0x809573d
+CCa 0x0809573d LED Process()
+
 CCa 0x08095740 from Codeplug Led Indikatore Enable 0x2001c658  ... maybe
 CCa 0x08095752 GPIO_WriteBit(GPIOE, 1, 1) - RX_LED ON
 CCa 0x08095752 GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
