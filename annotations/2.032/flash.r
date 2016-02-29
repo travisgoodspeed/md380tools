@@ -139,12 +139,15 @@ CCa 0x08026504 ... maybe STM32LIB ErrorStatus RTC_RefClockCmd(FunctionalState Ne
 af+ 0x08026596 24 something_to_store_to_RTC_backup_registers()
 CCa 0x08026596 something to store to RTC backup registers (RTC_BKPxR)
 
-af+ 0x080265ba 84 RTC_ITConfig(
+af+ 0x080265ba 84 RTC_ITConfig()
 CCa 0x080265ba ... maybe STM32LIB void RTC_ITConfig(uint32_t RTC_IT, FunctionalState NewState)
 
-af+ 0x08026616 28 RTC_ClearFlag(
+af+ 0x08026616 28 RTC_ClearFlag()
 CCa 0x08026616 ... maybe STM32LIB void RTC_ClearFlag(uint32_t RTC_FLAG)
 
+
+af+ 0x08026662 24 RTC_Bcd2ToByte()
+CCa 0x08026662 ... maybe STM32LIB
 
 CCa 0x08044620 set A7 POW_C
 
