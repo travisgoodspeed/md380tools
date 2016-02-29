@@ -33,6 +33,8 @@ void* (*dmr_handle_data)(void *pkt, int len) = 0x0804b66d;
 //! Function that handles an incoming SMS.
 void* (*dmr_sms_arrive)(void *pkt)=0x0803f03d;
 
+void (*MD380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;
+
 
 //! Handle to the original (unhooked) upload handler.
 int (*usb_upld_handle)(void*, char*, int, int)=0x0808d3d9;
