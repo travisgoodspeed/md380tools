@@ -88,6 +88,27 @@ CCa 0x0804b584 Reset BSHIFT
 CCa 0x0804b5b2 Set PLL_DAT/DMR_SDI
 CCa 0x0804b5bc Reset PLL_DAT/DMR_SDI
 
+CCa 0x080443f8 Crate Process -LED Process- Thread Start  addr 0x809573d
+CCa 0x0809573d LED Process()
+
+CCa 0x08095740 from Codeplug Led Indikatore Enable 0x2001c658  ... maybe
+CCa 0x08095752 GPIO_WriteBit(GPIOE, 1, 1) - RX_LED ON
+CCa 0x08095752 GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
+CCa 0x08095770 GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
+CCa 0x0809577a GPIO_WriteBit(GPIOE, 2, 0) - TX_LED OFF
+CCa 0x080957c6 GPIO_WriteBit(GPIOE, 2, 0) - TX_LED OFF
+CCa 0x080957d0 GPIO_WriteBit(GPIOE, 1, 1) - RX_LED ON
+CCa 0x080957ec GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
+CCa 0x080957f6 GPIO_WriteBit(GPIOE, 2, 1) - TX_LED ON
+CCa 0x08095842 GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
+CCa 0x0809584c GPIO_WriteBit(GPIOE, 2, 0) - TX_LED OFF
+CCa 0x0809586c GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
+CCa 0x08095876 GPIO_WriteBit(GPIOE, 2, 0) - TX_LED OFF
+CCa 0x08095884 GPIO_WriteBit(GPIOE, 1, 1) - RX_LED ON
+CCa 0x0809588e GPIO_WriteBit(GPIOE, 2, 1) - TX_LED ON
+CCa 0x0809589a GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
+CCa 0x080958a4 GPIO_WriteBit(GPIOE, 2, 0) - TX_LED OFF
+
 
 af+ 0x08049e9c 10 ADC_SoftwareStartConv()
 CCa 0x08049e9c ... maybe STM32LIB ..Function start adc(r0=base address) Bit 30 SWSTART: Start conversion of regular channels
@@ -139,16 +160,21 @@ CCa 0x08026504 ... maybe STM32LIB ErrorStatus RTC_RefClockCmd(FunctionalState Ne
 af+ 0x08026596 24 something_to_store_to_RTC_backup_registers()
 CCa 0x08026596 something to store to RTC backup registers (RTC_BKPxR)
 
-af+ 0x080265ba 84 RTC_ITConfig(
+af+ 0x080265ba 84 RTC_ITConfig()
 CCa 0x080265ba ... maybe STM32LIB void RTC_ITConfig(uint32_t RTC_IT, FunctionalState NewState)
 
-af+ 0x08026616 28 RTC_ClearFlag(
+af+ 0x08026616 28 RTC_ClearFlag()
 CCa 0x08026616 ... maybe STM32LIB void RTC_ClearFlag(uint32_t RTC_FLAG)
 
 
+af+ 0x08026662 24 RTC_Bcd2ToByte()
+CCa 0x08026662 ... maybe STM32LIB
+
 CCa 0x08044620 set A7 POW_C
 
-af+ 0x08026ab0 6 gpio_read r0 base addr but only 16bit
+af+ 0x08026ab0 6  GPIO_ReadInputData()
+CCa 0x08026ab0 GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
+
 af+ 0x08026ab6 4 gpio_write_set r0 base addr , val in r1
 af+ 0x08026aba 4 gpio_write_reset r0 base addr , val in r1
 
