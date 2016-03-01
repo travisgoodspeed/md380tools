@@ -50,3 +50,7 @@ char *botlinetext=(char*) 0x2001cee0;
 
 //ROM copy of the welcome bitmap.
 char *welcomebmp=0x080f9ca8;
+
+//! Function that handles uC/OS-II settings
+void* (*OSTaskCreate)(void *, int, void * , int)=0x804bbf5;
+void* (*os_set_task)(int, char *, void *)=0x804bcc1;

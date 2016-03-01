@@ -43,3 +43,7 @@ int (*usb_send_packet)(void*, char*, uint16_t);
 
 int (*usb_dnld_handle)();
 int *dnld_tohook;
+
+//! Function that handles uC/OS-II settings
+extern void* (*OSTaskCreate) (void *, int, void * , int);
+extern void* (*os_set_task)(int, char *, void *);

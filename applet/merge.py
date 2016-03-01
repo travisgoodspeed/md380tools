@@ -106,7 +106,7 @@ class Merger():
         #print "offset=%08x" % offset;
         offset=offset-4;    #PC points to the next ins.
         offset=(offset>>1); #LSBit is ignored.
-        hi=0xF000 | ((offset&0xfff100)>>11); #Hi address setter, but at lower adr.
+        hi=0xF000 | ((offset&0xfff800)>>11); #Hi address setter, but at lower adr.
         lo=0xF800 | (offset&0x7ff);            #Low adr setter goes next.
         #print "%04x %04x" % (hi,lo);
         word=((lo<<16) | hi);
@@ -183,6 +183,15 @@ if __name__== '__main__':
     merger.hookbl(0x0803ebaa, #sms_arrive_hook().
                   sapplet.getadr("dmr_sms_arrive_hook"),
                   0x0803f03c);
+
+    merger.hookbl(0x080443fc,
+                  sapplet.getadr("OSTaskCreate_hook"),
+                  0x0804bbf4);
+
+    merger.hookbl(0x08044408,
+                  sapplet.getadr("os_set_task_hook"),
+                  0x804bcc0);
+
     
     #Throwaway hook to see if adr is called.
     #merger.hookstub(0x0803f03c,
