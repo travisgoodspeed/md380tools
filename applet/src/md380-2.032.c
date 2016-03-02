@@ -6,6 +6,7 @@
 
 #include "md380.h"
 
+
 //So we don't get warnings about integer pointers, for just this header.
 #pragma GCC diagnostic ignored "-Wint-conversion"
 
@@ -52,5 +53,6 @@ char *botlinetext=(char*) 0x2001cee0;
 char *welcomebmp=0x080f9ca8;
 
 //! Function that handles uC/OS-II settings
-void* (*OSTaskCreate)(void *, int, void * , int)=0x804bbf5;
-void* (*os_set_task)(int, char *, void *)=0x804bcc1;
+
+INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt)=0x804bbf5;
+void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;

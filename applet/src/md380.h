@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "os.h"
 
 //Move these to their own module.
 void strhex(char *, long);
@@ -45,5 +46,5 @@ int (*usb_dnld_handle)();
 int *dnld_tohook;
 
 //! Function that handles uC/OS-II settings
-extern void* (*OSTaskCreate) (void *, int, void * , int);
-extern void* (*os_set_task)(int, char *, void *);
+extern INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
+extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);

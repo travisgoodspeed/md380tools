@@ -185,108 +185,108 @@ if __name__== '__main__':
                   0x0803f03c);
 
     merger.hookbl(0x8042368,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044028,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x80442c4,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x80442f8,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x804432c,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044360,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044394,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x80443c8,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x80443fc,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044430,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044464,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044498,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x80444cc,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044500,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8044534,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x8049150,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
     merger.hookbl(0x804ae5c,
-                  sapplet.getadr("OSTaskCreate_hook"),
+                  sapplet.getadr("OSTaskCreateExt_hook"),
                   0x0804bbf4);
 
 
     merger.hookbl(0x8042374,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x8044034,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x80442d0,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x8044304,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x8044338,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x804436c,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x80443a0,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x80443d4,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x8044408,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x804443c,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x8044470,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x80444a4,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x80444d8,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x804450c,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x8044540,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x804915c,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
     merger.hookbl(0x804ae68,
-                  sapplet.getadr("os_set_task_hook"),
+                  sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
 
 
