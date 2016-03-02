@@ -167,7 +167,13 @@ void demo(){
 int main(void) {
   dmesg_init();
   led_setup();
-  
+
+  RTC_TimeTypeDef RTC_TimeTypeTime;
+  MD380_RTC_GetTime(RTC_Format_BIN, &RTC_TimeTypeTime);
+  printf("%d:%d:%d\n", RTC_TimeTypeTime.RTC_Hours,
+                     RTC_TimeTypeTime.RTC_Minutes,
+                     RTC_TimeTypeTime.RTC_Seconds);
+     
   //Done with the blinking, so start the radio application.
   printf("Starting main()\n");
   abort_to_mfgr_app();

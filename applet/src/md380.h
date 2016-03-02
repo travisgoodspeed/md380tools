@@ -6,6 +6,8 @@
 #include <stdint.h>
 
 #include "os.h"
+#include "peripherals/stm32f4xx_rtc.h"
+
 
 //Move these to their own module.
 void strhex(char *, long);
@@ -28,6 +30,9 @@ extern void* (*dmr_call_start)(void *pkt);
 extern void* (*dmr_handle_data)(void *pkt, int len);
 //! Function that handles an incoming SMS.
 extern void* (*dmr_sms_arrive)(void *pkt);
+
+
+extern void (*MD380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 
 //Pointer to the buffer that stores the bottom line of screen text.
