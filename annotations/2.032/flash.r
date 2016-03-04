@@ -34,9 +34,29 @@ CCa 0x08026ab6 ... maybe STM32LIB
 af+ 0x08026aba 4 GPIO_ResetBits
 CCa 0x08026aba ... maybe STM32LIB  
 
+
+af+ 0x8042468 30 uC-OS-II-Idle()
+af+ 0x804921c 122 uC-OS-II-Tmr()
+af+ 0x804403c 310 Start()
+af+ 0x803dbc4 28 Sys-Inter()
+af+ 0x8044548 226 RTC-Timer()
+af+ 0x803b524 2286 Call_Process()
+af+ 0x8044674 626 FMTx_Process()
+af+ 0x80448e8 42 RF-Pll()
+af+ 0x8044900 20 PC-Tune()
+af+ 0x809573c 366 LED-Process()
+af+ 0x802a960 4084 Beep-Process()
+af+ 0x802bb40 372 Af-Mute()
+af+ 0x803dbe2 52 TimeSlot-Inter()
+af+ 0x802bcb8 340 Set-Vocoder()
+af+ 0x803c244 772 ChAccess-Pr()
+af+ 0x803be24 992 State-Change()
+af+ 0x804af68 568 Tone-fft()
+
+
+
 af+ 0x08041df8 8 OS_ENTER_CRITICAL()
 af+ 0x08041e00 6 OS_EXIT_CRITICAL()
-
 
 CCa 0x8030262 Call OS_ENTER_CRITICAL()
 CCa 0x80302d6 Call OS_ENTER_CRITICAL()
@@ -164,6 +184,12 @@ CCa 0x0802fb0e GPIO_SetBits(GPIOD, 0x80)
 af+ 0x08026abe 14 GPIO_WriteBit()
 CCa 0x08026abe ... maybe STM32LIB .. (r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 
+af+ 0x08046a28 306 Big_I2C_Function()
+af+ 0x0804ff74 244 Function_Called_Big_I2C_Function()
+af+ 0x08050068 270 Function_Function_Called_Big_I2C_Function()
+af+ 0x08046e00 156 Function_Function_Function_Called_Big_I2C_Function()
+af+ 0x08032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function()
+CCa 0x08032a3c Called from Task Start()
 
 af+ 0x08026a9a 22 GPIO_ReadInputDataBit()
 CCa 0x08026a9a ... maybe STM32LIB  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
@@ -176,9 +202,9 @@ CCa 0x08095736 Somsing with leds
 
 CCa 0x0803a2c6 mybee vox
 
-af+ 0x0804d268 208 Read_Channel_Switch
+af+ 0x0804d268 208 Read_Channel_Switch()
+af+ 0x0804d338 136 This_function_called_Read_Channel_Switch()
 
-CCa 0x0804d268 Function read and .. channal switch 
 CCa 0x0804d29a add 1 for ECN0
 CCa 0x0804d2ca add 2 for ECN1
 CCa 0x0804d2fa add 4 for ECN2
