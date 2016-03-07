@@ -36,6 +36,7 @@ CCa 0x08026aba ... maybe STM32LIB
 
 
 af+ 0x8042468 30 uC-OS-II-Idle()
+CCa 0x8042468 runs with 1MHz
 af+ 0x804921c 122 uC-OS-II-Tmr()
 af+ 0x804403c 310 Start()
 af+ 0x803dbc4 28 Sys-Inter()
@@ -52,6 +53,7 @@ af+ 0x802bcb8 340 Set-Vocoder()
 af+ 0x803c244 772 ChAccess-Pr()
 af+ 0x803be24 992 State-Change()
 af+ 0x804af68 568 Tone-fft()
+
 
 
 
@@ -184,18 +186,99 @@ CCa 0x0802fb0e GPIO_SetBits(GPIOD, 0x80)
 af+ 0x08026abe 14 GPIO_WriteBit()
 CCa 0x08026abe ... maybe STM32LIB .. (r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 
-af+ 0x08046a28 306 Big_I2C_Function()
 af+ 0x0804ff74 244 Function_Called_Big_I2C_Function()
 af+ 0x08050068 270 Function_Function_Called_Big_I2C_Function()
 af+ 0x08046e00 156 Function_Function_Function_Called_Big_I2C_Function()
 af+ 0x08032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function()
 CCa 0x08032a3c Called from Task Start()
 
+
+af+ 0x080355be 32 RCC_APB1_peripheral_clock_enable_register
+af+ 0x080355de 32 RCC_APB2_peripheral_clock_enable_register
+
+af+ 0x0804767c 62 dma_cmd_?()
+
+af+ 0x08041f10 148 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_1()
+af+ 0x0804248c 318 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_2()
+
+af+ 0x0804b90c 8  short_function_1()
+af+ 0x0804b914 36 short_function_2()
+af+ 0x0804b976 2 short_function_3()
+af+ 0x0804b974 2 short_function_4()
+
+
+af+ 0x08042448 30 mem_transfet
+
+
+af+ 0x08041ccc 28 f_0x400_0xfbff()
+
+
+af+ 0x0804696e 186 Not_Big_I2C_Function2()
+af+ 0x0804690c 22 Not_Big_I2C_Function3() 
+
+
+af+ 0x0804696e 186 Not_Big_I2C_Function3()
+CCa 0x8046a12 access auf 0x4000540 I2C1
+CCa 0x8046a1c access auf 0x4000540 I2C1
+
+
+
+
+af+ 0x08046a28 306 Big_I2C_Function()
+CCa 0x8046a36 access auf 0x4000540 I2C1
+CCa 0x8046a44 access auf 0x4000540 I2C1
+CCa 0x8046a62 access auf 0x4000540 I2C1
+CCa 0x8046a70 access auf 0x4000540 I2C1
+CCa 0x8046a8c access auf 0x4000540 I2C1
+CCa 0x8046a9a access auf 0x4000540 I2C1
+CCa 0x8046aa8 access auf 0x4000540 I2C1
+CCa 0x8046ac2 access auf 0x4000540 I2C1
+CCa 0x8046ad0 access auf 0x4000540 I2C1
+CCa 0x8046aee access auf 0x4000540 I2C1
+CCa 0x8046afc access auf 0x4000540 I2C1
+CCa 0x8046b18 access auf 0x4000540 I2C1
+CCa 0x8046b32 access auf 0x4000540 I2C1
+CCa 0x8046b4c access auf 0x4000540 I2C1
+
+af+ 0x08046b5a 236  Verry_Big_Function_with_I2C1()
+CCa 0x8046b68 access auf 0x4000540 I2C1
+CCa 0x8046b76 access auf 0x4000540 I2C1
+CCa 0x8046b94 access auf 0x4000540 I2C1
+CCa 0x8046ba2 access auf 0x4000540 I2C1
+CCa 0x8046bbe access auf 0x4000540 I2C1
+CCa 0x8046bcc access auf 0x4000540 I2C1
+CCa 0x8046bda access auf 0x4000540 I2C1
+CCa 0x8046c02 access auf 0x4000540 I2C1
+CCa 0x8046c10 access auf 0x4000540 I2C1
+CCa 0x8046c1e access auf 0x4000540 I2C1
+CCa 0x8046c38 access auf 0x4000540 I2C1
+
+af+ 0x804fcb0 234 I2C1_Function_1()
+af+ 0x804fda8 28 I2C1_Function_2()
+af+ 0x804fdc4 28 I2C1_Function_3()
+af+ 0x804fde0 28 I2C1_Function_4()
+af+ 0x804fdfc 22 I2C1_Function_5()
+af+ 0x804fe12 6 I2C1_Function_6()
+af+ 0x804fe18 6 I2C1_Function_7()
+af+ 0x804fe1e 52 I2C1_Function_8()
+af+ 0x804fe52 66 I2C1_Function_9()
+
+af+ 0x08046ca0 22 PWR_GetFlagStatus()
+CCa 0x08046ca0 ... maybe STM32LIB
+
+af+ 0x08046cb6 14 Function_PWR_CR__()
+CCa 0x08046cb6 maybe Function ???
+
+CCa 0x08046ca2 PWR_CSR
+CCa 0x08046cb6 PWR_CR
+CCa 0x08046cbe PWR_CR
+
 af+ 0x08026a9a 22 GPIO_ReadInputDataBit()
 CCa 0x08026a9a ... maybe STM32LIB  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
 
 
 CCa 0x0800df84 Function with check LCD_CS ....   why ....  when (set/noset) jump over function
+
 
 
 CCa 0x08095736 Somsing with leds
@@ -306,8 +389,6 @@ CCa 0x08044620 set A7 POW_C
 af+ 0x08026ab0 6  GPIO_ReadInputData()
 CCa 0x08026ab0 GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
 
-af+ 0x08026ab6 4 gpio_write_set r0 base addr , val in r1
-af+ 0x08026aba 4 gpio_write_reset r0 base addr , val in r1
 
 CCa 0x8026194 Call RTC_ExitInitMode()
 CCa 0x802631e Call RTC_ExitInitMode()
@@ -410,3 +491,229 @@ CCa 0x08095884 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base add
 CCa 0x0809588e call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0809589a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x080958a4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+
+CCa 0x800ded4 config_byte_LED_enable_and_more
+CCa 0x8012b9e config_byte_LED_enable_and_more
+CCa 0x8012bae config_byte_LED_enable_and_more
+CCa 0x8012bbe config_byte_LED_enable_and_more
+CCa 0x8012bce config_byte_LED_enable_and_more
+CCa 0x80154c2 config_byte_LED_enable_and_more
+CCa 0x8016c02 config_byte_LED_enable_and_more
+CCa 0x8016d26 config_byte_LED_enable_and_more
+CCa 0x8016db0 config_byte_LED_enable_and_more
+CCa 0x8016e5a config_byte_LED_enable_and_more
+CCa 0x8017002 config_byte_LED_enable_and_more
+CCa 0x8017bba config_byte_LED_enable_and_more
+CCa 0x8017bc4 config_byte_LED_enable_and_more
+CCa 0x8017bde config_byte_LED_enable_and_more
+CCa 0x8017be8 config_byte_LED_enable_and_more
+CCa 0x8017c02 config_byte_LED_enable_and_more
+CCa 0x8017c0c config_byte_LED_enable_and_more
+CCa 0x8017c18 config_byte_LED_enable_and_more
+CCa 0x8017c22 config_byte_LED_enable_and_more
+CCa 0x8017c2e config_byte_LED_enable_and_more
+CCa 0x8017c38 config_byte_LED_enable_and_more
+CCa 0x8017c44 config_byte_LED_enable_and_more
+CCa 0x8017c4e config_byte_LED_enable_and_more
+CCa 0x8017c5a config_byte_LED_enable_and_more
+CCa 0x8017c64 config_byte_LED_enable_and_more
+CCa 0x8017c70 config_byte_LED_enable_and_more
+CCa 0x8017c7a config_byte_LED_enable_and_more
+CCa 0x8017e80 config_byte_LED_enable_and_more
+CCa 0x8017e8a config_byte_LED_enable_and_more
+CCa 0x8017ea4 config_byte_LED_enable_and_more
+CCa 0x8017eae config_byte_LED_enable_and_more
+CCa 0x8017ec8 config_byte_LED_enable_and_more
+CCa 0x8017ed2 config_byte_LED_enable_and_more
+CCa 0x8017ede config_byte_LED_enable_and_more
+CCa 0x8017ee8 config_byte_LED_enable_and_more
+CCa 0x8017ef4 config_byte_LED_enable_and_more
+CCa 0x8017efe config_byte_LED_enable_and_more
+CCa 0x8017f0a config_byte_LED_enable_and_more
+CCa 0x8017f14 config_byte_LED_enable_and_more
+CCa 0x8017f22 config_byte_LED_enable_and_more
+CCa 0x8017f2c config_byte_LED_enable_and_more
+CCa 0x8017f38 config_byte_LED_enable_and_more
+CCa 0x8017f42 config_byte_LED_enable_and_more
+CCa 0x8018142 config_byte_LED_enable_and_more
+CCa 0x8018256 config_byte_LED_enable_and_more
+CCa 0x80182de config_byte_LED_enable_and_more
+CCa 0x801851a config_byte_LED_enable_and_more
+CCa 0x8018610 config_byte_LED_enable_and_more
+CCa 0x8018c9e config_byte_LED_enable_and_more
+CCa 0x8019188 config_byte_LED_enable_and_more
+CCa 0x8019326 config_byte_LED_enable_and_more
+CCa 0x80193b0 config_byte_LED_enable_and_more
+CCa 0x8019438 config_byte_LED_enable_and_more
+CCa 0x8019722 config_byte_LED_enable_and_more
+CCa 0x801978e config_byte_LED_enable_and_more
+CCa 0x80198a6 config_byte_LED_enable_and_more
+CCa 0x80198ae config_byte_LED_enable_and_more
+CCa 0x8019930 config_byte_LED_enable_and_more
+CCa 0x8019938 config_byte_LED_enable_and_more
+CCa 0x80199a6 config_byte_LED_enable_and_more
+CCa 0x8019b34 config_byte_LED_enable_and_more
+CCa 0x8019bc8 config_byte_LED_enable_and_more
+CCa 0x8019c50 config_byte_LED_enable_and_more
+CCa 0x8019cd2 config_byte_LED_enable_and_more
+CCa 0x8019d60 config_byte_LED_enable_and_more
+CCa 0x801a02a config_byte_LED_enable_and_more
+CCa 0x801a544 config_byte_LED_enable_and_more
+CCa 0x801a54c config_byte_LED_enable_and_more
+CCa 0x801a554 config_byte_LED_enable_and_more
+CCa 0x801a55c config_byte_LED_enable_and_more
+CCa 0x801a564 config_byte_LED_enable_and_more
+CCa 0x801a574 config_byte_LED_enable_and_more
+CCa 0x801a584 config_byte_LED_enable_and_more
+CCa 0x801a594 config_byte_LED_enable_and_more
+CCa 0x801a5f0 config_byte_LED_enable_and_more
+CCa 0x801a782 config_byte_LED_enable_and_more
+CCa 0x801a78c config_byte_LED_enable_and_more
+CCa 0x801a828 config_byte_LED_enable_and_more
+CCa 0x801a832 config_byte_LED_enable_and_more
+CCa 0x801a9ba config_byte_LED_enable_and_more
+CCa 0x801ad0a config_byte_LED_enable_and_more
+CCa 0x801afbe config_byte_LED_enable_and_more
+CCa 0x801afcc config_byte_LED_enable_and_more
+CCa 0x801afda config_byte_LED_enable_and_more
+CCa 0x801afe8 config_byte_LED_enable_and_more
+CCa 0x801f232 config_byte_LED_enable_and_more
+CCa 0x801f33e config_byte_LED_enable_and_more
+CCa 0x801f3ba config_byte_LED_enable_and_more
+CCa 0x801f416 config_byte_LED_enable_and_more
+CCa 0x801f558 config_byte_LED_enable_and_more
+CCa 0x801f578 config_byte_LED_enable_and_more
+CCa 0x801f7da config_byte_LED_enable_and_more
+CCa 0x801f814 config_byte_LED_enable_and_more
+CCa 0x801f882 config_byte_LED_enable_and_more
+CCa 0x801f88c config_byte_LED_enable_and_more
+CCa 0x801f996 config_byte_LED_enable_and_more
+CCa 0x801fc04 config_byte_LED_enable_and_more
+CCa 0x801fc9a config_byte_LED_enable_and_more
+CCa 0x801fd12 config_byte_LED_enable_and_more
+CCa 0x801ffe4 config_byte_LED_enable_and_more
+CCa 0x80201ca config_byte_LED_enable_and_more
+CCa 0x80207ce config_byte_LED_enable_and_more
+CCa 0x80208e8 config_byte_LED_enable_and_more
+CCa 0x80218ae config_byte_LED_enable_and_more
+CCa 0x80218c0 config_byte_LED_enable_and_more
+CCa 0x802352a config_byte_LED_enable_and_more
+CCa 0x8023536 config_byte_LED_enable_and_more
+CCa 0x8027c18 config_byte_LED_enable_and_more
+CCa 0x8027c38 config_byte_LED_enable_and_more
+CCa 0x802812a config_byte_LED_enable_and_more
+CCa 0x8028230 config_byte_LED_enable_and_more
+CCa 0x8028250 config_byte_LED_enable_and_more
+CCa 0x80282ac config_byte_LED_enable_and_more
+CCa 0x80282cc config_byte_LED_enable_and_more
+CCa 0x8028fda config_byte_LED_enable_and_more
+CCa 0x80293a2 config_byte_LED_enable_and_more
+CCa 0x80294e8 config_byte_LED_enable_and_more
+CCa 0x80295a2 config_byte_LED_enable_and_more
+CCa 0x80295ce config_byte_LED_enable_and_more
+CCa 0x8029774 config_byte_LED_enable_and_more
+CCa 0x80299d4 config_byte_LED_enable_and_more
+CCa 0x80299fc config_byte_LED_enable_and_more
+CCa 0x8029a04 config_byte_LED_enable_and_more
+CCa 0x8029a0a config_byte_LED_enable_and_more
+CCa 0x8029a12 config_byte_LED_enable_and_more
+CCa 0x802a8a8 config_byte_LED_enable_and_more
+CCa 0x802a91a config_byte_LED_enable_and_more
+CCa 0x802af8a config_byte_LED_enable_and_more
+CCa 0x802af98 config_byte_LED_enable_and_more
+CCa 0x80308da config_byte_LED_enable_and_more
+CCa 0x8030d56 config_byte_LED_enable_and_more
+CCa 0x8030d66 config_byte_LED_enable_and_more
+CCa 0x8030fa8 config_byte_LED_enable_and_more
+CCa 0x8031018 config_byte_LED_enable_and_more
+CCa 0x8031020 config_byte_LED_enable_and_more
+CCa 0x80372ba config_byte_LED_enable_and_more
+CCa 0x80372f4 config_byte_LED_enable_and_more
+CCa 0x80375d2 config_byte_LED_enable_and_more
+CCa 0x803760c config_byte_LED_enable_and_more
+CCa 0x8037774 config_byte_LED_enable_and_more
+CCa 0x80377a4 config_byte_LED_enable_and_more
+CCa 0x8037824 config_byte_LED_enable_and_more
+CCa 0x8037854 config_byte_LED_enable_and_more
+CCa 0x803bb72 config_byte_LED_enable_and_more
+CCa 0x803bb7c config_byte_LED_enable_and_more
+CCa 0x803c04e config_byte_LED_enable_and_more
+CCa 0x803c672 config_byte_LED_enable_and_more
+CCa 0x803c6c0 config_byte_LED_enable_and_more
+CCa 0x803cb6a config_byte_LED_enable_and_more
+CCa 0x803cb78 config_byte_LED_enable_and_more
+CCa 0x803cc2c config_byte_LED_enable_and_more
+CCa 0x803cc3a config_byte_LED_enable_and_more
+CCa 0x803d02e config_byte_LED_enable_and_more
+CCa 0x803d0b8 config_byte_LED_enable_and_more
+CCa 0x803d106 config_byte_LED_enable_and_more
+CCa 0x803ddce config_byte_LED_enable_and_more
+CCa 0x803dddc config_byte_LED_enable_and_more
+CCa 0x803ddec config_byte_LED_enable_and_more
+CCa 0x803eefe config_byte_LED_enable_and_more
+CCa 0x803f0c6 config_byte_LED_enable_and_more
+CCa 0x803f1d8 config_byte_LED_enable_and_more
+CCa 0x803f2ca config_byte_LED_enable_and_more
+CCa 0x803f3d6 config_byte_LED_enable_and_more
+CCa 0x803f42c config_byte_LED_enable_and_more
+CCa 0x803f462 config_byte_LED_enable_and_more
+CCa 0x803f506 config_byte_LED_enable_and_more
+CCa 0x803f5a0 config_byte_LED_enable_and_more
+CCa 0x803f716 config_byte_LED_enable_and_more
+CCa 0x803f75a config_byte_LED_enable_and_more
+CCa 0x803f78c config_byte_LED_enable_and_more
+CCa 0x803f7e8 config_byte_LED_enable_and_more
+CCa 0x803f87e config_byte_LED_enable_and_more
+CCa 0x803f902 config_byte_LED_enable_and_more
+CCa 0x803f934 config_byte_LED_enable_and_more
+CCa 0x803f95c config_byte_LED_enable_and_more
+CCa 0x803f98c config_byte_LED_enable_and_more
+CCa 0x803f9ce config_byte_LED_enable_and_more
+CCa 0x803fa1c config_byte_LED_enable_and_more
+CCa 0x803fa44 config_byte_LED_enable_and_more
+CCa 0x803fa88 config_byte_LED_enable_and_more
+CCa 0x803fb1c config_byte_LED_enable_and_more
+CCa 0x8040152 config_byte_LED_enable_and_more
+CCa 0x80401ce config_byte_LED_enable_and_more
+CCa 0x80401e6 config_byte_LED_enable_and_more
+CCa 0x80401fe config_byte_LED_enable_and_more
+CCa 0x8040216 config_byte_LED_enable_and_more
+CCa 0x804022c config_byte_LED_enable_and_more
+CCa 0x8040244 config_byte_LED_enable_and_more
+CCa 0x8040260 config_byte_LED_enable_and_more
+CCa 0x80409e4 config_byte_LED_enable_and_more
+CCa 0x8040a44 config_byte_LED_enable_and_more
+CCa 0x8040a8c config_byte_LED_enable_and_more
+CCa 0x8040bea config_byte_LED_enable_and_more
+CCa 0x8040d7e config_byte_LED_enable_and_more
+CCa 0x8040dec config_byte_LED_enable_and_more
+CCa 0x8041120 config_byte_LED_enable_and_more
+CCa 0x8041148 config_byte_LED_enable_and_more
+CCa 0x8043570 config_byte_LED_enable_and_more
+CCa 0x8043cee config_byte_LED_enable_and_more
+CCa 0x8043cfa config_byte_LED_enable_and_more
+CCa 0x8043d04 config_byte_LED_enable_and_more
+CCa 0x8044086 config_byte_LED_enable_and_more
+CCa 0x804454a config_byte_LED_enable_and_more
+CCa 0x80447a2 config_byte_LED_enable_and_more
+CCa 0x80447ae config_byte_LED_enable_and_more
+CCa 0x804a53e config_byte_LED_enable_and_more
+CCa 0x804a548 config_byte_LED_enable_and_more
+CCa 0x804a552 config_byte_LED_enable_and_more
+CCa 0x804a61a config_byte_LED_enable_and_more
+CCa 0x804a624 config_byte_LED_enable_and_more
+CCa 0x804a62e config_byte_LED_enable_and_more
+CCa 0x804a9cc config_byte_LED_enable_and_more
+CCa 0x804a9d4 config_byte_LED_enable_and_more
+CCa 0x804aa90 config_byte_LED_enable_and_more
+CCa 0x804aa98 config_byte_LED_enable_and_more
+CCa 0x804abe6 config_byte_LED_enable_and_more
+CCa 0x804abee config_byte_LED_enable_and_more
+CCa 0x804c478 config_byte_LED_enable_and_more
+CCa 0x808d6a2 config_byte_LED_enable_and_more
+CCa 0x808d96e config_byte_LED_enable_and_more
+CCa 0x808d976 config_byte_LED_enable_and_more
+CCa 0x808d984 config_byte_LED_enable_and_more
+CCa 0x808d9c8 config_byte_LED_enable_and_more
+CCa 0x8095740 config_byte_LED_enable_and_more
+CCa 0x80957ac config_byte_LED_enable_and_more
