@@ -19,6 +19,8 @@
 #include "config.h"
 #include "gfx.h"
 
+#include "../db/data.h"
+
 /* Used to avoid duplicate call endings. */
 int incall=0;
 
@@ -77,17 +79,38 @@ void *dmr_call_start_hook(char *pkt){
   int dst=(pkt[7]|
 	   (pkt[6]<<8)|
 	   (pkt[5]<<16));
-  
+
+  int src=(pkt[10]|
+           (pkt[9]<<8)|
+           (pkt[8]<<16));
+                          
   //All but the top row is overwritten,
   //so any status has to be logged here.
   char buf[15];
   
   //Print the target adress to the screen.
   sprintf(buf,
-	  "%d",dst);
-  drawascii(buf,
-	    160,20);
+	  "%d %d",dst,src);
+//  drawascii(buf,
+//	    160,20);
   
+  int n=0;
+
+  for (n=0;n<sizeof(db) /sizeof(struct call);n++) {
+    if (db[n].id == src) {   
+      printf("%s %s",
+        db[n].call,
+        db[n].name);
+      sprintf(buf,
+        "%s",
+        db[n].name);
+      drawascii(buf,
+      160,20);  
+      break;
+    }
+  }
+
+
   //Just a dot for logging.
   printf(".");
   
