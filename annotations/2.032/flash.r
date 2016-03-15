@@ -13,7 +13,7 @@
 
 
 ## These annotations describe the functions that handle incoming
-## audio, which is necessary to 
+## audio, which is necessary to
 
 CCa 0x803ec86 This function handles incoming audio calls.
 af+ 0x803ec86 740 dmr_audio_start
@@ -28,6 +28,96 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
+
+
+
+
+af+ 0x8043e78 268 F_4000
+af+ 0x80969de 16 F_4001
+af+ 0x808cc00 190 F_4002
+af+ 0x808cba4 38 F_4003
+af+ 0x808d3d8 3036 F_4004
+af+ 0x808dfd0 520 F_4005
+af+ 0x808e3ca 42 F_4006
+af+ 0x808e3f4 76 F_4007
+af+ 0x808e440 80 F_4008
+af+ 0x808e490 54 F_4009
+af+ 0x808e4c6 96 F_4010
+af+ 0x808e526 44 F_4011
+af+ 0x8091fb8 106 F_4012
+af+ 0x8092022 54 F_4013
+af+ 0x8092058 342 F_4014
+af+ 0x80921ae 284 F_4015
+af+ 0x80922ca 416 F_4016
+af+ 0x809246a 128 F_4017
+af+ 0x80924ea 104 F_4018
+af+ 0x8092552 416 F_4019
+af+ 0x80926f2 148 F_4020
+af+ 0x8092786 10 F_4021
+af+ 0x8092790 194 F_4022
+af+ 0x8092852 72 F_4023
+af+ 0x809289a 90 F_4024
+af+ 0x8092a4c 1916 F_4025
+af+ 0x80931c8 210 F_4026
+af+ 0x809329a 72 F_4027
+af+ 0x80932e2 136 F_4028
+af+ 0x809336a 244 F_4029
+af+ 0x809345e 202 F_4030
+af+ 0x8093528 28 F_4031
+af+ 0x8093544 158 F_4032
+af+ 0x80935e2 136 F_4033
+af+ 0x809366a 186 F_4034
+af+ 0x8093724 74 F_4035
+af+ 0x809376e 28 F_4036
+af+ 0x809378a 28 F_4037
+
+af+ 0x800d7f4 114 F_4038
+af+ 0x800d86c 30 F_4039
+af+ 0x802a87c 24 F_4040
+af+ 0x8030a52 284 F_4041
+af+ 0x8032cc2 18 F_4042
+af+ 0x80426a8 30 F_4043
+af+ 0x80495d4 28 F_4044
+af+ 0x804fa2e 50 F_4045
+af+ 0x8057754 70 F_4046
+af+ 0x805f242 42 F_4047
+af+ 0x805f4fc 20 F_4048
+af+ 0x805f510 18 F_4049
+af+ 0x805f6fa 44 F_4050
+af+ 0x805f726 74 F_4051
+af+ 0x805faea 14 F_4052
+af+ 0x805faf8 20 F_4053
+af+ 0x805fb0c 14 F_4054
+af+ 0x808d266 132 F_4055
+af+ 0x808d2ea 134 F_4056
+af+ 0x808e1dc 100 F_4057
+af+ 0x808e244 12 F_4058
+af+ 0x808e254 98 F_4059
+af+ 0x808e3a0 42 F_4060
+af+ 0x809290a 72 F_4061
+af+ 0x8092954 242 F_4062
+af+ 0x80937b0 32 F_4063
+
+af+ 0x80226f6 18 F_4064
+af+ 0x802271a 18 F_4065
+af+ 0x8026028 110 F_4066
+af+ 0x8057136 22 F_4067
+af+ 0x805714c 22 F_4068
+af+ 0x805779a 20 F_4069
+af+ 0x80577ec 40 F_4070
+af+ 0x805f4f2 10 F_4071
+
+af+ 0x804ce10 258 F_4072
+af+ 0x804f61a 54 F_4073
+af+ 0x804f508 78 F_4074
+af+ 0x804f556 138 F_4075
+af+ 0x804f5e0 58 F_4076
+af+ 0x804fa60 48 F_4077
+af+ 0x804fb00 22 F_4078
+af+ 0x804fb16 170 F_4079
+af+ 0x804fbc0 10 F_4080
+af+ 0x804fbca 90 F_4081
+af+ 0x804fc28 40 F_4082
 
 
 
@@ -154,7 +244,6 @@ af+ 0x80265b8 86 F_999
 af+ 0x80265ba 84 RTC_ITConfig
 af+ 0x8026614 2 F_1000
 af+ 0x8026616 28 RTC_ClearFlag
-af+ 0x802664c 22 F_274
 af+ 0x802664c 22 F_92
 af+ 0x8026662 24 F_275
 af+ 0x8026662 24 RTC_Bcd2ToByte
@@ -275,7 +364,7 @@ af+ 0x80326c4 26 F_1011
 af+ 0x80326de 54 F_1148
 af+ 0x8032714 66 F_1149
 af+ 0x8032756 16 F_1012
-af+ 0x8032766 14 F_1150    
+af+ 0x8032766 14 F_1150
 af+ 0x803277c 8 F_840
 af+ 0x8032784 8 F_841
 af+ 0x8032790 24 F_333
@@ -298,7 +387,6 @@ af+ 0x8035434 10 F_345
 af+ 0x803543e 226 F_121
 af+ 0x8035520 46 F_1016
 af+ 0x803554e 8 F_1017
-af+ 0x803555e 32 F_122
 af+ 0x803555e 32 F_347
 af+ 0x803557e 32 F_842
 af+ 0x803559e 32 F_843
@@ -341,24 +429,21 @@ af+ 0x803b176 32 F_365
 af+ 0x803b2e8 90 F_849
 af+ 0x803b342 100 F_850
 af+ 0x803b3a6 74 F_366
-af+ 0x803b3f0 36 F_127
 af+ 0x803b3f0 36 F_367
 af+ 0x803b414 20 F_368
 af+ 0x803b428 70 F_851
-af+ 0x803b46e 92 F_129
 af+ 0x803b46e 92 F_369
 af+ 0x803b510 14 F_852
 af+ 0x803b524 2286 Call_Process
 af+ 0x803be24 992 State_Change
 af+ 0x803c244 772 ChAccess_Pr
-af+ 0x803c57c 86 F_39 
+af+ 0x803c57c 86 F_39
 af+ 0x803c5d8 90 F_853
 af+ 0x803c632 52 F_371
 af+ 0x803c666 50 F_372
 af+ 0x803c6b4 680 F_40
 af+ 0x803c998 808 F_374
 af+ 0x803cccc 590 F_375
-af+ 0x803cf1a 62 F_376
 af+ 0x803cf1a 62 F_41
 af+ 0x803cf58 36 F_377
 af+ 0x803cf7c 46 F_42
@@ -386,7 +471,7 @@ af+ 0x803d8da 192 F_396
 af+ 0x803da00 44 F_857
 af+ 0x803da2c 76 F_397
 af+ 0x803da78 218 F_398
-af+ 0x803db68 92 F_21  
+af+ 0x803db68 92 F_21
 af+ 0x803dbc4 28 Sys_Inter
 af+ 0x803dbe2 52 TimeSlot_Inter
 af+ 0x803dc16 1206 F_43
@@ -458,7 +543,7 @@ af+ 0x8042130 122 F_449
 af+ 0x80421aa 140 F_450
 af+ 0x8042236 50 F_451
 af+ 0x8042268 26 F_872
-af+ 0x80423ec 92 F_02  
+af+ 0x80423ec 92 F_02
 af+ 0x8042448 30 mem_transfet
 af+ 0x8042468 30 uC_OS_II_Idle
 af+ 0x804248c 318 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_2
@@ -529,11 +614,10 @@ af+ 0x8046720 18 F_1021
 af+ 0x8046734 8 F_1022
 af+ 0x8046740 2 F_875
 af+ 0x8046790 378 F_1023
-af+ 0x804690c 22 Not_Big_I2C_Function33 
+af+ 0x804690c 22 Not_Big_I2C_Function33
 af+ 0x8046914 14 F_506
 af+ 0x8046922 38 F_507
 af+ 0x8046948 38 F_508
-af+ 0x804696e 186 F_509
 af+ 0x804696e 186 Not_Big_I2C_Function3
 af+ 0x8046a28 306 Big_I2C_Function
 af+ 0x8046b5a 236  Verry_Big_Function_with_I2C1
@@ -597,7 +681,6 @@ af+ 0x804921c 122 uC_OS_II_Tmr
 af+ 0x80492d4 16 F_1112
 af+ 0x80495f0 38 F_1136
 af+ 0x8049cd8 102 F_877
-af+ 0x8049d40 76 F_196
 af+ 0x8049d40 76 F_566
 af+ 0x8049d8c 34 F_567
 af+ 0x8049dae 26 F_568
@@ -626,9 +709,7 @@ af+ 0x804af68 568 Tone_fft
 af+ 0x804b1a0 734 F_205
 af+ 0x804b508 120 F_584
 af+ 0x804b580 114 F_17
-af+ 0x804b5f2 28 F_13
 af+ 0x804b5f2 28 F_586
-af+ 0x804b60e 36 F_14
 af+ 0x804b60e 36 F_587
 af+ 0x804b632 24 F_588
 af+ 0x804b64a 20 F_16
@@ -645,22 +726,17 @@ af+ 0x804b976 2 short_function_3
 af+ 0x804bb40 180 F_597
 af+ 0x804bbf4 204 F_598
 af+ 0x804bcc0 90 F_599
-af+ 0x804bd2c 86 DMA_Init  
+af+ 0x804bd2c 86 DMA_Init
 af+ 0x804bd82 26 DMA_Cmd
 af+ 0x804bd9c 64 F_208
 af+ 0x804be68 14 F_209
 af+ 0x804be7c 20 F_604
 af+ 0x804bea0 292 F_605
-af+ 0x804c01c 32 F_212
 af+ 0x804c01c 32 F_606
-af+ 0x804c150 6 F_213
 af+ 0x804c150 6 F_607
 af+ 0x804c240 106 F_608
-af+ 0x804c3c8 64 F_215
 af+ 0x804c3c8 64 F_609
-af+ 0x804c40a 78 F_216
 af+ 0x804c40a 78 F_610
-af+ 0x804c65e 74 F_217
 af+ 0x804c65e 74 F_611
 af+ 0x804c886 78 F_218
 af+ 0x804caba 78 F_219
@@ -670,12 +746,8 @@ af+ 0x804d258 2 F_222_Nice
 af+ 0x804d25c 2 F_223_Nice
 af+ 0x804d260 2 F_224_Nice
 af+ 0x804d264 2 F_225_Nice
-af+ 0x804d264 2 F_619
-af+ 0x804d268 208 F_620
 af+ 0x804d268 208 Read_Channel_Switch
-af+ 0x804d338 136 F_621
 af+ 0x804d338 136 This_function_called_Read_Channel_Switch
-af+ 0x804d3c0 36 F_226
 af+ 0x804d3c0 36 F_622
 af+ 0x804d410 8 F_623
 af+ 0x804d418 8 F_624
@@ -730,7 +802,6 @@ af+ 0x8051498 76 F_665
 af+ 0x805151c 64 F_888
 af+ 0x805155c 20 F_666
 af+ 0x8051570 14 F_667
-af+ 0x8051e14 28 F_240
 af+ 0x8051e14 28 F_668
 af+ 0x8051e30 418 F_669
 af+ 0x8051fd4 582 F_670
@@ -999,8 +1070,8 @@ CCa 0x08026616 ... maybe STM32LIB void RTC_ClearFlag(uint32_t RTC_FLAG)
 CCa 0x08026662 ... maybe STM32LIB
 CCa 0x08026a9a ... maybe STM32LIB  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
 CCa 0x08026ab0 GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
-CCa 0x08026ab6 ... maybe STM32LIB 
-CCa 0x08026aba ... maybe STM32LIB  
+CCa 0x08026ab6 ... maybe STM32LIB
+CCa 0x08026aba ... maybe STM32LIB
 CCa 0x08026abe ... maybe STM32LIB .. (r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x08027c22 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x08027c2e GPIO_SetBits(GPIOC, 0x40)
@@ -1058,7 +1129,7 @@ CCa 0x0804b5b2 Set PLL_DAT/DMR_SDI
 CCa 0x0804b5bc Reset PLL_DAT/DMR_SDI
 CCa 0x0804b5d4 Reset BSHIFT
 CCa 0x0804b5e2 call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
-CCa 0x0804bd2c ... maybe STM32LIB 
+CCa 0x0804bd2c ... maybe STM32LIB
 CCa 0x0804bd82 ... maybe STM32LIB
 CCa 0x0804c24a call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
 CCa 0x0804c258 call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
@@ -1245,7 +1316,7 @@ CCa 0x80218ae config_byte_LED_enable_and_more
 CCa 0x80218c0 config_byte_LED_enable_and_more
 CCa 0x802352a config_byte_LED_enable_and_more
 CCa 0x8023536 config_byte_LED_enable_and_more
-CCa 0x8026136 ... maybe STM32LIB ErrorStatus RTC_Init(RTC_InitTypeDef* RTC_InitStruct) \n Beginn Function ... Set RTC_CR (Hour format RTC_CR and RTC_PRER ) r0  arg[0] arg[1] arg[2]\narg[0] RTC_CR\arg[1] RTC_PRER\n arg[2] RTC_PRER 
+CCa 0x8026136 ... maybe STM32LIB ErrorStatus RTC_Init(RTC_InitTypeDef* RTC_InitStruct) \n Beginn Function ... Set RTC_CR (Hour format RTC_CR and RTC_PRER ) r0  arg[0] arg[1] arg[2]\narg[0] RTC_CR\arg[1] RTC_PRER\n arg[2] RTC_PRER
 CCa 0x8026194 Call RTC_ExitInitMode()
 CCa 0x802631e Call RTC_ExitInitMode()
 CCa 0x8026434 Call RTC_ExitInitMode()
