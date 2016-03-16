@@ -36,6 +36,13 @@ folks over some beer.
 Tytera's firmware is of unknown license and is not included in this
 repository.  We use a heap-less printf library under the BSD license.
 
+##Supported Hardware##
+
+The patched firmware is known to work on the following devices:
+
+* Tytera/TYT MD380
+* Retevis RT3
+
 ##Specifications:##
 
 * The MD380 uses a custom variant of DFU that isn't quite compatible
