@@ -159,6 +159,30 @@ af+ 0x8042282 96 F_4114
 af+ 0x8042342 58 F_4115
 af+ 0x804237c 94 F_4116
 
+af+ 0x8027aa8 2158 F_4117
+af+ 0x8027278 1228 F_4118
+af+ 0x80228e0 84 F_4119
+af+ 0x8022934 72 F_4120
+af+ 0x0802297c 314 F_4121
+af+ 0x8022ab6 76 F_4122
+af+ 0x8022b02 342 F_4123
+af+ 0x8022c58 250 F_4124
+af+ 0x8022d52 32 F_4125
+af+ 0x8022d72 220 F_4126
+af+ 0x8022e4e 248 F_4127
+af+ 0x8022f46 24 F_4128
+af+ 0x0809381c 34 F_4129
+
+
+CCa 0x80426f4 Bat_Voltage
+CCa 0x8042940 Bat_Voltage
+CCa 0x80429d2 Bat_Voltage
+CCa 0x8042f0e Bat_Voltage
+CCa 0x8043150 Bat_Voltage
+CCa 0x80435b4 Bat_Voltage
+CCa 0x8043a54 Bat_Voltage
+CCa 0x8043df8 Bat_Voltage
+
 CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
 CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending 
 
@@ -333,7 +357,7 @@ af+ 0x8030170 76 F_308
 af+ 0x80301bc 78 F_309
 af+ 0x8030250 76 F_310
 af+ 0x803029c 258 F_311
-af+ 0x80303b4 86 F_05
+af+ 0x80303b4 86 OSMboxPost
 af+ 0x80308fe 142 F_33
 af+ 0x803098c 198 F_314
 af+ 0x8030b6e 50 F_110
@@ -508,7 +532,7 @@ af+ 0x803d8da 192 F_396
 af+ 0x803da00 44 F_857
 af+ 0x803da2c 76 F_397
 af+ 0x803da78 218 F_398
-af+ 0x803db68 92 F_21
+af+ 0x803db68 92 OSSemPost
 af+ 0x803dbc4 28 Sys_Inter
 af+ 0x803dbe2 52 TimeSlot_Inter
 af+ 0x803dc16 1206 F_43
@@ -576,14 +600,14 @@ af+ 0x8041eac 56 F_446
 af+ 0x8041f10 148 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_1
 af+ 0x8041fa4 58 F_447
 af+ 0x8041fde 90 F_448
-af+ 0x8042130 122 F_449
+af+ 0x8042130 122 OS_EventTaskRdy
 af+ 0x80421aa 140 F_450
-af+ 0x8042236 50 F_451
+af+ 0x8042236 50 OS_EventTaskRemove
 af+ 0x8042268 26 F_872
-af+ 0x80423ec 92 F_02
+af+ 0x80423ec 92 OS_Sched
 af+ 0x8042448 30 mem_transfet
 af+ 0x8042468 30 uC_OS_II_Idle
-af+ 0x804248c 318 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_2
+af+ 0x804248c 318 OS_TCBInit
 af+ 0x80426c8 536 Init_ADC
 af+ 0x80428e0 332 F_455
 af+ 0x8042a2c 332 F_456
@@ -656,7 +680,7 @@ af+ 0x8046922 38 F_507
 af+ 0x8046948 38 F_508
 af+ 0x804696e 186 Not_Big_I2C_Function3
 af+ 0x8046a28 306 Big_I2C_Function
-af+ 0x8046b5a 236  Verry_Big_Function_with_I2C1
+af+ 0x8046b5a 236 Verry_Big_Function_with_I2C1
 af+ 0x8046c94 2 F_177_Nice
 af+ 0x8046c98 8 F_1024
 af+ 0x8046ca0 22 PWR_GetFlagStatus
@@ -752,15 +776,15 @@ af+ 0x804b64a 20 F_16
 af+ 0x804b66c 190 F_590
 af+ 0x804b7b0 8 F_206
 af+ 0x804b7b8 8 F_207
-af+ 0x804b7c0 324 F_882
+af+ 0x804b7c0 324 OSTaskStkInit
 af+ 0x804b90c 8  short_function_1
 af+ 0x804b914 36 short_function_2
 af+ 0x804b970 2 F_594
 af+ 0x804b974 2 short_function_4
 af+ 0x804b976 2 short_function_3
-af+ 0x804bb40 180 F_597
-af+ 0x804bbf4 204 F_598
-af+ 0x804bcc0 90 F_599
+af+ 0x804bb40 180 OSTaskCreate
+af+ 0x804bbf4 204 OSTaskCreateExt
+af+ 0x804bcc0 90 OSTaskNameSet
 af+ 0x804bd2c 86 DMA_Init
 af+ 0x804bd82 26 DMA_Cmd
 af+ 0x804bd9c 64 F_208
