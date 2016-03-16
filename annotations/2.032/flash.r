@@ -119,9 +119,48 @@ af+ 0x804fbc0 10 F_4080
 af+ 0x804fbca 90 F_4081
 af+ 0x804fc28 40 F_4082
 
+af+ 0x8017612 56 F_4083
+af+ 0x808ccbe 1444 F_4084
 
+af+ 0x8017650 124 F_4085
+af+ 0x801c4b0 94 F_4086
+af+ 0x802a3fc 168 F_4087
+af+ 0x802a824 88 F_4088
+af+ 0x8035556 8 F_4089
+af+ 0x804c0fe 82 F_4090
+af+ 0x808cb84 30 F_4091
+af+ 0x808e2bc 96 F_4092
 
+af+ 0x80226e4 18 F_4093
+af+ 0x8022708 18 F_4094
+af+ 0x802a39c 96 F_4095
+af+ 0x802fbb6 52 F_4096
+af+ 0x804c1a8 40 F_4097
 
+af+ 0x804c1d0 112 F_4098
+af+ 0x804cd16 240 F_4099
+af+ 0x804cf80 614 F_4100 
+
+af+ 0x804c156 58 F_4101
+af+ 0x804c2aa 286 F_4102
+af+ 0x804c408 2 F_4103
+af+ 0x804c458 518 F_4104
+af+ 0x804c6a8 478 F_4105
+af+ 0x804c8d4 486 F_4106
+af+ 0x804cb08 438 F_4107
+af+ 0x804ccc0 2 F_4108
+af+ 0x804cf18 48 F_4109
+af+ 0x804d25a 2 F_4110
+af+ 0x804d25e 2 F_4111
+af+ 0x804d262 2 F_4112
+af+ 0x804d266 2 F_4113
+
+af+ 0x8042282 96 F_4114
+af+ 0x8042342 58 F_4115
+af+ 0x804237c 94 F_4116
+
+CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
+CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending 
 
 af+ 0x800c188 1448 F_84
 af+ 0x800c730 86 F_249
@@ -245,7 +284,6 @@ af+ 0x80265ba 84 RTC_ITConfig
 af+ 0x8026614 2 F_1000
 af+ 0x8026616 28 RTC_ClearFlag
 af+ 0x802664c 22 F_92
-af+ 0x8026662 24 F_275
 af+ 0x8026662 24 RTC_Bcd2ToByte
 af+ 0x802669c 70 F_276
 af+ 0x80266e2 100 F_277
@@ -253,7 +291,6 @@ af+ 0x8026754 106 F_278
 af+ 0x80267be 266 F_94
 af+ 0x80268c8 122 F_1097
 af+ 0x80269f4 166 F_95
-af+ 0x8026a9a 22 F_281
 af+ 0x8026a9a 22 GPIO_ReadInputDataBit
 af+ 0x8026ab0 6  GPIO_ReadInputData
 af+ 0x8026ab6 4 GPIO_SetBits
@@ -577,7 +614,6 @@ af+ 0x8044900 20 PC_Tune
 af+ 0x8044914 32 F_167
 af+ 0x8044934 230 F_168
 af+ 0x8044ab4 392 F_478
-af+ 0x8044c3c 70 F_479
 af+ 0x8044c3c 79 F_71
 af+ 0x8044c82 678 F_480
 af+ 0x8044f8c 118 F_481
@@ -717,7 +753,6 @@ af+ 0x804b66c 190 F_590
 af+ 0x804b7b0 8 F_206
 af+ 0x804b7b8 8 F_207
 af+ 0x804b7c0 324 F_882
-af+ 0x804b90c 8 F_593
 af+ 0x804b90c 8  short_function_1
 af+ 0x804b914 36 short_function_2
 af+ 0x804b970 2 F_594
@@ -808,7 +843,6 @@ af+ 0x8051fd4 582 F_670
 af+ 0x805221c 144 F_671
 af+ 0x80522ac 152 F_672
 af+ 0x805235c 19184 F_245
-af+ 0x805235c 68 F_673
 af+ 0x80523a0 846 F_674
 af+ 0x80526f0 878 F_675
 af+ 0x8052a5e 266 F_676
