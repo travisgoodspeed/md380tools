@@ -530,7 +530,7 @@ af+ 0x80327a8 90 F_4260
 af+ 0x8032802 52 F_4319
 af+ 0x8032838 52 F_112
 af+ 0x803286c 320 F_1013
-af+ 0x80329c0 104 F_335
+af+ 0x80329c0 104 OSTimeDly
 af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
 af+ 0x8032ace 28 F_337
 af+ 0x8032aea 10 F_114
