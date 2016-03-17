@@ -43,7 +43,7 @@ af+ 0x800d732 188 F_4283
 af+ 0x800d7f4 114 F_4038
 af+ 0x800d86c 30 F_4039
 af+ 0x800d88a 36 gfx_drawtext
-af+ 0x800d8ae 254 F_785
+af+ 0x800d8ae 254 F_785_Print_Date_and_Time
 af+ 0x800d9b0 18 F_4153
 af+ 0x800d9cc 124 F_4220
 af+ 0x800da54 124 F_786
@@ -795,7 +795,7 @@ af+ 0x8041df8 8 OS_ENTER_CRITICAL
 af+ 0x8041e00 6 OS_EXIT_CRITICAL
 af+ 0x8041e22 8 OS_TASK_SW
 af+ 0x8041e2a 8 OS_TASK_SW
-af+ 0x8041eac 56 F_446
+af+ 0x8041eac 56 OSMemNameSet
 af+ 0x8041f10 148 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_1
 af+ 0x8041fa4 58 F_447
 af+ 0x8041fde 90 F_448
@@ -1479,6 +1479,11 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 
+af+ 0x80956d4 98 F_5000
+af+ 0x80956a0 52 F_5001
+af+ 0x809558c 206 F_5002
+
+
 
 
 CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
@@ -1493,6 +1498,11 @@ CCa 0x8043a54 Bat_Voltage
 CCa 0x8043df8 Bat_Voltage
 
 
+CCa 0x0801f5b6 sprite telephone
+
+CCa 0x08044184 _Start Mbox_
+CCa 0x0804910e _uC/OS-II TmrLock_
+CCa 0x0804911a _uC/OS-II TmrSignal_
 CCa 0x800df84 Function with check LCD_CS ....   why ....  when (set/noset) jump over function
 CCa 0x800df8e call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
 CCa 0x801931c GPIO_SetBits(GPIOC, 0x40)
