@@ -8,6 +8,9 @@ import math
 import binascii
 import argparse
 
+FontGFX_CN_START = 0x809c714
+FontGFX_CN_END = 0x80d0f80
+
 class Memory(object):
 
     def __init__(self, data, base_address=0x800c000):
@@ -166,7 +169,7 @@ class MD380Graphics(Memory):
             linebits = ''.join(linebits)
             for i in xrange(0, len(linebits), 8):
                 pixbytes += chr(int(linebits[i:i+8], 2))
-        self.write(pixptr, pixbytes);
+        self.write(pixptr, pixbytes)
 
         palbytes = b''
         for color in gfx['palette']:
@@ -175,7 +178,55 @@ class MD380Graphics(Memory):
             palbytes += chr(g)
             palbytes += chr(b)
             palbytes += chr(a)
-        self.write(colptr, palbytes);
+        self.write(colptr, palbytes)
+
+    def gfxrelocate(self, gfx, addr, location):
+        """Overwrite existing sprite structure with data in a new location"""
+        s = struct.Struct('<hhhhLL')
+        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr-self.addr)
+        if gfx['width'] != width or gfx['height'] != height:
+            sys.stderr.write('WARNING: Graphics dimensions have changed. Expect glitches.\n')
+
+        new_width = gfx['width']
+        new_height = gfx['height']
+
+        s = struct.Struct('<llL')
+        ncol, someb, colptr = s.unpack_from(self.mem, palptr-self.addr)
+
+        # TODO: check bitplanes match
+        # TODO: rewrite to use Memory bitbanging methods
+
+        new_bitsperpixel = int(math.ceil(math.log(len(gfx['palette']))/math.log(2)))
+        new_bytesperline = int(math.ceil(new_bitsperpixel*new_width/8.0))
+        new_pixptr = location
+        pixbytes = b''
+        for line in gfx['pixels']:
+            padding = new_width - len(line)
+            line += [0]*padding
+            linebits = [bin(c+0x10000)[-new_bitsperpixel:] for c in line]
+            linebits = ''.join(linebits)
+            for i in xrange(0, len(linebits), 8):
+                pixbytes += chr(int(linebits[i:i+8], 2))
+        self.write(new_pixptr, pixbytes)
+
+        new_colptr = location + len(pixbytes) + (16-(len(pixbytes)%16))
+        palbytes = b''
+        for color in gfx['palette']:
+            r, g, b, a = color
+            palbytes += chr(r)
+            palbytes += chr(g)
+            palbytes += chr(b)
+            palbytes += chr(a)
+        self.write(new_colptr, palbytes)
+
+        new_palptr = new_colptr + len(palbytes) + (16-(len(palbytes)%16))
+        new_ncol = len(gfx['palette'])
+        s = struct.Struct('<llL')
+        self.write(new_palptr, s.pack(new_ncol, someb, new_colptr))
+
+        s = struct.Struct('<hhhhLL')
+        self.write(addr, s.pack(new_width, new_height, new_bytesperline,
+                                new_bitsperpixel, new_pixptr, new_palptr))
 
     @staticmethod
     def bashcolor(r=None, g=None, b=None):
@@ -375,6 +426,20 @@ class MD380Graphics(Memory):
                 candidates.append(candidate)
         return candidates
 
+class MD380Fonts(Memory):
+
+    def table(self):
+        t = []
+        start = 0x080fbbb4
+        end = 0x080fc6dc
+        for p in xrange(start, end, 12):
+            a = self.rw(p)
+            b = self.rw(p+2)
+            addra = self.rl(p+4)
+            addrb = self.rl(p+8)
+            t.append({'x':a, 'y':b, 'addra':addra, 'addrb':addrb})
+        return t
+
 
 #with open('prom-private.img', 'rb') as f:
 #    mdgfx = MD380Graphics(f.read(), 0x800c000)
@@ -422,13 +487,18 @@ def main():
     def hex_int(x):
         return int(x, 0)
 
-    parser = argparse.ArgumentParser(description='modifies firmware \
-                                     graphics on MD-380 firmware')
+    parser = argparse.ArgumentParser(description='Modifies graphics objects \
+                                     in MD-380 firmware')
     parser.add_argument('--firmware', '-f', dest='firmware', type=str,
                         help='firmware image file to work on')
     parser.add_argument('--addr', '-a', dest='addr', type=hex_int,
                         default=0x800c000,
                         help='base address of raw flash image (default 0x800c000)')
+    location_default = FontGFX_CN_START+0x30000-0xc714
+    parser.add_argument('--location', '-l', dest='location', type=hex_int,
+                        default=location_default,
+                        help='Location of free memory to write to (default 0x%x)'
+                             % location_default)
     parser.add_argument('--dir', '-d', dest='dir', type=str,
                         help='directory for graphics files')
     parser.add_argument('--gfx', '-g', dest='gfx', type=str,
@@ -512,7 +582,40 @@ def main():
             else:
                 sys.stderr.write('ERROR: Can not determine fallback address from PPM header.\n')
                 sys.exit(5)
+
+    elif cmd == 'relocate':
+        if args.gfx is None:
+            sys.stderr.write('ERROR: Can\'t work without --gfx to write.\n')
+            sys.exit(5)
+        if args.location is None:
+            sys.stderr.write('ERROR: Don\'t know the --location to write to.\n')
+            sys.exit(5)
+
+        with open(args.gfx, 'rb') as f:
+            gfx = f.read()
+        if args.gfx.lower().endswith('.ppm'):
+            gfx = md.ppmparse(gfx)
+        elif args.gfx.lower().endswith('.pbm'):
+            sys.stderr.write('ERROR: PBM glyphs are not supported, yet.\n')
+            sys.exit(5)
+        else:
+            sys.stderr.write('ERROR: Unsupported file format.\n')
+            sys.exit(5)
+        md.gfxprint(gfx)
+
+        if gfx['address'] is not None:
+            addr = gfx['address']
+            sys.stderr.write('DEBUG: Overwriting address %s from PPM header.\n' % hex(addr))
+            md.gfxrelocate(gfx, addr, args.location)
+            modified = True
+        else:
+            sys.stderr.write('ERROR: Can not determine gfx struct address from PPM header.\n')
+            sys.exit(5)
+
     elif cmd == 'ipython':
+        font = MD380Fonts(input, args.addr)
+        no = '不'
+        yes = '是'
         from IPython import embed
         embed()
     else:
