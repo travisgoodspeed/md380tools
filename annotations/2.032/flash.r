@@ -36,7 +36,7 @@ af+ 0x8043e78 268 F_4000
 af+ 0x80969de 16 F_4001
 af+ 0x808cc00 190 F_4002
 af+ 0x808cba4 38 F_4003
-af+ 0x808d3d8 3036 F_4004
+af+ 0x808d3d8 3036 usb_upld_handle
 af+ 0x808dfd0 520 F_4005
 af+ 0x808e3ca 42 F_4006
 af+ 0x808e3f4 76 F_4007
@@ -120,7 +120,7 @@ af+ 0x804fbca 90 F_4081
 af+ 0x804fc28 40 F_4082
 
 af+ 0x8017612 56 F_4083
-af+ 0x808ccbe 1444 F_4084
+af+ 0x808ccbe 1444 usb_dnld_handle
 
 af+ 0x8017650 124 F_4085
 af+ 0x801c4b0 94 F_4086
@@ -172,7 +172,7 @@ af+ 0x8022d72 220 F_4126
 af+ 0x8022e4e 248 F_4127
 af+ 0x8022f46 24 F_4128
 af+ 0x0809381c 34 F_4129
-
+af+ 0x8093838 182 F_4130
 
 CCa 0x80426f4 Bat_Voltage
 CCa 0x8042940 Bat_Voltage
@@ -188,7 +188,7 @@ CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending
 
 af+ 0x800c188 1448 F_84
 af+ 0x800c730 86 F_249
-af+ 0x800d88a 36 F_85
+af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785
 af+ 0x800da54 124 F_786
 af+ 0x800dd40 284 F_1056
@@ -283,7 +283,7 @@ af+ 0x8022144 26 F_263
 af+ 0x80221d6 18 F_264
 af+ 0x80225b8 18 F_820
 af+ 0x80227e8 158 F_265
-af+ 0x8022886 86 F_266
+af+ 0x8022886 86 gfx_drawbmp
 af+ 0x8025e6c 362 F_1066
 af+ 0x8025fdc 76 F_996
 af+ 0x8026096 148 F_267
@@ -553,8 +553,8 @@ af+ 0x803e900 868 F_414
 af+ 0x803ec84 2 F_415
 af+ 0x803ef6c 92 F_416
 af+ 0x803efc8 90 F_858
-af+ 0x803f03c 728 F_417
-af+ 0x803f33c 818 F_418
+af+ 0x803f03c 728 dmr_sms_arrive
+af+ 0x803f33c 818 dmr_call_end
 af+ 0x803f6d8 1134 F_419
 af+ 0x803fbcc 5656 F_420
 af+ 0x80411e8 68 F_421
@@ -594,8 +594,8 @@ af+ 0x8041d5e 44 F_440
 af+ 0x8041d8a 20 F_441
 af+ 0x8041df8 8 OS_ENTER_CRITICAL
 af+ 0x8041e00 6 OS_EXIT_CRITICAL
-af+ 0x8041e22 8 F_444
-af+ 0x8041e2a 8 F_445
+af+ 0x8041e22 8 OS_TASK_SW
+af+ 0x8041e2a 8 OS_TASK_SW
 af+ 0x8041eac 56 F_446
 af+ 0x8041f10 148 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_1
 af+ 0x8041fa4 58 F_447
@@ -733,7 +733,7 @@ af+ 0x8048e84 2 F_192_Nice
 af+ 0x8048e88 120 F_560
 af+ 0x8048f00 130 F_561
 af+ 0x8048f82 184 F_562
-af+ 0x804903a 14 F_193
+af+ 0x804903a 14 OSTmrSignal___maybe
 af+ 0x8049048 52 F_876
 af+ 0x8049164 110 F_194
 af+ 0x80491d2 74 F_195
@@ -773,9 +773,9 @@ af+ 0x804b5f2 28 F_586
 af+ 0x804b60e 36 F_587
 af+ 0x804b632 24 F_588
 af+ 0x804b64a 20 F_16
-af+ 0x804b66c 190 F_590
+af+ 0x804b66c 190 dmr_handle_data
 af+ 0x804b7b0 8 F_206
-af+ 0x804b7b8 8 F_207
+af+ 0x804b7b8 8 OSTaskIdleHook
 af+ 0x804b7c0 324 OSTaskStkInit
 af+ 0x804b90c 8  short_function_1
 af+ 0x804b914 36 short_function_2
@@ -954,7 +954,7 @@ af+ 0x8057622 136 F_905
 af+ 0x80576c0 52 F_906
 af+ 0x80576f4 68 F_735
 af+ 0x8057738 28 F_907
-af+ 0x80577ae 40 F_908
+af+ 0x80577ae 40 usb_send_packet
 af+ 0x80577d6 22 F_736
 af+ 0x8057814 22 F_737
 af+ 0x805782a 36 F_738
