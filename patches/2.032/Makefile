@@ -8,13 +8,17 @@ unwrapped.bin:
 	../../md380-fw --unwrap ../../firmware/D002.032.bin unwrapped.img
 
 patches: unwrapped.bin
-	../../md380-gfx --firmware=unwrapped.img --gfx=0x80f9ca8-poc.ppm write
-	#../../md380-gfx --firmware=unwrapped.img --gfx=0x80f9ca8-shmoo.ppm write
-	#../../md380-gfx --firmware=unwrapped.img --gfx=0x80f9ca8-shmoocon.ppm write
-	#../../md380-gfx --firmware=unwrapped.img --gfx=0x80f9ca8-volnet.ppm write
 	./patch.py
 
-wrapped: patches
+logo: patches
+	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-poc-gs.ppm relocate
+	#../../md380-gfx --firmware=expriment.img --gfx=0x80f9ca8-poc.ppm write
+	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-shmoo.ppm write
+	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-shmoocon.ppm write
+	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-volnet.ppm write
+	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-troopers-color.ppm relocate
+
+wrapped: logo
 	../../md380-fw --wrap experiment.img experiment.bin
 
 
