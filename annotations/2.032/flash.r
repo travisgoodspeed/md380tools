@@ -345,7 +345,7 @@ af+ 0x802fb00 130 F_300
 af+ 0x802fb82 52 F_1068
 af+ 0x802fbea 76 F_1098
 af+ 0x802fc36 332 F_1069
-af+ 0x802fd82 70 F_301
+af+ 0x802fd82 70 spiflash_read
 af+ 0x802fdc8 58 F_302
 af+ 0x802fe02 18 F_303
 af+ 0x802fe14 34 F_304
