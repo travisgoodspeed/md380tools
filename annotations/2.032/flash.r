@@ -809,7 +809,7 @@ af+ 0x8042342 58 F_4115
 af+ 0x804237c 94 F_4116
 af+ 0x80423da 18 F_4131
 af+ 0x80423ec 92 OS_Sched
-af+ 0x8042448 30 mem_transfet
+af+ 0x8042448 30 OS_SchedNew
 af+ 0x8042468 30 uC_OS_II_Idle
 af+ 0x804248c 318 OS_TCBInit
 af+ 0x804262c 28 F_4508
