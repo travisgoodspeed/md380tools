@@ -79,6 +79,10 @@ class Tool(DFU):
             print "Failed to send custom %02x %02x." % (a,b);
             return False;
         return True;
+    def peek(self,adr,size):
+        """Returns so many bytes from an address."""
+        self.set_address(adr);
+        return self.upload(1,size,0);
     def getdmesg(self):
         """Returns the 1024 byte DMESG buffer."""
         cmd=0x00; #DMESG
@@ -142,6 +146,27 @@ def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     #dfu.drawtext("Dumping dmesg",160,50);
     print dfu.getdmesg();
+
+def coredump(dfu,filename):
+    """Dumps a corefil of RAM."""
+    with open(filename,'wb') as f:
+        for adr in range(0x20000000,
+                         0x20000000+(128*1024),
+                         1024):
+            #print "Fetching %08x"%adr
+            buf=dfu.peek(adr,1024);
+            f.write(buf);
+        f.close();
+def flashdump(dfu,filename):
+    """Dumps flash."""
+    with open(filename,'wb') as f:
+        for adr in range(0x08000000,
+                         0x08000000+(1024*1024),
+                         1024):
+            #print "Fetching %08x"%adr
+            buf=dfu.peek(adr,1024);
+            f.write(buf);
+        f.close();
 
 def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
@@ -221,7 +246,9 @@ Follow the dmesg buffer.
 
 
 Dump the bootloader from Flash memory.
-    md380-tool readboot <filename.bin>
+    md380-tool flashdump <filename.bin>
+Dump a core file of memory.
+    md380-tool coredump <filename.bin>
 
 
 """)
@@ -249,8 +276,14 @@ if __name__ == '__main__':
                 getchannel(dfu);
 
         elif len(sys.argv) == 3:
-            if sys.argv[1] == 'readboot':
-                print "I should be dumping memory to '%s'." % sys.argv[2];
+            if sys.argv[1] == 'flashdump':
+                print "Dumping flash from 0x08000000 to '%s'." % sys.argv[2];
+                dfu=init_dfu();
+                flashdump(dfu,sys.argv[2]);
+            elif sys.argv[1] == 'coredump':
+                print "Dumping ram from 0x20000000 to '%s'." % sys.argv[2];
+                dfu=init_dfu();
+                coredump(dfu,sys.argv[2]);
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]));
 
