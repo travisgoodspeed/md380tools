@@ -289,8 +289,10 @@ if __name__== '__main__':
                   sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
 
+    merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine"),0);
+    merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine"),0);
 
-    
+
     #Throwaway hook to see if adr is called.
     #merger.hookstub(0x0803f03c,
     #                sapplet.getadr("demo"));

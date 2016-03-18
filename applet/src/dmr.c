@@ -22,6 +22,10 @@
 /* Used to avoid duplicate call endings. */
 int incall=0;
 
+/* Bufferspace to transfer data*/
+char DebugLine1[30];
+char DebugLine2[30];
+
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
@@ -75,19 +79,15 @@ void *dmr_call_start_hook(char *pkt){
   
   //Destination adr as Big Endian.
   int dst=(pkt[7]|
-	   (pkt[6]<<8)|
-	   (pkt[5]<<16));
-  
-  //All but the top row is overwritten,
-  //so any status has to be logged here.
-  char buf[15];
-  
-  //Print the target adress to the screen.
-  sprintf(buf,
-	  "%d",dst);
-  drawascii(buf,
-	    160,20);
-  
+      (pkt[6]<<8)|
+          (pkt[5]<<16));
+
+  int src=(pkt[10]|
+      (pkt[9]<<8)|
+          (pkt[8]<<16));
+
+  sprintf(DebugLine1, "%d", src );
+  sprintf(DebugLine2, "%d", dst );
   //Just a dot for logging.
   printf(".");
   
