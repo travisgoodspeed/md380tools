@@ -1520,6 +1520,8 @@ CCa 0x8043df8 Bat_Voltage
 
 
 CCa 0x0801f5b6 sprite telephone
+CCa 0x0802e4b0 sprite incomming telephone
+CCa 0x0802e582 sprite incomming telephone
 
 CCa 0x08044184 _Start Mbox_
 CCa 0x0804910e _uC/OS-II TmrLock_
