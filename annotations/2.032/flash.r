@@ -29,6 +29,9 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
+
+
+
 af+ 0x0802297c 314 F_4121
 af+ 0x08047f5c 1700 F_4524
 af+ 0x08050d90 122 F_4523
@@ -320,8 +323,7 @@ af+ 0x8026594 2 F_822
 af+ 0x8026596 24 something_to_store_to_RTC_backup_registers
 af+ 0x80265b8 86 F_999
 af+ 0x80265ba 84 RTC_ITConfig
-af+ 0x8026614 2 F_1000
-af+ 0x8026616 28 RTC_ClearFlag
+af+ 0x8026614 30 RTC_ClearFlag
 af+ 0x802664c 22 F_92
 af+ 0x8026662 24 RTC_Bcd2ToByte
 af+ 0x802667a 32 F_4379
@@ -423,7 +425,7 @@ af+ 0x8030170 76 F_308
 af+ 0x80301bc 78 F_309
 af+ 0x803020c 66 F_4193
 af+ 0x8030250 76 F_310
-af+ 0x803029c 258 F_311
+af+ 0x803029c 258 OSMboxPend
 af+ 0x80303b4 86 OSMboxPost
 af+ 0x803040c 26 F_4497
 af+ 0x8030426 478 F_4492
@@ -482,6 +484,7 @@ af+ 0x8031844 20 F_325
 af+ 0x8031858 20 F_326
 af+ 0x803186c 56 F_829
 af+ 0x80318a4 90 F_4487
+af+ 0x80318fe 70 F_5012
 af+ 0x8031944 84 F_830
 af+ 0x8031998 540 F_831
 af+ 0x8031bb4 14 F_327
@@ -794,18 +797,20 @@ af+ 0x8041d8a 20 F_441
 af+ 0x8041df8 8 OS_ENTER_CRITICAL
 af+ 0x8041e00 6 OS_EXIT_CRITICAL
 af+ 0x8041e22 8 OS_TASK_SW
-af+ 0x8041e2a 8 OS_TASK_SW
-af+ 0x8041eac 56 OSMemNameSet
-af+ 0x8041f10 148 function_whith_lot_of_memmove_in_OS_ENTER_CRITICAL_1
-af+ 0x8041fa4 58 F_447
-af+ 0x8041fde 90 F_448
-af+ 0x804207a 182 F_4216
+af+ 0x8041e2a 8 OSIntCtxSw
+af+ 0x8041eac 100 OSMemNameSet_wtf
+af+ 0x8041f10 148 OSIntExit
+af+ 0x8041fa4 58 OSSchedLock
+af+ 0x8041fde 90 OSSchedUnlock
+af+ 0x804207a 182 OSTimeTick_maybee
 af+ 0x8042130 122 OS_EventTaskRdy
-af+ 0x80421aa 140 F_450
-af+ 0x8042236 50 OS_EventTaskRemove
+af+ 0x80421aa 140 OS_EventTaskWait_wtf_Multi
+af+ 0x8042236 50 OS_EventTaskRemove_wtf_Multi
 af+ 0x8042268 26 F_872
 af+ 0x8042282 96 F_4114
-af+ 0x8042342 58 F_4115
+af+ 0x80422e2 44 F_5013
+af+ 0x804230e 52 F_5014
+af+ 0x8042342 58 init_uC_OS-II_Idle_task
 af+ 0x804237c 94 F_4116
 af+ 0x80423da 18 F_4131
 af+ 0x80423ec 92 OS_Sched
@@ -840,7 +845,7 @@ af+ 0x8043e70 8 F_164
 af+ 0x8043e78 268 F_4000
 af+ 0x804403c 310 Start
 af+ 0x8044172 298 F_474
-af+ 0x804429c 684 F_166
+af+ 0x804429c 684 Start_multiple_tasks
 af+ 0x8044548 300 RTC_Timer
 af+ 0x8044674 626 FMTx_Process
 af+ 0x80448e8 42 RF_Pll
@@ -875,6 +880,7 @@ af+ 0x8045b60 90 F_500
 af+ 0x8045bc0 614 F_80_wtf
 af+ 0x8045e26 288 F_502
 af+ 0x8045f46 138 F_503
+af+ 0x8045fd0 78 F_5015
 af+ 0x804601e 88 F_504
 af+ 0x8046098 38 F_505
 af+ 0x80460be 14 F_1158
@@ -967,6 +973,8 @@ af+ 0x8048f00 130 F_561
 af+ 0x8048f82 184 F_562
 af+ 0x804903a 14 OSTmrSignal___maybe
 af+ 0x8049048 52 F_876
+af+ 0x804907c 174 F_5016
+af+ 0x804912a 58 F_5023
 af+ 0x8049164 110 F_194
 af+ 0x80491d2 74 F_195
 af+ 0x804921c 122 uC_OS_II_Tmr
@@ -994,10 +1002,12 @@ af+ 0x8049768 26 F_4421
 af+ 0x8049782 18 F_4422
 af+ 0x8049794 52 F_4488
 af+ 0x8049a9c 178 F_4452
+af+ 0x8049b74 82 F_5017
+af+ 0x8049bcc 78 F_5018
 af+ 0x8049c20 46 F_4345
-af+ 0x8049c4e 10 F_4283
-af+ 0x8049c58 64 F_4284
-af+ 0x8049c98 62 F_4285
+af+ 0x8049c4e 10 F_5024
+af+ 0x8049c58 64 F_5025
+af+ 0x8049c98 62 F_5026
 af+ 0x8049cd8 102 F_877
 af+ 0x8049d40 76 F_566
 af+ 0x8049d8c 34 F_567
@@ -1020,7 +1030,7 @@ af+ 0x804aaea 340 F_577
 af+ 0x804aca4 198 F_203
 af+ 0x804ad6a 68 F_881
 af+ 0x804adae 100 F_579
-af+ 0x804ae14 92 F_204
+af+ 0x804ae14 92 init_Tone_fft_task
 af+ 0x804ae70 126 F_581
 af+ 0x804aeee 120 F_582
 af+ 0x804af68 568 Tone_fft
@@ -1032,6 +1042,8 @@ af+ 0x804b60e 36 F_587
 af+ 0x804b632 24 F_588
 af+ 0x804b64a 20 F_16
 af+ 0x804b66c 190 dmr_handle_data
+af+ 0x804b7a6 8 F_5019
+af+ 0x804b7ae 2 F_5020
 af+ 0x804b7b0 8 F_206
 af+ 0x804b7b8 8 OSTaskIdleHook
 af+ 0x804b7c0 324 OSTaskStkInit
@@ -1040,6 +1052,7 @@ af+ 0x804b914 36 short_function_2
 af+ 0x804b970 2 F_594
 af+ 0x804b974 2 short_function_4
 af+ 0x804b976 2 short_function_3
+af+ 0x804b978 228 F_5021
 af+ 0x804bb40 180 OSTaskCreate
 af+ 0x804bbf4 204 OSTaskCreateExt
 af+ 0x804bcc0 90 OSTaskNameSet
@@ -1098,11 +1111,11 @@ af+ 0x804f33c 2 F_631
 af+ 0x804f340 10 F_884
 af+ 0x804f34a 104 F_632
 af+ 0x804f3b2 12 F_885
-af+ 0x804f3dc 136 F_633
+af+ 0x804f3dc 136 EXTI_Init
 af+ 0x804f464 18 F_634
-af+ 0x804f476 36 F_4217
+af+ 0x804f476 36 F_4217_Function_with_a_lot_of_ETXI
 af+ 0x804f49a 6 F_229
-af+ 0x804f4b4 80 F_230
+af+ 0x804f4b4 80 F_230_Function_with_a_lot_of_ETXI
 af+ 0x804f508 78 F_4074
 af+ 0x804f556 138 F_4075
 af+ 0x804f5e0 58 F_4076
@@ -1158,6 +1171,7 @@ af+ 0x8051570 14 F_667
 af+ 0x8051c58 60 F_4455
 af+ 0x8051c94 38 F_4423
 af+ 0x8051cba 226 F_4424
+af+ 0x8051d9c 68 F_5022
 af+ 0x8051de4 48 F_4425
 af+ 0x8051e14 28 F_668
 af+ 0x8051e30 418 F_669
@@ -1465,10 +1479,20 @@ af+ 0x8093724 74 F_4035
 af+ 0x809376e 28 F_4036
 af+ 0x809378a 28 F_4037
 af+ 0x80937b0 32 F_4063
-af+ 0x809381c 34 F_4129
-af+ 0x8093838 182 F_4130
+af+ 0x809381c 34 F_5003
+af+ 0x809383e 50 F_5004
+af+ 0x8093870 20 F_5005
+af+ 0x8093884 20 F_5006
+af+ 0x8093898 134 F_5007
+af+ 0x809391e 28 F_5008
+af+ 0x809393a 58 F_5009
+af+ 0x8093974 20 F_5010
+af+ 0x8093b34 56 F_5011_wtf
 af+ 0x8093c54 82 F_4219
 af+ 0x8093ca6 202 F_4282
+af+ 0x809558c 206 F_5002
+af+ 0x80956a0 52 F_5001
+af+ 0x80956d4 98 F_5000
 af+ 0x809573c 366 LED_Process
 af+ 0x80969de 16 F_4001
 af+ 0x80969ee 34 F_4539
@@ -1479,9 +1503,6 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 
-af+ 0x80956d4 98 F_5000
-af+ 0x80956a0 52 F_5001
-af+ 0x809558c 206 F_5002
 
 
 
@@ -1571,7 +1592,20 @@ CCa 0x0803e5e4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base add
 CCa 0x0803e69a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0803e6a4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x080426c8 Function ... Init ADC1 (Bat) with dma  value via dma DMA2 DMA_S0CRin 0x2001cfcc
-CCa 0x080443f8 Crate Process -LED Process- Thread Start  addr 0x809573d
+CCa 0x080443f8 Create Process -LED Process- Thread Start  addr 0x809573d
+CCa 0x80442c0 Create Process -Sys_Inter- Thread
+CCa 0x80442f4 Create Process -RTC_Timer- Thread
+CCa 0x8044328 Create Process -Call_Process- Thread
+CCa 0x804435c Create Process -FMTx_Process- Thread
+CCa 0x8044390 Create Process -RF_Pll- Thread
+CCa 0x80443c4 Create Process -PC_Tune- Thread
+CCa 0x804442c Create Process -Beep_Process- Thread
+CCa 0x8044460 Create Process -Af_Mute- Thread
+CCa 0x8044494 Create Process -TimeSlot- Thread
+CCa 0x80444c8 Create Process -Set_Vocoder- Thread
+CCa 0x80444fc Create Process -ChAccess_Rp- Thread
+CCa 0x8044530 Create Process -State_Change- Thread
+
 CCa 0x08044620 set A7 POW_C
 CCa 0x080458de call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x080458e8 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
