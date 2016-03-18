@@ -23,6 +23,8 @@
 
 /* Used to avoid duplicate call endings. */
 int incall=0;
+char DebugLine1[30];
+char DebugLine2[30];
 
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
@@ -93,19 +95,17 @@ void *dmr_call_start_hook(char *pkt){
 	  "%d %d",dst,src);
 //  drawascii(buf,
 //	    160,20);
+
+
+  sprintf(DebugLine1, "%d %d", dst,src );
   
   int n=0;
-
   for (n=0;n<sizeof(db) /sizeof(struct call);n++) {
     if (db[n].id == src) {   
       printf("%s %s",
         db[n].call,
         db[n].name);
-      sprintf(buf,
-        "%s",
-        db[n].name);
-      drawascii(buf,
-      160,20);  
+      sprintf(DebugLine2, "%s %s",  db[n].call, db[n].name);
       break;
     }
   }
@@ -121,6 +121,10 @@ void *dmr_call_start_hook(char *pkt){
   return dmr_call_start(pkt);
 }
 
+void print_DebugLine(void){
+  drawascii(DebugLine1, 160, 150);
+  drawascii(DebugLine2, 160, 187);
+  }
 
 void *dmr_handle_data_hook(char *pkt, int len){
   /* This hook handles the dmr_contact_check() function, calling
