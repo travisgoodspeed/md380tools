@@ -163,7 +163,7 @@ class MD380Graphics(Memory):
 
         pixbytes = b''
         for line in gfx['pixels']:
-            padding = bytesperline*8 - len(line)
+            padding = bytesperline*(8/bitsperpixel) - len(line)
             line += [0]*padding
             linebits = [bin(c+0x10000)[-bitsperpixel:] for c in line]
             linebits = ''.join(linebits)
