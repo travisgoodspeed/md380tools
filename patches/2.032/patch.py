@@ -123,6 +123,10 @@ if __name__ == '__main__':
     patcher.sethword(    0x0800d918, 0xfce9); #  0xfffc
     patcher.sethword(    0x0800d91a, 0x1d24); #  0x241d
 
+    # reduce the beep loudness ( r1 is not the volume ) ... 
+    # todo: understanding about the tone generation
+    patcher.sethword(    0x0802ba7c, 0x0155);
+
     # [0x0809cf00]> pd 7
     #             0x0809cf00      4048           ldr r0, [pc, 0x100]         ; [0x809d004:4]=-1
     #             0x0809cf02      0021           movs r1, 0
