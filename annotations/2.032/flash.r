@@ -13,7 +13,7 @@
 
 
 ## These annotations describe the functions that handle incoming
-## audio, which is necessary to
+## audio, which is necessary to 
 
 CCa 0x803ec86 This function handles incoming audio calls.
 af+ 0x803ec86 740 dmr_audio_start
@@ -57,7 +57,7 @@ af+ 0x800de5c 96 F_972
 af+ 0x800debc 126 F_787
 af+ 0x800df84 996 F_4285
 af+ 0x800e3c4 1820 F_4142
-af+ 0x800eb10 414 F_4144 
+af+ 0x800eb10 414 F_4144
 af+ 0x800ecc0 418 F_4145
 af+ 0x800ee94 1422 F_4143
 af+ 0x800f422 48 F_251
@@ -79,7 +79,7 @@ af+ 0x8017612 56 F_4083
 af+ 0x8017650 124 F_4085
 af+ 0x8019ce0 272 F_4160
 af+ 0x801ae24 282 F_4161
-af+ 0x801b09e 188 F_4146 
+af+ 0x801b09e 188 F_4146
 af+ 0x801b1c6 156 F_4162
 af+ 0x801b440 30 F_974
 af+ 0x801b45e 24 F_975
@@ -357,7 +357,7 @@ af+ 0x8028e32 28 F_4192
 af+ 0x8028e58 330 F_4238
 af+ 0x8028fa2 112 F_4239
 af+ 0x8029020 56 F_4240
-af+ 0x80290c8 1854 F_4137 
+af+ 0x80290c8 1854 F_4137
 af+ 0x8029810 104 F_4241
 af+ 0x8029898 156 F_4242
 af+ 0x8029938 120 F_4243
@@ -609,7 +609,7 @@ af+ 0x8035f0a 92 F_4263
 af+ 0x8035f66 24 F_4210
 af+ 0x8035f80 26 F_4264
 af+ 0x8036006 40 F_4512
-af+ 0x803602e 52 F_4502 
+af+ 0x803602e 52 F_4502
 af+ 0x803607e 28 F_4265
 af+ 0x80360de 32 F_4266
 af+ 0x8036156 12 F_4211
@@ -669,7 +669,7 @@ af+ 0x8039760 30 F_4405
 af+ 0x8039bfe 36 F_4273
 af+ 0x8039cb2 226 F_4274
 af+ 0x8039e28 54 F_4275
-af+ 0x8039e5e 22 F_4506  
+af+ 0x8039e5e 22 F_4506
 af+ 0x8039e74 12 F_1108
 af+ 0x8039ea0 100 F_1109
 af+ 0x8039f04 66 F_1082
@@ -783,7 +783,7 @@ af+ 0x8041b1e 8 F_433
 af+ 0x8041b26 18 F_869
 af+ 0x8041b38 32 F_4406
 af+ 0x8041b58 2 F_1086
-af+ 0x8041b5a 2 F_4507 
+af+ 0x8041b5a 2 F_4507
 af+ 0x8041b5c 64 F_870
 af+ 0x8041b9c 256 F_434
 af+ 0x8041cb0 28 F_871
@@ -1086,7 +1086,7 @@ af+ 0x804ccc2 84 F_221
 af+ 0x804cd16 240 F_4099
 af+ 0x804ce10 258 F_4072
 af+ 0x804cf18 48 F_4109
-af+ 0x804cf80 614 F_4100 
+af+ 0x804cf80 614 F_4100
 af+ 0x804d258 2 F_222_Nice
 af+ 0x804d25a 2 F_4110
 af+ 0x804d25c 2 F_223_Nice
@@ -1508,7 +1508,7 @@ af+ 0x8096c96 56 F_4544
 
 
 CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
-CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending 
+CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending
 CCa 0x80426f4 Bat_Voltage
 CCa 0x8042940 Bat_Voltage
 CCa 0x80429d2 Bat_Voltage
@@ -2073,4 +2073,3 @@ CCa 0x8093b36 Call OS_ENTER_CRITICAL()
 CCa 0x8093b44 Call OS_EXIT_CRITICAL()
 CCa 0x8095740 config_byte_LED_enable_and_more
 CCa 0x80957ac config_byte_LED_enable_and_more
-

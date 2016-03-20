@@ -18,4 +18,4 @@ data.h: users.csv
 	egrep ^262  users.csv | cut -d "," -f 1,2,3 | cut -d " " -f1 > 262.csv
 	dos2unix 262.csv
 	./conv.py > data.h
-	
+
