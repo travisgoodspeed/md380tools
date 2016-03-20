@@ -172,7 +172,7 @@ def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
     while True:
         sys.stdout.write(dfu.getdmesg());
-
+        sys.stdout.flush();
 
 def bcd(b):
     return int("%02x"%b);
