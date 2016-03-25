@@ -148,7 +148,7 @@ def dmesg(dfu):
     print dfu.getdmesg();
 
 def coredump(dfu,filename):
-    """Dumps a corefil of RAM."""
+    """Dumps a corefile of RAM."""
     with open(filename,'wb') as f:
         for adr in range(0x20000000,
                          0x20000000+(128*1024),
@@ -157,6 +157,17 @@ def coredump(dfu,filename):
             buf=dfu.peek(adr,1024);
             f.write(buf);
         f.close();
+def hexdump(dfu,address):
+    """Dumps from memory to the screen"""
+    adr=int(address,16);
+    buf=dfu.peek(adr,512);
+    i=0;
+    for b in buf:
+        sys.stdout.write("%02x "%b);
+        i=i+1;
+        if i%16==0: sys.stdout.write("\n");
+        elif i%8==0: sys.stdout.write(" ");
+
 def flashdump(dfu,filename):
     """Dumps flash."""
     with open(filename,'wb') as f:
@@ -284,6 +295,10 @@ if __name__ == '__main__':
                 print "Dumping ram from 0x20000000 to '%s'." % sys.argv[2];
                 dfu=init_dfu();
                 coredump(dfu,sys.argv[2]);
+            elif sys.argv[1] == 'hexdump':
+                print "Dumping memory from %s." % sys.argv[2];
+                dfu=init_dfu();
+                hexdump(dfu,sys.argv[2]);
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]));
 
