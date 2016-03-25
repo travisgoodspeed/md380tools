@@ -97,10 +97,24 @@ class Tool(DFU):
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
         return self.upload(1,size,0);
-    def getmessage(self,index):
+    def getsms(self,index):
         """Returns so many bytes from SPI Flash."""
         buf=self.spiflashpeek(0x41674+index*0x124,
-                         0x124);
+                              0x124);
+        srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
+        flags=buf[3];
+        message="";
+        for i in range(4,0x124,2):
+            c=chr(buf[i]);
+            if c!='\0':
+                message=message+c;
+            else:
+                return [srcadr,flags,message];
+        return [None,None,None];
+    def getsentsms(self,index):
+        """Returns so many bytes from SPI Flash."""
+        buf=self.spiflashpeek(0x450a4+index*0x124,
+                              0x124);
         srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
         flags=buf[3];
         message="";
@@ -264,9 +278,14 @@ def rssi(dfu):
 def messages(dfu):
     """Prints all the SMS messages."""
     for i in range(1,0xff):
-        [src,flags,message]=dfu.getmessage(i);
+        [src,flags,message]=dfu.getsms(i);
         if src!=None and flags==0xC2:
-            print "%s: %s"%(users.getusername(src),message);
+            print "From %s: %s"%(users.getusername(src),message);
+    for i in range(1,0xff):
+        [src,flags,message]=dfu.getsentsms(i);
+        if src!=None and flags==0xC2:
+            print "To   %s: %s"%(users.getusername(src),message);
+    
 def findcc(dfu):
     """Hunts for the color code of a transmitter."""
     cc=0; #Guess at the color code.
