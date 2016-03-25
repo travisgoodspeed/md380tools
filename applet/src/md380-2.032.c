@@ -58,3 +58,5 @@ char *welcomebmp=0x080f9ca8;
 
 INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt)=0x804bbf5;
 void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
+
+void* (*main_menu)(void *)=0x08039c23;
