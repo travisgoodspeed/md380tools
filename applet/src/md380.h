@@ -64,3 +64,9 @@ extern char* channelnum;
 //! Reads the current channel number from the rotary switch.
 extern int (*read_channel_switch)();
 
+
+//! Halts all threads.
+extern int (*OS_ENTER_CRITICAL)();
+//! Resumes threads.
+extern void (*OS_EXIT_CRITICAL)(int);
+

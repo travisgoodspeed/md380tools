@@ -63,3 +63,7 @@ void* (*main_menu)(void *)=0x08039c23;
 
 char* channelnum=0x2001d376;
 int (*read_channel_switch)()=0x0804d269;
+
+
+int (*OS_ENTER_CRITICAL)()    = 0x08041df9;
+void (*OS_EXIT_CRITICAL)(int) = 0x08041e01;
