@@ -67,6 +67,10 @@ void lcd_background_led(int on) {
 }
 
 void print_DebugLine(void){
-   drawascii(DebugLine1, 160, 150);
-   drawascii(DebugLine2, 160, 187);
-   }
+  //Clear the background.
+  drawascii("         ",160,154);
+  drawascii("         ",160,190);
+  //Draw the lines.
+  drawascii(DebugLine1, 160, 154);//150
+  drawascii(DebugLine2, 160, 190);//187
+}
