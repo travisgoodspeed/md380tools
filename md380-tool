@@ -96,9 +96,30 @@ class Tool(DFU):
                                    cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
-        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
-        
         return self.upload(1,size,0);
+    def c5000peek(self,reg):
+        """Returns so many bytes from SPI Flash."""
+        cmd=0x11; #C5000 Read Reg
+        cmdstr=(chr(cmd)+
+                chr(reg&0xFF)
+                );
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
+                                   cmdstr)
+        self.get_status(); #this changes state
+        status=self.get_status(); #this gets the status
+        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        return buf[0];
+    def c5000poke(self,reg,val):
+        """Returns so many bytes from SPI Flash."""
+        cmd=0x10; #C5000 Write Reg
+        cmdstr=(chr(cmd)+
+                chr(reg&0xFF)+
+                chr(val&0xFF)
+                );
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
+                                   cmdstr)
+        self.get_status(); #this changes state
+        status=self.get_status(); #this gets the status
     def getdmesg(self):
         """Returns the 1024 byte DMESG buffer."""
         cmd=0x00; #DMESG
@@ -210,6 +231,31 @@ def dmesgtail(dfu):
     while True:
         sys.stdout.write(dfu.getdmesg());
         sys.stdout.flush();
+def c5000(dfu):
+    """Prints some DMR registers."""
+    for r in range(0,0x87):
+        sys.stdout.write("[0x%02x]=0x%02x\t" % (r,dfu.c5000peek(r)));
+        if r%4==3:
+            sys.stdout.write("\n");
+            sys.stdout.flush();
+    sys.stdout.write("\n");
+def findcc(dfu):
+    """Hunts for the color code of a transmitter."""
+    cc=0; #Guess at the color code.
+    while True:
+        #Try a new color.
+        cc=cc+1;
+        print "Trying color %d." % (cc&0xf);
+        dfu.c5000poke(0x1f,(cc&0xF)<<4);
+        time.sleep(1.0);
+        if dfu.c5000peek(0x0d)&0x10:
+            print "Got a match on color %i"%(cc&0xf);
+            while dfu.c5000peek(0x0d)&0x10:
+                time.sleep(0.5);
+                sys.stdout.write(".");
+                sys.stdout.flush();
+            sys.stdout.write("\n");
+
 
 def bcd(b):
     return int("%02x"%b);
@@ -280,7 +326,10 @@ Prints the dmesg buffer.
 Follow the dmesg buffer.
     md380-tool dmesgtail
 
-
+Prints the C5000 baseband registers.
+    md380-tool c5000
+Scans for DMR traffic on all color codes.
+    md380-tool findcc
 
 Dump all of flash memory.
     md380-tool flashdump <filename.bin>
@@ -316,7 +365,13 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'channel':
                 dfu=init_dfu();
                 getchannel(dfu);
-
+            elif sys.argv[1] == 'c5000':
+                dfu=init_dfu();
+                c5000(dfu);
+            elif sys.argv[1] == 'findcc':
+                dfu=init_dfu();
+                findcc(dfu);
+            
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
                 print "Dumping flash from 0x08000000 to '%s'." % sys.argv[2];

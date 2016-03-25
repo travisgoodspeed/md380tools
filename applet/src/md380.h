@@ -55,6 +55,7 @@ extern INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *pto
 extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 
 
+//! Still figuring this out; it is involved in rendering menus.
 extern void* (*main_menu)(void *);
 
 
@@ -70,3 +71,10 @@ extern int (*OS_ENTER_CRITICAL)();
 //! Resumes threads.
 extern void (*OS_EXIT_CRITICAL)(int);
 
+
+
+//! Reads a register from the C5000.
+extern void (*c5000_spi0_readreg)(int reg, char *buf);
+
+//! Writes a register in the C5000.
+extern void (*c5000_spi0_writereg)(int reg, int val);

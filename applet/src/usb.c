@@ -101,12 +101,16 @@ int usb_dnld_hook(){
   //char *thingy=(char*) 0x2001d276;
   char *thingy2=(char*) 0x2001d041;
   
+  int state;
+  
   /* DFU transfers begin at block 2, and special commands hook block
      0.  We'll use block 1, because it handily fits in the gap without
      breaking backward compatibility with the older code.
    */
   if(*blockadr==1){
     switch(packet[0]){
+
+//Memory commands
     case TDFU_DMESG:
       //The DMESG buffer might move, so this command
       //sets the target address to the DMESG buffer.
@@ -122,6 +126,27 @@ int usb_dnld_hook(){
 		    adr,
 		    DMESG_SIZE);
       break;
+
+      
+//Radio Commands
+    case TDFU_C5000_READREG:
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      memset(dmesg_tx_buf,0,DMESG_SIZE);
+      state=OS_ENTER_CRITICAL();
+      c5000_spi0_readreg(packet[1],dmesg_tx_buf);
+      OS_EXIT_CRITICAL(state);
+      break;
+    case TDFU_C5000_WRITEREG:
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      memset(dmesg_tx_buf,0,DMESG_SIZE);
+      state=OS_ENTER_CRITICAL();
+      c5000_spi0_writereg(packet[1],packet[2]);
+      OS_EXIT_CRITICAL(state);
+      break;
+
+//Graphics commands.
     case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
       drawtext((wchar_t *) (packet+3),
 	       packet[1],packet[2]);

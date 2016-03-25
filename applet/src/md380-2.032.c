@@ -67,3 +67,7 @@ int (*read_channel_switch)()=0x0804d269;
 
 int (*OS_ENTER_CRITICAL)()    = 0x08041df9;
 void (*OS_EXIT_CRITICAL)(int) = 0x08041e01;
+
+
+void (*c5000_spi0_readreg)(int reg, char*buf)=0x0803e2f5;
+void (*c5000_spi0_writereg)(int reg, int val)=0x0803e2a9;
