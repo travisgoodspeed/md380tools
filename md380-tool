@@ -83,6 +83,23 @@ class Tool(DFU):
         """Returns so many bytes from an address."""
         self.set_address(adr);
         return self.upload(1,size,0);
+    def spiflashpeek(self,adr,size=1024):
+        """Returns so many bytes from SPI Flash."""
+        cmd=0x01; #SPIFLASHREAD
+        cmdstr=(chr(cmd)+
+                chr(adr&0xFF)+
+                chr((adr>>8)&0xFF)+
+                chr((adr>>16)&0xFF)+
+                chr((adr>>24)&0xFF)
+                );
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
+                                   cmdstr)
+        self.get_status(); #this changes state
+        time.sleep(0.1);
+        status=self.get_status(); #this gets the status
+        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        
+        return self.upload(1,size,0);
     def getdmesg(self):
         """Returns the 1024 byte DMESG buffer."""
         cmd=0x00; #DMESG
@@ -178,6 +195,16 @@ def flashdump(dfu,filename):
             buf=dfu.peek(adr,1024);
             f.write(buf);
         f.close();
+def spiflashdump(dfu,filename):
+    """Dumps SPI Flash."""
+    with open(filename,'wb') as f:
+        for adr in range(0x00000000,
+                         0x00000000+(2*1024*1024),
+                         1024):
+            #print "Fetching %08x"%adr
+            buf=dfu.spiflashpeek(adr,1024);
+            f.write(buf);
+        f.close();
 
 def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
@@ -256,10 +283,15 @@ Follow the dmesg buffer.
 
 
 
-Dump the bootloader from Flash memory.
+Dump all of flash memory.
     md380-tool flashdump <filename.bin>
-Dump a core file of memory.
+Dump the complete SPI Flash image.
+    md380-tool spiflashdump <filename.bin>
+Dump a core file of RAM.
     md380-tool coredump <filename.bin>
+
+Dumps memory in hex.
+    md380-tool hexdump <0xcafebabe>
 
 
 """)
@@ -291,6 +323,10 @@ if __name__ == '__main__':
                 print "Dumping flash from 0x08000000 to '%s'." % sys.argv[2];
                 dfu=init_dfu();
                 flashdump(dfu,sys.argv[2]);
+            elif sys.argv[1] == 'spiflashdump':
+                print "Dumping SPI Flash to '%s'." % sys.argv[2];
+                dfu=init_dfu();
+                spiflashdump(dfu,sys.argv[2]);
             elif sys.argv[1] == 'coredump':
                 print "Dumping ram from 0x20000000 to '%s'." % sys.argv[2];
                 dfu=init_dfu();

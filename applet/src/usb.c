@@ -112,10 +112,24 @@ int usb_dnld_hook(){
       //sets the target address to the DMESG buffer.
       *dfu_target_adr=dmesg_start;
       break;
+    case TDFU_SPIFLASHREAD:
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      uint32_t adr= *((uint32_t*)(packet+1));
+      printf("Dumping %d bytes from 0x%08x in SPI Flash\n",
+	     DMESG_SIZE, adr);
+      spiflash_read(dmesg_tx_buf,
+		    adr,
+		    DMESG_SIZE);
+      break;
     case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
       drawtext((wchar_t *) (packet+3),
 	       packet[1],packet[2]);
       break;
+      
+    case TDFU_BOX:
+    default:
+      printf("Unhandled DFU packet type 0x%02x.\n",packet[0]);
     }
     
     thingy2[0]=0;

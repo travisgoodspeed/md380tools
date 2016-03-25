@@ -14,7 +14,8 @@ fetching the raw buffer.
 
 
 //Memory commands
-#define TDFU_DMESG 0x00
+#define TDFU_DMESG        0x00
+#define TDFU_SPIFLASHREAD 0x01
 
 
 //Graphics Commands
