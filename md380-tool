@@ -239,6 +239,14 @@ def c5000(dfu):
             sys.stdout.write("\n");
             sys.stdout.flush();
     sys.stdout.write("\n");
+def rssi(dfu):
+    """Graphs the RSSI value.  Kinda useless."""
+    while True:
+        rssih=dfu.c5000peek(0x43);
+        rssil=dfu.c5000peek(0x44);
+        rssi=(rssih<<8)|rssil;
+        print "%04x" % rssi;
+        time.sleep(0.25);
 def findcc(dfu):
     """Hunts for the color code of a transmitter."""
     cc=0; #Guess at the color code.
@@ -368,6 +376,9 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'c5000':
                 dfu=init_dfu();
                 c5000(dfu);
+            elif sys.argv[1] == 'rssi':
+                dfu=init_dfu();
+                rssi(dfu);
             elif sys.argv[1] == 'findcc':
                 dfu=init_dfu();
                 findcc(dfu);
