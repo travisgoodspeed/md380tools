@@ -58,4 +58,9 @@ extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 extern void* (*main_menu)(void *);
 
 
+//! This points to the byte of the current channel.
+extern char* channelnum;
+
+//! Reads the current channel number from the rotary switch.
+extern int (*read_channel_switch)();
 
