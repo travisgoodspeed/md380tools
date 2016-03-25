@@ -119,7 +119,7 @@ class Tool(DFU):
         flags=buf[3];
         message="";
         for i in range(4,0x124,2):
-            c=chr(buf[i]);
+            c=chr(buf[i]&0x7F);
             if c!='\0':
                 message=message+c;
             else:
@@ -279,11 +279,11 @@ def messages(dfu):
     """Prints all the SMS messages."""
     for i in range(1,0xff):
         [src,flags,message]=dfu.getsms(i);
-        if src!=None and flags==0xC2:
+        if src!=None and flags&0xF==0x2:
             print "From %s: %s"%(users.getusername(src),message);
     for i in range(1,0xff):
         [src,flags,message]=dfu.getsentsms(i);
-        if src!=None and flags==0xC2:
+        if src!=None and flags&0xF==0x2:
             print "To   %s: %s"%(users.getusername(src),message);
     
 def findcc(dfu):
