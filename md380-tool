@@ -188,7 +188,7 @@ def calllog(dfu):
         if old1!=llid1 or old2!=llid2:
             old1=llid1;
             old2=llid2;
-            print "DMR call from %s to %i." % (
+            print "DMR call from %s to %s." % (
                 users.getusername(llid1),users.getusername(llid2));
             sys.stdout.flush();
 
