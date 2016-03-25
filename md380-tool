@@ -97,8 +97,22 @@ class Tool(DFU):
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
         return self.upload(1,size,0);
-    def c5000peek(self,reg):
+    def getmessage(self,index):
         """Returns so many bytes from SPI Flash."""
+        buf=self.spiflashpeek(0x41674+index*0x124,
+                         0x124);
+        srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
+        flags=buf[3];
+        message="";
+        for i in range(4,0x124,2):
+            c=chr(buf[i]);
+            if c!='\0':
+                message=message+c;
+            else:
+                return [srcadr,flags,message];
+        return [None,None,None];
+    def c5000peek(self,reg):
+        """Returns one byte from a C5000 register."""
         cmd=0x11; #C5000 Read Reg
         cmdstr=(chr(cmd)+
                 chr(reg&0xFF)
@@ -110,7 +124,7 @@ class Tool(DFU):
         buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
         return buf[0];
     def c5000poke(self,reg,val):
-        """Returns so many bytes from SPI Flash."""
+        """Writes a byte into a C5000 register."""
         cmd=0x10; #C5000 Write Reg
         cmdstr=(chr(cmd)+
                 chr(reg&0xFF)+
@@ -175,7 +189,7 @@ def calllog(dfu):
             old1=llid1;
             old2=llid2;
             print "DMR call from %s to %i." % (
-                users.getusername(llid1),llid2);
+                users.getusername(llid1),users.getusername(llid2));
             sys.stdout.flush();
 
 
@@ -247,6 +261,12 @@ def rssi(dfu):
         rssi=(rssih<<8)|rssil;
         print "%04x" % rssi;
         time.sleep(0.25);
+def messages(dfu):
+    """Prints all the SMS messages."""
+    for i in range(1,0xff):
+        [src,flags,message]=dfu.getmessage(i);
+        if src!=None and flags==0xC2:
+            print "%s: %s"%(users.getusername(src),message);
 def findcc(dfu):
     """Hunts for the color code of a transmitter."""
     cc=0; #Guess at the color code.
@@ -338,6 +358,8 @@ Prints the C5000 baseband registers.
     md380-tool c5000
 Scans for DMR traffic on all color codes.
     md380-tool findcc
+Dumps all the incoming text messages.
+    md380-tool messages
 
 Dump all of flash memory.
     md380-tool flashdump <filename.bin>
@@ -348,7 +370,6 @@ Dump a core file of RAM.
 
 Dumps memory in hex.
     md380-tool hexdump <0xcafebabe>
-
 
 """)
 
@@ -382,6 +403,9 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'findcc':
                 dfu=init_dfu();
                 findcc(dfu);
+            elif sys.argv[1] == 'messages':
+                dfu=init_dfu();
+                messages(dfu);
             
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
