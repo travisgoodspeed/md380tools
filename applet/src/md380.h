@@ -15,12 +15,12 @@ void wstrhex(wchar_t *, long);
 
 extern int (*spiflash_read)(void *dst, long adr, long len);
 extern void (*gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
-				  short sx, short sy, //Source coords, maybe?
-				  short x, short y,   //X and Y position
-				  int maxlen);
+			    short sx, short sy, //Source coords, maybe?
+			    short x, short y,   //X and Y position
+			    int maxlen);
 extern void (*gfx_drawbmp)(char *bmp,
-				 int idx,
-				 uint64_t pos);
+			   int idx,
+			   uint64_t pos);
 
 //! Function that handles checking a DMR contact.
 extern void* (*dmr_call_end)(void *pkt);
@@ -56,3 +56,6 @@ extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 
 
 extern void* (*main_menu)(void *);
+
+
+
