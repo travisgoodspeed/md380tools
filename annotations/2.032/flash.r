@@ -406,16 +406,19 @@ af+ 0x802ea44 202 F_4386
 af+ 0x802eb68 212 F_4444
 af+ 0x802f9bc 172 F_4138
 af+ 0x802fb00 130 F_300
-af+ 0x802fb82 52 F_1068
-af+ 0x802fbb6 52 F_4096
-af+ 0x802fbea 76 F_1098
+af+ 0x802fb82 52 spiflash_sektor_erase4k
+af+ 0x802fbb6 52 spiflash_block_erase64k
+af+ 0x802fbea 76 spiflash_program_page
+CCa 0x0802fbfa Page Program CMD (02h)
 af+ 0x802fc36 332 F_1069
 af+ 0x802fd82 70 spiflash_read
-af+ 0x802fdc8 58 F_302
-af+ 0x802fe02 18 F_303
-af+ 0x802fe14 34 F_304
-af+ 0x802fe36 28 F_305
-af+ 0x802fe52 24 F_65
+CCa 0x0802fd8e Read Data CMD 03h 
+CCa 0x0802fdae dummy_value
+af+ 0x802fdc8 58 spi_send_and_read_byte
+af+ 0x802fe02 18 spiflash_write_enable
+af+ 0x802fe14 34 spiflash_wait_for_read_status_register
+af+ 0x802fe36 28 enable_spi_flash_and_sem
+af+ 0x802fe52 24 disable_spi_flash_and_sem
 af+ 0x802fe6a 704 F_1002
 af+ 0x803013c 52 F_307
 af+ 0x8030170 76 F_308
@@ -741,7 +744,9 @@ af+ 0x803d7c0 282 F_395
 af+ 0x803d8da 192 F_396
 af+ 0x803da00 44 F_857
 af+ 0x803da2c 76 F_397
-af+ 0x803da78 218 F_398
+af+ 0x803da78 218 OSSemPend
+CCa 0x803da78 void OSSemPend (OS_EVENT *pevent, INT32U timeout, INT8U *perr)
+
 af+ 0x803db68 92 OSSemPost
 af+ 0x803dbc4 28 Sys_Inter
 af+ 0x803dbe2 52 TimeSlot_Inter
@@ -801,11 +806,11 @@ af+ 0x8041b9c 256 F_434
 af+ 0x8041cb0 28 F_871
 af+ 0x8041ccc 28 F_435
 af+ 0x8041ce8 86 F_436
-af+ 0x8041d3e 4 F_147_Nice
-af+ 0x8041d42 4 F_148_Nice
+af+ 0x8041d3e 4 SPI_I2S_ReceiveData
+af+ 0x8041d42 4 SPI_I2S_SendData
 af+ 0x8041d46 24 F_439
 af+ 0x8041d5e 44 F_440
-af+ 0x8041d8a 20 F_441
+af+ 0x8041d8a 20 SPI_I2S_GetFlagStatus
 af+ 0x8041df8 8 OS_ENTER_CRITICAL
 af+ 0x8041e00 6 OS_EXIT_CRITICAL
 af+ 0x8041e22 8 OS_TASK_SW
@@ -1545,7 +1550,8 @@ CCa 0x0800c03c 0x0809381d F_5003 Ticker
 
 af+ 0x080937f0 8 F_5047_uncertain
 af+ 0x0809381a 2 F_5048_uncertain
-
+CCa 0x0802fe48 enable Flash_CS0
+CCa 0x0802fe56 disable Flash_CS0
 CCa 0x8012528 ... number of zones?
 CCa 0x801252a ret value r0, r1
 CCa 0x8012538 0x149e0 begin zone list
