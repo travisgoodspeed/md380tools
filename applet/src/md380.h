@@ -81,4 +81,4 @@ extern void (*c5000_spi0_writereg)(int reg, int val);
 
 
 //! Unknown AES function.
-extern int* (*aes_cipher)(int *pkt);
+extern char* (*aes_cipher)(char *pkt);
