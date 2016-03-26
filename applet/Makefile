@@ -1,4 +1,4 @@
-SRCS = main.c usb.c gfx.c dmr.c printf.c dmesg.c stm32f4xx_it.c system_stm32f4xx.c os.c
+SRCS = main.c usb.c gfx.c dmr.c printf.c dmesg.c stm32f4xx_it.c system_stm32f4xx.c os.c menu.c
 PROJ_NAME=main
 
 

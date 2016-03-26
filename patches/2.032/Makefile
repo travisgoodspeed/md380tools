@@ -19,6 +19,7 @@ logo: patches
 	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-troopers-color.ppm relocate
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ce4.ppm write
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9cf8.ppm write
+
 wrapped: logo
 	../../md380-fw --wrap experiment.img experiment.bin
 

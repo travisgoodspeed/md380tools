@@ -26,6 +26,10 @@ int incall=0;
 char DebugLine1[30];
 char DebugLine2[30];
 
+/* Bufferspace to transfer data*/
+char DebugLine1[30];
+char DebugLine2[30];
+
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.

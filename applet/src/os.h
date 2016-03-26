@@ -1,4 +1,4 @@
-/*! \file gfx.h
+/*! \file os.h
   \brief µCOS defines
 */
 

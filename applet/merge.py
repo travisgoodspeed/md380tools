@@ -291,6 +291,10 @@ if __name__== '__main__':
 
     merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine"),0);
     merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine"),0);
+    
+    print "Hooking a menu call.";
+    merger.setword(0x08039d98,
+                   sapplet.getadr("main_menu_hook")+1);
 
 
     #Throwaway hook to see if adr is called.

@@ -14,7 +14,12 @@ fetching the raw buffer.
 
 
 //Memory commands
-#define TDFU_DMESG 0x00
+#define TDFU_DMESG        0x00
+#define TDFU_SPIFLASHREAD 0x01 //u32 address
+
+//Radio Commands
+#define TDFU_C5000_WRITEREG 0x10 //u8 reg, u8 val
+#define TDFU_C5000_READREG  0x11 //u8 register
 
 
 //Graphics Commands

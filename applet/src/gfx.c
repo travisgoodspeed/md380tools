@@ -65,3 +65,12 @@ void lcd_background_led(int on) {
     GPIO_ResetBits(GPIOC, GPIO_Pin_6);
   }
 }
+
+void print_DebugLine(void){
+  //Clear the background.
+  drawascii("         ",160,154);
+  drawascii("         ",160,190);
+  //Draw the lines.
+  drawascii(DebugLine1, 160, 154);//150
+  drawascii(DebugLine2, 160, 190);//187
+}

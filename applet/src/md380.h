@@ -15,12 +15,12 @@ void wstrhex(wchar_t *, long);
 
 extern int (*spiflash_read)(void *dst, long adr, long len);
 extern void (*gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
-				  short sx, short sy, //Source coords, maybe?
-				  short x, short y,   //X and Y position
-				  int maxlen);
+			    short sx, short sy, //Source coords, maybe?
+			    short x, short y,   //X and Y position
+			    int maxlen);
 extern void (*gfx_drawbmp)(char *bmp,
-				 int idx,
-				 uint64_t pos);
+			   int idx,
+			   uint64_t pos);
 
 //! Function that handles checking a DMR contact.
 extern void* (*dmr_call_end)(void *pkt);
@@ -53,3 +53,28 @@ int *dnld_tohook;
 //! Function that handles uC/OS-II settings
 extern INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
 extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
+
+
+//! Still figuring this out; it is involved in rendering menus.
+extern void* (*main_menu)(void *);
+
+
+//! This points to the byte of the current channel.
+extern char* channelnum;
+
+//! Reads the current channel number from the rotary switch.
+extern int (*read_channel_switch)();
+
+
+//! Halts all threads.
+extern int (*OS_ENTER_CRITICAL)();
+//! Resumes threads.
+extern void (*OS_EXIT_CRITICAL)(int);
+
+
+
+//! Reads a register from the C5000.
+extern void (*c5000_spi0_readreg)(int reg, char *buf);
+
+//! Writes a register in the C5000.
+extern void (*c5000_spi0_writereg)(int reg, int val);
