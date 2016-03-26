@@ -15,8 +15,6 @@
 
 int (*spiflash_read)(void *dst, long adr, long len) = 0x0802fd83;
 
-
-
 void (*gfx_drawtext)(wchar_t *str,    //16-bit, little endian.
 		     short sx, short sy, //Source coords, maybe?
 		     short x, short y,   //X and Y position
@@ -74,3 +72,5 @@ void (*c5000_spi0_writereg)(int reg, int val)=0x0803e2a9;
 
 
 int* (*aes_cipher)(int *pkt)=0x080356b1;
+
+

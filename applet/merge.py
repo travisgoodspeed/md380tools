@@ -302,6 +302,8 @@ if __name__== '__main__':
     merger.setword(0x08039d98,
                    sapplet.getadr("main_menu_hook")+1);
 
+    merger.hookbl(0x0801256c, sapplet.getadr("spiflash_read_hook"),0x0802fd82);
+    
 
     #Throwaway hook to see if adr is called.
     #merger.hookstub(0x0803f03c,
