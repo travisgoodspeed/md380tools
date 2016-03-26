@@ -26,19 +26,20 @@ void *main_menu_hook(void *menu){
   
   switch(* ((int*)menu)){
   case 0x0b:
-    printf("Exiting menu.\n");
+    //printf("Exiting menu.\n");
     break;
   case 0x24:
     //Third word of the parameter is a structure with
     //more entries.
     menustruct=*((int*)menu + 2);
+    /*
     printf("Menu struct: @0x%08x\n",
 	   menustruct);
     printf("Item %5d/%5d selected. %s\n",
 	   (int) *((unsigned short*) (menustruct+0x42)),
 	   (int) *((unsigned short*)menustruct),
 	   "test");
-    
+    */
     
     
     //printhex(*((int*) menu+2),128);

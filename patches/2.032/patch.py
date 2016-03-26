@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     # reduce the beep loudness ( r1 is not the volume ) ... 
     # todo: understanding about the tone generation
-    patcher.sethword(    0x0802ba7c, 0x0155);
+    patcher.sethword(    0x0802ba7c, 0x01aa);
 
     # [0x0809cf00]> pd 7
     #             0x0809cf00      4048           ldr r0, [pc, 0x100]         ; [0x809d004:4]=-1

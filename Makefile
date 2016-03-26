@@ -7,7 +7,7 @@ clean:
 #	cd firmware && make clean
 	cd applet && make clean
 	rm -f *~ *.pyc
-	cd db && make clean
+#	cd db && make clean
 	
 patches: firmwares
 	cd patches/2.032 && make all
