@@ -78,3 +78,7 @@ extern void (*c5000_spi0_readreg)(int reg, char *buf);
 
 //! Writes a register in the C5000.
 extern void (*c5000_spi0_writereg)(int reg, int val);
+
+
+//! Unknown AES function.
+extern int* (*aes_cipher)(int *pkt);

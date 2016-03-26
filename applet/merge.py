@@ -292,6 +292,12 @@ if __name__== '__main__':
     merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine"),0);
     merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine"),0);
     
+    #Function that calls aes_cipher() twice.  When are these called?
+    merger.hookbl(0x0802177c,sapplet.getadr("aes_cipher_hook"),0);
+    merger.hookbl(0x0802182c,sapplet.getadr("aes_cipher_hook"),0);
+    #c5000_dmr_init() calls aes_cipher() once, with Enhanced Privacy Key as input.
+    merger.hookbl(0x0803df16,sapplet.getadr("aes_cipher_hook"),0);
+    
     print "Hooking a menu call.";
     merger.setword(0x08039d98,
                    sapplet.getadr("main_menu_hook")+1);

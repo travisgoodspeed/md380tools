@@ -98,7 +98,7 @@ class Tool(DFU):
         status=self.get_status(); #this gets the status
         return self.upload(1,size,0);
     def getsms(self,index):
-        """Returns so many bytes from SPI Flash."""
+        """Returns an inbound SMS from SPI Flash."""
         buf=self.spiflashpeek(0x41674+index*0x124,
                               0x124);
         srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
@@ -112,7 +112,7 @@ class Tool(DFU):
                 return [srcadr,flags,message];
         return [None,None,None];
     def getsentsms(self,index):
-        """Returns so many bytes from SPI Flash."""
+        """Returns an outbound SMS from SPI Flash."""
         buf=self.spiflashpeek(0x450a4+index*0x124,
                               0x124);
         srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
@@ -125,6 +125,12 @@ class Tool(DFU):
             else:
                 return [srcadr,flags,message];
         return [None,None,None];
+    def getkey(self,index):
+        """Returns an Enhanced Privacy key from SPI Flash.  1-indexed"""
+        buf=self.spiflashpeek(0x59c0+16*index-16,
+                              16);
+        return buf;
+
     def c5000peek(self,reg):
         """Returns one byte from a C5000 register."""
         cmd=0x11; #C5000 Read Reg
@@ -279,12 +285,21 @@ def messages(dfu):
     for i in range(1,0xff):
         [src,flags,message]=dfu.getsms(i);
         if src!=None and flags&0xF==0x2:
-            print "From %s: %s"%(users.getusername(src),message);
+            print "fFrom %s: %s"%(users.getusername(src),message);
     for i in range(1,0xff):
         [src,flags,message]=dfu.getsentsms(i);
         if src!=None and flags&0xF==0x2:
             print "To   %s: %s"%(users.getusername(src),message);
-    
+
+def keys(dfu):
+    """Prints all the Enhanced Privacy keys."""
+    for i in range(1,9):
+        buf=dfu.getkey(i);
+        keystr="";    #Keys are displayed as big-endian, stored as little.
+        for b in buf:
+            keystr="%02x %s" % (b,keystr);
+        print "%02i: %s"%(i,keystr);
+
 def findcc(dfu):
     """Hunts for the color code of a transmitter."""
     cc=0; #Guess at the color code.
@@ -388,8 +403,10 @@ Prints the C5000 baseband registers.
     md380-tool c5000
 Scans for DMR traffic on all color codes.
     md380-tool findcc
-Dumps all the incoming text messages.
+Dumps all the inbound and outbound text messages.
     md380-tool messages
+Dumps all the keys.
+    md380-tool keys
 
 Dump all of flash memory.
     md380-tool flashdump <filename.bin>
@@ -441,6 +458,9 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'messages':
                 dfu=init_dfu();
                 messages(dfu);
+            elif sys.argv[1] == 'keys':
+                dfu=init_dfu();
+                keys(dfu);
             
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
