@@ -23,8 +23,6 @@
 
 /* Used to avoid duplicate call endings. */
 int incall=0;
-char DebugLine1[30];
-char DebugLine2[30];
 
 /* Bufferspace to transfer data*/
 char DebugLine1[30];
@@ -125,10 +123,6 @@ void *dmr_call_start_hook(char *pkt){
   return dmr_call_start(pkt);
 }
 
-void print_DebugLine(void){
-  drawascii(DebugLine1, 160, 150);
-  drawascii(DebugLine2, 160, 187);
-  }
 
 void *dmr_handle_data_hook(char *pkt, int len){
   /* This hook handles the dmr_contact_check() function, calling

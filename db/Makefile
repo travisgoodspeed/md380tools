@@ -3,7 +3,7 @@
 all: users.csv repeaters.csv users.json repeaters.json data.h
 
 clean:
-	rm -f users.csv repeaters.csv users.json repeaters.json
+	rm -f users.csv repeaters.csv users.json repeaters.json data.h
 
 users.csv:
 	curl 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | sed 's,<br/>,,' >users.csv
