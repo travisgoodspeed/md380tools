@@ -71,3 +71,6 @@ void (*OS_EXIT_CRITICAL)(int) = 0x08041e01;
 
 void (*c5000_spi0_readreg)(int reg, char*buf)=0x0803e2f5;
 void (*c5000_spi0_writereg)(int reg, int val)=0x0803e2a9;
+
+
+int* (*aes_cipher)(int *pkt)=0x080356b1;
