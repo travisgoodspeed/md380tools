@@ -1521,15 +1521,35 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 
-CCa 0x800c0f0 F_5004
-CCa 0x800c0f0 F_5036
-CCa 0x800c108 F_5010
+CCa 0x800c0f0 F_5036 0x08093b25
+CCa 0x800c108 F_5010 08093975
 CCa 0x809383e InterruptFunc Internal Perf
 CCa 0x8093974 Interrupt Func() 
 CCa 0x8093b24 0x0800c0ee Interrupt Func
 CCa 0x8093b2a Update interrupt flag (Clear) UIF TIMx_SR
 
+CCa 0x800c000 0x2001dc10
+CCa 0x800c004 0x80fa969
+CCa 0x800c008 0x80937f1
+CCa 0x800c00c 0x80937f9
+CCa 0x800c010 0x8093801
+CCa 0x800c014 0x8093809
+CCa 0x800c018 0x8093811
+CCa 0x800c0e8 0x809383f F_5004
+CCa 0x800c030 0x809381b hase
+CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
+CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
+CCa 0x0800c060 0x08093899 F_5007
+CCa 0x08093914 0x10 PC4 Set RF_APC_SW RF Amplifier Switch.High Avtive
+CCa 0x0800c03c 0x0809381d F_5003 Ticker
 
+af+ 0x080937f0 8 F_5047_uncertain
+af+ 0x0809381a 2 F_5048_uncertain
+
+CCa 0x8012528 ... number of zones?
+CCa 0x801252a ret value r0, r1
+CCa 0x8012538 0x149e0 begin zone list
+CCa 0x8012570 0x40 Next Zone entry
 
 CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
 CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending
