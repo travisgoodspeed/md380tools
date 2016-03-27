@@ -253,7 +253,7 @@ def spiflashdump(dfu,filename):
     """Dumps SPI Flash."""
     with open(filename,'wb') as f:
         for adr in range(0x00000000,
-                         0x00000000+(2*1024*1024),
+                         0x00000000+(16*1024*1024),
                          1024):
             #print "Fetching %08x"%adr
             buf=dfu.spiflashpeek(adr,1024);
