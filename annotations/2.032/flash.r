@@ -200,7 +200,7 @@ af+ 0x8021eb0 26 F_4302
 af+ 0x8021eee 26 F_4354
 af+ 0x8021f22 18 F_817
 af+ 0x8021f34 18 F_818
-af+ 0x8021f46 18 F_1065
+af+ 0x8021f46 18 F_1065_spiflash_read_c8_from_0x416d0
 af+ 0x8021f58 18 F_4428
 af+ 0x8021f6a 32 F_4355
 af+ 0x8021f8a 44 F_4429
@@ -234,9 +234,9 @@ af+ 0x80225b8 18 F_820
 af+ 0x80225e8 118 F_4371
 af+ 0x802268c 28 F_4436
 af+ 0x80226cc 16 F_4372
-af+ 0x80226e4 18 F_4093
+af+ 0x80226e4 18 F_4093_spi_read_0x2000_from_0x80000_to_CCM
 af+ 0x80226f6 18 F_4064
-af+ 0x8022708 18 F_4094
+af+ 0x8022708 18 F_4094_spi_read_0x3dc0_from_0x84000_to_CCM
 af+ 0x802271a 18 F_4065
 af+ 0x80227e8 158 F_265
 af+ 0x8022886 86 gfx_drawbmp
@@ -410,7 +410,7 @@ af+ 0x802fb82 52 spiflash_sektor_erase4k
 af+ 0x802fbb6 52 spiflash_block_erase64k
 af+ 0x802fbea 76 spiflash_program_page
 CCa 0x0802fbfa Page Program CMD (02h)
-af+ 0x802fc36 332 F_1069
+af+ 0x802fc36 332 F_1069_spiflash_multiple_spiflash_program_page
 af+ 0x802fd82 70 spiflash_read
 CCa 0x0802fd8e Read Data CMD 03h 
 CCa 0x0802fdae dummy_value
@@ -419,10 +419,11 @@ af+ 0x802fe02 18 spiflash_write_enable
 af+ 0x802fe14 34 spiflash_wait_for_read_status_register
 af+ 0x802fe36 28 enable_spi_flash_and_sem
 af+ 0x802fe52 24 disable_spi_flash_and_sem
-af+ 0x802fe6a 704 F_1002
-af+ 0x803013c 52 F_307
-af+ 0x8030170 76 F_308
-af+ 0x80301bc 78 F_309
+af+ 0x802fe6a 704 spiflash_write
+CCa 0x802fe6a same_parameter_as_spiflash_read
+af+ 0x803013c 52 spiflash_Erase_Security_Registers_44h
+af+ 0x8030170 76 spiflash_Program_Security_Registers_42h
+af+ 0x80301bc 78 spiflash_Read_Security_Registers_48h
 af+ 0x803020c 66 F_4193
 af+ 0x8030250 76 F_310
 af+ 0x803029c 258 OSMboxPend
