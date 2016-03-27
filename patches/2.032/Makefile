@@ -18,7 +18,11 @@ logo: patches
 	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-volnet.ppm write
 	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-troopers-color.ppm relocate
 
-wrapped: logo
+font: patches
+	../../md380-gfx --firmware=experiment.img --gfx=replacement-font-big-latin.pbm fontreplace
+	../../md380-gfx --firmware=experiment.img --gfx=replacement-font-small-latin.pbm fontreplace
+
+wrapped: logo font
 	../../md380-fw --wrap experiment.img experiment.bin
 
 
