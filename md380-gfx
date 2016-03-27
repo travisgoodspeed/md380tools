@@ -131,6 +131,11 @@ class MD380Graphics(Memory):
         """Parse a font glyph structure and return image"""
         s = struct.Struct('<bbbbL')
         width, height, bytesperline, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
+        # somea seems to be padding; always 0 in v2.32
+    
+        #sys.stdout.write('glyphparse: address 0x%x wid=%d height=%d  bpl=%d  somea=%d  pixptr=0x%x\n' % (addr, width, height, bytesperline, somea, pixptr) )
+        if height <= 8:
+            height = height * 2  # CN characters are right height, latin are reported 1/2 height
     
         img = {'address': addr, 'width': width, 'height': height, 'palette': None, 'pixels': []}
     
@@ -146,6 +151,34 @@ class MD380Graphics(Memory):
     def gfxchecksum(gfx):
         data = '%d:%d:%s:%s' % (gfx['width'], gfx['height'], repr(gfx['pixels']), repr(gfx['palette']))
         return binascii.crc32(data)
+
+    def glyphreplace(self, gfx, addr):
+        """Overwrite existing glyph structure - must be same byte width."""
+        s = struct.Struct('<bbbbL')
+        old_width, old_height, old_bytesperline, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
+        height_in_table = old_height     # funky value stored in table
+        if old_height <= 8:
+            old_height = old_height * 2  # CN characters are right height, latin are reported 1/2 height
+
+        new_bytesperline = int(math.ceil(gfx['width']/8.0))
+
+        assert new_bytesperline <= old_bytesperline  #technically new can be <= old
+        #assert gfx['width'] == old_width  # doesn't matter as long as bytesperline same.
+        assert gfx['height'] == old_height
+
+        # ok, now update.  Height and bytesperline must stay the same, but width can change.
+        s = struct.Struct('<bbb')
+        self.write(addr, s.pack(gfx['width'], gfx['height'], new_bytesperline))
+
+        pixbytes = b''
+        for line in gfx['pixels']:
+            padding = new_bytesperline*8 - len(line)
+            line += [0]*padding
+            linebits = [bin(c+0x10000)[-1:] for c in line]
+            linebits = ''.join(linebits)
+            for i in xrange(0, len(linebits), 8):
+                pixbytes += chr(int(linebits[i:i+8], 2))
+        self.write(pixptr, pixbytes)
 
     def gfxreplace(self, gfx, addr):
         """Overwrite existing sprite structure"""
@@ -329,28 +362,36 @@ class MD380Graphics(Memory):
 
     @staticmethod
     def pbm(gfx):
-        """Convert glyph object to PBM(P4) image"""
+        """Convert glyph object to PBM(P1) ascii bitmap image"""
         assert gfx['palette'] is None
-        out = 'P4\n'
+        out = 'P1\n'
         out += '# MD380 address: %s\n' % hex(gfx['address'])
         out += '# MD380 checksum: %d\n' % gfx['checksum']
         out += '%d %d\n' % (gfx['width'], gfx['height'])
         for line in gfx['pixels']:
             bitline = ''.join([str(pixel) for pixel in line])
-            bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
-            hexline = hex(int('1'+bitline, 2))[3:]
-            # Throw away python2.7's trailing long int marker
-            if hexline.endswith('L'):
-                hexline = hexline[:-1]
-            byteline = binascii.unhexlify(hexline)
-            out += byteline
+            
+            #ASCII output (P1)
+            sys.stdout.write('bit line  %s\n' % bitline)
+            out += bitline + '\n'
+            
+            #Hex ouput (P4) - OSX doesn't render non-byte widths correctly (like all latin fonts)
+            #bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
+            #hexline = hex(int('1'+bitline, 2))[3:]
+            ## Throw away python2.7's trailing long int marker
+            #if hexline.endswith('L'):
+            #    hexline = hexline[:-1]
+            #byteline = binascii.unhexlify(hexline)
+            #out += byteline
         return out
 
     @staticmethod
-    def pbmparse(pbm):
-        """Convert PBM(P4) image to glyph object"""
-        pbml = pbm.split('\n')
-        assert pbml[0] == 'P4'
+    def pbmparse(pbml):
+        """Convert PBM(P1) ascii bitmap image to glyph object"""
+        while (pbml != []) and (pbml[0] != 'P1'):
+            pbml = pbml[1:]
+        if (pbml == []) or (pbml[0] != 'P1'):
+            return (None, None)
         i = 1
         addr = 0
         while pbml[i].startswith('#'):
@@ -362,20 +403,31 @@ class MD380Graphics(Memory):
         width, height = pbml[i].split()
         width = int(width)
         height = int(height)
-        bytewidth = int(math.ceil(width/8.0))
-        data = b''.join(pbml[i+1:])
+        
+        #bytewidth = int(math.ceil(width/8.0))
+        #data = b''.join(pbml[i+1:])
+        #pixels = []
+        #for y in xrange(height):
+        #    bytesline = data[y*bytewidth:(y+1)*bytewidth]
+        #    hexline = binascii.hexlify(b'\x01'+bytesline)
+        #    binline = bin(int(hexline, 16))[3:]
+        #    line = [int(pixel) for pixel in binline]
+        #    pixels.append(line[:width])
+
+        i += 1
         pixels = []
         for y in xrange(height):
-            bytesline = data[y*bytewidth:(y+1)*bytewidth]
-            hexline = binascii.hexlify(b'\x01'+bytesline)
-            binline = bin(int(hexline, 16))[3:]
+            hexline = '1'+pbml[i]
+            binline = bin(int(hexline, 2))[3:]
             line = [int(pixel) for pixel in binline]
             pixels.append(line[:width])
+            i += 1
+
         img = {'address': addr, 'width': width, 'height': height,
                'palette': None, 'pixels': pixels,
                'oldchecksum': oldchecksum}
         img['checksum'] = MD380Graphics.gfxchecksum(img)
-        return img
+        return (img, pbml[i:])
 
     def isSpriteStruct(self, p):
         mstart = self.addr
@@ -583,6 +635,41 @@ def main():
                 sys.stderr.write('ERROR: Can not determine fallback address from PPM header.\n')
                 sys.exit(5)
 
+    elif cmd == 'fontreplace':
+        if args.gfx is None:
+            sys.stderr.write('ERROR: Can\'t work without --gfx to read.\n')
+            sys.exit(5)
+        if not args.gfx.lower().endswith('.pbm'):
+            sys.stderr.write('ERROR: only ascii PBM glyphs supported (multiple in one file ok)\n')
+            sys.exit(5)
+        with open(args.gfx, 'rb') as f:
+            pbmfonts = f.read()
+        pbmfontsl = pbmfonts.split('\n')
+
+        gfx, pbmfontsl = md.pbmparse(pbmfontsl)
+        while gfx != None:
+            print '\n---------------------\nNew glyph:'
+            md.gfxprint(gfx)
+            target_checksum = gfx['oldchecksum']
+            print "DEBUG: Looking for graphics checksum %d...\n" % target_checksum
+            candidates = md.gfxfind(target_checksum)
+            if len(candidates) > 0:
+                print "DEBUG: Overwriting matching structure at %s.\n" % hex(candidates[0]['address'])
+                print 'replaces old glyph:'
+                md.glyphreplace(gfx, candidates[0]['address'])
+                modified = True
+            else:
+                print 'WARNING: Checksum not found. Trying address fallback.\n'
+                if gfx['address'] is not None:
+                    addr = gfx['address']
+                    print 'DEBUG: Overwriting address %s from PPM header.\n' % hex(addr)
+                    md.glyphreplace(gfx, addr)
+                    modified = True
+                else:
+                    print 'ERROR: Can not determine fallback address from PPM header.\n'
+                    sys.exit(5)
+            gfx, pbmfontsl = md.pbmparse(pbmfontsl)
+
     elif cmd == 'relocate':
         if args.gfx is None:
             sys.stderr.write('ERROR: Can\'t work without --gfx to write.\n')
@@ -619,9 +706,10 @@ def main():
         from IPython import embed
         embed()
     else:
-        sys.stderr.write('ERROR: Use extract, restore or write as command.\n' % cmd)
+        sys.stderr.write('ERROR: Use extract, restore, write, fontreplace or relocate as command.\n' % cmd)
         sys.exit(5)
     if modified:
+        #args.firmware += '.modified'
         sys.stderr.write('DEBUG: writing "%s"\n' % args.firmware)
         with open(args.firmware, 'wb') as f:
             f.write(md.mem)
