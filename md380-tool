@@ -286,7 +286,7 @@ def messages(dfu):
     for i in range(1,0xff):
         [src,flags,message]=dfu.getsms(i);
         if src!=None and flags&0xF==0x2:
-            print "fFrom %s: %s"%(users.getusername(src),message);
+            print "From %s: %s"%(users.getusername(src),message);
     for i in range(1,0xff):
         [src,flags,message]=dfu.getsentsms(i);
         if src!=None and flags&0xF==0x2:
