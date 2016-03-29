@@ -30,6 +30,36 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
+
+
+
+
+
+
+
+CCa 0x0800c03c 0x0809381d F_5003 Ticker
+CCa 0x0800c060 0x08093899 F_5007
+CCa 0x0802fbfa Page Program CMD (02h)
+CCa 0x0802fd8e Read Data CMD 03h 
+CCa 0x0802fdae dummy_value
+CCa 0x0802fe48 enable Flash_CS0
+CCa 0x0802fe56 disable Flash_CS0
+af+ 0x080937f0 8 F_5047_uncertain
+af+ 0x0809381a 2 F_5048_uncertain
+CCa 0x08093914 0x10 PC4 Set RF_APC_SW RF Amplifier Switch.High Avtive
+CCa 0x800c000 0x2001dc10
+CCa 0x800c004 0x80fa969
+CCa 0x800c008 0x80937f1
+CCa 0x800c00c 0x80937f9
+CCa 0x800c010 0x8093801
+CCa 0x800c014 0x8093809
+CCa 0x800c018 0x8093811
+CCa 0x800c030 0x809381b hase
+CCa 0x800c0e8 0x809383f F_5004
+CCa 0x800c0f0 F_5036 0x08093b25
+CCa 0x800c108 F_5010 08093975
+CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
+CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
 af+ 0x800c188 1448 F_84
 af+ 0x800c730 86 F_249
 af+ 0x800c7e8 2980 F_4140
@@ -64,6 +94,10 @@ af+ 0x8010950 124 F_4156
 af+ 0x80109d0 150 F_4349
 af+ 0x8010b6a 96 F_4157
 af+ 0x8012528 148 F_253
+CCa 0x8012528 ... number of zones?
+CCa 0x801252a ret value r0, r1
+CCa 0x8012538 0x149e0 begin zone list
+CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
 af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
@@ -409,11 +443,8 @@ af+ 0x802fb00 130 F_300
 af+ 0x802fb82 52 spiflash_sektor_erase4k
 af+ 0x802fbb6 52 spiflash_block_erase64k
 af+ 0x802fbea 76 spiflash_program_page
-CCa 0x0802fbfa Page Program CMD (02h)
 af+ 0x802fc36 332 F_1069_spiflash_multiple_spiflash_program_page
 af+ 0x802fd82 70 spiflash_read
-CCa 0x0802fd8e Read Data CMD 03h 
-CCa 0x0802fdae dummy_value
 af+ 0x802fdc8 58 spi_send_and_read_byte
 af+ 0x802fe02 18 spiflash_write_enable
 af+ 0x802fe14 34 spiflash_wait_for_read_status_register
@@ -471,7 +502,7 @@ af+ 0x803154c 16 F_1003
 af+ 0x803155c 18 F_4194
 af+ 0x803156e 136 F_1071
 af+ 0x80315f6 126 F_1116
-af+ 0x8031674 118 F_826
+af+ 0x8031674 94 F_826
 af+ 0x8031694 62 F_67
 af+ 0x80316ec 26 F_1072
 af+ 0x8031710 66 F_827
@@ -487,10 +518,12 @@ af+ 0x803186c 56 F_829
 af+ 0x80318a4 90 F_4487
 af+ 0x80318fe 70 F_5012
 af+ 0x8031944 84 F_830
+CCa 0x08031994 BLX F_1095 ...wtf
 af+ 0x8031998 540 F_831
 af+ 0x8031bb4 14 F_327
 af+ 0x8031bc2 54 F_832
 af+ 0x8031bf8 12 F_328
+CCa 0x8031c00 BLX F_5049 ... wtf 
 af+ 0x8031c10 24 F_1006
 af+ 0x8031c28 24 F_1007
 af+ 0x8031c4c 54 F_4460
@@ -519,7 +552,7 @@ af+ 0x80322b2 216 F_837
 af+ 0x803238a 258 F_4388
 af+ 0x8032494 26 F_4318
 af+ 0x80325d4 40 F_4259
-af+ 0x8032620 348 F_838
+af+ 0x8032620 6 F_838
 af+ 0x8032628 136 F_3000
 af+ 0x80326b0 16 F_1010
 af+ 0x80326c4 26 F_1011
@@ -674,6 +707,7 @@ af+ 0x8039e5e 22 F_4506
 af+ 0x8039e74 12 F_1108
 af+ 0x8039ea0 100 F_1109
 af+ 0x8039f04 66 F_1082
+CCa 0x8039f24 BLX F_4543
 af+ 0x8039f46 62 F_1083
 af+ 0x8039f84 186 F_1084
 af+ 0x803a04c 100 F_1110
@@ -747,7 +781,6 @@ af+ 0x803da00 44 F_857
 af+ 0x803da2c 76 F_397
 af+ 0x803da78 218 OSSemPend
 CCa 0x803da78 void OSSemPend (OS_EVENT *pevent, INT32U timeout, INT8U *perr)
-
 af+ 0x803db68 92 OSSemPost
 af+ 0x803dbc4 28 Sys_Inter
 af+ 0x803dbe2 52 TimeSlot_Inter
@@ -922,6 +955,9 @@ af+ 0x8046614 40 F_4414
 af+ 0x8046640 88 F_4415
 af+ 0x804669c 52 F_4416
 af+ 0x80466d4 48 F_4276
+af+ 0x8046708 8 F_5049
+af+ 0x8046710 8 F_5050
+af+ 0x8046718 8 F_5051
 af+ 0x8046720 18 F_1021
 af+ 0x8046734 8 F_1022
 af+ 0x8046740 2 F_875
@@ -1161,6 +1197,9 @@ af+ 0x804fb16 170 F_4079
 af+ 0x804fbc0 10 F_4080
 af+ 0x804fbca 90 F_4081
 af+ 0x804fc28 40 F_4082
+af+ 0x804fc50 22 F_5052
+af+ 0x804fc66 6 F_5054
+af+ 0x804fc6c 52 F_5053
 af+ 0x804fcb0 234 I2C1_Function_1
 af+ 0x804fda8 28 I2C1_Function_2
 af+ 0x804fdc4 28 I2C1_Function_3
@@ -1503,14 +1542,18 @@ af+ 0x809378a 28 F_4037
 af+ 0x80937b0 32 F_4063
 af+ 0x809381c 34 F_5003
 af+ 0x809383e 50 F_5004 
+CCa 0x809383e InterruptFunc Internal Perf
 af+ 0x8093870 20 F_5005
 af+ 0x8093884 20 F_5006
 af+ 0x8093898 134 F_5007
 af+ 0x809391e 28 F_5008
 af+ 0x809393a 58 F_5009
 af+ 0x8093974 20 F_5010
+CCa 0x8093974 Interrupt Func() 
 af+ 0x8093ae4 64 F_5029
+CCa 0x8093b24 0x0800c0ee Interrupt Func
 af+ 0x8093b24 16 F_5036
+CCa 0x8093b2a Update interrupt flag (Clear) UIF TIMx_SR
 af+ 0x8093b34 56 F_5011_wtf
 af+ 0x8093c54 82 F_4219
 af+ 0x8093ca6 202 F_4282
@@ -1526,37 +1569,6 @@ af+ 0x8096c0c 12 F_4545
 af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
-
-CCa 0x800c0f0 F_5036 0x08093b25
-CCa 0x800c108 F_5010 08093975
-CCa 0x809383e InterruptFunc Internal Perf
-CCa 0x8093974 Interrupt Func() 
-CCa 0x8093b24 0x0800c0ee Interrupt Func
-CCa 0x8093b2a Update interrupt flag (Clear) UIF TIMx_SR
-
-CCa 0x800c000 0x2001dc10
-CCa 0x800c004 0x80fa969
-CCa 0x800c008 0x80937f1
-CCa 0x800c00c 0x80937f9
-CCa 0x800c010 0x8093801
-CCa 0x800c014 0x8093809
-CCa 0x800c018 0x8093811
-CCa 0x800c0e8 0x809383f F_5004
-CCa 0x800c030 0x809381b hase
-CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
-CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
-CCa 0x0800c060 0x08093899 F_5007
-CCa 0x08093914 0x10 PC4 Set RF_APC_SW RF Amplifier Switch.High Avtive
-CCa 0x0800c03c 0x0809381d F_5003 Ticker
-
-af+ 0x080937f0 8 F_5047_uncertain
-af+ 0x0809381a 2 F_5048_uncertain
-CCa 0x0802fe48 enable Flash_CS0
-CCa 0x0802fe56 disable Flash_CS0
-CCa 0x8012528 ... number of zones?
-CCa 0x801252a ret value r0, r1
-CCa 0x8012538 0x149e0 begin zone list
-CCa 0x8012570 0x40 Next Zone entry
 
 CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
 CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending
