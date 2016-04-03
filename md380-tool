@@ -249,6 +249,14 @@ def flashdump(dfu,filename):
             buf=dfu.peek(adr,1024);
             f.write(buf);
         f.close();
+def dump(dfu,filename,address):
+    """Dumps flash."""
+    adr=int(address,16);  
+    with open(filename,'wb') as f:
+        buf=dfu.peek(adr,1024);
+        f.write(buf);
+        f.close();
+
 def spiflashdump(dfu,filename):
     """Dumps SPI Flash."""
     with open(filename,'wb') as f:
@@ -479,11 +487,21 @@ if __name__ == '__main__':
                 print "Dumping memory from %s." % sys.argv[2];
                 dfu=init_dfu();
                 hexdump(dfu,sys.argv[2]);
+            elif sys.argv[1] == 'ramdump':
+                print "Dumping memory from %s." % sys.argv[3];
+		dfu=init_dfu();
+                ramdump(dfu,sys.argv[2],sys.argv[3]);
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]));
             elif sys.argv[1] == 'readword':
                 dfu=init_dfu();
                 readword(dfu, sys.argv[2]);
+
+        elif len(sys.argv) == 4:  
+            if sys.argv[1] == 'dump':
+                print "Dumping memory from %s." % sys.argv[3];
+		dfu=init_dfu();
+                dump(dfu,sys.argv[2],sys.argv[3]);
 
         else:
             usage();
