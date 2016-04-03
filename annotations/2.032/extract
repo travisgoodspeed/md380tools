@@ -1,0 +1,121 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+import sys
+import struct
+import os
+import math
+import binascii
+import argparse
+
+def gfxprint(gfx):
+  print("%s %d×%d" % (hex(gfx['address']), gfx['width'], gfx['height']))
+  print("%s" % repr(gfx['palette']))
+  for line in gfx['pixels']:
+     for color in line:
+        if color == 0:
+           px = '·'  # CAVE: using visually less intrusive Unicode middle dot
+        else:
+           px = hex(color)[-1]  # ensure single char for color
+        sys.stdout.write(px)
+     sys.stdout.write('\n')
+    
+
+
+def readbits( input, addr, bitlength, skip=0):
+   bytelength = int(math.ceil(bitlength/8.0))
+   bytedata = input[addr:addr+bytelength] 
+   hexdata = binascii.hexlify(b'\x01'+bytedata)
+   bitdata = bin(int(hexdata, 16))[3:]  # 1+...[:3] to preserve leading
+   cutoff = len(bitdata) - bitlength
+   if cutoff > 0:
+     bitdata = bitdata[:-cutoff]
+   return bitdata[skip:]
+
+def ppm(gfx):
+   """Convert sprite object to PPM(P6) image"""
+   assert gfx['palette'] is not None
+   out = 'P6\n'
+   out += '# MD380 address: %s\n' % hex(gfx['address'])
+   out += '# MD380 palette: %s\n' % repr(gfx['palette'])
+   out += '%d %d\n' % (gfx['width'], gfx['height'])
+   out += '255\n'
+   for line in gfx['pixels']:
+      for color in line:
+         r, g, b, a = gfx['palette'][color]
+         out += chr(r) + chr(g) + chr(b)
+   return out
+
+
+
+
+def main():
+
+  with open('dump.raw', 'rb') as f:
+    input = f.read()
+
+
+  s = struct.Struct('<hhhhLL')
+  
+  width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(input,0)
+    
+  print width, height, bytesperline, bitsperpixel, pixptr, palptr 
+
+  
+  bashCommand = "../../md380-tool dump 0x" + "%08x"%pixptr + ".raw 0x" + "%08x"%pixptr
+  print bashCommand
+  os.system(bashCommand)
+
+  bashCommand = "../../md380-tool dump 0x" + "%08x"%palptr + ".raw 0x" + "%08x"%palptr
+  print bashCommand
+  os.system(bashCommand)
+
+  filename="0x" + "%08x"%pixptr + ".raw"
+  with open(filename, 'rb') as f:
+    bmp = f.read()
+
+
+  filename="0x" + "%08x"%palptr + ".raw"
+  with open(filename, 'rb') as f:
+    pal = f.read()
+
+  s = struct.Struct('<llL')
+  ncol, someb, colptr = s.unpack_from(pal)
+
+  img = {'address': 0, 'width': width, 'height': height, 'palette': 1, 'pixels': []}
+
+
+  bashCommand = "../../md380-tool dump 0x" + "%08x"%colptr + ".raw 0x" + "%08x"%colptr
+  print bashCommand
+  os.system(bashCommand)
+
+  filename="0x" + "%08x"%colptr + ".raw"
+  with open(filename, 'rb') as col:
+    img['palette'] = []
+    for i in xrange(0, ncol*4, 4):
+      r, g, b, a = col.read( 4)
+      print  ord(r), ord(g), ord(b),ord( a)
+      img['palette'].append([ord(r), ord(g), ord(b), ord(a)])
+
+
+
+  for y in xrange(height):
+    linebits = readbits(bmp,0+y*bytesperline, width*bitsperpixel)
+    line = [int(linebits[i:i+bitsperpixel], 2) for i in xrange(0, len(linebits), bitsperpixel)]
+    img['pixels'].append(line)
+
+  gfxprint(img)
+  ppm_data="";    
+  ppm_data=ppm(img)
+  with open('image.png','wb') as f:
+     f.write(ppm_data);
+     f.close();
+
+
+
+
+
+
+if __name__ == "__main__":
+    main()
+ 
