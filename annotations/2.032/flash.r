@@ -30,23 +30,6 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
-
-
-
-
-
-
-
-CCa 0x0800c03c 0x0809381d F_5003 Ticker
-CCa 0x0800c060 0x08093899 F_5007
-CCa 0x0802fbfa Page Program CMD (02h)
-CCa 0x0802fd8e Read Data CMD 03h 
-CCa 0x0802fdae dummy_value
-CCa 0x0802fe48 enable Flash_CS0
-CCa 0x0802fe56 disable Flash_CS0
-af+ 0x080937f0 8 F_5047_uncertain
-af+ 0x0809381a 2 F_5048_uncertain
-CCa 0x08093914 0x10 PC4 Set RF_APC_SW RF Amplifier Switch.High Avtive
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -55,6 +38,8 @@ CCa 0x800c010 0x8093801
 CCa 0x800c014 0x8093809
 CCa 0x800c018 0x8093811
 CCa 0x800c030 0x809381b hase
+CCa 0x800c03c 0x0809381d F_5003 Ticker
+CCa 0x800c060 0x08093899 F_5007
 CCa 0x800c0e8 0x809383f F_5004
 CCa 0x800c0f0 F_5036 0x08093b25
 CCa 0x800c108 F_5010 08093975
@@ -190,6 +175,11 @@ af+ 0x801dcf0 1436 F_4171
 af+ 0x801e2d8 3408 F_4224
 af+ 0x801f03c 8 F_4292
 af+ 0x801f044 5240 F_4225
+CCa 0x801f5b6 sprite telephone
+CCa 0x802045c 0x2001cfe4 signal strength (byte) 0-5
+CCa 0x802046a 0x2001cfe4 signal strength (byte) 0-5
+CCa 0x8020472 Ant symbol with strength
+CCa 0x8020486 Ant symbol with strength
 af+ 0x80204dc 282 F_4293
 af+ 0x8020604 152 F_4294
 af+ 0x802069c 44 F_4295
@@ -197,6 +187,8 @@ af+ 0x80206c8 58 F_4296
 af+ 0x8020702 74 F_4297
 af+ 0x802074c 58 F_4298
 af+ 0x802079c 294 F_800
+CCa 0x80208a8 Ant symbol with strength
+CCa 0x80208ba Ant symbol with strength
 af+ 0x8020974 16 F_801
 af+ 0x8020988 8 F_4172
 af+ 0x8020990 8 F_4226
@@ -234,7 +226,7 @@ af+ 0x8021eb0 26 F_4302
 af+ 0x8021eee 26 F_4354
 af+ 0x8021f22 18 F_817
 af+ 0x8021f34 18 F_818
-af+ 0x8021f46 18 F_1065
+af+ 0x8021f46 18 F_1065_spiflash_read_c8_from_0x416d0
 af+ 0x8021f58 18 F_4428
 af+ 0x8021f6a 32 F_4355
 af+ 0x8021f8a 44 F_4429
@@ -268,9 +260,9 @@ af+ 0x80225b8 18 F_820
 af+ 0x80225e8 118 F_4371
 af+ 0x802268c 28 F_4436
 af+ 0x80226cc 16 F_4372
-af+ 0x80226e4 18 F_4093
+af+ 0x80226e4 18 F_4093_spi_read_0x2000_from_0x80000_to_CCM
 af+ 0x80226f6 18 F_4064
-af+ 0x8022708 18 F_4094
+af+ 0x8022708 18 F_4094_spi_read_0x3dc0_from_0x84000_to_CCM
 af+ 0x802271a 18 F_4065
 af+ 0x80227e8 158 F_265
 af+ 0x8022886 86 gfx_drawbmp
@@ -305,6 +297,22 @@ af+ 0x80232c6 84 F_4438
 af+ 0x802331a 68 F_4229
 af+ 0x802335e 1102 F_4474
 af+ 0x80237ac 1002 F_4458
+CCa 0x80237fa seen picture  2 picture .. 1 ok 2 ok 3 wrong palet (menu)
+CCa 0x8023824 2 people picture or 4 windows or envelope closed or phone
+CCa 0x802384e 4 windows and more (menu)
+CCa 0x802386c numbers (Menu)
+CCa 0x8023934 picture (N) .. Scan or (1) (2)
+CCa 0x802397c record picture
+CCa 0x80239a0 envelope closed blue
+CCa 0x80239c4 envelope closed yellow
+CCa 0x8023a10 envelope closed yellow
+CCa 0x8023a24 envelope open yellow
+CCa 0x8023a5c envelope closed yellow
+CCa 0x8023a9a 1 people
+CCa 0x8023ae4 1 people or TG
+CCa 0x8023ae4 TalkGroupSymbol in contact list
+CCa 0x8023b2a record picture
+CCa 0x8023b66 TG or  1 people
 af+ 0x8023bdc 408 F_4439
 af+ 0x8023d74 96 F_4230
 af+ 0x8023dd4 22 F_4440
@@ -370,8 +378,23 @@ af+ 0x8026aba 4 GPIO_ResetBits
 af+ 0x8026abe 14 GPIO_WriteBit
 af+ 0x8026acc 82 F_96
 af+ 0x8026b20 596 F_4309
+CCa 0x8026ba8 blue background
+CCa 0x8026c46 smarl arrow right picture
+CCa 0x8026d2a smarl arrow right picture
 af+ 0x8026d7c 1270 F_4310
+CCa 0x8026e8e blue background
+CCa 0x8026f22 smarl arrow right picture
+CCa 0x802703a smarl arrow right picture
+CCa 0x802711c smarl arrow left picture
+CCa 0x80271a4 smarl arrow right picture
 af+ 0x8027278 1228 F_4118
+CCa 0x80272f8 blue background
+CCa 0x8027304 smarl arrow left picture
+CCa 0x8027428 smarl arrow right picture
+CCa 0x80274b4 smarl arrow right picture
+CCa 0x80275a4 smarl arrow right picture
+CCa 0x8027606 smarl arrow left picture
+CCa 0x8027684 smarl arrow right picture
 af+ 0x802778c 522 F_4311
 af+ 0x80279a8 170 F_4312
 af+ 0x8027a52 66 F_823
@@ -381,7 +404,11 @@ af+ 0x8028316 52 F_4313
 af+ 0x802834a 396 F_4190
 af+ 0x80284d6 442 F_4237
 af+ 0x80286e8 580 F_286
+CCa 0x80287c6 2 house picture
 af+ 0x8028960 674 F_287
+CCa 0x8028a5a speaker picture
+CCa 0x8028a76 2 people picture
+CCa 0x8028b8a 2 house picture
 af+ 0x8028c20 530 F_4191
 af+ 0x8028e32 28 F_4192
 af+ 0x8028e58 330 F_4238
@@ -430,6 +457,12 @@ af+ 0x802c250 104 F_4382
 af+ 0x802d5d0 92 F_4383
 af+ 0x802dee4 428 F_4314
 af+ 0x802e240 888 F_4315
+CCa 0x802e452 singel person picture
+CCa 0x802e4a0 2 people picture
+CCa 0x802e4b0 sprite incomming telephone
+CCa 0x802e516 2 people picture
+CCa 0x802e566 outgoing telefone
+CCa 0x802e582 sprite incomming telephone
 af+ 0x802e5b8 24 F_4316
 af+ 0x802e74c 184 F_4384
 af+ 0x802e80c 184 F_4443
@@ -443,24 +476,30 @@ af+ 0x802fb00 130 F_300
 af+ 0x802fb82 52 spiflash_sektor_erase4k
 af+ 0x802fbb6 52 spiflash_block_erase64k
 af+ 0x802fbea 76 spiflash_program_page
-CCa 0x0802fbfa Page Program CMD (02h)
+CCa 0x802fbfa Page Program CMD (02h)
 af+ 0x802fc36 332 F_1069_spiflash_multiple_spiflash_program_page
 af+ 0x802fd82 70 spiflash_read
+CCa 0x802fd8e Read Data CMD 03h
+CCa 0x802fdae dummy_value
 af+ 0x802fdc8 58 spi_send_and_read_byte
 af+ 0x802fe02 18 spiflash_write_enable
 af+ 0x802fe14 34 spiflash_wait_for_read_status_register
 af+ 0x802fe36 28 enable_spi_flash_and_sem
+CCa 0x802fe48 enable Flash_CS0
 af+ 0x802fe52 24 disable_spi_flash_and_sem
-af+ 0x802fe6a 704 F_1002
-af+ 0x803013c 52 F_307
-af+ 0x8030170 76 F_308
-af+ 0x80301bc 78 F_309
+CCa 0x802fe56 disable Flash_CS0
+af+ 0x802fe6a 704 spiflash_write
+CCa 0x802fe6a same_parameter_as_spiflash_read
+af+ 0x803013c 52 spiflash_Erase_Security_Registers_44h
+af+ 0x8030170 76 spiflash_Program_Security_Registers_42h
+af+ 0x80301bc 78 spiflash_Read_Security_Registers_48h
 af+ 0x803020c 66 F_4193
 af+ 0x8030250 76 F_310
 af+ 0x803029c 258 OSMboxPend
 af+ 0x80303b4 86 OSMboxPost
 af+ 0x803040c 26 F_4497
 af+ 0x8030426 478 F_4492
+CCa 0x8030572 ... nice wtf
 af+ 0x8030604 104 F_4493
 af+ 0x803066c 42 F_4491
 af+ 0x8030696 118 F_4490
@@ -518,12 +557,12 @@ af+ 0x803186c 56 F_829
 af+ 0x80318a4 90 F_4487
 af+ 0x80318fe 70 F_5012
 af+ 0x8031944 84 F_830
-CCa 0x08031994 BLX F_1095 ...wtf
+CCa 0x8031994 BLX F_1095 ...wtf
 af+ 0x8031998 540 F_831
 af+ 0x8031bb4 14 F_327
 af+ 0x8031bc2 54 F_832
 af+ 0x8031bf8 12 F_328
-CCa 0x8031c00 BLX F_5049 ... wtf 
+CCa 0x8031c00 BLX F_5049 ... wtf
 af+ 0x8031c10 24 F_1006
 af+ 0x8031c28 24 F_1007
 af+ 0x8031c4c 54 F_4460
@@ -540,7 +579,9 @@ af+ 0x8031efa 32 F_331
 af+ 0x8031f40 36 F_1074
 af+ 0x8031f64 12 F_1008
 af+ 0x8031f74 8 F_834
+CCa 0x8031f74 to display ?
 af+ 0x8031f7c 6 F_835
+CCa 0x8031f7c to display ?
 af+ 0x8031f82 12 F_1139
 af+ 0x8031f8e 20 F_1101
 af+ 0x8031fb0 20 F_1102
@@ -567,6 +608,9 @@ af+ 0x80327a8 90 F_4260
 af+ 0x8032802 52 F_4319
 af+ 0x8032838 52 F_112
 af+ 0x803286c 320 F_1013
+CCa 0x80328dc Ant symbol
+CCa 0x803292a Ant symbol
+CCa 0x8032972 Ant symbol
 af+ 0x80329c0 104 OSTimeDly
 af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
 af+ 0x8032ace 28 F_337
@@ -700,8 +744,22 @@ af+ 0x80389ca 92 F_4403
 af+ 0x8038a26 158 F_4337
 af+ 0x8038b04 212 F_4404
 af+ 0x8039760 30 F_4405
+af+ 0x8039760 30 F_5067
+af+ 0x8039780 32 F_5066
+af+ 0x80397a0 56 F_5063
+af+ 0x80397d8 294 F_5064
+af+ 0x80398fe 58 F_5065
+af+ 0x8039938 354 F_5062
+af+ 0x8039a9a 36 F_5061
+af+ 0x8039abe 36 F_5060
+af+ 0x8039ae2 196 F_5059
+af+ 0x8039ba6 42 F_5058
+af+ 0x8039bd0 46 F_5057
 af+ 0x8039bfe 36 F_4273
+af+ 0x8039bfe 36 F_5056
+af+ 0x8039c22 144 main_menu
 af+ 0x8039cb2 226 F_4274
+CCa 0x8039d16 main_menu
 af+ 0x8039e28 54 F_4275
 af+ 0x8039e5e 22 F_4506
 af+ 0x8039e74 12 F_1108
@@ -731,7 +789,7 @@ af+ 0x803adfc 358 F_5046
 af+ 0x803af70 92 F_847
 af+ 0x803afd8 92 F_848
 af+ 0x803b044 58 F_363
-af+ 0x803b110 76 F_5030 
+af+ 0x803b110 76 F_5030
 af+ 0x803b15c 26 F_364
 af+ 0x803b176 32 F_365
 af+ 0x803b196 338 F_5031
@@ -848,7 +906,9 @@ af+ 0x8041d8a 20 SPI_I2S_GetFlagStatus
 af+ 0x8041df8 8 OS_ENTER_CRITICAL
 af+ 0x8041e00 6 OS_EXIT_CRITICAL
 af+ 0x8041e22 8 OS_TASK_SW
+CCa 0x8041e24 PENDSVSET .. changes PendSV exception state to pending
 af+ 0x8041e2a 8 OSIntCtxSw
+CCa 0x8041e2c PENDSVSET .. changes PendSV exception state to pending
 af+ 0x8041eac 100 OSMemNameSet_wtf
 af+ 0x8041f10 148 OSIntExit
 af+ 0x8041fa4 58 OSSchedLock
@@ -874,23 +934,31 @@ af+ 0x8042668 34 F_4338
 af+ 0x804268a 30 F_4468
 af+ 0x80426a8 30 F_4043
 af+ 0x80426c8 536 Init_ADC
+CCa 0x80426f4 Bat_Voltage
 af+ 0x80428e0 332 F_455
+CCa 0x8042940 Bat_Voltage
+CCa 0x80429d2 Bat_Voltage
 af+ 0x8042a2c 332 F_456
 af+ 0x8042b78 700 F_153
 af+ 0x8042e34 162 F_154
 af+ 0x8042ed6 120 F_459
+CCa 0x8042f0e Bat_Voltage
 af+ 0x8042f4e 62 F_155
 af+ 0x8042f8c 396 F_156
 af+ 0x8043118 124 F_462
+CCa 0x8043150 Bat_Voltage
 af+ 0x8043194 54 F_157
 af+ 0x8043204 934 F_158
 af+ 0x80435b0 188 F_465
+CCa 0x80435b4 Bat_Voltage
 af+ 0x8043678 42 F_159
 af+ 0x80436d4 834 F_160
 af+ 0x8043a1c 110 F_468
+CCa 0x8043a54 Bat_Voltage
 af+ 0x8043aa0 74 F_161
 af+ 0x8043b14 694 F_162
 af+ 0x8043dd0 80 F_471
+CCa 0x8043df8 Bat_Voltage
 af+ 0x8043e28 64 F_163
 af+ 0x8043e70 8 F_164
 af+ 0x8043e78 268 F_4000
@@ -1540,16 +1608,19 @@ af+ 0x8093724 74 F_4035
 af+ 0x809376e 28 F_4036
 af+ 0x809378a 28 F_4037
 af+ 0x80937b0 32 F_4063
+af+ 0x80937f0 8 F_5047_uncertain
+af+ 0x809381a 2 F_5048_uncertain
 af+ 0x809381c 34 F_5003
-af+ 0x809383e 50 F_5004 
+af+ 0x809383e 50 F_5004
 CCa 0x809383e InterruptFunc Internal Perf
 af+ 0x8093870 20 F_5005
 af+ 0x8093884 20 F_5006
 af+ 0x8093898 134 F_5007
+CCa 0x8093914 0x10 PC4 Set RF_APC_SW RF Amplifier Switch.High Avtive
 af+ 0x809391e 28 F_5008
 af+ 0x809393a 58 F_5009
 af+ 0x8093974 20 F_5010
-CCa 0x8093974 Interrupt Func() 
+CCa 0x8093974 Interrupt Func()
 af+ 0x8093ae4 64 F_5029
 CCa 0x8093b24 0x0800c0ee Interrupt Func
 af+ 0x8093b24 16 F_5036
@@ -1570,22 +1641,6 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 
-CCa 0x08041e24 PENDSVSET .. changes PendSV exception state to pending
-CCa 0x08041e2c PENDSVSET .. changes PendSV exception state to pending
-CCa 0x80426f4 Bat_Voltage
-CCa 0x8042940 Bat_Voltage
-CCa 0x80429d2 Bat_Voltage
-CCa 0x8042f0e Bat_Voltage
-CCa 0x8043150 Bat_Voltage
-CCa 0x80435b4 Bat_Voltage
-CCa 0x8043a54 Bat_Voltage
-CCa 0x8043df8 Bat_Voltage
-
-
-CCa 0x0801f5b6 sprite telephone
-CCa 0x0802e4b0 sprite incomming telephone
-CCa 0x0802e582 sprite incomming telephone
-
 CCa 0x08044184 _Start Mbox_
 CCa 0x0804910e _uC/OS-II TmrLock_
 CCa 0x0804911a _uC/OS-II TmrSignal_
@@ -1596,7 +1651,7 @@ CCa 0x80193a6 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801942e GPIO_SetBits(GPIOC, 0x40)
 CCa 0x8019718 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801ca5c GPIO_SetBits(GPIOD, 0x40)
-CCa 0x801f228 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x801f228 GPIO_SetBits(GPIOC, 0x40) .. Bit 3 .. C3  2T/5T / RF_RX_INTER
 CCa 0x801f334 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f3b0 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f40c GPIO_SetBits(GPIOC, 0x40)
