@@ -57,6 +57,10 @@ af+ 0x800d7f4 114 F_4038
 af+ 0x800d86c 30 F_4039
 af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785_Print_Date_and_Time
+CCa 0x800d8d4 20xx year 
+CCa 0x800d986 0x9d 157
+CCa 0x800d988 0x60 96
+CCa 0x800d98a 0x5f 95
 af+ 0x800d9b0 18 F_4153
 af+ 0x800d9cc 124 F_4220
 af+ 0x800da54 124 F_786
@@ -200,7 +204,7 @@ af+ 0x8020988 8 F_4172
 af+ 0x8020990 8 F_4226
 af+ 0x802099c 154 F_994
 af+ 0x8020a36 10 F_4353
-af+ 0x8020a40 18 F_802
+af+ 0x8020a40 18 F_802_Single_Char_Out_X_Y_Char
 af+ 0x8020a58 3020 F_28
 af+ 0x8021624 48 F_30
 af+ 0x8021654 30 F_31
@@ -419,6 +423,9 @@ CCa 0x80287c6 2 house picture
 CCa 0x8028838 0x9d 157
 CCa 0x8028848 0x4b 75
 CCa 0x802884a 0x69 105
+CCa 0x8028868 test for 2 digit channel
+CCa 0x8028870 get channel nr
+CCa 0x8028876 +0x30 for ascii
 af+ 0x8028960 674 F_287
 CCa 0x8028a5a speaker picture
 CCa 0x8028a76 2 people picture
