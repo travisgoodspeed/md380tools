@@ -22,6 +22,16 @@ extern void (*gfx_drawbmp)(char *bmp,
 			   int idx,
 			   uint64_t pos);
 
+void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
+                      int x, int y,   //X and Y position
+                      int maxlen);
+
+
+void (*gfx_F_801)(void *p);
+void (*gfx_F_795)(void *p);
+
+                                          
+
 //! Function that handles checking a DMR contact.
 extern void* (*dmr_call_end)(void *pkt);
 //! Function that handles a DMR call.

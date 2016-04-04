@@ -9,6 +9,9 @@ void drawtext(wchar_t *text,
 void drawascii(char *ascii,
 	       int x, int y);
 
+void drawascii2(char *ascii,
+                int x, int y);
+
 void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);

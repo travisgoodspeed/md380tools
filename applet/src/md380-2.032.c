@@ -23,6 +23,13 @@ void (*gfx_drawbmp)(char *bmp,
 		    int idx,
 		    uint64_t pos) = 0x08022887;
 
+void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
+                     int x, int y,   //X and Y position
+                     int maxlen) = 0x0801cf1d;
+
+void (*gfx_F_801)(void *p)=0x8020975;  // nicer name is comming
+void (*gfx_F_795)(void *p)=0x801c5e1;
+
 //! Function that handles the end of a DMR call.
 void* (*dmr_call_end)(void *pkt) = 0x0803f33d;
 //! Function that handles a DMR call.
