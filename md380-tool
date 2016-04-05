@@ -210,6 +210,24 @@ def calllog(dfu):
             old2=llid2;
             print "DMR call from %s to %s." % (
                 users.getusername(llid1),users.getusername(llid2));
+            #get actual canel name
+            dfu.set_address(0x2001c9d4);
+            data=dfu.upload(1,32,0);
+	    message=""
+            for i in range(0,32,2):
+               c=chr(data[i]&0x7F);
+               if c!='\0':
+                  message=message+c;
+	    print message
+            #get actual zone name
+            dfu.set_address(0x2001b958);
+            data=dfu.upload(1,32,0);
+	    message=""
+            for i in range(0,32,2):
+               c=chr(data[i]&0x7F);
+               if c!='\0':
+                 message=message+c;
+	    print message
             sys.stdout.flush();
 
 
