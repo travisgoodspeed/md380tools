@@ -88,8 +88,10 @@ void *dmr_call_start_hook(char *pkt){
 
   sprintf(DebugLine1, "%d", src );
   sprintf(DebugLine2, "%d", dst );
-  //Just a dot for logging.
-  printf(".");
+
+  //This prints a dot at every resynchronization frame.
+  //It can distract AMBE2+ logging.
+  //printf(".");
   
   //Record that we are in a call, for later logging.
   incall=1;

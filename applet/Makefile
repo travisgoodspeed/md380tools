@@ -1,4 +1,4 @@
-SRCS = main.c usb.c gfx.c dmr.c printf.c dmesg.c stm32f4xx_it.c system_stm32f4xx.c os.c menu.c aes.c
+SRCS = main.o usb.o gfx.o dmr.o printf.o dmesg.o stm32f4xx_it.o system_stm32f4xx.o os.o menu.o aes.o ambe.o
 PROJ_NAME=main
 
 
@@ -40,7 +40,7 @@ experiment.img:
 	cp ../patches/2.032/experiment.img ./
 
 
-lib: src/version.h
+lib: src/version.h config.h
 	$(MAKE) -C lib
 
 proj: 	$(PROJ_NAME).elf experiment.img
@@ -53,6 +53,7 @@ wrapped: lib proj
 flash: wrapped
 	../md380-dfu upgrade experiment.bin
 
+$(SRCS): config.h src/*.h
 $(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
@@ -64,7 +65,7 @@ src/version.h: src/*.c
 	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.bin *.elf *.hex *~ *.sym src/*~ src/version.h
+	rm -f *.img *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
 
 
 

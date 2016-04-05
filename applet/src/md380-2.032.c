@@ -74,3 +74,9 @@ void (*c5000_spi0_writereg)(int reg, int val)=0x0803e2a9;
 
 
 char* (*aes_cipher)(char *pkt)=0x080356b1;
+
+//! Unknown AMBE2+ thing.
+int (*ambe_encode_thing)(char *a1, int a2, int *a3, int a4,
+			 short a5, short a6, short a7, int a8)=0x08050d91;
+//! Decodes an AMBE2+ frame into bits.
+int (*ambe_unpack)(int a1, int a2, char length, int a4)=0x08048c9d;
