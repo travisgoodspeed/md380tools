@@ -29,7 +29,6 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
-
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -70,6 +69,7 @@ af+ 0x800dd40 284 F_1056
 af+ 0x800de5c 96 F_972
 af+ 0x800debc 126 F_787
 af+ 0x800df84 996 F_4285
+CCa 0x800e2b0 C.o.n.t.a.c.t.s.
 af+ 0x800e3c4 1820 F_4142
 af+ 0x800eb10 414 F_4144
 af+ 0x800ecc0 418 F_4145
@@ -170,7 +170,7 @@ af+ 0x801ca66 12 F_1095
 af+ 0x801ca72 32 F_1064
 af+ 0x801ca92 52 F_990
 af+ 0x801cac6 52 F_4134
-af+ 0x801cb04 30 F_797
+af+ 0x801cb04 30 F_797_gfx_blockfill_unsure
 af+ 0x801cb22 168 F_4135
 af+ 0x801cbca 2 F_991
 af+ 0x801cbcc 10 F_992
@@ -198,7 +198,7 @@ af+ 0x802069c 44 F_4295
 af+ 0x80206c8 58 F_4296
 af+ 0x8020702 74 F_4297
 af+ 0x802074c 58 F_4298
-af+ 0x802079c 294 F_800
+af+ 0x802079c 294 F_800_something_with_ant
 CCa 0x80208a8 Ant symbol with strength
 CCa 0x80208ba Ant symbol with strength
 af+ 0x8020974 16 gfx_select_font
@@ -422,6 +422,26 @@ af+ 0x802834a 396 F_4190
 af+ 0x80284d6 442 F_4237
 af+ 0x80286e8 580 F_286
 CCa 0x80287c6 2 house picture
+CCa 0x80287d6 0x1f 31
+CCa 0x80287d8 0x9d 157
+CCa 0x80287da 0x10 16
+CCa 0x80287e2 0x39 57
+CCa 0x80287e4 0x2c 44
+CCa 0x80287e6 0x35 53
+CCa 0x80287ee 0x30 48
+CCa 0x80287f0 0x18 24
+CCa 0x80287f2 0x20 32
+CCa 0x80287fa 0x30 48
+CCa 0x80287fc 0x9d 157
+CCa 0x80287fe 0x20 32
+CCa 0x8028800 0x91 145
+CCa 0x8028806 0x39 57
+CCa 0x8028808 0x9d 157
+CCa 0x802880a 0x30 48
+CCa 0x8028812 0x4a 74
+CCa 0x8028814 0x9d 157
+CCa 0x8028816 0x3a 58
+CCa 0x8028818 0x22 34
 CCa 0x8028838 0x9d 157
 CCa 0x8028848 0x4b 75
 CCa 0x802884a 0x69 105
@@ -480,6 +500,7 @@ af+ 0x802c250 104 F_4382
 af+ 0x802d5d0 92 F_4383
 af+ 0x802dee4 428 F_4314
 af+ 0x802e240 888 F_4315
+CCa 0x802e442 check for private call
 CCa 0x802e452 singel person picture
 CCa 0x802e4a0 2 people picture
 CCa 0x802e4b0 sprite incomming telephone
@@ -571,6 +592,7 @@ af+ 0x80315f6 126 F_1116
 af+ 0x8031674 94 F_826
 af+ 0x8031694 62 F_67
 af+ 0x80316ec 26 F_1072
+CCa 0x80316f8 BLX F_1021 ...wtf 
 af+ 0x8031710 66 F_827
 af+ 0x8031752 30 F_1004
 af+ 0x8031770 56 F_1073
@@ -590,6 +612,7 @@ af+ 0x8031bb4 14 F_327
 af+ 0x8031bc2 54 F_832
 af+ 0x8031bf8 12 F_328
 CCa 0x8031c00 BLX F_5049 ... wtf
+af+ 0x8031c04 12 F_5068
 af+ 0x8031c10 24 F_1006
 af+ 0x8031c28 24 F_1007
 af+ 0x8031c4c 54 F_4460
@@ -609,8 +632,8 @@ af+ 0x8031f74 8 F_834_Write_Command_2display
 af+ 0x8031f7c 6 F_835_Write_Data_2display
 af+ 0x8031f82 12 F_1139_to_display
 af+ 0x8031f8e 20 F_1101
-CCa 0x8031f9a 720895
 CCa 0x8031f90 Set GPIO D8 to Alternate function (Flash CS1..wtf)
+CCa 0x8031f9a 720895
 af+ 0x8031fb0 20 F_1102_delay
 af+ 0x8031fc4 392 F_1075_display_init
 af+ 0x803214c 72 F_332
@@ -619,24 +642,29 @@ af+ 0x80321d8 218 F_836
 af+ 0x80322b2 216 F_837
 af+ 0x803238a 258 F_4388
 af+ 0x8032494 26 F_4318
+af+ 0x80324ae 246 F_5069
 af+ 0x80325d4 40 F_4259
 af+ 0x8032620 6 F_838
 af+ 0x8032628 136 F_3000
 af+ 0x80326b0 16 F_1010
 af+ 0x80326c4 26 F_1011
 af+ 0x80326de 54 F_1148
+CCa 0x80326fe BLX F_5069 ...wtf
+CCa 0x8032700 0 value in my test case
 af+ 0x8032714 66 F_1149
 af+ 0x8032756 16 F_1012
 af+ 0x8032766 14 F_1150
+CCa 0x8032770 BLX F_5074 ...wtf
 af+ 0x803277c 8 F_840
 af+ 0x8032784 8 F_841
 af+ 0x8032790 24 F_333
 af+ 0x80327a8 90 F_4260
 af+ 0x8032802 52 F_4319
 af+ 0x8032838 52 F_112
-af+ 0x803286c 320 F_1013
+af+ 0x803286c 320 F_1013_Something_with_display_ant_signal_strength
 CCa 0x80328dc Ant symbol
 CCa 0x803292a Ant symbol
+CCa 0x8032950 clear ant_signal
 CCa 0x8032972 Ant symbol
 af+ 0x80329c0 104 OSTimeDly
 af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
@@ -1056,6 +1084,8 @@ af+ 0x8046718 8 F_5051
 af+ 0x8046720 18 F_1021
 af+ 0x8046734 8 F_1022
 af+ 0x8046740 2 F_875
+af+ 0x8046742 12 F_5070
+af+ 0x804674e 12 F_5071
 af+ 0x8046790 378 F_1023
 af+ 0x804690c 22 Not_Big_I2C_Function33
 af+ 0x8046914 14 F_506
@@ -1295,6 +1325,8 @@ af+ 0x804fc28 40 F_4082
 af+ 0x804fc50 22 F_5052
 af+ 0x804fc66 6 F_5054
 af+ 0x804fc6c 52 F_5053
+af+ 0x804fca0 6 F_5072
+af+ 0x804fca6 6 F_5073
 af+ 0x804fcb0 234 I2C1_Function_1
 af+ 0x804fda8 28 I2C1_Function_2
 af+ 0x804fdc4 28 I2C1_Function_3
@@ -1667,6 +1699,9 @@ af+ 0x8096c0c 12 F_4545
 af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
+af+ 0x80f96b0 6 F_5074
+
+
 
 CCa 0x8044184 _Start Mbox_
 CCa 0x804910e _uC/OS-II TmrLock_
