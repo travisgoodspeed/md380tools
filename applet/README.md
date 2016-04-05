@@ -6,6 +6,10 @@ native firmware, as well as extensions to the USB protocol.
 
 ##Important Headers##
 
+* `config.h` defines configuration options.  Many of these are
+  disabled in the standard build, but they can be enabled at compile
+  time.
+
 * `printf.h` defines the heapless printf() routines that log to the
   dmesg buffer.  You'll need to include this, not just `stdio.h`,
   to use the buffer.

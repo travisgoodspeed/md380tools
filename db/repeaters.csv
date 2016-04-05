@@ -73,7 +73,6 @@
 208010,F1ZWD,Paris,Île-de-France,France,430.15000,1,9.400,PEER,TS1 TS2,F1HBG,DMR-France
 208025,F1ZPQ,Parvis de la Defense,Île-de-France,France,430.23750,1,9.400,PEER,TS1 TS2,F1SHS,Motorola
 208065,F1SHS,La Garenne Colombes,Île-de-France,France,430.23750,1,9.400,PEER,TS1 TS2,F1SHS,DMR-France
-208075,F1ZTC,Paris,,France,145.72500,1,-0.6,PEER,TS1 TS2,F1HBG,DMR-plus
 208078,F1ZPK,Magnanville,Île-de-France,France,430.27500,1,9.400,PEER,TS1 TS2,F1IKD,DMR-France
 208080,F5ZDR,Linas,,France,430.20000,1,9.400,PEER,TS1 TS2,F4CQA,DMRF
 208091,F5ZIP,La Ville-du-bois,Île-de-France,France,430.01250,1,9.400,PEER,TS1 TS2,F6MPN,DMR-France
@@ -267,7 +266,7 @@
 228307,HB9BG,Falkenfluh (BE),Bern und Oberwallis,Switzerland,438.32500,1,-7.600,PEER,TS1 TS2,HB9DTZ,DMR-plus
 228308,HB9AK,Neuenegg / BE,Bern und Oberwallis,Switzerland,438.30000,1,-7.6,PEER,TS1 TS2,HB9SDB,DMR-plus
 228309,HB9F,Test / Entwicklung,Bern und Oberwallis,Switzerland,439.15000,1,-7.600,Peer,TS1 TS2,HB9DUU,BM
-228310,HB9DC,Muenster VS,Bern und Oberwallis,Switzerland,439.10000,3,-7.600,Peer,TS1 TS2,HB9DRX,Motorola
+228310,HB9DC,Muenster VS,Bern und Oberwallis,Switzerland,439.07500,3,-7.600,PEER,TS1 TS2,HB9DRX,Motorola
 228311,HB9F,Bern-Wankdorf,Bern und Oberwallis,Switzerland,145.68750,1,-0.600,Peer,TS1 TS2,HB9DUU,BM
 228391,HB9BO,Niesen,Bern und Oberwallis,Switzerland,439.41250,1,-7.6,PEER,TS1 TS2,HB9DUU,DMR-plus
 228402,HB9BA,Weissenstein,Basel,Switzerland,438.22500,1,-7.600,Peer,TS1 TS2,HB9FND,SwissDMR
@@ -303,7 +302,7 @@
 228809,HB9AK,Hoernli / ZH,Zuerich und Thurgau,Switzerland,438.60000,1,-7.6,PEER,TS1 TS2,HB9PAE,DMR-plus
 228810,HB9DR,Sulgen TG,Zuerich und Thurgau,Switzerland,439.57500,1,-7.6,PEER,TS1 TS2,HB9SDB,DMR-plus
 228811,HB9ZF-1,Uetliberg / ZH,Zuerich und Thurgau,Switzerland,439.56250,1,-7.6,PEER,TS1 TS2,HB9MNP,DMR-plus
-228891,HB9DR,Waedenswil / ZH,Zuerich und Thurgau,Switzerland,438.50000,1,-7.6,PEER,TS1 TS2,HB9SDB,DMR-plus
+228891,HB9DR-1,Waedenswil / ZH,Zuerich und Thurgau,Switzerland,438.50000,2,-7.6,PEER,TS1 TS2,HB9SDB,DMR-plus
 228892,HB9DR-0,IPSC2 IT-DMR-Link,,Switzerland,438.32500,1,-7.600,PEER,TS1 TS2,HB9SDB,IPSC
 228893,HB9DR-0,IPSC2 FR-DMR-Link,Zuerich und Thurgau,Switzerland,438.23750,1,-7.6,PEER,TS1 TS2,HB9SDB,DMR-plus
 228901,HB9DR,St.Gallen-City,Ostschweiz,Switzerland,438.22500,1,-7.6,PEER,TS1 TS2,HB9SDB,DMR-plus
@@ -366,6 +365,7 @@
 232895,OE8XFK,Dobratsch,Kaernten,Austria,438.90000,1,-7.6,PEER,TS1 TS2,OE8PKR,DMR-plus
 232896,OE8XLK,Koralm,Kaernten,Oesterreich/Austria,438.70000,1,-7.6,PEER,TS1 TS2,OE8URQ,DMR-plus
 232991,OE9XVJ,Pfaender / Bregenz,Vorarlberg,Oesterreich/Austria,438.50000,1,-7.6,PEER,TS1 TS2,OE9LTV,DMR-plus
+234900,GB3TU,Tring,England,United Kingdom,433.22500,3,1.600,PEER,TS1 TS2,G0RDI,DMR-plus
 235100,GB7TD,Wakefield,West Yorkshire,United Kingdom,439.16250,1,-9.000,Master,TS1 TS2,G1XCC,DMR-MARC - Wakefield - England
 235101,GB7FW,Birmingham,England,United Kingdom,439.66250,1,-9.000,Peer,TS1 TS2,G8VIQ,None
 235102,GB7AL,TEST,England,United Kingdom,439.46250,1,-9.000,PEER,TS1 TS2,G0RDI,DMRUK
@@ -413,7 +413,6 @@
 235170,GB7HR,Heathrow Airport,England,United Kingdom,439.45000,3,-9.000,Peer,TS1 TS2,G0OXZ,Motorola
 235171,GB7IK,Rochester, Kent,England,United Kingdom,439.43750,3,-9.000,PEER,TS1 TS2,G0RDI,Motorola
 235172,GB7BK,BlueBell Hill, Kent,England,United Kingdom,439.57500,4,-9.000,Peer,TS1 TS2,2E1GTB,Motorola
-235176,GB3TU,Tring,England,United Kingdom,433.22500,3,1.600,PEER,TS1 TS2,G0RDI,DMR-plus
 235177,GB7CT,Tring,England,United Kingdom,439.01250,3,-7.600,PEER,TS1 TS2,G0RDI,DMR-MARC - Tring - England
 235180,GB7BH,Brighton,England,United Kingdom,439.57500,4,-9.000,PEER,TS1 TS2,G7TXU,DMR-plus
 235188,GB7FI,Cheddar Somerset,England,United Kingdom,430.88750,3,7.600,PEER,TS1 TS2,G4RKY,Motorola
@@ -765,7 +764,7 @@
 262717,DM0KB,Konstanz,Baden-Wuerttemberg,Germany,145.60000,1,-0.6,Peer,TS1 TS2,DG8GL,DMR-plus
 262719,DB0SAA,Oberkochen,Baden-Wuerttemberg,Germany,438.47500,1,-7.600,PEER,TS1 TS2,DF7AJ,DMR-DL
 262720,DB0FAA,Aalen/Braunenberg,Baden-Wuerttemberg,Germany,439.48750,1,-7.6,PEER,TS1 TS2,DL8SFG,DMR-plus
-262721,DB0FHA,Aalen/Onatsfeld,Baden-Wuerttemberg,Germany,438.22500,1,-7.6,PEER,TS1 TS2,DL8SFG,DMR-plus
+262721,DB0FHA,Aalen/Onatsfeld,Baden-Wuerttemberg,Germany,145.66250,1,-0.6,PEER,TS1 TS2,DL8SFG,DMR-plus
 262722,DB0FHA,Aalen/Onatsfeld,Baden-Wuerttemberg,Germany,439.01250,1,-7.6,PEER,TS1 TS2,DL8SFG,DMR-plus
 262723,DB0CRA,Frankenhardt,Baden-Wuerttemberg,Germany,438.53750,1,-7.6,Peer,TS1 TS2,DG2SDW,DMR-plus
 262726,DB0RZ,Bussen ,Baden-Wuertt.,Germany,439.47500,1,-7.600,Peer,TS1 TS2,DL8VA,HYTERA
@@ -1213,12 +1212,13 @@
 311258,W4AC,Englewood,Florida,United States,444.10000,1,+5.000,Master,TS1 TS2,W4MO,Chicagoland
 311259,W4DFU,Gainesville,Florida,United States,444.81250,1,+5.000,Peer,TS1 TS2,AA4FL,K4USD
 311260,K4JTT,Titusville,Florida,United States,444.15000,1,+05.000,Peer,TS1 TS2,KC2CWT,DMR-FL
+311261,KF5IW,Fort Myers,Florida,United States,442.17500,1,+5.000,Peer,TS1 TS2,KF5IW,K4USD
 311301,KC6OVD,Atlanta,Georgia,United States,444.12500,0,+5.000,Master,TS1,KC6OVD,GeorgiaDMR- Atlanta GA
-311302,K4USD, Portable Repeater,Georgia,United States,442.17500,1,+5.000,Peer,TS1 TS2,W2AXB,K4USD
+311302,K4USD, Portable Repeater,Georgia,United States,442.17500,1,+5.000,Peer,TS1 TS2,W2XAB,K4USD
 311303,KE4OKD,Sandy Springs,Georgia,United States,441.95000,0,+5.000,Peer,TS1 TS2,KC6OVD,GeorgiaDMR - Sandy Springs, GA
 311304,KB4IZF,Jasper,Georgia,United States,438.62500,3,-7.6,Peer,TS1 TS2,N8WHG,Georgia-DMR
 311305,W7QO,Atlanta,Georgia,United States,442.45000,1,+5.000,Peer,TS1 TS2,W7QO,Georgia-DMR
-311306,K4USD,Morrow,Georgia,United States,442.17500,1,+5.000,Master,TS1 TS2,W2AXB,K4USD Network - Morrow, GA
+311306,K4USD,Morrow,Georgia,United States,442.17500,1,+5.000,Master,TS1 TS2,W2XAB,K4USD Network - Morrow, GA
 311307,W1KFR,Kingsland,Georgia,United States,444.62500,3,+5.000,Master,TS1 TS2,W1KFR,K4USD Network - Kingsland, Georgia
 311308,KC4VLJ,Valdosta,Georgia,United States,147.07500,0,+0.600,Peer,TS1 TS2,KC4VLJ,K4USD Network - Valdosta, GA
 311309,W7QO,Atlanta,Georgia,United States,443.02500,1,+5.000,Peer,TS1,W7QO,Hytera
@@ -1231,6 +1231,7 @@
 311316,K1DMR,Atlanta,Georgia,United States,444.43750,1,+5.000,Peer,TS1 TS2,K1DMR,K4USD Net - Atlanta Metro Central, GA
 311317,N4IRR,Marietta,Georgia,United States,927.70000,1,-25.000,Peer,TS1 TS2,N4IRR,DMR MARC
 311318,K4QHR,Kingsland,Georgia,United States,442.11250,3,+5.000,Peer,TS1 TS2,K4QHR ,K4USD
+311319,KD4GGY,Jesup,Georgia,United States,441.81250,1,+5.000,None,TS1 TS2,KD4GGY,K4USD
 311501,WH6TF,Kapaa,Hawaii,United States,444.30000,0,+5.000,Peer,TS1 TS2,WH6TF,SF-TRBO - Kapaa - Hawaii
 311502,AH6CP,Honolulu,Hawaii,United States,444.90000,0,+5.000,Peer,TS1 TS2,AH6CP,SF-TRBO- Kaimuki, HI
 311503,WB6EGR,Waikiki,Hawaii,United States,443.65000,0,+5.000,Peer,TS1 TS2,WB6EGR,SF-TRBO
@@ -1319,7 +1320,7 @@
 311744,W9DIG,Chicago,Illinois,United States,440.85625,1,+5.000,Master,None,N9OZR,Mixed Mode
 311745,WB9PHK,Schaumburg,Illinois,United States,146.70000,1,-0.600,Master,TS1 TS2,WB9PHK,ChicagoLand
 311746,N9CWMR,MCCOOK,Illinois,United States,442.12500,1,+5.000,Peer,TS1 TS2,N9CWM,ChicagoLand
-311747,K9PW,Schaumburg,Illinois,United States,430.50000,1,9.4,Master,TS1 TS2,K9PW,DMRPlus
+311747,K9PW,Schaumburg,Illinois,United States,145.66250,1,-0.6,Master,TS1 TS2,K9PW,DMRPlus
 311800,W9AMT,Indianapolis,Indiana,United States,441.20000,1,+5.000,Peer,TS1 TS2,W9AMT,Hoosier DMR - Indianapolis, IN
 311801,K9MMQ,Roanoke,Indiana,United States,442.92500,1,+5.000,Peer,TS1 TS2,K9MMQ,Crossroads DMR - Roanoke, IN
 311802,N9IAA,Valparaiso,Indiana,United States,441.57500,1,+5.000,Peer,TS1 TS2,N9IAA,DMR-MARC - Valparaiso, IN
@@ -1362,6 +1363,7 @@
 311839,KC9TKJ,Nashville,Indiana,United States,443.08750,1,+5.000,Peer,TS1 TS2,KC9TKJ,Hoosier DMR - Nashville, IN
 311840,W9NTP,Shelbyville,Indiana,United States,441.48750,1,+5.000,Peer,TS1 TS2,K9SVL,Hoosier DMR
 311841,N9MTF,Fort Wayne,Indiana,United States,442.63750,1,+5.000,Master,TS1 TS2,N9MTF,Hoosier DMR
+311842,KC9YGI,NEWPORT,Indiana,United States,443.08750,1,+5.000,Peer,TS1 TS2,W9MJW,Cross Roads DMR
 311900,K0HU,Humboldt,Iowa,United States,147.18000,1,+0.600,Peer,TS1 TS2,K0HU,DCI - Humboldt, IA
 311901,WB0VHB,Mt. Pleasant,Iowa,United States,444.52500,0,+5.000,Peer,TS1 TS2,WB0VHB,DCI
 311902,WA0RJR,Thurman/Tabor,Iowa,United States,442.80000,1,+5.000,Peer,TS1 TS2,KC0HYI,DMR-MARC Tabor, IA
@@ -1370,15 +1372,15 @@
 311905,N0CF,Cedar Falls,Iowa,United States,441.98750,1,+5.000,Peer,TS1 TS2,N0CF,BrandMeister
 311906,WD0FIA,Bridgewater,Iowa,United States,443.80000,10,5.000,Peer,TS1 TS2,WD0FIA,None
 311907,KD0WY,Clinton,Iowa,United States,147.31500,23,+0.600,Master,Mixed Mode,KD0WY,internet
-312000,K0USY,Lawrence,Kansas,United States,443.80000,1,+5.000,Master,TS1,K0USY,K0USY
-312001,N0RC,Basehor,Kansas,United States,442.00000,1,+5.000,Peer,TS1,N0RC,K0USY
-312002,KS0LNK,Minneapolis,Kansas,United States,444.85000,1,+5.000,Peer,TS1,N0UJQ,K0USY
-312003,K0USY,Hays,Kansas,United States,444.00000,1,+5.000,Peer,TS1 TS2,N0ECQ,K0USY
-312004,K0USY,Lawrence,Kansas,United States,444.77500,1,+5.000,Peer,TS1 TS2,N0MJS,K0USY
-312005,K0USY,Topeka,Kansas,United States,443.62500,1,+5.000,Peer,TS1 TS2,N0MJS,K0USY
-312006,K0JWH,El Dorado,Kansas,United States,441.97500,1,+5.000,Peer,TS1 TS2,K0JWH,K0USY
-312007,W0WJB,Overland Park,Kansas,United States,146.83500,1,-0.600,Master,TS1 TS2,W0WJB,K0USY
-312008,K0PRO,Pittsburg,Kansas,United States,444.80000,1,+5.000,Peer,TS1 TS2,K0PR,K0USY
+312000,K0USY,Lawrence,Kansas,United States,443.80000,1,+5.000,Master,TS1,K0USY,KS-DMR
+312001,N0RC,Basehor,Kansas,United States,442.00000,1,+5.000,Peer,TS1,N0RC,KS-DMR
+312002,KS0LNK,Minneapolis,Kansas,United States,444.85000,1,+5.000,Peer,TS1,N0UJQ,KS-DMR
+312003,K0USY,Hays,Kansas,United States,444.00000,1,+5.000,Peer,TS1 TS2,N0ECQ,KS-DMR
+312004,K0USY,Lawrence,Kansas,United States,444.77500,1,+5.000,Peer,TS1 TS2,N0MJS,KS-DMR
+312005,K0USY,Topeka,Kansas,United States,443.62500,1,+5.000,Peer,TS1 TS2,N0MJS,KS-DMR
+312006,K0JWH,El Dorado,Kansas,United States,441.97500,1,+5.000,Peer,TS1 TS2,K0JWH,KS-DMR
+312007,W0WJB,Overland Park,Kansas,United States,146.83500,1,-0.600,Master,TS1 TS2,W0WJB,KS-DMR
+312008,K0PRO,Pittsburg,Kansas,United States,444.80000,1,+5.000,Peer,TS1 TS2,K0PR,KS-DMR
 312009,K0USY,Manhattan,Kansas,United States,443.75000,1,+5.000,Peer,TS1 TS2,N0MJS,KS-DMR - Manhattan, KS
 312010,WB0YRG,Mission,Kansas,United States,442.10000,1,+5.000,Peer,TS1 TS2,W0NQX,BM
 312100,K4KTR,Bardstown,Kentucky,United States,443.00000,1,+5.000,Peer,TS1 TS2,K4KTR,DMR-MARC -Bardstown, KY
@@ -1397,14 +1399,14 @@
 312310,N1UGR,Dresden,Maine,United States,145.43000,12,-0.600,Peer,TS1 TS2,KQ1L,DMR-MARC - Blinn Hill, Dresden, ME
 312311,N1ME,Eddington,Maine,United States,145.31000,10,-0.600,Peer,TS1 TS2,KD1OM,DMR-MARC- BlackCap, Eddington, ME
 312312,KQ1L,Lincoln,Maine,United States,145.35000,12,-0.600,Peer,TS1 TS2,KQ1L,New England TRBO
-312400,N3LHD,Upper Marlboro,Maryland,United States,444.65000,6,+5.000,Peer,TS1 TS2,N3LHD,DMR-MARC - Washington DC
+312400,N3LHD,Upper Marlboro,Maryland,United States,444.65000,6,+5.000,Peer,TS1 TS2,N3LHD,K4USD Net
 312401,K3OCM,Towson,Maryland,United States,443.85000,6,+5.000,Peer,TS1 TS2,K3OCM,DMR-MARC - Towson, MD
 312402,K3OCM,Charlotte Hall,Maryland,United States,443.18750,6,+5.000,Peer,TS1 TS2,K3OCM,DMR-MARC - Charlotte Hall, MD
 312403,K3UCB,Ashton,Maryland,United States,442.23750,1,+5.000,Peer,TS1 TS2,K3UCB,K4USD Network  - Ashton, MD
 312404,N3HF,Ocean City,Maryland,United States,444.01250,1,+5.000,Peer,TS1 TS2,N3HF,NC-PRN - Ocean City, MD 
-312405,N3LHD,Laurel,Maryland,United States,444.65000,6,+0.600,Peer,TS1 TS2,N3LHD,N3LHD
-312406,N3LHD,Brandywine,Maryland,United States,444.65000,6,+0.600,Peer,TS1 TS2,N3LHD,DMR-MARC
-312407,N3LHD,Hyattsville,Maryland,United States,444.65000,6,+5.000,Peer,TS1 TS2,N3LHD,DMR-MARC
+312405,N3LHD,Laurel,Maryland,United States,444.65000,6,+0.600,Peer,TS1 TS2,N3LHD,K4USD Net
+312406,N3LHD,Brandywine,Maryland,United States,444.65000,6,+0.600,Peer,TS1 TS2,N3LHD,K4USD Net
+312407,N3LHD,Hyattsville,Maryland,United States,444.65000,6,+5.000,Peer,TS1 TS2,N3LHD,K4USD Net
 312408,W4ATN,Annapolis,Maryland,United States,443.78750,3,+5.000,Peer,TS1 TS2,W4ATN,DMR-MARC
 312409,KA3LAO,Thurmont,Maryland,United States,145.17000,1,-0.600,Peer,TS1 TS2,KA3LAO,K4USD Net Thurmont, Maryland
 312410,KB3LYL,Damacus,Maryland,United States,442.21250,1,+5.000,Peer,TS1 TS2,KB3LYL,K4USD Net Damascus, Maryland
@@ -1551,7 +1553,7 @@
 313313,NN1PA,Goffstown ,New Hampshire,United States,145.20000,2,-0.600,Peer,TS1 TS2,N1PA,EWARN - Mt. Uncan, Goffstown, NH
 313314,W1WNS,Madbury,New Hampshire,United States,145.18000,5,-0.600,Peer,TS1 TS2,W1WNS,DMR-MARC - Madbury, NH
 313315,K1LTM,Wakefield,New Hampshire,United States,145.28000,7,-0.600,Peer,TS1 TS2,K1LTM,EWARN - Wakefield, NH
-313316,KM3T,Amherst,New Hampshire,United States,441.46250,10,+5.000,Peer,TS1 TS2,KM3T,NEW ENGLAND-TRBO
+313316,KM3T,Goffstown,New Hampshire,United States,444.30000,10,+5.000,Peer,TS1 TS2,KM3T,NEW ENGLAND-TRBO
 313317,W1IMD,Sargents Purchase,New Hampshire,United States,145.12000,0,-0.600,Peer,TS1 TS2,W1IMD,NEW ENGLAND-TRBO
 313318,WA1ZYX,Keene,New Hampshire,United States,444.65000,1,+5.000,Peer,TS1 TS2,WA1ZYX,DMR-MARC Keene, New Hampshire
 313319,W1IF,North Hampton,New Hampshire,United States,449.47500,1,-5.000,Peer,TS1 TS2,W1IF,Unknown
@@ -1634,6 +1636,7 @@
 313648,N2LEN,Sams Point,New York,United States,442.05625,1,+5.000,Peer,TS1 TS2,N2LEN,NY-TRBO - Sam's Point, New York
 313649,N2NGK,Lake placid,New York,United States,446.97500,1,-5.000,Peer,TS1 TS2,N2NGK,DMR-MARC-Canada Lake Placid, NY
 313650,KD2MAJ,Plattsburgh,New York,United States,147.19500,1,+0.600,Peer,TS1 TS2,KD2MAJ,DMR-MARC Canada - Plattsburg, NY
+313651,KC2EQ,Elmira,New York,United States,443.00000,3,+5.000,None,Mixed Mode,KC2EQ,DMR+
 313700,W4ZO,Charlotte,North Carolina,United States,442.41250,1,+5.000,Peer,TS1 TS2,K4ITL,NC-PRN- Charlotte, NC
 313701,N4DTR,Waynesville,North Carolina,United States,444.45000,1,+5.000,Peer,TS1 TS2,N4DTR,WNC-NET - Waynesville, NC
 313702,K4ITL,Raleigh,North Carolina,United States,442.51250,1,+5.000,Peer,TS1 TS2,K4ITL,NC-PRN Raleigh, NC
@@ -1854,11 +1857,12 @@
 314904,NU7TS,Tremonton,Utah,United States,447.12500,1,-5.000,Peer,TS1 TS2,WA7KMF,Utah-DMR - Tremonton, UT
 314905,KC7WSU,Lehi,Utah,United States,449.25000,1,-5.000,Peer,TS1 TS2,KC7WSU,DMR-UTAH
 314906,KG7YHY,Bountiful,Utah,United States,449.25000,1,-5.000,Master,Mixed Mode,N2DME,Brandmiester
+314907,N6DVZ,West Jordan,Utah,United States,449.25000,2,-5.000,Peer,TS1 TS2,N6DVZ,Brandmeister
 315001,WR1VT,Brattleboro,Vermont,United States,444.40000,1,+5.000,Peer,TS1 TS2,N1ESK,DMR-MARC - Brattleboro, VT
 315002,W1IMD,Pico Peak,Vermont,United States,444.50000,1,+5.000,Peer,TS1 TS2,W1IMD,DMR-MARC - Pico Peak, VT
 315003,W1UWS,Mt. Ascutney,Vermont,United States,448.47500,5,-5.000,Master,TS1 TS2,WB2NWR,DMR-MARC - Mt. Ascutney, VT
 315004,K1VIT,Warren,Vermont,United States,145.41000,1,-0.600,Peer,TS1 TS2,WA2LRE,DMR-MARC-CANADA Warren, VT
-315100,W4YP,Haymarket,Virginia,United States,448.97500,6,-5.000,Peer,TS1 TS2,W4YP,DMR-MARC - Haymarket - Virgina
+315100,W4YP,Haymarket,Virginia,United States,448.97500,6,-5.000,Peer,TS1 TS2,W4YP,K4USD Net
 315101,W4RAT,Richmond,Virginia,United States,443.58750,1,+5.000,Peer,TS1 TS2,KD4BPZ,NC-PRN - Richmond - Virginia
 315102,WX4F,Fancy Gap,Virginia,United States,443.93750,1,+5.000,Peer,TS1 TS2,WX4F,NC-PRN- Fancy Gap, VA
 315103,W4VSP,Wytheville,Virginia,United States,443.26250,1,+5.000,Peer,TS1 TS2,W4VSP,NC-PRN Wytheville, VA
@@ -1895,6 +1899,8 @@
 315317,N7MAQ,Vancouver,Washington,United States,442.95000,1,+5.000,Peer,TS1 TS2,KB7APU,DCI
 315318,KK7TR,Sammamish,Washington,United States,442.05000,1,+5.000,None,TS1 TS2,KK7TR,DCI
 315319,NO7RF,Winthrop,Washington,United States,440.92500,3,+9.000,Peer,TS1 TS2,NO7RF,DCI-PNW-Sun Mtn
+315320,AF7PR,Mount Vernon,Washington,United States,440.92500,1,-5.000,Peer,TS1 TS2,AF7PR,PNW
+315321,KG7KPH,Olympia,Washington,United States,440.72500,1,-5.000,Peer,TS1 TS2,AF7PR,PNW DCI
 315400,W8LG,Beckley,West Virginia,United States,443.66250,1,+5.000,Peer,TS1 TS2,W8LG,NC-PRN Beckley, WV
 315401,KC8AFH,Beckley,West Virginia,United States,442.87500,1,+5.000,Peer,TS1 TS2,KC8AFH,WV DMR -  Beckley, WV
 315402,KC8AFH,Bolt,West Virginia,United States,443.87500,1,+5.000,Peer,TS1 TS2,KC8AFH,WV DMR - Bolt, WV
@@ -1959,10 +1965,11 @@
 505402,VK4RTQ,Toowoomba / Darling ,Queensland,Australia,439.48750,1,-5.000,Peer,TS1 TS2,VK4QF,VK-TRBO Darling Downs, Queensland
 505404,VK4DU,Cairns,Queensland,Australia,438.02500,1,-7.000,Peer,TS1 TS2,VK4DU,VK-TRBO Cairns, QLD, Australia
 505406,VK4TUX,TOOWOOMBA,Queensland,Australia,445.00000,1,-0.000,Peer,TS1 TS2,AX4TUX,BM
+505407,VK4REG,Mount Mowbullan,Queensland,Australia,439.98750,1,-5.000,Peer,TS1 TS2,VK4QF,VK-TRBO
 505600,VK6RRR,Perth,Western Australia,Australia,438.20000,1,-5.400,Peer,TS1 TS2,VK6ZTN,VK-TRBO - Perth - Australia
 505601,VK6ZTN,Perth,Western Australia,Australia,438.20000,1,-5.400,Peer,TS1 TS2,VK6ZTN,VK-TRBO - Perth - Australia
 510001,YD0ZUB,Jakarta,,Indonesia,434.98000,1,0.000,Peer,TS1 TS2,YB0AZ,None
-530100,ZL1CCT,Hamilton,Waikato,New Zealand,145.35000,12,-0.600,,None,ZL1HN,ZL-TRBO Hamilton - New Zealand
+530100,ZL1CCT,Hamilton,North Island 1,New Zealand,145.35000,12,-0.600,None,None,ZL1HN, Hamilton - New Zealand
 530101,ZL1UX,Hamilton,North Island 1,New Zealand,439.72500,1,-5.000,Peer,TS1 TS2,ZL1THG,ZL-TRBO Hamilton - New Zealand
 530102,ZL1DMR,AREC STSP,North Island 1,New Zealand,438.77500,1,-5.000,Peer,TS1 TS2,ZL4JY,ZL-TRBO
 530103,ZL1BQ,Auckland,North Island 1,New Zealand,439.70000,1,-5.000,Peer,TS1 TS2,ZL1JD,ZL-TRBO - Auckland, New Zealand

@@ -5,3 +5,8 @@
 */
 
 
+/* Uncomment these to enable printing raw frames, either before or
+   after error correction is applied. */
+//#define AMBECORRECTEDPRINT
+//#define AMBEUNCORRECTEDPRINT
+

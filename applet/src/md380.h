@@ -92,3 +92,9 @@ extern void (*c5000_spi0_writereg)(int reg, int val);
 
 //! Unknown AES function.
 extern char* (*aes_cipher)(char *pkt);
+
+//! Unknown AMBE2+ thing.
+extern int (*ambe_encode_thing)(char *a1, int a2, int *a3, int a4,
+				short a5, short a6, short a7, int a8);
+//! Decodes an AMBE2+ frame into bits.
+extern int (*ambe_unpack)(int a1, int a2, char length, int a4);

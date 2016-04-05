@@ -298,6 +298,7 @@ def dmesgtail(dfu):
     while True:
         sys.stdout.write(dfu.getdmesg());
         sys.stdout.flush();
+        #time.sleep(0.05);
 def c5000(dfu):
     """Prints some DMR registers."""
     for r in range(0,0x87):
@@ -341,6 +342,7 @@ def findcc(dfu):
         #Try a new color.
         cc=cc+1;
         print "Trying color %d." % (cc&0xf);
+        sys.stdout.flush();
         dfu.c5000poke(0x1f,(cc&0xF)<<4);
         time.sleep(1.0);
         if dfu.c5000peek(0x0d)&0x10:

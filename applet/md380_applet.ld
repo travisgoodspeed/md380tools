@@ -18,7 +18,7 @@ MEMORY
 /*  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 128K  /* All of RAM. */
 /*  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 4K */
   RAM (xrw)       : ORIGIN = 0x1000b000, LENGTH = 20K /* Bytes after 1000a868 are free.*/
-  MEMORY_B1 (rx)  : ORIGIN = 0x60000000, LENGTH = 0K
+/*  MEMORY_B1 (rx)  : ORIGIN = 0x60000000, LENGTH = 0K */
 }
 
 /* Define output sections */

@@ -313,7 +313,7 @@ af+ 0x802331a 68 F_4229
 af+ 0x802335e 1102 F_4474
 af+ 0x80237ac 1002 F_4458
 CCa 0x80237fa seen picture  2 picture .. 1 ok 2 ok 3 wrong palet (menu)
-CCa 0x8023824 2 people picture or 4 windows or envelope closed or phone 
+CCa 0x8023824 2 people picture or 4 windows or envelope closed or phone
 CCa 0x802384e 4 windows and more (menu)
 CCa 0x802386c numbers (Menu)
 CCa 0x8023934 picture (N) .. Scan or (1) (2)
@@ -323,11 +323,11 @@ CCa 0x80239c4 envelope closed yellow
 CCa 0x8023a10 envelope closed yellow
 CCa 0x8023a24 envelope open yellow
 CCa 0x8023a5c envelope closed yellow
-CCa 0x8023a9a 1 people 
+CCa 0x8023a9a 1 people
 CCa 0x8023ae4 1 people or TG
 CCa 0x8023ae4 TalkGroupSymbol in contact list
 CCa 0x8023b2a record picture
-CCa 0x8023b66 TG or  1 people 
+CCa 0x8023b66 TG or  1 people
 af+ 0x8023bdc 408 F_4439
 af+ 0x8023d74 96 F_4230
 af+ 0x8023dd4 22 F_4440
@@ -400,12 +400,12 @@ af+ 0x8026d7c 1270 F_4310
 CCa 0x8026e8e blue background
 CCa 0x8026f22 smarl arrow right picture
 CCa 0x802703a smarl arrow right picture
-CCa 0x802711c smarl arrow left picture  
+CCa 0x802711c smarl arrow left picture
 CCa 0x80271a4 smarl arrow right picture
 af+ 0x8027278 1228 F_4118
 CCa 0x80272f8 blue background
 CCa 0x8027304 smarl arrow left picture
-CCa 0x8027428 smarl arrow right picture 
+CCa 0x8027428 smarl arrow right picture
 CCa 0x80274b4 smarl arrow right picture
 CCa 0x80275a4 smarl arrow right picture
 CCa 0x8027606 smarl arrow left picture
@@ -500,7 +500,7 @@ af+ 0x802fbea 76 spiflash_program_page
 CCa 0x802fbfa Page Program CMD (02h)
 af+ 0x802fc36 332 F_1069_spiflash_multiple_spiflash_program_page
 af+ 0x802fd82 70 spiflash_read
-CCa 0x802fd8e Read Data CMD 03h 
+CCa 0x802fd8e Read Data CMD 03h
 CCa 0x802fdae dummy_value
 af+ 0x802fdc8 58 spi_send_and_read_byte
 af+ 0x802fe02 18 spiflash_write_enable
@@ -583,7 +583,7 @@ af+ 0x8031998 540 F_831
 af+ 0x8031bb4 14 F_327
 af+ 0x8031bc2 54 F_832
 af+ 0x8031bf8 12 F_328
-CCa 0x8031c00 BLX F_5049 ... wtf 
+CCa 0x8031c00 BLX F_5049 ... wtf
 af+ 0x8031c10 24 F_1006
 af+ 0x8031c28 24 F_1007
 af+ 0x8031c4c 54 F_4460
@@ -630,7 +630,7 @@ af+ 0x8032802 52 F_4319
 af+ 0x8032838 52 F_112
 af+ 0x803286c 320 F_1013
 CCa 0x80328dc Ant symbol
-CCa 0x803292a Ant symbol 
+CCa 0x803292a Ant symbol
 CCa 0x8032972 Ant symbol
 af+ 0x80329c0 104 OSTimeDly
 af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
@@ -771,7 +771,7 @@ af+ 0x80397a0 56 F_5063
 af+ 0x80397d8 294 F_5064
 af+ 0x80398fe 58 F_5065
 af+ 0x8039938 354 F_5062
-af+ 0x8039a9a 36 F_5061 
+af+ 0x8039a9a 36 F_5061
 af+ 0x8039abe 36 F_5060
 af+ 0x8039ae2 196 F_5059
 af+ 0x8039ba6 42 F_5058
@@ -810,7 +810,7 @@ af+ 0x803adfc 358 F_5046
 af+ 0x803af70 92 F_847
 af+ 0x803afd8 92 F_848
 af+ 0x803b044 58 F_363
-af+ 0x803b110 76 F_5030 
+af+ 0x803b110 76 F_5030
 af+ 0x803b15c 26 F_364
 af+ 0x803b176 32 F_365
 af+ 0x803b196 338 F_5031
@@ -1632,7 +1632,7 @@ af+ 0x80937b0 32 F_4063
 af+ 0x80937f0 8 F_5047_uncertain
 af+ 0x809381a 2 F_5048_uncertain
 af+ 0x809381c 34 F_5003
-af+ 0x809383e 50 F_5004 
+af+ 0x809383e 50 F_5004
 CCa 0x809383e InterruptFunc Internal Perf
 af+ 0x8093870 20 F_5005
 af+ 0x8093884 20 F_5006
@@ -1641,7 +1641,7 @@ CCa 0x8093914 0x10 PC4 Set RF_APC_SW RF Amplifier Switch.High Avtive
 af+ 0x809391e 28 F_5008
 af+ 0x809393a 58 F_5009
 af+ 0x8093974 20 F_5010
-CCa 0x8093974 Interrupt Func() 
+CCa 0x8093974 Interrupt Func()
 af+ 0x8093ae4 64 F_5029
 CCa 0x8093b24 0x0800c0ee Interrupt Func
 af+ 0x8093b24 16 F_5036

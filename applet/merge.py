@@ -89,7 +89,7 @@ class Merger():
            convention. """
         adr=adr & ~1;          #Address must be even.
         handler = handler | 1; #Destination address must be odd.
-        print "Inserting a stub hook at %08x to %08x." % (adr,handler);
+        #print "Inserting a stub hook at %08x to %08x." % (adr,handler);
         
         #FIXME This clobbers r0, should use a different register.
         self.sethword(adr,0x4801); # ldr r0, [pc, 4]
@@ -116,7 +116,7 @@ class Merger():
     def hookbl(self,adr,handler,oldhandler=None):
         """Hooks a function by replacing a 32-bit relative BL."""
         
-        print "Redirecting a bl at %08x to %08x." % (adr,handler);
+        #print "Redirecting a bl at %08x to %08x." % (adr,handler);
         
         #TODO This is sometimes tricked by old data.
         # Fix it by ensuring no old data.
@@ -297,6 +297,26 @@ if __name__== '__main__':
     merger.hookbl(0x0802182c,sapplet.getadr("aes_cipher_hook"),0);
     #c5000_dmr_init() calls aes_cipher() once, with Enhanced Privacy Key as input.
     merger.hookbl(0x0803df16,sapplet.getadr("aes_cipher_hook"),0);
+
+
+    #Hook lots of AMBE2+ encoder code and hope our places are correct.
+    ambelist=[
+        #Main AMBE2+ thread.
+        0x08047ff0, 0x0804810e, 0x08048160, 0x08048294, 0x08048304,
+        0x08048468, 0x080484e4,
+        #Second thread.
+        0x08048634, 0x08048668];
+    for adr in ambelist:
+        merger.hookbl(adr,sapplet.getadr("ambe_encode_thing_hook"));
+
+    #Hook calls within the AMBE2+ decoder.
+    unpacklist=[
+        0x08032b94, 0x08032ba0, #First parent
+        0x08032bb8, 0x08032bc4, #Second parent
+        0x08048adc              #General decoder.
+    ];
+    for adr in unpacklist:
+        merger.hookbl(adr,sapplet.getadr("ambe_unpack_hook"));
     
     print "Hooking a menu call.";
     merger.setword(0x08039d98,
