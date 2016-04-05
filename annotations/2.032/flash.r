@@ -156,8 +156,8 @@ af+ 0x801c494 8 F_989
 af+ 0x801c49c 14 F_4152
 af+ 0x801c4b0 94 F_4086
 af+ 0x801c50e 120 F_794
-af+ 0x801c5e0 8 F_795_gfx_set_bg_color
-af+ 0x801c5e8 8 F_796_gfx_set_fg_color
+af+ 0x801c5e0 8 gfx_set_bg_color
+af+ 0x801c5e8 8 gfx_set_fg_color
 af+ 0x801c5f0 214 F_4165
 af+ 0x801c6c6 330 F_4166
 af+ 0x801c810 328 F_4167
@@ -177,7 +177,7 @@ af+ 0x801cbcc 10 F_992
 af+ 0x801cbd8 40 F_4168
 af+ 0x801cc00 722 F_4136
 af+ 0x801ced2 40 F_993
-af+ 0x801cf1c 18 F_798_chars_to_display
+af+ 0x801cf1c 18 gfx_chars_to_display
 af+ 0x801cf2e 18 F_799
 af+ 0x801cf40 16 F_4169
 af+ 0x801cf50 30 F_4291
@@ -201,12 +201,12 @@ af+ 0x802074c 58 F_4298
 af+ 0x802079c 294 F_800
 CCa 0x80208a8 Ant symbol with strength
 CCa 0x80208ba Ant symbol with strength
-af+ 0x8020974 16 F_801_gfx_select_font
+af+ 0x8020974 16 gfx_select_font
 af+ 0x8020988 8 F_4172
 af+ 0x8020990 8 F_4226
 af+ 0x802099c 154 F_994
 af+ 0x8020a36 10 F_4353
-af+ 0x8020a40 18 F_802_Single_Char_Out_X_Y_Char
+af+ 0x8020a40 18 gfx_Single_Char_Out_X_Y_Char
 af+ 0x8020a58 3020 F_28
 af+ 0x8021624 48 F_30
 af+ 0x8021654 30 F_31
