@@ -24,11 +24,13 @@ void (*gfx_drawbmp)(char *bmp,
 		    uint64_t pos) = 0x08022887;
 
 void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
-                     int x, int y,   //X and Y position
-                     int maxlen) = 0x0801cf1d;
+                     int x, int y,   //X and Y position, Unit unknown
+                     int unknown) = 0x0801cf1d; // max 19 char ???
 
-void (*gfx_F_801)(void *p)=0x8020975;  // nicer name is comming
-void (*gfx_F_795)(void *p)=0x801c5e1;
+void (*gfx_select_font)(void *p)=0x8020975;
+void (*gfx_set_bg_color)(int color)=0x801c5e1;
+void (*gfx_set_fg_color)(int color)=0x801c5e9;
+
 
 //! Function that handles the end of a DMR call.
 void* (*dmr_call_end)(void *pkt) = 0x0803f33d;

@@ -36,16 +36,25 @@ void drawascii(char *ascii,
 	       x,y,
 	       15); //strlen(text));
 }
+
 void drawascii2(char *ascii,
                 int x, int y){
   wchar_t wide[40];
-  gfx_F_795((void *) 0xff8032);
-  gfx_F_801((void *) 0x809bcec);
-  for(int i=0;i<40;i++)
+  gfx_set_bg_color(0x552277);
+  gfx_set_fg_color(0x4488dd);
+
+  gfx_select_font((void *) 0x809bcec);
+  for(int i=0;i<25;i++)
+        {
         wide[i]=ascii[i];
-      gfx_drawtext2(wide,x,y,95);
-  gfx_F_801((void *) 0x80d0fac);
-  gfx_F_795((void *) 0xff000000);
+        if (ascii[i]=='\0')
+           break;
+        }
+  gfx_drawtext2(wide, x, y, 0);
+
+  gfx_select_font(0x80d0fac);
+  gfx_set_fg_color(0xff8032);
+  gfx_set_bg_color(0xff000000);
 }
 
 void green_led(int on) {
@@ -79,8 +88,8 @@ void lcd_background_led(int on) {
 
 void print_DebugLine(void){
   //Clear the background.
-  drawascii2("                   ",10,70);
-  drawascii2("                   ",10,80);
+  drawascii2("                  ",10,70);
+  drawascii2("                  ",10,80);
   //Draw the lines.
   drawascii2(DebugLine1, 10, 70);//160 154
   drawascii2(DebugLine2, 10, 80);//160 190

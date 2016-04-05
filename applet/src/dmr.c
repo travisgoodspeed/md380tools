@@ -113,9 +113,6 @@ void *dmr_call_start_hook(char *pkt){
   }
 
 
-  sprintf(DebugLine1, "%d", src );
-  sprintf(DebugLine2, "%d", dst );
-
   //This prints a dot at every resynchronization frame.
   //It can distract AMBE2+ logging.
   //printf(".");

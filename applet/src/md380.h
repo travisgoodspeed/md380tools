@@ -27,8 +27,10 @@ void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
                       int maxlen);
 
 
-void (*gfx_F_801)(void *p);
-void (*gfx_F_795)(void *p);
+void (*gfx_select_font)(void *p);
+
+void (*gfx_set_bg_color)(int color);
+void (*gfx_set_fg_color)(int color);
 
                                           
 

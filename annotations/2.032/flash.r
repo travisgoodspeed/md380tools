@@ -156,14 +156,16 @@ af+ 0x801c494 8 F_989
 af+ 0x801c49c 14 F_4152
 af+ 0x801c4b0 94 F_4086
 af+ 0x801c50e 120 F_794
-af+ 0x801c5e0 8 F_795
-af+ 0x801c5e8 8 F_796
+af+ 0x801c5e0 8 F_795_gfx_set_bg_color
+af+ 0x801c5e8 8 F_796_gfx_set_fg_color
 af+ 0x801c5f0 214 F_4165
 af+ 0x801c6c6 330 F_4166
 af+ 0x801c810 328 F_4167
 af+ 0x801c958 164 F_4132
 af+ 0x801c9fc 70 F_4133
 af+ 0x801ca42 36 F_1063
+CCa 0x801ca4a GPIO D3 K3 .. config as input
+CCa 0x801ca5c GPIO D3 K3 .. config as output
 af+ 0x801ca66 12 F_1095
 af+ 0x801ca72 32 F_1064
 af+ 0x801ca92 52 F_990
@@ -175,7 +177,7 @@ af+ 0x801cbcc 10 F_992
 af+ 0x801cbd8 40 F_4168
 af+ 0x801cc00 722 F_4136
 af+ 0x801ced2 40 F_993
-af+ 0x801cf1c 18 F_798
+af+ 0x801cf1c 18 F_798_chars_to_display
 af+ 0x801cf2e 18 F_799
 af+ 0x801cf40 16 F_4169
 af+ 0x801cf50 30 F_4291
@@ -199,7 +201,7 @@ af+ 0x802074c 58 F_4298
 af+ 0x802079c 294 F_800
 CCa 0x80208a8 Ant symbol with strength
 CCa 0x80208ba Ant symbol with strength
-af+ 0x8020974 16 F_801
+af+ 0x8020974 16 F_801_gfx_select_font
 af+ 0x8020988 8 F_4172
 af+ 0x8020990 8 F_4226
 af+ 0x802099c 154 F_994
@@ -543,6 +545,10 @@ af+ 0x8030d32 260 F_4500
 af+ 0x8030e36 40 F_320
 af+ 0x8030e5e 92 F_26
 af+ 0x8030eba 92 F_322
+CCa 0x8030eca GPIO C2 Reset MODER2_0 Input
+CCa 0x8030ed4 GPIO C4 Reset MODER4_1 Input
+CCa 0x8030ee0 GPIO A4 Reset MODER4_1 Input
+CCa 0x8030eec GPIO A4 Reset MODER4_0 Input
 af+ 0x8030f16 102 F_323
 af+ 0x8030f7c 328 F_4501
 af+ 0x803114c 10 F_1152
@@ -599,14 +605,14 @@ af+ 0x8031ede 28 F_111
 af+ 0x8031efa 32 F_331
 af+ 0x8031f40 36 F_1074
 af+ 0x8031f64 12 F_1008
-af+ 0x8031f74 8 F_834
-CCa 0x8031f74 to display ?
-af+ 0x8031f7c 6 F_835
-CCa 0x8031f7c to display ?
-af+ 0x8031f82 12 F_1139
+af+ 0x8031f74 8 F_834_Write_Command_2display
+af+ 0x8031f7c 6 F_835_Write_Data_2display
+af+ 0x8031f82 12 F_1139_to_display
 af+ 0x8031f8e 20 F_1101
-af+ 0x8031fb0 20 F_1102
-af+ 0x8031fc4 392 F_1075
+CCa 0x8031f9a 720895
+CCa 0x8031f90 Set GPIO D8 to Alternate function (Flash CS1..wtf)
+af+ 0x8031fb0 20 F_1102_delay
+af+ 0x8031fc4 392 F_1075_display_init
 af+ 0x803214c 72 F_332
 af+ 0x8032194 68 F_1117
 af+ 0x80321d8 218 F_836
@@ -1671,7 +1677,6 @@ CCa 0x801931c GPIO_SetBits(GPIOC, 0x40)
 CCa 0x80193a6 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801942e GPIO_SetBits(GPIOC, 0x40)
 CCa 0x8019718 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801ca5c GPIO_SetBits(GPIOD, 0x40)
 CCa 0x801f228 GPIO_SetBits(GPIOC, 0x40) .. Bit 3 .. C3  2T/5T / RF_RX_INTER
 CCa 0x801f334 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f3b0 GPIO_SetBits(GPIOC, 0x40)
