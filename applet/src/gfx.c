@@ -7,6 +7,7 @@
 #include "tooldfu.h"
 #include "config.h"
 #include "gfx.h"
+#include "printf.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -52,7 +53,7 @@ void drawascii2(char *ascii,
         }
   gfx_drawtext2(wide, x, y, 0);
 
-  gfx_select_font(0x80d0fac);
+  gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);
   gfx_set_bg_color(0xff000000);
 }
@@ -87,10 +88,17 @@ void lcd_background_led(int on) {
 }
 
 void print_DebugLine(void){
+  char buf[10];
+  static int cnt=0;
+
   //Clear the background.
   drawascii2("                  ",10,70);
   drawascii2("                  ",10,80);
+  drawascii2("                  ",10,90);
   //Draw the lines.
   drawascii2(DebugLine1, 10, 70);//160 154
   drawascii2(DebugLine2, 10, 80);//160 190
+  sprintf(buf, "%d", cnt++);
+  drawascii2(buf, 10, 90);//160 190
+
 }
