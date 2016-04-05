@@ -120,19 +120,19 @@ of the originally exported .ppm file; gimp et al. discard it):
 
     md380-gfx --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
 
-##Firmware Patching:##
+##Firmware Compilation##
 
 This archive does not ship with firmware.  Instead it grabs firmware
 from the Internet, decrypts it, and applies patches to that revision.
 
-You can reproduce the patched firmware with `make clean all`.
+You can reproduce the patched firmware with `make clean dist` after
+installing an arm-none-eabi cross compiler toolchain.  The firmware
+and a Windows flashing tool will then appear in
+`md380tools-yyyy-mm-dd`.  Alternately, you can flash them from Linux
+with `make clean flash`, after starting the recovery bootloader by
+holding PTT and the button above it during a radio reboot.
 
-Files from this process include:
-
-* unwrapped.img: factory firmware after decrypting.
-* prom-public.img and prom-public.bin: patched to monitor all talk groups.
-* prom-private.img and prom-private.bin: patched to monitor all talk groups, private calls.
-* experiment.img and experiment.bin: patched to monitor all talk groups, private calls, and sideload alternate firmware.
+##Windows Firmware Installation##
 
 You can install any of these patched firmware files into your MD380 by
 using the respective .bin file with the Tytera Windows firmware
