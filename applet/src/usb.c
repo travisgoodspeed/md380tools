@@ -54,6 +54,7 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   if(blockadr==1){
     //Some special addresses need help before the transfer.
     if(dfutargetadr== dmesg_start){
+      int state=OS_ENTER_CRITICAL();
       /* We can't send the DMESG buffer itself, because it's in the
 	 tightly coupled memory, so we'll memcpy() it to a buffer in
 	 SRAM and then transmit it.
@@ -64,6 +65,7 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
       for(int i=0;i<DMESG_SIZE;i++)
 	dmesg_start[i]=0;
       dmesg_wcurs=0;
+      OS_EXIT_CRITICAL(state);
       
       //Send the doubled buffer and return.
       usb_send_packet(iface,   //USB interface structure.
