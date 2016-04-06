@@ -289,8 +289,10 @@ if __name__== '__main__':
                   sapplet.getadr("OSTaskNameSet_hook"),
                   0x804bcc0);
 
-    merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine"),0);
-    merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine"),0);
+    merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine_green"),0);
+    merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine_green"),0);
+    
+    merger.hookbl(0x0801f5ba,sapplet.getadr("print_DebugLine_gray"),0);
     
     #Function that calls aes_cipher() twice.  When are these called?
     merger.hookbl(0x0802177c,sapplet.getadr("aes_cipher_hook"),0);

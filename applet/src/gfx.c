@@ -41,10 +41,7 @@ void drawascii(char *ascii,
 void drawascii2(char *ascii,
                 int x, int y){
   wchar_t wide[40];
-  gfx_set_bg_color(0x552277);
-  gfx_set_fg_color(0x4488dd);
 
-  gfx_select_font((void *) 0x809bcec);
   for(int i=0;i<25;i++)
         {
         wide[i]=ascii[i];
@@ -53,9 +50,6 @@ void drawascii2(char *ascii,
         }
   gfx_drawtext2(wide, x, y, 0);
 
-  gfx_select_font((void *) 0x80d0fac);
-  gfx_set_fg_color(0xff8032);
-  gfx_set_bg_color(0xff000000);
 }
 
 void green_led(int on) {
@@ -87,18 +81,46 @@ void lcd_background_led(int on) {
   }
 }
 
-void print_DebugLine(void){
+void print_DebugLine_green(void){
   char buf[10];
   static int cnt=0;
+ 
+  gfx_set_bg_color(0x00ff00);
+  gfx_set_fg_color(0x4488dd);
+  gfx_select_font((void *) 0x809bcec);
 
-  //Clear the background.
   drawascii2("                  ",10,70);
   drawascii2("                  ",10,80);
   drawascii2("                  ",10,90);
-  //Draw the lines.
+
   drawascii2(DebugLine1, 10, 70);//160 154
   drawascii2(DebugLine2, 10, 80);//160 190
   sprintf(buf, "%d", cnt++);
   drawascii2(buf, 10, 90);//160 190
 
+  gfx_select_font((void *) 0x80d0fac);
+  gfx_set_fg_color(0xff8032);
+  gfx_set_bg_color(0xff000000);
 }
+
+void print_DebugLine_gray(void){
+  char buf[10];
+  static int cnt=0;
+   
+  gfx_set_bg_color(0x555555);
+  gfx_set_fg_color(0x4488dd);
+  gfx_select_font((void *) 0x809bcec);
+
+  drawascii2("                  ",10,70);
+  drawascii2("                  ",10,80);
+  drawascii2("                  ",10,90);
+
+  drawascii2(DebugLine1, 10, 70);//160 154
+  drawascii2(DebugLine2, 10, 80);//160 190
+  sprintf(buf, "%d", cnt++);
+  drawascii2(buf, 10, 90);//160 190
+
+  gfx_select_font((void *) 0x80d0fac);
+  gfx_set_fg_color(0xff8032);
+  gfx_set_bg_color(0xff000000);
+}   
