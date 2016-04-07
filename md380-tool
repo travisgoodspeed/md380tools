@@ -108,9 +108,7 @@ class Tool(DFU):
                 );
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
                                    cmdstr)
-        time.sleep(0.5);
 	self.get_status(); #this changes state
-        time.sleep(0.5);
         status=self.get_status(); #this gets the status
         return self.upload(1,size,0);
 
@@ -332,7 +330,7 @@ def spiflashdump(dfu,filename):
 #                         0x00000000+(16*1024*1024),
 #                         1024):
         for adr in range(0x100000,
-                         0x100000+(1*1024*1024),
+                         0x100000+(3*1024*1024),
                          1024):
 
             #print "Fetching %08x"%adr

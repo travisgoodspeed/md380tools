@@ -146,9 +146,19 @@ int usb_dnld_hook(){
       *dfu_target_adr=dmesg_tx_buf;
       adr= *((uint32_t*)(packet+1));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
-
-      spiflash_block_erase64k(adr);
-   
+      
+      spiflash_wait();     
+      //spiflash_block_erase64k(adr);
+      spiflash_enable(); 
+      spi_sendrecv(0x6); 
+      spiflash_disable();
+      
+      spiflash_enable();
+      spi_sendrecv(0x2);
+      spi_sendrecv((adr>> 16) & 0xff);
+      spi_sendrecv((adr>>  8) & 0xff);
+      spi_sendrecv(adr & 0xff);                              
+      spiflash_disable();   
       break;
     
     case TDFU_SPIFLASHWRITE_NEW:
@@ -165,7 +175,8 @@ int usb_dnld_hook(){
           int page_adr;
           page_adr=adr+i;
           printf("%d %x\n",i,page_adr);
-
+          spiflash_wait();     
+          
           spiflash_enable();
           spi_sendrecv(0x6);
           spiflash_disable();
