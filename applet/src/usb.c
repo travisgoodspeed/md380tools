@@ -147,7 +147,7 @@ int usb_dnld_hook(){
       adr= *((uint32_t*)(packet+1));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       printf ("TDFU_SPIFLASHERASE64K %x \n", adr);
-      spiflash_wait();     
+//      spiflash_wait();     
 //      spiflash_block_erase64k(adr);
 
 
@@ -161,7 +161,8 @@ int usb_dnld_hook(){
       spi_sendrecv((adr>>  8) & 0xff);
       spi_sendrecv(adr & 0xff);                              
       spiflash_disable();   
-//      spiflash_wait();
+//      spiflash_wait();   // this is the problem :( 
+                           // must be polled via dfu commenad?
         
       break;
     
