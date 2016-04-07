@@ -525,7 +525,7 @@ af+ 0x802fc36 332 F_1069_spiflash_multiple_spiflash_program_page
 af+ 0x802fd82 70 spiflash_read
 CCa 0x802fd8e Read Data CMD 03h
 CCa 0x802fdae dummy_value
-af+ 0x802fdc8 58 spi_send_and_read_byte
+af+ 0x802fdc8 58 spi1_sendrecv
 af+ 0x802fe02 18 spiflash_write_enable
 af+ 0x802fe14 34 spiflash_wait_for_read_status_register
 af+ 0x802fe36 28 enable_spi_flash_and_sem
@@ -891,7 +891,7 @@ af+ 0x803d6d8 214 F_138
 af+ 0x803d7c0 282 F_395
 af+ 0x803d8da 192 F_396
 af+ 0x803da00 44 F_857
-af+ 0x803da2c 76 F_397
+af+ 0x803da2c 76 OSSemCreate
 af+ 0x803da78 218 OSSemPend
 CCa 0x803da78 void OSSemPend (OS_EVENT *pevent, INT32U timeout, INT8U *perr)
 af+ 0x803db68 92 OSSemPost

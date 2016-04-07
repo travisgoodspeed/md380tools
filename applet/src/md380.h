@@ -14,6 +14,22 @@ void strhex(char *, long);
 void wstrhex(wchar_t *, long);
 
 extern int (*spiflash_read)(void *dst, long adr, long len);
+extern void (*spiflash_write)(void *dst, long adr, long len);
+
+extern int (*spiflash_security_registers_read)(void *dst, long adr, long len);
+
+extern void (*spiflash_enable)();
+extern void (*spiflash_disable)();   
+extern void (*spiflash_wait)();   
+
+void (*spiflash_block_erase64k)(uint32_t);
+void (*spiflash_sektor_erase4k)(uint32_t);
+
+
+extern INT8U (*spi_sendrecv)(INT8U data); // SPI1              
+
+
+
 extern void (*gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
 			    short sx, short sy, //Source coords, maybe?
 			    short x, short y,   //X and Y position

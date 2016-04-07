@@ -12,8 +12,23 @@
 
 //Firmware calls to 2.032.
 
-
+//! Functions that handles spi flash .. handles semaphore internal
 int (*spiflash_read)(void *dst, long adr, long len) = 0x0802fd83;
+void (*spiflash_write)(void *dst, long adr, long len) =0x0802fe6b;
+
+int (*spiflash_security_registers_read)(void *dst, long adr, long len) = 0x080301bd;
+
+void (*spiflash_enable)() = 0x0802fe37;
+void (*spiflash_disable)() = 0x0802fe53;
+void (*spiflash_wait)()=0x0802fe15;
+
+void (*spiflash_block_erase64k)(uint32_t adr)=0x0802fbb7;
+void (*spiflash_sektor_erase4k)(uint32_t adr)=0x0802fb83;
+
+INT8U (*spi_sendrecv)(INT8U data) = 0x0802fdc9; // SPI1 
+
+
+
 
 void (*gfx_drawtext)(wchar_t *str,    //16-bit, little endian.
 		     short sx, short sy, //Source coords, maybe?
