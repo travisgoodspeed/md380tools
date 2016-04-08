@@ -20,7 +20,6 @@
 #include "gfx.h"
 #include "usersdb.h"
 
-//#include "../db/data.h"
 
 /* Used to avoid duplicate call endings. */
 int incall=0;
