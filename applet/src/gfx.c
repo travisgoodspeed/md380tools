@@ -86,7 +86,7 @@ void print_DebugLine_green(void){
   static int cnt=0;
  
   gfx_set_bg_color(0x00ff00);
-  gfx_set_fg_color(0x4488dd);
+  gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
 
   drawascii2("                  ",10,70);
@@ -107,8 +107,8 @@ void print_DebugLine_gray(void){
   char buf[10];
   static int cnt=0;
    
-  gfx_set_bg_color(0x555555);
-  gfx_set_fg_color(0x4488dd);
+  gfx_set_bg_color(0x222222);
+  gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
 
   drawascii2("                  ",10,70);
