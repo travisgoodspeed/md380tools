@@ -1,9 +1,9 @@
 
 
-all: users.csv repeaters.csv users.json repeaters.json data.h
+all: users.csv repeaters.csv users.json repeaters.json
 
 clean:
-	rm -f users.csv repeaters.csv users.json repeaters.json data.h
+	rm -f users.csv repeaters.csv users.json repeaters.json
 
 users.csv:
 	curl 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | sed 's,<br/>,,' >users.csv
@@ -14,8 +14,4 @@ repeaters.json:
 repeaters.csv:
 	curl 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=csv&header=0' | sed 's,<BR/>,,' >repeaters.csv
 
-data.h: users.csv
-	egrep ^262  users.csv | cut -d "," -f 1,2,3 | cut -d " " -f1 > 262.csv
-	dos2unix 262.csv
-	./conv.py > data.h
 
