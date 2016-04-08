@@ -1,0 +1,1 @@
+extern int find_dmr_user(char * str, int dmr_search, char *data, int maxstrlen);

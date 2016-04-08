@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "md380.h" 
        
-
-#define DATASIZE 10000000
-#define FILENAME "data.txt"
-char data[DATASIZE];
-
 char * getdata(char * dest, char * src, int number) {
-  int i;
-  for (i=0;i<number;i++) dest[i]=src[i];
+  spiflash_read(dest, (unsigned int) src, number);
+                                               
   return(dest);
 }
 
@@ -54,7 +50,7 @@ void trimtopreviousl(char  **p) {
   *p=pp;
 }
 
-int getdmrid(char * p) {
+int getfirstnumber(char * p) {
   char buffer[256];
   return (atoi(getdata(buffer, p, 10)));
 }
@@ -63,8 +59,8 @@ int  find_dmr(char* str, unsigned int dmr_search, char * dmr_first, char * dmr_l
   unsigned int dmr_first_id, dmr_last_id, new_id;
   char * p;
   
-  dmr_first_id = getdmrid(dmr_first);
-  dmr_last_id  = getdmrid(dmr_last);
+  dmr_first_id = getfirstnumber(dmr_first);
+  dmr_last_id  = getfirstnumber(dmr_last);
 
   if ( dmr_first_id == dmr_search ) {
     trim(dmr_first, str, maxstrlen);       
@@ -78,7 +74,7 @@ int  find_dmr(char* str, unsigned int dmr_search, char * dmr_first, char * dmr_l
 
   p=(dmr_last - dmr_first) / 2 + dmr_first;
   trimtonextl(&p);
-  new_id=getdmrid(p);
+  new_id=getfirstnumber(p);
 
   if ( dmr_first_id == dmr_last_id || new_id == dmr_first_id || new_id == dmr_last_id) {
     str[0]='\0';
@@ -86,7 +82,7 @@ int  find_dmr(char* str, unsigned int dmr_search, char * dmr_first, char * dmr_l
   }
  
   trimtonextl(&p);      
-  if ( getdmrid(p) == dmr_search) {
+  if ( getfirstnumber(p) == dmr_search) {
     trim(p,str,maxstrlen);                                                   
     return (1);
   }
@@ -103,59 +99,17 @@ int  find_dmr(char* str, unsigned int dmr_search, char * dmr_first, char * dmr_l
 }
 
 int find_dmr_user(char * str, int dmr_search, char *data, int maxstrlen) {
-  char buffer[80];
-//  FILE * f;
   unsigned int datasize;
   char * data_start;
   char * data_end;
 
-  datasize=atoi(getdata(buffer, data, 10));
+  datasize=getfirstnumber(data);
   data_start=data;
   trimtonextl(&data_start);
   data_end=data_start+datasize;
   trimtopreviousl(&data_end);
-  
+
   return(find_dmr(str, dmr_search, data_start, data_end , 80));
 
 }
 
-int main(int argc,char **argv) {
-  FILE *f;  
-  char str[80];
-  unsigned int dmr_search; 
-  char buffer[80];
-  int ret;
-  int i,ii;
-    
-  if (argc < 2 ) {
-    printf("enter %s <id>\n",argv[0]);
-    return(0);
-    }       
-
-  dmr_search=atoi(argv[1]);
-
-  f=fopen(FILENAME,"r");
-  if (f==NULL) {
-    printf("can't open %s\n",FILENAME);
-    return(0);
-    }
-  
-  fread(data, 1, DATASIZE, f);
-  ret=find_dmr_user(str, dmr_search, data, 80);
-  ii=0;
-  for (i=0;i<strlen(str);i++) {
-    if (str[i] == ',') {
-    buffer[ii++]='\0';
-    printf("%s\n",buffer);
-    ii=0;
-    } else {
-    buffer[ii++]=str[i];
-    }
-  }
-    
-  printf("%s\n",ret==1?str:"not in list");
-  printf("%d\n",strlen(str));
-  fclose(f);   
-     
-return(1);  
-}

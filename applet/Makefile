@@ -1,4 +1,4 @@
-SRCS = main.o usb.o gfx.o dmr.o printf.o dmesg.o stm32f4xx_it.o system_stm32f4xx.o os.o menu.o aes.o ambe.o spiflash.o
+SRCS = main.o usb.o gfx.o dmr.o printf.o dmesg.o stm32f4xx_it.o system_stm32f4xx.o os.o menu.o aes.o ambe.o spiflash.o usersdb.o
 PROJ_NAME=main
 
 

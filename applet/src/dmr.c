@@ -18,15 +18,16 @@
 #include "tooldfu.h"
 #include "config.h"
 #include "gfx.h"
+#include "usersdb.h"
 
-#include "../db/data.h"
+//#include "../db/data.h"
 
 /* Used to avoid duplicate call endings. */
 int incall=0;
 
 /* Bufferspace to transfer data*/
 char DebugLine1[30];
-char DebugLine2[30];
+char DebugLine2[80];
 
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
@@ -91,7 +92,7 @@ void *dmr_call_start_hook(char *pkt){
   //All but the top row is overwritten,
   //so any status has to be logged here.
   char buf[15];
-  
+  int  ret;
   //Print the target adress to the screen.
   sprintf(buf,
 	  "%d %d",dst,src);
@@ -99,18 +100,11 @@ void *dmr_call_start_hook(char *pkt){
 //	    160,20);
 
 
-  sprintf(DebugLine1, "%d %d", dst,src );
+  sprintf(DebugLine1, "%d -> %d", src, dst );
   
-  int n=0;
-  for (n=0;n<sizeof(db) /sizeof(struct call);n++) {
-    if (db[n].id == src) {   
-      printf("%s %s",
-        db[n].call,
-        db[n].name);
-      sprintf(DebugLine2, "%s %s",  db[n].call, db[n].name);
-      break;
-    }
-  }
+  ret=find_dmr_user(DebugLine2, src, (void *) 0x100000, 80);
+
+                                              
 
 
   //This prints a dot at every resynchronization frame.

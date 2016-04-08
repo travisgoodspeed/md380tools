@@ -8,6 +8,7 @@
 #include "config.h"
 #include "gfx.h"
 #include "printf.h"
+#include "string.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -82,9 +83,9 @@ void lcd_background_led(int on) {
 }
 
 void print_DebugLine_green(void){
-  char buf[10];
-  static int cnt=0;
- 
+  char buf[30];
+  int n,i,ii;
+    
   gfx_set_bg_color(0x00ff00);
   gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
@@ -92,11 +93,26 @@ void print_DebugLine_green(void){
   drawascii2("                  ",10,70);
   drawascii2("                  ",10,80);
   drawascii2("                  ",10,90);
+  drawascii2("                  ",10,100);
+  drawascii2("                  ",10,110);
+  drawascii2("                  ",10,120);
 
-  drawascii2(DebugLine1, 10, 70);//160 154
-  drawascii2(DebugLine2, 10, 80);//160 190
-  sprintf(buf, "%d", cnt++);
-  drawascii2(buf, 10, 90);//160 190
+
+  ii=0;
+  n=0;
+  for (i=0;i<strlen(DebugLine2) || n < 4 ;i++) {
+    if (DebugLine2[i] == ',') {
+      buf[ii++]='\0';
+      drawascii2(buf, 10, 70+n*10);
+      ii=0;
+      n++;
+    } else {
+      if (ii<29) buf[ii++]=DebugLine2[i];
+      }
+  }
+                                           
+  drawascii2(DebugLine1, 10,70);
+
 
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);
@@ -104,21 +120,35 @@ void print_DebugLine_green(void){
 }
 
 void print_DebugLine_gray(void){
-  char buf[10];
-  static int cnt=0;
+  char buf[30];
+  int n,i,ii;
    
-  gfx_set_bg_color(0x222222);
+  gfx_set_bg_color(0x888888);
   gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
 
   drawascii2("                  ",10,70);
   drawascii2("                  ",10,80);
   drawascii2("                  ",10,90);
+  drawascii2("                  ",10,100);
+  drawascii2("                  ",10,110);
+  drawascii2("                  ",10,120);
 
-  drawascii2(DebugLine1, 10, 70);//160 154
-  drawascii2(DebugLine2, 10, 80);//160 190
-  sprintf(buf, "%d", cnt++);
-  drawascii2(buf, 10, 90);//160 190
+  ii=0;
+  n=0;
+  for (i=0;i<strlen(DebugLine2) || n < 4 ;i++) {
+    if (DebugLine2[i] == ',') {
+      buf[ii++]='\0';
+      drawascii2(buf, 10, 70+n*10);
+      ii=0;
+      n++;
+    } else {
+      if (ii<29) buf[ii++]=DebugLine2[i];
+      }
+  }
+
+
+  drawascii2(DebugLine1, 10,70);
 
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);
