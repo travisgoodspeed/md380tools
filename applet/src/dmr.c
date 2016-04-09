@@ -91,7 +91,6 @@ void *dmr_call_start_hook(char *pkt){
   //All but the top row is overwritten,
   //so any status has to be logged here.
   char buf[15];
-  int  ret;
   //Print the target adress to the screen.
   sprintf(buf,
 	  "%d %d",dst,src);
@@ -101,7 +100,7 @@ void *dmr_call_start_hook(char *pkt){
 
   sprintf(DebugLine1, "%d -> %d", src, dst );
   
-  ret=find_dmr_user(DebugLine2, src, (void *) 0x100000, 80);
+  find_dmr_user(DebugLine2, src, (void *) 0x100000, 80);
 
                                               
 

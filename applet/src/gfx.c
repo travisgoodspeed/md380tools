@@ -82,11 +82,11 @@ void lcd_background_led(int on) {
   }
 }
 
-void print_DebugLine_green(void){
+void print_DebugLine(unsigned int bg_color) {
   char buf[30];
   int n,i,ii;
     
-  gfx_set_bg_color(0x00ff00);
+  gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
 
@@ -113,44 +113,15 @@ void print_DebugLine_green(void){
                                            
   drawascii2(DebugLine1, 10,70);
 
-
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);
   gfx_set_bg_color(0xff000000);
 }
 
-void print_DebugLine_gray(void){
-  char buf[30];
-  int n,i,ii;
-   
-  gfx_set_bg_color(0x888888);
-  gfx_set_fg_color(0x000000);
-  gfx_select_font((void *) 0x809bcec);
+void print_DebugLine_green(void) {
+  print_DebugLine(0x00ff00);
+} 
 
-  drawascii2("                  ",10,70);
-  drawascii2("                  ",10,80);
-  drawascii2("                  ",10,90);
-  drawascii2("                  ",10,100);
-  drawascii2("                  ",10,110);
-  drawascii2("                  ",10,120);
-
-  ii=0;
-  n=0;
-  for (i=0;i<strlen(DebugLine2) || n < 4 ;i++) {
-    if (DebugLine2[i] == ',') {
-      buf[ii++]='\0';
-      drawascii2(buf, 10, 70+n*10);
-      ii=0;
-      n++;
-    } else {
-      if (ii<29) buf[ii++]=DebugLine2[i];
-      }
-  }
-
-
-  drawascii2(DebugLine1, 10,70);
-
-  gfx_select_font((void *) 0x80d0fac);
-  gfx_set_fg_color(0xff8032);
-  gfx_set_bg_color(0xff000000);
-}   
+void print_DebugLine_gray(void) {
+  print_DebugLine(0x888888);
+}
