@@ -1,6 +1,14 @@
+/*! \file usersdb.c
+\brief There is the functionality 
+       which dmr id to the entry from the users.csv in flash reads
+       the first line is the size im byte     
+*/
+            
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "md380.h" 
        
 char * getdata(char * dest, char * src, int number) {
