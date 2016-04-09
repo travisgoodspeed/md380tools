@@ -9,115 +9,121 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "md380.h" 
-       
-char * getdata(char * dest, char * src, int number) {
-  spiflash_read(dest, (unsigned int) src, number);
-                                               
-  return(dest);
+
+/* All user database data is accessed through getdata.
+ * This makes it easier to adapt to different kinds of sources.
+ */
+
+#ifdef DMR_USERDB_NOT_IN_FLASH
+
+static char * getdata(char * dest, const char *  src, int count) {
+    memcpy(dest, src, count);
+    return dest;
 }
 
+#else /* user DB is in flash memory */
 
-void trim(char *in, char *out, int max) {
-  int i=0;
-  char buffer[256];
-  getdata(buffer, in, 256);
-  while ( buffer[i] != '\n') {
-    out[i]= buffer[i];
-    i++;
-    if (i > (max-2)) { 
-      out[i]='\0';
-      return;
+#include "md380.h"
+
+/* All user database data is accessed through this function.
+ * This makes it easier to adapt to different kinds of sources.
+ */
+static char * getdata(char * dest, const char * src, int count) {
+    spiflash_read(dest, (long) src, count);
+    return dest;
+}
+
+#endif
+
+
+/* copies a line of text starting at in[] that is terminated
+ * with a linefeed '\n' or '\0' to out[]. At most outsize characters
+ * are written to out[] (including null terminator). Lines that
+ * don't fit into out[] are truncated. out[] will always be
+ * null terminated if outsize > 0.
+ */
+static void readline(char *out, const char *in, int outsize) {
+    if (outsize <= 0) return;
+    char buff[64];
+    const int blen = sizeof(buff);
+    outsize -= 1; // for null terminator
+    while (outsize > 0) {
+        int chunk = outsize > blen ? blen : outsize;
+        getdata(buff, in, chunk);
+        for (int i = 0; i < chunk; ++i) {
+            char c = buff[i];
+            if (c == '\0' || c == '\n') {
+                *out++ = '\0';
+                return;
+            }
+            *out++ = c;
+        }
+        in += chunk;
+        outsize -= chunk;
     }
-  }
-  out[i]='\0';
+    *out = '\0';
 }
 
-
-void trimtonextl(char **p) {
-  char buffer[256];
-  char *pp;
-  pp=*p;
- 
-  getdata(buffer, pp, 256);  
-  while ( buffer[pp-*p] != '\n') pp++;
-  pp++;
-  *p=pp;
-}
-
-void trimtopreviousl(char  **p) {
-  char buffer[256];
-  char *pp;
-  pp=*p;
-       
-  getdata(buffer, pp - 255, 256);     
-  while ( buffer[pp-*p+255]  != '\n') pp--;
-  pp--;
-  while ( buffer[pp-*p+255]  != '\n') pp--;
-  pp++;
-  *p=pp;
-}
-
-int getfirstnumber(char * p) {
-  char buffer[256];
-  return (atoi(getdata(buffer, p, 10)));
-}
-
-int  find_dmr(char* str, unsigned int dmr_search, char * dmr_first, char * dmr_last, int maxstrlen) {
-  unsigned int dmr_first_id, dmr_last_id, new_id;
-  char * p;
-  
-  dmr_first_id = getfirstnumber(dmr_first);
-  dmr_last_id  = getfirstnumber(dmr_last);
-
-  if ( dmr_first_id == dmr_search ) {
-    trim(dmr_first, str, maxstrlen);       
-    return (1);
+/* searches for a newline character starting at *p and returns
+ * the pointer to the character following that newline
+ */
+static const char* next_line_ptr(const char* p) {
+    char buffer[64];
+    const int blen = sizeof(buffer);
+    for (;;) {
+        getdata(buffer, p, blen);
+        int linefeedidx = 0;
+        while (linefeedidx < blen && buffer[linefeedidx] != '\n') {
+            ++linefeedidx;
+        }
+        if (linefeedidx < blen) {
+            return p + linefeedidx + 1;
+        }
+        p += blen;
     }
-
-  if ( dmr_last_id  == dmr_search ) {
-    trim(dmr_last, str, maxstrlen);
-    return (1);
-    }
-
-  p=(dmr_last - dmr_first) / 2 + dmr_first;
-  trimtonextl(&p);
-  new_id=getfirstnumber(p);
-
-  if ( dmr_first_id == dmr_last_id || new_id == dmr_first_id || new_id == dmr_last_id) {
-    str[0]='\0';
-    return (0);
-  }
- 
-  trimtonextl(&p);      
-  if ( getfirstnumber(p) == dmr_search) {
-    trim(p,str,maxstrlen);                                                   
-    return (1);
-  }
-  
-  if ( new_id > dmr_search) {
-    dmr_last = (dmr_last - dmr_first) / 2 + dmr_first;
-    trimtonextl(&dmr_last);          
-  } 
-  else {
-    dmr_first = (dmr_last - dmr_first) / 2 + dmr_first;
-    trimtonextl(&dmr_first);
-  }
-  return (find_dmr( str, dmr_search,  dmr_first,  dmr_last, maxstrlen));
 }
 
-int find_dmr_user(char * str, int dmr_search, char *data, int maxstrlen) {
-  unsigned int datasize;
-  char * data_start;
-  char * data_end;
+/* parse number as text and return its numerical value
+ */
+static long getfirstnumber(const char * p) {
+  char buffer[64];
+  return (atol(getdata(buffer, p, 60)));
+}
 
-  datasize=getfirstnumber(data);
-  data_start=data;
-  trimtonextl(&data_start);
-  data_end=data_start+datasize;
-  trimtopreviousl(&data_end);
+/* tries to locate and copy the line of text that starts with the
+ * number dmr_search to the output buffer outstr. The return value
+ * indicates whether the DMR ID was found (1) or not (0).
+ */
+static int find_dmr(char *outstr, long dmr_search,
+                    const char *dmr_begin, const char *dmr_end,
+                    int outsize)
+{
+    /* As long as there is at least one line of text between
+       offsets dmr_begin and dmr_end... */
+    while (dmr_begin != dmr_end) {
+        const char* dmr_test = next_line_ptr(dmr_begin + (dmr_end - dmr_begin) / 2);
+        if (dmr_test == dmr_end) { dmr_test = next_line_ptr(dmr_begin); }
+        if (dmr_test == dmr_end) { dmr_test = dmr_begin; }
+        long id = getfirstnumber(dmr_test);
+        if (id == dmr_search) {
+            readline(outstr, dmr_test, outsize);
+            return 1;
+        }
+        if (dmr_search < id) {
+            dmr_end = dmr_test;
+        } else {
+            dmr_begin = next_line_ptr(dmr_test);
+        }
+    }
+    return 0;
+}
 
-  return(find_dmr(str, dmr_search, data_start, data_end , 80));
-
+int find_dmr_user(char *outstr, int dmr_search,
+                  const char *data, int outsize)
+{
+    const long datasize = getfirstnumber(data);
+    const char *data_start = next_line_ptr(data);
+    const char *data_end = data_start + datasize; // exclusive
+    return find_dmr(outstr, dmr_search, data_start, data_end, outsize);
 }
 
