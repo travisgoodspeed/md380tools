@@ -159,7 +159,7 @@ class Tool(DFU):
         cmd=0x00; #DMESG
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
         self.get_status(); #this changes state
-        time.sleep(0.1);
+        #time.sleep(0.1);
         status=self.get_status(); #this gets the status
         buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
         
@@ -228,16 +228,21 @@ def coredump(dfu,filename):
             buf=dfu.peek(adr,1024);
             f.write(buf);
         f.close();
-def hexdump(dfu,address):
+def hexdump(dfu,address,length=512):
     """Dumps from memory to the screen"""
     adr=int(address,16);
-    buf=dfu.peek(adr,512);
+    buf=dfu.peek(adr,length);
     i=0;
     for b in buf:
         sys.stdout.write("%02x "%b);
         i=i+1;
         if i%16==0: sys.stdout.write("\n");
         elif i%8==0: sys.stdout.write(" ");
+def hexwatch(dfu,address):
+    """Dumps from memory to the screen"""
+    while True:
+        hexdump(dfu,address,16);
+        time.sleep(0.05);
 
 def flashdump(dfu,filename):
     """Dumps flash."""
@@ -264,8 +269,8 @@ def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
     while True:
         sys.stdout.write(dfu.getdmesg());
+        #time.sleep(0.01);
         sys.stdout.flush();
-        #time.sleep(0.05);
 def c5000(dfu):
     """Prints some DMR registers."""
     for r in range(0,0x87):
@@ -465,6 +470,10 @@ if __name__ == '__main__':
                 print "Dumping memory from %s." % sys.argv[2];
                 dfu=init_dfu();
                 hexdump(dfu,sys.argv[2]);
+            elif sys.argv[1] == 'hexwatch':
+                print "Dumping memory from %s." % sys.argv[2];
+                dfu=init_dfu();
+                hexwatch(dfu,sys.argv[2]);
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]));
 

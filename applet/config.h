@@ -10,3 +10,8 @@
 //#define AMBECORRECTEDPRINT
 //#define AMBEUNCORRECTEDPRINT
 
+/* This one prints all incoming audio as WAV.  Very noisy, but allows
+   for recorindgs.
+*/
+//#define AMBEWAVPRINT
+

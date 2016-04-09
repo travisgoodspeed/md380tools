@@ -317,6 +317,15 @@ if __name__== '__main__':
     ];
     for adr in unpacklist:
         merger.hookbl(adr,sapplet.getadr("ambe_unpack_hook"));
+
+    #Hook calls that produce WAV audio.  (Maybe.)
+    wavdeclist=[
+        0x08047e00,
+        0x0804893a,
+        0x08048ba8,
+        0x08048c18];
+    for adr in wavdeclist:
+        merger.hookbl(adr,sapplet.getadr("ambe_decode_wav_hook"));
     
     print "Hooking a menu call.";
     merger.setword(0x08039d98,

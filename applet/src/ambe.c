@@ -38,12 +38,13 @@ int ambe_encode_thing_hook(char *a1, int a2, int *a3, int a4,
    we'll get the bits of the new frame without error correction.
  */
 int ambe_unpack_hook(int a1, int a2, char length, int a4){
+  /* Dump the previous, error-corrected AMBE frame.  For some reason,
+     these aren't decoding properly in DSD. */
+
+#ifdef AMBECORRECTEDPRINT
   short *bits=(short*) a1;
   static int i;
 
-  /* Dump the previous, error-corrected AMBE frame. */
-
-#ifdef AMBECORRECTEDPRINT
   printf("AMBE2+ Corr: ");
   for(i=0;i<49;i++){
     md380_putc(NULL,bits[i]?'1':'0');
@@ -54,8 +55,8 @@ int ambe_unpack_hook(int a1, int a2, char length, int a4){
   
   ambe_unpack(a1,a2,length,a4);
 
-  /* Dump the new, uncorrected AMBE frame.  Bits won't
-     make sense until after decoding. */
+  /* Dump the new, uncorrected AMBE frame.  Bits won't make sense
+     until after decoding. */
 #ifdef AMBEUNCORRECTEDPRINT
   printf("AMBE2+:  ");
   for(i=0;i<length;i++){
@@ -66,4 +67,43 @@ int ambe_unpack_hook(int a1, int a2, char length, int a4){
   
 
   return 0;
+}
+
+/* The ambe_decode_wav() function decodes AMBE2+ bits to 80 samples
+   (160 bytes) of 8kHz audio as signed shorts.  This hook will
+   optionally print that data to the dmesg buffer, where it can be
+   extracted and recorded on the host.
+*/
+int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
+			 int a4, short a5, short a6, int a7){
+  //First we call the original function.
+  int toret=ambe_decode_wav(a1, eighty, bitbuffer,
+			    a4, a5, a6, a7);
+
+  /* Print the paramters
+  printf("ambe_decode_wav(0x%08x, %d, 0x%08x,\n"
+    "%d, %d, %d, 0x%08x);\n",
+    a1, eighty, bitbuffer,
+    a4, a5, a6, a7);
+  */
+
+
+  /* This is very noisy, so we don't enable it by default.  It prints
+     the WAV as hex pairs, which will quickly flood the buffer if it
+     isn't cleared in time.
+   */
+#ifdef AMBEWAVPRINT
+  //Does this really need to be in a critical section?
+  int state=OS_ENTER_CRITICAL();/
+  
+  //A1 holds audio as signed LE shorts.
+  printf("WAV: ");
+  printhex(a1,160);
+  printf("\n");
+  
+  OS_EXIT_CRITICAL(state);
+#endif //AMBEWAVPRINT
+
+  
+  return toret;
 }
