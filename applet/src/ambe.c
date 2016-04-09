@@ -76,6 +76,20 @@ int ambe_unpack_hook(int a1, int a2, char length, int a4){
 */
 int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
 			 int a4, short a5, short a6, int a7){
+
+
+#ifdef AMBEPRINT
+  short *bits=(short*) bitbuffer;
+  static int i;
+
+  printf("AMBE2+ Corr: ");
+  for(i=0;i<49;i++){
+    md380_putc(NULL,bits[i]?'1':'0');
+  }
+  md380_putc(NULL,'\n');
+#endif //AMBEPRINT
+
+  
   //First we call the original function.
   int toret=ambe_decode_wav(a1, eighty, bitbuffer,
 			    a4, a5, a6, a7);
@@ -86,6 +100,8 @@ int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
     a1, eighty, bitbuffer,
     a4, a5, a6, a7);
   */
+
+  
 
 
   /* This is very noisy, so we don't enable it by default.  It prints
