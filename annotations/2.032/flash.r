@@ -639,12 +639,12 @@ af+ 0x8028fa2 112 F_4239
 CCa 0x8028fde ConfigData + 0x0  (byte) F_4239
 af+ 0x8029020 56 F_4240
 af+ 0x80290c8 1854 F_4137
-CCa 0x80293a6 ConfigData + 0x2  (byte) F_4137
-CCa 0x80294ec ConfigData + 0x2  (byte) F_4137
-CCa 0x80295a6 ConfigData + 0x2  (byte) F_4137
-CCa 0x80295d2 ConfigData + 0x2  (byte) F_4137
-CCa 0x80295d2 ConfigData + 0x2  (byte) F_4137
-CCa 0x8029778 ConfigData + 0x2  (byte) F_4137
+CCa 0x80293a6 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80294ec Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80295a6 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80295d2 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80295d2 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x8029778 Get ConfigData + 0x2  (byte) F_4137
 af+ 0x8029810 104 F_4241
 af+ 0x8029898 156 F_4242
 af+ 0x8029938 120 F_4243
