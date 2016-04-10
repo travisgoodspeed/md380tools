@@ -193,7 +193,7 @@ af+ 0x8019534 164 F_5108
 af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
 CCa 0x8019728 Set ConfigData + 0x15 F_5110
-af+ 0x8019734 250 F_5111
+af+ 0x8019734 250 Add_Menu_Entry_Intro_Screen
 CCa 0x8019792 Get ConfigData + 0x2 F_5111
 CCa 0x80197b0 1 to SP,8
 CCa 0x80197b4 0 to SP,4 
