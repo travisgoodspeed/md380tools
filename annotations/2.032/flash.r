@@ -29,6 +29,7 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -44,8 +45,18 @@ CCa 0x800c0f0 F_5036 0x08093b25
 CCa 0x800c108 F_5010 08093975
 CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
 CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
-af+ 0x800c188 1448 F_84
-af+ 0x800c730 86 F_249
+af+ 0x800c188 1448 Create_MainMenyEntry
+CCa 0x800c270 ... C.o.n.t.a.c.t.s.
+CCa 0x800c2b4 ... S.c.a.n
+CCa 0x800c2ea ... S.c.a.n
+CCa 0x800c31a ... Z.o.n.e
+CCa 0x800c33a ... 0x802bfd4 Create_Menu_Entry_Message
+CCa 0x800c34c ... M.e.s.s.a.g.e.s.
+CCa 0x800c37e ... C.a.l.l...Log
+CCa 0x800c3b0 ... U.t.i.l.i.t.i.e.s
+CCa 0x800c462 ... C.o.n.t.a.c.t.s
+CCa 0x800c49e ... S.c.a.n
+af+ 0x800c730 86 F_249_Create_MenuEntry
 af+ 0x800c7e8 2980 F_4140
 af+ 0x800d390 378 F_4495
 af+ 0x800d518 320 F_4141
@@ -68,6 +79,7 @@ af+ 0x800dc56 230 F_4284
 af+ 0x800dd40 284 F_1056
 af+ 0x800de5c 96 F_972
 af+ 0x800debc 126 F_787
+CCa 0x800ded8 ConfigData + 0x17 (byte) F_787
 af+ 0x800df84 996 F_4285
 CCa 0x800e2b0 C.o.n.t.a.c.t.s.
 af+ 0x800e3c4 1820 F_4142
@@ -75,6 +87,7 @@ af+ 0x800eb10 414 F_4144
 af+ 0x800ecc0 418 F_4145
 af+ 0x800ee94 1422 F_4143
 af+ 0x800f422 48 F_251
+af+ 0x800f452 18 F_5143
 af+ 0x800f464 32 F_86
 af+ 0x800f488 294 F_4155
 af+ 0x800fc12 34 F_4286
@@ -94,17 +107,218 @@ CCa 0x801252a ret value r0, r1
 CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
+af+ 0x80126a8 256 Create_Menu_Utilies
+CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_RadioSettings
+CCa 0x8012706 ... R.a.d.i.o...S.e.t.t.i.n.g.s
+CCa 0x8012720 0x80152ec .. Create_Menu_Entry_RadioInfo
+CCa 0x8012730 ... R.a.d.i.o...I.n.f.o
+CCa 0x8012766 0x80127d0 .. Create_Menu_Entry_ProgramRadio
+CCa 0x8012776 ... P.r.o.g.r.a.m...R.a.d.i.o
+af+ 0x80127d0 880 Create_Menu_Entry_ProgramRadio
+af+ 0x8012b54 854 F_5075
+CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
+CCa 0x8012bb2 ConfigData + 1d (byte) F_5075
+CCa 0x8012bc2 ConfigData + 1e (byte) F_5075
+CCa 0x8012bd2 ConfigData + 1f (byte) F_5075
+af+ 0x80152ec 198 Create_Menu_Entry_RadioInfo
+af+ 0x8015464 122 F_5076
+CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID F_5076
 af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
+af+ 0x8016684 1312 Create_Menu_Entry_RadioSettings
+CCa 0x8016744 ... T.a.l.k.a.r.o.u.n.d
+CCa 0x8016778 ... T.a.l.k.a.r.o.u.n.d
+CCa 0x80167bc ... T.o.n.e.s./.A.l.e.r.t.s
+CCa 0x801680e ... P.o.w.e.r
+CCa 0x8016858 ... B.a.c.k.l.i.g.h.t
+CCa 0x80168ac ... S.q.u.e.l.c.h.
+CCa 0x80168d6 4 to sp,8
+CCa 0x80168da 0 to sp,4
+CCa 0x80168de 0x98 to sp
+CCa 0x80168e0 0x800f453 .. 0x800f452 F_5143() to r3
+CCa 0x80168e4 0x800f452 .. Create_Menu_Entry_Intro_Screen(),r2
+CCa 0x80168f6 ... I.n.t.r.o...S.c.r.e.e.n
+CCa 0x80168f6 ...    I.n.t.r.o...S.c.r.e.e.n
+CCa 0x8016902  (byte)[0x2001d3c2]+5 to r0 .. [0x2001d3c2]+1 = 11
+CCa 0x8016940 ... K.e.y.p.a.d...L.o.c.k.
+CCa 0x8016978 ... L.a.n.g.u.a.g.e
+CCa 0x80169c2 ... L.E.D...I.n.d.i.c.a.t.o.r
+CCa 0x8016a12 ... V.O.X.
+CCa 0x8016a82 ... P.a.s.s.w.d
+CCa 0x8016ab6 ... S.i.t.e...R.o.a.m.i.n.g
+CCa 0x8016aee ... R.e.c.o.r.d
+CCa 0x8016b24 ... C.l.o.c.k
+CCa 0x8016b6e ... M.o.d.e
+af+ 0x8016bb8 238 F_5077
+CCa 0x8016c06 ConfigData + 0x17 (byte) F_5077
+af+ 0x8016cb0 132 F_5078
+CCa 0x8016d2c Set ConfigData + 0x17 (Byte) F_5078
+af+ 0x8016d3c 130 F_5079
+CCa 0x8016db6 Set ConfigData + 0x17 (Byte) F_5079
+af+ 0x8016dcc 152 Create_Menu_Entry_VOX
+CCa 0x8016e60 ConfigData + 0x17 (Byte) F_5080
+af+ 0x8016f90 146 F_5081
+CCa 0x8017006 Set ConfigData + 0xb (Byte) F_5081
 af+ 0x8017204 92 F_4288
 af+ 0x8017268 104 F_4289
 af+ 0x80172ec 236 F_973
 af+ 0x8017612 56 F_4083
 af+ 0x8017650 124 F_4085
+af+ 0x8017938 250 Create_Menu_Entry_Talkaround
+af+ 0x8017a60 590 F_5082
+CCa 0x8017bbe Get ConfigData + 0x1 F_5082
+CCa 0x8017bd0 Get ConfigData + 0x1 F_5082
+CCa 0x8017be2 Get ConfigData + 0x1 F_5082
+CCa 0x8017bec Set ConfigData + 0x1 F_5082
+CCa 0x8017c06 Get ConfigData + 0x1 F_5082
+CCa 0x8017c10 Set ConfigData + 0x1 F_5082
+CCa 0x8017c1c Get ConfigData + 0x0 F_5082
+CCa 0x8017c32 Get ConfigData + 0x2 F_5082
+CCa 0x8017c34 Bit 5
+CCa 0x8017c3c Set ConfigData + 0x2 F_5082
+CCa 0x8017c48 Get ConfigData + 0x1 F_5082
+CCa 0x8017c4a Bit 3
+CCa 0x8017c52 Set ConfigData + 0x1 F_5082
+CCa 0x8017c5e Get ConfigData + 0x2 F_5082
+CCa 0x8017c74 Get ConfigData + 0x0 F_5082
+CCa 0x8017c7e Set ConfigData + 0x0 F_5082
+af+ 0x8017cd4 674 F_5083_Init...
+CCa 0x8017e84 Get ConfigData + 0x1 F_5083
+CCa 0x8017e8e Set ConfigData + 0x1 F_5083
+CCa 0x8017ea8 Get ConfigData + 0x1 F_5083
+CCa 0x8017eb2 Set ConfigData + 0x1 F_5083
+CCa 0x8017ecc Get ConfigData + 0x1 F_5083
+CCa 0x8017ed6 Set ConfigData + 0x1 F_5083
+CCa 0x8017ee2 Get ConfigData + 0x0 F_5083
+CCa 0x8017eec Set ConfigData + 0x0 F_5083
+CCa 0x8017ef8 Get ConfigData + 0x2 F_5083
+CCa 0x8017efa Unset Bit 5
+CCa 0x8017f02 Set ConfigData + 0x2 F_5083
+CCa 0x8017f0e Get ConfigData + 0x1 F_5083
+CCa 0x8017f18 Set ConfigData + 0x1 F_5083
+CCa 0x8017f26 Get ConfigData + 0x2 F_5083
+CCa 0x8017f28 Unset Bit 4
+CCa 0x8017f30 Set ConfigData + 0x2 F_5083
+CCa 0x8017f3c Get ConfigData + 0x0 F_5083
+CCa 0x8017f46 Set ConfigData + 0x0 F_5083
+af+ 0x8017f78 394 Create_Menu_Entry_Tones_Alerts
+af+ 0x8018104 220 F_5085
+CCa 0x8018146 Get ConfigData + 0x1 F_5085
+af+ 0x80181f0 398 F_5086
+CCa 0x8018258 Get ConfigData + 0x1 F_5086
+CCa 0x80182e0 Get ConfigData + 0x1 F_5086
+af+ 0x8018394 296 F_5087
+af+ 0x80184c0 254 F_5088
+CCa 0x801851c Get ConfigData + 0x2 F_5088
+af+ 0x80185cc 236 F_5089
+CCa 0x8018614 Get ConfigData + 0x1 F_5089
+af+ 0x80186b8 170 F_5090
+af+ 0x801876c 152 F_5091
+af+ 0x8018804 248 F_5092
+af+ 0x8018900 192 F_5093
+af+ 0x80189d8 350 F_5094
+af+ 0x8018b3c 134 F_5095
+af+ 0x8018bc2 132 F_5096
+af+ 0x8018c58 228 F_5097
+CCa 0x8018ca0 Get ConfigData + 0x0 F_5097
+af+ 0x8018d3c 176 F_5098
+af+ 0x8018e00 190 F_5099
+af+ 0x8018ecc 250 Create_Menu_Entry_Power
+af+ 0x8018fcc 154 F_5101
+af+ 0x801906c 154 F_5102
+af+ 0x8019128 394 Create_Menu_Entry_Backlight
+CCa 0x801918c Get ConfigData + 0x15 F_5103
+af+ 0x80192b2 130 F_5104
+CCa 0x801932c Set ConfigData + 0x15 F_5104
+af+ 0x801933c 130 F_5105
+af+ 0x80193c8 126 F_5106
+af+ 0x801944c 232 Create_Menu_Entry_Squelch
+af+ 0x8019534 164 F_5108
+af+ 0x80195f0 182 F_5109
+af+ 0x80196a6 138 F_5110
+CCa 0x8019728 Set ConfigData + 0x15 F_5110
+af+ 0x8019734 250 Create_Menu_Entry_Intro_Screen
+CCa 0x8019792 Get ConfigData + 0x2 F_5111
+CCa 0x80197b0 1 to SP,8
+CCa 0x80197b4 0 to SP,4 
+CCa 0x80197b8 0x8b to SP
+CCa 0x80197ba 0x800f453 .. 0x800f452 F_5143()  to r3
+CCa 0x80197be 0x8019834 .. SetConfig0x02Bit4andmore(),r2
+CCa 0x80197d0 [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b0] to r1 .. [0x200003b0] = 0x080fa348 .. [0x080fa348] = "P.i.c.t.u.r.e"
+CCa 0x80197d6 (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
+CCa 0x80197dc 1 to SP,8
+CCa 0x80197e2 0 to SP,4
+CCa 0x80197e6 0x8b to SP
+CCa 0x80197e8 0x800f453 .. 0x800f452 F_5143() to r3
+CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore(),r2
+CCa 0x80197fe [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b4] to r1 .. [0x200003b4] = 0x080d1f48 .. [0x080d1f48] ="C.h.a.r...S.t.r.i.n.g" 
+CCa 0x8019808 (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2]+1 = 7 ???
+af+ 0x8019834 132 SetConfig0x02Bit4andmore
+CCa 0x80198a8 Get ConfigData + 0x2 F_5112
+CCa 0x80198aa SetBit 4
+CCa 0x80198b0 Set ConfigData + 0x2 F_5112
+af+ 0x80198c0 130 UnsetConfig0x02Bit4andmore
+CCa 0x8019932 Get ConfigData + 0x2 F_5113
+CCa 0x8019934 Unset Bit 4 
+CCa 0x801993a Set ConfigData + 0x2 F_5113
+af+ 0x8019948 380 Create_Menu_Entry_KeypadLock
+CCa 0x80199a8 Get ConfigData + 0x16 F_5114
+af+ 0x8019ac4 126 F_5115
+CCa 0x8019b3a Set ConfigData + 0x16 F_5115
+af+ 0x8019b54 130 F_5116
+CCa 0x8019bce Set ConfigData + 0x16 F_5116
+af+ 0x8019be0 126 F_5117
+CCa 0x8019c56 Set ConfigData + 0x16 F_5117
+af+ 0x8019c68 120 F_5118
+CCa 0x8019cd8 Set ConfigData + 0x16 F_5118
 af+ 0x8019ce0 272 F_4160
-af+ 0x801ae24 282 F_4161
+CCa 0x8019d64 ConfigData + 0x16 (byte) F_4160
+af+ 0x8019dfc 208 Create_Menu_Entry_Language
+af+ 0x8019ecc 120 F_5120
+af+ 0x8019f4c 122 F_5121
+af+ 0x8019fd0 256 Create_Menu_Entry_LEDIndicator
+CCa 0x801a02e Get ConfigData + 0x0 F_5122
+af+ 0x801a0e0 304 Create_Menu_Entry_wtf_5235235
+af+ 0x801a210 198 F_5124
+af+ 0x801a2d6 26 F_5125
+af+ 0x801a2f4 114 F_5126
+af+ 0x801a374 114 F_5127
+af+ 0x801a3ec 114 F_5128
+af+ 0x801a45e 146 F_5129
+af+ 0x801a4fc 520 F_5130
+CCa 0x801a546 Get ConfigData + 0x18 F_5130
+CCa 0x801a54e Get ConfigData + 0x19 F_5130
+CCa 0x801a556 Get ConfigData + 0x1a F_5130
+CCa 0x801a55e Get ConfigData + 0x1b F_5130
+CCa 0x801a566 Get ConfigData + 0x18 F_5130
+CCa 0x801a576 Get ConfigData + 0x19 F_5130
+CCa 0x801a586 Get ConfigData + 0x1a F_5130
+CCa 0x801a596 Get ConfigData + 0x1b F_5130
+CCa 0x801a5f2 Get ConfigData + 0x1 F_5130
+af+ 0x801a714 174 F_5131
+CCa 0x801a786 Get ConfigData + 0x1 F_5131
+CCa 0x801a790 Set ConfigData + 0x1 F_5131
+af+ 0x801a7cc 156 F_5132
+CCa 0x801a82c Get ConfigData + 0x1 F_5132
+CCa 0x801a836 Set ConfigData + 0x1 F_5132
+af+ 0x801a870 178 F_5133
+af+ 0x801a938 322 F_5134
+CCa 0x801a9be Get ConfigData + 0x1 F_5134
+af+ 0x801aabc 408 F_5135
+af+ 0x801ac60 452 F_5144
+af+ 0x801ae24 282 F_5136
+af+ 0x801af58 298 F_5137
+CCa 0x801afc0 Get ConfigData + 0x18 F_5137
+CCa 0x801afce Get ConfigData + 0x19 F_5137
+CCa 0x801afdc Get ConfigData + 0x1a F_5137
+CCa 0x801afea Get ConfigData + 0x1b F_5137
+af+ 0x801b082 28 F_5138
 af+ 0x801b09e 188 F_4146
+af+ 0x801b164 98 F_5139
 af+ 0x801b1c6 156 F_4162
+af+ 0x801b270 136 F_5140
+af+ 0x801b300 106 F_5141
+af+ 0x801b388 54 F_5142
 af+ 0x801b440 30 F_974
 af+ 0x801b45e 24 F_975
 af+ 0x801b476 118 F_1091
@@ -187,7 +401,23 @@ af+ 0x801dcf0 1436 F_4171
 af+ 0x801e2d8 3408 F_4224
 af+ 0x801f03c 8 F_4292
 af+ 0x801f044 5240 F_4225
+CCa 0x801f236 ConfigData + 0x15 (byte) F_4225
+CCa 0x801f342 ConfigData + 0x15 (byte) F_4225
+CCa 0x801f3be ConfigData + 0x15 (byte) F_4225
+CCa 0x801f41a ConfigData + 0x15 (byte) F_4225
+CCa 0x801f55c ConfigData + 0xa  (byte) F_4225
+CCa 0x801f57c ConfigData + 0x9  (byte) F_4225
 CCa 0x801f5b6 sprite telephone
+CCa 0x801f7de ConfigData + 0x16 (byte) F_4225
+CCa 0x801f818 ConfigData + 0x16 (byte) F_4225
+CCa 0x801f886 ConfigData + 0x0  (byte) F_4225
+CCa 0x801f890 ConfigData + 0x0  (byte) F_4225
+CCa 0x801f99a ConfigData + 0x15 (byte) F_4225
+CCa 0x801fc06 ConfigData + 0x1  (byte) F_4225
+CCa 0x801fc9c ConfigData + 0x16 (byte) F_4225
+CCa 0x801fd14 ConfigData + 0x16 (byte) F_4225
+CCa 0x801ffe8 ConfigData + 0x15 (byte) F_4225
+CCa 0x80201ce ConfigData + 0x15 (byte) F_4225
 CCa 0x802045c 0x2001cfe4 signal strength (byte) 0-5
 CCa 0x802046a 0x2001cfe4 signal strength (byte) 0-5
 CCa 0x8020472 Ant symbol with strength
@@ -199,6 +429,7 @@ af+ 0x80206c8 58 F_4296
 af+ 0x8020702 74 F_4297
 af+ 0x802074c 58 F_4298
 af+ 0x802079c 294 F_800_something_with_ant
+CCa 0x80207d0 ConfigData + 0x1  (byte) F_800
 CCa 0x80208a8 Ant symbol with strength
 CCa 0x80208ba Ant symbol with strength
 af+ 0x8020974 16 gfx_select_font
@@ -213,10 +444,10 @@ af+ 0x8021654 30 F_31
 af+ 0x8021672 26 F_32
 af+ 0x802168c 484 F_803
 af+ 0x8021870 18 F_804
-af+ 0x8021882 18 F_258
-af+ 0x8021894 18 F_259
-af+ 0x80218a6 18 F_805
-af+ 0x80218b8 18 F_4299
+af+ 0x8021882 18 Get_Welcome_Line1_from_spi_flash
+af+ 0x8021894 18 Get_Welcome_Line2_from_spi_flash
+af+ 0x80218a6 18 Read_Config_Data_from_Flash
+af+ 0x80218b8 18 Write_Config_Data_to_Flash
 af+ 0x80218d4 474 F_806
 af+ 0x8021ac0 18 F_807
 af+ 0x8021ad2 26 F_808
@@ -240,7 +471,9 @@ af+ 0x8021e80 24 F_815
 af+ 0x8021e98 24 F_816
 af+ 0x8021eb0 26 F_4302_SMS_QuickText2Ram_ID
 af+ 0x8021eca 16 F_Get_From_SPIF
+af+ 0x8021edc 18 Edit_Message_Confirm_Store_Message_to_spi_1
 af+ 0x8021eee 26 F_4354
+af+ 0x8021f08 26 Edit_Message_Confirm_Store_Message_to_spi_2
 af+ 0x8021f22 18 F_817_SPIF_Number_of_zones
 af+ 0x8021f34 18 F_818
 af+ 0x8021f46 18 F_1065_spiflash_read_c8_from_0x416d0
@@ -313,6 +546,8 @@ af+ 0x802327c 74 F_4306
 af+ 0x80232c6 84 F_4438
 af+ 0x802331a 68 F_4229
 af+ 0x802335e 1102 F_4474
+CCa 0x802352e ConfigData + 0xb  (byte) F_4474
+CCa 0x802353a ConfigData + 0xb  (byte) F_4474
 af+ 0x80237ac 1002 F_4458
 CCa 0x80237fa seen picture  2 picture .. 1 ok 2 ok 3 wrong palet (menu)
 CCa 0x8023824 2 people picture or 4 windows or envelope closed or phone
@@ -387,6 +622,7 @@ af+ 0x80266e2 100 F_277
 af+ 0x8026754 106 F_278
 af+ 0x80267be 266 F_94
 af+ 0x80268c8 122 F_1097
+af+ 0x8026942 112 Edit_Message_Confirm_Send_4
 af+ 0x80269f4 166 F_95
 af+ 0x8026a9a 22 GPIO_ReadInputDataBit
 af+ 0x8026ab0 6  GPIO_ReadInputData
@@ -417,6 +653,13 @@ af+ 0x80279a8 170 F_4312
 af+ 0x8027a52 66 F_823
 af+ 0x8027aa8 58 F_4519_wtf
 af+ 0x8027ae8 2094 F_4520
+CCa 0x8027c1c ConfigData + 0x15 (byte) F_4520
+CCa 0x8027c3c ConfigData + 0x15 (byte) F_4520
+CCa 0x802812e ConfigData + 0x15 (byte) F_4520
+CCa 0x8028234 ConfigData + 0x15 (byte) F_4520
+CCa 0x8028254 ConfigData + 0x15 (byte) F_4520
+CCa 0x80282b0 ConfigData + 0x15 (byte) F_4520
+CCa 0x80282d0 ConfigData + 0x15 (byte) F_4520
 af+ 0x8028316 52 F_4313
 af+ 0x802834a 396 F_4190
 af+ 0x80284d6 442 F_4237
@@ -456,12 +699,24 @@ af+ 0x8028c20 530 F_4191
 af+ 0x8028e32 28 F_4192
 af+ 0x8028e58 330 F_4238
 af+ 0x8028fa2 112 F_4239
+CCa 0x8028fde ConfigData + 0x0  (byte) F_4239
 af+ 0x8029020 56 F_4240
 af+ 0x80290c8 1854 F_4137
+CCa 0x80293a6 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80294ec Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80295a6 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80295d2 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x80295d2 Get ConfigData + 0x2  (byte) F_4137
+CCa 0x8029778 Get ConfigData + 0x2  (byte) F_4137
 af+ 0x8029810 104 F_4241
 af+ 0x8029898 156 F_4242
 af+ 0x8029938 120 F_4243
 af+ 0x80299bc 118 F_4244
+CCa 0x80299d6 ConfigData + 0x1  (byte) ubfx r0, r0, 2, 1 .. lsls r0, r0, 0x1f F_4244
+CCa 0x80299fe ConfigData + 0x1  (byte) F_4244
+CCa 0x8029a06 ConfigData + 0x1  (byte) F_4244
+CCa 0x8029a0c ConfigData + 0x1  (byte) F_4244
+CCa 0x8029a14 ConfigData + 0x1  (byte) F_4244
 af+ 0x8029a3c 138 F_4245
 af+ 0x8029acc 138 F_4246
 af+ 0x8029b64 134 F_4247
@@ -484,8 +739,11 @@ af+ 0x802a87c 24 F_4040
 af+ 0x802a8b0 48 F_289
 af+ 0x802a8e0 56 F_99
 af+ 0x802a918 36 F_291
+CCa 0x802a91c ConfigData + 0x1  (byte) ubfx r0, r0, 2, 1 .. lsls r0, r0, 0x1f F_291
 af+ 0x802a93c 24 F_292
 af+ 0x802a960 4084 Beep_Process
+CCa 0x802af8e ConfigData + 0xf  (byte) Beep_Process
+CCa 0x802af9c ConfigData + 0xf  (byte) Beep_Process
 af+ 0x802b958 236 F_5027
 af+ 0x802ba44 52 F_293
 af+ 0x802ba78 16 F_294
@@ -496,8 +754,59 @@ af+ 0x802bb40 372 Af_Mute
 af+ 0x802bcb8 340 Set_Vocoder
 af+ 0x802be0c 340 F_107
 af+ 0x802bf76 2 F_108_Nice
+af+ 0x802bfd4 394 Create_Menu_Entry_Message
+CCa 0x802c044 0x802ec54 Create_Menu_Entry_Inbox
+CCa 0x802c056 ... I.n.b.o.x
+CCa 0x802c076 0x802c47a Create_Menu_Entry_Write
+CCa 0x802c088 ... W.r.i.t.e
+CCa 0x802c0ac 0x802c168 Create_Menu_Entry_Quick
+CCa 0x802c0be ... Q.u.i.c.k
+CCa 0x802c0e2 0x8038bd8 Create_Menu_Entry_Send
+CCa 0x802c0f4 ... S.e.n.t
+CCa 0x802c118 0x802d1e4 Create_Menu_Entry_Draft
+CCa 0x802c12a ... D.r.a.f.t.s
+af+ 0x802c168 146 Create_Menu_Entry_Quick
 af+ 0x802c250 104 F_4382
+af+ 0x802c47a 228 Create_Menu_Entry_Write
+CCa 0x802c53c 0x802c55e Create_Menu_Entry_Edit
+CCa 0x802c54e ... E.d.i.t.
+af+ 0x802c55e 66 Create_Menu_Entry_Edit
+af+ 0x802c5a0 192 Edit_Message_Clear
+af+ 0x802c660 394 Edit_Message_Menu_Entry
+CCa 0x802c6b6 0x802d108 Edit_Message_Confirm
+CCa 0x802c6c4 ... Y.e.s
+CCa 0x802c6de 0x800f452 ... Back
+CCa 0x802c6ec ... N.o.
+CCa 0x802c754 0x802c818 Edit_Message_Confirm_Send
+CCa 0x802c762 ... S.e.n.d
+CCa 0x802c77e 0x802d108 Edit_Message_Confirm
+CCa 0x802c78c ... S.a.v.e
+CCa 0x802c7ac 0x802c5a0 Edit_Message_Clear
+CCa 0x802c7ba ... C.l.e.a.r
+af+ 0x802c818 50 Edit_Message_Confirm_Send
+af+ 0x802c84a 176 Edit_Message_Confirm_Send_2
+CCa 0x802c896 0x802c8fa Edit_Message_Confirm_Send_Contacts
+CCa 0x802c8a4 .. C.o.n.t.a.c.t.s
+CCa 0x802c8be 0x802c99c Edit_Message_Confirm_Send_Manual
+CCa 0x802c8cc .. M.a.n.u.a.l
+af+ 0x802c8fa 126  Edit_Message_Confirm_Send_Contacts
+CCa 0x802c94a Ponter to contact list
+af+ 0x802c99c 204 Edit_Message_Confirm_Send_Manual
+CCa 0x802ca54 0x802ca88 Edit_Message_Confirm_Send_3
+CCa 0x802ca58 .. Pointer to Message 
+af+ 0x802ca88 302 Edit_Message_Confirm_Send_3
+af+ 0x802cbbc 114 Edit_Message_Confirm_Send_5
+CCa 0x802cc0e 0x800f452 ... Back
+CCa 0x802cc1e ... N.u.m.b.e.r
+af+ 0x802cdc8 194 Edit_Message_Confirm_Send_1
+CCa 0x802ce7a .. NULLTEXT
+af+ 0x802d108 204 Edit_Message_Confirm
+CCa 0x802d1c4 ... D.r.a.f.t.s
+af+ 0x802d1e4 408 Create_Menu_Entry_Draft
+af+ 0x802d524 166 Edit_Message_Confirm_2
 af+ 0x802d5d0 92 F_4383
+af+ 0x802d62c 162 Edit_Message_Confirm_3
+af+ 0x802d714 212 Edit_Message_Confirm_1
 af+ 0x802dee4 428 F_4314
 af+ 0x802e240 888 F_4315
 CCa 0x802e442 check for private call
@@ -515,6 +824,7 @@ af+ 0x802e988 92 F_4385
 af+ 0x802e9f0 54 F_824
 af+ 0x802ea44 202 F_4386
 af+ 0x802eb68 212 F_4444
+af+ 0x802ec54 Create_Menu_Entry_Inbox
 af+ 0x802f9bc 172 F_4138
 af+ 0x802fb00 130 F_300
 af+ 0x802fb82 52 spiflash_sektor_erase4k
@@ -554,6 +864,7 @@ af+ 0x8030854 14 F_4498
 af+ 0x8030862 12 F_4499
 af+ 0x803086e 72 F_4485
 af+ 0x80308d8 38 F_4494
+CCa 0x80308de ConfigData + 0x1  (byte) ubfx r0, r0, 1, 1 .. lsls r0, r0, 0x1f F_4494
 af+ 0x80308fe 142 F_33
 af+ 0x803098c 198 F_314
 af+ 0x8030a52 284 F_4041
@@ -563,6 +874,8 @@ af+ 0x8030c58 70 F_317
 af+ 0x8030c9e 80 F_08
 af+ 0x8030cee 68 F_09
 af+ 0x8030d32 260 F_4500
+CCa 0x8030d5a ConfigData + 0xe  (byte) F_4500
+CCa 0x8030d6a ConfigData + 0xe  (byte) F_4500
 af+ 0x8030e36 40 F_320
 af+ 0x8030e5e 92 F_26
 af+ 0x8030eba 92 F_322
@@ -572,6 +885,9 @@ CCa 0x8030ee0 GPIO A4 Reset MODER4_1 Input
 CCa 0x8030eec GPIO A4 Reset MODER4_0 Input
 af+ 0x8030f16 102 F_323
 af+ 0x8030f7c 328 F_4501
+CCa 0x8030faa ConfigData + 0x10 (byte) F_4501
+CCa 0x803101a ConfigData + 0x11 (byte) F_4501
+CCa 0x8031022 ConfigData + 0x10 (byte) F_4501
 af+ 0x803114c 10 F_1152
 af+ 0x8031156 16 F_4486
 af+ 0x8031166 152 F_1070
@@ -767,6 +1083,14 @@ af+ 0x8036b96 222 F_4477
 af+ 0x8036c74 54 F_359
 af+ 0x8036cac 140 F_4332
 af+ 0x8036d88 2810 F_4505
+CCa 0x80372be ConfigData + 0x14 (byte) F_4505
+CCa 0x80372f8 ConfigData + 0x13 (byte) F_4505
+CCa 0x80375d6 ConfigData + 0x14 (byte) F_4505
+CCa 0x8037610 ConfigData + 0x13 (byte) F_4505
+CCa 0x8037778 ConfigData + 0x14 (byte) F_4505
+CCa 0x80377a8 ConfigData + 0x13 (byte) F_4505
+CCa 0x8037828 ConfigData + 0x14 (byte) F_4505
+CCa 0x8037858 ConfigData + 0x13 (byte) F_4505
 af+ 0x80378b4 448 F_4513
 af+ 0x8037a98 500 F_4514
 af+ 0x8037c90 320 F_4515
@@ -798,8 +1122,8 @@ af+ 0x8038924 166 F_4402
 af+ 0x80389ca 92 F_4403
 af+ 0x8038a26 158 F_4337
 af+ 0x8038b04 212 F_4404
+af+ 0x8038bd8 442 Create_Menu_Entry_Send
 af+ 0x8039760 30 F_4405
-af+ 0x8039760 30 F_5067
 af+ 0x8039780 32 F_5066
 af+ 0x80397a0 56 F_5063
 af+ 0x80397d8 294 F_5064
@@ -810,7 +1134,6 @@ af+ 0x8039abe 36 F_5060
 af+ 0x8039ae2 196 F_5059
 af+ 0x8039ba6 42 F_5058
 af+ 0x8039bd0 46 F_5057
-af+ 0x8039bfe 36 F_4273
 af+ 0x8039bfe 36 F_5056
 af+ 0x8039c22 144 main_menu
 af+ 0x8039cb2 226 F_4274
@@ -857,19 +1180,32 @@ af+ 0x803b428 70 F_851
 af+ 0x803b46e 92 F_369
 af+ 0x803b510 14 F_852
 af+ 0x803b524 2286 Call_Process
+CCa 0x803bb76 ConfigData + 0x1  (byte) Call_Process
+CCa 0x803bb80 ConfigData + 0x8  (byte) Call_Process
 af+ 0x803be24 992 State_Change
+CCa 0x803c052 ConfigData + 0x4  (long) MyDMRID State_Change
 af+ 0x803c244 772 ChAccess_Pr
 af+ 0x803c57c 86 F_39
 af+ 0x803c5d8 90 F_853
 af+ 0x803c632 52 F_371
 af+ 0x803c666 50 F_372
+CCa 0x803c676 ConfigData + 0x4  (long) MyDMRID F_372
 af+ 0x803c6b4 680 F_40
+CCa 0x803c6c4 ConfigData + 0x15 (byte) F_40
 af+ 0x803c998 808 F_374
+CCa 0x803cb6a ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 1 F_374
+CCa 0x803cb6e ConfigData + 0x1  (byte) F_374
+CCa 0x803cb7c ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 6 F_374
+CCa 0x803cc30 ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 6 F_374
+CCa 0x803cc3e ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 6 F_374
 af+ 0x803cccc 590 F_375
 af+ 0x803cf1a 62 F_41
 af+ 0x803cf58 36 F_377
 af+ 0x803cf7c 46 F_42
 af+ 0x803cfb4 388 F_379
+CCa 0x803d030 ConfigData + 0x15 (byte) F_379
+CCa 0x803d0ba ConfigData + 0x15 (byte) F_379
+CCa 0x803d108 ConfigData + 0x15 (byte) F_379
 af+ 0x803d140 102 F_380
 af+ 0x803d1fc 40 F_381
 af+ 0x803d224 70 F_382
@@ -898,6 +1234,9 @@ af+ 0x803db68 92 OSSemPost
 af+ 0x803dbc4 28 Sys_Inter
 af+ 0x803dbe2 52 TimeSlot_Inter
 af+ 0x803dc16 1206 F_43
+CCa 0x803ddd2 ConfigData + 0x4  (long) MyDMRID F_43
+CCa 0x803dde0 ConfigData + 0x4  (long) MyDMRID F_43
+CCa 0x803ddf0 ConfigData + 0x4  (long) MyDMRID F_43
 af+ 0x803e0cc 476 F_44
 af+ 0x803e2a8 38 F_402
 af+ 0x803e2ce 38 F_68
@@ -913,12 +1252,51 @@ af+ 0x803e6e4 196 F_412
 af+ 0x803e7a8 340 F_413
 af+ 0x803e900 868 F_414
 af+ 0x803ec84 2 F_415
+CCa 0x803ef02 ConfigData + 0x4  (long) MyDMRID dmr_audio_start
 af+ 0x803ef6c 92 F_416
 af+ 0x803efc8 90 F_858
 af+ 0x803f03c 728 dmr_sms_arrive
+CCa 0x803f0ca ConfigData + 0x4  (long) MyDMRID dmr_sms_arrive
+CCa 0x803f1dc ConfigData + 0x4  (long) MyDMRID dmr_sms_arrive
+CCa 0x803f2ce ConfigData + 0x4  (long) MyDMRID dmr_sms_arrive
 af+ 0x803f33c 818 dmr_call_end
+CCa 0x803f3d8 ConfigData + 0x1  (byte) dmr_call_end
+CCa 0x803f42e ConfigData + 0x4  (long) MyDMRID dmr_call_end
+CCa 0x803f464 ConfigData + 0x4  (long) MyDMRID dmr_call_end
+CCa 0x803f508 ConfigData + 0x1  (byte) dmr_call_end
+CCa 0x803f5a2 ConfigData + 0x4  (long) MyDMRID dmr_call_end
 af+ 0x803f6d8 1134 F_419
+CCa 0x803f71a ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f75e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f790 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f7ec ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f882 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f904 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f934 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f95e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f98e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f9d0 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fa1e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fa46 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fa8a ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fb1e ConfigData + 0x4  (long) MyDMRID F_419
 af+ 0x803fbcc 5656 F_420
+CCa 0x8040156 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x80401d2 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x80401ea ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040202 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x804021a ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040230 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040248 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040264 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x80409e8 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040a48 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040a90 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040bec ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040d80 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040dee ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8041124 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x804114c ConfigData + 0x4  (long) MyDMRID F_420
 af+ 0x80411e8 68 F_421
 af+ 0x8041244 652 F_422
 af+ 0x8041578 52 F_46
@@ -1004,6 +1382,7 @@ af+ 0x8043118 124 F_462
 CCa 0x8043150 Bat_Voltage
 af+ 0x8043194 54 F_157
 af+ 0x8043204 934 F_158
+CCa 0x8043574 ConfigData + 0xe  (byte) F_158
 af+ 0x80435b0 188 F_465
 CCa 0x80435b4 Bat_Voltage
 af+ 0x8043678 42 F_159
@@ -1012,16 +1391,24 @@ af+ 0x8043a1c 110 F_468
 CCa 0x8043a54 Bat_Voltage
 af+ 0x8043aa0 74 F_161
 af+ 0x8043b14 694 F_162
+CCa 0x8043cf0 ConfigData + 0xb  (byte) F_162
+CCa 0x8043cfc ConfigData + 0xb  (byte) F_162
+CCa 0x8043d06 ConfigData + 0xb  (byte) F_162
 af+ 0x8043dd0 80 F_471
 CCa 0x8043df8 Bat_Voltage
 af+ 0x8043e28 64 F_163
 af+ 0x8043e70 8 F_164
 af+ 0x8043e78 268 F_4000
 af+ 0x804403c 310 Start
+CCa 0x804408a ConfigData + 0x1  (byte) Start
 af+ 0x8044172 298 F_474
 af+ 0x804429c 684 Start_multiple_tasks
 af+ 0x8044548 300 RTC_Timer
+CCa 0x804454e Get ConfigData + 0x2  (byte) ubfx r0, r0, 4, 1 .. lsls r0, r0, 0x1f  RTC_Timer
+CCa 0x8044550 Bit 4
 af+ 0x8044674 626 FMTx_Process
+CCa 0x80447a4 ConfigData + 0x1  (byte) FMTx_Process
+CCa 0x80447b0 ConfigData + 0x1  (byte) FMTx_Process
 af+ 0x80448e8 42 RF_Pll
 af+ 0x8044900 20 PC_Tune
 af+ 0x8044914 32 F_167
@@ -1204,11 +1591,23 @@ af+ 0x804a17e 16 F_878
 af+ 0x804a18e 402 F_1087
 af+ 0x804a420 90 F_573
 af+ 0x804a47a 520 F_879
+CCa 0x804a542 ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a54c ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a556 ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a61e ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a628 ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a632 ConfigData + 0x4  (long) MyDMRID F_879
 af+ 0x804a682 232 F_574
 af+ 0x804a76a 52 F_575
 af+ 0x804a79e 162 F_880
 af+ 0x804a840 682 F_576
+CCa 0x804a9ce ConfigData + 0x1  (byte) F_576
+CCa 0x804a9d6 ConfigData + 0x8  (byte) F_576
+CCa 0x804aa92 ConfigData + 0x1  (byte) F_576
+CCa 0x804aa9a ConfigData + 0x8  (byte) F_576
 af+ 0x804aaea 340 F_577
+CCa 0x804abe8 ConfigData + 0x1  (byte) F_577
+CCa 0x804abf0 ConfigData + 0x8  (byte) F_577
 af+ 0x804aca4 198 F_203
 af+ 0x804ad6a 68 F_881
 af+ 0x804adae 100 F_579
@@ -1256,6 +1655,7 @@ af+ 0x804c3c8 64 F_609
 af+ 0x804c408 2 F_4103
 af+ 0x804c40a 78 F_610
 af+ 0x804c458 518 F_4104
+CCa 0x804c47c ConfigData + 0x16 (byte) F_4104
 af+ 0x804c65e 74 F_611
 af+ 0x804c6a8 478 F_4105
 af+ 0x804c886 78 F_218
@@ -1626,6 +2026,11 @@ af+ 0x808ccbe 1444 usb_dnld_handle
 af+ 0x808d266 132 F_4055
 af+ 0x808d2ea 134 F_4056
 af+ 0x808d3d8 3036 usb_upld_handle
+CCa 0x808d6a6 ConfigData + x usb_upld_handle
+CCa 0x808d972 ConfigData + 0x4  (long) MyDMRID usb_upld_handle
+CCa 0x808d97a ConfigData + 0x4  (long) MyDMRID usb_upld_handle
+CCa 0x808d988 ConfigData + 0x4  (long) MyDMRID usb_upld_handle
+CCa 0x808d9cc ConfigData + x usb_upld_handle
 af+ 0x808dfd0 520 F_4005
 af+ 0x808e1dc 100 F_4057
 af+ 0x808e244 12 F_4058
@@ -1691,6 +2096,8 @@ af+ 0x809558c 206 F_5002
 af+ 0x80956a0 52 F_5001
 af+ 0x80956d4 98 F_5000
 af+ 0x809573c 366 LED_Process
+CCa 0x8095742 ConfigData + 0x1  (byte) ubfx r0, r0, 2, 1 .. lsls r0, r0, 0x1f LED_Process
+CCa 0x80957ae ConfigData + 0x0  (byte) LED_Process
 af+ 0x80969de 16 F_4001
 af+ 0x80969ee 34 F_4539
 af+ 0x8096a10 34 F_4540
@@ -1700,7 +2107,11 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 af+ 0x80f96b0 6 F_5074
-
+f ConfigData 0x50 @ 0x2001c658
+f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
+f WelcomeLine1 4 @ 0x2001cecc
+fC WelcomeLine1 *Welcome_Line1
+f WelcomeLine2 4 @ 0x2001cee0
 
 
 CCa 0x8044184 _Start Mbox_
