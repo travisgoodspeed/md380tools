@@ -29,6 +29,7 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
+af+ 0x080127d0 880 F_4546
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -68,6 +69,7 @@ af+ 0x800dc56 230 F_4284
 af+ 0x800dd40 284 F_1056
 af+ 0x800de5c 96 F_972
 af+ 0x800debc 126 F_787
+CCa 0x800ded8 ConfigData + 0x17 (byte) F_787
 af+ 0x800df84 996 F_4285
 CCa 0x800e2b0 C.o.n.t.a.c.t.s.
 af+ 0x800e3c4 1820 F_4142
@@ -94,14 +96,24 @@ CCa 0x801252a ret value r0, r1
 CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
+af+ 0x8012b54 854 F_5075
+CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
+CCa 0x8012bb2 ConfigData + 1d (byte) F_5075
+CCa 0x8012bc2 ConfigData + 1e (byte) F_5075
+CCa 0x8012bd2 ConfigData + 1f (byte) F_5075
+af+ 0x8015464 122 F_5076
+CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID F_5076
 af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
+af+ 0x8016bb8 238 F_5077
+CCa 0x8016c06 ConfigData + 0x17 (byte) F_5077
 af+ 0x8017204 92 F_4288
 af+ 0x8017268 104 F_4289
 af+ 0x80172ec 236 F_973
 af+ 0x8017612 56 F_4083
 af+ 0x8017650 124 F_4085
 af+ 0x8019ce0 272 F_4160
+CCa 0x8019d64 ConfigData + 0x16 (byte) F_4160
 af+ 0x801ae24 282 F_4161
 af+ 0x801b09e 188 F_4146
 af+ 0x801b1c6 156 F_4162
@@ -187,7 +199,23 @@ af+ 0x801dcf0 1436 F_4171
 af+ 0x801e2d8 3408 F_4224
 af+ 0x801f03c 8 F_4292
 af+ 0x801f044 5240 F_4225
+CCa 0x801f236 ConfigData + 0x15 (byte) F_4225
+CCa 0x801f342 ConfigData + 0x15 (byte) F_4225
+CCa 0x801f3be ConfigData + 0x15 (byte) F_4225
+CCa 0x801f41a ConfigData + 0x15 (byte) F_4225
+CCa 0x801f55c ConfigData + 0xa  (byte) F_4225
+CCa 0x801f57c ConfigData + 0x9  (byte) F_4225
 CCa 0x801f5b6 sprite telephone
+CCa 0x801f7de ConfigData + 0x16 (byte) F_4225
+CCa 0x801f818 ConfigData + 0x16 (byte) F_4225
+CCa 0x801f886 ConfigData + 0x0  (byte) F_4225
+CCa 0x801f890 ConfigData + 0x0  (byte) F_4225
+CCa 0x801f99a ConfigData + 0x15 (byte) F_4225
+CCa 0x801fc06 ConfigData + 0x1  (byte) F_4225
+CCa 0x801fc9c ConfigData + 0x16 (byte) F_4225
+CCa 0x801fd14 ConfigData + 0x16 (byte) F_4225
+CCa 0x801ffe8 ConfigData + 0x15 (byte) F_4225
+CCa 0x80201ce ConfigData + 0x15 (byte) F_4225
 CCa 0x802045c 0x2001cfe4 signal strength (byte) 0-5
 CCa 0x802046a 0x2001cfe4 signal strength (byte) 0-5
 CCa 0x8020472 Ant symbol with strength
@@ -199,6 +227,7 @@ af+ 0x80206c8 58 F_4296
 af+ 0x8020702 74 F_4297
 af+ 0x802074c 58 F_4298
 af+ 0x802079c 294 F_800_something_with_ant
+CCa 0x80207d0 ConfigData + 0x1  (byte) F_800
 CCa 0x80208a8 Ant symbol with strength
 CCa 0x80208ba Ant symbol with strength
 af+ 0x8020974 16 gfx_select_font
@@ -213,10 +242,10 @@ af+ 0x8021654 30 F_31
 af+ 0x8021672 26 F_32
 af+ 0x802168c 484 F_803
 af+ 0x8021870 18 F_804
-af+ 0x8021882 18 F_258
-af+ 0x8021894 18 F_259
-af+ 0x80218a6 18 F_805
-af+ 0x80218b8 18 F_4299
+af+ 0x8021882 18 Get_Welcome_Line1_from_spi_flash
+af+ 0x8021894 18 Get_Welcome_Line2_from_spi_flash
+af+ 0x80218a6 18 Read_Config_Data_from_Flash
+af+ 0x80218b8 18 Write_Config_Data_to_Flash
 af+ 0x80218d4 474 F_806
 af+ 0x8021ac0 18 F_807
 af+ 0x8021ad2 26 F_808
@@ -313,6 +342,8 @@ af+ 0x802327c 74 F_4306
 af+ 0x80232c6 84 F_4438
 af+ 0x802331a 68 F_4229
 af+ 0x802335e 1102 F_4474
+CCa 0x802352e ConfigData + 0xb  (byte) F_4474
+CCa 0x802353a ConfigData + 0xb  (byte) F_4474
 af+ 0x80237ac 1002 F_4458
 CCa 0x80237fa seen picture  2 picture .. 1 ok 2 ok 3 wrong palet (menu)
 CCa 0x8023824 2 people picture or 4 windows or envelope closed or phone
@@ -417,6 +448,13 @@ af+ 0x80279a8 170 F_4312
 af+ 0x8027a52 66 F_823
 af+ 0x8027aa8 58 F_4519_wtf
 af+ 0x8027ae8 2094 F_4520
+CCa 0x8027c1c ConfigData + 0x15 (byte) F_4520
+CCa 0x8027c3c ConfigData + 0x15 (byte) F_4520
+CCa 0x802812e ConfigData + 0x15 (byte) F_4520
+CCa 0x8028234 ConfigData + 0x15 (byte) F_4520
+CCa 0x8028254 ConfigData + 0x15 (byte) F_4520
+CCa 0x80282b0 ConfigData + 0x15 (byte) F_4520
+CCa 0x80282d0 ConfigData + 0x15 (byte) F_4520
 af+ 0x8028316 52 F_4313
 af+ 0x802834a 396 F_4190
 af+ 0x80284d6 442 F_4237
@@ -456,12 +494,24 @@ af+ 0x8028c20 530 F_4191
 af+ 0x8028e32 28 F_4192
 af+ 0x8028e58 330 F_4238
 af+ 0x8028fa2 112 F_4239
+CCa 0x8028fde ConfigData + 0x0  (byte) F_4239
 af+ 0x8029020 56 F_4240
 af+ 0x80290c8 1854 F_4137
+CCa 0x80293a6 ConfigData + 0x2  (byte) F_4137
+CCa 0x80294ec ConfigData + 0x2  (byte) F_4137
+CCa 0x80295a6 ConfigData + 0x2  (byte) F_4137
+CCa 0x80295d2 ConfigData + 0x2  (byte) F_4137
+CCa 0x80295d2 ConfigData + 0x2  (byte) F_4137
+CCa 0x8029778 ConfigData + 0x2  (byte) F_4137
 af+ 0x8029810 104 F_4241
 af+ 0x8029898 156 F_4242
 af+ 0x8029938 120 F_4243
 af+ 0x80299bc 118 F_4244
+CCa 0x80299d6 ConfigData + 0x1  (byte) ubfx r0, r0, 2, 1 .. lsls r0, r0, 0x1f F_4244
+CCa 0x80299fe ConfigData + 0x1  (byte) F_4244
+CCa 0x8029a06 ConfigData + 0x1  (byte) F_4244
+CCa 0x8029a0c ConfigData + 0x1  (byte) F_4244
+CCa 0x8029a14 ConfigData + 0x1  (byte) F_4244
 af+ 0x8029a3c 138 F_4245
 af+ 0x8029acc 138 F_4246
 af+ 0x8029b64 134 F_4247
@@ -484,8 +534,11 @@ af+ 0x802a87c 24 F_4040
 af+ 0x802a8b0 48 F_289
 af+ 0x802a8e0 56 F_99
 af+ 0x802a918 36 F_291
+CCa 0x802a91c ConfigData + 0x1  (byte) ubfx r0, r0, 2, 1 .. lsls r0, r0, 0x1f F_291
 af+ 0x802a93c 24 F_292
 af+ 0x802a960 4084 Beep_Process
+CCa 0x802af8e ConfigData + 0xf  (byte) Beep_Process
+CCa 0x802af9c ConfigData + 0xf  (byte) Beep_Process
 af+ 0x802b958 236 F_5027
 af+ 0x802ba44 52 F_293
 af+ 0x802ba78 16 F_294
@@ -554,6 +607,7 @@ af+ 0x8030854 14 F_4498
 af+ 0x8030862 12 F_4499
 af+ 0x803086e 72 F_4485
 af+ 0x80308d8 38 F_4494
+CCa 0x80308de ConfigData + 0x1  (byte) ubfx r0, r0, 1, 1 .. lsls r0, r0, 0x1f F_4494
 af+ 0x80308fe 142 F_33
 af+ 0x803098c 198 F_314
 af+ 0x8030a52 284 F_4041
@@ -563,6 +617,8 @@ af+ 0x8030c58 70 F_317
 af+ 0x8030c9e 80 F_08
 af+ 0x8030cee 68 F_09
 af+ 0x8030d32 260 F_4500
+CCa 0x8030d5a ConfigData + 0xe  (byte) F_4500
+CCa 0x8030d6a ConfigData + 0xe  (byte) F_4500
 af+ 0x8030e36 40 F_320
 af+ 0x8030e5e 92 F_26
 af+ 0x8030eba 92 F_322
@@ -572,6 +628,9 @@ CCa 0x8030ee0 GPIO A4 Reset MODER4_1 Input
 CCa 0x8030eec GPIO A4 Reset MODER4_0 Input
 af+ 0x8030f16 102 F_323
 af+ 0x8030f7c 328 F_4501
+CCa 0x8030faa ConfigData + 0x10 (byte) F_4501
+CCa 0x803101a ConfigData + 0x11 (byte) F_4501
+CCa 0x8031022 ConfigData + 0x10 (byte) F_4501
 af+ 0x803114c 10 F_1152
 af+ 0x8031156 16 F_4486
 af+ 0x8031166 152 F_1070
@@ -767,6 +826,14 @@ af+ 0x8036b96 222 F_4477
 af+ 0x8036c74 54 F_359
 af+ 0x8036cac 140 F_4332
 af+ 0x8036d88 2810 F_4505
+CCa 0x80372be ConfigData + 0x14 (byte) F_4505
+CCa 0x80372f8 ConfigData + 0x13 (byte) F_4505
+CCa 0x80375d6 ConfigData + 0x14 (byte) F_4505
+CCa 0x8037610 ConfigData + 0x13 (byte) F_4505
+CCa 0x8037778 ConfigData + 0x14 (byte) F_4505
+CCa 0x80377a8 ConfigData + 0x13 (byte) F_4505
+CCa 0x8037828 ConfigData + 0x14 (byte) F_4505
+CCa 0x8037858 ConfigData + 0x13 (byte) F_4505
 af+ 0x80378b4 448 F_4513
 af+ 0x8037a98 500 F_4514
 af+ 0x8037c90 320 F_4515
@@ -857,19 +924,32 @@ af+ 0x803b428 70 F_851
 af+ 0x803b46e 92 F_369
 af+ 0x803b510 14 F_852
 af+ 0x803b524 2286 Call_Process
+CCa 0x803bb76 ConfigData + 0x1  (byte) Call_Process
+CCa 0x803bb80 ConfigData + 0x8  (byte) Call_Process
 af+ 0x803be24 992 State_Change
+CCa 0x803c052 ConfigData + 0x4  (long) MyDMRID State_Change
 af+ 0x803c244 772 ChAccess_Pr
 af+ 0x803c57c 86 F_39
 af+ 0x803c5d8 90 F_853
 af+ 0x803c632 52 F_371
 af+ 0x803c666 50 F_372
+CCa 0x803c676 ConfigData + 0x4  (long) MyDMRID F_372
 af+ 0x803c6b4 680 F_40
+CCa 0x803c6c4 ConfigData + 0x15 (byte) F_40
 af+ 0x803c998 808 F_374
+CCa 0x803cb6a ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 1 F_374
+CCa 0x803cb6e ConfigData + 0x1  (byte) F_374
+CCa 0x803cb7c ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 6 F_374
+CCa 0x803cc30 ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 6 F_374
+CCa 0x803cc3e ConfigData + 0x1  (byte) uxtb r0, r0 .. lsrs r0, r0, 6 check with 6 F_374
 af+ 0x803cccc 590 F_375
 af+ 0x803cf1a 62 F_41
 af+ 0x803cf58 36 F_377
 af+ 0x803cf7c 46 F_42
 af+ 0x803cfb4 388 F_379
+CCa 0x803d030 ConfigData + 0x15 (byte) F_379
+CCa 0x803d0ba ConfigData + 0x15 (byte) F_379
+CCa 0x803d108 ConfigData + 0x15 (byte) F_379
 af+ 0x803d140 102 F_380
 af+ 0x803d1fc 40 F_381
 af+ 0x803d224 70 F_382
@@ -898,6 +978,9 @@ af+ 0x803db68 92 OSSemPost
 af+ 0x803dbc4 28 Sys_Inter
 af+ 0x803dbe2 52 TimeSlot_Inter
 af+ 0x803dc16 1206 F_43
+CCa 0x803ddd2 ConfigData + 0x4  (long) MyDMRID F_43
+CCa 0x803dde0 ConfigData + 0x4  (long) MyDMRID F_43
+CCa 0x803ddf0 ConfigData + 0x4  (long) MyDMRID F_43
 af+ 0x803e0cc 476 F_44
 af+ 0x803e2a8 38 F_402
 af+ 0x803e2ce 38 F_68
@@ -913,12 +996,51 @@ af+ 0x803e6e4 196 F_412
 af+ 0x803e7a8 340 F_413
 af+ 0x803e900 868 F_414
 af+ 0x803ec84 2 F_415
+CCa 0x803ef02 ConfigData + 0x4  (long) MyDMRID dmr_audio_start
 af+ 0x803ef6c 92 F_416
 af+ 0x803efc8 90 F_858
 af+ 0x803f03c 728 dmr_sms_arrive
+CCa 0x803f0ca ConfigData + 0x4  (long) MyDMRID dmr_sms_arrive
+CCa 0x803f1dc ConfigData + 0x4  (long) MyDMRID dmr_sms_arrive
+CCa 0x803f2ce ConfigData + 0x4  (long) MyDMRID dmr_sms_arrive
 af+ 0x803f33c 818 dmr_call_end
+CCa 0x803f3d8 ConfigData + 0x1  (byte) dmr_call_end
+CCa 0x803f42e ConfigData + 0x4  (long) MyDMRID dmr_call_end
+CCa 0x803f464 ConfigData + 0x4  (long) MyDMRID dmr_call_end
+CCa 0x803f508 ConfigData + 0x1  (byte) dmr_call_end
+CCa 0x803f5a2 ConfigData + 0x4  (long) MyDMRID dmr_call_end
 af+ 0x803f6d8 1134 F_419
+CCa 0x803f71a ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f75e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f790 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f7ec ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f882 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f904 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f934 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f95e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f98e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803f9d0 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fa1e ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fa46 ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fa8a ConfigData + 0x4  (long) MyDMRID F_419
+CCa 0x803fb1e ConfigData + 0x4  (long) MyDMRID F_419
 af+ 0x803fbcc 5656 F_420
+CCa 0x8040156 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x80401d2 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x80401ea ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040202 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x804021a ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040230 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040248 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040264 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x80409e8 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040a48 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040a90 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040bec ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040d80 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8040dee ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x8041124 ConfigData + 0x4  (long) MyDMRID F_420
+CCa 0x804114c ConfigData + 0x4  (long) MyDMRID F_420
 af+ 0x80411e8 68 F_421
 af+ 0x8041244 652 F_422
 af+ 0x8041578 52 F_46
@@ -1004,6 +1126,7 @@ af+ 0x8043118 124 F_462
 CCa 0x8043150 Bat_Voltage
 af+ 0x8043194 54 F_157
 af+ 0x8043204 934 F_158
+CCa 0x8043574 ConfigData + 0xe  (byte) F_158
 af+ 0x80435b0 188 F_465
 CCa 0x80435b4 Bat_Voltage
 af+ 0x8043678 42 F_159
@@ -1012,16 +1135,23 @@ af+ 0x8043a1c 110 F_468
 CCa 0x8043a54 Bat_Voltage
 af+ 0x8043aa0 74 F_161
 af+ 0x8043b14 694 F_162
+CCa 0x8043cf0 ConfigData + 0xb  (byte) F_162
+CCa 0x8043cfc ConfigData + 0xb  (byte) F_162
+CCa 0x8043d06 ConfigData + 0xb  (byte) F_162
 af+ 0x8043dd0 80 F_471
 CCa 0x8043df8 Bat_Voltage
 af+ 0x8043e28 64 F_163
 af+ 0x8043e70 8 F_164
 af+ 0x8043e78 268 F_4000
 af+ 0x804403c 310 Start
+CCa 0x804408a ConfigData + 0x1  (byte) Start
 af+ 0x8044172 298 F_474
 af+ 0x804429c 684 Start_multiple_tasks
 af+ 0x8044548 300 RTC_Timer
+CCa 0x804454e ConfigData + 0x2  (byte) ubfx r0, r0, 4, 1 .. lsls r0, r0, 0x1f  RTC_Timer
 af+ 0x8044674 626 FMTx_Process
+CCa 0x80447a4 ConfigData + 0x1  (byte) FMTx_Process
+CCa 0x80447b0 ConfigData + 0x1  (byte) FMTx_Process
 af+ 0x80448e8 42 RF_Pll
 af+ 0x8044900 20 PC_Tune
 af+ 0x8044914 32 F_167
@@ -1204,11 +1334,23 @@ af+ 0x804a17e 16 F_878
 af+ 0x804a18e 402 F_1087
 af+ 0x804a420 90 F_573
 af+ 0x804a47a 520 F_879
+CCa 0x804a542 ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a54c ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a556 ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a61e ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a628 ConfigData + 0x4  (long) MyDMRID F_879
+CCa 0x804a632 ConfigData + 0x4  (long) MyDMRID F_879
 af+ 0x804a682 232 F_574
 af+ 0x804a76a 52 F_575
 af+ 0x804a79e 162 F_880
 af+ 0x804a840 682 F_576
+CCa 0x804a9ce ConfigData + 0x1  (byte) F_576
+CCa 0x804a9d6 ConfigData + 0x8  (byte) F_576
+CCa 0x804aa92 ConfigData + 0x1  (byte) F_576
+CCa 0x804aa9a ConfigData + 0x8  (byte) F_576
 af+ 0x804aaea 340 F_577
+CCa 0x804abe8 ConfigData + 0x1  (byte) F_577
+CCa 0x804abf0 ConfigData + 0x8  (byte) F_577
 af+ 0x804aca4 198 F_203
 af+ 0x804ad6a 68 F_881
 af+ 0x804adae 100 F_579
@@ -1256,6 +1398,7 @@ af+ 0x804c3c8 64 F_609
 af+ 0x804c408 2 F_4103
 af+ 0x804c40a 78 F_610
 af+ 0x804c458 518 F_4104
+CCa 0x804c47c ConfigData + 0x16 (byte) F_4104
 af+ 0x804c65e 74 F_611
 af+ 0x804c6a8 478 F_4105
 af+ 0x804c886 78 F_218
@@ -1626,6 +1769,11 @@ af+ 0x808ccbe 1444 usb_dnld_handle
 af+ 0x808d266 132 F_4055
 af+ 0x808d2ea 134 F_4056
 af+ 0x808d3d8 3036 usb_upld_handle
+CCa 0x808d6a6 ConfigData + x usb_upld_handle
+CCa 0x808d972 ConfigData + 0x4  (long) MyDMRID usb_upld_handle
+CCa 0x808d97a ConfigData + 0x4  (long) MyDMRID usb_upld_handle
+CCa 0x808d988 ConfigData + 0x4  (long) MyDMRID usb_upld_handle
+CCa 0x808d9cc ConfigData + x usb_upld_handle
 af+ 0x808dfd0 520 F_4005
 af+ 0x808e1dc 100 F_4057
 af+ 0x808e244 12 F_4058
@@ -1691,6 +1839,8 @@ af+ 0x809558c 206 F_5002
 af+ 0x80956a0 52 F_5001
 af+ 0x80956d4 98 F_5000
 af+ 0x809573c 366 LED_Process
+CCa 0x8095742 ConfigData + 0x1  (byte) ubfx r0, r0, 2, 1 .. lsls r0, r0, 0x1f LED_Process
+CCa 0x80957ae ConfigData + 0x0  (byte) LED_Process
 af+ 0x80969de 16 F_4001
 af+ 0x80969ee 34 F_4539
 af+ 0x8096a10 34 F_4540
@@ -1700,7 +1850,11 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 af+ 0x80f96b0 6 F_5074
-
+f ConfigData 0x50 @ 0x2001c658
+f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
+f WelcomeLine1 4 @ 0x2001cecc
+fC WelcomeLine1 *Welcome_Line1
+f WelcomeLine2 4 @ 0x2001cee0
 
 
 CCa 0x8044184 _Start Mbox_
