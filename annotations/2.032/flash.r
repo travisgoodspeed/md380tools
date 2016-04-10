@@ -30,7 +30,6 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
-
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -140,7 +139,7 @@ af+ 0x8016cb0 132 F_5078
 CCa 0x8016d2c Set ConfigData + 0x17 (Byte) F_5078
 af+ 0x8016d3c 130 F_5079
 CCa 0x8016db6 Set ConfigData + 0x17 (Byte) F_5079
-af+ 0x8016dcc 152 F_5080
+af+ 0x8016dcc 152 Create_Menu_Entry_VOX
 CCa 0x8016e60 ConfigData + 0x17 (Byte) F_5080
 af+ 0x8016f90 146 F_5081
 CCa 0x8017006 Set ConfigData + 0xb (Byte) F_5081
@@ -149,6 +148,7 @@ af+ 0x8017268 104 F_4289
 af+ 0x80172ec 236 F_973
 af+ 0x8017612 56 F_4083
 af+ 0x8017650 124 F_4085
+af+ 0x8017938 250 Create_Menu_Entry_Talkaround
 af+ 0x8017a60 590 F_5082
 CCa 0x8017bbe Get ConfigData + 0x1 F_5082
 CCa 0x8017bd0 Get ConfigData + 0x1 F_5082
@@ -185,6 +185,7 @@ CCa 0x8017f28 Unset Bit 4
 CCa 0x8017f30 Set ConfigData + 0x2 F_5083
 CCa 0x8017f3c Get ConfigData + 0x0 F_5083
 CCa 0x8017f46 Set ConfigData + 0x0 F_5083
+af+ 0x8017f78 394 Create_Menu_Entry_Tones_Alerts
 af+ 0x8017f78 394 F_5084
 af+ 0x8018104 220 F_5085
 CCa 0x8018146 Get ConfigData + 0x1 F_5085
@@ -207,16 +208,16 @@ af+ 0x8018c58 228 F_5097
 CCa 0x8018ca0 Get ConfigData + 0x0 F_5097
 af+ 0x8018d3c 176 F_5098
 af+ 0x8018e00 190 F_5099
-af+ 0x8018ecc 250 F_5100
+af+ 0x8018ecc 250 Create_Menu_Entry_Power
 af+ 0x8018fcc 154 F_5101
 af+ 0x801906c 154 F_5102
-af+ 0x8019128 394 F_5103
+af+ 0x8019128 394 Create_Menu_Entry_Backlight
 CCa 0x801918c Get ConfigData + 0x15 F_5103
 af+ 0x80192b2 130 F_5104
 CCa 0x801932c Set ConfigData + 0x15 F_5104
 af+ 0x801933c 130 F_5105
 af+ 0x80193c8 126 F_5106
-af+ 0x801944c 232 F_5107
+af+ 0x801944c 232 Create_Menu_Entry_Squelch
 af+ 0x8019534 164 F_5108
 af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
@@ -245,7 +246,7 @@ af+ 0x80198c0 130 UnsetConfig0x02Bit4andmore
 CCa 0x8019932 Get ConfigData + 0x2 F_5113
 CCa 0x8019934 Unset Bit 4 
 CCa 0x801993a Set ConfigData + 0x2 F_5113
-af+ 0x8019948 380 F_5114
+af+ 0x8019948 380 Create_Menu_Entry_KeypadLock
 CCa 0x80199a8 Get ConfigData + 0x16 F_5114
 af+ 0x8019ac4 126 F_5115
 CCa 0x8019b3a Set ConfigData + 0x16 F_5115
@@ -257,12 +258,12 @@ af+ 0x8019c68 120 F_5118
 CCa 0x8019cd8 Set ConfigData + 0x16 F_5118
 af+ 0x8019ce0 272 F_4160
 CCa 0x8019d64 ConfigData + 0x16 (byte) F_4160
-af+ 0x8019dfc 208 F_5119
+af+ 0x8019dfc 208 Create_Menu_Entry_Language
 af+ 0x8019ecc 120 F_5120
 af+ 0x8019f4c 122 F_5121
-af+ 0x8019fd0 256 F_5122
+af+ 0x8019fd0 256 Create_Menu_Entry_LEDIndicator
 CCa 0x801a02e Get ConfigData + 0x0 F_5122
-af+ 0x801a0e0 304 F_5123
+af+ 0x801a0e0 304 Create_Menu_Entry_wtf_5235235
 af+ 0x801a210 198 F_5124
 af+ 0x801a2d6 26 F_5125
 af+ 0x801a2f4 114 F_5126
@@ -2043,6 +2044,7 @@ f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
 f WelcomeLine1 4 @ 0x2001cecc
 fC WelcomeLine1 *Welcome_Line1
 f WelcomeLine2 4 @ 0x2001cee0
+
 
 CCa 0x8044184 _Start Mbox_
 CCa 0x804910e _uC/OS-II TmrLock_
