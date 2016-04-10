@@ -34,6 +34,7 @@ void dmesg_init(){
   //Wipe out the old buffer.
   for(int i=0;i<DMESG_SIZE;i++)
     dmesg_start[i]=0;
+  dmesg_wcurs=0;
   //Register the putc() function.
   init_printf(0,md380_putc);
 }
@@ -43,7 +44,7 @@ void dmesg_init(){
    we get around to it.
 */
 void dmesg_flush(){
-  dmesg_wcurs=0;
+  dmesg_init();
 }
 
 

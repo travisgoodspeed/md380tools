@@ -116,3 +116,7 @@ extern int (*ambe_encode_thing)(char *a1, int a2, int *a3, int a4,
 				short a5, short a6, short a7, int a8);
 //! Decodes an AMBE2+ frame into bits.
 extern int (*ambe_unpack)(int a1, int a2, char length, int a4);
+
+//! Populates the audio buffer.
+extern int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
+			      int a4, short a5, short a6, int a7);
