@@ -459,6 +459,7 @@ def readword(dfu, address):
 
     dfu.set_address(int(address,0));  # 2.032 
     data=dfu.upload(1,4*4,0);
+    print "%x %02x%02x%02x%02x" % (int(address, 0), data[3], data[2], data[1], data[0])
     print "%x %02x %02x %02x %02x" % (int(address, 0), data[3], data[2], data[1], data[0])
     print "%x %02x %02x %02x %02x" % (int(address, 0)+4, data[7], data[6], data[5], data[4])
     print "%x %02x %02x %02x %02x" % (int(address, 0)+8, data[11], data[10], data[9], data[8])
