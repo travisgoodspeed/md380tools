@@ -133,13 +133,16 @@ CCa 0x8017c06 Get ConfigData + 0x1 F_5082
 CCa 0x8017c10 Set ConfigData + 0x1 F_5082
 CCa 0x8017c1c Get ConfigData + 0x0 F_5082
 CCa 0x8017c32 Get ConfigData + 0x2 F_5082
+CCa 0x8017c34 Bit 5
 CCa 0x8017c3c Set ConfigData + 0x2 F_5082
 CCa 0x8017c48 Get ConfigData + 0x1 F_5082
+CCa 0x8017c4a Bit 3
 CCa 0x8017c52 Set ConfigData + 0x1 F_5082
 CCa 0x8017c5e Get ConfigData + 0x2 F_5082
 CCa 0x8017c74 Get ConfigData + 0x0 F_5082
 CCa 0x8017c7e Set ConfigData + 0x0 F_5082
-af+ 0x8017cd4 674 F_5083
+
+af+ 0x8017cd4 674 F_5083_Init...
 CCa 0x8017e84 Get ConfigData + 0x1 F_5083
 CCa 0x8017e8e Set ConfigData + 0x1 F_5083
 CCa 0x8017ea8 Get ConfigData + 0x1 F_5083
@@ -149,10 +152,12 @@ CCa 0x8017ed6 Set ConfigData + 0x1 F_5083
 CCa 0x8017ee2 Get ConfigData + 0x0 F_5083
 CCa 0x8017eec Set ConfigData + 0x0 F_5083
 CCa 0x8017ef8 Get ConfigData + 0x2 F_5083
+CCa 0x8017efa Unset Bit 5
 CCa 0x8017f02 Set ConfigData + 0x2 F_5083
 CCa 0x8017f0e Get ConfigData + 0x1 F_5083
 CCa 0x8017f18 Set ConfigData + 0x1 F_5083
 CCa 0x8017f26 Get ConfigData + 0x2 F_5083
+CCa 0x8017f28 Unset Bit 4
 CCa 0x8017f30 Set ConfigData + 0x2 F_5083
 CCa 0x8017f3c Get ConfigData + 0x0 F_5083
 CCa 0x8017f46 Set ConfigData + 0x0 F_5083
@@ -193,12 +198,16 @@ af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
 CCa 0x8019728 Set ConfigData + 0x15 F_5110
 af+ 0x8019734 250 F_5111
+CCa 0x080197be 0x8019834 .. SetConfig0x02Bit4andmore()
 CCa 0x8019792 Get ConfigData + 0x2 F_5111
-af+ 0x8019834 132 F_5112
-CCa 0x80198aa Get ConfigData + 0x2 F_5112
+CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore()
+af+ 0x8019834 132 SetConfig0x02Bit4andmore
+CCa 0x80198a8 Get ConfigData + 0x2 F_5112
+CCa 0x80198aa SetBit 4
 CCa 0x80198b0 Set ConfigData + 0x2 F_5112
-af+ 0x80198c0 130 F_5113
+af+ 0x80198c0 130 UnsetConfig0x02Bit4andmore
 CCa 0x8019932 Get ConfigData + 0x2 F_5113
+CCa 0x8019934 Unset Bit 4 
 CCa 0x801993a Set ConfigData + 0x2 F_5113
 af+ 0x8019948 380 F_5114
 CCa 0x80199a8 Get ConfigData + 0x16 F_5114
@@ -1291,6 +1300,7 @@ af+ 0x8044172 298 F_474
 af+ 0x804429c 684 Start_multiple_tasks
 af+ 0x8044548 300 RTC_Timer
 CCa 0x804454e Get ConfigData + 0x2  (byte) ubfx r0, r0, 4, 1 .. lsls r0, r0, 0x1f  RTC_Timer
+CCa 0x8044550 Bit 4
 af+ 0x8044674 626 FMTx_Process
 CCa 0x80447a4 ConfigData + 0x1  (byte) FMTx_Process
 CCa 0x80447b0 ConfigData + 0x1  (byte) FMTx_Process
