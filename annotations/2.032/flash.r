@@ -30,6 +30,9 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
+
+
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -122,6 +125,20 @@ af+ 0x80172ec 236 F_973
 af+ 0x8017612 56 F_4083
 af+ 0x8017650 124 F_4085
 af+ 0x8017a60 590 F_5082
+CCa 0x8017bbe Get ConfigData + 0x1 F_5082
+CCa 0x8017bd0 Get ConfigData + 0x1 F_5082
+CCa 0x8017be2 Get ConfigData + 0x1 F_5082
+CCa 0x8017bec Set ConfigData + 0x1 F_5082
+CCa 0x8017c06 Get ConfigData + 0x1 F_5082
+CCa 0x8017c10 Set ConfigData + 0x1 F_5082
+CCa 0x8017c1c Get ConfigData + 0x0 F_5082
+CCa 0x8017c32 Get ConfigData + 0x2 F_5082
+CCa 0x8017c3c Set ConfigData + 0x2 F_5082
+CCa 0x8017c48 Get ConfigData + 0x1 F_5082
+CCa 0x8017c52 Set ConfigData + 0x1 F_5082
+CCa 0x8017c5e Get ConfigData + 0x2 F_5082
+CCa 0x8017c74 Get ConfigData + 0x0 F_5082
+CCa 0x8017c7e Set ConfigData + 0x0 F_5082
 af+ 0x8017cd4 674 F_5083
 CCa 0x8017e84 Get ConfigData + 0x1 F_5083
 CCa 0x8017e8e Set ConfigData + 0x1 F_5083
@@ -1976,27 +1993,10 @@ af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 af+ 0x80f96b0 6 F_5074
 f ConfigData 0x50 @ 0x2001c658
-0x8017c1c Get ConfigData + 0x0 F_5082
-0x8017c74 Get ConfigData + 0x0 F_5082
-0x8017bbe Get ConfigData + 0x1 F_5082
-0x8017bd0 Get ConfigData + 0x1 F_5082
-0x8017be2 Get ConfigData + 0x1 F_5082
-0x8017c06 Get ConfigData + 0x1 F_5082
-0x8017c48 Get ConfigData + 0x1 F_5082
-0x8017c32 Get ConfigData + 0x2 F_5082
-0x8017c5e Get ConfigData + 0x2 F_5082
-0x8017c7e Set ConfigData + 0x0 F_5082
-0x8017bec Set ConfigData + 0x1 F_5082
-0x8017c10 Set ConfigData + 0x1 F_5082
-0x8017c52 Set ConfigData + 0x1 F_5082
-0x8017c3c Set ConfigData + 0x2 F_5082
 f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
 f WelcomeLine1 4 @ 0x2001cecc
 fC WelcomeLine1 *Welcome_Line1
 f WelcomeLine2 4 @ 0x2001cee0
-
-
-
 
 
 CCa 0x8044184 _Start Mbox_
