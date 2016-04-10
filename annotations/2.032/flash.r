@@ -29,7 +29,7 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
-af+ 0x080127d0 880 F_4546
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -96,6 +96,7 @@ CCa 0x801252a ret value r0, r1
 CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
+af+ 0x80127d0 880 F_4546
 af+ 0x8012b54 854 F_5075
 CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
 CCa 0x8012bb2 ConfigData + 1d (byte) F_5075
@@ -107,16 +108,140 @@ af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
 af+ 0x8016bb8 238 F_5077
 CCa 0x8016c06 ConfigData + 0x17 (byte) F_5077
+af+ 0x8016cb0 132 F_5078
+CCa 0x8016d2c Set ConfigData + 0x17 (Byte) F_5078
+af+ 0x8016d3c 130 F_5079
+CCa 0x8016db6 Set ConfigData + 0x17 (Byte) F_5079
+af+ 0x8016dcc 152 F_5080
+CCa 0x8016e60 ConfigData + 0x17 (Byte) F_5080
+af+ 0x8016f90 146 F_5081
+CCa 0x8017006 Set ConfigData + 0xb (Byte) F_5081
 af+ 0x8017204 92 F_4288
 af+ 0x8017268 104 F_4289
 af+ 0x80172ec 236 F_973
 af+ 0x8017612 56 F_4083
 af+ 0x8017650 124 F_4085
+af+ 0x8017a60 590 F_5082
+af+ 0x8017cd4 674 F_5083
+CCa 0x8017e84 Get ConfigData + 0x1 F_5083
+CCa 0x8017e8e Set ConfigData + 0x1 F_5083
+CCa 0x8017ea8 Get ConfigData + 0x1 F_5083
+CCa 0x8017eb2 Set ConfigData + 0x1 F_5083
+CCa 0x8017ecc Get ConfigData + 0x1 F_5083
+CCa 0x8017ed6 Set ConfigData + 0x1 F_5083
+CCa 0x8017ee2 Get ConfigData + 0x0 F_5083
+CCa 0x8017eec Set ConfigData + 0x0 F_5083
+CCa 0x8017ef8 Get ConfigData + 0x2 F_5083
+CCa 0x8017f02 Set ConfigData + 0x2 F_5083
+CCa 0x8017f0e Get ConfigData + 0x1 F_5083
+CCa 0x8017f18 Set ConfigData + 0x1 F_5083
+CCa 0x8017f26 Get ConfigData + 0x2 F_5083
+CCa 0x8017f30 Set ConfigData + 0x2 F_5083
+CCa 0x8017f3c Get ConfigData + 0x0 F_5083
+CCa 0x8017f46 Set ConfigData + 0x0 F_5083
+af+ 0x8017f78 394 F_5084
+af+ 0x8018104 220 F_5085
+CCa 0x8018146 Get ConfigData + 0x1 F_5085
+af+ 0x80181f0 398 F_5086
+CCa 0x8018258 Get ConfigData + 0x1 F_5086
+CCa 0x80182e0 Get ConfigData + 0x1 F_5086
+af+ 0x8018394 296 F_5087
+af+ 0x80184c0 254 F_5088
+CCa 0x801851c Get ConfigData + 0x2 F_5088
+af+ 0x80185cc 236 F_5089
+CCa 0x8018614 Get ConfigData + 0x1 F_5089
+af+ 0x80186b8 170 F_5090
+af+ 0x801876c 152 F_5091
+af+ 0x8018804 248 F_5092
+af+ 0x8018900 192 F_5093
+af+ 0x80189d8 350 F_5094
+af+ 0x8018b3c 134 F_5095
+af+ 0x8018bc2 132 F_5096
+af+ 0x8018c58 228 F_5097
+CCa 0x8018ca0 Get ConfigData + 0x0 F_5097
+af+ 0x8018d3c 176 F_5098
+af+ 0x8018e00 190 F_5099
+af+ 0x8018ecc 250 F_5100
+af+ 0x8018fcc 154 F_5101
+af+ 0x801906c 154 F_5102
+af+ 0x8019128 394 F_5103
+CCa 0x801918c Get ConfigData + 0x15 F_5103
+af+ 0x80192b2 130 F_5104
+CCa 0x801932c Set ConfigData + 0x15 F_5104
+af+ 0x801933c 130 F_5105
+af+ 0x80193c8 126 F_5106
+af+ 0x801944c 232 F_5107
+af+ 0x8019534 164 F_5108
+af+ 0x80195f0 182 F_5109
+af+ 0x80196a6 138 F_5110
+CCa 0x8019728 Set ConfigData + 0x15 F_5110
+af+ 0x8019734 250 F_5111
+CCa 0x8019792 Get ConfigData + 0x2 F_5111
+af+ 0x8019834 132 F_5112
+CCa 0x80198aa Get ConfigData + 0x2 F_5112
+CCa 0x80198b0 Set ConfigData + 0x2 F_5112
+af+ 0x80198c0 130 F_5113
+CCa 0x8019932 Get ConfigData + 0x2 F_5113
+CCa 0x801993a Set ConfigData + 0x2 F_5113
+af+ 0x8019948 380 F_5114
+CCa 0x80199a8 Get ConfigData + 0x16 F_5114
+af+ 0x8019ac4 126 F_5115
+CCa 0x8019b3a Set ConfigData + 0x16 F_5115
+af+ 0x8019b54 130 F_5116
+CCa 0x8019bce Set ConfigData + 0x16 F_5116
+af+ 0x8019be0 126 F_5117
+CCa 0x8019c56 Set ConfigData + 0x16 F_5117
+af+ 0x8019c68 120 F_5118
+CCa 0x8019cd8 Set ConfigData + 0x16 F_5118
 af+ 0x8019ce0 272 F_4160
 CCa 0x8019d64 ConfigData + 0x16 (byte) F_4160
+af+ 0x8019dfc 208 F_5119
+af+ 0x8019ecc 120 F_5120
+af+ 0x8019f4c 122 F_5121
+af+ 0x8019fd0 256 F_5122
+CCa 0x801a02e Get ConfigData + 0x0 F_5122
+af+ 0x801a0e0 304 F_5123
+af+ 0x801a210 198 F_5124
+af+ 0x801a2d6 26 F_5125
+af+ 0x801a2f4 114 F_5126
+af+ 0x801a374 114 F_5127
+af+ 0x801a3ec 114 F_5128
+af+ 0x801a45e 146 F_5129
+af+ 0x801a4fc 520 F_5130
+CCa 0x801a546 Get ConfigData + 0x18 F_5130
+CCa 0x801a54e Get ConfigData + 0x19 F_5130
+CCa 0x801a556 Get ConfigData + 0x1a F_5130
+CCa 0x801a55e Get ConfigData + 0x1b F_5130
+CCa 0x801a566 Get ConfigData + 0x18 F_5130
+CCa 0x801a576 Get ConfigData + 0x19 F_5130
+CCa 0x801a586 Get ConfigData + 0x1a F_5130
+CCa 0x801a596 Get ConfigData + 0x1b F_5130
+CCa 0x801a5f2 Get ConfigData + 0x1 F_5130
+af+ 0x801a714 174 F_5131
+CCa 0x801a786 Get ConfigData + 0x1 F_5131
+CCa 0x801a790 Set ConfigData + 0x1 F_5131
+af+ 0x801a7cc 156 F_5132
+CCa 0x801a82c Get ConfigData + 0x1 F_5132
+CCa 0x801a836 Set ConfigData + 0x1 F_5132
+af+ 0x801a870 178 F_5133
+af+ 0x801a938 322 F_5134
+CCa 0x801a9be Get ConfigData + 0x1 F_5134
+af+ 0x801aabc 408 F_5135
+af+ 0x801ac60 452 F_F_5143
 af+ 0x801ae24 282 F_4161
+af+ 0x801ae24 282 F_5136
+af+ 0x801af58 298 F_5137
+CCa 0x801afc0 Get ConfigData + 0x18 F_5137
+CCa 0x801afce Get ConfigData + 0x19 F_5137
+CCa 0x801afdc Get ConfigData + 0x1a F_5137
+CCa 0x801afea Get ConfigData + 0x1b F_5137
+af+ 0x801b082 28 F_5138
 af+ 0x801b09e 188 F_4146
+af+ 0x801b164 98 F_5139
 af+ 0x801b1c6 156 F_4162
+af+ 0x801b270 136 F_5140
+af+ 0x801b300 106 F_5141
+af+ 0x801b388 54 F_5142
 af+ 0x801b440 30 F_974
 af+ 0x801b45e 24 F_975
 af+ 0x801b476 118 F_1091
@@ -1851,10 +1976,27 @@ af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 af+ 0x80f96b0 6 F_5074
 f ConfigData 0x50 @ 0x2001c658
+0x8017c1c Get ConfigData + 0x0 F_5082
+0x8017c74 Get ConfigData + 0x0 F_5082
+0x8017bbe Get ConfigData + 0x1 F_5082
+0x8017bd0 Get ConfigData + 0x1 F_5082
+0x8017be2 Get ConfigData + 0x1 F_5082
+0x8017c06 Get ConfigData + 0x1 F_5082
+0x8017c48 Get ConfigData + 0x1 F_5082
+0x8017c32 Get ConfigData + 0x2 F_5082
+0x8017c5e Get ConfigData + 0x2 F_5082
+0x8017c7e Set ConfigData + 0x0 F_5082
+0x8017bec Set ConfigData + 0x1 F_5082
+0x8017c10 Set ConfigData + 0x1 F_5082
+0x8017c52 Set ConfigData + 0x1 F_5082
+0x8017c3c Set ConfigData + 0x2 F_5082
 f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
 f WelcomeLine1 4 @ 0x2001cecc
 fC WelcomeLine1 *Welcome_Line1
 f WelcomeLine2 4 @ 0x2001cee0
+
+
+
 
 
 CCa 0x8044184 _Start Mbox_
