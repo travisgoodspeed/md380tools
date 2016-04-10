@@ -110,7 +110,7 @@ int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
    */
 #ifdef AMBEWAVPRINT
   //Does this really need to be in a critical section?
-  int state=OS_ENTER_CRITICAL();/
+  int state=OS_ENTER_CRITICAL();
   
   //A1 holds audio as signed LE shorts.
   printf("WAV: ");
