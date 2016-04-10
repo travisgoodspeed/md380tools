@@ -29,7 +29,6 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
-
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -57,6 +56,10 @@ af+ 0x800d7f4 114 F_4038
 af+ 0x800d86c 30 F_4039
 af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785_Print_Date_and_Time
+CCa 0x800d8d4 20xx year 
+CCa 0x800d986 0x9d 157
+CCa 0x800d988 0x60 96
+CCa 0x800d98a 0x5f 95
 af+ 0x800d9b0 18 F_4153
 af+ 0x800d9cc 124 F_4220
 af+ 0x800da54 124 F_786
@@ -66,6 +69,7 @@ af+ 0x800dd40 284 F_1056
 af+ 0x800de5c 96 F_972
 af+ 0x800debc 126 F_787
 af+ 0x800df84 996 F_4285
+CCa 0x800e2b0 C.o.n.t.a.c.t.s.
 af+ 0x800e3c4 1820 F_4142
 af+ 0x800eb10 414 F_4144
 af+ 0x800ecc0 418 F_4145
@@ -78,6 +82,12 @@ af+ 0x8010838 260 F_4221
 af+ 0x8010950 124 F_4156
 af+ 0x80109d0 150 F_4349
 af+ 0x8010b6a 96 F_4157
+af+ 0x80123c4 186 F_Menu_Zone
+CCa 0x80123ea Z.o.n.e
+CCa 0x801244c 0x74f8dfb6
+CCa 0x8012450 0xd0f8dfb5
+CCa 0x8012454 Titel of active Zone
+CCa 0x8012458 0x00000006
 af+ 0x8012528 148 F_253
 CCa 0x8012528 ... number of zones?
 CCa 0x801252a ret value r0, r1
@@ -146,26 +156,28 @@ af+ 0x801c494 8 F_989
 af+ 0x801c49c 14 F_4152
 af+ 0x801c4b0 94 F_4086
 af+ 0x801c50e 120 F_794
-af+ 0x801c5e0 8 F_795
-af+ 0x801c5e8 8 F_796
+af+ 0x801c5e0 8 gfx_set_bg_color
+af+ 0x801c5e8 8 gfx_set_fg_color
 af+ 0x801c5f0 214 F_4165
 af+ 0x801c6c6 330 F_4166
 af+ 0x801c810 328 F_4167
 af+ 0x801c958 164 F_4132
 af+ 0x801c9fc 70 F_4133
 af+ 0x801ca42 36 F_1063
+CCa 0x801ca4a GPIO D3 K3 .. config as input
+CCa 0x801ca5c GPIO D3 K3 .. config as output
 af+ 0x801ca66 12 F_1095
 af+ 0x801ca72 32 F_1064
 af+ 0x801ca92 52 F_990
 af+ 0x801cac6 52 F_4134
-af+ 0x801cb04 30 F_797
+af+ 0x801cb04 30 F_797_gfx_blockfill_unsure
 af+ 0x801cb22 168 F_4135
 af+ 0x801cbca 2 F_991
 af+ 0x801cbcc 10 F_992
 af+ 0x801cbd8 40 F_4168
 af+ 0x801cc00 722 F_4136
 af+ 0x801ced2 40 F_993
-af+ 0x801cf1c 18 F_798
+af+ 0x801cf1c 18 gfx_chars_to_display
 af+ 0x801cf2e 18 F_799
 af+ 0x801cf40 16 F_4169
 af+ 0x801cf50 30 F_4291
@@ -186,15 +198,15 @@ af+ 0x802069c 44 F_4295
 af+ 0x80206c8 58 F_4296
 af+ 0x8020702 74 F_4297
 af+ 0x802074c 58 F_4298
-af+ 0x802079c 294 F_800
+af+ 0x802079c 294 F_800_something_with_ant
 CCa 0x80208a8 Ant symbol with strength
 CCa 0x80208ba Ant symbol with strength
-af+ 0x8020974 16 F_801
+af+ 0x8020974 16 gfx_select_font
 af+ 0x8020988 8 F_4172
 af+ 0x8020990 8 F_4226
 af+ 0x802099c 154 F_994
 af+ 0x8020a36 10 F_4353
-af+ 0x8020a40 18 F_802
+af+ 0x8020a40 18 gfx_Single_Char_Out_X_Y_Char
 af+ 0x8020a58 3020 F_28
 af+ 0x8021624 48 F_30
 af+ 0x8021654 30 F_31
@@ -218,13 +230,18 @@ af+ 0x8021bfc 156 F_812
 af+ 0x8021c98 362 F_260
 af+ 0x8021e02 26 F_4301
 af+ 0x8021e1c 26 F_261
-af+ 0x8021e4c 26 F_813
-af+ 0x8021e66 26 F_814
+af+ 0x8021e4c 26 F_813_SPIF_ZoneName2Ram_0x40_ID
+CCa 0x8021e4c get aktive zone name to ram
+CCa 0x8021e56 SPI 0x149a0 + 0x40 begin zone names
+af+ 0x8021e66 26 F_814_SPIF_ZoneName2Ram_0x20_ID
+CCa 0x8021e66 get aktive zone name to ram 
+CCa 0x8021e70 SPI 0x149a0 + 0x40 begin zone names
 af+ 0x8021e80 24 F_815
 af+ 0x8021e98 24 F_816
-af+ 0x8021eb0 26 F_4302
+af+ 0x8021eb0 26 F_4302_SMS_QuickText2Ram_ID
+af+ 0x8021eca 16 F_Get_From_SPIF
 af+ 0x8021eee 26 F_4354
-af+ 0x8021f22 18 F_817
+af+ 0x8021f22 18 F_817_SPIF_Number_of_zones
 af+ 0x8021f34 18 F_818
 af+ 0x8021f46 18 F_1065_spiflash_read_c8_from_0x416d0
 af+ 0x8021f58 18 F_4428
@@ -233,7 +250,7 @@ af+ 0x8021f8a 44 F_4429
 af+ 0x8021fb6 84 F_4356
 af+ 0x802200a 18 F_4430
 af+ 0x802201c 18 F_4357
-af+ 0x802202e 32 F_4358
+af+ 0x802202e 32 F_4358_SPIF_Read_Send_SMS
 af+ 0x802204e 44 F_4359
 af+ 0x802207a 126 F_4360
 af+ 0x80220f8 26 F_819
@@ -405,6 +422,32 @@ af+ 0x802834a 396 F_4190
 af+ 0x80284d6 442 F_4237
 af+ 0x80286e8 580 F_286
 CCa 0x80287c6 2 house picture
+CCa 0x80287d6 0x1f 31
+CCa 0x80287d8 0x9d 157
+CCa 0x80287da 0x10 16
+CCa 0x80287e2 0x39 57
+CCa 0x80287e4 0x2c 44
+CCa 0x80287e6 0x35 53
+CCa 0x80287ee 0x30 48
+CCa 0x80287f0 0x18 24
+CCa 0x80287f2 0x20 32
+CCa 0x80287fa 0x30 48
+CCa 0x80287fc 0x9d 157
+CCa 0x80287fe 0x20 32
+CCa 0x8028800 0x91 145
+CCa 0x8028806 0x39 57
+CCa 0x8028808 0x9d 157
+CCa 0x802880a 0x30 48
+CCa 0x8028812 0x4a 74
+CCa 0x8028814 0x9d 157
+CCa 0x8028816 0x3a 58
+CCa 0x8028818 0x22 34
+CCa 0x8028838 0x9d 157
+CCa 0x8028848 0x4b 75
+CCa 0x802884a 0x69 105
+CCa 0x8028868 test for 2 digit channel
+CCa 0x8028870 get channel nr
+CCa 0x8028876 +0x30 for ascii
 af+ 0x8028960 674 F_287
 CCa 0x8028a5a speaker picture
 CCa 0x8028a76 2 people picture
@@ -457,6 +500,7 @@ af+ 0x802c250 104 F_4382
 af+ 0x802d5d0 92 F_4383
 af+ 0x802dee4 428 F_4314
 af+ 0x802e240 888 F_4315
+CCa 0x802e442 check for private call
 CCa 0x802e452 singel person picture
 CCa 0x802e4a0 2 people picture
 CCa 0x802e4b0 sprite incomming telephone
@@ -481,7 +525,7 @@ af+ 0x802fc36 332 F_1069_spiflash_multiple_spiflash_program_page
 af+ 0x802fd82 70 spiflash_read
 CCa 0x802fd8e Read Data CMD 03h
 CCa 0x802fdae dummy_value
-af+ 0x802fdc8 58 spi_send_and_read_byte
+af+ 0x802fdc8 58 spi1_sendrecv
 af+ 0x802fe02 18 spiflash_write_enable
 af+ 0x802fe14 34 spiflash_wait_for_read_status_register
 af+ 0x802fe36 28 enable_spi_flash_and_sem
@@ -522,6 +566,10 @@ af+ 0x8030d32 260 F_4500
 af+ 0x8030e36 40 F_320
 af+ 0x8030e5e 92 F_26
 af+ 0x8030eba 92 F_322
+CCa 0x8030eca GPIO C2 Reset MODER2_0 Input
+CCa 0x8030ed4 GPIO C4 Reset MODER4_1 Input
+CCa 0x8030ee0 GPIO A4 Reset MODER4_1 Input
+CCa 0x8030eec GPIO A4 Reset MODER4_0 Input
 af+ 0x8030f16 102 F_323
 af+ 0x8030f7c 328 F_4501
 af+ 0x803114c 10 F_1152
@@ -544,6 +592,7 @@ af+ 0x80315f6 126 F_1116
 af+ 0x8031674 94 F_826
 af+ 0x8031694 62 F_67
 af+ 0x80316ec 26 F_1072
+CCa 0x80316f8 BLX F_1021 ...wtf 
 af+ 0x8031710 66 F_827
 af+ 0x8031752 30 F_1004
 af+ 0x8031770 56 F_1073
@@ -563,6 +612,7 @@ af+ 0x8031bb4 14 F_327
 af+ 0x8031bc2 54 F_832
 af+ 0x8031bf8 12 F_328
 CCa 0x8031c00 BLX F_5049 ... wtf
+af+ 0x8031c04 12 F_5068
 af+ 0x8031c10 24 F_1006
 af+ 0x8031c28 24 F_1007
 af+ 0x8031c4c 54 F_4460
@@ -578,38 +628,43 @@ af+ 0x8031ede 28 F_111
 af+ 0x8031efa 32 F_331
 af+ 0x8031f40 36 F_1074
 af+ 0x8031f64 12 F_1008
-af+ 0x8031f74 8 F_834
-CCa 0x8031f74 to display ?
-af+ 0x8031f7c 6 F_835
-CCa 0x8031f7c to display ?
-af+ 0x8031f82 12 F_1139
+af+ 0x8031f74 8 F_834_Write_Command_2display
+af+ 0x8031f7c 6 F_835_Write_Data_2display
+af+ 0x8031f82 12 F_1139_to_display
 af+ 0x8031f8e 20 F_1101
-af+ 0x8031fb0 20 F_1102
-af+ 0x8031fc4 392 F_1075
+CCa 0x8031f90 Set GPIO D8 to Alternate function (Flash CS1..wtf)
+CCa 0x8031f9a 720895
+af+ 0x8031fb0 20 F_1102_delay
+af+ 0x8031fc4 392 F_1075_display_init
 af+ 0x803214c 72 F_332
 af+ 0x8032194 68 F_1117
 af+ 0x80321d8 218 F_836
 af+ 0x80322b2 216 F_837
 af+ 0x803238a 258 F_4388
 af+ 0x8032494 26 F_4318
+af+ 0x80324ae 246 F_5069
 af+ 0x80325d4 40 F_4259
 af+ 0x8032620 6 F_838
 af+ 0x8032628 136 F_3000
 af+ 0x80326b0 16 F_1010
 af+ 0x80326c4 26 F_1011
 af+ 0x80326de 54 F_1148
+CCa 0x80326fe BLX F_5069 ...wtf
+CCa 0x8032700 0 value in my test case
 af+ 0x8032714 66 F_1149
 af+ 0x8032756 16 F_1012
 af+ 0x8032766 14 F_1150
+CCa 0x8032770 BLX F_5074 ...wtf
 af+ 0x803277c 8 F_840
 af+ 0x8032784 8 F_841
 af+ 0x8032790 24 F_333
 af+ 0x80327a8 90 F_4260
 af+ 0x8032802 52 F_4319
 af+ 0x8032838 52 F_112
-af+ 0x803286c 320 F_1013
+af+ 0x803286c 320 F_1013_Something_with_display_ant_signal_strength
 CCa 0x80328dc Ant symbol
 CCa 0x803292a Ant symbol
+CCa 0x8032950 clear ant_signal
 CCa 0x8032972 Ant symbol
 af+ 0x80329c0 104 OSTimeDly
 af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
@@ -836,7 +891,7 @@ af+ 0x803d6d8 214 F_138
 af+ 0x803d7c0 282 F_395
 af+ 0x803d8da 192 F_396
 af+ 0x803da00 44 F_857
-af+ 0x803da2c 76 F_397
+af+ 0x803da2c 76 OSSemCreate
 af+ 0x803da78 218 OSSemPend
 CCa 0x803da78 void OSSemPend (OS_EVENT *pevent, INT32U timeout, INT8U *perr)
 af+ 0x803db68 92 OSSemPost
@@ -1029,6 +1084,8 @@ af+ 0x8046718 8 F_5051
 af+ 0x8046720 18 F_1021
 af+ 0x8046734 8 F_1022
 af+ 0x8046740 2 F_875
+af+ 0x8046742 12 F_5070
+af+ 0x804674e 12 F_5071
 af+ 0x8046790 378 F_1023
 af+ 0x804690c 22 Not_Big_I2C_Function33
 af+ 0x8046914 14 F_506
@@ -1268,6 +1325,8 @@ af+ 0x804fc28 40 F_4082
 af+ 0x804fc50 22 F_5052
 af+ 0x804fc66 6 F_5054
 af+ 0x804fc6c 52 F_5053
+af+ 0x804fca0 6 F_5072
+af+ 0x804fca6 6 F_5073
 af+ 0x804fcb0 234 I2C1_Function_1
 af+ 0x804fda8 28 I2C1_Function_2
 af+ 0x804fdc4 28 I2C1_Function_3
@@ -1640,17 +1699,19 @@ af+ 0x8096c0c 12 F_4545
 af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
+af+ 0x80f96b0 6 F_5074
 
-CCa 0x08044184 _Start Mbox_
-CCa 0x0804910e _uC/OS-II TmrLock_
-CCa 0x0804911a _uC/OS-II TmrSignal_
+
+
+CCa 0x8044184 _Start Mbox_
+CCa 0x804910e _uC/OS-II TmrLock_
+CCa 0x804911a _uC/OS-II TmrSignal_
 CCa 0x800df84 Function with check LCD_CS ....   why ....  when (set/noset) jump over function
 CCa 0x800df8e call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
 CCa 0x801931c GPIO_SetBits(GPIOC, 0x40)
 CCa 0x80193a6 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801942e GPIO_SetBits(GPIOC, 0x40)
 CCa 0x8019718 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801ca5c GPIO_SetBits(GPIOD, 0x40)
 CCa 0x801f228 GPIO_SetBits(GPIOC, 0x40) .. Bit 3 .. C3  2T/5T / RF_RX_INTER
 CCa 0x801f334 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f3b0 GPIO_SetBits(GPIOC, 0x40)
