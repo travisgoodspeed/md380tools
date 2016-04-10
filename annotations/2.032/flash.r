@@ -30,6 +30,8 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
+
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -98,18 +100,24 @@ CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
 af+ 0x80126a8 256 Create_Menu
-CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_Utilities
-af+ 0x80127d0 880 F_4546
+CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_RadioSettings
+CCa 0x8012706 ... R.a.d.i.o...S.e.t.t.i.n.g.s
+CCa 0x8012720 0x80152ec .. Create_Menu_Entry_RadioInfo
+CCa 0x8012730 ... R.a.d.i.o...I.n.f.o
+CCa 0x8012766 0x80127d0 .. Create_Menu_Entry_ProgramRadio
+CCa 0x8012776 ... P.r.o.g.r.a.m...R.a.d.i.o
+af+ 0x80127d0 880 Create_Menu_Entry_ProgramRadio
 af+ 0x8012b54 854 F_5075
 CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
 CCa 0x8012bb2 ConfigData + 1d (byte) F_5075
 CCa 0x8012bc2 ConfigData + 1e (byte) F_5075
 CCa 0x8012bd2 ConfigData + 1f (byte) F_5075
+af+ 0x80152ec 198 Create_Menu_Entry_RadioInfo
 af+ 0x8015464 122 F_5076
 CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID F_5076
 af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
-af+ 0x8016684 1312 Create_Menu_Entry_Utilities
+af+ 0x8016684 1312 Create_Menu_Entry_RadioSettings
 CCa 0x8016744 ... T.a.l.k.a.r.o.u.n.d
 CCa 0x8016778 ... T.a.l.k.a.r.o.u.n.d
 CCa 0x80167bc ... T.o.n.e.s./.A.l.e.r.t.s
