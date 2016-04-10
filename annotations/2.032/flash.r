@@ -29,6 +29,8 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
+
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -44,8 +46,8 @@ CCa 0x800c0f0 F_5036 0x08093b25
 CCa 0x800c108 F_5010 08093975
 CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
 CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
-af+ 0x800c188 1448 F_84
-af+ 0x800c730 86 F_249_Add_MenuEntry
+af+ 0x800c188 1448 Create_MainMenyEntry
+af+ 0x800c730 86 F_249_Create_MenuEntry
 af+ 0x800c7e8 2980 F_4140
 af+ 0x800d390 378 F_4495
 af+ 0x800d518 320 F_4141
@@ -96,6 +98,8 @@ CCa 0x801252a ret value r0, r1
 CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
+af+ 0x80126a8 256 Create_Menu
+CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_Utilities
 af+ 0x80127d0 880 F_4546
 af+ 0x8012b54 854 F_5075
 CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
@@ -106,6 +110,30 @@ af+ 0x8015464 122 F_5076
 CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID F_5076
 af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
+af+ 0x8016684 1312 Create_Menu_Entry_Utilities
+CCa 0x8016744 ... T.a.l.k.a.r.o.u.n.d
+CCa 0x8016778 ... T.a.l.k.a.r.o.u.n.d
+CCa 0x80167bc ... T.o.n.e.s./.A.l.e.r.t.s
+CCa 0x801680e ... P.o.w.e.r
+CCa 0x8016858 ... B.a.c.k.l.i.g.h.t
+CCa 0x80168ac ... S.q.u.e.l.c.h.
+CCa 0x80168d6 4 to sp,8
+CCa 0x80168da 0 to sp,4
+CCa 0x80168de 0x98 to sp
+CCa 0x80168e0 0x800f453 .. 0x800f452 F_5143() to r3
+CCa 0x80168e4 0x800f452 .. Create_Menu_Entry_Intro_Screen(),r2
+CCa 0x80168f6 ... I.n.t.r.o...S.c.r.e.e.n
+CCa 0x80168f6 ....    I.n.t.r.o...S.c.r.e.e.n
+CCa 0x8016902  (byte)[0x2001d3c2]+5 to r0 .. [0x2001d3c2]+1 = 11
+CCa 0x8016940 ... K.e.y.p.a.d...L.o.c.k.
+CCa 0x8016978 ... L.a.n.g.u.a.g.e
+CCa 0x80169c2 ... L.E.D...I.n.d.i.c.a.t.o.r
+CCa 0x8016a12 ... V.O.X.
+CCa 0x8016a82 ... P.a.s.s.w.d
+CCa 0x8016ab6 ... S.i.t.e...R.o.a.m.i.n.g
+CCa 0x8016aee ... R.e.c.o.r.d
+CCa 0x8016b24 ... C.l.o.c.k
+CCa 0x8016b6e ... M.o.d.e
 af+ 0x8016bb8 238 F_5077
 CCa 0x8016c06 ConfigData + 0x17 (byte) F_5077
 af+ 0x8016cb0 132 F_5078
@@ -193,22 +221,22 @@ af+ 0x8019534 164 F_5108
 af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
 CCa 0x8019728 Set ConfigData + 0x15 F_5110
-af+ 0x8019734 250 Add_Menu_Entry_Intro_Screen
+af+ 0x8019734 250 Create_Menu_Entry_Intro_Screen
 CCa 0x8019792 Get ConfigData + 0x2 F_5111
 CCa 0x80197b0 1 to SP,8
 CCa 0x80197b4 0 to SP,4 
 CCa 0x80197b8 0x8b to SP
-CCa 0x80197ba 0x800f453 r3
+CCa 0x80197ba 0x800f453 .. 0x800f452 F_5143()  to r3
 CCa 0x80197be 0x8019834 .. SetConfig0x02Bit4andmore(),r2
 CCa 0x80197d0 [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b0] to r1 .. [0x200003b0] = 0x080fa348 .. [0x080fa348] = "P.i.c.t.u.r.e"
 CCa 0x80197d6 (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
 CCa 0x80197dc 1 to SP,8
 CCa 0x80197e2 0 to SP,4
 CCa 0x80197e6 0x8b to SP
-CCa 0x80197e8 0x800f453 r3
+CCa 0x80197e8 0x800f453 .. 0x800f452 F_5143() to r3
 CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore(),r2
 CCa 0x80197fe [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b4] to r1 .. [0x200003b4] = 0x080d1f48 .. [0x080d1f48] ="C.h.a.r...S.t.r.i.n.g" 
-CCa 0x8019808 (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2] = 7 ???
+CCa 0x8019808 (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2]+1 = 7 ???
 af+ 0x8019834 132 SetConfig0x02Bit4andmore
 CCa 0x80198a8 Get ConfigData + 0x2 F_5112
 CCa 0x80198aa SetBit 4
@@ -261,7 +289,7 @@ af+ 0x801a870 178 F_5133
 af+ 0x801a938 322 F_5134
 CCa 0x801a9be Get ConfigData + 0x1 F_5134
 af+ 0x801aabc 408 F_5135
-af+ 0x801ac60 452 F_F_5143
+af+ 0x801ac60 452 F_5143
 af+ 0x801ae24 282 F_4161
 af+ 0x801ae24 282 F_5136
 af+ 0x801af58 298 F_5137
