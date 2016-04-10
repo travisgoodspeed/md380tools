@@ -29,10 +29,6 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
-
-
-
-
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -49,7 +45,7 @@ CCa 0x800c108 F_5010 08093975
 CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
 CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
 af+ 0x800c188 1448 F_84
-af+ 0x800c730 86 F_249
+af+ 0x800c730 86 F_249_Add_MenuEntry
 af+ 0x800c7e8 2980 F_4140
 af+ 0x800d390 378 F_4495
 af+ 0x800d518 320 F_4141
@@ -80,6 +76,7 @@ af+ 0x800eb10 414 F_4144
 af+ 0x800ecc0 418 F_4145
 af+ 0x800ee94 1422 F_4143
 af+ 0x800f422 48 F_251
+af+ 0x800f452 18 F_5143
 af+ 0x800f464 32 F_86
 af+ 0x800f488 294 F_4155
 af+ 0x800fc12 34 F_4286
@@ -141,7 +138,6 @@ CCa 0x8017c52 Set ConfigData + 0x1 F_5082
 CCa 0x8017c5e Get ConfigData + 0x2 F_5082
 CCa 0x8017c74 Get ConfigData + 0x0 F_5082
 CCa 0x8017c7e Set ConfigData + 0x0 F_5082
-
 af+ 0x8017cd4 674 F_5083_Init...
 CCa 0x8017e84 Get ConfigData + 0x1 F_5083
 CCa 0x8017e8e Set ConfigData + 0x1 F_5083
@@ -198,9 +194,21 @@ af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
 CCa 0x8019728 Set ConfigData + 0x15 F_5110
 af+ 0x8019734 250 F_5111
-CCa 0x080197be 0x8019834 .. SetConfig0x02Bit4andmore()
 CCa 0x8019792 Get ConfigData + 0x2 F_5111
-CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore()
+CCa 0x80197b0 1 to SP,8
+CCa 0x80197b4 0 to SP,4 
+CCa 0x80197b8 0x8b to SP
+CCa 0x80197ba 0x800f453 r3
+CCa 0x80197be 0x8019834 .. SetConfig0x02Bit4andmore(),r2
+CCa 0x80197d0 [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b0] to r1 .. [0x200003b0] = 0x080fa348 .. [0x080fa348] = "P.i.c.t.u.r.e"
+CCa 0x80197d6 (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
+CCa 0x80197dc 1 to SP,8
+CCa 0x80197e2 0 to SP,4
+CCa 0x80197e6 0x8b to SP
+CCa 0x80197e8 0x800f453 r3
+CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore(),r2
+CCa 0x80197fe [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b4] to r1 .. [0x200003b4] = 0x080d1f48 .. [0x080d1f48] ="C.h.a.r...S.t.r.i.n.g" 
+CCa 0x8019808 (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2] = 7 ???
 af+ 0x8019834 132 SetConfig0x02Bit4andmore
 CCa 0x80198a8 Get ConfigData + 0x2 F_5112
 CCa 0x80198aa SetBit 4
@@ -2007,7 +2015,6 @@ f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
 f WelcomeLine1 4 @ 0x2001cecc
 fC WelcomeLine1 *Welcome_Line1
 f WelcomeLine2 4 @ 0x2001cee0
-
 
 CCa 0x8044184 _Start Mbox_
 CCa 0x804910e _uC/OS-II TmrLock_
