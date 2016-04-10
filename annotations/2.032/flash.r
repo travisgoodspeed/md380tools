@@ -1290,7 +1290,7 @@ CCa 0x804408a ConfigData + 0x1  (byte) Start
 af+ 0x8044172 298 F_474
 af+ 0x804429c 684 Start_multiple_tasks
 af+ 0x8044548 300 RTC_Timer
-CCa 0x804454e ConfigData + 0x2  (byte) ubfx r0, r0, 4, 1 .. lsls r0, r0, 0x1f  RTC_Timer
+CCa 0x804454e Get ConfigData + 0x2  (byte) ubfx r0, r0, 4, 1 .. lsls r0, r0, 0x1f  RTC_Timer
 af+ 0x8044674 626 FMTx_Process
 CCa 0x80447a4 ConfigData + 0x1  (byte) FMTx_Process
 CCa 0x80447b0 ConfigData + 0x1  (byte) FMTx_Process
