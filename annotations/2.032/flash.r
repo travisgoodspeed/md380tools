@@ -30,8 +30,6 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
-
-
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -48,6 +46,16 @@ CCa 0x800c108 F_5010 08093975
 CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
 CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
 af+ 0x800c188 1448 Create_MainMenyEntry
+CCa 0x800c270 ... C.o.n.t.a.c.t.s.
+CCa 0x800c2b4 ... S.c.a.n
+CCa 0x800c2ea ... S.c.a.n
+CCa 0x800c31a ... Z.o.n.e
+CCa 0x800c33a ... 0x802bfd4 Create_Menu_Entry_Message
+CCa 0x800c34c ... M.e.s.s.a.g.e.s.
+CCa 0x800c37e ... C.a.l.l...Log
+CCa 0x800c3b0 ... U.t.i.l.i.t.i.e.s
+CCa 0x800c462 ... C.o.n.t.a.c.t.s
+CCa 0x800c49e ... S.c.a.n
 af+ 0x800c730 86 F_249_Create_MenuEntry
 af+ 0x800c7e8 2980 F_4140
 af+ 0x800d390 378 F_4495
@@ -99,7 +107,7 @@ CCa 0x801252a ret value r0, r1
 CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
-af+ 0x80126a8 256 Create_Menu
+af+ 0x80126a8 256 Create_Menu_Utilies
 CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_RadioSettings
 CCa 0x8012706 ... R.a.d.i.o...S.e.t.t.i.n.g.s
 CCa 0x8012720 0x80152ec .. Create_Menu_Entry_RadioInfo
@@ -130,7 +138,7 @@ CCa 0x80168de 0x98 to sp
 CCa 0x80168e0 0x800f453 .. 0x800f452 F_5143() to r3
 CCa 0x80168e4 0x800f452 .. Create_Menu_Entry_Intro_Screen(),r2
 CCa 0x80168f6 ... I.n.t.r.o...S.c.r.e.e.n
-CCa 0x80168f6 ....    I.n.t.r.o...S.c.r.e.e.n
+CCa 0x80168f6 ...    I.n.t.r.o...S.c.r.e.e.n
 CCa 0x8016902  (byte)[0x2001d3c2]+5 to r0 .. [0x2001d3c2]+1 = 11
 CCa 0x8016940 ... K.e.y.p.a.d...L.o.c.k.
 CCa 0x8016978 ... L.a.n.g.u.a.g.e
@@ -194,7 +202,6 @@ CCa 0x8017f30 Set ConfigData + 0x2 F_5083
 CCa 0x8017f3c Get ConfigData + 0x0 F_5083
 CCa 0x8017f46 Set ConfigData + 0x0 F_5083
 af+ 0x8017f78 394 Create_Menu_Entry_Tones_Alerts
-af+ 0x8017f78 394 F_5084
 af+ 0x8018104 220 F_5085
 CCa 0x8018146 Get ConfigData + 0x1 F_5085
 af+ 0x80181f0 398 F_5086
@@ -298,8 +305,7 @@ af+ 0x801a870 178 F_5133
 af+ 0x801a938 322 F_5134
 CCa 0x801a9be Get ConfigData + 0x1 F_5134
 af+ 0x801aabc 408 F_5135
-af+ 0x801ac60 452 F_5143
-af+ 0x801ae24 282 F_4161
+af+ 0x801ac60 452 F_5144
 af+ 0x801ae24 282 F_5136
 af+ 0x801af58 298 F_5137
 CCa 0x801afc0 Get ConfigData + 0x18 F_5137
@@ -465,7 +471,9 @@ af+ 0x8021e80 24 F_815
 af+ 0x8021e98 24 F_816
 af+ 0x8021eb0 26 F_4302_SMS_QuickText2Ram_ID
 af+ 0x8021eca 16 F_Get_From_SPIF
+af+ 0x8021edc 18 Edit_Message_Confirm_Store_Message_to_spi_1
 af+ 0x8021eee 26 F_4354
+af+ 0x8021f08 26 Edit_Message_Confirm_Store_Message_to_spi_2
 af+ 0x8021f22 18 F_817_SPIF_Number_of_zones
 af+ 0x8021f34 18 F_818
 af+ 0x8021f46 18 F_1065_spiflash_read_c8_from_0x416d0
@@ -614,6 +622,7 @@ af+ 0x80266e2 100 F_277
 af+ 0x8026754 106 F_278
 af+ 0x80267be 266 F_94
 af+ 0x80268c8 122 F_1097
+af+ 0x8026942 112 Edit_Message_Confirm_Send_4
 af+ 0x80269f4 166 F_95
 af+ 0x8026a9a 22 GPIO_ReadInputDataBit
 af+ 0x8026ab0 6  GPIO_ReadInputData
@@ -745,8 +754,59 @@ af+ 0x802bb40 372 Af_Mute
 af+ 0x802bcb8 340 Set_Vocoder
 af+ 0x802be0c 340 F_107
 af+ 0x802bf76 2 F_108_Nice
+af+ 0x802bfd4 394 Create_Menu_Entry_Message
+CCa 0x802c044 0x802ec54 Create_Menu_Entry_Inbox
+CCa 0x802c056 ... I.n.b.o.x
+CCa 0x802c076 0x802c47a Create_Menu_Entry_Write
+CCa 0x802c088 ... W.r.i.t.e
+CCa 0x802c0ac 0x802c168 Create_Menu_Entry_Quick
+CCa 0x802c0be ... Q.u.i.c.k
+CCa 0x802c0e2 0x8038bd8 Create_Menu_Entry_Send
+CCa 0x802c0f4 ... S.e.n.t
+CCa 0x802c118 0x802d1e4 Create_Menu_Entry_Draft
+CCa 0x802c12a ... D.r.a.f.t.s
+af+ 0x802c168 146 Create_Menu_Entry_Quick
 af+ 0x802c250 104 F_4382
+af+ 0x802c47a 228 Create_Menu_Entry_Write
+CCa 0x802c53c 0x802c55e Create_Menu_Entry_Edit
+CCa 0x802c54e ... E.d.i.t.
+af+ 0x802c55e 66 Create_Menu_Entry_Edit
+af+ 0x802c5a0 192 Edit_Message_Clear
+af+ 0x802c660 394 Edit_Message_Menu_Entry
+CCa 0x802c6b6 0x802d108 Edit_Message_Confirm
+CCa 0x802c6c4 ... Y.e.s
+CCa 0x802c6de 0x800f452 ... Back
+CCa 0x802c6ec ... N.o.
+CCa 0x802c754 0x802c818 Edit_Message_Confirm_Send
+CCa 0x802c762 ... S.e.n.d
+CCa 0x802c77e 0x802d108 Edit_Message_Confirm
+CCa 0x802c78c ... S.a.v.e
+CCa 0x802c7ac 0x802c5a0 Edit_Message_Clear
+CCa 0x802c7ba ... C.l.e.a.r
+af+ 0x802c818 50 Edit_Message_Confirm_Send
+af+ 0x802c84a 176 Edit_Message_Confirm_Send_2
+CCa 0x802c896 0x802c8fa Edit_Message_Confirm_Send_Contacts
+CCa 0x802c8a4 .. C.o.n.t.a.c.t.s
+CCa 0x802c8be 0x802c99c Edit_Message_Confirm_Send_Manual
+CCa 0x802c8cc .. M.a.n.u.a.l
+af+ 0x802c8fa 126  Edit_Message_Confirm_Send_Contacts
+CCa 0x802c94a Ponter to contact list
+af+ 0x802c99c 204 Edit_Message_Confirm_Send_Manual
+CCa 0x802ca54 0x802ca88 Edit_Message_Confirm_Send_3
+CCa 0x802ca58 .. Pointer to Message 
+af+ 0x802ca88 302 Edit_Message_Confirm_Send_3
+af+ 0x802cbbc 114 Edit_Message_Confirm_Send_5
+CCa 0x802cc0e 0x800f452 ... Back
+CCa 0x802cc1e ... N.u.m.b.e.r
+af+ 0x802cdc8 194 Edit_Message_Confirm_Send_1
+CCa 0x802ce7a .. NULLTEXT
+af+ 0x802d108 204 Edit_Message_Confirm
+CCa 0x802d1c4 ... D.r.a.f.t.s
+af+ 0x802d1e4 408 Create_Menu_Entry_Draft
+af+ 0x802d524 166 Edit_Message_Confirm_2
 af+ 0x802d5d0 92 F_4383
+af+ 0x802d62c 162 Edit_Message_Confirm_3
+af+ 0x802d714 212 Edit_Message_Confirm_1
 af+ 0x802dee4 428 F_4314
 af+ 0x802e240 888 F_4315
 CCa 0x802e442 check for private call
@@ -764,6 +824,7 @@ af+ 0x802e988 92 F_4385
 af+ 0x802e9f0 54 F_824
 af+ 0x802ea44 202 F_4386
 af+ 0x802eb68 212 F_4444
+af+ 0x802ec54 Create_Menu_Entry_Inbox
 af+ 0x802f9bc 172 F_4138
 af+ 0x802fb00 130 F_300
 af+ 0x802fb82 52 spiflash_sektor_erase4k
@@ -1061,8 +1122,8 @@ af+ 0x8038924 166 F_4402
 af+ 0x80389ca 92 F_4403
 af+ 0x8038a26 158 F_4337
 af+ 0x8038b04 212 F_4404
+af+ 0x8038bd8 442 Create_Menu_Entry_Send
 af+ 0x8039760 30 F_4405
-af+ 0x8039760 30 F_5067
 af+ 0x8039780 32 F_5066
 af+ 0x80397a0 56 F_5063
 af+ 0x80397d8 294 F_5064
@@ -1073,7 +1134,6 @@ af+ 0x8039abe 36 F_5060
 af+ 0x8039ae2 196 F_5059
 af+ 0x8039ba6 42 F_5058
 af+ 0x8039bd0 46 F_5057
-af+ 0x8039bfe 36 F_4273
 af+ 0x8039bfe 36 F_5056
 af+ 0x8039c22 144 main_menu
 af+ 0x8039cb2 226 F_4274
