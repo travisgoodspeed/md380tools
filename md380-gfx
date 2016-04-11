@@ -168,7 +168,7 @@ class MD380Graphics(Memory):
 
         # ok, now update.  Height and bytesperline must stay the same, but width can change.
         s = struct.Struct('<bbb')
-        self.write(addr, s.pack(gfx['width'], gfx['height'], new_bytesperline))
+        self.write(addr, s.pack(gfx['width'], height_in_table, new_bytesperline))
 
         pixbytes = b''
         for line in gfx['pixels']:
