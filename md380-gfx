@@ -709,7 +709,7 @@ def main():
         sys.stderr.write('ERROR: Use extract, restore, write, fontreplace or relocate as command.\n' % cmd)
         sys.exit(5)
     if modified:
-        args.firmware += '.modified'
+        #args.firmware += '.modified'
         sys.stderr.write('DEBUG: writing "%s"\n' % args.firmware)
         with open(args.firmware, 'wb') as f:
             f.write(md.mem)
