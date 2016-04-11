@@ -46,6 +46,8 @@ void (*gfx_select_font)(void *p)=0x8020975;
 void (*gfx_set_bg_color)(int color)=0x801c5e1;
 void (*gfx_set_fg_color)(int color)=0x801c5e9;
 
+void (*gfx_blockfill)(int xmin, int ymin, int xmax, int ymax)=0x0801cb05;
+
 
 //! Function that handles the end of a DMR call.
 void* (*dmr_call_end)(void *pkt) = 0x0803f33d;

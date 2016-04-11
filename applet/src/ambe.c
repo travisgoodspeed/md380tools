@@ -17,7 +17,7 @@
 #include "config.h"
 #include "gfx.h"
 
-
+#include <stdlib.h>
 
 
 int ambe_encode_thing_hook(char *a1, int a2, int *a3, int a4,
@@ -76,7 +76,8 @@ int ambe_unpack_hook(int a1, int a2, char length, int a4){
 */
 int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
 			 int a4, short a5, short a6, int a7){
-
+  int val;
+  int i;
   /* This prints the AMBE2+ structure that is to be decoded.  The
      output is decodable with DSD, but it sounds horrible.
    */
@@ -105,10 +106,12 @@ int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
 #endif //AMBEPRINT
 
   
+  
   //First we call the original function.
   int toret=ambe_decode_wav(a1, eighty, bitbuffer,
 			    a4, a5, a6, a7);
 
+  
   /* Print the parameters
   printf("ambe_decode_wav(0x%08x, %d, 0x%08x,\n"
     "%d, %d, %d, 0x%08x);\n",
@@ -131,7 +134,25 @@ int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
   
   OS_EXIT_CRITICAL(wavstate);
 #endif //AMBEWAVPRINT
+  val=0;
+  for (i=0;i<80;i++)
+     val+=(abs((short) a1[i] )/256) ;
+  val=val/80;
+  val=val*5;
+  if (val > 100 ) val = 100;
+  int wavstate=OS_ENTER_CRITICAL();
 
+  gfx_blockfill( 2, 50, 100 , 51);  
+  gfx_set_fg_color(0x555555);
+  gfx_set_bg_color(0xff000000);
+  
+  gfx_blockfill( 2, 50, val , 51);
+  OS_EXIT_CRITICAL(wavstate);
+  
+  printf("%d\n" ,val );
+  gfx_set_fg_color(0xff8032);
+  gfx_set_bg_color(0xff000000);
+   
   
   return toret;
 }

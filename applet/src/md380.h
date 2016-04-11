@@ -22,8 +22,8 @@ extern void (*spiflash_enable)();
 extern void (*spiflash_disable)();   
 extern void (*spiflash_wait)();   
 
-void (*spiflash_block_erase64k)(uint32_t);
-void (*spiflash_sektor_erase4k)(uint32_t);
+extern void (*spiflash_block_erase64k)(uint32_t);
+extern void (*spiflash_sektor_erase4k)(uint32_t);
 
 
 extern INT8U (*spi_sendrecv)(INT8U data); // SPI1              
@@ -38,17 +38,17 @@ extern void (*gfx_drawbmp)(char *bmp,
 			   int idx,
 			   uint64_t pos);
 
-void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
+extern void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
                       int x, int y,   //X and Y position
                       int maxlen);
 
 
-void (*gfx_select_font)(void *p);
+extern void (*gfx_select_font)(void *p);
 
-void (*gfx_set_bg_color)(int color);
-void (*gfx_set_fg_color)(int color);
+extern void (*gfx_set_bg_color)(int color);
+extern void (*gfx_set_fg_color)(int color);
 
-                                          
+extern void (*gfx_blockfill)(int xmin, int ymin, int xmax, int ymax);                                          
 
 //! Function that handles checking a DMR contact.
 extern void* (*dmr_call_end)(void *pkt);

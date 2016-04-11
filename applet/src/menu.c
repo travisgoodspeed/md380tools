@@ -17,11 +17,11 @@
    Its exact purpose is unknown, but I'm working on that.
  */
 void *main_menu_hook(void *menu){
-  //void *menustruct;
+  void *menustruct;
   
-  //printf("main_menu() ");
-  //printhex(menu,32);
-  //printf("\n");
+//  printf("main_menu() ");
+//  printhex(menu,32);
+//  printf("\n");
   
   
   switch(* ((int*)menu)){
@@ -31,15 +31,14 @@ void *main_menu_hook(void *menu){
   case 0x24:
     //Third word of the parameter is a structure with
     //more entries.
-    //menustruct=*((int*)menu + 2);
-    /*
+    menustruct=*((int*)menu + 2);
     printf("Menu struct: @0x%08x\n",
 	   menustruct);
     printf("Item %5d/%5d selected. %s\n",
 	   (int) *((unsigned short*) (menustruct+0x42)),
 	   (int) *((unsigned short*)menustruct),
 	   "test");
-    */
+    
     
     
     //printhex(*((int*) menu+2),128);
