@@ -26,7 +26,7 @@ int incall=0;
 
 /* Bufferspace to transfer data*/
 char DebugLine1[30];
-char DebugLine2[80];
+char DebugLine2[160];  // only for debug normal is 80
 
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
@@ -100,8 +100,10 @@ void *dmr_call_start_hook(char *pkt){
 
   sprintf(DebugLine1, "%d -> %d", src, dst );
   
-  find_dmr_user(DebugLine2, src, (void *) 0x100000, 80);
-
+  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0)
+   {
+    sprintf(DebugLine2, ",abcdefghijklmnopq,rstuvwxyz012345678,9ABCDEFGHIJKLMNOPQ,RSTUVWXYZ.-;:_#'+*");   // , is line seperator ;)
+    }
                                               
 
 

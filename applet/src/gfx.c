@@ -90,20 +90,20 @@ void print_DebugLine(unsigned int bg_color) {
   gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
 
+  drawascii2("                  ",10,50);
+  drawascii2("                  ",10,60);
   drawascii2("                  ",10,70);
   drawascii2("                  ",10,80);
   drawascii2("                  ",10,90);
   drawascii2("                  ",10,100);
-  drawascii2("                  ",10,110);
-  drawascii2("                  ",10,120);
 
 
   ii=0;
   n=0;
-  for (i=0;i<strlen(DebugLine2) || n < 4 ;i++) {
-    if (DebugLine2[i] == ',') {
+  for (i=0;i<strlen(DebugLine2) || n < 6 ;i++) {
+    if (DebugLine2[i] == ',' || DebugLine2[i] == '\0') {
       buf[ii++]='\0';
-      drawascii2(buf, 10, 70+n*10);
+      drawascii2(buf, 10, 50+n*10);
       ii=0;
       n++;
     } else {
@@ -111,7 +111,7 @@ void print_DebugLine(unsigned int bg_color) {
       }
   }
                                            
-  drawascii2(DebugLine1, 10,70);
+  drawascii2(DebugLine1, 10,50);
 
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);

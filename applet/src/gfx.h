@@ -18,5 +18,5 @@ void lcd_background_led(int on);
 
 
 extern char DebugLine1[30];
-extern char DebugLine2[80];
+extern char DebugLine2[160];  // 80
  

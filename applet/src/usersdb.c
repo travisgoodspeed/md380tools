@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "printf.h"
 
 /* All user database data is accessed through getdata.
  * This makes it easier to adapt to different kinds of sources.
@@ -122,6 +122,11 @@ int find_dmr_user(char *outstr, int dmr_search,
                   const char *data, int outsize)
 {
     const long datasize = getfirstnumber(data);
+    printf("datasize %d\n", (int) datasize);  
+    
+    if (datasize == 0 || datasize > 3279629)  // filesize @ 20160420 is 2279629 byte
+       return(0);
+       
     const char *data_start = next_line_ptr(data);
     const char *data_end = data_start + datasize; // exclusive
     return find_dmr(outstr, dmr_search, data_start, data_end, outsize);
