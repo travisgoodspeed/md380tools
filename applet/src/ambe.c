@@ -22,7 +22,7 @@
 
 int ambe_encode_thing_hook(char *a1, int a2, int *a3, int a4,
 		      short a5, short a6, short a7, int a8){
-  printf("AMBE2+ function is hooked!\n");
+  //printf("AMBE2+ function is hooked!\n");
   
   //Call back to the original function.
   return ambe_encode_thing(a1,a2,a3,a4,
