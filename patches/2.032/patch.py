@@ -110,5 +110,5 @@ if __name__ == '__main__':
     patcher.setwstring(0x080d17e8,
                       "Repeater Slot"); #was 'Repeatar Slot'
     
-    patcher.export("experiment.img");
+    patcher.export("patched.img");
     
