@@ -255,21 +255,21 @@ def calllog(dfu):
             #get actual canel name
             dfu.set_address(0x2001c9d4);
             data=dfu.upload(1,32,0);
-	    message=""
+            message=""
             for i in range(0,32,2):
                c=chr(data[i]&0x7F);
                if c!='\0':
                   message=message+c;
-	    print message
-            #get actual zone name
+             print message
+             #get actual zone name
             dfu.set_address(0x2001b958);
             data=dfu.upload(1,32,0);
-	    message=""
+            message=""
             for i in range(0,32,2):
                c=chr(data[i]&0x7F);
                if c!='\0':
                  message=message+c;
-	    print message
+            print message
             sys.stdout.flush();
 
 
@@ -298,21 +298,31 @@ def hexdump(dfu,address,length=512):
         sys.stdout.write("%02x "%b);
         i=i+1;
         if(b > 32 and b < 127 ):
-          cbuf = cbuf + chr(b);
+            cbuf = cbuf + chr(b);
         else:
-          cbuf = cbuf + ".";
+            cbuf = cbuf + ".";
         if i%16==0: 
-           sys.stdout.write(" " + cbuf);
-           sys.stdout.write("\n");
-           cbuf="";  
+            sys.stdout.write(" " + cbuf);
+            sys.stdout.write("\n");
+            cbuf="";  
         elif i%8==0: 
-           sys.stdout.write(" ");
+            sys.stdout.write(" ");
 
 def hexwatch(dfu,address):
     """Dumps from memory to the screen"""
     while True:
         hexdump(dfu,address,16);
         time.sleep(0.05);
+
+def dump(dfu,filename,address):
+    """Dumps flash."""
+    adr=int(address,16);
+    with open(filename,'wb') as f:
+        buf=dfu.peek(adr,1024);
+        f.write(buf);
+        f.close();
+
+
 
 def flashdump(dfu,filename):
     """Dumps flash."""
@@ -324,14 +334,6 @@ def flashdump(dfu,filename):
             buf=dfu.peek(adr,1024);
             f.write(buf);
         f.close();
-def dump(dfu,filename,address):
-    """Dumps flash."""
-    adr=int(address,16);  
-    with open(filename,'wb') as f:
-        buf=dfu.peek(adr,1024);
-        f.write(buf);
-        f.close();
-
 def spiflashdump(dfu,filename):
     """Dumps SPI Flash."""
     with open(filename,'wb') as f:
@@ -460,6 +462,8 @@ def getchannel(dfu):
     data=dfu.upload(1,4,0);
     print "%02d %02d %02d %02d" % ( data[3], data[2], data[1], data[0])
 
+
+
 def readword(dfu, address):
         
     print "%x"%(int(address, 0))
@@ -471,9 +475,8 @@ def readword(dfu, address):
     print "%x %02x %02x %02x %02x" % (int(address, 0)+4, data[7], data[6], data[5], data[4])
     print "%x %02x %02x %02x %02x" % (int(address, 0)+8, data[11], data[10], data[9], data[8])
     print "%x %02x %02x %02x %02x" % (int(address, 0)+12, data[15], data[14], data[13], data[12])
-
     print "%d" % ( data[3] << 24|  data[2]<<16 | data[1]<<8 | data[0])
-
+ 
 
 def init_dfu(alt=0):
     dev = usb.core.find(idVendor=md380_vendor,
@@ -527,13 +530,11 @@ Dump the complete SPI Flash image.
 Dump a core file of RAM.
     md380-tool coredump <filename.bin>
 
-Dump the bootloader from Flash memory.
-    md380-tool flashdump <filename.bin>
-Dump a core file of memory.
-    md380-tool coredump <filename.bin>
-
 Dumps memory in hex.
     md380-tool hexdump <0xcafebabe>
+
+Copy File to SPI flash.
+    md380-tool spiflashwrite <filename> <address>"
 
 """)
 
@@ -593,7 +594,7 @@ if __name__ == '__main__':
                 hexdump(dfu,sys.argv[2]);
             elif sys.argv[1] == 'ramdump':
                 print "Dumping memory from %s." % sys.argv[3];
-		dfu=init_dfu();
+                dfu=init_dfu();
                 ramdump(dfu,sys.argv[2],sys.argv[3]);
             elif sys.argv[1] == 'hexwatch':
                 print "Dumping memory from %s." % sys.argv[2];
@@ -604,13 +605,8 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'readword':
                 dfu=init_dfu();
                 readword(dfu, sys.argv[2]);
-
+        
         elif len(sys.argv) == 4:  
-            if sys.argv[1] == 'dump':
-                print "Dumping memory from %s." % sys.argv[3];
-		dfu=init_dfu();
-                dump(dfu,sys.argv[2],sys.argv[3]);
-
             if sys.argv[1] == 'spiflashwrite':
 #                print "flash %s with len %d to memory from %s." % sys.argv[2] , sys.argv[3];
                 filename=sys.argv[2];
@@ -620,6 +616,11 @@ if __name__ == '__main__':
                    spiflashwrite(dfu,sys.argv[2],adr);
                 else:
                    print "address to low"
+            if sys.argv[1] == 'dump':
+                print "Dumping memory from %s." % sys.argv[3];
+                dfu=init_dfu();
+                dump(dfu,sys.argv[2],sys.argv[3]);
+
         else:
             usage();
     except RuntimeError, e:
