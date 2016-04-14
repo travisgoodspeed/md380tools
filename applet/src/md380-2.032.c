@@ -85,6 +85,8 @@ void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
 
 void* (*main_menu)(void *)=0x08039c23;
 
+void* (*F_249_Create_MenuEntry)(int a, void *b , void *c, void  *d, int e, int f ,int g)=0x0800c731;
+
 char* channelnum=0x2001d376;
 int (*read_channel_switch)()=0x0804d269;
 

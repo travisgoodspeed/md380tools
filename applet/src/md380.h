@@ -87,6 +87,9 @@ extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 extern void* (*main_menu)(void *);
 
 
+extern void* (*F_249_Create_MenuEntry)(int a, void *b , void *c, void  *d, int e, int f ,int g);
+
+
 //! This points to the byte of the current channel.
 extern char* channelnum;
 
