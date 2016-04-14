@@ -30,6 +30,11 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
+
+
+
+
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -48,11 +53,12 @@ CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
 af+ 0x800c188 1448 Create_MainMenyEntry
 CCa 0x800c270 ... C.o.n.t.a.c.t.s.
 CCa 0x800c2b4 ... S.c.a.n
-CCa 0x800c2ea ... S.c.a.n
+CCa 0x800c2e8 ... S.c.a.n
 CCa 0x800c31a ... Z.o.n.e
 CCa 0x800c33a ... 0x802bfd4 Create_Menu_Entry_Message
 CCa 0x800c34c ... M.e.s.s.a.g.e.s.
 CCa 0x800c37e ... C.a.l.l...Log
+CCa 0x800c39e 0x80126a8 -> Create_Menu_Utilies
 CCa 0x800c3b0 ... U.t.i.l.i.t.i.e.s
 CCa 0x800c462 ... C.o.n.t.a.c.t.s
 CCa 0x800c49e ... S.c.a.n
@@ -67,7 +73,15 @@ af+ 0x800d7f4 114 F_4038
 af+ 0x800d86c 30 F_4039
 af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785_Print_Date_and_Time
+CCa 0x800d8ca 0x2001d1ac Date
 CCa 0x800d8d4 20xx year 
+CCa 0x800d8e0 0x2001d1ac Date
+CCa 0x800d8f6 0x2001d1ac Date
+CCa 0x800d90c 0x2001d1ac Date
+CCa 0x800d93a 0x2001d1a8 Time
+CCa 0x800d944 0x2001d1a8 Time
+CCa 0x800d95a 0x2001d1a8 Time
+CCa 0x800d970 0x2001d1a8 Time
 CCa 0x800d986 0x9d 157
 CCa 0x800d988 0x60 96
 CCa 0x800d98a 0x5f 95
@@ -90,7 +104,22 @@ af+ 0x800f422 48 F_251
 af+ 0x800f452 18 F_5143
 af+ 0x800f464 32 F_86
 af+ 0x800f488 294 F_4155
+CCa 0x800f6b4 ... E.m.p.t.y
 af+ 0x800fc12 34 F_4286
+CCa 0x80100a0 ... R.X
+CCa 0x801013e ... Y.e.s
+CCa 0x801016c ... N.o.
+CCa 0x80104e0 ... E.d.i.t
+CCa 0x8010514 ... E.d.i.t
+CCa 0x8010546 ... R.i.n.g
+CCa 0x801058c ... P.r.o.g.r.a.m
+CCa 0x80105d2 ... D.e.l.e.t.e
+CCa 0x8010648 ... R.a.d.i.o
+CCa 0x801068e ... R.e.m.o.t.e
+CCa 0x80106d4 ... R.a.d.i.o
+CCa 0x8010716 ... R.a.d.i.o
+CCa 0x8010784 ... V.i.e.w
+CCa 0x80107d2 ... V.i.e.w
 af+ 0x8010838 260 F_4221
 af+ 0x8010950 124 F_4156
 af+ 0x80109d0 150 F_4349
@@ -110,8 +139,11 @@ af+ 0x80125c0 98 F_4287
 af+ 0x80126a8 256 Create_Menu_Utilies
 CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_RadioSettings
 CCa 0x8012706 ... R.a.d.i.o...S.e.t.t.i.n.g.s
+CCa 0x801270a .. 6
 CCa 0x8012720 0x80152ec .. Create_Menu_Entry_RadioInfo
 CCa 0x8012730 ... R.a.d.i.o...I.n.f.o
+CCa 0x8012734 .. 6
+CCa 0x801274c Is Menu ProgramRadio allowedly
 CCa 0x8012766 0x80127d0 .. Create_Menu_Entry_ProgramRadio
 CCa 0x8012776 ... P.r.o.g.r.a.m...R.a.d.i.o
 af+ 0x80127d0 880 Create_Menu_Entry_ProgramRadio
@@ -120,6 +152,7 @@ CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
 CCa 0x8012bb2 ConfigData + 1d (byte) F_5075
 CCa 0x8012bc2 ConfigData + 1e (byte) F_5075
 CCa 0x8012bd2 ConfigData + 1f (byte) F_5075
+CCa 0x8014f4e S.a.v.e.d...I.n.b.o.x
 af+ 0x80152ec 198 Create_Menu_Entry_RadioInfo
 af+ 0x8015464 122 F_5076
 CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID F_5076
@@ -136,9 +169,8 @@ CCa 0x80168d6 4 to sp,8
 CCa 0x80168da 0 to sp,4
 CCa 0x80168de 0x98 to sp
 CCa 0x80168e0 0x800f453 .. 0x800f452 F_5143() to r3
-CCa 0x80168e4 0x800f452 .. Create_Menu_Entry_Intro_Screen(),r2
+CCa 0x80168e4 .. Create_Menu_Entry_Intro_Screen(),r2
 CCa 0x80168f6 ... I.n.t.r.o...S.c.r.e.e.n
-CCa 0x80168f6 ...    I.n.t.r.o...S.c.r.e.e.n
 CCa 0x8016902  (byte)[0x2001d3c2]+5 to r0 .. [0x2001d3c2]+1 = 11
 CCa 0x8016940 ... K.e.y.p.a.d...L.o.c.k.
 CCa 0x8016978 ... L.a.n.g.u.a.g.e
@@ -147,6 +179,7 @@ CCa 0x8016a12 ... V.O.X.
 CCa 0x8016a82 ... P.a.s.s.w.d
 CCa 0x8016ab6 ... S.i.t.e...R.o.a.m.i.n.g
 CCa 0x8016aee ... R.e.c.o.r.d
+CCa 0x8016b12 0x8017028 Create_Menu_Entry_RadioSettingsDateTime
 CCa 0x8016b24 ... C.l.o.c.k
 CCa 0x8016b6e ... M.o.d.e
 af+ 0x8016bb8 238 F_5077
@@ -159,13 +192,56 @@ af+ 0x8016dcc 152 Create_Menu_Entry_VOX
 CCa 0x8016e60 ConfigData + 0x17 (Byte) F_5080
 af+ 0x8016f90 146 F_5081
 CCa 0x8017006 Set ConfigData + 0xb (Byte) F_5081
-af+ 0x8017204 92 F_4288
+af+ 0x8017028 180 Create_Menu_Entry_RadioSettings
+CCa 0x8017070 0x80171e8 Edit_Time_Back
+CCa 0x8017074 0x80170f0 Edit_Time
+CCa 0x8017082 ... Time
+CCa 0x801709a 0x80171f2
+CCa 0x801709e 0x8017178
+CCa 0x80170ac ... Date
+af+ 0x80170f0 106 Edit_Time
+CCa 0x8017110 T.i.m.e
+CCa 0x8017116 .. 0x1c
+CCa 0x8017144 0x8017204 Edit_Time2_Confirm
+CCa 0x8017148 0x80173d8 Edit_Time3_Back
+CCa 0x801714c ... 0.1.:.1.3.:.4.2
+af+ 0x80171e8 10 Edit_Time_Back
+af+ 0x8017204 92 Edit_Time2_Confirm
+CCa 0x8017212 0x2001d1a8 RTC_TimeTypeDef* RTC_TimeStruct
+CCa 0x8017212 0x2001d1a8 Time
+CCa 0x801721c 0x2001d1a8 Time
+CCa 0x8017220 h in r1
+CCa 0x8017232 0x2001d1a8 Time
+CCa 0x8017236 m in r1
+CCa 0x8017248 0x2001d1a8 Time
+CCa 0x801724c s in r1
 af+ 0x8017268 104 F_4289
+CCa 0x8017276 0x2001d1ac Date
+CCa 0x801728c 0x2001d1ac Date
+CCa 0x80172a2 0x2001d1ac Date
+CCa 0x80172b8 0x2001d1ac Date
 af+ 0x80172ec 236 F_973
+af+ 0x80173d8 134 Edit_Time3_Back
+CCa 0x8017448 Back
+CCa 0x801744c 0x80174fc Edit_Time_Confirm
+CCa 0x8017450 ... 0.1.:.2.8.:.0.0
+af+ 0x8017470 134 Create_Menu_Entry_QuickText
+CCa 0x80174e8 Q.u.i.c.k...T.e.x.t
+af+ 0x80174fc Edit_Time_Confirm
+CCa 0x8017544 0x80175dc Edit_Time5_SetToRTC 
+CCa 0x8017548 Back
+af+ 0x80175dc 54 Edit_Time5_SetToRTC
+CCa 0x80175e0 0x2001d1a8 Time
+CCa 0x8017606 0x2001d1a8 Time
 af+ 0x8017612 56 F_4083
+CCa 0x801763e 0x2001d1ac Date
 af+ 0x8017650 124 F_4085
+af+ 0x80176cc 216 Create_Menu_Entry_TurnOnOff
+CCa 0x8017744 ... T.u.r.n...O.n
+CCa 0x8017770 ... T.u.r.n...O.f.f
 af+ 0x8017938 250 Create_Menu_Entry_Talkaround
 af+ 0x8017a60 590 F_5082
+CCa 0x8017b28 ... T.u.r.n...O.n
 CCa 0x8017bbe Get ConfigData + 0x1 F_5082
 CCa 0x8017bd0 Get ConfigData + 0x1 F_5082
 CCa 0x8017be2 Get ConfigData + 0x1 F_5082
@@ -182,7 +258,7 @@ CCa 0x8017c52 Set ConfigData + 0x1 F_5082
 CCa 0x8017c5e Get ConfigData + 0x2 F_5082
 CCa 0x8017c74 Get ConfigData + 0x0 F_5082
 CCa 0x8017c7e Set ConfigData + 0x0 F_5082
-af+ 0x8017cd4 674 F_5083_Init...
+af+ 0x8017cd4 674 F_5083
 CCa 0x8017e84 Get ConfigData + 0x1 F_5083
 CCa 0x8017e8e Set ConfigData + 0x1 F_5083
 CCa 0x8017ea8 Get ConfigData + 0x1 F_5083
@@ -202,8 +278,17 @@ CCa 0x8017f30 Set ConfigData + 0x2 F_5083
 CCa 0x8017f3c Get ConfigData + 0x0 F_5083
 CCa 0x8017f46 Set ConfigData + 0x0 F_5083
 af+ 0x8017f78 394 Create_Menu_Entry_Tones_Alerts
+CCa 0x8017f9c ... T.o.n.e.s./.A.l.e.r.t.s
+CCa 0x8017fe8 ... A.l.l...T.o.n.e.s
+CCa 0x8018014 ... T.a.l.k...P.e.r.m.i.t
+CCa 0x8018044 ... C.a.l.l...R.i.n.g.e.r.s
+CCa 0x8018072 ... K.e.y.p.a.d...T.o.n.e.s
+CCa 0x80180a0 ... E.s.c.a.l.e.r.t
+CCa 0x80180ce ... V.o.l
 af+ 0x8018104 220 F_5085
 CCa 0x8018146 Get ConfigData + 0x1 F_5085
+CCa 0x801817c ... T.u.r.n...O.n
+CCa 0x80181a4 ... T.u.r.n...O.f.f
 af+ 0x80181f0 398 F_5086
 CCa 0x8018258 Get ConfigData + 0x1 F_5086
 CCa 0x80182e0 Get ConfigData + 0x1 F_5086
@@ -213,7 +298,10 @@ CCa 0x801851c Get ConfigData + 0x2 F_5088
 af+ 0x80185cc 236 F_5089
 CCa 0x8018614 Get ConfigData + 0x1 F_5089
 af+ 0x80186b8 170 F_5090
+CCa 0x80186de ... V.o.l.u.m.e
 af+ 0x801876c 152 F_5091
+CCa 0x801878e ... V.o.l.u.m.e
+CCa 0x80187d4 ... S.e.l.e.c.t.e.d
 af+ 0x8018804 248 F_5092
 af+ 0x8018900 192 F_5093
 af+ 0x80189d8 350 F_5094
@@ -242,14 +330,14 @@ CCa 0x8019792 Get ConfigData + 0x2 F_5111
 CCa 0x80197b0 1 to SP,8
 CCa 0x80197b4 0 to SP,4 
 CCa 0x80197b8 0x8b to SP
-CCa 0x80197ba 0x800f453 .. 0x800f452 F_5143()  to r3
+CCa 0x80197ba 0x800f453 .. 0x800f452 F_5143()  to r3 - Back
 CCa 0x80197be 0x8019834 .. SetConfig0x02Bit4andmore(),r2
 CCa 0x80197d0 [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b0] to r1 .. [0x200003b0] = 0x080fa348 .. [0x080fa348] = "P.i.c.t.u.r.e"
 CCa 0x80197d6 (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
 CCa 0x80197dc 1 to SP,8
 CCa 0x80197e2 0 to SP,4
 CCa 0x80197e6 0x8b to SP
-CCa 0x80197e8 0x800f453 .. 0x800f452 F_5143() to r3
+CCa 0x80197e8 0x800f453 .. 0x800f452 F_5143() to r3 - Back
 CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore(),r2
 CCa 0x80197fe [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b4] to r1 .. [0x200003b4] = 0x080d1f48 .. [0x080d1f48] ="C.h.a.r...S.t.r.i.n.g" 
 CCa 0x8019808 (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2]+1 = 7 ???
@@ -446,8 +534,8 @@ af+ 0x802168c 484 F_803
 af+ 0x8021870 18 F_804
 af+ 0x8021882 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x8021894 18 Get_Welcome_Line2_from_spi_flash
-af+ 0x80218a6 18 Read_Config_Data_from_Flash
-af+ 0x80218b8 18 Write_Config_Data_to_Flash
+af+ 0x80218a6 18 Read_Config_Data_from_SPIFlash
+af+ 0x80218b8 18 Write_Config_Data_to_SPIFlash
 af+ 0x80218d4 474 F_806
 af+ 0x8021ac0 18 F_807
 af+ 0x8021ad2 26 F_808
@@ -1123,6 +1211,7 @@ af+ 0x80389ca 92 F_4403
 af+ 0x8038a26 158 F_4337
 af+ 0x8038b04 212 F_4404
 af+ 0x8038bd8 442 Create_Menu_Entry_Send
+CCa 0x803965e ... D.e.l.e.t.e.d
 af+ 0x8039760 30 F_4405
 af+ 0x8039780 32 F_5066
 af+ 0x80397a0 56 F_5063
@@ -1877,8 +1966,8 @@ af+ 0x805782a 36 F_738
 af+ 0x805784e 36 F_739
 af+ 0x8057880 46 ambr_x01
 af+ 0x80578c0 78 ambr_x02
-# 0x8057940 --  39792 byte -Ambr Codec ---
 af+ 0x8057940 118 ambr_001
+# 0x8057940 --  39792 byte -Ambr Codec ---
 af+ 0x80579c0 356 ambr_002
 af+ 0x8057b40 162 ambr_003
 af+ 0x8057c00 70 ambr_004
@@ -2026,14 +2115,30 @@ af+ 0x8061340 252 ambr_145
 af+ 0x8061440 50 ambr_146
 af+ 0x8061480 14 ambr_147
 af+ 0x80614a4 14 ambr_148
-# 0x080614b0 -- -end ambr codec  -------------------
 af+ 0x808cb84 30 F_4091
 af+ 0x808cba4 38 F_4003
 af+ 0x808cc00 190 F_4002
 af+ 0x808ccbe 1444 usb_dnld_handle
+CCa 0x808d082 0x2001d1a8 Time
+CCa 0x808d088 0x2001d1a8 Time
+CCa 0x808d092 0x2001d1a8 Time
+CCa 0x808d09c 0x2001d1a8 Time
+CCa 0x808d0a6 0x2001d1ac Date
+CCa 0x808d0b0 0x2001d1ac Date
+CCa 0x808d0ba 0x2001d1ac Date
+CCa 0x808d0c4 0x2001d1ac Date
 af+ 0x808d266 132 F_4055
 af+ 0x808d2ea 134 F_4056
 af+ 0x808d3d8 3036 usb_upld_handle
+CCa 0x808d42c DFU_Command_Parser
+CCa 0x808d5f0 0x2001d1ac Date
+CCa 0x808d5fe 0x2001d1ac Date
+CCa 0x808d60a 0x2001d1ac Date
+CCa 0x808d616 0x2001d1ac Date
+CCa 0x808d61e 0x2001d1a8 Time
+CCa 0x808d62c 0x2001d1a8 Time
+CCa 0x808d638 0x2001d1a8 Time
+CCa 0x808d644 0x2001d1a8 Time
 CCa 0x808d6a6 ConfigData + x usb_upld_handle
 CCa 0x808d972 ConfigData + 0x4  (long) MyDMRID usb_upld_handle
 CCa 0x808d97a ConfigData + 0x4  (long) MyDMRID usb_upld_handle
