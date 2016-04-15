@@ -30,6 +30,8 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
+
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -47,12 +49,15 @@ CCa 0x800c158 0x80fdd95 .. 0x80fdd94 while 1
 CCa 0x800c160 0x80fdd9d .. 0x80fdd9c while 1
 af+ 0x800c188 1448 Create_MainMenyEntry
 CCa 0x800c270 ... C.o.n.t.a.c.t.s.
+CCa 0x800c282 Test Can this Channel Scan 
+CCa 0x800c29a 3 Menu entry shown but not aktive
 CCa 0x800c2b4 ... S.c.a.n
-CCa 0x800c2ea ... S.c.a.n
+CCa 0x800c2e8 ... S.c.a.n
 CCa 0x800c31a ... Z.o.n.e
 CCa 0x800c33a ... 0x802bfd4 Create_Menu_Entry_Message
 CCa 0x800c34c ... M.e.s.s.a.g.e.s.
 CCa 0x800c37e ... C.a.l.l...Log
+CCa 0x800c39e 0x80126a8 -> Create_Menu_Utilies
 CCa 0x800c3b0 ... U.t.i.l.i.t.i.e.s
 CCa 0x800c462 ... C.o.n.t.a.c.t.s
 CCa 0x800c49e ... S.c.a.n
@@ -67,7 +72,15 @@ af+ 0x800d7f4 114 F_4038
 af+ 0x800d86c 30 F_4039
 af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785_Print_Date_and_Time
+CCa 0x800d8ca 0x2001d1ac Date
 CCa 0x800d8d4 20xx year 
+CCa 0x800d8e0 0x2001d1ac Date
+CCa 0x800d8f6 0x2001d1ac Date
+CCa 0x800d90c 0x2001d1ac Date
+CCa 0x800d93a 0x2001d1a8 Time
+CCa 0x800d944 0x2001d1a8 Time
+CCa 0x800d95a 0x2001d1a8 Time
+CCa 0x800d970 0x2001d1a8 Time
 CCa 0x800d986 0x9d 157
 CCa 0x800d988 0x60 96
 CCa 0x800d98a 0x5f 95
@@ -90,7 +103,22 @@ af+ 0x800f422 48 F_251
 af+ 0x800f452 18 F_5143
 af+ 0x800f464 32 F_86
 af+ 0x800f488 294 F_4155
+CCa 0x800f6b4 ... E.m.p.t.y
 af+ 0x800fc12 34 F_4286
+CCa 0x80100a0 ... R.X
+CCa 0x801013e ... Y.e.s
+CCa 0x801016c ... N.o.
+CCa 0x80104e0 ... E.d.i.t
+CCa 0x8010514 ... E.d.i.t
+CCa 0x8010546 ... R.i.n.g
+CCa 0x801058c ... P.r.o.g.r.a.m
+CCa 0x80105d2 ... D.e.l.e.t.e
+CCa 0x8010648 ... R.a.d.i.o
+CCa 0x801068e ... R.e.m.o.t.e
+CCa 0x80106d4 ... R.a.d.i.o
+CCa 0x8010716 ... R.a.d.i.o
+CCa 0x8010784 ... V.i.e.w
+CCa 0x80107d2 ... V.i.e.w
 af+ 0x8010838 260 F_4221
 af+ 0x8010950 124 F_4156
 af+ 0x80109d0 150 F_4349
@@ -99,7 +127,7 @@ af+ 0x80123c4 186 F_Menu_Zone
 CCa 0x80123ea Z.o.n.e
 CCa 0x801244c 0x74f8dfb6
 CCa 0x8012450 0xd0f8dfb5
-CCa 0x8012454 Titel of active Zone
+CCa 0x8012454 act Zone
 CCa 0x8012458 0x00000006
 af+ 0x8012528 148 F_253
 CCa 0x8012528 ... number of zones?
@@ -108,10 +136,15 @@ CCa 0x8012538 0x149e0 begin zone list
 CCa 0x8012570 0x40 Next Zone entry
 af+ 0x80125c0 98 F_4287
 af+ 0x80126a8 256 Create_Menu_Utilies
+CCa 0x80126ac menu_depth
+CCa 0x80126c8 ... U.t.i.l.i.t.i.e.s
 CCa 0x80126f6 0x8016684 .. Create_Menu_Entry_RadioSettings
 CCa 0x8012706 ... R.a.d.i.o...S.e.t.t.i.n.g.s
+CCa 0x801270a .. 6
 CCa 0x8012720 0x80152ec .. Create_Menu_Entry_RadioInfo
 CCa 0x8012730 ... R.a.d.i.o...I.n.f.o
+CCa 0x8012734 .. 6
+CCa 0x801274c Is Menu ProgramRadio allowedly
 CCa 0x8012766 0x80127d0 .. Create_Menu_Entry_ProgramRadio
 CCa 0x8012776 ... P.r.o.g.r.a.m...R.a.d.i.o
 af+ 0x80127d0 880 Create_Menu_Entry_ProgramRadio
@@ -120,9 +153,11 @@ CCa 0x8012ba2 ConfigData + 1c (byte) F_5075
 CCa 0x8012bb2 ConfigData + 1d (byte) F_5075
 CCa 0x8012bc2 ConfigData + 1e (byte) F_5075
 CCa 0x8012bd2 ConfigData + 1f (byte) F_5075
+CCa 0x8014f4e S.a.v.e.d...I.n.b.o.x
 af+ 0x80152ec 198 Create_Menu_Entry_RadioInfo
 af+ 0x8015464 122 F_5076
-CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID F_5076
+CCa 0x80154c6 ConfigData + 0x4  (long) MyDMRID
+CCa 0x80154cc itoa(DMRID, *data) -> len .. max 0a digits
 af+ 0x80154de 58 F_4158
 af+ 0x8015518 86 F_4159
 af+ 0x8016684 1312 Create_Menu_Entry_RadioSettings
@@ -136,9 +171,8 @@ CCa 0x80168d6 4 to sp,8
 CCa 0x80168da 0 to sp,4
 CCa 0x80168de 0x98 to sp
 CCa 0x80168e0 0x800f453 .. 0x800f452 F_5143() to r3
-CCa 0x80168e4 0x800f452 .. Create_Menu_Entry_Intro_Screen(),r2
+CCa 0x80168e4 .. Create_Menu_Entry_Intro_Screen(),r2
 CCa 0x80168f6 ... I.n.t.r.o...S.c.r.e.e.n
-CCa 0x80168f6 ...    I.n.t.r.o...S.c.r.e.e.n
 CCa 0x8016902  (byte)[0x2001d3c2]+5 to r0 .. [0x2001d3c2]+1 = 11
 CCa 0x8016940 ... K.e.y.p.a.d...L.o.c.k.
 CCa 0x8016978 ... L.a.n.g.u.a.g.e
@@ -147,6 +181,7 @@ CCa 0x8016a12 ... V.O.X.
 CCa 0x8016a82 ... P.a.s.s.w.d
 CCa 0x8016ab6 ... S.i.t.e...R.o.a.m.i.n.g
 CCa 0x8016aee ... R.e.c.o.r.d
+CCa 0x8016b12 0x8017028 Create_Menu_Entry_RadioSettingsDateTime
 CCa 0x8016b24 ... C.l.o.c.k
 CCa 0x8016b6e ... M.o.d.e
 af+ 0x8016bb8 238 F_5077
@@ -159,13 +194,56 @@ af+ 0x8016dcc 152 Create_Menu_Entry_VOX
 CCa 0x8016e60 ConfigData + 0x17 (Byte) F_5080
 af+ 0x8016f90 146 F_5081
 CCa 0x8017006 Set ConfigData + 0xb (Byte) F_5081
-af+ 0x8017204 92 F_4288
+af+ 0x8017028 180 Create_Menu_Entry_RadioSettings
+CCa 0x8017070 0x80171e8 Edit_Time_Back
+CCa 0x8017074 0x80170f0 Edit_Time
+CCa 0x8017082 ... Time
+CCa 0x801709a 0x80171f2
+CCa 0x801709e 0x8017178
+CCa 0x80170ac ... Date
+af+ 0x80170f0 106 Edit_Time
+CCa 0x8017110 T.i.m.e
+CCa 0x8017116 .. 0x1c
+CCa 0x8017144 0x8017204 Edit_Time2_Confirm
+CCa 0x8017148 0x80173d8 Edit_Time3_Back
+CCa 0x801714c ... 0.1.:.1.3.:.4.2
+af+ 0x80171e8 10 Edit_Time_Back
+af+ 0x8017204 92 Edit_Time2_Confirm
+CCa 0x8017212 0x2001d1a8 RTC_TimeTypeDef* RTC_TimeStruct
+CCa 0x8017212 0x2001d1a8 Time
+CCa 0x801721c 0x2001d1a8 Time
+CCa 0x8017220 h in r1
+CCa 0x8017232 0x2001d1a8 Time
+CCa 0x8017236 m in r1
+CCa 0x8017248 0x2001d1a8 Time
+CCa 0x801724c s in r1
 af+ 0x8017268 104 F_4289
+CCa 0x8017276 0x2001d1ac Date
+CCa 0x801728c 0x2001d1ac Date
+CCa 0x80172a2 0x2001d1ac Date
+CCa 0x80172b8 0x2001d1ac Date
 af+ 0x80172ec 236 F_973
+af+ 0x80173d8 134 Edit_Time3_Back
+CCa 0x8017448 Back
+CCa 0x801744c 0x80174fc Edit_Time_Confirm
+CCa 0x8017450 ... 0.1.:.2.8.:.0.0
+af+ 0x8017470 134 Create_Menu_Entry_QuickText
+CCa 0x80174e8 Q.u.i.c.k...T.e.x.t
+af+ 0x80174fc Edit_Time_Confirm
+CCa 0x8017544 0x80175dc Edit_Time5_SetToRTC 
+CCa 0x8017548 Back
+af+ 0x80175dc 54 Edit_Time5_SetToRTC
+CCa 0x80175e0 0x2001d1a8 Time
+CCa 0x8017606 0x2001d1a8 Time
 af+ 0x8017612 56 F_4083
+CCa 0x801763e 0x2001d1ac Date
 af+ 0x8017650 124 F_4085
+af+ 0x80176cc 216 Create_Menu_Entry_TurnOnOff
+CCa 0x8017744 ... T.u.r.n...O.n
+CCa 0x8017770 ... T.u.r.n...O.f.f
 af+ 0x8017938 250 Create_Menu_Entry_Talkaround
 af+ 0x8017a60 590 F_5082
+CCa 0x8017b28 ... T.u.r.n...O.n
 CCa 0x8017bbe Get ConfigData + 0x1 F_5082
 CCa 0x8017bd0 Get ConfigData + 0x1 F_5082
 CCa 0x8017be2 Get ConfigData + 0x1 F_5082
@@ -182,7 +260,7 @@ CCa 0x8017c52 Set ConfigData + 0x1 F_5082
 CCa 0x8017c5e Get ConfigData + 0x2 F_5082
 CCa 0x8017c74 Get ConfigData + 0x0 F_5082
 CCa 0x8017c7e Set ConfigData + 0x0 F_5082
-af+ 0x8017cd4 674 F_5083_Init...
+af+ 0x8017cd4 674 F_5083
 CCa 0x8017e84 Get ConfigData + 0x1 F_5083
 CCa 0x8017e8e Set ConfigData + 0x1 F_5083
 CCa 0x8017ea8 Get ConfigData + 0x1 F_5083
@@ -202,8 +280,17 @@ CCa 0x8017f30 Set ConfigData + 0x2 F_5083
 CCa 0x8017f3c Get ConfigData + 0x0 F_5083
 CCa 0x8017f46 Set ConfigData + 0x0 F_5083
 af+ 0x8017f78 394 Create_Menu_Entry_Tones_Alerts
+CCa 0x8017f9c ... T.o.n.e.s./.A.l.e.r.t.s
+CCa 0x8017fe8 ... A.l.l...T.o.n.e.s
+CCa 0x8018014 ... T.a.l.k...P.e.r.m.i.t
+CCa 0x8018044 ... C.a.l.l...R.i.n.g.e.r.s
+CCa 0x8018072 ... K.e.y.p.a.d...T.o.n.e.s
+CCa 0x80180a0 ... E.s.c.a.l.e.r.t
+CCa 0x80180ce ... V.o.l
 af+ 0x8018104 220 F_5085
 CCa 0x8018146 Get ConfigData + 0x1 F_5085
+CCa 0x801817c ... T.u.r.n...O.n
+CCa 0x80181a4 ... T.u.r.n...O.f.f
 af+ 0x80181f0 398 F_5086
 CCa 0x8018258 Get ConfigData + 0x1 F_5086
 CCa 0x80182e0 Get ConfigData + 0x1 F_5086
@@ -213,7 +300,10 @@ CCa 0x801851c Get ConfigData + 0x2 F_5088
 af+ 0x80185cc 236 F_5089
 CCa 0x8018614 Get ConfigData + 0x1 F_5089
 af+ 0x80186b8 170 F_5090
+CCa 0x80186de ... V.o.l.u.m.e
 af+ 0x801876c 152 F_5091
+CCa 0x801878e ... V.o.l.u.m.e
+CCa 0x80187d4 ... S.e.l.e.c.t.e.d
 af+ 0x8018804 248 F_5092
 af+ 0x8018900 192 F_5093
 af+ 0x80189d8 350 F_5094
@@ -238,26 +328,39 @@ af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
 CCa 0x8019728 Set ConfigData + 0x15 F_5110
 af+ 0x8019734 250 Create_Menu_Entry_Intro_Screen
+CCa 0x801975e ... I.n.t.r.o...S.c.r.e.e.n
+CCa 0x801976a ... I.n.t.r.o...S.c.r.e.e.n
 CCa 0x8019792 Get ConfigData + 0x2 F_5111
-CCa 0x80197b0 1 to SP,8
+CCa 0x801979a Set old Valvue selected
+CCa 0x80197b0 1 or 0 ... to SP,8
 CCa 0x80197b4 0 to SP,4 
 CCa 0x80197b8 0x8b to SP
-CCa 0x80197ba 0x800f453 .. 0x800f452 F_5143()  to r3
+CCa 0x80197ba 0x800f453 .. 0x800f452 F_5143()  to r3 - Back
 CCa 0x80197be 0x8019834 .. SetConfig0x02Bit4andmore(),r2
 CCa 0x80197d0 [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b0] to r1 .. [0x200003b0] = 0x080fa348 .. [0x080fa348] = "P.i.c.t.u.r.e"
 CCa 0x80197d6 (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
 CCa 0x80197dc 1 to SP,8
 CCa 0x80197e2 0 to SP,4
 CCa 0x80197e6 0x8b to SP
-CCa 0x80197e8 0x800f453 .. 0x800f452 F_5143() to r3
+CCa 0x80197e8 0x800f453 .. 0x800f452 F_5143() to r3 - Back
 CCa 0x80197ec 0x80198c0 .. UnsetConfig0x02Bit4andmore(),r2
 CCa 0x80197fe [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b4] to r1 .. [0x200003b4] = 0x080d1f48 .. [0x080d1f48] ="C.h.a.r...S.t.r.i.n.g" 
 CCa 0x8019808 (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2]+1 = 7 ???
-af+ 0x8019834 132 SetConfig0x02Bit4andmore
+af+ 0x8019834 132 SetConfig0x02Bit4andmore_Introscreen
+CCa 0x8019884 Back
+CCa 0x8019888 Back
 CCa 0x80198a8 Get ConfigData + 0x2 F_5112
 CCa 0x80198aa SetBit 4
 CCa 0x80198b0 Set ConfigData + 0x2 F_5112
-af+ 0x80198c0 130 UnsetConfig0x02Bit4andmore
+af+ 0x80198c0 130 UnsetConfig0x02Bit4andmore_Introscreen
+CCa 0x80198dc mla 0x20019e68 , 0x14, 6 ,0x20019df0  .. 0x14*6+0x20019df0  ... 0x20019e68 ... 0x0809bb8c                            
+CCa 0x80198ec add ,0x20000000 ,0 , lsl 2  ... 080d1b58 ... thinking :(
+CCa 0x8019902 para 6 from F_249_Create_MenuEntry
+CCa 0x8019906 para 5 from F_249_Create_MenuEntry
+CCa 0x801990a para 4 from F_249_Create_MenuEntry
+CCa 0x801990e Back
+CCa 0x8019912 Back
+CCa 0x8019924 ... T.u.r.n...O.n
 CCa 0x8019932 Get ConfigData + 0x2 F_5113
 CCa 0x8019934 Unset Bit 4 
 CCa 0x801993a Set ConfigData + 0x2 F_5113
@@ -306,6 +409,8 @@ af+ 0x801a938 322 F_5134
 CCa 0x801a9be Get ConfigData + 0x1 F_5134
 af+ 0x801aabc 408 F_5135
 af+ 0x801ac60 452 F_5144
+CCa 0x801acc0 ... E.n.t.r.y
+CCa 0x801ad46 ... C.h.a.n.g.e.d
 af+ 0x801ae24 282 F_5136
 af+ 0x801af58 298 F_5137
 CCa 0x801afc0 Get ConfigData + 0x18 F_5137
@@ -384,7 +489,7 @@ af+ 0x801ca66 12 F_1095
 af+ 0x801ca72 32 F_1064
 af+ 0x801ca92 52 F_990
 af+ 0x801cac6 52 F_4134
-af+ 0x801cb04 30 F_797_gfx_blockfill_unsure
+af+ 0x801cb04 30 F_797_gfx_blockfill
 af+ 0x801cb22 168 F_4135
 af+ 0x801cbca 2 F_991
 af+ 0x801cbcc 10 F_992
@@ -446,8 +551,8 @@ af+ 0x802168c 484 F_803
 af+ 0x8021870 18 F_804
 af+ 0x8021882 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x8021894 18 Get_Welcome_Line2_from_spi_flash
-af+ 0x80218a6 18 Read_Config_Data_from_Flash
-af+ 0x80218b8 18 Write_Config_Data_to_Flash
+af+ 0x80218a6 18 Read_Config_Data_from_SPIFlash
+af+ 0x80218b8 18 Write_Config_Data_to_SPIFlash
 af+ 0x80218d4 474 F_806
 af+ 0x8021ac0 18 F_807
 af+ 0x8021ad2 26 F_808
@@ -464,9 +569,11 @@ af+ 0x8021e1c 26 F_261
 af+ 0x8021e4c 26 F_813_SPIF_ZoneName2Ram_0x40_ID
 CCa 0x8021e4c get aktive zone name to ram
 CCa 0x8021e56 SPI 0x149a0 + 0x40 begin zone names
+CCa 0x8021e5c set akt. Zone_Name
 af+ 0x8021e66 26 F_814_SPIF_ZoneName2Ram_0x20_ID
 CCa 0x8021e66 get aktive zone name to ram 
 CCa 0x8021e70 SPI 0x149a0 + 0x40 begin zone names
+CCa 0x8021e76 set akt. Zone_Name
 af+ 0x8021e80 24 F_815
 af+ 0x8021e98 24 F_816
 af+ 0x8021eb0 26 F_4302_SMS_QuickText2Ram_ID
@@ -621,7 +728,8 @@ af+ 0x802669c 70 F_276
 af+ 0x80266e2 100 F_277
 af+ 0x8026754 106 F_278
 af+ 0x80267be 266 F_94
-af+ 0x80268c8 122 F_1097
+af+ 0x80268c8 122 F_1097..Mybee.itoa()..check
+CCa 0x80268c8 r0 = iValue, r1 
 af+ 0x8026942 112 Edit_Message_Confirm_Send_4
 af+ 0x80269f4 166 F_95
 af+ 0x8026a9a 22 GPIO_ReadInputDataBit
@@ -663,7 +771,10 @@ CCa 0x80282d0 ConfigData + 0x15 (byte) F_4520
 af+ 0x8028316 52 F_4313
 af+ 0x802834a 396 F_4190
 af+ 0x80284d6 442 F_4237
+CCa 0x8028514 get channel nr
+CCa 0x8028522 get akt. Zone_Name
 af+ 0x80286e8 580 F_286
+CCa 0x80287ac ... M.e.n.u
 CCa 0x80287c6 2 house picture
 CCa 0x80287d6 0x1f 31
 CCa 0x80287d8 0x9d 157
@@ -686,14 +797,25 @@ CCa 0x8028814 0x9d 157
 CCa 0x8028816 0x3a 58
 CCa 0x8028818 0x22 34
 CCa 0x8028838 0x9d 157
+CCa 0x802883e get akt. Zone_Name
 CCa 0x8028848 0x4b 75
 CCa 0x802884a 0x69 105
+CCa 0x802885a ... C.H.
+CCa 0x8028862 get channel nr
 CCa 0x8028868 test for 2 digit channel
 CCa 0x8028870 get channel nr
 CCa 0x8028876 +0x30 for ascii
+CCa 0x802888e get channel nr
 af+ 0x8028960 674 F_287
+CCa 0x8028a14 ... M.e.n.u
 CCa 0x8028a5a speaker picture
 CCa 0x8028a76 2 people picture
+CCa 0x8028aea get akt. Zone_Name
+CCa 0x8028aea get akt. Zone_Name
+CCa 0x8028b06 ... C.H.
+CCa 0x8028b0e get channel nr
+CCa 0x8028b1c get channel nr
+CCa 0x8028b3a get channel nr
 CCa 0x8028b8a 2 house picture
 af+ 0x8028c20 530 F_4191
 af+ 0x8028e32 28 F_4192
@@ -1026,7 +1148,7 @@ af+ 0x80355fe 68 F_1018
 af+ 0x803568c 8 F_350
 af+ 0x8035694 10 F_351
 af+ 0x80356a8 8 F_352
-af+ 0x80356b0 136 F_353
+af+ 0x80356b0 136 aes_cipher
 af+ 0x8035738 236 F_354
 af+ 0x8035824 92 F_844
 af+ 0x8035880 42 F_355
@@ -1060,17 +1182,29 @@ af+ 0x8035f80 26 F_4264
 af+ 0x8036006 40 F_4512
 af+ 0x803602e 52 F_4502
 af+ 0x803607e 28 F_4265
+af+ 0x803609a 34 F_5172
+af+ 0x80360bc 34 F_5173
 af+ 0x80360de 32 F_4266
+af+ 0x80360fe 44 F_5154
+af+ 0x803612a 44 F_5155
 af+ 0x8036156 12 F_4211
 af+ 0x8036162 240 F_4212
 af+ 0x8036252 46 F_4329
 af+ 0x8036280 34 F_4503
+af+ 0x80362a2 30 F_5148
+af+ 0x80362c0 62 F_5149
+af+ 0x80362fe 10 F_5150
+af+ 0x8036308 50 F_5145
 af+ 0x803633a 6 F_4461
 af+ 0x8036344 22 F_1107
 af+ 0x803635a 10 F_4213
 af+ 0x8036364 10 F_4462
 af+ 0x803636e 26 F_4214
 af+ 0x8036388 72 F_4267
+af+ 0x80363d0 10 F_5174
+af+ 0x80363da 98 F_5156
+af+ 0x803643c 8 F_5157
+af+ 0x8036444 68 F_5158
 af+ 0x8036488 152 F_4268
 af+ 0x8036530 4 F_4330
 af+ 0x8036534 104 F_4446
@@ -1079,6 +1213,9 @@ af+ 0x80365d2 40 F_4269
 af+ 0x80365fa 26 F_4398
 af+ 0x8036614 198 F_4331
 af+ 0x80366da 42 F_4476
+af+ 0x8036704 628 F_5159
+af+ 0x8036978 120 F_5160
+af+ 0x80369f0 144 F_5161
 af+ 0x8036b96 222 F_4477
 af+ 0x8036c74 54 F_359
 af+ 0x8036cac 140 F_4332
@@ -1115,14 +1252,19 @@ af+ 0x8038806 10 F_4448
 af+ 0x8038810 10 F_4449
 af+ 0x803881c 18 F_1081
 af+ 0x8038834 24 F_4272
+af+ 0x803884c 12 F_5162
+af+ 0x8038858 12 F_5163
+af+ 0x8038864 18 F_5164
 af+ 0x8038878 54 F_4335
 af+ 0x80388b0 68 F_4336
 af+ 0x80388f4 46 F_4401
 af+ 0x8038924 166 F_4402
 af+ 0x80389ca 92 F_4403
 af+ 0x8038a26 158 F_4337
+af+ 0x8038ac4 64 F_5165
 af+ 0x8038b04 212 F_4404
 af+ 0x8038bd8 442 Create_Menu_Entry_Send
+CCa 0x803965e ... D.e.l.e.t.e.d
 af+ 0x8039760 30 F_4405
 af+ 0x8039780 32 F_5066
 af+ 0x80397a0 56 F_5063
@@ -1138,9 +1280,14 @@ af+ 0x8039bfe 36 F_5056
 af+ 0x8039c22 144 main_menu
 af+ 0x8039cb2 226 F_4274
 CCa 0x8039d16 main_menu
+af+ 0x8039da4 14 F_5146
+af+ 0x8039db2 12 F_5147
+af+ 0x8039dbe 34 F_5166
+af+ 0x8039de0 72 F_5151
 af+ 0x8039e28 54 F_4275
 af+ 0x8039e5e 22 F_4506
 af+ 0x8039e74 12 F_1108
+af+ 0x8039e80 30 F_5152
 af+ 0x8039ea0 100 F_1109
 af+ 0x8039f04 66 F_1082
 CCa 0x8039f24 BLX F_4543
@@ -1421,6 +1568,7 @@ af+ 0x8045002 366 F_482
 af+ 0x8045198 108 F_483
 af+ 0x8045218 96 F_484
 af+ 0x80452b8 418 F_485
+CCa 0x80453ca get akt. Zone_Name
 af+ 0x80454b0 94 F_486
 af+ 0x804550e 136 F_873
 af+ 0x8045596 70 F_487
@@ -1531,7 +1679,7 @@ af+ 0x8047f5c 1700 F_4524
 af+ 0x8048600 312 F_4525
 af+ 0x8048738 104 F_4526
 af+ 0x80487a8 158 F_557
-af+ 0x8048c9c 202 F_558
+af+ 0x8048c9c 202 ambe_unpack
 af+ 0x8048d6c 88 F_4527
 af+ 0x8048dc4 62 F_4528
 af+ 0x8048e84 2 F_192_Nice
@@ -1560,6 +1708,7 @@ af+ 0x8049480 338 F_4342
 af+ 0x80495d4 28 F_4044
 af+ 0x80495f0 38 F_1136
 af+ 0x804962c 28 F_4419
+af+ 0x8049648 24 F_5167
 af+ 0x8049660 48 F_4420
 af+ 0x8049694 30 F_4343
 af+ 0x80496b2 24 F_4344
@@ -1568,7 +1717,12 @@ af+ 0x8049712 86 F_4472
 af+ 0x8049768 26 F_4421
 af+ 0x8049782 18 F_4422
 af+ 0x8049794 52 F_4488
+af+ 0x80497c8 444 F_5168
+af+ 0x8049984 120 F_5169
+af+ 0x80499fc 66 F_5170
+af+ 0x8049a3e 94 F_5171
 af+ 0x8049a9c 178 F_4452
+af+ 0x8049b5c 22 F_5153
 af+ 0x8049b74 82 F_5017
 af+ 0x8049bcc 78 F_5018
 af+ 0x8049c20 46 F_4345
@@ -1679,7 +1833,10 @@ af+ 0x804d264 2 F_225_Nice
 af+ 0x804d266 2 F_4113
 af+ 0x804d268 208 Read_Channel_Switch
 af+ 0x804d338 136 This_function_called_Read_Channel_Switch
+CCa 0x804d35c get channel nr
+CCa 0x804d3a4 set channel nr
 af+ 0x804d3c0 36 F_622
+CCa 0x804d3c6 set channel nr (init)
 af+ 0x804d410 8 F_623
 af+ 0x804d418 8 F_624
 af+ 0x804d420 8 F_625
@@ -1743,12 +1900,12 @@ af+ 0x8050176 2632 F_656
 af+ 0x8050bcc 102 F_238
 af+ 0x8050c40 2 F_239_Nice
 af+ 0x8050c44 328 F_4522
-af+ 0x8050d90 122 F_4523
+af+ 0x8050d90 122 ambe_encode_thing__size_not_correct
 af+ 0x8050e24 44 F_659
 af+ 0x8050ed8 524 F_660
 af+ 0x8051140 24 F_661
 af+ 0x8051158 170 F_4529
-af+ 0x8051248 130 F_662
+af+ 0x8051248 66 ambe_decode_wav
 af+ 0x80512f0 46 F_663
 af+ 0x8051334 126 F_664
 af+ 0x80513b4 226 F_4530
@@ -1875,157 +2032,181 @@ af+ 0x80577ec 40 F_4070
 af+ 0x8057814 22 F_737
 af+ 0x805782a 36 F_738
 af+ 0x805784e 36 F_739
-af+ 0x8057880 46 F_1032
-af+ 0x80578c0 78 F_1033
-af+ 0x8057940 118 F_1034
-af+ 0x80579c0 356 F_1035
-af+ 0x8057b40 162 F_909
-af+ 0x8057c00 70 F_1036
-af+ 0x8057c80 70 F_1037
-af+ 0x8057d00 82 F_1038
-af+ 0x8057d5c 180 F_910
-af+ 0x8057e10 36 F_740
-af+ 0x8057e34 42 F_911
-af+ 0x8057e80 30 F_1039
-af+ 0x8057ea0 32 F_741
-af+ 0x8057ec0 38 F_912
-af+ 0x8057f00 34 F_913
-af+ 0x8057f24 20 F_914
-af+ 0x8057f38 142 F_742
-af+ 0x8058058 64 F_915
-af+ 0x8058098 32 F_916
-af+ 0x80580b8 162 F_917
-af+ 0x805815c 20 F_743
-af+ 0x8058170 68 F_918
-af+ 0x80581dc 62 F_919
-af+ 0x805821c 52 F_744
-af+ 0x8058250 52 F_920
-af+ 0x8058284 122 F_745
-af+ 0x8058300 50 F_746
-af+ 0x8058334 56 F_747
-af+ 0x805836c 80 F_921
-af+ 0x80583bc 522 F_748
-af+ 0x80585c8 3752 F_749
-af+ 0x8059470 30 F_750
-af+ 0x8059490 176 F_751
-af+ 0x8059540 170 F_922
-af+ 0x80595ec 220 F_923
-af+ 0x80596c8 80 F_924
-af+ 0x8059718 2630 F_752
-af+ 0x805a160 74 F_925
-af+ 0x805a1ac 602 F_753
-af+ 0x805a408 612 F_754
-af+ 0x805a66c 1380 F_755
-af+ 0x805abd0 1338 F_756
-af+ 0x805b10c 120 F_926
-af+ 0x805b184 64 F_927
-af+ 0x805b1c4 230 F_928
-af+ 0x805b2ac 106 F_1040
-af+ 0x805b318 122 F_929
-af+ 0x805b394 60 F_930
-af+ 0x805b3d0 1812 F_757
-af+ 0x805bae8 74 F_758
-af+ 0x805bb34 126 F_759
-af+ 0x805bbb4 502 F_760
-af+ 0x805bdac 296 F_761
-af+ 0x805bed4 594 F_762
-af+ 0x805c128 4 F_763
-af+ 0x805c12c 568 F_764
-af+ 0x805c368 276 F_931
-af+ 0x805c47c 404 F_765
-af+ 0x805c610 20 F_766
-af+ 0x805c624 182 F_767
-af+ 0x805c6dc 156 F_768
-af+ 0x805c778 108 F_769
-af+ 0x805c7e4 18 F_770
-af+ 0x805c7f8 1094 F_932
-af+ 0x805cc40 86 F_771
-af+ 0x805cc98 1084 F_772
-af+ 0x805d0d4 22 F_773
-af+ 0x805d0ec 44 F_774
-af+ 0x805d11c 612 F_775
-af+ 0x805d380 104 F_1041
-af+ 0x805d3e8 150 F_933
-af+ 0x805d480 406 F_776
-af+ 0x805d618 236 F_777
-af+ 0x805d708 76 F_778
-af+ 0x805d754 130 F_779
-af+ 0x805d85c 66 F_780
-af+ 0x805d8a4 1634 F_781
-af+ 0x805df08 260 F_1042
-af+ 0x805e010 390 F_934
-af+ 0x805e19c 440 F_935
-af+ 0x805e354 560 F_936
-af+ 0x805e584 1692 F_782
-af+ 0x805ec20 240 F_783
-af+ 0x805ed14 1114 F_784
-af+ 0x805f180 32 F_1089
-af+ 0x805f1a0 98 F_1043
-af+ 0x805f202 64 F_1090
-af+ 0x805f242 42 F_4047
-af+ 0x805f26c 218 F_937
-af+ 0x805f346 182 F_938
-af+ 0x805f3fc 24 F_939
-af+ 0x805f414 26 F_940
-af+ 0x805f42e 70 F_1044
-af+ 0x805f474 62 F_1045
-af+ 0x805f4bc 54 F_941
-af+ 0x805f4f2 10 F_4071
-af+ 0x805f4fc 20 F_4048
-af+ 0x805f510 18 F_4049
-af+ 0x805f522 16 F_1046
-af+ 0x805f532 368 F_942
-af+ 0x805f6a2 88 F_1047
-af+ 0x805f6fa 44 F_4050
-af+ 0x805f726 74 F_4051
-af+ 0x805f770 114 F_943
-af+ 0x805f7e2 358 F_1048
-af+ 0x805f948 294 F_1049
-af+ 0x805fa6e 62 F_944
-af+ 0x805faac 62 F_1050
-af+ 0x805faea 14 F_4052
-af+ 0x805faf8 20 F_4053
-af+ 0x805fb0c 14 F_4054
-af+ 0x805fb1a 80 F_945
-af+ 0x805fb6a 40 F_4218
-af+ 0x805fbc0 282 F_946
-af+ 0x805fd00 178 F_947
-af+ 0x805fdb8 182 F_948
-af+ 0x805fe74 98 F_949
-af+ 0x805fed8 294 F_950
-af+ 0x8060000 268 F_951
-af+ 0x806010c 238 F_952
-af+ 0x8060200 162 F_953
-af+ 0x80602a8 298 F_954
-af+ 0x80603d8 68 F_955
-af+ 0x806041c 72 F_956
-af+ 0x8060464 86 F_957
-af+ 0x80604ba 122 F_958
-af+ 0x8060534 82 F_959
-af+ 0x8060586 42 F_960
-af+ 0x80605b0 42 F_961
-af+ 0x80605da 326 F_962
-af+ 0x8060720 214 F_963
-af+ 0x8060920 770 F_1051
-af+ 0x8060c24 220 F_964
-af+ 0x8060df0 72 F_965
-af+ 0x8060e38 268 F_966
-af+ 0x8060f4c 78 F_967
-af+ 0x8060f9c 68 F_968
-af+ 0x8060fe0 146 F_969
-af+ 0x8061074 566 F_1052
-af+ 0x80612ac 138 F_1053
-af+ 0x8061340 252 F_970
-af+ 0x8061440 50 F_971
-af+ 0x8061480 14 F_1054
-af+ 0x80614a4 14 F_1055
+af+ 0x8057880 46 ambr_x01
+af+ 0x80578c0 78 ambr_x02
+af+ 0x8057940 118 ambr_001
+# 0x8057940 --  39792 byte -Ambr Codec ---
+af+ 0x80579c0 356 ambr_002
+af+ 0x8057b40 162 ambr_003
+af+ 0x8057c00 70 ambr_004
+af+ 0x8057c80 70 ambr_005
+af+ 0x8057d00 82 ambr_006
+af+ 0x8057d5c 180 ambr_007
+af+ 0x8057e10 36 ambr_008
+af+ 0x8057e34 42 ambr_009
+af+ 0x8057e80 30 ambr_010
+af+ 0x8057ea0 32 ambr_011
+af+ 0x8057ec0 38 ambr_012
+af+ 0x8057f00 34 ambr_013
+af+ 0x8057f24 20 ambr_014
+af+ 0x8057f38 142 ambr_015
+af+ 0x8057fc8 30 ambr_016
+af+ 0x8057fe8 38 ambr_017
+af+ 0x8058010 30 ambr_018
+af+ 0x8058030 38 ambr_019
+af+ 0x8058058 64 ambr_020
+af+ 0x8058098 32 ambr_021
+af+ 0x80580b8 162 ambr_022
+af+ 0x805815c 20 ambr_023
+af+ 0x8058170 68 ambr_024
+af+ 0x80581b4 38 ambr_025
+af+ 0x80581dc 62 ambr_026
+af+ 0x805821c 52 ambr_027
+af+ 0x8058250 52 ambr_028
+af+ 0x8058284 122 ambr_029
+af+ 0x8058300 50 ambr_030
+af+ 0x8058334 56 ambr_031
+af+ 0x805836c 80 ambr_032
+af+ 0x80583bc 522 ambr_033
+af+ 0x80585c8 3752 ambr_034
+af+ 0x8059470 30 ambr_035
+af+ 0x8059490 176 ambr_036
+af+ 0x8059540 170 ambr_037
+af+ 0x80595ec 220 ambr_038
+af+ 0x80596c8 80 ambr_039
+af+ 0x8059718 2630 ambr_040
+af+ 0x805a160 74 ambr_041
+af+ 0x805a1ac 602 ambr_042
+af+ 0x805a408 612 ambr_043
+af+ 0x805a66c 1380 ambr_044
+af+ 0x805abd0 1338 ambr_045
+af+ 0x805b10c 120 ambr_046
+af+ 0x805b184 64 ambr_047
+af+ 0x805b1c4 230 ambr_048
+af+ 0x805b2ac 106 ambr_049
+af+ 0x805b318 122 ambr_050
+af+ 0x805b394 60 ambr_051
+af+ 0x805b3d0 1812 ambr_052
+af+ 0x805bae8 74 ambr_053
+af+ 0x805bb34 126 ambr_054
+af+ 0x805bbb4 502 ambr_055
+af+ 0x805bdac 296 ambr_056
+af+ 0x805bed4 594 ambr_057
+af+ 0x805c128 4 ambr_058
+af+ 0x805c12c 568 ambr_059
+af+ 0x805c368 276 ambr_060
+af+ 0x805c47c 404 ambr_061
+af+ 0x805c610 20 ambr_062
+af+ 0x805c624 182 ambr_063
+af+ 0x805c6dc 156 ambr_064
+af+ 0x805c778 108 ambr_065
+af+ 0x805c7e4 18 ambr_066
+af+ 0x805c7f8 1094 ambr_067
+af+ 0x805cc40 86 ambr_068
+af+ 0x805cc98 1084 ambr_069
+af+ 0x805d0d4 22 ambr_070
+af+ 0x805d0ec 44 ambr_071
+af+ 0x805d11c 612 ambr_072
+af+ 0x805d380 104 ambr_073
+af+ 0x805d3e8 150 ambr_074
+af+ 0x805d480 406 ambr_075
+af+ 0x805d618 236 ambr_076
+af+ 0x805d708 76 ambr_077
+af+ 0x805d754 130 ambr_078
+af+ 0x805d7d8 126 ambr_079
+af+ 0x805d85c 66 ambr_080
+af+ 0x805d8a4 1634 ambr_081
+af+ 0x805df08 260 ambr_082
+af+ 0x805e010 390 ambr_083
+af+ 0x805e19c 440 ambr_084
+af+ 0x805e354 560 ambr_085
+af+ 0x805e584 1692 ambr_086
+af+ 0x805ec20 240 ambr_087
+af+ 0x805ed14 1114 ambr_088
+af+ 0x805f180 32 ambr_089
+af+ 0x805f1a0 98 ambr_090
+af+ 0x805f202 64 ambr_091
+af+ 0x805f242 42 ambr_092
+af+ 0x805f26c 218 ambr_093
+af+ 0x805f346 182 ambr_094
+af+ 0x805f3fc 24 ambr_095
+af+ 0x805f414 26 ambr_096
+af+ 0x805f42e 70 ambr_097
+af+ 0x805f474 62 ambr_098
+af+ 0x805f4bc 54 ambr_099
+af+ 0x805f4f2 10 ambr_100
+af+ 0x805f4fc 20 ambr_101
+af+ 0x805f510 18 ambr_102
+af+ 0x805f522 16 ambr_103
+af+ 0x805f532 368 ambr_104
+af+ 0x805f6a2 88 ambr_105
+af+ 0x805f6fa 44 ambr_106
+af+ 0x805f726 74 ambr_107
+af+ 0x805f770 114 ambr_108
+af+ 0x805f7e2 358 ambr_109
+af+ 0x805f948 294 ambr_110
+af+ 0x805fa6e 62 ambr_111
+af+ 0x805faac 62 ambr_112
+af+ 0x805faea 14 ambr_113
+af+ 0x805faf8 20 ambr_114
+af+ 0x805fb0c 14 ambr_115
+af+ 0x805fb1a 80 ambr_116
+af+ 0x805fb6a 40 ambr_117
+af+ 0x805fbc0 282 ambr_118
+af+ 0x805fd00 178 ambr_119
+af+ 0x805fdb8 182 ambr_120
+af+ 0x805fe74 98 ambr_121
+af+ 0x805fed8 294 ambr_122
+af+ 0x8060000 268 ambr_123
+af+ 0x806010c 238 ambr_124
+af+ 0x8060200 162 ambr_125
+af+ 0x80602a8 298 ambr_126
+af+ 0x80603d8 68 ambr_127
+af+ 0x806041c 72 ambr_128
+af+ 0x8060464 86 ambr_129
+af+ 0x80604ba 122 ambr_130
+af+ 0x8060534 82 ambr_131
+af+ 0x8060586 42 ambr_132
+af+ 0x80605b0 42 ambr_133
+af+ 0x80605da 326 ambr_134
+af+ 0x8060720 214 ambr_135
+af+ 0x8060920 770 ambr_136
+af+ 0x8060c24 220 ambr_137
+af+ 0x8060df0 72 ambr_138
+af+ 0x8060e38 268 ambr_139
+af+ 0x8060f4c 78 ambr_140
+af+ 0x8060f9c 68 ambr_141
+af+ 0x8060fe0 146 ambr_142
+af+ 0x8061074 566 ambr_143
+af+ 0x80612ac 138 ambr_144
+af+ 0x8061340 252 ambr_145
+af+ 0x8061440 50 ambr_146
+af+ 0x8061480 14 ambr_147
+af+ 0x80614a4 14 ambr_148
 af+ 0x808cb84 30 F_4091
 af+ 0x808cba4 38 F_4003
 af+ 0x808cc00 190 F_4002
 af+ 0x808ccbe 1444 usb_dnld_handle
+CCa 0x808d082 0x2001d1a8 Time
+CCa 0x808d088 0x2001d1a8 Time
+CCa 0x808d092 0x2001d1a8 Time
+CCa 0x808d09c 0x2001d1a8 Time
+CCa 0x808d0a6 0x2001d1ac Date
+CCa 0x808d0b0 0x2001d1ac Date
+CCa 0x808d0ba 0x2001d1ac Date
+CCa 0x808d0c4 0x2001d1ac Date
 af+ 0x808d266 132 F_4055
 af+ 0x808d2ea 134 F_4056
 af+ 0x808d3d8 3036 usb_upld_handle
+CCa 0x808d42c DFU_Command_Parser
+CCa 0x808d5f0 0x2001d1ac Date
+CCa 0x808d5fe 0x2001d1ac Date
+CCa 0x808d60a 0x2001d1ac Date
+CCa 0x808d616 0x2001d1ac Date
+CCa 0x808d61e 0x2001d1a8 Time
+CCa 0x808d62c 0x2001d1a8 Time
+CCa 0x808d638 0x2001d1a8 Time
+CCa 0x808d644 0x2001d1a8 Time
 CCa 0x808d6a6 ConfigData + x usb_upld_handle
 CCa 0x808d972 ConfigData + 0x4  (long) MyDMRID usb_upld_handle
 CCa 0x808d97a ConfigData + 0x4  (long) MyDMRID usb_upld_handle
