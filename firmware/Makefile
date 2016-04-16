@@ -1,9 +1,9 @@
 # This Makefile grabs firmware from the web, then de 
 
+all: D002.032.bin
+
 clean:
 	rm -f *.zip *~ *.bin *.img
-
-all: D002.032.bin D002.034.bin
 
 D002.032.bin: D002.032.zip
 	unzip -p D002.032.zip 'Firmware 2.32/MD-380-D2.32(AD).bin' >D002.032.bin
