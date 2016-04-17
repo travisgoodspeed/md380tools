@@ -88,11 +88,25 @@ static void do_jump(uint32_t entrypoint) {
 }
                                                                         
 
+void Create_Menu_Utilies_hook(void) {
 
-void Create_Menu_Utilies_hook(void)
-  {
-  do_jump(0x08012786+1);
+  uint8_t * program_radio_unprohibited = (uint8_t *) (0x2001d030 + 4);
+  // 0x08012740      dff8f80a       ldr.w r0, [pc, 0xaf8]       ; [0x801323c:4]=0x2001d030
+  // 0x08012744      0079           ldrb r0, [r0, 4]   
+  // 0x08012746      c0f38000       ubfx r0, r0, 2, 1 
+  // 0x0801274a      c007           lsls r0, r0, 0x1f
+  // 0x0801274c      02d4           bmi 0x8012754               ;[2] ; Is Menu ProgramRadio allowedly  
+  if ( (* program_radio_unprohibited & 0x4) == 0x4 ) {
+    printf("program_radio_unprohibited ");  
+  } else {
+    printf("program_radio_prohibited ");
   }
+}  
+  
+
+void Create_Menu_Utilies_hook_end(void) {
+  do_jump(0x08012786+1);
+}
 
 
 

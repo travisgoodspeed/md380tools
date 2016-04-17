@@ -260,7 +260,7 @@ def calllog(dfu):
                c=chr(data[i]&0x7F);
                if c!='\0':
                   message=message+c;
-             print message
+            print message
              #get actual zone name
             dfu.set_address(0x2001b958);
             data=dfu.upload(1,32,0);

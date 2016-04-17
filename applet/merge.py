@@ -368,7 +368,9 @@ if __name__== '__main__':
     for adr in Create_MenuEntrylist:
         merger.hookbl(adr,sapplet.getadr("F_249_Create_MenuEntry_hook"),0);
 
-    merger.hookstub(0x08012740,sapplet.getadr("Create_Menu_Utilies_hook")); 
+    merger.hookbl(0x08012740,sapplet.getadr("Create_Menu_Utilies_hook"),0); 
+    merger.hookstub(0x08012740+4,sapplet.getadr("Create_Menu_Utilies_hook_end"));
+    
     merger.setbyte(0x080126dc,0x02);    
 
     #Throwaway hook to see if adr is called.
