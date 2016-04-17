@@ -79,6 +79,23 @@ e0020000 Selected Page Index
 }
 
 
+static void do_jump(uint32_t entrypoint) {
+  asm volatile(
+               "bx     %0      \n"
+                : : "r" (entrypoint) : );
+  // just to keep noreturn happy
+  for (;;) ;
+}
+                                                                        
+
+
+void Create_Menu_Utilies_hook(void)
+  {
+  do_jump(0x08012786+1);
+  }
+
+
+
 void F_249_Create_MenuEntry_hook(int a, void * b , void * c, void  * d, int e, int f ,int g) {
   printf("0x%x Text: 0x%x GreenKey 0x%x RedKey 0x%x 0x%x 0x%x 0x%x\n", a,b,c,d,e,f,g);
   printf("b: ");

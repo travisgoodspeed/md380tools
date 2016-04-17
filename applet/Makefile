@@ -55,6 +55,7 @@ flash: wrapped
 
 $(SRCS): config.h src/*.h
 $(PROJ_NAME).elf: $(SRCS)
+	cp ../patches/2.032/patched.img ./experiment.img
 	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
 	$(OBJDUMP) -t main.elf >main.img.sym
