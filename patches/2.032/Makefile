@@ -10,14 +10,13 @@ unwrapped.img:
 patched.img: unwrapped.img
 	./patch.py
 
-logo: patches
 	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-poc-gs.ppm relocate
 	#../../md380-gfx --firmware=expriment.img --gfx=0x80f9ca8-poc.ppm write
 	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-shmoo.ppm write
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-shmoocon.ppm write
 	#../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-volnet.ppm write
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-flauschfunk-color.ppm relocate
-	../../md380-gfx --firmware=experiment.img --gfx=a.ppm relocate
+	../../md380-gfx --firmware=patched.img --gfx=a.ppm relocate
 
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ca8-troopers-color.ppm relocate
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ce4.ppm write
@@ -29,6 +28,7 @@ logo: patches
 
 patched.bin: patched.img
 	../../md380-fw --wrap patched.img patched.bin
+
 
 
 #Use this to flash a physically jailbroken radio.
