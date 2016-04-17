@@ -1,13 +1,13 @@
 
-all: wrapped
+all: patched.bin
 clean:
 	rm -f *~ *.bin *.img
 
-unwrapped.bin:
+unwrapped.img:
 	cd ../../firmware && make D002.032.bin
 	../../md380-fw --unwrap ../../firmware/D002.032.bin unwrapped.img
 
-patches: unwrapped.bin
+patched.img: unwrapped.img
 	./patch.py
 
 logo: patches
@@ -23,24 +23,24 @@ logo: patches
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9ce4.ppm write
 #	../../md380-gfx --firmware=experiment.img --gfx=0x80f9cf8.ppm write
 
-font: patches
-	../../md380-gfx --firmware=experiment.img --gfx=replacement-font-big-latin.pbm fontreplace
-	../../md380-gfx --firmware=experiment.img --gfx=replacement-font-small-latin.pbm fontreplace
+#Apply the font.
+	../../md380-gfx --firmware=patched.img --gfx=replacement-font-big-latin.pbm fontreplace
+	../../md380-gfx --firmware=patched.img --gfx=replacement-font-small-latin.pbm fontreplace
 
-wrapped: logo font
-	../../md380-fw --wrap experiment.img experiment.bin
+patched.bin: patched.img
+	../../md380-fw --wrap patched.img patched.bin
 
 
 #Use this to flash a physically jailbroken radio.
 #You must have jailbreak.bin in ~/
-dfuflash: patches
+dfuflash: patched.img
 	stm32-dfu erase
 	sleep 25
 	stm32-dfu writeflash ~/jailbreak.bin
-	stm32-dfu write experiment.img 0x0800C000
+	stm32-dfu write patched.img 0x0800C000
 
 #Use this to flash an unmodified radio.
 #No soldering or jailbreak.bin necessary.
-flash: wrapped
-	../../md380-dfu upgrade experiment.bin
+flash: patched.bin
+	../../md380-dfu upgrade patched.bin
 

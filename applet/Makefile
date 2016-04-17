@@ -35,9 +35,9 @@ OBJS = $(SRCS:.c=.o)
 
 all: lib proj wrapped
 
-experiment.img:
+experiment.img: 
 	cd ../patches/2.032 && make all
-	cp ../patches/2.032/experiment.img ./
+	cp ../patches/2.032/patched.img ./experiment.img
 
 
 lib: src/version.h config.h

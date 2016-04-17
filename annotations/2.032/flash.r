@@ -30,6 +30,8 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
+
+
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
