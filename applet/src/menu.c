@@ -107,9 +107,9 @@ struct MENU {
   uint8_t unknown_01;
 };
 #define MENU_DEPTH  0x200011e4
-#define UNKNOWN_01 0x2001d3c2
-#define UNKNOWN_02 0x20019df0
-#define MENU_MEM 0x2001c148
+#define UNKNOWN_01  0x2001d3c2
+#define UNKNOWN_02  0x20019df0
+#define MENU_MEM    0x2001c148
                  
 
 void Create_My_Menu_Entry_DebugEnableScreen(void) {
@@ -413,6 +413,8 @@ void Create_Menu_Utilies_hook(void) {
   // 0x08012756      e4b2           uxtb r4, r4                                                                    
   // 0x08012758      a4b2           uxth r4, r4       
   // 0x0801275a      0294           str r4, [sp, 8]     
+
+  // added the original "programm radio" menu entry... lost by the hook
   menu_enabled=1;
   menu_unknown_0=0;
   menu_unknown_1=0x8a;
@@ -422,6 +424,7 @@ void Create_Menu_Utilies_hook(void) {
   menu_entry_nr=8;
   F_249_Create_MenuEntry_hook(menu_entry_nr, menu_text , menu_green_key , menu_red_key, menu_unknown_1, menu_unknown_0 , menu_enabled);
 
+  // added the "debug" menu entry  
   for(i=0;i<strlen(my_entry);i++)
     wide[i]=my_entry[i];
 
@@ -429,13 +432,11 @@ void Create_Menu_Utilies_hook(void) {
   menu_enabled=1;
   menu_unknown_0=0;
   menu_unknown_1= 0x8a;
-  menu_green_key= Create_My_Menu_Entry_Debug_Screen +1 ;  //0x08019734+1 ; //0x80127d1;
+  menu_green_key= Create_My_Menu_Entry_Debug_Screen +1;
   menu_red_key=(void *) 0x800f453; //back
 
   menu_entry_nr=9;
   F_249_Create_MenuEntry_hook(menu_entry_nr, wide , menu_green_key , menu_red_key, menu_unknown_1, menu_unknown_0 , menu_enabled);
-  
-  
 }  
   
 
