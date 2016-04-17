@@ -98,6 +98,188 @@ static void do_jump(uint32_t entrypoint) {
   // just to keep noreturn happy
   for (;;) ;
 }
+ 
+struct MENU {
+  void    *menu_titel;
+  void    *unknownp;
+  uint8_t numberofentrys;
+  uint8_t unknown_00;
+  uint8_t unknown_01;
+};
+                 
+                 
+void Create_My_Menu_Entry_Intro_Screen(void) {
+  uint8_t menu_depth;
+  struct MENU *menu_mem; 
+  
+  int i;
+/*
+ / (fcn) Create_Menu_Entry_Intro_Screen 250
+ |           0x08019734      e0b5           push {r5, r6, r7, lr}
+*/
+
+/* pull MENU_DEPTH
+ |           0x08019736      dff80c08       ldr.w r0, [pc, 0x80c]       ; [0x8019f44:4]=0x200011e4
+ |           0x0801973a      0078           ldrb r0, [r0]
+*/
+  #define MENU_DEPTH  0x200011e4
+  menu_depth =  *(uint8_t *)MENU_DEPTH;  
+
+/* calculate pos of new menu memory   
+ |           0x0801973c      0c21           movs r1, 0xc
+ |           0x0801973e      dff80828       ldr.w r2, [pc, 0x808]       ; [0x8019f48:4]=0x2001c148
+ |           0x08019742      01fb0020       mla r0, r1, r0, r2
+ |           0x08019746      0c30           adds r0, 0xc
+*/
+  #define MENU_MEM 0x2001c148
+  menu_mem = ((void *) MENU_MEM + ( menu_depth * 0xc) ) + 0xc;
+
+/*  Set Menu Title complicate ... no  idear why 
+ |           0x08019748      3949           ldr r1, [pc, 0xe4]          ; [0x8019830:4]=0x2001d3e2
+ |           0x0801974a      0978           ldrb r1, [r1]
+ |           0x0801974c      0129           cmp r1, 1
+ |       ,=< 0x0801974e      0ad1           bne 0x8019766
+ |       |   0x08019750      dff87418       ldr.w r1, [pc, 0x874]       ; [0x8019fc8:4]=0x2001d1a0
+ |       |   0x08019754      0968           ldr r1, [r1]
+ |       |   0x08019756      dff87428       ldr.w r2, [pc, 0x874]       ; [0x8019fcc:4]=0x20000000
+ |       |   0x0801975a      12eb8101       adds.w r1, r2, r1, lsl 2
+ |       |   0x0801975e      d1f89c11       ldr.w r1, [r1, 0x19c]
+ |       |   0x08019762      0160           str r1, [r0]
+ |      ,==< 0x08019764      04e0           b 0x8019770
+*/
+  
+
+/*  Set MenuTitle
+ |      |`-> 0x08019766      dff86418       ldr.w r1, [pc, 0x864]       ; [0x8019fcc:4]=0x20000000
+ |      |    0x0801976a      d1f89c11       ldr.w r1, [r1, 0x19c]
+ |      |    0x0801976e      0160           str r1, [r0]
+*/
+  menu_mem->menu_titel =  (void *) 0x080d1580;
+
+
+/* Set MenuExecFunction 
+ |      `--> 0x08019770      dff8d013       ldr.w r1, [pc, 0x3d0]       ; [0x8019b44:4]=0x2001d3c2
+ |           0x08019774      0978           ldrb r1, [r1]
+ |           0x08019776      1422           movs r2, 0x14
+ |           0x08019778      dff8743d       ldr.w r3, [pc, 0xd74]       ; [0x801a4f0:4]=0x20019df0
+ |           0x0801977c      02fb0131       mla r1, r2, r1, r3
+ |           0x08019780      4160           str r1, [r0, 4]
+*/
+ #define UNKNOWN_01 0x2001d3c2
+ #define UNKNOWN_02 0x20019df0
+ 
+ menu_mem->unknownp = 0x14 * (*(uint8_t *)UNKNOWN_01) + (void *)UNKNOWN_02;
+  
+
+/* Number of Menu Entrys
+ |           0x08019782      0221           movs r1, 2
+ |           0x08019784      0172           strb r1, [r0, 8]
+*/
+  menu_mem->numberofentrys=2;
+/*
+ |           0x08019786      0021           movs r1, 0
+ |           0x08019788      4172           strb r1, [r0, 9]
+*/
+  menu_mem->unknown_00 = 0;
+/*
+ |           0x0801978a      0021           movs r1, 0
+ |           0x0801978c      4181           strh r1, [r0, 0xa]
+*/
+  menu_mem->unknown_01 = 0;
+
+/*  Preset radiobutton with akt. setting
+ |           0x0801978e      dff8b803       ldr.w r0, [pc, 0x3b8]       ; [0x8019b48:4]=0x2001c658 ConfigData ; config_byte_LED_enable_and_more
+ |           0x08019792      8078           ldrb r0, [r0, 2]            ; Get ConfigData + 0x2 F_5111
+ |           0x08019794      c0f30010       ubfx r0, r0, 4, 1
+ |           0x08019798      c007           lsls r0, r0, 0x1f
+ |       ,=< 0x0801979a      04d4           bmi 0x80197a6
+ |       |   0x0801979c      dff83009       ldr.w r0, [pc, 0x930]       ; [0x801a0d0:4]=0x2001d3b2
+ |       |   0x080197a0      0121           movs r1, 1
+ |       |   0x080197a2      0170           strb r1, [r0]
+ |      ,==< 0x080197a4      03e0           b 0x80197ae
+ |      |`-> 0x080197a6      dff82809       ldr.w r0, [pc, 0x928]       ; [0x801a0d0:4]=0x2001d3b2
+ |      |    0x080197aa      0021           movs r1, 0
+ |      |    0x080197ac      0170           strb r1, [r0]
+*/
+  #define SELECTED 0x2001d3b2
+  *(uint8_t *) SELECTED = 0;
+  
+
+/* Add first line to Menu
+ |      `--> 0x080197ae      0120           movs r0, 1
+ |           0x080197b0      0290           str r0, [sp, 8]             ; 1 to SP,8
+ |           0x080197b2      0020           movs r0, 0
+ |           0x080197b4      0190           str r0, [sp, 4]             ; 0 to SP,4
+ |           0x080197b6      8b20           movs r0, 0x8b
+ |           0x080197b8      0090           str r0, [sp]                ; 0x8b to SP
+ |           0x080197ba      dff81839       ldr.w r3, [pc, 0x918]       ; [0x801a0d4:4]=0x800f453 ; 0x800f453 .. 0x800f452 F_5143()  to r3 - Back
+ |           0x080197be      dff81829       ldr.w r2, [pc, 0x918]       ; [0x801a0d8:4]=0x8019835 ; 0x8019834 .. SetConfig0x02Bit4andmore(),r2
+ |           0x080197c2      dff80408       ldr.w r0, [pc, 0x804]       ; [0x8019fc8:4]=0x2001d1a0
+ |           0x080197c6      0068           ldr r0, [r0]
+ |           0x080197c8      dff80018       ldr.w r1, [pc, 0x800]       ; [0x8019fcc:4]=0x20000000
+ |           0x080197cc      11eb8000       adds.w r0, r1, r0, lsl 2
+ |           0x080197d0      d0f8b013       ldr.w r1, [r0, 0x3b0]       ; [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b0] to r1 .. [0x200003b0] = 0x080fa348 .. [0x080fa348] = "P.i.c.t.u.r.e"
+                                            0x080fa348
+ |           0x080197d4      db48           ldr r0, [pc, 0x36c]         ; [0x8019b44:4]=0x2001d3c2
+ |           0x080197d6      0078           ldrb r0, [r0]               ; (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
+ |           0x080197d8      f2f7aaff       bl F_249_Create_MenuEntry
+*/
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), (void *) 0x080fa348, (void *) 0x8019835, (void *) 0x800f453, 0x8b, 0 , 1);
+  
+/* Add second line to Menu
+ |           0x080197dc      0120           movs r0, 1                  ; 1 to SP,8
+ |           0x080197de      0290           str r0, [sp, 8]
+ |           0x080197e0      0020           movs r0, 0
+ |           0x080197e2      0190           str r0, [sp, 4]             ; 0 to SP,4
+ |           0x080197e4      8b20           movs r0, 0x8b
+ |           0x080197e6      0090           str r0, [sp]                ; 0x8b to SP
+ |           0x080197e8      dff8e838       ldr.w r3, [pc, 0x8e8]       ; [0x801a0d4:4]=0x800f453 ; 0x800f453 .. 0x800f452 F_5143() to r3 - Back
+ |           0x080197ec      dff8ec28       ldr.w r2, [pc, 0x8ec]       ; [0x801a0dc:4]=0x80198c1 ; 0x80198c0 .. UnsetConfig0x02Bit4andmore(),r2
+ |           0x080197f0      dff8d407       ldr.w r0, [pc, 0x7d4]       ; [0x8019fc8:4]=0x2001d1a0
+ |           0x080197f4      0068           ldr r0, [r0]
+ |           0x080197f6      dff8d417       ldr.w r1, [pc, 0x7d4]       ; [0x8019fcc:4]=0x20000000
+ |           0x080197fa      11eb8000       adds.w r0, r1, r0, lsl 2
+ |           0x080197fe      d0f8b413       ldr.w r1, [r0, 0x3b4]       ; [((0x2001d1a0 lsl 2) +[0x20000000])+0x3b4] to r1 .. [0x200003b4] = 0x080d1f48 .. [0x080d1f48] ="C.h.a.r...S.t.r.i.n.g"
+                                            0x080d1f48.
+ |           0x08019802      d048           ldr r0, [pc, 0x340]         ; [0x8019b44:4]=0x2001d3c2
+ |           0x08019804      0078           ldrb r0, [r0]
+ |           0x08019806      401c           adds r0, r0, 1
+ |           0x08019808      c0b2           uxtb r0, r0                 ; (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2]+1 = 7 ???
+ |           0x0801980a      f2f791ff       bl F_249_Create_MenuEntry
+*/
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, (void * ) 0x080d1f48 , (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
+  
+
+/*
+ |           0x0801980e      0020           movs r0, 0
+ |       ,=< 0x08019810      0ae0           b 0x8019828
+ |      .--> 0x08019812      cc49           ldr r1, [pc, 0x330]         ; [0x8019b44:4]=0x2001d3c2 ... sw menu_depth
+ |      ||   0x08019814      0978           ldrb r1, [r1]
+ |      ||   0x08019816      4118           adds r1, r0, r1
+ |      ||   0x08019818      1422           movs r2, 0x14
+ |      ||   0x0801981a      dff8d43c       ldr.w r3, [pc, 0xcd4]       ; [0x801a4f0:4]=0x20019df0  ... global menu
+ |      ||   0x0801981e      02fb0131       mla r1, r2, r1, r3
+ |      ||   0x08019822      0022           movs r2, 0
+ |      ||   0x08019824      0a74           strb r2, [r1, 0x10]
+ |      ||   0x08019826      401c           adds r0, r0, 1
+ |      |`-> 0x08019828      0228           cmp r0, 2                    ; number of menu entrys
+ |      `==< 0x0801982a      f2db           blt 0x8019812
+ \           0x0801982c      07bd           pop {r0, r1, r2, pc}
+*/  
+ // #define UNKNOWN_01 0x2001d3c2
+ #define UNKNOWN_02 0x20019df0
+ 
+ for(i=0;i<2;i++) {
+   uint8_t n;
+   uint8_t *p;
+   
+   n = *(uint8_t*)UNKNOWN_01;
+   n = n + i;
+   p = (void *)UNKNOWN_02;
+   p = p + n * 14;
+   p[0x10]=0;
+ } 
+}
                                                                         
 
 void Create_Menu_Utilies_hook(void) {
@@ -132,9 +314,9 @@ void Create_Menu_Utilies_hook(void) {
   menu_enabled=1;
   menu_unknown_0=0;
   menu_unknown_1=0x8a;
-  menu_green_key=0x80127d1;
-  menu_red_key=0x800f453; //back
-  menu_text=0x080d175c;
+  menu_green_key=(void *)0x80127d1;
+  menu_red_key=(void *)0x800f453; //back
+  menu_text=(void *)0x080d175c;
   menu_entry_nr=8;
   F_249_Create_MenuEntry_hook(menu_entry_nr, menu_text , menu_green_key , menu_red_key, menu_unknown_1, menu_unknown_0 , menu_enabled);
 
@@ -144,9 +326,9 @@ void Create_Menu_Utilies_hook(void) {
   wide[i]='\0';   
   menu_enabled=1;
   menu_unknown_0=0;
-  menu_unknown_1=0x8a;
-  menu_green_key=0x80127d1;
-  menu_red_key=0x800f453; //back
+  menu_unknown_1= 0x8a;
+  menu_green_key= Create_My_Menu_Entry_Intro_Screen +1 ;  //0x08019734+1 ; //0x80127d1;
+  menu_red_key=(void *) 0x800f453; //back
 
   menu_entry_nr=9;
   F_249_Create_MenuEntry_hook(menu_entry_nr, wide , menu_green_key , menu_red_key, menu_unknown_1, menu_unknown_0 , menu_enabled);
