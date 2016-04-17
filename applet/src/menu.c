@@ -86,7 +86,7 @@ void F_249_Create_MenuEntry_hook(int a, void * b , void * c, void  * d, int e, i
   printf("b: ");
   printhex2(b,14);
   printf("\n");
-  printf("%x %\n", * (unsigned int*) 0x20019df0);
+//  printf("%x \n", * (unsigned int*) 0x20019df0);
   F_249_Create_MenuEntry(a,b,c,d,e,f,g);
 }
 
