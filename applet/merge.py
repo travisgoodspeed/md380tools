@@ -366,7 +366,7 @@ if __name__== '__main__':
     for adr in Create_MenuEntrylist:
         merger.hookbl(adr,sapplet.getadr("F_249_Create_MenuEntry_hook"),0);
 
-    merger.hookbl(0x0801256c, sapplet.getadr("spiflash_read_hook"),0x0802fd82);
+
     
 
     #Throwaway hook to see if adr is called.
