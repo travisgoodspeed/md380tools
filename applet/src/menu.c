@@ -106,9 +106,86 @@ struct MENU {
   uint8_t unknown_00;
   uint8_t unknown_01;
 };
+#define MENU_DEPTH  0x200011e4
+#define UNKNOWN_01 0x2001d3c2
+#define UNKNOWN_02 0x20019df0
+#define MENU_MEM 0x2001c148
                  
+
+void Create_My_Menu_Entry_DebugEnableScreen(void) {
+  uint8_t menu_depth;
+  struct MENU *menu_mem; 
+  static wchar_t wt_enable[40];
+  static wchar_t wt_menu[40];
+  const char t_enable[]="Enable";
+  const char t_menu[]="Debug";
+  int i;
+  
+                               
+  for(i=0;i<strlen(t_menu);i++)
+    wt_menu[i]=t_menu[i];
+  wt_menu[i]='\0';   
+
+  for(i=0;i<strlen(t_enable);i++)
+    wt_enable[i]=t_enable[i];
+  wt_enable[i]='\0';   
+
+  menu_depth =  *(uint8_t *)MENU_DEPTH;  
+  menu_mem = ((void *) MENU_MEM + ( menu_depth * 0xc) ) + 0xc;
+
+  menu_mem->menu_titel = wt_menu;
+
+ 
+  menu_mem->unknownp = 0x14 * (*(uint8_t *)UNKNOWN_01) + (void *)UNKNOWN_02;
+  
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), wt_enable, (void *) 0x800f453, (void *) 0x800f453, 6, 2 , 1);
+
+}
+
+void Create_My_Menu_Entry_DebugDisableScreen(void) {
+  uint8_t menu_depth;
+  struct MENU *menu_mem; 
+  static wchar_t wt_disable[40];
+  static wchar_t wt_menu[40];
+  const char t_disable[]="Disable";
+  const char t_menu[]="Debug";
+     
+  int i;
+  
+                               
+  for(i=0;i<strlen(t_menu);i++)
+    wt_menu[i]=t_menu[i];
+  wt_menu[i]='\0';   
+       
+  for(i=0;i<strlen(t_disable);i++)
+    wt_disable[i]=t_disable[i];
+  wt_disable[i]='\0';   
+       
+
+  menu_depth =  *(uint8_t *)MENU_DEPTH;  
+  menu_mem = ((void *) MENU_MEM + ( menu_depth * 0xc) ) + 0xc;
+
+  menu_mem->menu_titel = wt_menu;
+
+ 
+  menu_mem->unknownp = 0x14 * (*(uint8_t *)UNKNOWN_01) + (void *)UNKNOWN_02;
+  
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), wt_disable, (void *) 0x800f453, (void *) 0x800f453, 6, 2 , 1);
+
+}
+
                  
-void Create_My_Menu_Entry_Intro_Screen(void) {
+void Create_My_Menu_Entry_Debug_Screen(void) {
   uint8_t menu_depth;
   struct MENU *menu_mem; 
   static wchar_t wt_enable[40];
@@ -248,7 +325,7 @@ void Create_My_Menu_Entry_Intro_Screen(void) {
  |           0x080197d8      f2f7aaff       bl F_249_Create_MenuEntry
 */
 //  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), (void *) 0x080fa348, (void *) 0x8019835, (void *) 0x800f453, 0x8b, 0 , 1);
-  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), wt_enable, (void *) 0x8019835, (void *) 0x800f453, 0x8b, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), wt_enable, Create_My_Menu_Entry_DebugEnableScreen + 1 /*(void *) 0x8019835*/, (void *) 0x800f453, 0x8b, 0 , 1);
   
 /* Add second line to Menu
  |           0x080197dc      0120           movs r0, 1                  ; 1 to SP,8
@@ -272,8 +349,8 @@ void Create_My_Menu_Entry_Intro_Screen(void) {
  |           0x0801980a      f2f791ff       bl F_249_Create_MenuEntry
 */
 //  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, (void * ) 0x080d1f48 , (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
-  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, wt_disable, (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
-  
+//  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, wt_disable, (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, wt_disable, Create_My_Menu_Entry_DebugDisableScreen + 1 , (void *) 0x800f453 , 0x8b, 0 , 1);
 
 /*
  |           0x0801980e      0020           movs r0, 0
@@ -352,7 +429,7 @@ void Create_Menu_Utilies_hook(void) {
   menu_enabled=1;
   menu_unknown_0=0;
   menu_unknown_1= 0x8a;
-  menu_green_key= Create_My_Menu_Entry_Intro_Screen +1 ;  //0x08019734+1 ; //0x80127d1;
+  menu_green_key= Create_My_Menu_Entry_Debug_Screen +1 ;  //0x08019734+1 ; //0x80127d1;
   menu_red_key=(void *) 0x800f453; //back
 
   menu_entry_nr=9;
