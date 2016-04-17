@@ -111,8 +111,31 @@ struct MENU {
 void Create_My_Menu_Entry_Intro_Screen(void) {
   uint8_t menu_depth;
   struct MENU *menu_mem; 
-  
+  static wchar_t wt_enable[40];
+  static wchar_t wt_disable[40];
+  static wchar_t wt_menu[40];
+  const char t_enable[]="Enable";
+  const char t_disable[]="Disable";
+  const char t_menu[]="Debug";
+     
   int i;
+  
+                               
+  for(i=0;i<strlen(t_menu);i++)
+    wt_menu[i]=t_menu[i];
+  wt_menu[i]='\0';   
+
+  for(i=0;i<strlen(t_enable);i++)
+    wt_enable[i]=t_enable[i];
+  wt_enable[i]='\0';   
+       
+  for(i=0;i<strlen(t_disable);i++)
+    wt_disable[i]=t_disable[i];
+  wt_disable[i]='\0';   
+       
+       
+                                       
+  
 /*
  / (fcn) Create_Menu_Entry_Intro_Screen 250
  |           0x08019734      e0b5           push {r5, r6, r7, lr}
@@ -154,8 +177,8 @@ void Create_My_Menu_Entry_Intro_Screen(void) {
  |      |    0x0801976a      d1f89c11       ldr.w r1, [r1, 0x19c]
  |      |    0x0801976e      0160           str r1, [r0]
 */
-  menu_mem->menu_titel =  (void *) 0x080d1580;
-
+//  menu_mem->menu_titel =  (void *) 0x080d1580;
+  menu_mem->menu_titel = wt_menu;
 
 /* Set MenuExecFunction 
  |      `--> 0x08019770      dff8d013       ldr.w r1, [pc, 0x3d0]       ; [0x8019b44:4]=0x2001d3c2
@@ -224,7 +247,8 @@ void Create_My_Menu_Entry_Intro_Screen(void) {
  |           0x080197d6      0078           ldrb r0, [r0]               ; (byte)[0x2001d3c2] to r0 .. [0x2001d3c2] = 6 ???
  |           0x080197d8      f2f7aaff       bl F_249_Create_MenuEntry
 */
-  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), (void *) 0x080fa348, (void *) 0x8019835, (void *) 0x800f453, 0x8b, 0 , 1);
+//  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), (void *) 0x080fa348, (void *) 0x8019835, (void *) 0x800f453, 0x8b, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2), wt_enable, (void *) 0x8019835, (void *) 0x800f453, 0x8b, 0 , 1);
   
 /* Add second line to Menu
  |           0x080197dc      0120           movs r0, 1                  ; 1 to SP,8
@@ -247,7 +271,8 @@ void Create_My_Menu_Entry_Intro_Screen(void) {
  |           0x08019808      c0b2           uxtb r0, r0                 ; (byte)[0x2001d3c2]+1 to r0 .. [0x2001d3c2]+1 = 7 ???
  |           0x0801980a      f2f791ff       bl F_249_Create_MenuEntry
 */
-  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, (void * ) 0x080d1f48 , (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
+//  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, (void * ) 0x080d1f48 , (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, wt_disable, (void *) 0x80198c1 , (void *) 0x800f453 , 0x8b, 0 , 1);
   
 
 /*
