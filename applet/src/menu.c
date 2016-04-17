@@ -80,9 +80,10 @@ e0020000 Selected Page Index
 
 
 void F_249_Create_MenuEntry_hook(int a, void * b , void * c, void  * d, int e, int f ,int g) {
-  printf("%x Text: %x GreenKey %x RedKey %x %x %x %x\n", a,b,c,d,e,f,g);
+  printf("0x%x Text: 0x%x GreenKey 0x%x RedKey 0x%x 0x%x 0x%x 0x%x\n", a,b,c,d,e,f,g);
   printf("b: ");
   printhex2(b,10);
   printf("\n");
+//  printf("%x %\n", * (unsigned int*) 0x20019df0);
   F_249_Create_MenuEntry(a,b,c,d,e,f,g);
 }
