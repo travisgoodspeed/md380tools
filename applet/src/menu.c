@@ -90,7 +90,7 @@ void F_249_Create_MenuEntry_hook(int a, void * b , void * c, void  * d, int e, i
   F_249_Create_MenuEntry(a,b,c,d,e,f,g);
 }
 
-
+/*
 static void do_jump(uint32_t entrypoint) {
   asm volatile(
                "bx     %0      \n"
@@ -98,6 +98,7 @@ static void do_jump(uint32_t entrypoint) {
   // just to keep noreturn happy
   for (;;) ;
 }
+*/
  
 struct MENU {
   void    *menu_titel;
@@ -110,6 +111,7 @@ struct MENU {
 #define UNKNOWN_01  0x2001d3c2
 #define UNKNOWN_02  0x20019df0
 #define MENU_MEM    0x2001c148
+#define SELECTED 0x2001d3b2
                  
 
 void Create_My_Menu_Entry_DebugEnableScreen(void) {
@@ -222,7 +224,7 @@ void Create_My_Menu_Entry_Debug_Screen(void) {
  |           0x08019736      dff80c08       ldr.w r0, [pc, 0x80c]       ; [0x8019f44:4]=0x200011e4
  |           0x0801973a      0078           ldrb r0, [r0]
 */
-  #define MENU_DEPTH  0x200011e4
+//  #define MENU_DEPTH  0x200011e4
   menu_depth =  *(uint8_t *)MENU_DEPTH;  
 
 /* calculate pos of new menu memory   
@@ -231,7 +233,7 @@ void Create_My_Menu_Entry_Debug_Screen(void) {
  |           0x08019742      01fb0020       mla r0, r1, r0, r2
  |           0x08019746      0c30           adds r0, 0xc
 */
-  #define MENU_MEM 0x2001c148
+//  #define MENU_MEM 0x2001c148
   menu_mem = ((void *) MENU_MEM + ( menu_depth * 0xc) ) + 0xc;
 
 /*  Set Menu Title complicate ... no  idear why 
@@ -265,8 +267,8 @@ void Create_My_Menu_Entry_Debug_Screen(void) {
  |           0x0801977c      02fb0131       mla r1, r2, r1, r3
  |           0x08019780      4160           str r1, [r0, 4]
 */
- #define UNKNOWN_01 0x2001d3c2
- #define UNKNOWN_02 0x20019df0
+// #define UNKNOWN_01 0x2001d3c2
+// #define UNKNOWN_02 0x20019df0
  
  menu_mem->unknownp = 0x14 * (*(uint8_t *)UNKNOWN_01) + (void *)UNKNOWN_02;
   
@@ -301,7 +303,6 @@ void Create_My_Menu_Entry_Debug_Screen(void) {
  |      |    0x080197aa      0021           movs r1, 0
  |      |    0x080197ac      0170           strb r1, [r0]
 */
-  #define SELECTED 0x2001d3b2
   *(uint8_t *) SELECTED = 0;
   
 
@@ -369,7 +370,7 @@ void Create_My_Menu_Entry_Debug_Screen(void) {
  \           0x0801982c      07bd           pop {r0, r1, r2, pc}
 */  
  // #define UNKNOWN_01 0x2001d3c2
- #define UNKNOWN_02 0x20019df0
+// #define UNKNOWN_02 0x20019df0
  
  for(i=0;i<2;i++) {
    uint8_t n;
@@ -378,9 +379,76 @@ void Create_My_Menu_Entry_Debug_Screen(void) {
    n = *(uint8_t*)UNKNOWN_01;
    n = n + i;
    p = (void *)UNKNOWN_02;
-   p = p + n * 14;
+   p = p + n * 0x14;
    p[0x10]=0;
  } 
+}
+
+void CreateMenuEntryAddlFunctionsScreen(void) {
+  uint8_t menu_depth;
+  struct MENU *menu_mem; 
+  static wchar_t wt_rbeep[40];
+  static wchar_t wt_datef[40];
+  static wchar_t wt_userscsv[40];
+  static wchar_t wt_debug[40];
+  static wchar_t wt_menu[40];
+  const char t_rbeep[]="RogerBeep";
+  const char t_datef[]="Date format";
+  const char t_userscsv[]="UsersCSV";
+  const char t_debug[]="Debug";
+  const char t_menu[]="Addl. Funct";
+
+  static wchar_t wt_menu1[]=L"Addl. Funct";
+     
+  int i;
+                                 
+  for(i=0;i<strlen(t_menu);i++)
+    wt_menu[i]=t_menu[i];
+  wt_menu[i]='\0';   
+
+  for(i=0;i<strlen(t_rbeep);i++)
+    wt_rbeep[i]=t_rbeep[i];
+  wt_rbeep[i]='\0';   
+       
+  for(i=0;i<strlen(t_datef);i++)
+    wt_datef[i]=t_datef[i];
+  wt_datef[i]='\0';   
+    
+  for(i=0;i<strlen(t_userscsv);i++)
+    wt_userscsv[i]=t_userscsv[i];
+  wt_userscsv[i]='\0';   
+  
+  for(i=0;i<strlen(t_debug);i++)
+    wt_debug[i]=t_debug[i];
+  wt_debug[i]='\0';   
+  
+  
+       
+  menu_depth =  *(uint8_t *)MENU_DEPTH;  
+  menu_mem = ((void *) MENU_MEM + ( menu_depth * 0xc) ) + 0xc;
+  menu_mem->menu_titel = wt_menu1;
+
+  menu_mem->unknownp = 0x14 * (*(uint8_t *)UNKNOWN_01) + (void *)UNKNOWN_02;
+  
+  menu_mem->numberofentrys=4;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2),     wt_rbeep,    Create_My_Menu_Entry_Debug_Screen + 1 , (void *) 0x800f453, 0x98, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 1, wt_datef,    Create_My_Menu_Entry_Debug_Screen + 1 , (void *) 0x800f453, 0x98, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 2, wt_userscsv, Create_My_Menu_Entry_Debug_Screen + 1 , (void *) 0x800f453, 0x98, 0 , 1);
+  F_249_Create_MenuEntry_hook( (*(char *) 0x2001d3c2) + 3, wt_debug,    Create_My_Menu_Entry_Debug_Screen + 1 , (void *) 0x800f453, 0x98, 0 , 1);
+  
+ 
+ for(i=0;i<4;i++) {
+   uint8_t n;
+   uint8_t *p;
+   n = *(uint8_t*)UNKNOWN_01;
+   n = n + i;
+   p = (void *)UNKNOWN_02;
+   p = p + n * 0x14;
+   p[0x10]=2;
+ }
 }
                                                                         
 
@@ -393,7 +461,7 @@ void Create_Menu_Utilies_hook(void) {
     uint32_t menu_entry_nr;  
     void *menu_green_key, *menu_red_key,*menu_text;
     static wchar_t wide[40];
-    char my_entry[]="Debug";
+    char my_entry[]="Addl. Functions";
     int i;  
                                                      
   
@@ -432,15 +500,16 @@ void Create_Menu_Utilies_hook(void) {
   menu_enabled=1;
   menu_unknown_0=0;
   menu_unknown_1= 0x8a;
-  menu_green_key= Create_My_Menu_Entry_Debug_Screen +1;
+  menu_green_key= CreateMenuEntryAddlFunctionsScreen +1;
   menu_red_key=(void *) 0x800f453; //back
 
   menu_entry_nr=9;
   F_249_Create_MenuEntry_hook(menu_entry_nr, wide , menu_green_key , menu_red_key, menu_unknown_1, menu_unknown_0 , menu_enabled);
 }  
   
-
+/*
 void Create_Menu_Utilies_hook_end(void) {
   do_jump(0x08012786+1);
 }
+*/
 
