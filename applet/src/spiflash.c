@@ -42,4 +42,8 @@ int check_spf_flash_type(void) {
     }
 }
                                                           
+
+uint32_t spi_flash_addl_config_start = 0xf0000;   
+uint32_t spi_flash_addl_config_size  = 0xffff;
+
                                                           
