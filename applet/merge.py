@@ -367,10 +367,13 @@ if __name__== '__main__':
     for adr in Create_MenuEntrylist:
         merger.hookbl(adr,sapplet.getadr("create_menu_entry_hook"),0);
 
+    # hook
     merger.hookbl(0x08012740,sapplet.getadr("create_menu_utilies_hook"),0);
+    # skip ..."unused code"
     merger.hookstub(0x08012740+4,0x08012786+1);
     merger.setbyte(0x080126dc,0x04);  # menu has now 4 entry
 
+    # init the global config struct from spi  flash
     merger.hookbl(0x080440a6,sapplet.getadr("init_global_addl_config_hook"),0);
 
     #Throwaway hook to see if adr is called.
