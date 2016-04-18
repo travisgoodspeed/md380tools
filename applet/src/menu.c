@@ -12,6 +12,7 @@
 #include "config.h"
 #include "os.h"
 #include "spiflash.h"
+#include "addl_config.h"
 
 static wchar_t wt_addl_func[]         = L"Addl. Funct";
 static wchar_t wt_datef[]             = L"Date format";
@@ -259,8 +260,10 @@ void create_menu_entry_rbeep_screen(void) {
   menu_mem->unknown_01 = 0;
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
+    global_addl_config.rbeep = 1;
   } else {
     *menu_entry_selected = 1;
+    global_addl_config.rbeep = 0;
   }    
   create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_rbeep_enable_screen + 1,  menu_entry_back, 0x8b, 0 , 1);
   create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
@@ -289,8 +292,10 @@ void create_menu_entry_datef_screen(void) {
 
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
+    global_addl_config.datef = 1;
   } else {
     *menu_entry_selected = 1;
+    global_addl_config.datef = 0;
   }    
 
   create_menu_entry_hook( (*menu_id),     wt_datef_original,  create_menu_entry_datef_original_screen + 1, menu_entry_back,  0x8b, 0 , 1);
@@ -320,8 +325,10 @@ void create_menu_entry_userscsv_screen(void) {
 
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
+    global_addl_config.userscsv = 1;
   } else {
     *menu_entry_selected = 1;
+    global_addl_config.userscsv = 0;
   }    
                    
   
@@ -352,8 +359,10 @@ void create_menu_entry_debug_screen(void) {
   
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
+    global_addl_config.debug = 1;
   } else {
     *menu_entry_selected = 1;
+    global_addl_config.debug = 0;
   }
   
   create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_debug_enable_screen + 1, menu_entry_back,  0x8b, 0 , 1);
