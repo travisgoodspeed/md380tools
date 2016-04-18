@@ -83,9 +83,22 @@ char *welcomebmp=0x080f9ca8;
 INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt)=0x804bbf5;
 void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
 
-void* (*main_menu)(void *)=0x08039c23;
+//! Functions and Variabes regarding the menu
+void    *(*main_menu)(void *)=0x08039c23;
 
-void* (*F_249_Create_MenuEntry)(int a, void *b , void *c, void  *d, int e, int f ,int g)=0x0800c731;
+void    *(*create_menu_entry)(int a, void *b , void *c, void  *d, int e, int f ,int g)=0x0800c731;
+void    *(*menu_entry_back)(void)=0x800f453;
+void    *(*menu_entry_programradio)(void)=0x80127d1;
+char    *wt_programradio=0x080d175c;
+uint8_t *menu_id=0x2001d3c2;
+uint8_t *menu_depth=0x200011e4;
+uint8_t *menu_entry_selected=0x2001d3b2;
+void    *menu_memory=0x2001c148;
+void    *menu_unknown_02=0x20019df0;
+uint8_t *menu_unkonwn_01=0x2001d3c2;
+
+uint8_t *program_radio_unprohibited=(uint8_t *)(0x2001d030 + 4);
+
 
 char* channelnum=0x2001d376;
 int (*read_channel_switch)()=0x0804d269;

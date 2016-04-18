@@ -83,12 +83,29 @@ extern INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *pto
 extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 
 
-//! Still figuring this out; it is involved in rendering menus.
-extern void* (*main_menu)(void *);
+//! Functions and Variabes regarding the menu
+extern void*   (*main_menu)(void *);     // menu exec
 
+// menu in case of pressing back key
+extern void*   (*menu_entry_back)(void);
+// create one new menu entry
+// menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
+extern void*   (*create_menu_entry)(int, void *, void *, void  *,
+                                    int , int, int);
+// for the hook funktion (hook used the space from this entry)
+extern void*   (*menu_entry_programradio)(void);
+extern char    *wt_programradio;  // menutext <- menu_entry_programradio
 
-extern void* (*F_249_Create_MenuEntry)(int a, void *b , void *c, void  *d, int e, int f ,int g);
+// not yet known ;)
+extern uint8_t *menu_id;
+extern uint8_t *menu_depth;
+extern uint8_t *menu_entry_selected;
+extern void    *menu_memory;
+extern void    *menu_unknown_02;
+extern uint8_t *menu_unkonwn_01;
 
+//! program_radio_unprohibited ... bulding site is an struct
+extern uint8_t *program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
 extern char* channelnum;
