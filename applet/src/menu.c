@@ -12,13 +12,15 @@
 #include "config.h"
 #include "os.h"
 
-static wchar_t wt_addl_func[] = L"Addl. Funct";
-static wchar_t wt_datef[]     = L"Date format";
-static wchar_t wt_debug[]     = L"Debug";
-static wchar_t wt_disable[]   = L"Disable";
-static wchar_t wt_enable[]    = L"Enable";
-static wchar_t wt_rbeep[]     = L"RogerBeep";
-static wchar_t wt_userscsv[]  = L"UsersCSV";
+static wchar_t wt_addl_func[]         = L"Addl. Funct";
+static wchar_t wt_datef[]             = L"Date format";
+static wchar_t wt_debug[]             = L"Debug";
+static wchar_t wt_disable[]           = L"Disable";
+static wchar_t wt_enable[]            = L"Enable";
+static wchar_t wt_rbeep[]             = L"M. RogerBeep";
+static wchar_t wt_userscsv[]          = L"UsersCSV";
+static wchar_t wt_datef_original[]    = L"Original";
+static wchar_t wt_datef_germany[]     = L"German";
 
 /* This hooks a function that is called a lot during menu processing.
    Its exact purpose is unknown, but I'm working on that.
@@ -104,6 +106,100 @@ struct MENU {
   uint8_t unknown_01;
 };
 
+
+
+
+void create_menu_entry_rbeep_enable_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_rbeep;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( (*menu_id), wt_enable, menu_entry_back, menu_entry_back, 6, 2 , 1);
+}
+
+void create_menu_entry_rbeep_disable_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_rbeep;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( (*menu_id), wt_disable, menu_entry_back, menu_entry_back, 6, 2 , 1);
+}
+
+void create_menu_entry_datef_original_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_datef_original;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( (*menu_id), wt_datef_original, menu_entry_back, menu_entry_back, 6, 2 , 1);
+}
+
+void create_menu_entry_datef_germany_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_datef_germany;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( (*menu_id), wt_datef_germany, menu_entry_back, menu_entry_back, 6, 2 , 1);
+}
+
+void create_menu_entry_userscsv_enable_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_userscsv;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( (*menu_id), wt_enable, menu_entry_back, menu_entry_back, 6, 2 , 1);
+}
+
+void create_menu_entry_userscsv_disable_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_userscsv;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+
+  menu_mem->numberofentrys=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( (*menu_id), wt_disable, menu_entry_back, menu_entry_back, 6, 2 , 1);
+}
+
+
 void create_menu_entry_debug_enable_screen(void) {
 //  uint8_t menu_depth;
   struct MENU *menu_mem;
@@ -133,9 +229,74 @@ void create_menu_entry_debug_disable_screen(void) {
   menu_mem->unknown_01 = 0;
 
   create_menu_entry_hook( (*menu_id), wt_disable, menu_entry_back, menu_entry_back, 6, 2 , 1);
-
 }
 
+
+void create_menu_entry_rbeep_screen(void) {
+  int i;
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_rbeep;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+  menu_mem->numberofentrys=2;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+  *menu_entry_selected = 0;
+  create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_rbeep_enable_screen + 1,  menu_entry_back, 0x8b, 0 , 1);
+  create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
+
+ for(i=0;i<2;i++) { // not yet known ;)
+   uint8_t *p;
+   p = menu_unknown_02 + ( (*menu_unkonwn_01) + i ) * 0x14;
+   p[0x10] = 0;
+ }
+}
+
+void create_menu_entry_datef_screen(void) {
+  int i;
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_datef;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+  menu_mem->numberofentrys=2;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+  *menu_entry_selected = 0;
+  create_menu_entry_hook( (*menu_id),     wt_datef_original,  create_menu_entry_datef_original_screen + 1, menu_entry_back,  0x8b, 0 , 1);
+  create_menu_entry_hook( (*menu_id) + 1, wt_datef_germany,  create_menu_entry_datef_germany_screen + 1, menu_entry_back, 0x8b, 0 , 1);
+
+ for(i=0;i<2;i++) { // not yet known ;)
+   uint8_t *p;
+   p = menu_unknown_02 + ( (*menu_unkonwn_01) + i ) * 0x14;
+   p[0x10] = 0;
+ }
+}
+
+void create_menu_entry_userscsv_screen(void) {
+  int i;
+  struct MENU *menu_mem;
+
+  menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
+  menu_mem->menu_titel = wt_userscsv;
+
+  menu_mem->unknownp = 0x14 * (*menu_unkonwn_01) + menu_unknown_02;
+  menu_mem->numberofentrys=2;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+  *menu_entry_selected = 0;
+  create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_userscsv_enable_screen + 1, menu_entry_back,  0x8b, 0 , 1);
+  create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_userscsv_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
+
+ for(i=0;i<2;i++) { // not yet known ;)
+   uint8_t *p;
+   p = menu_unknown_02 + ( (*menu_unkonwn_01) + i ) * 0x14;
+   p[0x10] = 0;
+ }
+}
 
 void create_menu_entry_debug_screen(void) {
   int i;
@@ -172,10 +333,10 @@ void create_menu_entry_addl_functions_screen(void) {
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  create_menu_entry_hook( (*menu_id),     wt_rbeep,    create_menu_entry_debug_screen + 1 , menu_entry_back, 0x98, 0 , 1);
-  create_menu_entry_hook( (*menu_id) + 1, wt_datef,    create_menu_entry_debug_screen + 1 , menu_entry_back, 0x98, 0 , 1);
-  create_menu_entry_hook( (*menu_id) + 2, wt_userscsv, create_menu_entry_debug_screen + 1 , menu_entry_back, 0x98, 0 , 1);
-  create_menu_entry_hook( (*menu_id) + 3, wt_debug,    create_menu_entry_debug_screen + 1 , menu_entry_back, 0x98, 0 , 1);
+  create_menu_entry_hook( (*menu_id),     wt_rbeep,    create_menu_entry_rbeep_screen + 1,    menu_entry_back, 0x98, 0 , 1);
+  create_menu_entry_hook( (*menu_id) + 1, wt_datef,    create_menu_entry_datef_screen + 1,    menu_entry_back, 0x98, 0 , 1);
+  create_menu_entry_hook( (*menu_id) + 2, wt_userscsv, create_menu_entry_userscsv_screen + 1, menu_entry_back, 0x98, 0 , 1);
+  create_menu_entry_hook( (*menu_id) + 3, wt_debug,    create_menu_entry_debug_screen + 1,    menu_entry_back, 0x98, 0 , 1);
 
  for(i=0;i<4;i++) {  // not yet known ;)
    uint8_t *p;
