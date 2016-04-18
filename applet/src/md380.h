@@ -88,10 +88,14 @@ extern void*   (*main_menu)(void *);     // menu exec
 
 // menu in case of pressing back key
 extern void*   (*menu_entry_back)(void);
+extern void*   (*create_main_meny_entry)(void);
+
+
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
 extern void*   (*create_menu_entry)(int, void *, void *, void  *,
                                     int , int, int);
+
 // for the hook funktion (hook used the space from this entry)
 extern void*   (*menu_entry_programradio)(void);
 extern char    *wt_programradio;  // menutext <- menu_entry_programradio

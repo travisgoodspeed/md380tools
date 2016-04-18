@@ -85,6 +85,7 @@ void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
 
 //! Functions and Variabes regarding the menu
 void    *(*main_menu)(void *)=0x08039c23;
+void    *(*create_main_meny_entry)(void)=0x0800c189;
 
 void    *(*create_menu_entry)(int a, void *b , void *c, void  *d, int e, int f ,int g)=0x0800c731;
 void    *(*menu_entry_back)(void)=0x800f453;

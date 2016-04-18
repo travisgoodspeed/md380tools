@@ -21,7 +21,7 @@ struct addl_config {
   uint8_t  debug;
   } global_addl_config;
   
-void init_global_addl_config(void) {
+void init_global_addl_config_hook(void) {
   int8_t buf[1];
  
   spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1);
@@ -50,7 +50,9 @@ void init_global_addl_config(void) {
     global_addl_config.debug = 1;
   } else {
     global_addl_config.debug = 0;
-  }    
+  }
+  // hooked call
+  create_main_meny_entry();
 }
 
                                                           
