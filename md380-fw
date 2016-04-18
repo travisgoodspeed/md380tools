@@ -176,8 +176,8 @@ def main():
             sys.stderr.write('ERROR: seeking beyond end of input file\n')
             sys.exit(5)
         output = md.wrap()
-        print('INFO: base address 0x{:x}'.format(md.start))
-        print('INFO: length 0x{:x}'.format(len(md.app)))
+        print('INFO: base address 0x{0:x}'.format(md.start))
+        print('INFO: length 0x{0:x}'.format(len(md.app)))
 
     elif args.unwrap:
         md = MD380FW()
@@ -191,8 +191,8 @@ def main():
                 sys.stderr.write(hl+'\n')
             sys.stderr.write('Trying anyway.\n')
         output = md.app
-        print('INFO: base address 0x{:x}'.format(md.start))
-        print('INFO: length 0x{:x}'.format(len(md.app)))
+        print('INFO: base address 0x{0:x}'.format(md.start))
+        print('INFO: length 0x{0:x}'.format(len(md.app)))
 
     print('DEBUG: writing "%s"' % args.output[0])
     with open(args.output[0], 'wb') as f:
