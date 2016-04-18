@@ -125,6 +125,7 @@ void create_menu_entry_rbeep_enable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_enable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("1", spi_flash_addl_config_start + offset_rbeep, 1);
+  global_addl_config.rbeep = 1;
 }
 
 void create_menu_entry_rbeep_disable_screen(void) {
@@ -141,6 +142,7 @@ void create_menu_entry_rbeep_disable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_disable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("0", spi_flash_addl_config_start + offset_rbeep, 1);
+  global_addl_config.rbeep = 0;
 }
 
 void create_menu_entry_datef_original_screen(void) {
@@ -157,6 +159,7 @@ void create_menu_entry_datef_original_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_datef_original, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("0", spi_flash_addl_config_start + offset_datef, 1);
+  global_addl_config.datef = 0;
 }
 
 void create_menu_entry_datef_germany_screen(void) {
@@ -173,6 +176,8 @@ void create_menu_entry_datef_germany_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_datef_germany, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("1", spi_flash_addl_config_start + offset_datef, 1);
+  global_addl_config.datef = 1;
+   
 }
 
 void create_menu_entry_userscsv_enable_screen(void) {
@@ -189,6 +194,7 @@ void create_menu_entry_userscsv_enable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_enable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("1", spi_flash_addl_config_start + offset_userscsv, 1);
+  global_addl_config.userscsv = 1;
 }
 
 void create_menu_entry_userscsv_disable_screen(void) {
@@ -205,6 +211,7 @@ void create_menu_entry_userscsv_disable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_disable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("0", spi_flash_addl_config_start + offset_userscsv, 1);
+  global_addl_config.userscsv = 0;
 }
 
 
@@ -223,7 +230,7 @@ void create_menu_entry_debug_enable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_enable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("1", spi_flash_addl_config_start + offset_debug, 1);
-  
+  global_addl_config.debug=1;  
 }
 
 void create_menu_entry_debug_disable_screen(void) {
@@ -240,7 +247,7 @@ void create_menu_entry_debug_disable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_disable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("0", spi_flash_addl_config_start + offset_debug, 1);
-  
+  global_addl_config.debug=0;
 }
 
 
@@ -260,10 +267,8 @@ void create_menu_entry_rbeep_screen(void) {
   menu_mem->unknown_01 = 0;
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
-    global_addl_config.rbeep = 1;
   } else {
     *menu_entry_selected = 1;
-    global_addl_config.rbeep = 0;
   }    
   create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_rbeep_enable_screen + 1,  menu_entry_back, 0x8b, 0 , 1);
   create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
@@ -292,10 +297,8 @@ void create_menu_entry_datef_screen(void) {
 
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
-    global_addl_config.datef = 1;
   } else {
     *menu_entry_selected = 1;
-    global_addl_config.datef = 0;
   }    
 
   create_menu_entry_hook( (*menu_id),     wt_datef_original,  create_menu_entry_datef_original_screen + 1, menu_entry_back,  0x8b, 0 , 1);
@@ -325,10 +328,8 @@ void create_menu_entry_userscsv_screen(void) {
 
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
-    global_addl_config.userscsv = 1;
   } else {
     *menu_entry_selected = 1;
-    global_addl_config.userscsv = 0;
   }    
                    
   

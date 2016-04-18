@@ -9,6 +9,8 @@
 #include "gfx.h"
 #include "printf.h"
 #include "string.h"
+#include "addl_config.h"
+
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -118,10 +120,20 @@ void print_DebugLine(unsigned int bg_color) {
   gfx_set_bg_color(0xff000000);
 }
 
-void print_DebugLine_green(void) {
-  print_DebugLine(0x00ff00);
+void print_DebugLine_green(char *bmp, int idx, uint64_t pos) {
+  if (global_addl_config.userscsv == 1) {
+    print_DebugLine(0x00ff00);
+  } else {
+    gfx_drawbmp(bmp, idx, pos);
+  }
 } 
 
-void print_DebugLine_gray(void) {
-  print_DebugLine(0x888888);
+void print_DebugLine_gray(void *bmp, int idx, uint64_t pos) {
+  if (global_addl_config.userscsv == 1) {
+    print_DebugLine(0x888888);
+  } else {
+    gfx_drawbmp(bmp, idx, pos);
+  }
 }
+
+
