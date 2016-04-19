@@ -26,6 +26,8 @@
 #include "tooldfu.h"
 #include "config.h"
 #include "gfx.h"
+#include "spiflash.h"
+#include "string.h"
 
 int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   /* This hooks the USB Device Firmware Update upload function,
@@ -120,10 +122,90 @@ int usb_dnld_hook(){
       *dfu_target_adr=dmesg_tx_buf;
       uint32_t adr= *((uint32_t*)(packet+1));
       printf("Dumping %d bytes from 0x%08x in SPI Flash\n",
-	     DMESG_SIZE, adr);
+            DMESG_SIZE, adr);
       spiflash_read(dmesg_tx_buf,
 		    adr,
 		    DMESG_SIZE);
+      break;
+    case TDFU_SPIFLASHWRITE:
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      adr = *((uint32_t*)(packet+1));
+      uint32_t size = *((uint32_t*)(packet+5));
+      memset(dmesg_tx_buf,0,DMESG_SIZE);
+      if (check_spf_flash_type()) {
+        printf ("TDFU_SPIFLASHWRITE %x %d %x\n", adr, size, packet+9);
+        spiflash_write(packet+9,  adr, size);
+      }
+      break;
+    case TDFU_SPIFLASHERASE64K:   // experimental
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      adr= *((uint32_t*)(packet+1));
+      memset(dmesg_tx_buf,0,DMESG_SIZE);
+      printf ("TDFU_SPIFLASHERASE64K %x \n", adr);
+//      spiflash_wait();     
+//      spiflash_block_erase64k(adr);
+
+
+      spiflash_enable();
+      spi_sendrecv(0x6);
+      spiflash_disable();
+
+      spiflash_enable();
+      spi_sendrecv(0xd8);
+      spi_sendrecv((adr>> 16) & 0xff);
+      spi_sendrecv((adr>>  8) & 0xff);
+      spi_sendrecv(adr & 0xff);
+      spiflash_disable();
+//      spiflash_wait();   // this is the problem :( 
+                           // must be polled via dfu commenad?
+      break;
+    case TDFU_SPIFLASHWRITE_NEW: // not working, this is not the problem
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      adr = *((uint32_t*)(packet+1));
+      size = *((uint32_t*)(packet+5));
+      memset(dmesg_tx_buf,0,DMESG_SIZE);
+      if (check_spf_flash_type()) {
+        printf ("DFU_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
+        // enable write
+
+        for (int i=0;i<size;i=i+256) {
+          int page_adr;
+          page_adr=adr+i;
+          printf("%d %x\n",i,page_adr);
+          spiflash_wait();
+
+          spiflash_enable();
+          spi_sendrecv(0x6);
+          spiflash_disable();
+
+          spiflash_enable();
+          spi_sendrecv(0x2);
+          printf("%x ", ((page_adr>> 16) & 0xff));
+          spi_sendrecv((page_adr>> 16) & 0xff);
+          printf("%x ", ((page_adr>>  8) & 0xff));
+          spi_sendrecv((page_adr>>  8) & 0xff);
+          printf("%x ", (page_adr & 0xff));
+          spi_sendrecv(page_adr & 0xff);
+          for (int ii=0; ii < 256; ii++) {
+            spi_sendrecv(packet[9+ii+i]);
+          }
+          spiflash_disable();
+          spiflash_wait();
+          printf("\n");
+        }
+      }
+      break;
+    case TDFU_SPIFLASHSECURITYREGREAD:
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      printf("Dumping %d bytes from adr 0 SPI Flash security_registers\n",
+	     DMESG_SIZE);
+      spiflash_security_registers_read(dmesg_tx_buf,
+                                      0,
+                                      3*256);
       break;
 
       

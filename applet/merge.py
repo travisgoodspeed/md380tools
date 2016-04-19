@@ -184,113 +184,31 @@ if __name__== '__main__':
                   sapplet.getadr("dmr_sms_arrive_hook"),
                   0x0803f03c);
 
-    merger.hookbl(0x8042368,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044028,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80442c4,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80442f8,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x804432c,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044360,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044394,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80443c8,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80443fc,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044430,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044464,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044498,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80444cc,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044500,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044534,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8049150,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x804ae5c,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
+    OSTaskCreateExt_hook_list=[
+        0x8042368, 0x8044028, 0x80442c4, 0x80442f8, 0x804432c, 0x8044360, 0x8044394, 0x80443c8,
+        0x80443fc, 0x8044430, 0x8044464, 0x8044498, 0x80444cc, 0x8044500, 0x8044534, 0x8049150,
+        0x804ae5c];
+    ### only for debug and information addiction
+    #for adr in OSTaskCreateExt_hook_list:
+    #    merger.hookbl(adr, sapplet.getadr("OSTaskCreateExt_hook"),0);
 
+    OSTaskNameSet_hook_list=[
+        0x8042374, 0x8044034, 0x80442d0, 0x8044304, 0x8044338, 0x804436c, 0x80443a0, 0x80443d4,
+        0x8044408, 0x804443c, 0x8044470, 0x80444a4, 0x80444d8, 0x804450c, 0x8044540, 0x804915c,
+        0x804ae68];
+    ### only for debug and information addiction
+    #for adr in OSTaskNameSet_hook_list:
+    #    merger.hookbl(adr, sapplet.getadr("OSTaskNameSet_hook"),0);
 
-    merger.hookbl(0x8042374,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044034,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80442d0,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044304,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044338,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804436c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80443a0,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80443d4,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044408,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804443c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044470,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80444a4,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80444d8,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804450c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044540,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804915c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804ae68,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
+    # gfx hooks
+    merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine_green"),0);
+    merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine_green"),0);
+    merger.hookbl(0x0801f5ba,sapplet.getadr("print_DebugLine_gray"),0);
 
-    merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine"),0);
-    merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine"),0);
+    # date format  hook, this hook can modify the date format on the status line
+    merger.hookbl(0x0800d8c8,sapplet.getadr("print_date_hook"),0);
+    # skip ..."unused code"
+    merger.hookstub(0x0800d8c8+4,0x0800d92e+1);
     
     #Function that calls aes_cipher() twice.  When are these called?
     merger.hookbl(0x0802177c,sapplet.getadr("aes_cipher_hook"),0);
@@ -331,6 +249,62 @@ if __name__== '__main__':
     merger.setword(0x08039d98,
                    sapplet.getadr("main_menu_hook")+1);
 
+    Create_MenuEntrylist=[
+        0x0800c278, 0x0800c2c0, 0x0800c2f4, 0x0800c326, 0x0800c358, 0x0800c38a, 0x0800c3bc, 0x0800c468,
+        0x0800c4a8, 0x0800c4d2, 0x0800c4fa, 0x0800c522, 0x0800c54a, 0x0800c572, 0x0800c5ec, 0x0800c614,
+        0x0800c64a, 0x0800c674, 0x0800c69c, 0x0800c6c4, 0x0800c6ec, 0x080191f2, 0x08019226, 0x0801925a,
+        0x0801928a, 0x0802d264, 0x0802d2ca, 0x0802d326, 0x0802d356, 0x080197d8, 0x0801980a, 0x08019a08,
+        0x08019a3a, 0x08019a6c, 0x08019a9e, 0x08019e78, 0x08019ea6, 0x0801a070, 0x0801a0a2, 0x0802c060,
+        0x0802c096, 0x0802c0cc, 0x0802c102, 0x0802c138, 0x08018f70, 0x08018fa2, 0x08012872, 0x080128a4,
+        0x080128d6, 0x08012908, 0x08012948, 0x0801297c, 0x080129bc, 0x080129ee, 0x08012a22, 0x08012a54,
+        0x08012b3a, 0x0802c1d4, 0x0801535a, 0x0801538c, 0x0801674e, 0x08016782, 0x080167ca, 0x0801681c,
+        0x08016866, 0x080168ba, 0x08016904, 0x0801694e, 0x08016986, 0x080169d0, 0x08016a20, 0x08016a4a,
+        0x08016a90, 0x08016ac4, 0x08016afc, 0x08016b32, 0x08016b7c, 0x08038c66, 0x08038cd4, 0x08038d38,
+        0x08038d6c, 0x080194e0, 0x0801950e, 0x080179d6, 0x08017a08, 0x08017ff2, 0x08018022, 0x08018052,
+        0x08018080, 0x080180ae, 0x080180dc, 0x08016e2a, 0x0802c558, 0x0801a158, 0x0801a18a, 0x0801a1bc,
+        0x0801a1ee, 0x0801270e, 0x08012782, 0x0802c610, 0x0802c63c, 0x0801273c, 0x0802d1ce, 0x0802ce84,
+        0x0802c8aa, 0x0802c8d6, 0x0802cc28, 0x0802c952, 0x0802ca62, 0x0802c6ca, 0x0802c6f6, 0x0802c76a,
+        0x0802c798, 0x0802c7c6, 0x0802fa46, 0x0801b130, 0x0800f50c, 0x0800f53e, 0x0800f588, 0x08019d54,
+        0x0801b240, 0x0800e01e, 0x0800e040, 0x080205cc, 0x0802dfe0, 0x0802e014, 0x0802e048, 0x080346da,
+        0x08034704, 0x08012c44, 0x08012c76, 0x08012ca8, 0x08012cda, 0x08012d1a, 0x08012d4e, 0x08012d8e,
+        0x08012dc0, 0x08012df4, 0x08012e26, 0x08012ea4, 0x080154bc, 0x08016c4a, 0x08016c7e, 0x08016d22,
+        0x08016dac, 0x08016fe4, 0x08017b30, 0x08017b60, 0x08017df0, 0x08017e22, 0x08018186, 0x080181b2,
+        0x0801829c, 0x080182cc, 0x08018320, 0x08018350, 0x08018402, 0x08018434, 0x08018466, 0x08018498,
+        0x08018562, 0x08018594, 0x0801865a, 0x0801868c, 0x0801871a, 0x080187de, 0x08018966, 0x08018b94,
+        0x08018c24, 0x08018ce0, 0x08018d10, 0x08018da4, 0x08018e68, 0x08019038, 0x080190d8, 0x08019318,
+        0x080193a2, 0x0801942a, 0x080195ba, 0x08019688, 0x08019714, 0x08019b30, 0x08019bc4, 0x08019c4c,
+        0x08019cce, 0x08019f2a, 0x08019fae, 0x0801a2d0, 0x0801a360, 0x0801a3e0, 0x0801a458, 0x0801a4cc,
+        0x0801a624, 0x0801a652, 0x0801a682, 0x0801a6fe, 0x0801a7b8, 0x0801a85e, 0x0801a91c, 0x0801a9f2,
+        0x0801aa22, 0x0801aa54, 0x0801abb2, 0x0801ac1c, 0x0801ac4e, 0x0801af14, 0x0801b07a, 0x0801b1c0,
+        0x0801b2ca, 0x0801b2f2, 0x0801b364, 0x0801ad50, 0x0801ad82, 0x0801adec, 0x0801ae1e, 0x0801245c,
+        0x080198a2, 0x0801992c];
+    ### only for debug and information addiction
+    #for adr in Create_MenuEntrylist:
+    #    merger.hookbl(adr,sapplet.getadr("create_menu_entry_hook"),0);
+
+    # additional menu hook
+    merger.hookbl(0x08012740,sapplet.getadr("create_menu_utilies_hook"),0);
+    # skip ..."unused code"
+    merger.hookstub(0x08012740+4,0x08012786+1);
+    merger.setbyte(0x080126dc,0x04);  # menu has now 4 entry
+
+    # init the addl global config struct from spi  flash
+    merger.hookbl(0x080440a6,sapplet.getadr("init_global_addl_config_hook"),0);
+
+    # hooks regarding the beep_process
+    beep_process_list=[
+        0x0802ab30, 0x0802ab42, 0x0802ab50, 0x0802ab78, 0x0802ab8a, 0x0802abb2, 0x0802abc4, 0x0802abec,
+        0x0802ac92, 0x0802aca4, 0x0802acb2, 0x0802acc0, 0x0802acf0, 0x0802ad02, 0x0802ad10, 0x0802ad1e,
+        0x0802ad54, 0x0802ade6, 0x0802adf8, 0x0802ae06, 0x0802ae14, 0x0802ae3c, 0x0802ae4e, 0x0802ae76,
+        0x0802ae88, 0x0802ae96, 0x0802aea4, 0x0802aed2, 0x0802aee4, 0x0802aef2, 0x0802af00, 0x0802af0e,
+        0x0802af1c, 0x0802af2a, 0x0802af38, 0x0802afb8, 0x0802afd4, 0x0802afe6, 0x0802affe, 0x0802b010,
+        0x0802b01e, 0x0802b046, 0x0802b062, 0x0802b074, 0x0802b08c, 0x0802b09e, 0x0802b0ac, 0x0802b320,
+        0x0802b332, 0x0802b340, 0x0802b34e, 0x0802b35c, 0x0802b398, 0x0802b3aa, 0x0802b3b8, 0x0802b3c6,
+        0x0802b402, 0x0802b414, 0x0802b422, 0x0802b430, 0x0802b43e, 0x0802b47a, 0x0802b4ae, 0x0802b4de,
+        0x0802b50e, 0x0802b566, 0x0802b59a, 0x0802b5c8, 0x0802b5f4, 0x0802b648, 0x0802b744, 0x0802b770,
+        0x0802b7be, 0x0802b812, 0x0802b900, 0x0802b920];
+    for adr in beep_process_list:
+        merger.hookbl(adr,sapplet.getadr("F_294_replacement"),0);
 
     #Throwaway hook to see if adr is called.
     #merger.hookstub(0x0803f03c,

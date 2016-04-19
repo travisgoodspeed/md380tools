@@ -1,4 +1,5 @@
-SRCS = main.o usb.o gfx.o dmr.o printf.o dmesg.o stm32f4xx_it.o system_stm32f4xx.o os.o menu.o aes.o ambe.o
+SRCS  = main.o usb.o gfx.o dmr.o printf.o dmesg.o stm32f4xx_it.o system_stm32f4xx.o
+SRCS += os.o menu.o aes.o ambe.o spiflash.o usersdb.o addl_config.o beep_process.o
 PROJ_NAME=main
 
 
@@ -44,6 +45,8 @@ lib: src/version.h config.h
 	$(MAKE) -C lib
 
 proj: 	$(PROJ_NAME).elf experiment.img
+	# use an fresh experiment.img
+	cp ../patches/2.032/patched.img ./experiment.img
 	python2 merge.py experiment.img $(PROJ_NAME).img 0x0809D000
 
 #The wrapped file is the one that works with the Windows updater.

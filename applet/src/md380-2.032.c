@@ -12,8 +12,21 @@
 
 //Firmware calls to 2.032.
 
-
+//! Functions that handles spi flash .. handles semaphore internal
 int (*spiflash_read)(void *dst, long adr, long len) = 0x0802fd83;
+void (*spiflash_write)(void *dst, long adr, long len) =0x0802fe6b;
+
+int (*spiflash_security_registers_read)(void *dst, long adr, long len) = 0x080301bd;
+
+void (*spiflash_enable)() = 0x0802fe37;
+void (*spiflash_disable)() = 0x0802fe53;
+void (*spiflash_wait)()=0x0802fe15;
+
+void (*spiflash_block_erase64k)(uint32_t adr)=0x0802fbb7;
+void (*spiflash_sektor_erase4k)(uint32_t adr)=0x0802fb83;
+
+INT8U (*spi_sendrecv)(INT8U data) = 0x0802fdc9; // SPI1
+
 
 
 
@@ -25,6 +38,18 @@ void (*gfx_drawbmp)(char *bmp,
 		    int idx,
 		    uint64_t pos) = 0x08022887;
 
+void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
+                     int x, int y,   //X and Y position, Unit unknown
+                     int unknown) = 0x0801cf1d; // max 19 char ???
+
+void (*gfx_chars_to_display)(wchar_t *str, int x, int y, int unknown) = 0x0801cf1d;
+
+void (*gfx_select_font)(void *p)=0x8020975;
+void (*gfx_set_bg_color)(int color)=0x801c5e1;
+void (*gfx_set_fg_color)(int color)=0x801c5e9;
+
+void (*gfx_blockfill)(int xmin, int ymin, int xmax, int ymax)=0x0801cb05;
+
 //! Function that handles the end of a DMR call.
 void* (*dmr_call_end)(void *pkt) = 0x0803f33d;
 //! Function that handles a DMR call.
@@ -34,7 +59,6 @@ void* (*dmr_handle_data)(void *pkt, int len) = 0x0804b66d;
 //! Function that handles an incoming SMS.
 void* (*dmr_sms_arrive)(void *pkt)=0x0803f03d;
 
-void (*MD380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;
 
 
 //! Handle to the original (unhooked) upload handler.
@@ -59,7 +83,24 @@ char *welcomebmp=0x080f9ca8;
 INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt)=0x804bbf5;
 void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
 
-void* (*main_menu)(void *)=0x08039c23;
+
+//! Functions and Variabes regarding the menu
+void    *(*main_menu)(void *)=0x08039c23;
+void    *(*create_main_meny_entry)(void)=0x0800c189;
+
+void    *(*create_menu_entry)(int a, void *b , void *c, void  *d, int e, int f ,int g)=0x0800c731;
+void    *(*menu_entry_back)(void)=0x800f453;
+void    *(*menu_entry_programradio)(void)=0x80127d1;
+char    *wt_programradio=0x080d175c;
+uint8_t *menu_id=0x2001d3c2;
+uint8_t *menu_depth=0x200011e4;
+uint8_t *menu_entry_selected=0x2001d3b2;
+void    *menu_memory=0x2001c148;
+void    *menu_unknown_02=0x20019df0;
+uint8_t *menu_unkonwn_01=0x2001d3c2;
+
+uint8_t *program_radio_unprohibited=(uint8_t *)(0x2001d030 + 4);
+
 
 char* channelnum=0x2001d376;
 int (*read_channel_switch)()=0x0804d269;
@@ -84,3 +125,13 @@ int (*ambe_unpack)(int a1, int a2, char length, int a4)=0x08048c9d;
 //! Populates the audio buffer.
 int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
 		       int a4, short a5, short a6, int a7)=0x08051249;
+
+
+//! Functions and Variabes regarding the beep_process
+uint32_t *beep_process_unkown=0x2001d178;
+
+
+//! useful md380 firmware functions
+void (*md380_itow)(wchar_t *, int value)=0x080172ed;
+void (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct)=0x08026461;
+void (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;

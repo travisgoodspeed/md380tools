@@ -7,6 +7,10 @@
 #include "tooldfu.h"
 #include "config.h"
 #include "gfx.h"
+#include "printf.h"
+#include "string.h"
+#include "addl_config.h"
+
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -35,6 +39,20 @@ void drawascii(char *ascii,
 	       0,0,
 	       x,y,
 	       15); //strlen(text));
+}
+
+void drawascii2(char *ascii,
+                int x, int y){
+  wchar_t wide[40];
+
+  for(int i=0;i<25;i++)
+        {
+        wide[i]=ascii[i];
+        if (ascii[i]=='\0')
+           break;
+        }
+  gfx_drawtext2(wide, x, y, 0);
+
 }
 
 void green_led(int on) {
@@ -66,11 +84,80 @@ void lcd_background_led(int on) {
   }
 }
 
-void print_DebugLine(void){
-  //Clear the background.
-  drawascii("         ",160,154);
-  drawascii("         ",160,190);
-  //Draw the lines.
-  drawascii(DebugLine1, 160, 154);//150
-  drawascii(DebugLine2, 160, 190);//187
+void print_DebugLine(unsigned int bg_color) {
+  char buf[30];
+  int n,i,ii;
+
+  gfx_set_bg_color(bg_color);
+  gfx_set_fg_color(0x000000);
+  gfx_select_font((void *) 0x809bcec);
+
+  drawascii2("                  ",10,50);
+  drawascii2("                  ",10,60);
+  drawascii2("                  ",10,70);
+  drawascii2("                  ",10,80);
+  drawascii2("                  ",10,90);
+  drawascii2("                  ",10,100);
+
+
+  ii=0;
+  n=0;
+  for (i=0;i<strlen(DebugLine2) || n < 6 ;i++) {
+    if (DebugLine2[i] == ',' || DebugLine2[i] == '\0') {
+      buf[ii++]='\0';
+      drawascii2(buf, 10, 50+n*10);
+      ii=0;
+      n++;
+    } else {
+      if (ii<29) buf[ii++]=DebugLine2[i];
+      }
+  }
+                                           
+  drawascii2(DebugLine1, 10,50);
+
+  gfx_select_font((void *) 0x80d0fac);
+  gfx_set_fg_color(0xff8032);
+  gfx_set_bg_color(0xff000000);
+}
+
+void print_DebugLine_green(char *bmp, int idx, uint64_t pos) {
+  if (global_addl_config.userscsv == 1) {
+    print_DebugLine(0x00ff00);
+  } else {
+    gfx_drawbmp(bmp, idx, pos);
+  }
+}
+
+void print_DebugLine_gray(void *bmp, int idx, uint64_t pos) {
+  if (global_addl_config.userscsv == 1) {
+    print_DebugLine(0x888888);
+  } else {
+    gfx_drawbmp(bmp, idx, pos);
+  }
+}
+
+
+void print_date_hook(void) {  // copy from the md380 code
+  wchar_t wide[40];
+  RTC_DateTypeDef RTC_DateStruct;
+    md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
+  if ( global_addl_config.datef == 0) {
+    wide[0]='2';
+    wide[1]='0';
+    md380_itow(&wide[2], RTC_DateStruct.RTC_Year);
+    wide[4]='/';
+    md380_itow(&wide[5], RTC_DateStruct.RTC_Month);
+    wide[7]='/';
+    md380_itow(&wide[8], RTC_DateStruct.RTC_Date);
+  } else {
+    md380_itow(&wide[0], RTC_DateStruct.RTC_Date);
+    wide[2]='.';
+    md380_itow(&wide[3], RTC_DateStruct.RTC_Month);
+    wide[5]='.';
+    wide[6]='2';
+    wide[7]='0';
+    md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
+  }
+  wide[10]='\0';
+  gfx_chars_to_display( wide, 0xa, 0x60, 0x5e);
 }
