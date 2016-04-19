@@ -120,6 +120,12 @@ of the originally exported .ppm file; gimp et al. discard it):
 
     md380-gfx --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
 
+To flash the Ham-DMR UserDB to SPI Flash.
+    generate the upload file
+    wc -c < db/users.csv > data ; cat db/users.csv >> data
+    programm to flash with: (verry experimental)
+    md380-tool spiflashwrite data 0x100000
+
 ##Firmware Compilation##
 
 This archive does not ship with firmware.  Instead it grabs firmware
