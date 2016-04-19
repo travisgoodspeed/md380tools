@@ -277,7 +277,6 @@ def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     #dfu.drawtext("Dumping dmesg",160,50);
     print dfu.getdmesg();
-
 def coredump(dfu,filename):
     """Dumps a corefile of RAM."""
     with open(filename,'wb') as f:
@@ -307,15 +306,13 @@ def hexdump(dfu,address,length=512):
             cbuf="";  
         elif i%8==0: 
             sys.stdout.write(" ");
-
 def hexwatch(dfu,address):
     """Dumps from memory to the screen"""
     while True:
         hexdump(dfu,address,16);
         time.sleep(0.05);
-
 def dump(dfu,filename,address):
-    """Dumps flash."""
+    """1k Binary dumps"""
     adr=int(address,16);
     with open(filename,'wb') as f:
         buf=dfu.peek(adr,1024);
@@ -337,13 +334,9 @@ def flashdump(dfu,filename):
 def spiflashdump(dfu,filename):
     """Dumps SPI Flash."""
     with open(filename,'wb') as f:
-#        for adr in range(0x00000000,
-#                         0x00000000+(16*1024*1024),
-#                         1024):
-        for adr in range(0x100000,
-                         0x100000+(3*1024*1024),
+        for adr in range(0x00000000,
+                         0x00000000+(16*1024*1024),
                          1024):
-
             #print "Fetching %08x"%adr
             buf=dfu.spiflashpeek(adr,1024);
             f.write(buf);
@@ -363,7 +356,6 @@ def spiflashwrite(dfu,filename,adr):
               print "%d %d %x %d " % (fullparts, n, adr+n*1024, 1024)
               dfu.spiflashpoke( adr+n*1024,1024,data[n*1024:(n+1)*1024]);
         lastpartsize= size - fullparts * 1024
-        print lastpartsize
 
         if ( lastpartsize  > 0 ):
            print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
@@ -525,16 +517,24 @@ Dumps all the keys.
 
 Dump all of flash memory.
     md380-tool flashdump <filename.bin>
-Dump the complete SPI Flash image.
+Dump the complete SPI Flash image (16MByte).
     md380-tool spiflashdump <filename.bin>
 Dump a core file of RAM.
     md380-tool coredump <filename.bin>
-
 Dumps memory in hex.
     md380-tool hexdump <0xcafebabe>
+Dump one word.
+    md380-tool readword <0xcafebabe>
+Dump 1kB from arbitrary address
+    md380-tool dump <filename.bin> <address>
 
 Copy File to SPI flash.
     md380-tool spiflashwrite <filename> <address>"
+
+Copy users.csv to SPI flash:
+    wc -c < db/users.csv > data ; cat db/users.csv >> data
+    md380-tool spiflashwrite data 0x100000   
+
 
 """)
 
@@ -608,7 +608,6 @@ if __name__ == '__main__':
         
         elif len(sys.argv) == 4:  
             if sys.argv[1] == 'spiflashwrite':
-#                print "flash %s with len %d to memory from %s." % sys.argv[2] , sys.argv[3];
                 filename=sys.argv[2];
                 adr=int(sys.argv[3],16);
                 if ( adr >= int("0x100000",16) ):
@@ -623,6 +622,7 @@ if __name__ == '__main__':
 
         else:
             usage();
+
     except RuntimeError, e:
         print(e.args[0])
         exit(1)
