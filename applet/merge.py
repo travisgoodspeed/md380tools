@@ -204,6 +204,11 @@ if __name__== '__main__':
     merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine_green"),0);
     merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine_green"),0);
     merger.hookbl(0x0801f5ba,sapplet.getadr("print_DebugLine_gray"),0);
+
+    # date format  hook, this hook can modify the date format on the status line
+    merger.hookbl(0x0800d8c8,sapplet.getadr("print_date_hook"),0);
+    # skip ..."unused code"
+    merger.hookstub(0x0800d8c8+4,0x0800d92e+1);
     
     #Function that calls aes_cipher() twice.  When are these called?
     merger.hookbl(0x0802177c,sapplet.getadr("aes_cipher_hook"),0);

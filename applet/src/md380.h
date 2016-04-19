@@ -42,6 +42,8 @@ extern void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
                       int x, int y,   //X and Y position
                       int maxlen);
 
+extern void (*gfx_chars_to_display)(wchar_t *str, int x, int y, int unknown);
+
 
 extern void (*gfx_select_font)(void *p);
 
@@ -60,7 +62,6 @@ extern void* (*dmr_handle_data)(void *pkt, int len);
 extern void* (*dmr_sms_arrive)(void *pkt);
 
 
-extern void (*MD380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 
 //Pointer to the buffer that stores the bottom line of screen text.
@@ -149,3 +150,11 @@ extern int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
 //! Functions and Variabes regarding the beep_
 // not yet known ;)
 extern uint32_t *beep_process_unkown;
+
+
+
+
+//! useful firmware functions
+extern void (*md380_itow)(wchar_t *, int value);
+extern void (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
+extern void (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);

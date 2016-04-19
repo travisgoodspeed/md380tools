@@ -296,9 +296,9 @@ void create_menu_entry_datef_screen(void) {
   menu_mem->unknown_01 = 0;
 
   if (buf[0] == '1') {
-    *menu_entry_selected = 0;
-  } else {
     *menu_entry_selected = 1;
+  } else {
+    *menu_entry_selected = 0;
   }    
 
   create_menu_entry_hook( (*menu_id),     wt_datef_original,  create_menu_entry_datef_original_screen + 1, menu_entry_back,  0x8b, 0 , 1);

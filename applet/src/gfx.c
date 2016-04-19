@@ -137,3 +137,28 @@ void print_DebugLine_gray(void *bmp, int idx, uint64_t pos) {
 }
 
 
+void print_date_hook(void) {  // copy from the md380 code
+  wchar_t wide[40];
+  RTC_DateTypeDef RTC_DateStruct;
+    md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
+  if ( global_addl_config.datef == 0) {
+    wide[0]='2';
+    wide[1]='0';
+    md380_itow(&wide[2], RTC_DateStruct.RTC_Year);
+    wide[4]='/';
+    md380_itow(&wide[5], RTC_DateStruct.RTC_Month);
+    wide[7]='/';
+    md380_itow(&wide[8], RTC_DateStruct.RTC_Date);
+  } else {
+    md380_itow(&wide[0], RTC_DateStruct.RTC_Date);
+    wide[2]='.';
+    md380_itow(&wide[3], RTC_DateStruct.RTC_Month);
+    wide[5]='.';
+    wide[6]='2';
+    wide[7]='0';
+    md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
+  }
+  wide[10]='\0';
+  gfx_chars_to_display( wide, 0xa, 0x60, 0x5e);
+}
+

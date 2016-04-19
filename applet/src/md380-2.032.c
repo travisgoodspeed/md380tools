@@ -42,12 +42,13 @@ void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
                      int x, int y,   //X and Y position, Unit unknown
                      int unknown) = 0x0801cf1d; // max 19 char ???
 
+void (*gfx_chars_to_display)(wchar_t *str, int x, int y, int unknown) = 0x0801cf1d;
+
 void (*gfx_select_font)(void *p)=0x8020975;
 void (*gfx_set_bg_color)(int color)=0x801c5e1;
 void (*gfx_set_fg_color)(int color)=0x801c5e9;
 
 void (*gfx_blockfill)(int xmin, int ymin, int xmax, int ymax)=0x0801cb05;
-
 
 //! Function that handles the end of a DMR call.
 void* (*dmr_call_end)(void *pkt) = 0x0803f33d;
@@ -58,7 +59,6 @@ void* (*dmr_handle_data)(void *pkt, int len) = 0x0804b66d;
 //! Function that handles an incoming SMS.
 void* (*dmr_sms_arrive)(void *pkt)=0x0803f03d;
 
-void (*MD380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;
 
 
 //! Handle to the original (unhooked) upload handler.
@@ -128,5 +128,10 @@ int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
 
 
 //! Functions and Variabes regarding the beep_process
-
 uint32_t *beep_process_unkown=0x2001d178;
+
+
+//! useful md380 firmware functions
+void (*md380_itow)(wchar_t *, int value)=0x080172ed;
+void (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct)=0x08026461;
+void (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;

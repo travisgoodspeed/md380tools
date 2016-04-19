@@ -151,9 +151,6 @@ void demo(){
   
   //Restore the bottom line of text before we return.
   spiflash_read(botlinetext, 0x2054, 20);
-  
-  printf("Channel %d selected.\n",
-	 read_channel_switch());
 }
 
 
@@ -172,10 +169,13 @@ int main(void) {
   led_setup();
 
   RTC_TimeTypeDef RTC_TimeTypeTime;
-  MD380_RTC_GetTime(RTC_Format_BIN, &RTC_TimeTypeTime);
+  md380_RTC_GetTime(RTC_Format_BIN, &RTC_TimeTypeTime);
   printf("%d:%d:%d\n", RTC_TimeTypeTime.RTC_Hours,
-                     RTC_TimeTypeTime.RTC_Minutes,
-                     RTC_TimeTypeTime.RTC_Seconds);
+                       RTC_TimeTypeTime.RTC_Minutes,
+                       RTC_TimeTypeTime.RTC_Seconds);
+
+  printf("Channel %d selected.\n",
+	 read_channel_switch());
      
   //Done with the blinking, so start the radio application.
   printf("Starting main()\n");
