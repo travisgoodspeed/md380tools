@@ -83,6 +83,7 @@ char *welcomebmp=0x080f9ca8;
 INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt)=0x804bbf5;
 void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
 
+
 //! Functions and Variabes regarding the menu
 void    *(*main_menu)(void *)=0x08039c23;
 void    *(*create_main_meny_entry)(void)=0x0800c189;
@@ -124,3 +125,8 @@ int (*ambe_unpack)(int a1, int a2, char length, int a4)=0x08048c9d;
 //! Populates the audio buffer.
 int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
 		       int a4, short a5, short a6, int a7)=0x08051249;
+
+
+//! Functions and Variabes regarding the beep_process
+
+uint32_t *beep_process_unkown=0x2001d178;

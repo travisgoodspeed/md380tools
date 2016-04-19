@@ -184,114 +184,25 @@ if __name__== '__main__':
                   sapplet.getadr("dmr_sms_arrive_hook"),
                   0x0803f03c);
 
-    merger.hookbl(0x8042368,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044028,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80442c4,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80442f8,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x804432c,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044360,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044394,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80443c8,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80443fc,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044430,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044464,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044498,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x80444cc,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044500,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8044534,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x8049150,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
-    merger.hookbl(0x804ae5c,
-                  sapplet.getadr("OSTaskCreateExt_hook"),
-                  0x0804bbf4);
+    OSTaskCreateExt_hook_list=[
+        0x8042368, 0x8044028, 0x80442c4, 0x80442f8, 0x804432c, 0x8044360, 0x8044394, 0x80443c8,
+        0x80443fc, 0x8044430, 0x8044464, 0x8044498, 0x80444cc, 0x8044500, 0x8044534, 0x8049150,
+        0x804ae5c];
+    ### only for debug and information addiction
+    #for adr in OSTaskCreateExt_hook_list:
+    #    merger.hookbl(adr, sapplet.getadr("OSTaskCreateExt_hook"),0);
 
+    OSTaskNameSet_hook_list=[
+        0x8042374, 0x8044034, 0x80442d0, 0x8044304, 0x8044338, 0x804436c, 0x80443a0, 0x80443d4,
+        0x8044408, 0x804443c, 0x8044470, 0x80444a4, 0x80444d8, 0x804450c, 0x8044540, 0x804915c,
+        0x804ae68];
+    ### only for debug and information addiction
+    #for adr in OSTaskNameSet_hook_list:
+    #    merger.hookbl(adr, sapplet.getadr("OSTaskNameSet_hook"),0);
 
-    merger.hookbl(0x8042374,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044034,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80442d0,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044304,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044338,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804436c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80443a0,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80443d4,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044408,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804443c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044470,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80444a4,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x80444d8,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804450c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x8044540,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804915c,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-    merger.hookbl(0x804ae68,
-                  sapplet.getadr("OSTaskNameSet_hook"),
-                  0x804bcc0);
-
+    # gfx hooks
     merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine_green"),0);
     merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine_green"),0);
-    
     merger.hookbl(0x0801f5ba,sapplet.getadr("print_DebugLine_gray"),0);
     
     #Function that calls aes_cipher() twice.  When are these called?
@@ -362,19 +273,33 @@ if __name__== '__main__':
         0x0801aa22, 0x0801aa54, 0x0801abb2, 0x0801ac1c, 0x0801ac4e, 0x0801af14, 0x0801b07a, 0x0801b1c0,
         0x0801b2ca, 0x0801b2f2, 0x0801b364, 0x0801ad50, 0x0801ad82, 0x0801adec, 0x0801ae1e, 0x0801245c,
         0x080198a2, 0x0801992c];
+    ### only for debug and information addiction
+    #for adr in Create_MenuEntrylist:
+    #    merger.hookbl(adr,sapplet.getadr("create_menu_entry_hook"),0);
 
-
-    for adr in Create_MenuEntrylist:
-        merger.hookbl(adr,sapplet.getadr("create_menu_entry_hook"),0);
-
-    # hook
+    # additional menu hook
     merger.hookbl(0x08012740,sapplet.getadr("create_menu_utilies_hook"),0);
     # skip ..."unused code"
     merger.hookstub(0x08012740+4,0x08012786+1);
     merger.setbyte(0x080126dc,0x04);  # menu has now 4 entry
 
-    # init the global config struct from spi  flash
+    # init the addl global config struct from spi  flash
     merger.hookbl(0x080440a6,sapplet.getadr("init_global_addl_config_hook"),0);
+
+    # hooks regarding the beep_process
+    beep_process_list=[
+        0x0802ab30, 0x0802ab42, 0x0802ab50, 0x0802ab78, 0x0802ab8a, 0x0802abb2, 0x0802abc4, 0x0802abec,
+        0x0802ac92, 0x0802aca4, 0x0802acb2, 0x0802acc0, 0x0802acf0, 0x0802ad02, 0x0802ad10, 0x0802ad1e,
+        0x0802ad54, 0x0802ade6, 0x0802adf8, 0x0802ae06, 0x0802ae14, 0x0802ae3c, 0x0802ae4e, 0x0802ae76,
+        0x0802ae88, 0x0802ae96, 0x0802aea4, 0x0802aed2, 0x0802aee4, 0x0802aef2, 0x0802af00, 0x0802af0e,
+        0x0802af1c, 0x0802af2a, 0x0802af38, 0x0802afb8, 0x0802afd4, 0x0802afe6, 0x0802affe, 0x0802b010,
+        0x0802b01e, 0x0802b046, 0x0802b062, 0x0802b074, 0x0802b08c, 0x0802b09e, 0x0802b0ac, 0x0802b320,
+        0x0802b332, 0x0802b340, 0x0802b34e, 0x0802b35c, 0x0802b398, 0x0802b3aa, 0x0802b3b8, 0x0802b3c6,
+        0x0802b402, 0x0802b414, 0x0802b422, 0x0802b430, 0x0802b43e, 0x0802b47a, 0x0802b4ae, 0x0802b4de,
+        0x0802b50e, 0x0802b566, 0x0802b59a, 0x0802b5c8, 0x0802b5f4, 0x0802b648, 0x0802b744, 0x0802b770,
+        0x0802b7be, 0x0802b812, 0x0802b900, 0x0802b920];
+    for adr in beep_process_list:
+        merger.hookbl(adr,sapplet.getadr("F_294_replacement"),0);
 
     #Throwaway hook to see if adr is called.
     #merger.hookstub(0x0803f03c,

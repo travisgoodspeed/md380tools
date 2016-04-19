@@ -144,3 +144,8 @@ extern int (*ambe_unpack)(int a1, int a2, char length, int a4);
 //! Populates the audio buffer.
 extern int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
 			      int a4, short a5, short a6, int a7);
+
+
+//! Functions and Variabes regarding the beep_
+// not yet known ;)
+extern uint32_t *beep_process_unkown;
