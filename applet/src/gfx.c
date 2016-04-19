@@ -87,7 +87,7 @@ void lcd_background_led(int on) {
 void print_DebugLine(unsigned int bg_color) {
   char buf[30];
   int n,i,ii;
-    
+
   gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
   gfx_select_font((void *) 0x809bcec);
@@ -126,7 +126,7 @@ void print_DebugLine_green(char *bmp, int idx, uint64_t pos) {
   } else {
     gfx_drawbmp(bmp, idx, pos);
   }
-} 
+}
 
 void print_DebugLine_gray(void *bmp, int idx, uint64_t pos) {
   if (global_addl_config.userscsv == 1) {
@@ -161,4 +161,3 @@ void print_date_hook(void) {  // copy from the md380 code
   wide[10]='\0';
   gfx_chars_to_display( wide, 0xa, 0x60, 0x5e);
 }
-

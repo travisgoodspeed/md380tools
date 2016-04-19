@@ -138,7 +138,7 @@ int usb_dnld_hook(){
         spiflash_write(packet+9,  adr, size);
       }
       break;
-    case TDFU_SPIFLASHERASE64K:
+    case TDFU_SPIFLASHERASE64K:   // experimental
       //Re-uses the dmesg transmit buffer.
       *dfu_target_adr=dmesg_tx_buf;
       adr= *((uint32_t*)(packet+1));
@@ -148,22 +148,20 @@ int usb_dnld_hook(){
 //      spiflash_block_erase64k(adr);
 
 
-      spiflash_enable(); 
-      spi_sendrecv(0x6); 
+      spiflash_enable();
+      spi_sendrecv(0x6);
       spiflash_disable();
-      
+
       spiflash_enable();
       spi_sendrecv(0xd8);
       spi_sendrecv((adr>> 16) & 0xff);
       spi_sendrecv((adr>>  8) & 0xff);
-      spi_sendrecv(adr & 0xff);                              
-      spiflash_disable();   
+      spi_sendrecv(adr & 0xff);
+      spiflash_disable();
 //      spiflash_wait();   // this is the problem :( 
                            // must be polled via dfu commenad?
-        
       break;
-    
-    case TDFU_SPIFLASHWRITE_NEW:
+    case TDFU_SPIFLASHWRITE_NEW: // not working, this is not the problem
       //Re-uses the dmesg transmit buffer.
       *dfu_target_adr=dmesg_tx_buf;
       adr = *((uint32_t*)(packet+1));
@@ -171,18 +169,18 @@ int usb_dnld_hook(){
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       if (check_spf_flash_type()) {
         printf ("DFU_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
-        // enable write 
-        
+        // enable write
+
         for (int i=0;i<size;i=i+256) {
           int page_adr;
           page_adr=adr+i;
           printf("%d %x\n",i,page_adr);
-          spiflash_wait();     
-          
+          spiflash_wait();
+
           spiflash_enable();
           spi_sendrecv(0x6);
           spiflash_disable();
-          
+
           spiflash_enable();
           spi_sendrecv(0x2);
           printf("%x ", ((page_adr>> 16) & 0xff));
@@ -195,12 +193,11 @@ int usb_dnld_hook(){
             spi_sendrecv(packet[9+ii+i]);
           }
           spiflash_disable();
-          spiflash_wait();     
+          spiflash_wait();
           printf("\n");
         }
       }
       break;
-    
     case TDFU_SPIFLASHSECURITYREGREAD:
       //Re-uses the dmesg transmit buffer.
       *dfu_target_adr=dmesg_tx_buf;

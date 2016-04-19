@@ -25,7 +25,7 @@ void (*spiflash_wait)()=0x0802fe15;
 void (*spiflash_block_erase64k)(uint32_t adr)=0x0802fbb7;
 void (*spiflash_sektor_erase4k)(uint32_t adr)=0x0802fb83;
 
-INT8U (*spi_sendrecv)(INT8U data) = 0x0802fdc9; // SPI1 
+INT8U (*spi_sendrecv)(INT8U data) = 0x0802fdc9; // SPI1
 
 
 

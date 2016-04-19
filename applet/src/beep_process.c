@@ -1,10 +1,9 @@
 /*! \file beep_process.c
   \brief beep_process Hook Functions.
-  
+
   This module contains hooks and replacement functions for the beep_process.
 
 */
-
 
 #include <stdio.h>
 #include <string.h>
@@ -14,22 +13,17 @@
 #include "dmesg.h"
 #include "addl_config.h"
 
-//#include "version.h"
-//#include "tooldfu.h"
-//#include "config.h"
-//#include "gfx.h"
-
 
 
 // First experiments with beep_tone tunig
-// why it's work, i have no idea ;) 
+// why it's work, i have no idea ;)
 
 void F_294_replacement(uint16_t value) {
   uint32_t multiplicand = 0x1dd;  // original value
 
   if (global_addl_config.rbeep == 1) {
     multiplicand= 0xaa;
-  } 
- 
+  }
+
  *beep_process_unkown=(uint32_t) value * multiplicand;
 }

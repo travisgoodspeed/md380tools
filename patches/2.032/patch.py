@@ -78,10 +78,6 @@ if __name__ == '__main__':
     patcher.sethword(0x0809cf08, 0xd100);
     patcher.sethword(0x0809cf0a, 0x483c);
     patcher.sethword(0x0809cf0c, 0x4700);
-    #patcher.sethword(0x080172b2, 0x203a);  // edit menu
-    #patcher.sethword(0x0801729c, 0x203a);  // edit menu
-
-
     # [0x0809cf00]> pd 7
     #             0x0809cf00      4048           ldr r0, [pc, 0x100]         ; [0x809d004:4]=-1
     #             0x0809cf02      0021           movs r1, 0

@@ -42,14 +42,15 @@ void *main_menu_hook(void *menu){
   case 0x24:
     //Third word of the parameter is a structure with
     //more entries.
-    menustruct=*((int*)menu + 2);
+    //menustruct=*((int*)menu + 2);
+    /*
     printf("Menu struct: @0x%08x\n",
 	   menustruct);
     printf("Item %5d/%5d selected. %s\n",
 	   (int) *((unsigned short*) (menustruct+0x42)),
 	   (int) *((unsigned short*)menustruct),
 	   "test");
-    
+    */
     
     
     //printhex(*((int*) menu+2),128);
@@ -113,7 +114,7 @@ struct MENU {
 
 void create_menu_entry_rbeep_enable_screen(void) {
   struct MENU *menu_mem;
-  
+
   menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
   menu_mem->menu_titel = wt_rbeep;
 
@@ -177,7 +178,6 @@ void create_menu_entry_datef_germany_screen(void) {
   create_menu_entry_hook( (*menu_id), wt_datef_germany, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("1", spi_flash_addl_config_start + offset_datef, 1);
   global_addl_config.datef = 1;
-   
 }
 
 void create_menu_entry_userscsv_enable_screen(void) {
@@ -230,7 +230,7 @@ void create_menu_entry_debug_enable_screen(void) {
 
   create_menu_entry_hook( (*menu_id), wt_enable, menu_entry_back, menu_entry_back, 6, 2 , 1);
   spiflash_write("1", spi_flash_addl_config_start + offset_debug, 1);
-  global_addl_config.debug=1;  
+  global_addl_config.debug=1;
 }
 
 void create_menu_entry_debug_disable_screen(void) {
@@ -255,8 +255,8 @@ void create_menu_entry_rbeep_screen(void) {
   int i;
   struct MENU *menu_mem;
   int8_t buf[1];
-  
-  spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1); 
+
+  spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1);
 
   menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
   menu_mem->menu_titel = wt_rbeep;
@@ -269,7 +269,7 @@ void create_menu_entry_rbeep_screen(void) {
     *menu_entry_selected = 0;
   } else {
     *menu_entry_selected = 1;
-  }    
+  }
   create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_rbeep_enable_screen + 1,  menu_entry_back, 0x8b, 0 , 1);
   create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
 
@@ -284,9 +284,9 @@ void create_menu_entry_datef_screen(void) {
   int i;
   struct MENU *menu_mem;
   int8_t buf[1];
-  
+
   spiflash_read(buf, spi_flash_addl_config_start + offset_datef, 1);
-  
+
   menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
   menu_mem->menu_titel = wt_datef;
 
@@ -299,7 +299,7 @@ void create_menu_entry_datef_screen(void) {
     *menu_entry_selected = 1;
   } else {
     *menu_entry_selected = 0;
-  }    
+  }
 
   create_menu_entry_hook( (*menu_id),     wt_datef_original,  create_menu_entry_datef_original_screen + 1, menu_entry_back,  0x8b, 0 , 1);
   create_menu_entry_hook( (*menu_id) + 1, wt_datef_germany,  create_menu_entry_datef_germany_screen + 1, menu_entry_back, 0x8b, 0 , 1);
@@ -315,9 +315,9 @@ void create_menu_entry_userscsv_screen(void) {
   int i;
   struct MENU *menu_mem;
   int8_t buf[1];
-  
+
   spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
-  
+
   menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
   menu_mem->menu_titel = wt_userscsv;
 
@@ -330,8 +330,7 @@ void create_menu_entry_userscsv_screen(void) {
     *menu_entry_selected = 0;
   } else {
     *menu_entry_selected = 1;
-  }    
-                   
+  }
   
   create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_userscsv_enable_screen + 1, menu_entry_back,  0x8b, 0 , 1);
   create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_userscsv_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
@@ -347,7 +346,7 @@ void create_menu_entry_debug_screen(void) {
   int i;
   struct MENU *menu_mem;
   int8_t buf[1];
-    
+
   spiflash_read(buf, spi_flash_addl_config_start + offset_debug, 1);
 
   menu_mem = (menu_memory + ((*menu_depth) * 0xc)) + 0xc;
@@ -357,7 +356,7 @@ void create_menu_entry_debug_screen(void) {
   menu_mem->numberofentrys=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
-  
+
   if (buf[0] == '1') {
     *menu_entry_selected = 0;
     global_addl_config.debug = 1;
@@ -365,7 +364,7 @@ void create_menu_entry_debug_screen(void) {
     *menu_entry_selected = 1;
     global_addl_config.debug = 0;
   }
-  
+
   create_menu_entry_hook( (*menu_id),     wt_enable,  create_menu_entry_debug_enable_screen + 1, menu_entry_back,  0x8b, 0 , 1);
   create_menu_entry_hook( (*menu_id) + 1, wt_disable, create_menu_entry_debug_disable_screen + 1, menu_entry_back, 0x8b, 0 , 1);
 

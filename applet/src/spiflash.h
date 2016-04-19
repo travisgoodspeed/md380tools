@@ -1,4 +1,4 @@
-/*! \file spiflash.h 
+/*! \file spiflash.h
   \brief spiflash defines
 */
 

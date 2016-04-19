@@ -7,18 +7,13 @@ clean:
 #	cd firmware && make clean
 	cd applet && make clean
 	rm -f *~ *.pyc
-#	cd db && make clean
-	
 patches: firmwares
 	cd patches/2.032 && make all
-dbs:
-	cd db && make all
-
-applets: patches dbs
+applets: patches
 	cd applet && make all
 firmwares:
 	cd firmware && make all
-flash:	applets
+flash:
 #	cd patches/2.032 && make flash
 	cd applet && make flash
 dist: applets

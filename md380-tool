@@ -102,7 +102,7 @@ class Tool(DFU):
         cmd=0x03; #SPIFLASHWRITE
         cmdstr=(chr(cmd)+
                 chr(adr&0xFF)+
-                chr((adr>>8)&0xFF)+ 
+                chr((adr>>8)&0xFF)+
                 chr((adr>>16)&0xFF)+
                 chr((adr>>24)&0xFF)
                 );
@@ -128,10 +128,10 @@ class Tool(DFU):
                 chr((size>>16)&0xFF)+
                 chr((size>>24)&0xFF)
                 );
-        
+
         for i in range(0,size,1):
             cmdstr=cmdstr+data[i];
-        
+
         print len(cmdstr)
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
                                    cmdstr)
@@ -300,11 +300,11 @@ def hexdump(dfu,address,length=512):
             cbuf = cbuf + chr(b);
         else:
             cbuf = cbuf + ".";
-        if i%16==0: 
+        if i%16==0:
             sys.stdout.write(" " + cbuf);
             sys.stdout.write("\n");
-            cbuf="";  
-        elif i%8==0: 
+            cbuf="";
+        elif i%8==0:
             sys.stdout.write(" ");
 def hexwatch(dfu,address):
     """Dumps from memory to the screen"""
@@ -347,7 +347,7 @@ def spiflashwrite(dfu,filename,adr):
         data = f.read()
         size=len(data)
 
-        for n in range(adr,adr+size+1,0x1000):                  
+        for n in range(adr,adr+size+1,0x1000):
            print "erase %x " % n
            dfu.spiflash_erase64kblock(n)
         fullparts = int(size/1024)
@@ -361,7 +361,7 @@ def spiflashwrite(dfu,filename,adr):
            print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
            dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
 
-        f.close(); 
+        f.close();
 def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
     while True:
@@ -444,23 +444,15 @@ def calladc1(dfu):
     dfu.set_address(0x2001cfcc);   #  2.032
     data=dfu.upload(1,4,0);
     # 7.2V ~ 2.4V PA1 (BATT) ... 2715 ~ 6.5V ... 3.3V 12BIT
-    
     print "%f Volt"  % ( 3.3 / 0xfff * ((data[3] << 8 )+ data[2]) * 3 )
-
-
 def getchannel(dfu):
     """Print actual Channel, fetched from the MD380's Memory."""
     dfu.set_address(0x2001d376);  # 2.032
     data=dfu.upload(1,4,0);
     print "%02d %02d %02d %02d" % ( data[3], data[2], data[1], data[0])
-
-
-
 def readword(dfu, address):
-        
     print "%x"%(int(address, 0))
-
-    dfu.set_address(int(address,0));  # 2.032 
+    dfu.set_address(int(address,0));  # 2.032
     data=dfu.upload(1,4*4,0);
     print "%x %02x%02x%02x%02x" % (int(address, 0), data[3], data[2], data[1], data[0])
     print "%x %02x %02x %02x %02x" % (int(address, 0), data[3], data[2], data[1], data[0])
@@ -468,8 +460,6 @@ def readword(dfu, address):
     print "%x %02x %02x %02x %02x" % (int(address, 0)+8, data[11], data[10], data[9], data[8])
     print "%x %02x %02x %02x %02x" % (int(address, 0)+12, data[15], data[14], data[13], data[12])
     print "%d" % ( data[3] << 24|  data[2]<<16 | data[1]<<8 | data[0])
- 
-
 def init_dfu(alt=0):
     dev = usb.core.find(idVendor=md380_vendor,
                         idProduct=md380_product)
@@ -533,7 +523,7 @@ Copy File to SPI flash.
 
 Copy users.csv to SPI flash:
     wc -c < db/users.csv > data ; cat db/users.csv >> data
-    md380-tool spiflashwrite data 0x100000   
+    md380-tool spiflashwrite data 0x100000
 
 
 """)
@@ -605,8 +595,8 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'readword':
                 dfu=init_dfu();
                 readword(dfu, sys.argv[2]);
-        
-        elif len(sys.argv) == 4:  
+
+        elif len(sys.argv) == 4:
             if sys.argv[1] == 'spiflashwrite':
                 filename=sys.argv[2];
                 adr=int(sys.argv[3],16);

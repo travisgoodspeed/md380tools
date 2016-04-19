@@ -20,12 +20,12 @@ int (spiflash_read_hook)(void *dst, long adr, long len) {
 
 int check_spf_flash_type(void) {
     static int ok=0;
-    
+
     if (ok==1) {
       return 1;
-    } else {  
-      char data[3];  
-    
+    } else {
+      char data[3];
+      
       spiflash_enable();
       spi_sendrecv(0x9f);
       data[0]=spi_sendrecv(0x00);
@@ -35,15 +35,12 @@ int check_spf_flash_type(void) {
       if (data[0]==0xef && data[1]==0x40 && data[2]==0x18) {
         ok=1;
         return 1;
-      } else { 
+      } else {
         printf("no W25Q128FV %x %x %x\n", data[0],data[1],data[2]);
         return 0;
       }
     }
 }
-                                                          
 
-uint32_t spi_flash_addl_config_start = 0xf0000;   
+uint32_t spi_flash_addl_config_start = 0xf0000;
 uint32_t spi_flash_addl_config_size  = 0xffff;
-
-                                                          

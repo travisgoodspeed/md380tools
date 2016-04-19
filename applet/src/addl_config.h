@@ -2,6 +2,8 @@
   \brief .
 */
 
+#ifndef MD380TOOLS_ADDL_CONFIG_H_INCLUDED
+#define MD380TOOLS_ADDL_CONFIG_H_INCLUDED
 
 extern struct addl_config {
   uint8_t  rbeep;
@@ -9,7 +11,7 @@ extern struct addl_config {
   uint8_t  userscsv;
   uint8_t  debug;
   } global_addl_config;
-  
+
 extern void init_global_addl_config_hook(void);
 
-                                                          
+#endif
