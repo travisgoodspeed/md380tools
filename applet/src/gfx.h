@@ -9,13 +9,14 @@ void drawtext(wchar_t *text,
 void drawascii(char *ascii,
 	       int x, int y);
 
+void drawascii2(char *ascii,
+                int x, int y);
+
 void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);
 
 
 extern char DebugLine1[30];
-extern char DebugLine2[30];
+extern char DebugLine2[160];  // 80
  
-
-void print_DebugLine(void);

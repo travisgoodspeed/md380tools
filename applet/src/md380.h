@@ -14,6 +14,22 @@ void strhex(char *, long);
 void wstrhex(wchar_t *, long);
 
 extern int (*spiflash_read)(void *dst, long adr, long len);
+extern void (*spiflash_write)(void *dst, long adr, long len);
+
+extern int (*spiflash_security_registers_read)(void *dst, long adr, long len);
+
+extern void (*spiflash_enable)();
+extern void (*spiflash_disable)();
+extern void (*spiflash_wait)();
+
+extern void (*spiflash_block_erase64k)(uint32_t);
+extern void (*spiflash_sektor_erase4k)(uint32_t);
+
+
+extern INT8U (*spi_sendrecv)(INT8U data); // SPI1
+
+
+
 extern void (*gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
 			    short sx, short sy, //Source coords, maybe?
 			    short x, short y,   //X and Y position
@@ -21,6 +37,20 @@ extern void (*gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
 extern void (*gfx_drawbmp)(char *bmp,
 			   int idx,
 			   uint64_t pos);
+
+extern void (*gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
+                      int x, int y,   //X and Y position
+                      int maxlen);
+
+extern void (*gfx_chars_to_display)(wchar_t *str, int x, int y, int unknown);
+
+
+extern void (*gfx_select_font)(void *p);
+
+extern void (*gfx_set_bg_color)(int color);
+extern void (*gfx_set_fg_color)(int color);
+
+extern void (*gfx_blockfill)(int xmin, int ymin, int xmax, int ymax);
 
 //! Function that handles checking a DMR contact.
 extern void* (*dmr_call_end)(void *pkt);
@@ -32,7 +62,6 @@ extern void* (*dmr_handle_data)(void *pkt, int len);
 extern void* (*dmr_sms_arrive)(void *pkt);
 
 
-extern void (*MD380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 
 //Pointer to the buffer that stores the bottom line of screen text.
@@ -55,9 +84,33 @@ extern INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *pto
 extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 
 
-//! Still figuring this out; it is involved in rendering menus.
-extern void* (*main_menu)(void *);
+//! Functions and Variabes regarding the menu
+extern void*   (*main_menu)(void *);     // menu exec
 
+// menu in case of pressing back key
+extern void*   (*menu_entry_back)(void);
+extern void*   (*create_main_meny_entry)(void);
+
+
+// create one new menu entry
+// menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
+extern void*   (*create_menu_entry)(int, void *, void *, void  *,
+                                    int , int, int);
+
+// for the hook funktion (hook used the space from this entry)
+extern void*   (*menu_entry_programradio)(void);
+extern char    *wt_programradio;  // menutext <- menu_entry_programradio
+
+// not yet known ;)
+extern uint8_t *menu_id;
+extern uint8_t *menu_depth;
+extern uint8_t *menu_entry_selected;
+extern void    *menu_memory;
+extern void    *menu_unknown_02;
+extern uint8_t *menu_unkonwn_01;
+
+//! program_radio_unprohibited ... bulding site is an struct
+extern uint8_t *program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
 extern char* channelnum;
@@ -92,3 +145,16 @@ extern int (*ambe_unpack)(int a1, int a2, char length, int a4);
 //! Populates the audio buffer.
 extern int (*ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
 			      int a4, short a5, short a6, int a7);
+
+
+//! Functions and Variabes regarding the beep_
+// not yet known ;)
+extern uint32_t *beep_process_unkown;
+
+
+
+
+//! useful firmware functions
+extern void (*md380_itow)(wchar_t *, int value);
+extern void (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
+extern void (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
