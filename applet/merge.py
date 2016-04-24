@@ -306,6 +306,10 @@ if __name__== '__main__':
     for adr in beep_process_list:
         merger.hookbl(adr,sapplet.getadr("F_294_replacement"),0);
 
+    #Hooks the squelch routines, so we can do monitor mode in C.
+    merger.hookbl(0x0803ef64, sapplet.getadr("dmr_apply_privsquelch_hook"),0); #Private calls.
+    merger.hookbl(0x0803eea0, sapplet.getadr("dmr_apply_squelch_hook"),0);     #Public calls.
+
     #Throwaway hook to see if adr is called.
     #merger.hookstub(0x0803f03c,
     #                sapplet.getadr("demo"));

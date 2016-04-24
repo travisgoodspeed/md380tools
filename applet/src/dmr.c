@@ -88,12 +88,12 @@ void *dmr_call_start_hook(char *pkt){
            (pkt[9]<<8)|
            (pkt[8]<<16));
 
+  //printf("Call start %d -> %d\n", src,dst);
   sprintf(DebugLine1, "%d -> %d", src, dst );
 
-  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0)
-   {
+  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
     sprintf(DebugLine2, ",no users.csv,see md380-tool,usage");   // , is line seperator ;)
-    }
+  }
 
   //This prints a dot at every resynchronization frame.
   //It can distract AMBE2+ logging.
@@ -104,6 +104,39 @@ void *dmr_call_start_hook(char *pkt){
 
   //Forward to the original function.
   return dmr_call_start(pkt);
+}
+
+
+void dmr_apply_squelch_hook(char *firstthing, char *mode){
+  /* The *mode byte is 0x09 for an unmuted call and 0x08 for a muted
+     call.
+  */
+
+  //printf("dmr_apply_squelch_hook for *mode=0x%02x.\n",*mode);
+
+  //Promiscuous mode!
+  if(*mode==0x08){
+    printf("Applying monitor mode to a public call.\n");
+    *mode=0x09;
+    dmr_before_squelch();
+  }
+  dmr_apply_squelch(firstthing,mode);
+}
+
+void dmr_apply_privsquelch_hook(char *firstthing, char *mode){
+  /* The *mode byte is 0x09 for an unmuted call and 0x08 for a muted
+     call.
+  */
+
+  //printf("dmr_apply_squelch_hook for *mode=0x%02x.\n",*mode);
+
+  //Promiscuous mode!
+  if(*mode==0x08){
+    printf("Applying monitor mode to a private call.\n");
+    *mode=0x09;
+    dmr_before_squelch();
+  }
+  dmr_apply_squelch(firstthing,mode);
 }
 
 

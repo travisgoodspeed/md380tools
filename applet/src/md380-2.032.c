@@ -58,7 +58,15 @@ void* (*dmr_call_start)(void *pkt) = 0x0803ec87;
 void* (*dmr_handle_data)(void *pkt, int len) = 0x0804b66d;
 //! Function that handles an incoming SMS.
 void* (*dmr_sms_arrive)(void *pkt)=0x0803f03d;
+//! Function that applies a squelch.
+void (*dmr_apply_squelch)(char *dmr_squelch_firsthing, int dmr_squelch_mode)=0x080303b5;
+//! Called before unsquelching.
+int (*dmr_before_squelch)()=0x0803ef6d;
 
+//! Determines the squelching of an incoming call.
+char* dmr_squelch_mode = 0x2001d35f;
+//! Unknown function involved in squelching.
+char** dmr_squelch_firstthing = 0x2001d118;
 
 
 //! Handle to the original (unhooked) upload handler.

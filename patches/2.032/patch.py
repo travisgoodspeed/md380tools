@@ -4,28 +4,16 @@
 
 from Patcher import Patcher
 
+#Match all public calls.
+monitormode=False;
+#Match all private calls.
+monitormodeprivate=False;
+
 if __name__ == '__main__':
     print "Creating patches from unwrapped.img.";
     patcher=Patcher("unwrapped.img");
     
-    #Old logo patcher, no longer used.
-    #fhello=open("welcome.txt","rb");
-    #hello=fhello.read();
-    #patcher.str2sprite(0x08094610,hello);
-    #print patcher.sprite2str(0x08094610,0x14,760);
-    
-    #Old patch, matching on the first talkgroup.
-    #We don't use this anymore, because the new patch is better.
-    #patcher.nopout(0x0803ee36,0xd1ef);
-    
-    # New patch for monitoring all talk groups , matched on first
-    # entry iff no other match.
-    #wa mov r5, 0 @ 0x0803ee86 # So the radio thinks it matched at zero.
-    patcher.sethword(0x0803ee86, 0x2500);
-    #wa b 0x0803ee38 @ 0x0803ee88 # Branch back to perform that match.
-    patcher.sethword(0x0803ee88,0xe7d6); #Jump back to matched condition.
-    #patcher.export("prom-public.img");
-    
+
 #     #These aren't quite enough to skip the Color Code check.  Not sure why.
 #     patcher.nopout(0x0803ea62,0xf040);  #Main CC check.
 #     patcher.nopout(0x0803ea64,0x80fd);
@@ -38,21 +26,8 @@ if __name__ == '__main__':
 #     patcher.nopout(0x0803eafe,0xf100); #Disable CRC check, in case CC is included.
 #     patcher.nopout(0x0803eb00,0x80af);
     
-    
-    #patcher.export("prom-colors.img");
-    
-    
-    # This should be changed to only show missed calls for private
-    # calls directed at the user, and to decode others without
-    # triggering a missed call.
-    patcher.nopout(0x0803ef10,0xd11f);  #Matches all private calls.
-    #patcher.export("prom-private.img");
-    
-    
-
-    #Everything after here is experimental.
-    #Everything after here is experimental.
-    #Everything after here is experimental.
+        
+    # Patches after here allow for an included applet.
     
     #This cuts out the Chinese font, freeing ~200k for code patches.
     patcher.ffrange(0x809c714,0x80d0f80);

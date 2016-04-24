@@ -60,12 +60,21 @@ extern void* (*dmr_call_start)(void *pkt);
 extern void* (*dmr_handle_data)(void *pkt, int len);
 //! Function that handles an incoming SMS.
 extern void* (*dmr_sms_arrive)(void *pkt);
+//! Function that applies a squelch.
+extern void (*dmr_apply_squelch)(char *dmr_squelch_firsthing, int dmr_squelch_mode);
+//! Called before unsquelching.
+extern int (*dmr_before_squelch)();
+
+
+//! Determines the squelching of an incoming call.
+extern char* dmr_squelch_mode;
+//! Unknown function involved in squelching.
+extern char** dmr_squelch_firstthing;
 
 
 
-
-//Pointer to the buffer that stores the bottom line of screen text.
-char *botlinetext;
+//! Pointer to the buffer that stores the bottom line of screen text.
+extern char *botlinetext;
 
 
 //ROM copy of the welcome bitmap.
