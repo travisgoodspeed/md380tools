@@ -1,3 +1,21 @@
+1137001,K4SWL,Thomas H Witherspoon,Thomas,Swannanoa,North Carolina,United States,DMR
+1137002,KK4RKU,Glenn A Allison,Allen,Canton,North Carolina,United States,DMR
+1137003,KM4IOU,Marty D Bumgarner,Marty,Granite Falls,North Carolina,United States,DMR
+1137004,KK4PLI,Keith Stroud,,Morehead City,North Carolina,United States,DMR
+1137005,KM4THM,Zachary Miller,Zach,Millers Creek,North Carolina,United States,DMR
+1137006,KK4SUH,Nicholas M Leclair,Nick,Newport,North Carolina,United States,DMR
+1137007,N4NTO,Tripp Owens,,Tarboro,North Carolina,United States,DMR
+1137008,KK4YPR,David L Harrelson,David,Tarboro,North Carolina,United States,DMR
+1137009,KM4BLG,Zachary M Thompson,Zach,Candler,North Carolina,United States,DMR
+1137010,KI4CFS,Martin W Brossman,Martin Brossman,Raleigh,North Carolina,United States,DMR
+1137011,KK4QEJ,Joni Julian,,Hillsborough,North Carolina,United States,DMR
+1137012,WX4WNC,Adam Caudill,,Clyde,North Carolina,United States,DMR
+1137013,N4TOK,Christopher L Davenport,Chris,South Mills,North Carolina,United States,DMR
+1137014,K4PVJ,Raymond G Mc Cracken,,Ahoskie,North Carolina,United States,DMR
+1137015,N3GCA,Paul J Apollonia,,Raleigh,North Carolina,United States,DMR
+1137016,N4CTT,Byron D Shore,,Greensboro,North Carolina,United States,DMR
+1137017,W3ENK,Charles P Wenk,Pete,Beaufort,North Carolina,United States,DMR
+1137018,K9FWA,Mark Barrera,,Lenoir,North Carolina,United States,DMR
 2021001,SV1BYK,Babis Kappatos,Babis,Athens,Attica,Greece,
 2021002,SV1PDW,Ioannis Barbat-Soskos,Ioannis,Athens,Attica,Greece,
 2021003,SV1IW,Manos Darkadakis,Manos,Athens,Attica,Greece,
@@ -30,6 +48,8 @@
 2021030,SV1AVT,Spyros Manikas,Spiretos,Argyroupolis,Attica,Greece,
 2021031,SY1AQH,Nikos Rigas,,Glyfada Athens,Attiki,Greece,
 2021032,SY1AWT,Dimitris Ganassoulis,,Athens,Attiki,Greece,
+2021033,SV1LIU,NIKOLAOS ,,ATHENS,Attica,Greece,
+2021034,SV1XV,Costas ,,Athens,Attiki,Greece,
 2022001,SV2XI,Kleanthis ,Kleanthis,Thessaloniki,Makedonia Thraki,Greece,
 2022002,SV2RGC,Konstantinos Makris,Konstantinos,Kastoria,Ipiros Ditiki Makedo,Greece,
 2022003,SV2LLJ,Ioannis Kokovidis,Giannis,Naoussa,Makedonia Thraki,Greece,
@@ -37,6 +57,7 @@
 2022005,SV2NFK,Eleutherios Tsotouridis,Akaliptos,Kastoria,Ipiros Ditiki Makedo,Greece,
 2022006,SV2HJZ,Vasileios Tsetsoa,,Argos Orestiko,Ipiros Ditiki Makedo,Greece,
 2022007,SV2GQO,Christoforos Mos,Christoforos,Kozani,Ipiros Ditiki Makedo,Greece,
+2022008,SV2DTK,CHRISTOS ,,THESSALONIKI,Makedonia Thraki,Greece,
 2023001,SV3BSF,Nikos Karkavelias,Nick,Patra,Peloponnisos,Greece,
 2024001,SV4QXF,Efthimios Floros,Efthimios,Trikala,Thessalia,Greece,
 2024002,SV4LRX,Antonis Sotiriou,Asot,LARISSA,Thessalia,Greece,
@@ -535,6 +556,7 @@
 2043091,PA9MD,Michel Van Deventer,Michel,Wijk bij Duurstede,Utrecht,Netherlands,
 2043092,PD3UTR,Ronald Weijers,Ronald,Vianen,Utrecht,Netherlands,
 2043093,PA0MPL,Mick VanderPols,Mick,Nieuwegein,Utrecht,Netherlands,
+2043097,PD0G, ,Gerton,,,,
 2044001,PD4RS,Ruud ,Ruud,Heerlen,Limburg,Netherlands,Portable
 2044002,PD4RS,Ruud ,Ruud,Heerlen,Limburg,Netherlands,Mobile
 2044003,PA7DVM,Duncan ,Duncan,Kerkrade,Limburg,Netherlands,Mobile
@@ -776,7 +798,7 @@
 2046036,PA3BKO,Koen ,Koen,Apeldoorn,Gelderland,Netherlands,Portable
 2046037,PD2RMV,Richard ,Richard,Apeldoorn,Gelderland,Netherlands,
 2046038,PI9XXT,Test ,,Arnhem,Gelderland,Netherlands,
-2046039,PD0FDX,Tom ,Tom,Apeldoorn,,Netherlands,
+2046039,PD2MZ,Marcel ,Tom,Poederoijen,,Netherlands,
 2046040,PD4K,Klaas ,Klaas,Putten,Gelderland,Netherlands,Portable
 2046041,PG8M,Marcel ,Marcel,Afferden,Gelderland,Netherlands,Mobile
 2046042,PA3RD,Reink Van Dijk,Reink,Westervoort,Gelderland,Netherlands,Portable
@@ -1119,6 +1141,7 @@
 2048114,PD1LDB,Leo De Blaauw,Leo,Leeuwarden,Friesland,Netherlands,
 2048115,PA3FSA,Johnny Dekker,Johnny,Pietersbierum,Friesland,Netherlands,
 2048116,PA3ANT,Anton Landman,Anton,Assen,Drenthe,Netherlands,
+2048118,PE1RYN,Jan ,Jan,Drachten,Drenthe,Netherlands,
 2060001,ON4AIM,Aime ,Aime,Oostende,West-Vlaanderen,Belgium,Portable
 2060002,ON3AN,Ann ,Ann,Oostende,West-Vlaanderen,Belgium,Portable
 2060003,ON2WIK,Marc ,Marc,Oostende,West-Vlaanderen,Belgium,Portable
@@ -1556,6 +1579,7 @@
 2064059,ON6ZG,Jan Engelen,Jan,Bree,Limburg,Belgium,
 2064060,ON8AR,Erwin Fiten,Erwin,Bree,Limburg,Belgium,
 2064061,ON7YT,Rudi Geerits,Rudi,Gruitrode,Limburg,Belgium,
+2064062,ON6JZ,Hubert ,,Kinrooi,Limburg,Belgium,
 2064063,ON3DLP,Yves Franssen,Yves,Herk-de-Stad,Limburg,Belgium,
 2064064,ON3IA,Frederik Vandeweyer,Frederik,Bilzen,Limburg,Belgium,
 2064065,ON3BC,Bert Colemont,,Waasmont,Limburg,Belgium,
@@ -1565,6 +1589,7 @@
 2064069,ON3RE,Remy Kallen,Remy,Riemst,Limburg,Belgium,
 2064070,ON3AQC,Casimir Seminck,Cas,Zonhoven,Limburg,Belgium,
 2064071,ON8CV,Clement Vandegoor,Clement,Genk,Limburg,Belgium,
+2064073,ON4MLB,Clubstation MLB ,,Genk,Limburg,Belgium,
 2065001,ON4REC,REEC ,REEC,Beauvechain,Brabant wallon,Belgium,Portable
 2065002,ON3XBS,Serge Schleusner,Serge,Beauvechain,Wal. Brabant,Belgium,
 2065003,ON3CCM,Moreno Caveye,Moreno,Menen,Wal. Brabant,Belgium,
@@ -1821,6 +1846,7 @@
 2081024,F1HGH,Christian DARBOT,Chris,Aix-en-Provence,Provence-Alpes-Cte d,France,
 2081025,F5MDR,Michel CAREDDU,Miche,ISTRES,Provence-Alpes-Cte d,France,
 2081026,F1CEM,Andr Monterymard,Andr,Saint etienne,Provence-Alpes-Cte d,France,
+2081027,F4VRJ,Teodor ,,Isle sur la sorgue,Provence-Alpes-Cte dAzur,France,
 2082001,F4FUL,Cyril ,Cyril,Sciez,Rhone-Alpes,France,
 2082002,F5VIN,Heiko Damerau,Heiko,Thoiry,Rhone-Alpes,France,
 2082003,F1AGU,Charles-Henri SAP,Charles-Henri,Aillon Le Vieux,RhÃÂne-Alpes,France,
@@ -2267,8 +2293,8 @@
 2141099,EB1FE,Jose ,,Oviedo,Principado de Asturias,Spain,
 2141100,EA1EXB,JOSE LUIS ,,A CORUaeA,Galicia,Spain,
 2141101,EB1DPB,Jose Manuel ,,A Coruna,Galicia,Spain,
-2141102,EA1AGM,Baltasar ,,Isla Playa,Cantabria,Spain,
-2141103,EA1HEU,Luis ,,Valladolid,Castilla y Leuan,Spain,
+2141102,EA1SK,FRANCISCO JAVIER ,,MURIEDAS,Cantabria,Spain,
+2141103,EA1TA,Francisco Manuel ,,Via cl Lubre 24 Berg,Galicia,Spain,
 2141104,EA1IRC,Gervasio Andrs ,,A Corua,Galicia,Spain,
 2142001,EA2IP,Jesus ,Jesus,Sestao,Basque Country,Spain,
 2142002,EA2IV,Alex BONILLO,Alex,Huesca,Aragon,Spain,
@@ -2330,6 +2356,7 @@
 2142058,EA2DCR,Agustin Zubasti madoz,Agustin,Artica-navarra,Navarra,Spain,
 2142059,EB2GEV,Jos Miguel Orueta Michelena,EB2GEV,Bilbao,Basque Country,Spain,
 2142060,EB2YA,JESUS ,,Vitoria,Basque Country,Spain,
+2142061,EA2AR,Angel ,,Obanos,Navarra,Spain,
 2143001,EA3DKP,Ricardo ,Ricardo,Roses,Girona,Spain,Portable #1
 2143002,EA3DKP,Ricardo ,Ricardo,Roses,Girona,Spain,Portable #2
 2143003,EA3DKP,Ricardo ,Ricardo,Roses,Girona,Spain,Portable #3
@@ -2443,8 +2470,11 @@
 2143111,EA3GWW,Medardo ,,San Adrian del Besos,Cataluna,Spain,
 2143112,EA3EPE,Pere ,,Masquefa,Cataluna,Spain,
 2143113,EB3EAW,Miguel Angel ,,Badalona,Cataluna,Spain,
-2143114,EA3FLR,DAVID ,,BADALONA,Cataluna,Spain,
-2143115,EA3HSQ,Josep ,,Badalona,Cataluna,Spain,
+2143114,EA3HHV,Christian ,,Sant Esteve Sesrovir,Cataluna,Spain,
+2143115,EA3HBI,JUAN ,,BADALONA,Cataluna,Spain,
+2143116,EA3HSQ,Josep ,,Badalona,Cataluna,Spain,
+2143117,EA3GVJ,Fransesc ,,Badalona,Cataluna,Spain,
+2143118,EB3FLR,David ,,Badalona,Cataluna,Spain,
 2144001,EA5IIO,ANTONIO ,,Albacete,Castile-La Mancha,Spain,
 2144002,EA4GQW,Pablo Cortes,Pablo,Madrid,Community of Madrid,Spain,
 2144003,EA4AAE,Javier Coso,Javier,Madrid,Community of Madrid,Spain,
@@ -2492,6 +2522,7 @@
 2144045,EA4AXH,Antonio ,,S.S. De los Reyes,excluding Albacete,Spain,
 2144046,EA4DGT,ADA ,,VALDEMORO,excluding Albacete,Spain,
 2144047,EA4GME,David ,,Madrid,excluding Albacete,Spain,
+2144048,EA4GPG,Ramiro ,,Madrid,excluding Albacete,Spain,
 2144049,EA4GLC,Jose Vicente Moreno Picazo,Jose,Cuenca,excluding Albacete,Spain,
 2144050,EA4DRI,Luis Escribano,Luis,Madrid,excluding Albacete,Spain,
 2144051,EA4FCO,Julian Gonzalez,Ea4fco,Cabeza del buey,excluding Albacete,Spain,
@@ -2580,8 +2611,12 @@
 2145080,EA5IKN,Antonio Caro Gonzalez,NecroLord,Albacete,Castilla-La Mancha,Spain,
 2145081,EA5URI,URE ELDA SECCION COMARCAL,URE ELDA,ELDA,Comunidad Valenciana,Spain,
 2145082,EB5BQC,ALFONSO PASTOR JUAN SALVADOR,JUAN SALVADOR,Petrer,Valencian Community,Spain,
-2145083,EA5IBJ,JUAN ,,Polinya del xuquer,Valencian Community,Spain,
-2145084,EA5GXB,JUAN RICARDO ,,Balazote,Castilla-La Mancha,Spain,
+2145083,EB5DXJ,JOSE MIGUEL ,,ALICANTE,Valencian Community,Spain,
+2145084,EB5CHE,JOSE MANUEL ,,PETRER,Valencian Community,Spain,
+2145085,EA5IMS,PACO ,,CARTAGENA,Regiuan de Murcia,Spain,
+2145086,EA5GXB,JUAN RICARDO ,,Balazote,Castilla-La Mancha,Spain,
+2145087,EA5IBJ,JUAN ANTONIO ,,Polinya del xuquer,Valencian Community,Spain,
+2145088,EA5IMC,Candido ,,VILLAJOYOSA-LA VILA ,Valencian Community,Spain,
 2146001,EA6AFZ,Antonio Lopez,Antonio,Inca,Islas Baleares,Spain,
 2146002,EA6AID,Ana Macian,Ana,Inca,Islas Baleares,Spain,
 2146003,EA6AFZ,Antonio Lopez Segade,Antonio,Inca,Islas Baleares,Spain,
@@ -2662,6 +2697,8 @@
 2147066,EA7JYO,Daniel Salagean,Denis,Roquetas de Mar,Andalucia,Spain,
 2147067,EA7JMW,JOSE ,,CADIZ,Andalucia,Spain,
 2147068,EA7ACU,GABRIEL ,,CORDOBA,Andalucia,Spain,
+2147069,EA7JAZ,GUILLERMO ,,Puerto Real,Andalucia,Spain,
+2147070,EC7AKL,Joaquin ,,El Puerto de Santa M,Andalucia,Spain,
 2148001,EA8YAT,Alfred ,Alfred,Las Palmas,Islas Canarias,Spain,Portable
 2148002,EA8EE,Jose ,Jose,Las Palmas,Islas Canarias,Spain,
 2148003,EA8EE,Jose Manuel Martinez,Jose Manuel,Las Palmas,Islas Canarias,Spain,
@@ -2806,7 +2843,7 @@
 2190002,9A5DW,Johann Schmidt,Johann,Zadar,,Croatia,
 2190003,9A0W,Ivan Vlasic,Ivan,Oroslevje,,Croatia,
 2190004,9A2JY,Boris Vrbanovic,Boris,Zagreb,,Croatia,
-2220001,IK0YYY,Luca ,Luca,Rome,Lazio,Italy,Portable#1
+2220001,IK0YYY,Luca ,Luca,Rome,,Italy,
 2220002,IK0YYY,Luca ,Luca,Rome,Lazio,Italy,Portable#2
 2220003,IW0BEC,Eugenio ,Eugenio,Rome,Lazio,Italy,Portable
 2220004,IT9LRZ,Giovanni ,Giovanni,Rome,Lazio,Italy,Portable
@@ -3004,6 +3041,7 @@
 2220196,IZ0WPQ,Francesco DAmico,Francesco,Cassino,Lazio,Italy,
 2220197,IZ0RRZ,Giampiero Stentella,Giampjst,Stroncone,Umbria,Italy,
 2220198,IZ0GEB,Giovanni Meloni,IZ0GEB,Rieti,Lazio,Italy,
+2220199,IZ0OBR,Ricciatti ,,Bracciano,Lazio,Italy,
 2220200,I0KTE,Stefano Ricciardetto,Steve,MORLUPO (RM),Lazio,Italy,
 2220201,I0BYR,Aldo Rossi,Aldo,Roma,Lazio,Italy,
 2220202,IU0GCR,Antonio Angeloni,Tonyroma73,Roma,Lazio,Italy,
@@ -3049,6 +3087,8 @@
 2220242,IK0ZSP,Claudio Gentili,,Rome,Lazio,Italy,
 2220243,IZ0SGB,Mario ,iz0sgb,Aprilia,Lazio,Italy,
 2220249,IS0GF,Giovanni ,is0gf,Cagliari,Cagliari,Italy,
+2220255,IW0HJR,Romano ,IW0HJR,Monterotondo,Lazio,Italy,
+2220258,IW0SAG,Fabio ,Iw0sag,Bastia,Umbria,Italy,
 2220900,IW0UIF,Natale ,Natale,Oristano,Sardinia,Italy,Mobile
 2220901,IS0XDA,Gianni ,Gianni,Sinnai,Sardinia,Italy,Mobile
 2220902,IS0AYI,Paolo ,Paolo,Cagliari,Sardinia,Italy,Mobile
@@ -3492,7 +3532,7 @@
 2222240,IZ2GIL,Gilberto Villa,Gil,Milano,Lombardy,Italy,
 2222241,IW2ESE,Limonta Maurizio,Limonta,Brivio Lc,Lombardy,Italy,
 2222242,IW2GQE,Franco Boffelli,Franco,MIlano,Lombardy,Italy,
-2222243,IU2BWK,Eddy Padovani,,Ses San Giova,Lombardy,Italy,ID wird durch Pirat benutzt.
+2222243,IU2BWK,Eddy Padovani,,Ses San Giova,Lombardy,Italy,
 2222244,IU2GLU,Giovanni Cattaneo,Gianni,Erba,Lombardy,Italy,
 2222245,IZ2WYY,Carlo Bellati,,Premana,Lombardy,Italy,
 2222246,IZ2LSC,Andrea Timpanaro,,Solaro,Lombardy,Italy,
@@ -3528,6 +3568,7 @@
 2222276,IW2JYG,Umberto ,Umberto,Ispra,Lombardy,Italy,
 2222277,IW2CQO,Paolini ,,Villimpenta,Lombardy,Italy,
 2222278,IW2BUG,Massimo ,iw2bug,Castelleone,Lombardy,Italy,
+2222288,IW2KWS,Massimo ,Iw2kws,Cernusco Sul Navigli,Lombardy,Italy,
 2222290,IK2FYK,Roberto ,ik2fyk,Capriate San Gervasi,Lombardy,Italy,
 2223001,IW3SRH,Stefano ,Stefano,Trieste,Friuli-Venetia Giuli,Italy,Portable
 2223002,IV3DVE,Corrado ,Corrado,Trieste,Friuli-Venetia Giuli,Italy,Portable
@@ -3745,6 +3786,7 @@
 2223215,IN3IZQ,Danilo Datres,Danilo,Preghena di livo   t,Trentino-Alto Adige,Italy,
 2223216,IN3EIN,MICHELE MARTINELLI,MICHELE MARTINELLI,Rumo,Trentino-Alto Adige,Italy,
 2223217,IU3CUJ,Fabrizio Maccarini,Makka,Valeggio sul Mincio,Veneto,Italy,
+2223218,IU3FVW,Claudio ,,Verona,Veneto,Italy,
 2223219,IN3FAH,Guido Samuel Rifesser,Guido,Brixen,Trentino-Alto Adige/,Italy,
 2223220,IN3ADE,Roberto Marcolla,Robybz,Bolzano,Trentino-Alto Adige/,Italy,
 2223221,IN3DPT,Guido Senoner,,Santa Cristina,Trentino-Alto Adige/,Italy,
@@ -3988,6 +4030,8 @@
 2226100,IW6CAE,Simone ,IW6CAE,Ancona,Marche,Italy,
 2226101,IW6ORW,Fernando Egidio ,,Acciano,Abruzzo,Italy,
 2226102,IK6TIJ,Vincenzo ,ik6tij,Pianella,Abruzzo,Italy,
+2226110,IZ6RNV,Pietro ,Iz6rnv,Aquila,Abruzzo,Italy,
+2226111,IZ6JVB,Ernesto ,,LAquila,Abruzzo,Italy,
 2227001,IZ7OIX,Domingo ,Domingo,Bari,Apulia,Italy,Portable
 2227002,IZ7GLL,Massimo ,Massimo,Bari,Apulia,Italy,Mobile
 2227003,IZ7ZFT,Silvio ,Silvio,Rutigliano,Apulia,Italy,Mobile
@@ -4051,7 +4095,7 @@
 2227061,IZ7WEM,Antonio Ressa,Antonio,Cellamare,Puglia,Italy,
 2227062,IZ7DOZ,Pasquale Loconte,Pasquale,Andria (BT),Puglia,Italy,
 2227063,IU7EPP,Giancarlo De Bellis,Giancarlo,Valenzano,Puglia,Italy,
-2227064,IW7CLG,iovanni Milella,iovanni,Noicattaro,Puglia,Italy,
+2227064,IW7CLG,Giovanni Milella,iovanni,Noicattaro,Puglia,Italy,
 2227065,IZ7YVH,Antonio Lopopolo,Antonio,Bisceglie,Puglia,Italy,
 2227066,IZ7KYS,Claudio Fersini,,Maglie,Puglia,Italy,
 2227067,IK7XIW,Angelo Fumarola,Angelo,Grottaglie,Puglia,Italy,
@@ -4155,7 +4199,7 @@
 2228093,IZ8PWN,Michele Veneziale,Michele,Sant Agapito,Molise,Italy,
 2228094,IW8ELS,Michele Giannattasio,,Solofra ( AV),Campania,Italy,
 2228095,IW8XOU,Massimo Cuomo,,Monteroduni,Molise,Italy,
-2228096,IK8NSI,Crea ,Ik8nsi,Reggio Calabria,Calabria,Italy,
+2228096,IK8NSI,Sebastiano ,Ik8nsi,Reggio Calabria,Calabria,Italy,
 2228099,IZ8DQG,Vincenzo ,,Battipaglia,Campania,Italy,
 2229001,IT9YFO,Andrea ,Andrea,Catania,Sicily,Italy,Mobile
 2229002,IT9ZON,Francesco ,Francesco,Catania,Sicily,Italy,Mobile
@@ -4328,6 +4372,7 @@
 2266029,YO6FNX,Dumitru Udrea,Dumitru,Brasov,Municipiul Bucureti,Romania,
 2266030,YO6IGJ,Ciprian Purice,Ciprian,Brasov,Judeul Braov,Romania,
 2268001,YO8TEH,Stirbu Isidor,Stirbu,Bacau,Bacu County,Romania,
+2268002,YO8RCM,Teodor ,,ROMAN,Neamo County,Romania,
 2269001,YO9ION,Ionut ,Ionut,Ploiesti,Prahova,Romania,Mobile
 2269002,YO9ION,Ionut ,Ionut,Ploiesti,Prahova,Romania,Portable
 2269003,YO9MB,Mitica ,Mitica,Baicoi,Prahova,Romania,Mobile#1
@@ -4829,7 +4874,7 @@
 2288019,HB9WNT,Roland ,Roland,Winterthur,Winterthur,Switzerland,Portable#2-VHF
 2288020,HB9WNT,Roland ,Roland,Winterthur,Winterthur,Switzerland,Mobile#2-VHF
 2288021,HB9DRX,Nick ,Nick,Maennedorf,Zuerich,Switzerland,Portable#1
-2288022,HB9DR,Club Call Digital Radio Club,Club Call,Waedenswil,,Switzerland,Portable
+2288022,HB9DR,Club Call Digital Radio Club,Club Call,Waedenswil,Zuerich und Thurgau,Switzerland,
 2288023,HB9DRX,Nick ,Nick,Maennedorf,Zuerich,Switzerland,Portable#2
 2288024,HB9DRX,Nick ,Nick,Maennedorf,Zuerich,Switzerland,Mobile
 2288025,HB9DRX,Nick ,Nick,Maennedorf,Zuerich,Switzerland,Mobile#2
@@ -5122,6 +5167,7 @@
 2307008,OK2NID,Miroslav Vanek,,Pribor,Moravian-Silesian Re,Czech Republic,
 2307009,OK2VR,Radim Jarolim,Midar,Havirov 4,Moravskoslezsky,Czech Republic,
 2307010,OK8GKL,Gyurka Levente,Levi,Litovel,Olomouc Region,Czech Republic,
+2307011,OK8UOF,Oleksandr ,,Ostrava,Moravian-Silesian Region,Czech Republic,
 2311001,OM1ATS,Daniel ,Daniel,Bratislava,BratislavskÃ½,Slovakia,Portable
 2311002,OM1AEG,Anton Srnka,Anton,Bratislava,Bratislavsky,Slovakia,
 2311003,OM1EI,Marian Nagy,Marian,Bratislava,Bratislavsky,Slovakia,
@@ -6092,6 +6138,7 @@
 2341339,M6POB,Brian Campbell,Brian,Sefton,England,United Kingdom,
 2341340,G1ZIG,Richard Hudson,Ziggy,Chesterfield,England,United Kingdom,
 2341341,M3KIR,Karen Romang,Karen,Corsham,England,United Kingdom,
+2341342,G8BHE,Norman ,,Birmingham,England,United Kingdom,
 2341343,M0WJN,Teric Chan,Jon,London,England,United Kingdom,
 2341344,M6HOF,Steve Baines,Steve,Gloucester,England,United Kingdom,
 2341345,G0ELM,Philip Green,Phil,Parbold,England,United Kingdom,
@@ -6101,6 +6148,7 @@
 2341349,M0HBK,Carlos Sartorius,Carlos,Englefield Green,England,United Kingdom,
 2341350,G6JVT,Colin Santer,G6jvt,Worthing,England,United Kingdom,
 2341351,2E0TMI,Philip Boxx,Phil,North Shields,England,United Kingdom,
+2341352,M6MNK,Peter ,,Birkenhead,England,United Kingdom,
 2341353,M6BPA,Anna Parnell-brookes,Monkee,Chippenham,England,United Kingdom,
 2341354,M0SAS,Steve Wellon,Steve,Worcester,England,United Kingdom,
 2341355,2E0LBI,Les Bell,Belly,Barrow in Furness,England,United Kingdom,
@@ -6112,9 +6160,11 @@
 2341361,G7MMF,Stephen Morris,Steve,Gillingham,England,United Kingdom,
 2341362,M0VFC,Robert Chipperfield,M0VFC,Cambridge,England,United Kingdom,
 2341363,M3KHE,Kelvin Bradley,Nutty,Kirkby in ashfield,England,United Kingdom,
+2341364,G4CUI,Greg ,,Sheffield,England,United Kingdom,
 2341365,M0MFF,Michael Jury,Mike,Gillingham,England,United Kingdom,
 2341366,2E0BTX,Peter Chamberlain,Irlampete,Wigan,England,United Kingdom,
 2341367,M1CXF,Trevor Corney,TJ,ILKESTON,England,United Kingdom,
+2341368,G7WKV,Benjamin ,,Kettering,England,United Kingdom,
 2341369,G0CUQ,Gary Milton,Gary,Huddersfield,England,United Kingdom,
 2341370,M0MMB,Mike Byrne,M0MMB,Canvey Island,England,United Kingdom,
 2341371,G4TVR,Simon Hawkins,Simon,Birmingham,England,United Kingdom,
@@ -6138,6 +6188,7 @@
 2341389,MB6INK,Steve Gibbs,Tibs01,Kent,England,United Kingdom,
 2341390,G1BBI,Karl Ford,Karl,Bracknell,England,United Kingdom,
 2341391,M0YDJ,Darran Jackson,DJ,Manchester,England,United Kingdom,
+2341392,G7OSR,Graham ,,Milton Keynes,England,United Kingdom,
 2341393,MB6ZE,Jamie Somerville,Jamie,HASTINGS,England,United Kingdom,
 2341394,M6HAP,Arron Huelin,Happy,Chatham,England,United Kingdom,
 2341395,G2AXQ,John Walker,John,Wisbech,England,United Kingdom,
@@ -6183,6 +6234,8 @@
 2341436,M0HXH,John Matthewson,John boy,Nottingham,England,United Kingdom,
 2341437,M0FXB,Andreas Macrides,M0fxb,Weston super mare,England,United Kingdom,
 2341438,G7TRJ,Peter Sharkey,Peter,Coventry,England,United Kingdom,
+2341439,M3UKO,Neil ,,Hereford,England,United Kingdom,
+2341440,G6DCT,David ,,Sheffield,England,United Kingdom,
 2341441,G8CUX,Denis Stanton,Denis,Caterham Surrey,England,United Kingdom,
 2341442,M1GXL,Terry Higginson,Terry,Biggleswade,England,United Kingdom,
 2341443,M0JOH,John Godfrey,John,Nottingham,England,United Kingdom,
@@ -6206,6 +6259,7 @@
 2341461,2E0HRJ,Robin Huelin,Rob 2E,Walderslade,England,United Kingdom,
 2341462,M6HRJ,Robin Huelin,Rob M6,Walderslade,England,United Kingdom,
 2341463,M1DQG,Ronald Kennedy-bright,Ron,Shrewsbury,England,United Kingdom,
+2341464,M6SNN,Sebastian ,,Birmingham,England,United Kingdom,
 2341465,M6KDI,Lawrence Azzopardi,Lawrence,Salisbury,England,United Kingdom,
 2341466,G0SCX,Geoffrey Hobbs,AVUS,Southampton,England,United Kingdom,
 2341467,M6HDY,David Hardy,David,Birmingham,England,United Kingdom,
@@ -6246,7 +6300,9 @@
 2341502,G6ISY,Lawrence Hill,Laurie,WATERLOOVILLE,England,United Kingdom,
 2341503,M6LLD,Anthony Clark,Clarky,Liverpool,England,United Kingdom,
 2341504,G7KDQ,Ken Roan,G7kdq,Sheffield,England,United Kingdom,
+2341505,G0SLR,Roy ,,Warrington,England,United Kingdom,
 2341506,M6GOF,Mark Stitt,Mark,West Lancashire,England,United Kingdom,
+2341507,2E0CXH,Phill ,,Seagry,England,United Kingdom,
 2341508,G6YEK,DES HEARD,Demma,WESTON-SUPER-MARE,England,United Kingdom,
 2341509,G8SFA,Sydney Carruthers Milsom,Sydney Carruthers,Prudhoe,England,United Kingdom,
 2341510,G0IMN,Jeff Hudson,Jeff,Tamworth,England,United Kingdom,
@@ -6569,10 +6625,10 @@
 2341827,G7MZY,Ian Sharp,Pirhanas,Bath,England,United Kingdom,
 2341828,G8SEZ,Brian Morrison,Brian,Bedford,England,United Kingdom,
 2341829,M6GGU,Callum Haines,Callum,Peterborough,England,United Kingdom,
-2341830,M3YOB,Peter ,,Radstock,England,United Kingdom,
+2341830,G6DKS,Roy ,,London,England,United Kingdom,
 2341831,M0XGD,Graeme Edward Davies,Graeme,Prudhoe,England,United Kingdom,
 2341832,G0TMP,Malcolm Lane,Malcolm-G0TMP,Cheltenham,England,United Kingdom,
-2341833,2E0UEM,Colin ,,Birmingham,England,United Kingdom,
+2341833,G6TSF,Paul ,,Slough,England,United Kingdom,
 2341834,M0XAI,Richard Eyre,Rich,Chesterfield,England,United Kingdom,
 2341835,G4WMH,Warwick Hall,G4WMH,Solihull,England,United Kingdom,
 2341836,2E0EUI,Damien Nolan,Damien,London,England,United Kingdom,
@@ -6587,6 +6643,7 @@
 2341845,2E0IHO,Keith ,,Ellesmere Port,England,United Kingdom,
 2341846,2E0RRF,Derry ,,Derby,England,United Kingdom,
 2341847,G4WQB,Keith ,,Amersham,England,United Kingdom,
+2341848,M3ZZF,DAMON ,,SITTINGBOURNE,England,United Kingdom,
 2341849,M6MKX,Stephen ,,Manchester,England,United Kingdom,
 2341850,G0OJG,Joseph ,,Runcorn,England,United Kingdom,
 2341851,G1OLE,David ,,Worthing, West Susse,England,United Kingdom,
@@ -6615,6 +6672,7 @@
 2341874,M1EMB,Stuart ,,Stevenage,England,United Kingdom,
 2341875,G6THR,James ,,Wolverhampton,England,United Kingdom,
 2341876,2E0DMN,Daniel ,,Hull,England,United Kingdom,
+2341877,M0JMS,James ,,North Walsham,England,United Kingdom,
 2341878,M0IMA,Philip ,,Swanscombe,England,United Kingdom,
 2341879,G4AEH,James ,,Nuneaton,England,United Kingdom,
 2341880,2E0JWJ,Dennis ,,Westbury,England,United Kingdom,
@@ -6630,19 +6688,69 @@
 2341890,M0GLF,Joey ,,London,England,United Kingdom,
 2341891,2E0XTV,Terence ,,Birmingham,England,United Kingdom,
 2341892,G3KYG,Robin ,,Southampton,England,United Kingdom,
-2341893,M0AOV,Robert ,,Mablethorpe,England,United Kingdom,
-2341895,M6CRE,Cyril ,,Skegness,England,United Kingdom,
-2341896,M0ROC,Mark ,,Hitchin,England,United Kingdom,
+2341893,M0NVH,Gareth ,,Wigan,England,United Kingdom,
+2341894,M6LAB,Luke ,,Ellesmere port,England,United Kingdom,
+2341895,M3WCA,William ,,London,England,United Kingdom,
+2341896,M6OVE,Garry ,,Leeds,England,United Kingdom,
 2341897,G0WFS,Nigel ,,Leicester,England,United Kingdom,
-2341898,G8CQH,Peter ,,Birmingham,England,United Kingdom,
+2341898,M0PWW,Peter ,,Redhill,England,United Kingdom,
 2341899,M0ORC,Jonathan ,,Bromley,England,United Kingdom,
-2341900,M3PIL,Robert ,,Ferndown,England,United Kingdom,
-2341901,M3XKC,John ,,Ipswich,England,United Kingdom,
-2341902,M6GMQ,Brian ,,Worthing,England,United Kingdom,
-2341903,G3YTT,Bill ,,Tamworth,England,United Kingdom,
-2341904,2E0DWG,David ,,Westerham,England,United Kingdom,
-2341905,M6SSO,Sam ,,Four Marks,England,United Kingdom,
-2341907,G8FGK,Arthur ,,Jarrow,England,United Kingdom,
+2341900,G7OMT,Matt ,,Leicester,England,United Kingdom,
+2341901,G3VXF,Brian ,,Hindhead,England,United Kingdom,
+2341902,G6TRG,Paul ,,Hebden Bridge,England,United Kingdom,
+2341903,M6SSO,Sam ,,Four Marks,England,United Kingdom,
+2341904,G3YTT,Bill ,,Tamworth,England,United Kingdom,
+2341905,M0MMZ,Stuart ,,Leighton Buzzard,England,United Kingdom,
+2341906,M0LPF,Brynley ,,Birmingham,England,United Kingdom,
+2341907,G7HIF,Stuart ,,Towcester,England,United Kingdom,
+2341908,G6UAN,Michael ,,Southampton,England,United Kingdom,
+2341909,M0SGS,Stuart ,,Pudsey,England,United Kingdom,
+2341910,M0KVC,Ryszard ,,Scunthorpe,England,United Kingdom,
+2341911,G7OLH,Alan ,,London,England,United Kingdom,
+2341912,G4ERQ,Tony ,,Alsager Cheshire,England,United Kingdom,
+2341913,M0ROC,Mark ,,Hitchin,England,United Kingdom,
+2341914,M0SYG,ANTONY ,,Cheltenham,England,United Kingdom,
+2341915,G0UEU,Andy ,,Sawbridgeworth,England,United Kingdom,
+2341916,M6GMC,TERRY ,,Banbury,England,United Kingdom,
+2341917,M6HMS,Matthew ,,Tamworth,England,United Kingdom,
+2341918,M6THF,Mark ,,Dudley,England,United Kingdom,
+2341919,M6GVQ,CHRISTOPHER ,,MIDDLESBROUGH,England,United Kingdom,
+2341920,M0JLY,Andy ,,Cheltenham,England,United Kingdom,
+2341921,G4HGI,Richard ,,Billinge,England,United Kingdom,
+2341922,G1PVZ,James ,,Crewkerne,England,United Kingdom,
+2341923,M6TLX,Matthew ,,Warrington,England,United Kingdom,
+2341924,M0CCA,Stephen ,,Plymouth,England,United Kingdom,
+2341926,M6PHC,Paul ,,High Wycombe,England,United Kingdom,
+2341927,G0VXY,Gregory ,,London,England,United Kingdom,
+2341928,G6VGN,Ken ,,Notts,England,United Kingdom,
+2341929,M0MBS,Malcolm ,,Manchester,England,United Kingdom,
+2341930,2E0FOL,William ,,Chapel En le frith ,,England,United Kingdom,
+2341931,2E0XMT,Tommy ,,London,England,United Kingdom,
+2341932,G0MPI,Stephen ,,Farnborough,England,United Kingdom,
+2341933,M6BPC,GARY ,,DARTFORD,England,United Kingdom,
+2341934,M6KIG,KEN ,,NORTHFLEET,England,United Kingdom,
+2341935,M1YAP,Alexander ,,Crawley,England,United Kingdom,
+2341936,2E0LOW,Mark ,,Durham,England,United Kingdom,
+2341937,G6ABF,Anthony ,,Portsmouth,England,United Kingdom,
+2341938,M6IVI,John ,,Blackpool,England,United Kingdom,
+2341939,M3FNM,Peter ,,London,England,United Kingdom,
+2341940,G0SLN,Peter ,,Sunderland,England,United Kingdom,
+2341941,G4NXH,Andrew ,,Sunderland,England,United Kingdom,
+2341943,M6TIV,Curtis ,,Stoke-on-Trent,England,United Kingdom,
+2341944,2E0SXR,Darren ,,Northwich,England,United Kingdom,
+2341945,G0VIQ,Eugene ,,Crawley,England,United Kingdom,
+2341947,2E0JSK,Steve ,,London,England,United Kingdom,
+2341948,2E0DOZ,Dorian ,,Fleet,England,United Kingdom,
+2341949,G6AOH,Richard ,,Tadley,England,United Kingdom,
+2341950,M6SLX,John ,,Stoke-on-Trent,England,United Kingdom,
+2341951,G4VUD,John ,,Newton Abbot,England,United Kingdom,
+2341952,2E1RAF,Roy ,,Letchworth,England,United Kingdom,
+2341953,M6LHH,Bradley ,,Reading,England,United Kingdom,
+2341954,G4DMH,Malcolm ,,Doncaster,England,United Kingdom,
+2341955,M6JJG,Jeremy ,,Kempsford,England,United Kingdom,
+2341956,M3JQN,Vincenzo ,,Spilsby,England,United Kingdom,
+2341957,M0SCK,Duncan ,,Stoke on Trent,England,United Kingdom,
+2341958,M0LOM,Paul ,,Harlow,England,United Kingdom,
 2350001,G8SJP,Iain ,,Aylesbury,England,United Kingdom,
 2351001,G0PRF,John ,John,Huddersfield,West Yorkshire,United Kingdom,Portable
 2351002,G0PRF,John Goodwin ,,Huddersfield,West Yorkshire,United Kingdom,Mobile
@@ -7957,7 +8065,7 @@
 2352311,G4BXY,Harry Barker,Harry,Reading,England,United Kingdom,
 2352312,G6ZWQ,Caroline Williams,Caroline,Huddersfield,England,United Kingdom,
 2352313,M6NGO,Charlie Stevens,Charlie,Saint Albans,England,United Kingdom,
-2352314,G0NWI,Peter Martin,Peter,Blackburn,England,United Kingdom,
+2352314,M0NWI,Peter Martin,Peter,Blackburn,,United Kingdom,
 2352315,G1RUN,Lewis Hunter,Lewis,Manchester,England,United Kingdom,
 2352316,M1ATM,Graham Monks,Graham,Manchester,England,United Kingdom,
 2352317,G4RKY,Matt Beasant,Matt,Winscombe,England,United Kingdom,
@@ -8786,6 +8894,7 @@
 2353144,GW7VBE,Diane Harris,Diane,Blaengarw,Wales,United Kingdom,
 2353145,2W0HFU,Gareth Ralls,2W0HFU,Merthyr Tydfil,Wales,United Kingdom,
 2353146,GW8OGI,Ian Wareing,Ian,Abergele,Wales,United Kingdom,
+2353147,MW1FDN,David ,,Newport,Wales,United Kingdom,
 2353148,MW0AEL,Selwyn Townsend,Selwyn,Bridgend,Wales,United Kingdom,
 2353149,MW3HKH,Steven Crighton,Mw3hkh,Ebbw Vale,Wales,United Kingdom,
 2353150,MW0MWZ,Andrew Taylor,Andy,Blackwood,Wales,United Kingdom,
@@ -8826,9 +8935,11 @@
 2353185,GW7JKK,Jon Mossman,Jon,Caergeiliog, Holyhea,Wales,United Kingdom,
 2353186,MW0RKD,Russ ,,Bagillt,Wales,United Kingdom,
 2353187,MW6UNY,Lee ,,Cwmbran,Wales,United Kingdom,
-2353188,GW4KJW,W. Gareth ,,Abergavenny,Wales,United Kingdom,
-2353189,GW4SXA,Paul ,,Aberdare,Wales,United Kingdom,
-2353191,MW3YKA,ADRIAN ,,NEWPORT,Wales,United Kingdom,
+2353188,MW0POB,Jamie ,,Port Talbot,Wales,United Kingdom,
+2353189,MW3YKA,ADRIAN ,,NEWPORT,Wales,United Kingdom,
+2353190,2W0IAO,Anthony ,,Tredegar,Wales,United Kingdom,
+2353191,2W0KSA,Paul ,,Treherbert,Wales,United Kingdom,
+2353192,2W0OZO,Sheridan ,,Milford Haven,Wales,United Kingdom,
 2354001,MM0MBK,Mark ,Mark,Cairneyhill,Scotland,United Kingdom,Base
 2354002,MM0MBK,Mark ,Mark,Cairneyhill,Scotland,United Kingdom,Mobile
 2354003,MM0MBK,Mark ,Mark,Cairneyhill,Scotland,United Kingdom,Portable
@@ -9056,7 +9167,7 @@
 2355087,MI0LPO,John McErlean,Johnmac,Belfast,Northern Ireland,United Kingdom,
 2355088,MI0PYN,Stefan Pynappels,Spynappels,Newry,Northern Ireland,United Kingdom,
 2355089,MI1AIB,Paul Lewis,Paul,Ballykelly,Northern Ireland,United Kingdom,
-2355090,MI6MOI,Sharon Lewis,Sharon,Ballykelly,Northern Ireland,United Kingdom,
+2355090,2I0SHZ,Sharon Lewis,Sharon,Ballykelly,Northern Ireland,United Kingdom,
 2355091,2I0EGN,ROBERT GEORGE NELSON,BOB,DUNGIVEN,Northern Ireland,United Kingdom,
 2355092,MI3VFJ,Noel Orr,Jimmy,Bangor,Northern Ireland,United Kingdom,
 2355093,MI0RYL,Bobby Wadey,Bobby,Ballyhalbert,Northern Ireland,United Kingdom,
@@ -9069,7 +9180,7 @@
 2355100,GI0BDX,Eamon Hughes,Eamon,Newtownabbey,Northern Ireland,United Kingdom,
 2355101,MI0PWH,Philip Holmes,Phil,Lisburn,Northern Ireland,United Kingdom,
 2355102,GI3XCZ,Albert Martin,Albert,Omagh,Northern Ireland,United Kingdom,
-2355103,MI6FQG,Alistair Hunter,Ali,Bangor,Northern Ireland,United Kingdom,
+2355103,2I0POD,Alistair Hunter,Ali,Bangor,Northern Ireland,United Kingdom,
 2355104,MI0RJY,James Young,James,Cookstown,Northern Ireland,United Kingdom,
 2355105,GI1RSR,Colin Fogarty,Blokeonbike,Portadown,Northern Ireland,United Kingdom,
 2355106,GI0IOT,Martin Rabbett,MartinR,Londonderrry,Northern Ireland,United Kingdom,
@@ -9083,6 +9194,7 @@
 2355114,GI1VYZ,Allister Hadden Hadden,Allie,Carrickfergus,Northern Ireland,United Kingdom,
 2355115,MI6FAU,William Montgomery,William,Londonderry,Northern Ireland,United Kingdom,
 2355116,GI8AIR,William Kenneth Parkes,Ken,Bushmills,Northern Ireland,United Kingdom,
+2355117,2I0SFA,Noel ,,Craigavon,Northern Ireland,United Kingdom,
 2355118,2I0EAS,DAVID ELLIOTT,Davidemed,ENNISKILLEN,Northern Ireland,United Kingdom,
 2355119,GI0ISQ,David Christie,David,Bushmills,Northern Ireland,United Kingdom,
 2355120,MI6SGU,Andrew Curran,Andrew Curran,Craigavon,Northern Ireland,United Kingdom,
@@ -9115,7 +9227,7 @@
 2355147,MI6CGI,Alastair Shepherd,Alastair,Stewartstown,Northern Ireland,United Kingdom,
 2355148,MI6HCP,Scott Mawhinney,Scott,Dungannon,Northern Ireland,United Kingdom,
 2355149,MI0RTY,Martin Strawbridge,Merry Mart,Coleraine,Northern Ireland,United Kingdom,
-2355150,MI6JIE,Joseph Evans,Joe,Dungiven,Northern Ireland,United Kingdom,
+2355150,2I0JIE,Joseph Evans,Joe,Dungiven,Northern Ireland,United Kingdom,
 2355151,MI0NWA,Joe Baker,Joe,Craigavon,Northern Ireland,United Kingdom,
 2355152,MI5SPY,John Johnston,Mi5spy,Newtownabbey,Northern Ireland,United Kingdom,
 2355153,MI6LSY,Louis Stock,Stocky,Armagh,Northern Ireland,United Kingdom,
@@ -9161,9 +9273,13 @@
 2355193,2I0UAD,Alan ,,Bangor,Northern Ireland,United Kingdom,
 2355194,GI4MDD,Ian ,,Belfast,Northern Ireland,United Kingdom,
 2355195,2I0OMA,John ,,Omagh,Northern Ireland,United Kingdom,
-2355196,MI3EZF,Patrick Gerard ,,Ballynahinch,Northern Ireland,United Kingdom,
-2355197,GI0OEH,Kenneth ,,Lisburn,Northern Ireland,United Kingdom,
+2355196,MI5DAW,Richard ,,Belfast,Northern Ireland,United Kingdom,
+2355197,GI4XFE,Alan ,,Armagh,Northern Ireland,United Kingdom,
 2355198,MI5DAW,Richard ,,Belfast,Northern Ireland,United Kingdom,
+2355199,MI5AMO,James ,,Belfast,Northern Ireland,United Kingdom,
+2355200,GI4MBM,Samuel ,,Comber,Northern Ireland,United Kingdom,
+2355201,MI6BND,Alfred ,,Belfast,Northern Ireland,United Kingdom,
+2355202,GI6VWS,James ,,Limavady,Northern Ireland,United Kingdom,
 2356001,GD6XHG,Ed ,Ed,Douglas,Isle of Man,United Kingdom,Portable#1
 2356002,GD6XHG,Ed ,Ed,Douglas,Isle of Man,United Kingdom,Portable#2
 2356003,GD0NFN,John Butler,John,Isle of Man,Isle of Man,United Kingdom,
@@ -9186,6 +9302,7 @@
 2356020,GU3TUX,Chris Rees,Chris,Alderney,Guernsey,United Kingdom,
 2356021,MD6TSW,David Williamson,David,Peel,,United Kingdom,
 2356022,MD0FIX,Nigel Wallace,Nigel,Ramsey,,United Kingdom,
+2356023,MJ0SIT,Steve ,,St Helier, Jersey,St Helier,United Kingdom,
 2357001,G0RDI,Iain ,,Aylesbury,Others,United Kingdom,
 2359999,G8SJP,Iain ,,Aylesbury,England,United Kingdom,
 2381001,OZ2CA,Soren ,Soren,Bronderslev,Nordjylland,Denmark,
@@ -9453,6 +9570,9 @@
 2383119,OZ1BBY,Jan Rolfdal,Jan,Odense,Syddanmark,Denmark,
 2383120,OZ5T,Tom Ekelund,Tom,Snder Stenderup,Syddanmark,Denmark,
 2383121,OZ5HSP,Kay Flemming Andersen,Kay,Nyborg,Syddanmark,Denmark,
+2383122,OZ5PO,Per ,,Kolding,Syddanmark,Denmark,
+2383123,OZ1LQB,Claus ,,Svendborg,Syddanmark,Denmark,
+2383124,5P6HQ,Per ,,Middelfart,Syddanmark,Denmark,
 2384001,OZ3MAJ,Martin ,Martin,Herlev,Hovestaden,Denmark,Portable
 2384002,OZ3MAJ,Martin ,Martin,Herlev,Hovestaden,Denmark,Mobile
 2384003,OZ1BZJ,Michael ,Michael,Sengeloese,Hovestaden,Denmark,Portable
@@ -9625,6 +9745,7 @@
 2384170,OZ5ZF,Jan Fischer,Jan,Kastrup,Hovedstaden,Denmark,
 2384171,OZ4YN,Benny Hansen,Elbenny,Trnby,Hovedstaden,Denmark,
 2384172,5P0O,Steen Rudberg,Ou8a,Helsingr,Hovedstaden,Denmark,
+2384173,OZ0HK,Henrik ,,Ballerup,Hovedstaden,Denmark,
 2384174,OZ1GNN,Christian Treldal,Chris,Copenhagen,Hovedstaden,Denmark,
 2384175,OZ7KT,Jakob Bo Hjlund Nielsen,Jakob,Herlev,Hovedstaden,Denmark,
 2384176,OZ6VJ,Erik Jensen,Erik,Copenhagen,Hovedstaden,Denmark,
@@ -9642,10 +9763,11 @@
 2384188,OZ8D,Mark Tvermoes,Mark,Humlebk,Hovedstaden,Denmark,
 2384189,OZ1CF,Per Giessing,Wilhelm,Kbh,Hovedstaden,Denmark,
 2384190,OZ1OP,Ole Pueschl,Ole,Birkerd,Hovedstaden,Denmark,
-2384191,OZ1RGR,Rene ,,Oelstykke,Hovedstaden,Denmark,
+2384191,OZ6AAD,Peter Due ,,Frederiksvrk,Hovedstaden,Denmark,
 2384194,OZ3YH,Oystein Lauenborg ,,Koebenhavn,Hovedstaden,Denmark,
 2384195,OZ1AJD,John ,,Kbenhavn s,Hovedstaden,Denmark,
 2384196,5P2CW,Henrik ,,Hoje taastrup,Hovedstaden,Denmark,
+2384197,OZ2HWP,Henrik ,,Rdovre,Hovedstaden,Denmark,
 2384400,OZ3MAJ,Martin ,,Herlev,Hovedstaden,Denmark,
 2384444,OZ0GC,Gifted Children DK,Gifted Children,Hvidovre,Hovedstaden,Denmark,
 2384500,OZ1HWN,Einar T,Einar,Alleroed,Hovedstaden,Denmark,
@@ -9786,7 +9908,7 @@
 2385133,5Q5XX,Hans ,Hans,Asminsrup,Sjaelland,Denmark,
 2385134,OZ2U,Stephan Aller,Stephan,Kr Hyllinge,Sjaelland,Denmark,
 2385135,OZ1DLP,Kaj Mortensen,Viggo,Gladsaxe,Sjaelland,Denmark,
-2385136,OZ2U,Stephan ,Stephan,Hyllinge,Sjaelland,Denmark,
+2385136,OZ3SR,Soren ,Stephan,Nakskov,Sjaelland,Denmark,
 2385137,OZ1FAK,Carsten ,,Roskilde,Sjaelland,Denmark,
 2385138,OZ0PY,Peter Due ,,Frederiksvrk,Sjaelland,Denmark,
 2385139,OZ1DPP,Finn ,,Vejby,Sjaelland,Denmark,
@@ -9959,6 +10081,8 @@
 2400164,SM0WJI,David Holmsten,David,Tumba,Stockholms luon,Sweden,
 2400165,SM7WBH,Bo Hansson,Bosse,Malmoe,Skune County,Sweden,
 2400166,SM0UFZ,Joakim Nystroem,Joakim,Stockholm,Stockholms luon,Sweden,
+2400167,SM0YXI,Robert ,,Skogas,New York,Sweden,
+2400168,SM0EXG,Sven-Ulrik ,,Skarpnack,Stockholm County,Sweden,
 2400169,SA0BWP,Peter Tippl,Peter,Stockholm,Stockholms luon,Sweden,
 2400170,SM0TRY,Ulf Westman,Uffe,NORSBORG,Stockholm County,Sweden,
 2400171,SA0AJS,Anders Carlzon,Anders,Stockholm,Stockholm County,Sweden,
@@ -9974,7 +10098,9 @@
 2400181,SA0CIM,Rene ,,Ronninge,Stockholm County,Sweden,
 2400182,SM0ZAG,Joerg ,,Stockholm,Stockholm County,Sweden,
 2400183,SE0O,Leif ,,Stockholm,Stockholms luon,Sweden,
-2400184,SE0S,Pierre ,,Johanneshov,Stockholm County,Sweden,
+2400184,SM0UQX,Raimo ,,Upplands Vaesby,Stockholms luon,Sweden,
+2400185,SM0PHK,Stefan ,,Johanneshov,Stockholms luon,Sweden,
+2400186,SE0S,Pierre ,,Johanneshov,Stockholm County,Sweden,
 2401001,SM6UDU,Marcus ,,Uddevalla,Gotland-I,Sweden,
 2402001,SA2CMY,Tomas Isaksson,Tomas,Lulea,Norrbotten,Sweden,
 2402002,SA2BNO,Peter Larsson,Peter,Kiruna,Norrbotten County,Sweden,
@@ -10067,7 +10193,7 @@
 2403066,SM3YTX,PER-ERIK LOeVGREN,,Domsjoe,Vuosternorrlands luo,Sweden,
 2403067,SM3DOP,Anders Ekstrom,Anders,Alfta,Gavleborg County,Sweden,
 2403068,SM3MXR,Einar Persson,Sm3mxr,Jarbo,Guovleborgs luon,Sweden,
-2403069,SA3CFT,Anders ,,Bollnas,Guovleborgs luon,Sweden,
+2403069,SM3WTC,Lars ,,Liden,Vuosternorrland County,Sweden,
 2403070,SA3CJF,Marina ,,Bollnas,Guovleborgs luon,Sweden,
 2404001,SM4XBL,Christopher ,Christopher,Borlange,Dalarnas Laen,Sweden,Portable
 2404002,SM4WOA,Claes ,Claes,Borlange,Dalarnas Laen,Sweden,Portable
@@ -10125,7 +10251,8 @@
 2404054,SM4WDQ,Joergen Joensson,SM4WDQ,Hagfors,Vuormlands luon,Sweden,
 2404055,SM4URM,Claes Giljegard,ClaesG,Karlstad,Varmland County,Sweden,
 2404056,SM4YTF,Ola Ostmans,Ola,Karlstad,Varmland County,Sweden,
-2404057,SM4RAM,Gerhard ,,Grycksbo,Dalarna County,Sweden,
+2404057,SM4MKG,Bror ,,Falun,Dalarnas luon,Sweden,
+2404059,SM4PDP,Ted ,,Mora,Dalarnas luon,Sweden,
 2405001,SM5OEM,Ronny ,Ronny,Aby,Oestergoetland Laen,Sweden,Portable
 2405002,SM5BMK,Anders ,Anders,Torshalla,Soedermanland County,Sweden,
 2405003,SM5ULX,Morgan ,Morgan,Eskilstuna,Soedermanland County,Sweden,
@@ -10143,7 +10270,7 @@
 2405015,SM5FLT,Hans Hultqvist,Hans,Nykoping,Sudermanlands luon,Sweden,
 2405016,SM5UKP,Mikael Larsson,Mikael,Stigtomta,Sudermanlands luon,Sweden,
 2405017,SM5GZE,Ulf Backlund,Ulf,Uppsala,Uppsala County,Sweden,
-2405018,SA5CIG,Mikael Ahlberg,Anders,Enkoping,Uppsala luon,Sweden,
+2405018,SK5UM,Goeran Ahlberg,Anders,Flen,Suadermanlands luon,Sweden,
 2405019,SM5KPC,Conny Lundberg,Conny,Flen,Sodermanland County,Sweden,
 2405020,SM5GSB,Bo Gustavsson,Bo,Katrineholm,Sudermanland County,Sweden,
 2405021,SM5EWE,Kaj Schnipper,Kaj,FLEN,Sudermanland County,Sweden,
@@ -10329,7 +10456,7 @@
 2406125,SM6MSD,Roland Falck,Roland,Jarpas,Vuostra Guatalands l,Sweden,
 2406126,SA6CEC,Torbjoern Larsson,SA6CEC,Limmared,Vuostra Guatalands l,Sweden,
 2406127,SM6JNS,Goeran Sandqvist,Goeran,Kungsbacka,Hallands luon,Sweden,
-2406128,SM6VZU,Mikael ,,Trollhattan,Vuostra Guataland County,Sweden,
+2406128,SA6JUR,Georgios ,,Nol,Vuostra Guataland County,Sweden,
 2406129,SM6TLX,Hakan ,,Uddevalla,Vuostra Guataland County,Sweden,
 2407001,SM7URN,Patrik ,Patrik,SÃ¶lvesborg,Blekinge Laen,Sweden,Portable
 2407002,SM7URN,Patrik ,Patrik,SÃ¶lvesborg,Blekinge Laen,Sweden,Mobile
@@ -10463,6 +10590,7 @@
 2407130,SM7MUN,Kenneth Karlsson,Kenneth,Arloev,Skune County,Sweden,
 2407131,SM7HLU,Sune Sturesson,Sunes,Hoeganaes,Skune luon,Sweden,
 2407132,SM7MPR,Rune Ljunggren,Runempr,Kristianstad,Skune luon,Sweden,
+2407133,SA7CIZ,Lars ,,Malmoe,Skuane County,Sweden,
 2407134,SA7EKA,Jan-Olof Persson,Jan-Olof,Trelleborg,Skune luon,Sweden,
 2407135,SM7EYW,Thorleif Narvell,Narve,Trelleborg,Skune luon,Sweden,
 2407136,SM7FRD,H-C Waldermansson,H-C,Vellinge,Skune luon,Sweden,
@@ -10484,7 +10612,7 @@
 2407152,SA7CDM,Liselott Lindvall,Lotta,Tving,Blekinge County,Sweden,
 2407153,SG7ADV,Kristian ,,Oderljunga,Skuane County,Sweden,
 2407154,SA7ZZZ,Olof ,,S. Sandby,Skuane luon,Sweden,
-2407155,SA7BIK,Mats ,,Eslov,Skuane luon,Sweden,
+2407155,SM7WNE,Henrik ,,Matkaryd,Kronobergs luon,Sweden,
 2420001,LA3RIA,Mushtaq ,Mushtaq,Oslo,Oslo,Norway,
 2420002,LA1KP,Oivind ,Oivind,Oslo,Oslo,Norway,
 2420003,LA4JL,Per Eftang,Per,Oslo,Oslo,Norway,
@@ -10606,6 +10734,8 @@
 2423033,LA2ASA,Alfred Galta,Alfred,Stavanger,Rogaland,Norway,
 2423034,LA8YNA,Roald Lunde,Roald,Kverneland,Rogaland,Norway,
 2423035,LA7KRA,Anne-bjorg Lunde,Anne-bjorg,Kvernaland,Rogaland,Norway,
+2423036,LA6BNA,Geir Sverre ,,Bryne,Rogaland,Norway,
+2423037,LB3DH,Vidar ,,Stavanger,Rogaland,Norway,
 2424001,LA7TMA,Torstein Olsen,Torstein,Flornes,Nord-Trondelag,Norway,
 2424002,LB3AG,Kre Arnfinn Fostad,Kre Arnfinn,Levanger,Nord-Trondelag,Norway,
 2424003,LA3KL,Tore Barlindhaug,Tore,Trondheim,Sur-Trundelag,Norway,
@@ -10695,6 +10825,7 @@
 2426062,LA4YMA,Errol Skagen,Errol,Hallingby,Buskerud,Norway,
 2426063,LA3JRA,Tom Nilssen,Tom,Mjondalen,Buskerud,Norway,
 2426064,LB9UE,Tom Erik Amundsen,Tom Erik,Sr-Fron,Oppland,Norway,
+2426065,LA8IMA,Rolv Sverre ,,Lom,Oppland,Norway,
 2427001,LA3VW,Odd Skogjordet,Odd,ARENDAL,Aust-Agder,Norway,
 2427002,LA4CSA,Tarjei Lundarvollen,Tarjei,Vinje,Telemark,Norway,
 2427003,LA7LW,Ole Andreas Olsen,Ole Andreas,Arendal,Aust-Agder,Norway,
@@ -10773,13 +10904,14 @@
 2429036,LA4ITA,Truls Hofstad,La4ita,Narvik,Nordland,Norway,
 2429037,LA8IHA,Jarle Stormo,Jarle,Ramfjordbotn,Troms,Norway,
 2429038,LA6WU,Harald ,,Mo i Rana,Nordland,Norway,
-2440001,OH0EOH,Mikael ,Mikael,Finstrom,Aland Is,Finland,
+2440001,OH0CD,Mikael ,Mikael,Finstrom,Aland Is,Finland,
 2440002,OH0KCE,Leif Perjus,Leif,Palsbole,Aland Is,Finland,
 2440003,OH0AZX,Roland Danielsson,Roland,Mariehamn,Aland Is,Finland,
-2440004,OH0EOH,Mikael Soderbo,Mikael,Finstrom,Aland Is,Finland,
+2440004,OH0CD,Mikael Soderbo,Mikael,Finstrom,Aland Is,Finland,
 2440005,OH0KCE,Leif Perjus,Leif,Palsbole,Aland Is,Finland,
 2440006,OH0NM,Markus Mattsson,Markus,Mariehamn,Aland Is,Finland,
 2440007,OH0AZX,Roland D,OH0AZX,Mariehamn,Aland Is,Finland,
+2440008,OH0CD,Mikael ,,Finstrom,Aland Is,Finland,
 2441001,OH10AS,Ari Salonen,Ari,Marttila,,Finland,Mobile
 2441002,OH1EEZ,Jyrki Maekinen,Jyrki,Salo,Turku-Pori,Finland,
 2441003,OH1SIC,Goeran Ingemar Backman,Goeran Ingemar,Nagu,Turku-Pori,Finland,
@@ -10878,7 +11010,7 @@
 2442091,OH2GDE,Pasi Ruotsalainen,OH2GDE,Kirkkonummi,Uudenmaa,Finland,
 2442092,OH2KFH,Pertsa Herva,Pertsa,Lohja,Uudenmaa,Finland,
 2442093,OH2FKX,Kati Harjula,Kati,Espoo,Uudenmaa,Finland,
-2442094,OH1MIJ,Sauli ,,Espoo,Uudenmaa,Finland,
+2442094,OH2LYS,Raimo Tapani ,,Vantaa,Uudenmaa,Finland,
 2443001,OH3FCB,Tommi ,Tommi,Tampere,Pirkanmaa,Finland,Portable
 2443002,OH3KGR,Janne ,Janne,Tampere,Pirkanmaa,Finland,Portable #1
 2443003,OH3HWX,Toni ,Toni,Tampere,Pirkanmaa,Finland,Portable#1
@@ -10947,6 +11079,10 @@
 2443066,OH3GXQ,Marko Kukkasniemi,OH3GXQ,Kangasala,Haeme,Finland,
 2443067,OH3ENU,Kalle Antniemi,Kalle,Tampere,Haeme,Finland,
 2443068,OH3FSR,Tomi Liukkonen,Tomi,Tampere,Haeme,Finland,
+2443069,OH3EVO,Kari ,,Akaa,Haeme,Finland,
+2443070,OH7SP,Seppo ,,Haemeenlinna,Haeme,Finland,
+2443071,OH7Z,Seppo ,,Haemeenlinna,Haeme,Finland,
+2443072,OH3LCS,Ari ,,Hollola,Haeme,Finland,
 2444001,OH4JP,Juha-Pekka Rantalainen,Juha-Pekka,Mikkeli,Mikkeli,Finland,
 2444002,OH4EA,Vesa Kauppinen,Vesa,Naarajaervi,Mikkeli,Finland,
 2444003,OH4TK,Tatyana Kauppinen,Tan,Naarajarvi,Mikkeli,Finland,
@@ -10981,6 +11117,7 @@
 2446007,OH3HWU,Vesa Kukko,OH3HWU,SASTAMALA,Keski-Suomi,Finland,
 2446008,OH6FDM,Joona Akerberg,Joona,Seinaejoki,Southern Ostrobothni,Finland,
 2446009,OH1KK,Kari ,,Kaustinen,Keski-Suomi,Finland,
+2446010,OH3FVS,Jussi ,,Uurainen,Keski-Suomi,Finland,
 2447000,OH3HAM,Radio ,Radio,Kuopio,Kuopio,Finland,Club
 2447003,OH7VM,Veli-Matti ,Veli-Matti,Kuopio,Kuopio,Finland,Portable#1
 2447004,OH7JEV,Veli-Matti ,Veli-Matti,Helsinki,Uusimaa,Finland,Portable
@@ -11014,7 +11151,7 @@
 2448025,OH8WM,Marko Wirtanen,Marko,Oulu,Oulu,Finland,
 2448026,OH8T,Oulun Teekkarien Radiokerho,Teekkari,Oulu,Oulu,Finland,
 2448027,OH8AA,OH8AA ,,Oulunsalo,Oulu,Finland,
-2448028,OH8EXO,Janne ,,Oulu,Oulu,Finland,
+2448028,OH4GRM,Jyri ,,Paltamo,Oulu,Finland,
 2449001,OH9LNA,Jari Lammi,Jari,Tornio,Lappi,Finland,
 2480001,ES2AST,Marek Astrik,SiiliOnu,Kose,,Estonia,
 2480002,ES1FJR,Ivan Shebanov,,Tallinn,,Estonia,
@@ -11114,6 +11251,9 @@
 2550087,UR5FYG,Yurii Gubernatorov,Guber,Odessa,,Ukraine,
 2550088,UR3PMR,Sergey ,Sergey,Lutsk,,Ukraine,
 2550089,UR3PMR,Sergey Bondarchuk,Sergey,Lutsk,,Ukraine,
+2550090,US5LPW,Vitalii ,,Selo Sudanka,Kharkiv Oblast,Ukraine,
+2550091,US5FET,Mykola ,,Odessa,Odessa Oblast,Ukraine,
+2550094,UR5KSH,Aleksander ,,Rivne,Rivnens ka oblast,Ukraine,
 2601001,SP1XNE,Maciek ,Maciek,Szczecin,Zachodniopomorskie,Poland,
 2601002,SQ1TAO,Krzysztof ,Krzysztof,Szczecin,Zachodniopomorskie,Poland,
 2601003,SQ1GZG,Bogdan Gwodziaski,Bogdan,Stargard,Zachodniopomorskie,Poland,
@@ -11350,7 +11490,9 @@
 2605122,SQ5MC,Monika Czaplicka,Monika,Warszawa,Mazowieckie,Poland,
 2605123,SQ5JUC,Rafal Korbal,,Pultusk,Mazowieckie,Poland,
 2605124,SQ5RM,Robert Malocha,SQ5RM,Warszawa,Mazowieckie,Poland,
+2605125,SP5VYH,Adam ,,Nowe Babice,Mazowieckie,Poland,
 2605126,SQ5LTD,Korbal Sbigniew,Jerzy,Pultusk,Mazowieckie,Poland,
+2605128,SQ5U,SEBASTIAN ,,Warszawa,Mazowieckie,Poland,
 2606001,SQ6ROK,Andrzej ,Andrzej,Wroclaw,Lower Silesian Voivo,Poland,
 2606002,SQ6NCJ,Jacek Diaczek,Jacek,Olawa,Lower Silesian Voivo,Poland,
 2606003,SQ6IUB,Kamil Szmajda,Kamil,Opole,Opole Voivodeship,Poland,
@@ -11375,6 +11517,7 @@
 2606022,SQ6KQK,KATARZYNA KOPEC,KATARZYNA,WROCLAW,Lower Silesian Voivo,Poland,
 2606023,3Z6AET,Robert Czapski,Robert,Wroceaw,Lower Silesian Voivo,Poland,
 2606024,SP6GYZ,Krystian Riedler,Krystian,Jelenia Gora,Lower Silesian Voivo,Poland,
+2606025,SP6QNP,Piotr ,,Wroclaw,Lower Silesian Voivodeship,Poland,
 2606027,SQ6KW,Wilhelm Koziol ,Willi,Zdzieszowice,Opole Voivodeship,Poland,
 2606028,SQ6DXP,Pawel Pospiech,Pawel,Opole,Opole Voivodeship,Poland,
 2606029,SQ6VRS,Radoslaw Wojtyla,Redzi,Nysa,Opole Voivodeship,Poland,
@@ -11693,6 +11836,9 @@
 2621145,DL1XKA,Klaus-Dieter Anger,Dieter,Gross Ossnig,Brandenburg,Germany,
 2621146,DL7ARY,Martin Tomiak,Martin,Berlin,Berlin,Germany,
 2621147,DL2ROA,Matthias Hahn,Matthias,Teltow,Brandenburg,Germany,
+2621150,DB0SPN,Gateway ,,Cottbus,Brandenburg,Germany,
+2621152,DB0LUD,Bernd ,Clubstation Y05,Ludwigsfelde,Nordrhein-Westfalen,Germany,
+2621153,DD6SW,Stefan ,Stefan,Berlin,Berlin,Germany,
 2622000,DF4HN,Joerg Neugebauer,Joerg,Hamburg,HAMBURG/SCHLESWIG-HO,Germany,
 2622001,DL6LIM,Iven ,Iven,Twedt/Schleswig,Schleswig-Holstein,Germany,Portable
 2622002,DJ3HZ,Klaus ,Klaus,Norderstedt,Schleswig-Holstein,Germany,Portable
@@ -11955,6 +12101,7 @@
 2622259,DO4HJS,Jens Stadali,Jens,Hamburg,Hamburg,Germany,
 2622260,DG4LAX,Torsten Schlueter,Torsten,Lehmkuhlen,Schleswig-Holstein,Germany,
 2622261,DC3LD,Lars Deutsch,Lars,Heiligenhafen,Schleswig-Holstein,Germany,
+2622269,DK5LX,Uwe ,,Ratzeburg,Schleswig-Holstein,Germany,
 2623001,DL4BCG,Paul Hag ,,Schneverdingen,Niedersachsen,Germany,Portable
 2623002,DG5AV,Gerd May,Gerd,Einbeck,Lower Saxony,Germany,
 2623003,DO1HSN,Hendrik ,Hendrik,Pewsum,Niedersachsen,Germany,Portable
@@ -12702,6 +12849,7 @@
 2623747,DK3QC,Klaus Pahnke,Klaus,Goettingen,Lower Saxony,Germany,
 2623748,DO1XXY,Armin Fendel,Armin,Lueneburg,Lower Saxony,Germany,
 2623749,DC3WX,Andreas Chmielecki,Andreas,Hannover,Lower Saxony,Germany,
+2623763,DB6OE,Thomas ,,Koenigslutter,Niedersachsen,Germany,
 2624001,DF2ER,Walter ,Walter,Heiligenhaus,Nordrhein-Westfalen,Germany,Portable
 2624002,DD2JU,Rudolf ,Rudolf,Ratingen,Nordrhein-Westfalen,Germany,Portable
 2624003,DL1YBL,Jochen ,Jochen,Marl,Nordrhein-Westfalen,Germany,Portable
@@ -13978,6 +14126,8 @@
 2625276,DG4PG,Matthias Lueck,Matthias,Steineroth,Rhineland-Palatinate,Germany,
 2625277,DL7PH,Hans-Michael Huck,Michael,Worms-Pfeddersheim,Rhineland-Palatinate,Germany,
 2625278,DO4HJB,Hans-Joerg Faller,Hans,Faid,Rhineland-Palatinate,Germany,
+2625292,DL7FBT,Thomas ,,Mainz,Rhineland-Palatinate,Germany,
+2625294,DD4DJ,Christoph ,,Bosen,Saarland,Germany,
 2625998,DB0MYK,Hans-Juergen ,Hans-Juergen,Gaensehals,Thuaringen,Germany,
 2625999,DB0LJ,D-Star-Gateway Barthen,DSTAR-DMR-Gateway,Kruft,Rhineland-Palatinate,Germany,
 2626000,DF6RK,Ralf ,Ralf,Glashuetten,Hessen,Germany,Base Station
@@ -14271,7 +14421,7 @@
 2626288,DO9THW,Jonas Jaeger,Jonas,Mainhausen,Hessen,Germany,
 2626289,DL3SP,Stephan Puck,Stephan,Wiesbaden,Hessen,Germany,
 2626290,DK3EA,Bodo Schacht,Bodo,Malsfeld,Hessen,Germany,
-2626291,DO2MRD,Daniel Bieker,Daniel,Stadtallendorf,Hessen,Germany,
+2626291,DL8MR,Daniel Bieker,Daniel,Stadtallendorf,Hessen,Germany,
 2626292,DJ9LK,Lado Kumsiashvili,Lado,Kassel,Hessen,Germany,
 2626293,DK1VY,Claus Koch,Claus,Witzenhausen,Hessen,Germany,
 2626294,DO1HO,Juergen Hornivius,Juergen,Solms,Hessen,Germany,
@@ -15014,6 +15164,7 @@
 2627563,DL1GRR,Rudolf Ruess,Rolf,Oberteuringen,Baden-Wuerttemberg,Germany,
 2627564,DO2KD,Sandor Dubronner,Sandor,Karlsdorf-Neuthard,Baden-Wuerttemberg,Germany,
 2627565,DL1IK,Burkhard Decker,Burkhard,Lauf,Baden-Wuerttemberg,Germany,
+2627568,DO7GK,Daniel ,Daniel,Aitern,Baden-Wuerttemberg,Germany,
 2628001,DL1BNO,Bernd ,Bernd,Geiselbach,Bayern,Germany,Mobile
 2628002,DL5NBZ,Rainer ,Rainer,Nuernberg,Bayern,Germany,Mobile
 2628003,DK7NKR,Ralf ,Ralf,Nuernberg,Bayern,Germany,Portable
@@ -15683,6 +15834,7 @@
 2628667,DL1OTT,Wilhelm Adolf Ott,Willi,Aschaffenburg,Bayern,Germany,
 2628668,DB7NBS,Benedikt Franz Schwarz,Benedikt Franz,Pleinfeld,Bayern,Germany,
 2628678,DH1MHK,Hermann ,Hermann,Riemerling,Bayern,Germany,
+2628681,DO1WA,Anton ,Anton,Oberschleissheim,Bayern,Germany,
 2629001,DC8YM,Maik ,Maik,Leipzig,Sachsen,Germany,Portable#1
 2629002,DC8YM,Maik ,Maik,Leipzig,Sachsen,Germany,Portable#2
 2629003,DC8YM,Maik ,Maik,Leipzig,Sachsen,Germany,Mobile
@@ -15842,6 +15994,7 @@
 2634050,DL1KJ,Rolf Dohmen,Rolf,Pulheim,Nordrhein-Westfalen,Germany,
 2634051,DL6YBX,Mario Janicki,Mario,Bottrop,Nordrhein-Westfalen,Germany,
 2634052,DO3LLB,Bjoern Theunert,Bjoern,Steinhagen,Nordrhein-Westfalen,Germany,
+2634053,DD4KQ,Manfred ,,Lohmar,Nordrhein-Westfalen,Germany,
 2634054,DG1DPN,Roland Prinz,Roland,Dortmund,Nordrhein-Westfalen,Germany,
 2634055,DG7DAM,Juergen Heusner,Juergen,Herne,Nordrhein-Westfalen,Germany,
 2634056,DG7YEM,Erwin Maus,DG7YEM,Marl,Nordrhein-Westfalen,Germany,
@@ -15928,6 +16081,7 @@
 2634137,DO5DA,Andreas Schaefer,Andres,Hattingen,Nordrhein-Westfalen,Germany,
 2634138,DH3WR,Ralf Wilke,Ralf,Aachen,Nordrhein-Westfalen,Germany,
 2634139,DO6OLI,Oliver Gerhards,Oliver,Niederkassel,Nordrhein-Westfalen,Germany,
+2634157,DL9WH,Wolfgang ,Wolfgang,Duisburg,Nordrhein-Westfalen,Germany,
 2681001,CT2HMR,Manuel ,Manuel,Amarante,Porto District,Portugal,
 2681002,CT1DQV,Eduardo Goncalves,Eduardo,Chaves,Vila Real,Portugal,
 2681003,CT2GSW,Rui Calada,Rui,Maia,Porto District,Portugal,
@@ -15958,6 +16112,8 @@
 2681028,CT1FUK,Cipriano Sousa,Cipriano,Matosinhos,Porto District,Portugal,
 2681029,CT2YUC,Amelia Almeida,Amelia,Matosinhos,Porto District,Portugal,
 2681030,CT2JNC,Rolando Montalvuo,Rolando,Chaves,Vila Real,Portugal,
+2681031,CT2JIF,Paulo ,,Viana do Castelo,Viana do Castelo,Portugal,
+2681032,CT2IUV,Nuno ,,Porto,Porto District,Portugal,
 2682001,CS7ACF,Nuno ,Nuno,Viseu,Viseu,Portugal,
 2682002,CT1BAT,Jose Machado,Jose,Coimbra,Coimbra,Portugal,
 2682003,CT2JWV,Carlos Marques,Carlos,Estarreja,Aveiro,Portugal,
@@ -15987,6 +16143,8 @@
 2682027,CS7ACD,Paulo Sousa,Paulo,Gouveia,Guarda,Portugal,
 2682028,CT5YWF,Graca Sousa,Graca,Gouveia,Guarda,Portugal,
 2682029,CR7ALB,Jorge Brito da Silva,Rui,Viseu,Viseu District,Portugal,
+2682030,CS7ABH,Amilcar ,CS7ABH,Ovar,Aveiro,Portugal,
+2682031,CT2JAY,Paulo ,,Coimbra,Coimbra District,Portugal,
 2683001,CT1HDC,Paulo ,Paulo,Lisboa,Lisboa,Portugal,Portable
 2683002,CR7AIC,Fernando ,Fernando,Lisboa,Lisbon,Portugal,
 2683003,CS7AFO,Hugo ,Hugo,Amadora,Lisbon,Portugal,
@@ -16058,6 +16216,7 @@
 2683069,CT2EEW,Eduardo Arraia,Eduardo,Estoril,Lisboa,Portugal,
 2683070,CT1FNG,Victor Barros,Victor,Lisboa,Lisboa,Portugal,
 2683071,CT2KEV,Luis Franco,Luis,Torres Vedras,Lisboa,Portugal,
+2683072,CT2JUS,Antnio ,,Montijo,Setuabal,Portugal,
 2683073,CT1DDN,Luis Tomas,Luis,Mem Martins,Lisboa,Portugal,
 2683074,CT1JIB,Jorge Santos,Jorge,Palmela,Setubal,Portugal,
 2683075,CS7AIC,Fernando Lopes,Fernando,Lisboa,Lisboa,Portugal,
@@ -16096,6 +16255,15 @@
 2683108,CT7AHQ,Bruno Marado,Bruno,Lisboa,Lisbon,Portugal,
 2683109,CS7AJM,Francisco Carmo,Francisco,Lisboa,Lisboa,Portugal,
 2683110,CT1FSM,Carlos Alegre,,Linda-a-Velha,Lisboa,Portugal,
+2683111,CT2GOY,Luis ,,Corroios,Setuabal,Portugal,
+2683112,CT2GWL,Custodio ,,Fernuo Ferro,Setuabal,Portugal,
+2683113,CT2JUT,Miguel ,,Seixal,Setuabal,Portugal,
+2683114,CT1ECM,Antonio ,,Palmela,Setuabal,Portugal,
+2683115,CR7AOA,Rui ,,Ericeira,Lisboa,Portugal,
+2683116,CT2JCG,Paulo ,,Lisboa,Lisbon,Portugal,
+2683117,CT1FIL,Fernando ,,Odivelas,Lisboa,Portugal,
+2683118,CR7AOC,Joaquim ,Guilherme,Lisboa,Lisboa,Portugal,
+2683119,CT1FNF,Joaquim ,Jorge Ramos,Almada,Setubal,Portugal,
 2684001,CT2BXN,Jose ,Jose,Beja,Alentejo,Portugal,Mobile#1
 2684002,CT2BXN,Jose ,Jose,Beja,Alentejo,Portugal,Mobile#2
 2684003,CT1DUM,Carlos ,Carlos,Elvas,Portalegre District,Portugal,
@@ -16515,8 +16683,8 @@
 3022222,VA2JN,Jean Drolet Drolet,,Mascouche,Quebec,Canada,DMR
 3022223,VA2HU,Krzysztof Kochanek,Chris,Lasalle,Quebec,Canada,DMR
 3022224,VE2ROR,Belair Radio Club Belair Radio Tech Club,,Montreal,Quebec,Canada,DMR
-3022225,VE2IFM,Jean-Francois Marion,,Joliette,Quebec,Canada,CCS7
 3022226,VE2NCG,Nicolas Gagnon,,Montreal,Quebec,Canada,DMR
+3022227,VE2FPD,Robert E. Regimbald,,Lac Cayamant,Quebec,Canada,CCS7
 3023001,VE3XF,Steve Jones,,Stayner,Ontario,Canada,Mobile
 3023002,VE3KFQ,Doug Hodgson,,Toronto,Ontario,Canada,Mobile
 3023003,VE3SAQ,Marshall Mcbride,,Cornwall,Ontario,Canada,Portable
@@ -17057,6 +17225,14 @@
 3023538,VE3GUO,Tony Guo,Tony,Brampton,Ontario,Canada,DMR
 3023539,VE3GUO,Tony Guo,Tony,Brampton,Ontario,Canada,DMR
 3023540,VE3CQK,Scott Stevenson,,Toronto,Ontario,Canada,DMR
+3023541,VA3AQE,George Robert Garby,,St.Eugene,Ontario,Canada,DMR
+3023542,VE3WW,Robert Brian Scott,Bob,Midland,Ontario,Canada,DMR
+3023543,VE3IRI,Maurice Dusome,Moe,Penetangishene,Ontario,Canada,DMR
+3023544,VE3FKN,Tomas Roeder,,Stoney Creek,Ontario,Canada,DMR
+3023545,VE3VJH,John Murdoch Hood,,Whitby,Ontario,Canada,DMR
+3023546,VE3IXJ,Donald Trevor Matthews,,Newmarket,Ontario,Canada,DMR
+3023547,VE3IXJ,Donald Trevor Matthews,,Newmarket,Ontario,Canada,DMR
+3023548,VE3PO,Donald Trevor Matthews,Don,Newmarket,Ontario,Canada,DMR
 3024001,VE4RRB,Rob Boux,,Winnipeg,Manitoba,Canada,Portable
 3024002,VE4RRB,Rob Boux,,Winnipeg,Manitoba,Canada,Mobile
 3024003,VE4AI,Shaun Mcleod,,Winnipeg,Manitoba,Canada,Portable
@@ -17191,6 +17367,12 @@
 3026091,VA6PJB,Peter J Barry,,Calgary,Alberta,Canada,DMR
 3026092,VA6EMS,Ian Burgess,Thundermedic,Calgary,Alberta,Canada,DMR
 3026093,VE6IB,Ian Burgess,,Calgary,Alberta,Canada,DMR
+3026094,VE6NR,Stephane Raimbault,,Calgary,Alberta,Canada,DMR
+3026095,VE6 ACF,Arthur Foster,,Calgary,Alberta,Canada,DMR
+3026096,VA6JWL,J. Wilson Loree,,Calgary,Alberta,Canada,DMR
+3026097,VA6MD,Mervin P. Dulce,Emmdee,Calgary,Alberta,Canada,DMR
+3026098,VA6MD,Mervin P. Dulce,,Calgary,Alberta,Canada,DMR
+3026099,VE6IBY,Trevor Brooke,,Edmonton,Alberta,Canada,Other
 3027001,VE7NWX,Emcomm N. Wstmnstr,,New Westminster,British Columbia,Canada,Portable #1
 3027002,VE7NWX,Emcomm N. Wstmnstr,,New Westminster,British Columbia,Canada,Portable #2
 3027003,VE7NWX,Emcomm N. Wstmnstr,,New Westminster,British Columbia,Canada,Portable #3
@@ -17423,6 +17605,11 @@
 3101113,N4CBS,Larry D Fussell,,Brewton,Alabama,United States,Other
 3101114,WB4NCT,David O Ausley,Dave,Athens,Alabama,United States,CCS7
 3101115,N4MYI,Jeremy D Key,,Parrish,Alabama,United States,DMR
+3101116,N0ZO,Justin Glass,,Calera,Alabama,United States,Other
+3101117,KC4SIG,Douglas E Jackson,Doug,Helena,Alabama,United States,DMR
+3101118,N4GNO,Eugene L Newman,,Alabaster,Alabama,United States,DMR
+3101119,W4OS,Ronnie G Kelley,Ron,Jack,Alabama,United States,DMR
+3101120,W4NQ,Troy Radio Club,Troy Radio Club,Troy,Alabama,United States,CCS7
 3102001,KL2AV,Brian Corty,,Delta Junction ,Alaska,United States,Portable
 3102002,KL7PS,Paul Spatzek,,Ancorage,Alaska,United States,Portable
 3102003,KL7RW,Ralph Wilkerson,Ralph,Anchorage,Alaska,United States,Portable
@@ -17850,6 +18037,12 @@
 3104418,KI7AKZ,Kathleen T Kuck,Cass,Oro Valley,Arizona,United States,DMR
 3104419,KG7BGM,Jason L Brown,,Phoenix,Arizona,United States,DMR
 3104420,KE7LVR,Peter G Efroymson,,Yuma,Arizona,United States,DMR
+3104421,N1AHH,Ronald Gregory,,Ajo,Arizona,United States,DMR
+3104422,KG7QXG,John Tyler,,Chandler,Arizona,United States,DMR
+3104423,AA7BQ,Fred L Lloyd,,Scottsdale,Arizona,United States,DMR
+3104424,KC7MMI,Benjamin Russell,,Mesa,Arizona,United States,DMR
+3104425,N7KCW,Thomas V Meeker,,Yuma,Arizona,United States,DMR
+3104427,N0VCC,Robert S Peteuil,,Phoenix,Arizona,United States,DMR
 3105001,N5QM,Robert Garcia,,Little Rock,Arkansas,United States,Portable
 3105002,KB6FO,George Roher,,Edgemont,Arkansas,United States,Portable
 3105003,W5KEC,Kenneth Carpenter,,Edgemont,Arkansas,United States,Portable
@@ -17984,6 +18177,12 @@
 3105132,KE5ZSW,Robert Briggs,,Lamar,Arkansas,United States,DMR
 3105133,KG5MST,Kevin Rowell,Kev,Mayflower,Arkansas,United States,DMR
 3105134,KE5DUK,Kevin S Blanton,,Austin ,Arkansas,United States,DMR
+3105135,N5OMW,Robert Hambuchen,Bob,Conway,Arkansas,United States,DMR
+3105136,N5TSG,Jimmy L Grinder,Grinder,Wooster,Arkansas,United States,DMR
+3105137,N5GLH,Gary L Hawkins,,Conway,Arkansas,United States,DMR
+3105138,K5WRS,William R Sanders,Bill,Paron,Arkansas,United States,DMR
+3105139,N5GLH,Gary L Hawkins,,Conway,Arkansas,United States,DMR
+3105140,KC3AYK,Michael D Smith,,Springdale,Arkansas,United States,DMR
 3106001,K6EH,Paul Metzger,,Downey,California,United States,Portable #1
 3106002,K6EH,Paul Metzger,,Downey,California,United States,Mobile
 3106003,K6EH,Paul Metzger,,Downey,California,United States,Base
@@ -19097,7 +19296,7 @@
 3107114,W6CMU,Carnegie Mellon University ,ARC,Moffett Field,California,United States,Club Fleet
 3107115,KI6OID,Michael Yamamoto,,South San Francisco,California,United States,Portable
 3107116,KI6EAY,Fred Venaglia,,Glendale,California,United States,Mobile
-3107117,N1YNQ,Jeremy Consolatti,,Dublin,California,United States,Portable
+3107117,N1YNQ,Jeremy Consolatti,Jeremy,Dublin,California,United States,DMR
 3107118,KK6YHQ,Richard Lewis,,Corona,California,United States,Mobile
 3107119,N2VAJ,Anthony M. Scalpi,,Orange,California,United States,Portable
 3107120,KK6JYU,Mike Abrahamian,,San dimas,California,United States,Portable
@@ -19392,6 +19591,28 @@
 3107411,KF6OSO,Thomas R Cole,Tom,La Mirada,California,United States,DMR
 3107412,N6GAZ,Geoffrey C Smith,Clark -1,Orinda,California,United States,DMR
 3107413,KE6FGW,Paddy E Ordway,,Stevenson Ranch,California,United States,DMR
+3107414,K6ZWA,Zac Amsler,Zac,Monterey,California,United States,DMR
+3107415,W9FFL,Barry Redding,,San Jose,California,United States,DMR
+3107416,K6BIB,Bogdan M Cirlig,Biba,Los Gatos,California,United States,DMR
+3107417,WB6LOT,Steve T Cole,,Crestline,California,United States,DMR
+3107418,KM6ANN,Marcus Mackenzie,,Costa Mesa,California,United States,DMR
+3107419,KK6OVD,Joseph B Villasista,Joey,Oceanside,California,United States,DMR
+3107420,KK6OVD,Joseph B Villasista,Joey,Oceanside,California,United States,DMR
+3107421,N1TCA,Michael W Warchut,Mike,Fairfield,California,United States,DMR
+3107422,WZ2Q,Howard M Harte,,Dublin,California,United States,DMR
+3107423,N6SET,Peter C Van Scherpe,,Foster City,California,United States,DMR
+3107424,KF6MSP,Frank L Bracken,Frank,Saratoga,California,United States,DMR
+3107425,NA6XR,Otis B Mccoy,Na6xr,Long Beach,California,United States,DMR
+3107426,KB6LA,Joseph Moschella,Joe,Los Angeles,California,United States,DMR
+3107427,KG6VPL,Alton B Wong,Al,San Francisco,California,United States,DMR
+3107428,K6JAW,James A Walton,Jim,Corona,California,United States,DMR
+3107429,KK6ZAW,Nancy B Walsh,,Lakewood,California,United States,DMR
+3107430,KI6RT,Jonathan Kim,Jon,San Jose,California,United States,DMR
+3107431,AF6TE,Jonathan J Mirabile,,Simi Valley,California,United States,DMR
+3107432,KD6MDV,Donald T Tribble,Tim,Sacramento,California,United States,CCS7
+3107433,KD6MDV,Donald T Tribble,,Sacramento,California,United States,CCS7
+3107434,KI6MPU,Benjamin Michan,,Fresno,California,United States,DMR
+3107435,WN6CTY,Sandy Ganz,,Studio City,California,United States,DMR
 3108001,NR2Y,Marinus Jacobs,,Colorado Springs,Colorado,United States,Portable
 3108002,WA2YZT,Paul Deeth,,Golden,Colorado,United States,Mobile
 3108003,K0JSC,Jeff Carrier,,Canon City,Colorado,United States,Portable #1
@@ -20128,6 +20349,14 @@
 3108735,K9ATK,Brian I Leet,,Aurora,Colorado,United States,DMR
 3108736,KI0ID,Clayton W Schneider,,Aurora,Colorado,United States,DMR
 3108737,KB1OTE,Jacob Torrey,,Elizabeth,Colorado,United States,DMR
+3108738,KE0IJN,David C Brower,Dave,Colorado Springs,Colorado,United States,DMR
+3108739,W0PHC ,Steve Pueblo Ham Club,,Pueblo,Colorado,United States,DMR
+3108740,W0PHC ,Carrie  Pueblo Ham Club,,Pueblo,Colorado,United States,DMR
+3108741,K0NNN,David E Nolan,Dave,Brighton,Colorado,United States,DMR
+3108742,KB0KZR,William M Sturtz,Matt,Boulder,Colorado,United States,DMR
+3108743,W0GJF,Gilbert J Friedmann,,Yoder,Colorado,United States,DMR
+3108744,N0XDX,John D Throndson,,Longmont,Colorado,United States,DMR
+3108745,W0FTP,Bill Sheriff,,Denver,Colorado,United States,DMR
 3109001,WA2WCB,Michael D. Arsenie,,Roxbury,Connecticut,United States,Portable
 3109002,N1MCC,Kit Kocielo,,Old Lyme,Connecticut,United States,Portable
 3109003,N1MCC,Kit Kocielo,,Old Lyme,Connecticut,United States,Mobile
@@ -20613,6 +20842,17 @@
 3109484,KC1ERO,Jason J Pintek,,Southington,Connecticut,United States,DMR
 3109485,KB1YPD,Nicholas R Cerniglia,Nick,Berlin,Connecticut,United States,DMR
 3109486,KC1FEB,Edward L O'Brien,,Shelton,Connecticut,United States,DMR
+3109487,N1KHW,Koon Hung Wong,Billy,Mansfield Center,Connecticut,United States,DMR
+3109488,KC1PWH,Peter W Hubbard,,Wilton,Connecticut,United States,DMR
+3109489,W1MDJ,Matt D Johnson,Mcmlxxix,Waterbury,Connecticut,United States,DMR
+3109490,N1JBS,William E Simpson,,Glastonbury,Connecticut,United States,DMR
+3109491,WA1VRP,Richard J David,,New Britain,Connecticut,United States,DMR
+3109492,KA1UWB,William H Prout,Bill,East Haven,Connecticut,United States,DMR
+3109493,WA1ZVY,Anthony J Martin,Tony,Hamden,Connecticut,United States,DMR
+3109494,WA1ZVY,Anthony J Martin,Tony,Hamden,Connecticut,United States,DMR
+3109495,WE1K,Jonathan C Prout,,Durham,Connecticut,United States,DMR
+3109496,KC1TWR,Timothy W Rodgers,Tim,Groton,Connecticut,United States,DMR
+3109497,N1MOB,Daniel E David,,Bristol,Connecticut,United States,DMR
 3110001,N2VRQ,David Larson,,Bear,Delaware,United States,Portable
 3110002,KB3WQH,Robert Dobie,,Newark,Delaware,United States,Portable
 3110003,KC3BNZ,Street, Earl,,Claymont,Delaware,United States,Portable
@@ -20624,6 +20864,8 @@
 3110009,NI2O,Mark Phillips,,Wilmington,Delaware,United States,DMR
 3110010,KB3PRW,Douglas W Covert,Doug,Smyrna,Delaware,United States,DMR
 3110011,WB3JUV,Grady C Ball,,Smyrna,Delaware,United States,Other
+3110012,KC3BND,Sean Kirby,Kirby,Frankford,Delaware,United States,DMR
+3110013,KI3B,Joseph M Grib,Joe,Bear,Delaware,United States,DMR
 3111001,W2NJS,Tom Donohoe,,Washington,District of Columbia,United States,Portable
 3111002,W3DCA,Michael Kiron,,Washington,District of Columbia,United States,Mobile
 3111003,WA1ESQ,Jason Wareham,,Washington,District of Columbia,United States,Portable
@@ -21503,7 +21745,7 @@
 3112867,KP4RY,Abimael Padro,,Lares,Florida,United States,DMR
 3112868,KC4FLE,Jose P Ollino,,Miami,Florida,United States,Other
 3112869,KC4HSI,Keating Floyd,Keating,Tampa,Florida,United States,DMR
-3112870,KM4SDV,Michael Arnold,,Fort Myers,Florida,United States,DMR
+3112870,KD4MAA,Michael Arnold,,Fort Myers,Florida,United States,DMR
 3112871,KB4B,Jackson R Driskell,Jack,Jacksonville,Florida,United States,DMR
 3112872,WA3APC,James S Cook,Jim,Venice,Florida,United States,DMR
 3112873,W4AFK,Bruno Haineault,,West Melbourne,Florida,United States,DMR
@@ -21540,7 +21782,6 @@
 3112904,KE4MWZ,George M Ellixson,Mike,Titusville,Florida,United States,DMR
 3112905,KF5IW,James R Blocker,Jim,Fort Myers,Florida,United States,DMR
 3112906,W4DQ,Armond M Lehman,Rick,Coconut Creek,Florida,United States,DMR
-3112907,K4LAW,Seth T Craine,Biff,Tampa,Florida,United States,DMR
 3112908,W4BKY,Rebecca W Craine,Becky,Tampa,Florida,United States,DMR
 3112909,K4JEW,Jeffrey R Goldensoph,Jeff,Dade City,Florida,United States,DMR
 3112910,KM4RFI,Mark D Foskey,,Crestview ,Florida,United States,CCS7
@@ -21581,6 +21822,34 @@
 3112945,K4WFM,William F Moore,,Temple Terrace,Florida,United States,DMR
 3112946,KM4JNI,Laura Makhoul,,Oviedo,Florida,United States,DMR
 3112947,KI4HHK,Bruce Crow,,Saint Petersburg,Florida,United States,DMR
+3112948,KD6KHM,Dennis E Kelly,,Jacksonville,Florida,United States,DMR
+3112949,KC4JQH,William M Anderson,Bill,Zephyrhills,Florida,United States,DMR
+3112950,N2QGV,John A Gwynne,Art,Winter Park,Florida,United States,DMR
+3112951,W1WAB,William A Barron,,Sun City Center,Florida,United States,CCS7
+3112952,W4DFU,Uf Gator Amateur Radio Club,,Gainesville,Florida,United States,DMR
+3112953,KB1YBB,James R Bunnell,,Sebastian,Florida,United States,DMR
+3112954,AA4FL,Jay H Garlitz,,Hawthorne,Florida,United States,DMR
+3112955,KD2KWD,Michael Santamaria,,Brandon,Florida,United States,DMR
+3112956,N4YHS,Herbert C Taylor,Herb,Jacksonville,Florida,United States,DMR
+3112957,AE4WK,Wayne Kocher,,Tampa,Florida,United States,DMR
+3112958,KM4STV,Lucy Reynnells,,Jensen Beach,Florida,United States,DMR
+3112959,KK4QFP,John P Liddell,,Naples,Florida,United States,DMR
+3112960,WD4CQH,Bruce A Crandall,,West Palm Beach,Florida,United States,DMR
+3112961,WB4DX,John H Owens,Radarnet,Ft. Lauderdale,Florida,United States,DMR
+3112962,K4KOZ,Jeffrey L Kozdron,,Hollywood,Florida,United States,DMR
+3112963,N3USA,Angel H Sepulveda,Speedycat3,Miami,Florida,United States,DMR
+3112964,K4LAW,Seth T Craine,Biff,Tampa,Florida,United States,DMR
+3112965,AE4WK,Wayne Kocher,,Tampa,Florida,United States,DMR
+3112966,W4IJJ,John C Reynolds,,Jacksonville,Florida,United States,DMR
+3112967,AJ4LU,David Compton,,Lutz,Florida,United States,DMR
+3112968,KD4JMV,Harry H Sevush,Harry,Naples,Florida,United States,DMR
+3112969,W0MGA,Michael G Anderson,,Jacksonville,Florida,United States,DMR
+3112970,KK4DQJ,Francis H Raab,Franko,Naples,Florida,United States,DMR
+3112971,W4MO,Stewart E Haag,Stew,Venice,Florida,United States,DMR
+3112972,W1LVL,George A Kangas,,Holly Hill,Florida,United States,DMR
+3112973,KM4STV,Lucy Reynnells,,Jensen Beach,Florida,United States,DMR
+3112974,K4JDG,John D Gill,Mobile,Venice,Florida,United States,DMR
+3112975,N4ZQ,George K O,Keith,Dunedin,Florida,United States,DMR
 3113001,KB4R,Greg Ansley,,Alpharetta,Georgia,United States,
 3113002,KC6OVD,Kevin King,,Acworth,Georgia,United States,Portable#1
 3113003,KC6OVD,Kevin King,,Acworth,Georgia,United States,Portable#2
@@ -21646,7 +21915,7 @@
 3113064,KK4LOQ,Brian Thompson,,Alpharetta,Georgia,United States,Portable
 3113065,K4QHR,Peter Dulac,,Kingsland,Georgia,United States,Loaner
 3113066,KD4APP,Don Woodward,,Ball Ground,Georgia,United States,Portable
-3113067,KI4ETJ,Eric Sisk,,Atlanta,Georgia,United States,Portable
+3113067,KG4EEE,Eric Sisk,,Atlanta,Georgia,United States,DMR
 3113068,KG4WIV,Mark Harris,,Woodstock,Georgia,United States,Portable
 3113069,KE4URL,Nirmal Singh,,Whigham,Georgia,United States,Mobile
 3113070,W4AMP,James O'brien,,Cedartown,Georgia,United States,Portable
@@ -21682,7 +21951,7 @@
 3113100,KI4HEQ,Ronald Knauss,,SAINT MARYS,Georgia,United States,Portable
 3113101,KI4RAC,James Erickson,,Screven,Georgia,United States,Mobile
 3113102,W6NY,Thurston Armstrong,,St. Marys,Georgia,United States,Portable
-3113103,KI4ETJ,Eric Sisk,,Atlanta,Georgia,United States,Portable
+3113103,KG4EEE,Eric Sisk,,Atlanta,Georgia,United States,DMR
 3113104,W4AMP,James O,,Dallas,Georgia,United States,Mobile
 3113105,KC9LYM,Will Crocker,,Brookhaven,Georgia,United States,Portable
 3113106,KM4LQV,Cem Carfil,,HOSCHTON,Georgia,United States,Portable
@@ -21815,6 +22084,16 @@
 3113234,WA4RVO,Charles S Eiland,Chuck,Stone Mountain,Georgia,United States,DMR
 3113235,KD4BIS,Kevin C Johnson,Casey,Atlanta ,Georgia,United States,DMR
 3113236,WW4MO,Martin L Olson,,Marietta,Georgia,United States,DMR
+3113237,NJ4CD,John C Dabney,,Gainesville,Georgia,United States,DMR
+3113238,KF4SCA,Brady D Ends,,Winder,Georgia,United States,DMR
+3113239,KC4ZGK,Edward C Chellino,,Marietta,Georgia,United States,DMR
+3113240,K4SID,Sidney J Williams,Sid,Conyers,Georgia,United States,DMR
+3113241,AK4DK,Daniel A Knight,Dan,Loganville,Georgia,United States,DMR
+3113242,AF4MP,Zygmunt P Skrobanski,Zyg,Roswell,Georgia,United States,DMR
+3113243,KE6IYD,Jose Jasso,,Dacula,Georgia,United States,DMR
+3113244,K4BSE,James O Farmer,Jim,Cumming,Georgia,United States,Other
+3113245,KE4KAK,Shane Mehollin,Shane,Woodbine,Georgia,United States,DMR
+3113246,W5MW,William E Gordon,Will,Dawsonville,Georgia,United States,DMR
 3115001,NH7YS,Tad Miura,,Lihue,Hawaii,United States,Mobile
 3115002,KH6DQ,Jack Tsujimura,,Honolulu,Hawaii,United States,Portable
 3115003,AH6PR,Mark Pascal,,Kailua,Hawaii,United States,Portable
@@ -21868,7 +22147,7 @@
 3115051,NH6XO,Bob Hlivak,,Kaneohe,Hawaii,United States,Loaner
 3115052,KH6WG,Stephen Kawamae,,Mililani,Hawaii,United States,Portable
 3115053,W8JVF,James Freetage,,Honolulu,Hawaii,United States,Portable
-3115054,AH6BZ,Ryan Ueoka,,Honolulu,Hawaii,United States,Portable
+3115054,AH6OO,Ryan Ueoka,,Honolulu,Hawaii,United States,DMR
 3115055,AH6S,Tiffany Lawyer,,KAILUA,Hawaii,United States,Portable
 3115056,AH0A,Joseph Speroni,,Honolulu,Hawaii,United States,Mobile
 3115057,K6ATF,Donald Holdener,,Kamuela ,Hawaii,United States,Portable
@@ -21890,6 +22169,10 @@
 3115073,WH7PD,Ralph L Miranda,,Pearl City,Hawaii,United States,Other
 3115074,AH6H,Richard Bulacan,Bula,Mililani,Hawaii,United States,DMR
 3115075,KH6GOZ,Michael J Scott,,Honolulu,Hawaii,United States,DMR
+3115076,AH6EE,David M Clothier,Ld,Wailuku,Hawaii,United States,DMR
+3115077,WH6DWN,Larry K Nihipali,,Kahuku,Hawaii,United States,DMR
+3115078,WH6RG,Scott  Kawahara,,Honolulu,Hawaii,United States,DMR
+3115079,WH6EUG,Wesley M Koga,,Kaneohe,Hawaii,United States,Other
 3115101,WA6SXY,Anette Simon,,Kona,Hawaii,United States,Portable
 3115102,NO7BS,Kirk Nemzer,,Kona,Hawaii,United States,DMR
 3115104,WB6LNX,David Mescon,,Kona,Hawaii,United States,Portable
@@ -22537,6 +22820,17 @@
 3117551,KB9ORA,Constantinos F Bouras,Dino,Chicago,Illinois,United States,DMR
 3117552,W9EMS,Daniel J Durbin,,Woodstock,Illinois,United States,DMR
 3117553,KC9GQR,Bradley D Haney,,Metamora,Illinois,United States,CCS7
+3117554,KC9GQR,Bradley D Haney,,Metamora,Illinois,United States,DMR
+3117555,AB1Z,Warren D Miedema,,Hawthorn Woods,Illinois,United States,DMR
+3117556,KC9HLL,Stephanie M Haney,,Metamora,Illinois,United States,DMR
+3117557,KC9HLL,Stephanie M Haney,,Metamora,Illinois,United States,DMR
+3117558,KC9ZLC,Nathan Roney,Nate,Maryville,Illinois,United States,DMR
+3117559,AB1Z,Warren Miedema,,Hawthorn Woods,Illinois,United States,DMR
+3117560,W9CV,Ralph Tessmann,,Plainfield,Illinois,United States,DMR
+3117561,K9LOT,Jerry Watts,,Frankfort,Illinois,United States,DMR
+3117562,K9BOO,Mark Anderson,,Chicago,Illinois,United States,DMR
+3117563,KC9WME,Burt Krain,,Northbrook,Illinois,United States,DMR
+3117564,N9KTW,Howard R Goldberg,,Libertyville ,Illinois,United States,Other
 3118001,KK9EJ,Ej Caylor,,Noblesville,Indiana,United States,Portable
 3118002,KG9NN,Robert Long,,Auburn,Indiana,United States,Portable
 3118003,KC8PTE,David Wild,,Bloomington,Indiana,United States,Portable
@@ -23139,6 +23433,17 @@
 3118600,N9LJT,Leonard J Timberman,Joe,Liberty,Indiana,United States,DMR
 3118601,N9UDH,David J Whitehead,,Goshen,Indiana,United States,DMR
 3118602,N9IZ,Jeffrey R Brown,,Thorntown,Indiana,United States,DMR
+3118603,N9CVA,David L Moyers,Dave,Floyds Knobs,Indiana,United States,DMR
+3118604,KB9SRE,Terry L Payne,,Westport,Indiana,United States,DMR
+3118605,KD9DUX,Chadwick A Ziemer,Chad,Monticello,Indiana,United States,DMR
+3118606,KC9BXX,David D Diehl,,Fremont,Indiana,United States,DMR
+3118607,N7CZ,Robert C Avritt,Bob,Indianapolis,Indiana,United States,DMR
+3118608,KD9MH,Mark R Heiser,Doc,Fishers,Indiana,United States,DMR
+3118609,W9MCI,Eugene F Williams,Butch,Twelve Mile,Indiana,United States,DMR
+3118610,K9PSR,William E Norris,Ed,Logansport,Indiana,United States,DMR
+3118611,W9NES,Timothy A De Long,,Indianapolis,Indiana,United States,DMR
+3118612,N9WLW,Daniel N Ward,Dan,Churubusco,Indiana,United States,DMR
+3118613,K9WOG,Eric E Wolgamott,Wog,Osceola,Indiana,United States,DMR
 3119002,WD0FIA,Keith Carpenter,Keith,Bridgewater,Iowa,United States,
 3119003,W0DT,Donald Talaska,,Cedar Falls,Iowa,United States,Portable
 3119004,KD0WY,Roger Gorzney,,CLINTON,Iowa,United States,Mobile
@@ -23148,6 +23453,8 @@
 3119008,KB0RSW,Randall D Mc Clain,RANDALL D,Dunkerton,Iowa,United States,DMR
 3119009,N0ACX,Colby Penn,,Altoona,Iowa,United States,DMR
 3119010,KD0WFX,Brad A Proctor,,Indianola,Iowa,United States,CCS7
+3119011,K0UPH,Frank A Coller,Frank,Bettendorf,Iowa,United States,DMR
+3119012,N0GR,Gregory S Ross,,Minden,Iowa,United States,DMR
 3119100,WB0VHB,Randy Nelson,,Mt. Union,Iowa,United States,Mobile #1
 3119101,K0TSK,Timothy Kilbride,,Victor,Iowa,United States,Portable
 3119102,K7PEM,Paul Mccoy,,Anamosa,Iowa,United States,Portable
@@ -23237,6 +23544,8 @@
 3120047,KB0NRG,Ronald D Ginardi,,Frontenac,Kansas,United States,DMR
 3120048,N5SD,Stephen C Draper,,Weir,Kansas,United States,DMR
 3120049,KE0CUY,Robert A Kessler,,Lenexa,Kansas,United States,DMR
+3120050,KC0LDA,Douglas J Kelly,Doug,Olathe,Kansas,United States,DMR
+3120051,WB0KIA,Kenneth C Yarnevich,Kenny,Kansas City,Kansas,United States,DMR
 3120101,N0MJS,Cort Buffington,,Lawrence,Kansas,United States,Portable
 3120102,KD0CYJ,Shannon O�connor,,Lawrence,Kansas,United States,Portable
 3120103,N0MJS,Cort Buffington,,Lawrence,Kansas,United States,Portable
@@ -23405,6 +23714,7 @@
 3121083,KI4FRJ,Billy D Pennington,,London,Kentucky,United States,DMR
 3121084,KI4JWK,Robert G Brown,Bob,Lexington,Kentucky,United States,DMR
 3121085,KB4PTJ,William D Jones,Will,Williamsburg,Kentucky,United States,DMR
+3121086,KI4GMP,David E Jasper,,Ludlow,Kentucky,United States,DMR
 3122001,KD5SSQ,Anthony Tango,,Covington,Louisiana,United States,Portable
 3122002,W5ELM,Earl Morrow,,Oberlin,Louisiana,United States,Portable
 3122003,KB5UDF,Jean Boudreaux,,Lafayette,Louisiana,United States,Portable
@@ -23429,6 +23739,8 @@
 3122023,KG5KTN,Brent M Matthews,Brent,Baton Rouge,Louisiana,United States,DMR
 3122024,KA5LUG,Ronald E Wright,Ron,Natchitoches,Louisiana,United States,DMR
 3122025,KD5DFL,Scott B Wren,,Pineville,Louisiana,United States,DMR
+3122026,KB5FSG,Gerald Miller,Ta Tai,Lake Arthur,Louisiana,United States,DMR
+3122027,W5DJA,Donald J Arceneaux,Don,Baton Rouge,Louisiana,United States,DMR
 3123001,N1XBM,Robert Newberry,,Raymond,Maine,United States,Portable
 3123002,WJ1D,James Delancy,,Saint Francis,Maine,United States,Portable
 3123003,WJ1D,James Delancy,,Saint Francis,Maine,United States,Mobile
@@ -23554,7 +23866,7 @@
 3123123,NW1P,Luke Dyer,,Van Buren,Maine,United States,Other
 3123124,N1DEN,Doug Nelson,Doug,Belfast,Maine,United States,DMR
 3123125,KC1CTJ,Nicholas Johnson,Nick,Presque Isle,Maine,United States,DMR
-3123126,KC1DEZ,Daryl R Johnson,Daryl,Greenfield Twp,Maine,United States,DMR
+3123126,N1BGR,Daryl R Johnson,Daryl,Greenfield Twp,Maine,United States,DMR
 3123127,AA1PN,Clarence I Rider,CLARENCE I,Exeter,Maine,United States,DMR
 3123128,W1JH,Eric Keppel,Eric,Winterport,Maine,United States,DMR
 3123129,W1LWT,Lee W Trask,Lee W,Lisbon Fallls,Maine,United States,DMR
@@ -23597,6 +23909,39 @@
 3123166,KA1RTW,Michael J Grace,,Pownal,Maine,United States,DMR
 3123167,KT1R,Louis A Eckert,Lou,Hermon,Maine,United States,DMR
 3123168,KC1EZU,Andrew M Constantine,,Windham,Maine,United States,DMR
+3123169,KC1AIZ,Johannes R Bakker,,Bangor,Maine,United States,DMR
+3123170,N1OQS,Jimmy D Mathews,Jim,Bangor,Maine,United States,DMR
+3123171,WA1JMM,George R Dean,,Brownville,Maine,United States,DMR
+3123172,N1UB,Barton J Newhouse,Bart,Sidney,Maine,United States,DMR
+3123173,WA4SWM,John Hackney,,Orono,Maine,United States,DMR
+3123174,K1DEL,Dana E Littlefield,,Strong,Maine,United States,DMR
+3123175,KB1ZCF,Brian Demers,,Palmyra,Maine,United States,DMR
+3123176,WA1AKV,Donald E Gaudreau,Don,Hermon,Maine,United States,DMR
+3123177,KC1AIH,Miriam K Morgan Alexander,,Lisbon,Maine,United States,DMR
+3123178,KB1GBD,Gary B Daigle,,Monroe,Maine,United States,DMR
+3123179,KB1KDX,Carol A Inman,,Monroe,Maine,United States,DMR
+3123180,K1MJB,Martin J Baker,Marty,Mount Vernon,Maine,United States,DMR
+3123181,N1NPL,Erik D Cockburn,,West Enfield ,Maine,United States,DMR
+3123182,WQ1W,John R Hersey,,Norway,Maine,United States,DMR
+3123183,KF4IIG,Mark A Sullivan,,Holden,Maine,United States,DMR
+3123184,KB1RHF,Joseph Kellner,Joe,Bangor,Maine,United States,DMR
+3123185,KC1CCC,Bill  Mitchell,,Glenburn,Maine,United States,DMR
+3123186,K1SSC,Susan S Choate,Sue,Owls Head,Maine,United States,DMR
+3123187,N1ZNJ,Gary L Gilman,,Naples,Maine,United States,DMR
+3123188,KB1PYV,Anne G Rothrock,,Thorndike,Maine,United States,DMR
+3123189,K1CDA,Charles D Mcmahan,,Newburgh,Maine,United States,DMR
+3123190,KB1KSM,Jonathan T Grout,Jon,Thomaston,Maine,United States,DMR
+3123191,N1XIM,Drew D Northup,,Clifton,Maine,United States,DMR
+3123192,N1OXA,Ivan L Lazure,,Lewiston,Maine,United States,DMR
+3123193,KB1HOZ,Charles M Wescott,,Clinton,Maine,United States,DMR
+3123194,AA1LO,David A Johnson,Dave,Wells,Maine,United States,DMR
+3123195,K1WXY,Robert L Stessel,Stes,Milford,Maine,United States,DMR
+3123196,K1WXY,Robert Stessel,Stes,Milford,Maine,United States,DMR
+3123197,KC1FOB,Deborah A Ellis,Debbie,Bangor,Maine,United States,DMR
+3123199,KB1PTQ,Samuel P Stessel,Samuel,Milford,Maine,United States,DMR
+3123200,KB1UOS,Breena M Newberry,,Raymond,Maine,United States,DMR
+3123201,N1URT,Kerry T Case,,New Vineyard,Maine,United States,DMR
+3123202,KB1WLU,Bruce M Johnson,,Greenbush,Maine,United States,DMR
 3124001,N3LHD,Tom Provenza,,Davidsonville,Maryland,United States,Portable & Mobile
 3124002,N3LHD,Tom Provenza,,Davidsonville,Maryland,United States,Control Station
 3124003,N3LHD,Tom Provenza,,Davidsonville,Maryland,United States,Demo
@@ -23794,6 +24139,10 @@
 3124195,AA3NN,Kenneth L Courtney,Kenny,Clinton,Maryland,United States,Other
 3124196,AA3NN,Kenneth L Courtney,,Clinton,Maryland,United States,DMR
 3124197,KK4KPY,Douglas Webster,Doug,Gambrills,Maryland,United States,DMR
+3124198,KC3EQJ,Matthew S Dori,Matt,Snow Hill,Maryland,United States,DMR
+3124199,NK3T,David J Hess,Dave,Snow Hill,Maryland,United States,DMR
+3124200,KB3VCS,Willard W Ward,Willy,Salisbury,Maryland,United States,DMR
+3124201,KC2GUA,Robert G Carlyle,,Waldorf,Maryland,United States,DMR
 3125001,W1NAU,Tim Nau,,Boston,Massachusetts,United States,Portable
 3125002,KT1U,Vivian Podsiadlo,,Mendon,Massachusetts,United States,Portable
 3125003,AE1C,Jim Podsiadlo,,Mendon,Massachusetts,United States,Mobile
@@ -23927,7 +24276,7 @@
 3125131,NI1S,John Carr,,Needham,Massachusetts,United States,Mobile
 3125132,KB1FQG,John Flood,,Maynard,Massachusetts,United States,Mobile
 3125133,N1ZC,Harold Carlson,,Rochdale,Massachusetts,United States,Mobile
-3125134,KS1Q,John Barbuto,,Marshfield ,Massachusetts,United States,Mobile
+3125134,KS1Q,John Barbuto,,Hull,Massachusetts,United States,DMR
 3125135,K1XML,Alexander Falk,,Marblehead,Massachusetts,United States,Mobile
 3125136,K1OTA,Ken Cantrell,,Chelmsford,Massachusetts,United States,Mobile
 3125137,W1MPD,Richard Wright,,Norfolk,Massachusetts,United States,Portable
@@ -24052,7 +24401,7 @@
 3125256,KC1VIC,Victor Caputo,Vic,Williamsburg,Massachusetts,United States,Other
 3125257,KC1AEI,Matt Knowles,,Danvers,Massachusetts,United States,DMR
 3125258,KE1L,Shirley Dulcey,,Dorchester Center,Massachusetts,United States,DMR
-3125259,KC1EXS,Scott Gaudet,shellback1998,Weymouth,Massachusetts,United States,DMR
+3125259,KO4W,Scott Gaudet,shellback1998,Weymouth,Massachusetts,United States,DMR
 3125260,AA1VS,Charles Suprin,,Lowell,Massachusetts,United States,DMR
 3125261,N1HIR,Christopher Diamond,Chris,Westford,Massachusetts,United States,DMR
 3125262,N1YLQ,Michael P Leger,Michael P,Acushnet,Massachusetts,United States,DMR
@@ -24074,6 +24423,15 @@
 3125278,KB1EKN,Mark J Duff,,Hingham,Massachusetts,United States,DMR
 3125279,NM1B,Matthew T Brennan,,Worcester,Massachusetts,United States,DMR
 3125280,NM1B,Matthew Brennan,,Worcester,Massachusetts,United States,DMR
+3125281,KM1CC,Marconi  Cape Cod Radio Club,,Wellfleet,Massachusetts,United States,DMR
+3125282,K1MOT,COURSE Motorola ARC,,Boston,Massachusetts,United States,DMR
+3125283,K1MOT,START Motorola ARC,,Hopkinton,Massachusetts,United States,DMR
+3125284,KC3BIU,Andrew F Flynn,,Worcester,Massachusetts,United States,DMR
+3125285,KC1EPN,Daniel B Sheen,,Boston,Massachusetts,United States,DMR
+3125286,KB1PJN,Eric Taylor,,Natick,Massachusetts,United States,DMR
+3125287,KB1NCG,Marek Kozubal,,Arlington,Massachusetts,United States,DMR
+3125288,W1GSC,Gary S Cohen,,Revere,Massachusetts,United States,DMR
+3125289,KC1EGK,Joseph F Murray,,Braintree,Massachusetts,United States,DMR
 3126001,N8CN,Joe Erlewein,,Traverse City,Michigan,United States,Portable
 3126002,KD8EYF,David Kierzkowski,,Detroit,Michigan,United States,Portable#1
 3126003,W8FSM,Fred Moses,,Fenton,Michigan,United States,Portable #1
@@ -24797,6 +25155,41 @@
 3126721,KD8DLP,Paul A Bodnar,,Dorr,Michigan,United States,DMR
 3126722,N8VLJ,John S Kay,,Grand Rapids,Michigan,United States,DMR
 3126723,N8GAN,Kenneth L Koch,Ken,Harrison,Michigan,United States,DMR
+3126724,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126725,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,DMR
+3126726,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126727,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126728,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126729,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126730,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126731,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126732,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126733,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126734,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126735,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126736,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126737,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126738,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126739,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126740,W8LRC,Larc Lowell Amateur Radio Club,,Lowell,Michigan,United States,DMR
+3126741,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126742,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126743,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126744,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126745,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126746,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126747,W8CMN,Central Michigan Emergency Network Central Michigan Emergency Network,,Fenton,Michigan,United States,Club Fleet
+3126748,W8LFM,Lynn F Morgan,,Livonia,Michigan,United States,DMR
+3126749,KD8VZF,Joshua P Graff,,Huntington Woods,Michigan,United States,DMR
+3126750,KD8HBY,Holly L Zorn,,Auburn Hills,Michigan,United States,DMR
+3126751,WB8AIZ,Kevin J Mathison,,Mount Clemens,Michigan,United States,CCS7
+3126752,N8CPW,Charles P White,Patrick,Birmingham,Michigan,United States,DMR
+3126753,N8VPZ,Daniel J Hebron,,Cassopolis,Michigan,United States,DMR
+3126754,KA8E,Glenn R Wright,,Dearborn,Michigan,United States,DMR
+3126755,N8MEB,Charles L Mathison,,Columbus,Michigan,United States,CCS7
+3126756,KA8RMA,Jared M Sisco,Karma,Traverse City,Michigan,United States,DMR
+3126757,KG8OC,Timothy S Pickett,Tim,Vassar,Michigan,United States,DMR
+3126758,KD8PA,Gregory L Wesley,Toad,Lansing,Michigan,United States,DMR
 3127001,N0NMZ,Shep Shepardson,,Roseville,Minnesota,United States,Mobile
 3127002,NH7CY,Jason Ballesteros,,Saint Paul,Minnesota,United States,Portable
 3127003,NH7CY,Jason Ballesteros,,Saint Paul,Minnesota,United States,Demo
@@ -24934,6 +25327,19 @@
 3127135,K0FCC,Daniel D Swee,,Columbia Heights,Minnesota,United States,DMR
 3127136,N0QVC,Brian J Klier,Brian,Faribault,Minnesota,United States,DMR
 3127137,N0KBD,David E Johnson,,Champlin,Minnesota,United States,DMR
+3127138,N0PBA,Sean Stepanek,,Mankato,Minnesota,United States,DMR
+3127139,KM0D,Randy G Wendel,,Bloomington,Minnesota,United States,DMR
+3127140,KA0PHD,Peter R Hall,,Crystal,Minnesota,United States,DMR
+3127141,K0AQE,Michael A Lewis,Mike,Faribault,Minnesota,United States,DMR
+3127142,K2KLN,Steven A Csizmadia,,Mankato,Minnesota,United States,DMR
+3127143,AC0YR,Joseph G Sherohman,Joe,Maple Grove,Minnesota,United States,DMR
+3127144,K9EQ,Christopher M Petersen,Chris,Ham Lake,Minnesota,United States,CCS7
+3127145,KC0RYK,Charles W Lutes,,Mankato,Minnesota,United States,Other
+3127146,N0GOI,Terry B Londroche,Terry,St. Paul,Minnesota,United States,DMR
+3127147,N0BVE,Donald A Rice,Don,Minnetonka,Minnesota,United States,DMR
+3127148,W0JFC,Martin A Erickson Iv,,Apple Valley,Minnesota,United States,DMR
+3127149,W0SDG,Steven D Gaiser,,Bloomington,Minnesota,United States,DMR
+3127150,KE0EMB,Laurence L Denny,Lee,Saint Cloud,Minnesota,United States,DMR
 3128001,KF5MWE,Gary White,,Quitman,Mississippi,United States,Portable
 3128002,K5WSM,Lemuel Smith,,Fulton,Mississippi,United States,
 3128003,KD4VVZ,General Dailey,,Lucedale,Mississippi,United States,Portable
@@ -24961,6 +25367,9 @@
 3128025,N5ZNO,Thomas Martin,Tommy,Madison,Mississippi,United States,Other
 3128026,K9LJQ,James Stewart,,Olive Branch,Mississippi,United States,DMR
 3128027,AA5SG,Jeffery S Grantham,,Ellisville,Mississippi,United States,DMR
+3128028,W5NRU,Jeffery Networked Radio User,Nrug,Ellisville,Mississippi,United States,DMR
+3128029,AK5CT,W C Tate Tate,,Saltillo,Mississippi,United States,DMR
+3128030,AK5CT,W C Tate Tate,,Saltillo,Mississippi,United States,CCS7
 3129001,W0PM,John Rayfield Jr,,Springfield,Missouri,United States,Portable
 3129002,W0PM,John Rayfield Jr,,Springfield,Missouri,United States,Mobile
 3129003,N0EUG,John Rayfield Sr,,Springfield,Missouri,United States,Portable
@@ -25036,6 +25445,14 @@
 3129073,AD0KA,John W Humble,,Joplin,Missouri,United States,DMR
 3129074,AD0KA,John W Humble,,Joplin,Missouri,United States,DMR
 3129075,K0LW,Lee A Ward,,Peculiar,Missouri,United States,DMR
+3129076,NS0D,Robert L Henderson,Pete,Independence,Missouri,United States,CCS7
+3129077,KD0HMH,Scott F Covey,,Kansas City,Missouri,United States,DMR
+3129078,KD0HMH,Scott F Covey,,Kansas City,Missouri,United States,DMR
+3129079,KC0YYS,Mark E Buckley,,Sedalia,Missouri,United States,DMR
+3129080,N9JRM,Jeffrey R Mullin,Jeff,Wentzville,Missouri,United States,DMR
+3129081,KD0NKQ,Jean M Covey,,Kansas City,Missouri,United States,DMR
+3129082,N0RJC,Daniel J Carter,,Kansas City,Missouri,United States,DMR
+3129083,N9JRM,Jeffrey R Mullin,Jeff,Wentzville,Missouri,United States,DMR
 3129101,W0WJB,William J. Brunkhardt,,Kansas City,Missouri,United States,Portable #1
 3129102,W0WJB,William J. Brunkhardt,,Kansas City,Missouri,United States,Portable #2
 3129103,W0WJB,William J. Brunkhardt,,Kansas City,Missouri,United States,Mobile
@@ -25132,8 +25549,8 @@
 3131023,WB0QQK,Frank Vondra,,Omaha,Nebraska,United States,Base
 3131024,N9WHM,Nathan Luey,,Elkhorn,Nebraska,United States,Portable
 3131025,KE0XQ,Bill Mccollum,,Omaha,Nebraska,United States,Portable
-3131026,NE0RC,Nebraska Amateur Radio Club,,Bellevue,Nebraska,United States,DMR
-3131027,NE0RC,Nebraska Amateur Radio Club,,Bellevue,Nebraska,United States,DMR
+3131026,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,DMR
+3131027,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,DMR
 3131028,KC0DTK,Joan Bellairs,,Bellevue,Nebraska,United States,Portable
 3131029,W0AAI,Greg Babbit,,Omaha,Nebraska,United States,Portable
 3131030,W9AFB,Scott Grams,,Bellevue,Nebraska,United States,Portable
@@ -25142,7 +25559,7 @@
 3131033,WB0QQK,Frank Vondra,,Omaha,Nebraska,United States,Portable
 3131034,KD0DDU,Robert Ervin,,Omaha,Nebraska,United States,Portable
 3131035,N0PSV,John Cooper,,Bellevue,Nebraska,United States,Portable
-3131036,N0QEI,Joel Stacy,,Omaha,Nebraska,United States,Portable
+3131036,K0OQL,Joel Stacy,,Omaha,Nebraska,United States,DMR
 3131037,WR5I,John Bergmann,,Plattsmouth,Nebraska,United States,Mobile
 3131038,KI0PY,Kevin Faris,,Plattsmouth,Nebraska,United States,Mobile
 3131039,KI0PY,Kevin Faris,,Plattsmouth,Nebraska,United States,Loaner
@@ -25200,7 +25617,21 @@
 3131091,N0NSD,Jerry L Rotschafer,JERRY R,Denton,Nebraska,United States,DMR
 3131092,W0TVS,James B Case,Brad,Bellevue,Nebraska,United States,DMR
 3131093,KA0VNY,Kevin P Hill,,Gretna,Nebraska,United States,DMR
+3131094,WB0SIP,William D Seier,Bill,Lincoln,Nebraska,United States,DMR
 3131095,N0UP,Stephen J Schmitz,Steve,Papillion,Nebraska,United States,DMR
+3131096,K0OQL,Joel A Stacy,,Omaha,Nebraska,United States,DMR
+3131097,KC0BDZ,Karl H Davlin,,Omaha,Nebraska,United States,DMR
+3131098,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131099,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131100,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131101,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131102,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131103,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131104,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131105,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131106,NE0RC,Nebraska  Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
+3131107,N0JWS,James  Scheideler,,Crete,Nebraska,United States,DMR
+3131108,NE0RC,Nebraska Amateur Radio Club,NE0RC,Bellevue,Nebraska,United States,Club Fleet
 3132001,KG7VUJ,Joseph Simeo,Joe,Reno,Nevada,United States,
 3132002,NR7H,Bill Foster,Bill,Reno,Nevada,United States,
 3132003,WB9STH,Steve Gebhard,,Las Vegas,Nevada,United States,Portable
@@ -25561,6 +25992,10 @@
 3132360,KJ7UK,Richard L Creley,,Gardnerville,Nevada,United States,DMR
 3132361,KJ7UK,Richard L Creley,,Gardnerville,Nevada,United States,DMR
 3132362,N7TGB,Charles R Nehrbass,Richard,Sun Valley,Nevada,United States,DMR
+3132363,KI7DIP,Donald Schoemer,,Henderson,Nevada,United States,DMR
+3132364,KB2TZP,Frank P Beninato,,Las Vegas,Nevada,United States,DMR
+3132365,KG7NLW,David W Sorensen,,Las Vegas,Nevada,United States,DMR
+3132366,KF7LPH,Douglas M Dye,,Las Vegas,Nevada,United States,DMR
 3133001,NE1B,Bill Barber,,Hudson,New Hampshire,United States,Portable
 3133002,NE1B,Bill Barber,,Hudson,New Hampshire,United States,Mobile
 3133003,WA2IYO,Pat Barber,,Hudson ,New Hampshire,United States,
@@ -25573,7 +26008,7 @@
 3133010,N1PFB,Paul Beasley,,Derry,New Hampshire,United States,Portable
 3133011,N1PFB,Paul Beasley,,Derry,New Hampshire,United States,Mobile
 3133012,W1CUI,Dan Cui,,Barrington,New Hampshire,United States,DMR
-3133013,K1MOT,Marc ,,Hudson,New Hampshire,United States,Portable -Loaner
+3133013,KA1VGM,Lawrence A Levesque,Larry,Surry,New Hampshire,United States,DMR
 3133014,N1GLT,Wally O'donnell,,Derry,New Hampshire,United States, Portable
 3133015,WF1R,Elizabeth O'donnell,,Derry,New Hampshire,United States, Portable
 3133016,N1IMO,Bernie Peabody,,Nashua,New Hampshire,United States,Harris Portable
@@ -25774,6 +26209,15 @@
 3133211,W1HS,Steve Goldsmith,,Grantham,New Hampshire,United States,CCS7
 3133212,N7ECM,Eric Montague,,Hudson,New Hampshire,United States,DMR
 3133213,KA1KST,James B Whittaker,,Walpole,New Hampshire,United States,DMR
+3133214,K1RJZ,Richard J Zach,Rick,Gilford,New Hampshire,United States,DMR
+3133215,W1BST,Lrra Lakes Region Repeater Association,Lrra,Gilford,New Hampshire,United States,DMR
+3133216,KA1VGM,Lawrence A Levesque,Larry,Surry,New Hampshire,United States,DMR
+3133217,N1MXJ,Michael J Paulin,,Dublin,New Hampshire,United States,DMR
+3133218,W1HNX,James C Pokorny,Jim,South Acworth,New Hampshire,United States,DMR
+3133219,AA1TT,Billy Michaud,,Claremont,New Hampshire,United States,DMR
+3133220,KB1MOG,John F Rolfson,John,Gilmanton,New Hampshire,United States,DMR
+3133221,AA1TT,Billy  Michaud,,Claremont,New Hampshire,United States,DMR
+3133222,KB1CID,David E Chandler,,Center Ossipee,New Hampshire,United States,DMR
 3134001,K2XTS,Alex Chadis-ny Sysop,,Hoboken,New Jersey,United States,Portable
 3134002,K2XTS,Alex Chadis-ny Sysop,,Hoboken,New Jersey,United States,Mobile
 3134003,KC2WNG,Israel Goldstein,,East Brunswick,New Jersey,United States,Portable
@@ -25968,7 +26412,7 @@
 3134192,K2CB,Eric Dobrowansky,,Manahawkin,New Jersey,United States,Portable
 3134193,KC2VRJ,Paul Nannery,,Fords,New Jersey,United States,Mobile
 3134194,N2QXB,Paul Hansen,,Berkley Twp,New Jersey,United States,Portable
-3134195,KD2BRR,Austin Pencinger,,Clark,New Jersey,United States,Portable
+3134195,K2ATP,Austin Pencinger,,Clark,New Jersey,United States,DMR
 3134196,WD9EQD,Billy Hemphill,,Galloway,New Jersey,United States,Loaner
 3134197,N2MDM,Michael Moller,,Bordentown,New Jersey,United States,Portable
 3134198,WA2ZE,Paul Krzewinski,,Chesterfield,New Jersey,United States,Portable
@@ -26012,8 +26456,8 @@
 3134236,WA2HYO,Tony Cranston,,east brunswick ,New Jersey,United States,Portable
 3134237,WB3EBN,Robert W. Janney,,Wayne,New Jersey,United States,Mobile
 3134238,KD2GZY,John Alston,,Plainfield,New Jersey,United States,Portable
-3134239,W4ITG,Mark A Herman,,Piscataway,New Jersey,United States,Portable
-3134240,W4ITG,Mark A Herman,,Piscataway,New Jersey,United States,Portable
+3134239,W4ITG,Mark A Herman,,BERNARDSVILLE,New Jersey,United States,DMR
+3134240,W4ITG,Mark A Herman,,BERNARDSVILLE,New Jersey,United States,DMR
 3134241,KD2AAP,Anthony J Cranston,,East Brunswick,New Jersey,United States,Portable
 3134242,WA2SEC,Howard Bendrot,,Metuchen,New Jersey,United States,Portable
 3134243,N2KXY,Kevin Pahira,,Brick,New Jersey,United States,Portable
@@ -26215,6 +26659,18 @@
 3134439,AC2BK,Harold J Garron,,Deptford,New Jersey,United States,CCS7
 3134440,N2TQL,Joseph G Moor,Joe,Wantage,New Jersey,United States,DMR
 3134441,NX3I,Thomas J Maher,Tom,Brigantine,New Jersey,United States,CCS7
+3134442,KD2IVG,Kenneth M Kebless,Ken,Barnegat,New Jersey,United States,DMR
+3134443,KC2SVX,Joseph J Picardi,,Galloway Twp,New Jersey,United States,DMR
+3134444,KD2IVG,Kenneth M Kebless,Ken,Barnegat,New Jersey,United States,DMR
+3134445,KI4KWR,Stephen T Molo,Steve,Tuckerton,New Jersey,United States,DMR
+3134446,KD2KVY,Daniel Ringer,Dan,Woodbine,New Jersey,United States,DMR
+3134447,WA2WUN,James R Tieman,,Runnemede,New Jersey,United States,DMR
+3134448,K2AUD , Boro Of Audubon  Emergency Management,,Audubon ,New Jersey,United States,Club Fleet
+3134449,KB2RLQ,Eddy Medina,Pulposa,Fairview,New Jersey,United States,DMR
+3134450,KD2JGH,Jerry B Pacis,,Jackson,New Jersey,United States,DMR
+3134451,K2ZGW,Mario G Assennato,,Glendora,New Jersey,United States,DMR
+3134452,KD2KNV,Cynthia R Pacis,Cindy,Jackson,New Jersey,United States,DMR
+3134453,KD2JOC,Yentel Hollebeke,,Eatontown,New Jersey,United States,DMR
 3135001,N5BG,Larry Griggs,,Virden,New Mexico,United States,Mobile
 3135002,N5BG,Larry Griggs,,Virden,New Mexico,United States,Mobile
 3135003,N5UBJ,William Van Huss,,Farmington,New Mexico,United States,Mobile
@@ -27161,6 +27617,18 @@
 3136894,KC2VTJ,Dominick  Guerra,,Wallkill,New York,United States,DMR
 3136895,KB2SOZ,Charles  Escriva,Charlie,Macedon,New York,United States,DMR
 3136896,KC2OBW,Scott M Holmes,,Wappingers Falls ,New York,United States,Other
+3136897,N2NUO,Mark E Robinson,,Waverly,New York,United States,DMR
+3136898,NB2O,Bryan J Kim,,New York,New York,United States,DMR
+3136899,KA2BIX,Anthony F Flores,Tony,Hudson Falls,New York,United States,DMR
+3136900,KK4VCZ,Travis M Goodspeed,,New York,New York,United States,DMR
+3136901,KA2GEF,Robert J Soto,Bob,N. Baldwin,New York,United States,DMR
+3136902,AB2WZ,David A Foster,,Macedon,New York,United States,CCS7
+3136903,KB2WZX,John W Hennion,Johnny105,Burlingham,New York,United States,DMR
+3136904,KB2WZX,John W Hennion,,Burlingham,New York,United States,DMR
+3136905,AC2HE,Andrew Babiak,Andy,Breesport,New York,United States,DMR
+3136906,N2OLK,Olivier L Kramer,,Carmel ,New York,United States,DMR
+3136907,KD2GHN,Frederick Gorden,Fredgny,Far Rocaway,New York,United States,DMR
+3136908,K2AP,Joseph Sciacca,Joe,East Islip,New York,United States,DMR
 3137001,W4ZO,Ralph Bartlett,,Indian Trail,North Carolina,United States,Portable
 3137002,W4ZO,Ralph Bartlett,,Indian Trail,North Carolina,United States,Mobile
 3137003,KI4M,Christopher Autrey,,Morganton,North Carolina,United States,Portable
@@ -27583,7 +28051,7 @@
 3137420,KB0YOJ,Carmen Lyons,,Lillington,North Carolina,United States,Portable
 3137421,AA3BM,Bob Mulleins,,Kill Devil Hills,North Carolina,United States,Portable
 3137422,KK4BI,Beryl Iven,,Manteo,North Carolina,United States,Portable
-3137423,WX4WNC,Adam Caudill,,Lake Junaluska,North Carolina,United States,Portable
+3137423,WX4WNC,Adam Caudill,,Clyde,North Carolina,United States,DMR
 3137424,K4RQ,George Hicks,,Concord,North Carolina,United States,Portable
 3137425,W8LAD,Lynn Durham,,Kitty Hawk,North Carolina,United States,Portable
 3137426,W4HAT,Randy Jordan,,Buxton,North Carolina,United States,Portable
@@ -28074,7 +28542,7 @@
 3137911,KK4OVN,Kevin C Andrews,KEVIN C,Statesvile,North Carolina,United States,DMR
 3137913,KM4RQR,John K Keller,JOHN K,Browns Summit,North Carolina,United States,DMR
 3137914,NC4CD,Charles E Durst,Charlie,Durham,North Carolina,United States,DMR
-3137915,NL7OT,Jackson R Dobbins,Randy,Marion,North Carolina,United States,DMR
+3137915,NL7OT,Randy Dobbins,Randy,Marion,North Carolina,United States,DMR
 3137916,KD4HCT,Leslie R Daughtry,Leslie R,Pink Hill,North Carolina,United States,DMR
 3137917,KK4EKM,Lloyd C Gregory,,Franklin,North Carolina,United States,DMR
 3137918,KM4OSW,George R Miller,,Waynesville,North Carolina,United States,DMR
@@ -28155,6 +28623,10 @@
 3137993,K4IOA,Bryan F Sickels,Bryan,Raleigh,North Carolina,United States,DMR
 3137994,KF4VMU,Steven W Menius,,Kannapolis,North Carolina,United States,DMR
 3137995,KF4WND,Eric C Lambirth,,Rockwell,North Carolina,United States,DMR
+3137996,K4GRW,Robert W Chambers,Bob,Newport,North Carolina,United States,DMR
+3137997,NC2N,Michael B Hunter,,Burnsville,North Carolina,United States,DMR
+3137998,NC2N,Michael B Hunter,Michael,Burnsville,North Carolina,United States,DMR
+3137999,KT4JJ,John J Johnson,,Saluda,North Carolina,United States,DMR
 3138001,KD0WEB,Quentin Schumacher,,Bismarck,North Dakota,United States,Portable
 3138002,KD0IOE,Andrew Lynch,,West Fargo,North Dakota,United States,Portable
 3138003,N0ATN,Johnathan W Boles,,Turtle Lake,North Dakota,United States,DMR
@@ -28642,6 +29114,19 @@
 3139486,KE8CZP,Bradley F Ruhberg,,Maumee,Ohio,United States,DMR
 3139487,KE8DTX,Cameron G Knight,,Cincinnati,Ohio,United States,DMR
 3139488,KD8QFM,Brian R Devilbiss,Brian,Eaton,Ohio,United States,DMR
+3139489,N3PUG,Robert F Wiesman,,Oxford,Ohio,United States,DMR
+3139490,W8IE,Edward Rivers,,Lakewood,Ohio,United States,DMR
+3139491,N8HHV,Eric J Gwynne,,Alliance,Ohio,United States,DMR
+3139492,N8KLG,Kristine L Gwynne,,Alliance,Ohio,United States,DMR
+3139493,W8SAI,Theodore L Ryan,,Mason,Ohio,United States,DMR
+3139494,KD8MAI,Thomas Hess,,Macedonia,Ohio,United States,DMR
+3139495,KE8DNP,Garrett M Katschka,,Broadview Heights,Ohio,United States,DMR
+3139496,KB8MYD,Eric W Seebohm,,Reading,Ohio,United States,DMR
+3139497,KG8FE,Eric W Seebohm,Eric,Hamilton,Ohio,United States,DMR
+3139498,KG8FE,Eric W Seebohm,Eric,Hamilton,Ohio,United States,DMR
+3139499,WD8BQS,Stephen G Villanova,Steve,Cuyahoga Falls,Ohio,United States,DMR
+3139500,KE8DMQ,Kenneth M Fischer,,Noth Kingsville,Ohio,United States,DMR
+3139501,KE8DYA,Edwin J Nagle Iii,Ed,Perrysburg,Ohio,United States,DMR
 3140001,AE5DN,Mark Matalik,,Oklahoma City,Oklahoma,United States,Portable
 3140002,AE5DN,Mark Matalik,,Oklahoma City,Oklahoma,United States,Mobile
 3140003,KE5BDG,Leah Matalik,,Oklahoma City,Oklahoma,United States,Portable
@@ -28731,7 +29216,7 @@
 3140087,KD5JIO,Jeff Smith,,Collinsville,Oklahoma,United States,Portable
 3140088,N3CI,David Edger,,Choctaw,Oklahoma,United States,Portable
 3140089,WD5G,David Downing,,CHOCTAW,Oklahoma,United States,Portable
-3140090,KA5WRG,Duane Angles,,Oklahoma City,Oklahoma,United States,Portable
+3140090,AA5KD,Duane Angles,,Oklahoma City,Oklahoma,United States,DMR
 3140091,KF5ACD,Stanford, Jonathon Michael,,Dewar,Oklahoma,United States,DMR
 3140092,KA5OUG,Charles Herndon,,Tulsa,Oklahoma,United States,Portable
 3140093,AE5YJ,Andrew Selfridge,,Cushing,Oklahoma,United States,Portable
@@ -28938,6 +29423,17 @@
 3140294,KF5GTX,Bobby Duncan,Bobby,Oklahoma City,Oklahoma,United States,DMR
 3140295,N5HOL,Jimmy D Bryson,Jim,Glencoe,Oklahoma,United States,DMR
 3140296,KF5CKQ,Jonathan P Cloud,Paul,Oklahoma City,Oklahoma,United States,DMR
+3140297,KD5CJB,David R Underwood,,Oklahoma City,Oklahoma,United States,DMR
+3140298,KM5CL,David W Zeller,,Maud,Oklahoma,United States,DMR
+3140299,KB5QAI,S A P Laughlin,,Muskogee,Oklahoma,United States,DMR
+3140300,NQ2J,Skipper E Smith,,Broken Arrow,Oklahoma,United States,DMR
+3140301,WX5OKC,Putnam E Reiter,,Oklahoma City,Oklahoma,United States,DMR
+3140302,AG5DV,Edwin Hatch,Ed,Norman,Oklahoma,United States,DMR
+3140303,KA5ZYM,Patrick O Roberts,,Oklahoma City,Oklahoma,United States,DMR
+3140304,N5PYD,Paul D Wardell,Pwardell,Lawton,Oklahoma,United States,DMR
+3140305,WA5MA,Mark Adams,,Tulsa,Oklahoma,United States,DMR
+3140306,KB5TQH,Harrison K Jestice,Harry,Muskogee ,Oklahoma,United States,DMR
+3140307,WA5FLV,Gary L Sherard,,Miami,Oklahoma,United States,DMR
 3141001,N7MAQ,Jim Hanrahan,,Woodbum,Oregon,United States,Portable
 3141002,N7MAQ,Jim Hanrahan,,Woodbum,Oregon,United States,Mobile
 3141003,KC7HBU,David Rogers,,Portland,Oregon,United States,Portable
@@ -28968,7 +29464,7 @@
 3141028,KD7PJP,Gabe Adel,Gabe,Portland,Oregon,United States,Portable
 3141029,WA7BND,Richard Wiehrdt,Richard,West Linn,Oregon,United States,
 3141030,K7MTW,Mountain Wave Search And Rescue,Mountain Wave,Portland,Oregon,United States,
-3141031,WH6EBU,Sara ,Sara,Portland,Oregon,United States,
+3141031,K4UAI,Sara Dysinger,Sara,Portland,Oregon,United States,DMR
 3141032,AH6TE,Tim ,Tim,Portland,Oregon,United States,
 3141033,WH6EXB,Jacob ,Jacob,Portland,Oregon,United States,
 3141034,KF7KXT,Dylan Mcnamee,,Portland,Oregon,United States,Mobile
@@ -28994,6 +29490,8 @@
 3141054,KF7PPY,Rob Riscoe,,Beaverton,Oregon,United States,DMR
 3141055,N7XAH,Achim D Warth,,Oregon City,Oregon,United States,DMR
 3141056,N7XAH,Achim D Warth,,Oregon City,Oregon,United States,DMR
+3141057,K7BRS,Bradley H Smith,,Portland,Oregon,United States,DMR
+3141058,AF7SO,Jared Boone,,Portland,Oregon,United States,DMR
 3142001,N3ST,Bryan Dorbert,,Littlestown,Pennsylvania,United States,Portable
 3142002,K4MTP,Mike Priebe,,Effort,Pennsylvania,United States,Mobile
 3142003,N3OBL,Frank Smoyer,,Pittsburgh,Pennsylvania,United States,Portable
@@ -29274,6 +29772,16 @@
 3142278,KB3KBD,Daniel S Mackelvey,,Bally,Pennsylvania,United States,DMR
 3142279,W3STP,Steve T Pesini,,Conshohocken,Pennsylvania,United States,DMR
 3142280,KC3CTK,Roger L Mullins,,Chalfont,Pennsylvania,United States,DMR
+3142281,KD5OLE,Roy H Kent,,Fairfield,Pennsylvania,United States,DMR
+3142282,KB3ZDW,Michael J Mckenna,,Harrisburg,Pennsylvania,United States,DMR
+3142283,W3VG,Theodore Leonard,Ted,Bradford,Pennsylvania,United States,CCS7
+3142284,KB3ZDW,Michael J Mckenna,Mike,Harrisburg,Pennsylvania,United States,DMR
+3142285,N3UGI,Joseph W Gormley,Joe,Ambler,Pennsylvania,United States,DMR
+3142286,N3XAO,Howard E Null,Howie,Reinholds,Pennsylvania,United States,DMR
+3142287,KC3CWJ ,Robert F Kita,,Oxford,Pennsylvania,United States,DMR
+3142288,KC3GYX,Doug Schreffler,,Bellefonte,Pennsylvania,United States,DMR
+3142289,N3YJ,Glenn P Bartlett,,Nottingham,Pennsylvania,United States,DMR
+3142290,N3YJ,Glenn P Bartlett,,Nottingham,Pennsylvania,United States,DMR
 3144001,KB1ISZ,William Carlson,,Smithfield,Rhode Island,United States,Hytera Portable
 3144002,KB1ISZ,William Carlson,,Smithfield,Rhode Island,United States,Hytera Loaner
 3144003,KC2FMI,Joseph Miklovic,,North Kingstown,Rhode Island,United States,Portable
@@ -29768,6 +30276,12 @@
 3145472,N4UQM,Jeff Johnson,,Columbia,South Carolina,United States,DMR
 3145473,W4BCY,Bowling C Yates,Bo,Conway,South Carolina,United States,DMR
 3145474,N3MME,Jay I Girton,,Columbia,South Carolina,United States,DMR
+3145475,KU4XO,Matt Holley,,Simpsonville,South Carolina,United States,DMR
+3145476,W2FTV,Lawrence T Heinz,Larry,Myrtle Beach,South Carolina,United States,DMR
+3145477,N3LU,Stanley R Slaughter,Stan,Columbia,South Carolina,United States,DMR
+3145478,N3MME,Jay I Girton,,Columbia,South Carolina,United States,DMR
+3145479,KI4VGA,Stephen A Brumagin,,Irmo,South Carolina,United States,DMR
+3145480,KM4DFX,Robert L Burress,,Sumter,South Carolina,United States,DMR
 3146001,KG6JLB,Thomas Rohwer,,Madison,South Dakota,United States,Portable
 3146002,AD0BN,Aaron Locker,,Sioux Falls,South Dakota,United States,Portable
 3146003,KD0QYR,Dustin Schnabel,,Sioux Falls,South Dakota,United States,Non-DMR
@@ -29776,6 +30290,7 @@
 3146006,KB0WSW,Anthony ,,Sioux Falls,South Dakota,United States,
 3146007,WA0NUU,Eugene Hoag,Gene,Vermillion,South Dakota,United States,
 3146008,N1EGT,Orval W South,Orval W,Sioux Falls ,South Dakota,United States,DMR
+3146009,N0AYK,Gary E Dahlerup,,Aberdeen,South Dakota,United States,DMR
 3147001,WB4JGI,Stuart Whitmire,,Cleveland,Tennessee,United States,Portable
 3147002,K1LNX,Stephen Brown,,Johnson City,Tennessee,United States,Portable
 3147003,K1LNX,Stephen Brown,,Johnson City,Tennessee,United States,Mobile
@@ -30131,6 +30646,12 @@
 3147354,WA6GGM,Shaun W Wheeler,,Covington,Tennessee,United States,DMR
 3147355,KK4HYO,Brighton D Spain,,Chattanooga ,Tennessee,United States,DMR
 3147356,KJ4NTK,Gregory L Finch,,Athens,Tennessee,United States,DMR
+3147357,KY4RJ,Randall W Jackson,Randy,Smyrna,Tennessee,United States,DMR
+3147358,W4TAC,Randall Capps,Allen,Knoxville,Tennessee,United States,DMR
+3147359,KE4BFG,Roger D Shults,,Cosby,Tennessee,United States,DMR
+3147360,AC4TR,Joey Clements,Highland,Livingston,Tennessee,United States,DMR
+3147362,K4AR,Hubert Y Rollen,Bert,Clinton,Tennessee,United States,DMR
+3147363,KM4SLB,Laurence D Miller,Larry,La Follette,Tennessee,United States,DMR
 3148001,W5EBQ,Jim Hopper,,Dallas,Texas,United States,
 3148002,N4MSE,Jeff Alexander,,Dallas,Texas,United States,
 3148003,KE4QLC,Cliff Jenkins,,Commerce,Texas,United States,Portable
@@ -30641,13 +31162,31 @@
 3148508,W5FOS,Asa M Fosburgh,,Dayton,Texas,United States,DMR
 3148509,K5PAC,Christopher A Page,Cp2,Garland,Texas,United States,DMR
 3148510,KE5KPC,Chris D Shanahan,,Fort Worth,Texas,United States,CCS7
+3148511,N5BXP,Robert H Fuglaar,,Rosenberg,Texas,United States,DMR
+3148512,KE5DI,Richard W Fosburgh,Rick,Dayton,Texas,United States,DMR
+3148513,KC5BAL,Willie K Doty,Ken,Houston,Texas,United States,DMR
+3148514,N5TRS,N5trs Harris County Transtar Emergency Communi,,Houston,Texas,United States,DMR
+3148515,KE5ISM,Eric D Laird,,College Station,Texas,United States,DMR
+3148516,N5THL,Ronald G Hill,Ron,Richland Hills,Texas,United States,DMR
+3148517,KE5YPH,Joe B Moore,Joe,Hubbard,Texas,United States,DMR
+3148518,N4MUJ,Michael W Invergo,,Bandera,Texas,United States,DMR
+3148519,W5NGU,Dcara Denton County Amateur Radio Club Inc,Ecomm 701,Denton,Texas,United States,DMR
+3148520,KG5LBP,Tom L Parish,,Austin,Texas,United States,DMR
+3148521,KG5MGD,Karen M Pleschutznig,,Houston,Texas,United States,DMR
+3148522,K5ENB,Kenneth D Brown,,Elgin,Texas,United States,DMR
+3148523,N5YM,Michael H Haefner,Mike,Colleyville,Texas,United States,DMR
+3148524,KF5WWR,Todd R Cain,,Grand Prairie,Texas,United States,DMR
+3148525,AE5VS,David B Spratt,,Fairview,Texas,United States,DMR
+3148526,KG5JBC,Jerry W Wade,,Azle,Texas,United States,CCS7
+3148527,N5NYV,Nathan Y Vessey,,Houston,Texas,United States,DMR
+3148528,K5SFV,Stephanie K Vessey,,Houston,Texas,United States,DMR
 3149001,N6DVZ,Roger Davies,,West Jordan,Utah,United States,Portable
 3149002,KC7WSU,Chris Andrist,,Lehi,Utah,United States,DMR
 3149003,WR7O,Douglas Datwyler,,Sandy,Utah,United States,Portable
 3149004,KG7CRH,Brandon Smith,,Layton,Utah,United States,Portable
 3149005,N7JEH,Joseph M Giraudo,Joe,Layton,Utah,United States,DMR
 3149006,N7SLC,Dan Dialogue,,Salt Lake City,Utah,United States,Portable
-3149007,W7RSS,Phil L Wingfield,W7rss,Ogden,Utah,United States,DMR
+3149007,W7RSS,Phil Wingfield,,Ogden,Utah,United States,DMR
 3149008,K7MWB,Michael Backus,,Sandy,Utah,United States,Portable
 3149009,AA7J,Joe Maughan,,Kearns,Utah,United States,Portable
 3149010,KC7WST,DMR-UTAH RadioPro,,Lehi,Utah,United States,DMR
@@ -30775,8 +31314,9 @@
 3150054,K2AEP,Peter Hayes,Pete,Dover,Vermont,United States,
 3150055,KC1SS,Peter Kelleher,Pete,Cavendish,Vermont,United States,
 3150056,K1JON,Ciocchi John,DOC,Springfield,Vermont,United States,DMR
-3150057,K1ZK,Zachary Manganello,Zach,Charlotte,Vermont,United States,DMR
+3150057,K1ZK,Zach Manganello,Zach,Charlotte,Vermont,United States,DMR
 3150058,N1HOS,John W Adams,Jack,Bellows Falls,Vermont,United States,DMR
+3150059,N1GBB,Christopher S Knox,,Northfield,Vermont,United States,DMR
 3151001,N8RK,Ralf Klingler,,Hayes,Virginia,United States,
 3151002,W4YP,Bob Spindle,,Haymarket,Virginia,United States,Portable
 3151003,W4YP,Bob Spindle,,Haymarket,Virginia,United States,Control Station
@@ -31102,8 +31642,20 @@
 3151324,KK4OKJ,Christopher A Sayre,Chris,Roanoe,Virginia,United States,DMR
 3151325,KX3K,William J Woodfield,Bill,Roanoke,Virginia,United States,DMR
 3151326,KF4GOI,Franklin D Mink,Wimp,Meadowview,Virginia,United States,DMR
+3151327,AE4ML,Michael S Lussier,,Spotsylvania,Virginia,United States,DMR
 3151328,KD4EG,Ted T Lawrence,Ted,Salem,Virginia,United States,DMR
 3151329,KM4SYA,Charles Etheridge,Camzap,Wallops Island,Virginia,United States,DMR
+3151330,N0BES,Bryan E Sams,,Onancock,Virginia,United States,DMR
+3151331,KB4CVN,Mark A Cobbeldick,,Monroe,Virginia,United States,DMR
+3151332,KC2HY,Kenneth P Bieber,,Greenbackville,Virginia,United States,DMR
+3151333,N3JS,Carroll J Shelton,Jeff,Chincoteague,Virginia,United States,DMR
+3151334,KB8KSP,Kenneth E Gregory,,Rural Retreat,Virginia,United States,DMR
+3151335,KK4HKT,Andrew Muender,Drew,Exmore,Virginia,United States,DMR
+3151336,KI4UDD,Shaena L Hicks,,Greenbackville,Virginia,United States,DMR
+3151337,K4OSS,Charles W Ross,Charlie,Flint Hill,Virginia,United States,DMR
+3151338,K9SSD,Patrick J Hahnlen,Pj,Pearisburg,Virginia,United States,DMR
+3151339,KM4SYA,Charles Etheridge,Camzap,Wallops Island,Virginia,United States,DMR
+3151340,KA4HLG,Raymond A Pfaff,,Chantilly,Virginia,United States,DMR
 3153001,KD7AKB,Chris Palmer,,Bremerton,Washington,United States,Mobile
 3153002,NF6C,Gregory Krantz,,Orting,Washington,United States,Mobile
 3153003,NF6C,Gregory Krantz,,Orting,Washington,United States,Portable
@@ -31277,6 +31829,17 @@
 3153171,K7LKA,Steven E Elli,,Snohomish,Washington,United States,DMR
 3153172,KG7JMI,Carl A Munson,,Cle Elum,Washington,United States,CCS7
 3153173,KF7MDP,James C Payne,Jim,Vancouver,Washington,United States,DMR
+3153174,N7TNG,Todd N George,,Vancouver,Washington,United States,DMR
+3153175,KG7JMI,Carl A Munson,,Cle Elum,Washington,United States,DMR
+3153176,KD7AVP,Raymond C Smith,,Lake Stevens,Washington,United States,DMR
+3153177,K7YRC,Robert D Sanborn,,Colbert,Washington,United States,CCS7
+3153178,WA7KRG,Kimberly R Gray,Kim,Vancouver,Washington,United States,DMR
+3153179,WA7DGW,David G Williamson,,Lake Stevens,Washington,United States,DMR
+3153180,KB6JEX,Alexis L Thompson,,Port Angeles,Washington,United States,DMR
+3153181,WA7JPT,Josiah P Thompson,,Port Angeles,Washington,United States,DMR
+3153182,KF7KQB,Doris J Williamson,,Lake Stevens,Washington,United States,DMR
+3153183,KB7ZEN,Robert A Morris,Bob,Yelm,Washington,United States,DMR
+3153184,KJ7UF,Toby J Bollinger,,Vancouver,Washington,United States,DMR
 3154001,WV8VFD,Tyler Lewis,,Parkersburg,West Virginia,United States,Portable
 3154002,WB3JPB,Bruce Conley,,Inwood,West Virginia,United States,Portable
 3154003,WB8WKO,Mike Vargo,,Mount Hope,West Virginia,United States,Portable
@@ -31349,6 +31912,11 @@
 3154070,KC8EHD,Wayne R Mc Bride,Mrmac,Hinton,West Virginia,United States,DMR
 3154071,WV8CW,Charles C Wiant,,Horner,West Virginia,United States,DMR
 3154072,N8SNU,Danny R Church,Dan,Bluefield,West Virginia,United States,DMR
+3154073,KC8OGK,Phillip  Pack,,Ansted,West Virginia,United States,DMR
+3154074,N8SNU,Danny R Church,,Bluefield,West Virginia,United States,DMR
+3154075,KE8CMX,Jeffery E Harrah,Jeff,Alderson,West Virginia,United States,DMR
+3154076,KE8DND,Allen M Pack,,Switzer,West Virginia,United States,DMR
+3154077,KB8YDE,Aaron D Kelley,,Fenwick,West Virginia,United States,DMR
 3155001,N9NLZ,Craig Ochs,,Brookfield,Wisconsin,United States,Portable
 3155002,KB9VLL,Dan Albert,,South Milwaukee,Wisconsin,United States,Portable
 3155003,KB9ENO,William Niemuth,,Hortonville,Wisconsin,United States,Portable
@@ -31474,6 +32042,10 @@
 3155123,WD9HOT,Leroy A Skalstad,Wd9hot_leroy,Milwaukee,Wisconsin,United States,DMR
 3155124,WD9HOT,Leroy A Skalstad,,Milwaukee,Wisconsin,United States,DMR
 3155125,W9MBL,Scott M Smith,,Greenfield,Wisconsin,United States,DMR
+3155126,K0RPL,Justin J Korpal,,Green Bay,Wisconsin,United States,DMR
+3155127,K0RPL,Justin J Korpal,,Green Bay,Wisconsin,United States,DMR
+3155128,WI9DMM,Dana Miller,,Delavan,Wisconsin,United States,DMR
+3155129,K9PT,Dean L Andrewjeski,,Mosinee,Wisconsin,United States,CCS7
 3156001,KC7YRA,Brad Lutz,,Casper,Wyoming,United States,Portable
 3156002,KC7YRA,Brad Lutz,,Casper,Wyoming,United States,Mobile
 3156003,KC0ZHF,Rodney Waln,,Cheyenne,Wyoming,United States,Portable
@@ -31564,6 +32136,9 @@
 3156088,K7FTP,Mark D Griffith,,Sheridan,Wyoming,United States,CCS7
 3156089,KG0IJ,Steve R Bogart,,Hawk Springs,Wyoming,United States,DMR
 3156090,KE7WQP,Michael L Bond,,Evansville,Wyoming,United States,DMR
+3156091,N7TDJ,Peter V Dewees,,Casper,Wyoming,United States,DMR
+3156092,N7TDJ,Peter V Dewees,,Casper,Wyoming,United States,DMR
+3156093,W7MOH,Mark O Harris,,St. Stephens,Wyoming,United States,DMR
 3301001,WP4OV,Juan Montijo,Coki,Hatillo,San Juan,Puerto Rico,Other
 3301002,WP4OTW,Carla Lopez,,SAN JUAN,San Juan,Puerto Rico,DMR
 3301003,NP4ET,Jose M Candelaria Medina,,Hatillo,San Juan,Puerto Rico,DMR
@@ -31737,6 +32312,7 @@
 4401033,JL1ZRD,Kdn-Net Kanagawadigital,,Ebina-City Kanagawa,Kanto,Japan,DMR
 4401034,JA1CCL,Yoshihiko Nonaka,,Ebina-City,Kanto,Japan,DMR
 4401035,JG1NCB,Wisnu Widjaja,Wisnu,Ibaraki,Kanto,Japan,DMR
+4401036,JH1AAQ,Akira Watanabe,,Tateyama,Kanto,Japan,CCS7
 4402001,JR2SRH,Gosei Sato,,Tokai-city,Tokai,Japan,Mobile
 4402002,JR2MOK,Masaru Komoda,Masaru,Nagoya,Tokai,Japan,Portable
 4402003,JN2JWA,Minoru Urata,,Shizuoka,Tokai,Japan,Other
@@ -31752,6 +32328,7 @@
 4402013,JA2UCX,Yoshihiko Nonaka,,Toki-City,Tokai,Japan,DMR
 4402014,JA2UCX,Yoshihiko Nonaka,,Toko-City Gifu,Tokai,Japan,DMR
 4402015,JR2YTU,Yoichi Kawaguchi,,Owariasahi,Tokai,Japan,DMR
+4402016,JI2GYC,Yutaka Andou,,Nagoya,Tokai,Japan,CCS7
 4403001,JP3KAF,Ryusho Tanabe,,Nishinomiya,Kinki,Japan,Portable
 4403002,JO3XPH,Pascal Provot,,KYOTO,Kinki,Japan,Portable
 4403003,JA3GQJ,Shuji Chiba,,Takatuki,Kinki,Japan,Club Fleet
@@ -31761,6 +32338,7 @@
 4403007,JH3GCN,Yuge Kiyohiro,Koh,Yawata,Kinki,Japan,DMR
 4403008,JL3YSD,Koichi Mori,,Kasai,Kinki,Japan,DMR
 4403009,JG3EBB,Masataka Otera,Masa,Higashiosaka,Kinki,Japan,DMR
+4403010,JP3GMO,Makoto Sakurai(Saku),Saku,Osaka,Kinki,Japan,CCS7
 4404001,JO4DYL,Masanobu Ikemoto,,Yanai,Chugoku,Japan,Mobile
 4404002,JO4DYL,Masanobu Ikemoto,,Yanai City,Chugoku,Japan,Mobile
 4407001,JE7ZBQ,Doinaka Net,Doinaka,Takizawa,Tohoku,Japan,Club Fleet
@@ -31852,7 +32430,9 @@
 4506001,HL2KZJ,Kwang-ok Yoo,,GunPO-SI,KyungKi-Do,Korea S, Republic of,Other
 4506002,HL2UJ,Kim Gil Tae,,CHEONG PYEONG,KyungKi-Do,Korea S, Republic of,DMR
 4506003,DS1AWE,Joel(Seung) Han,,Dongducheon,Kyungki-Do,Korea S, Republic of,Other
+4506004,HL2ADY,Seon Kyu Roh,,Bucheon,Kyungki-Do,Korea S, Republic of,Club Fleet
 4507001,HL1RR,Lim Seong Gyu Lim,Hope,Seoul,Seoul,Korea S, Republic of,DMR
+4507002,DS1RHP,Lee Seung-Jae,Ds1rhp,Seoul,Seoul,Korea S, Republic of,DMR
 4540001,VR2XJN,Charles Tsang,,Hong Kong,Hong Kong,China,Mobile
 4540002,VR2XJT,Hkprc ,,Hong Kong,Hong Kong,China,Portable
 4540003,VR2RG,Hkprc ,,Hong Kong,Hong Kong,China,Portable
@@ -32322,6 +32902,11 @@
 5052145,VK2JXA,Andrew Avery,,Sydney,New South Wales,Australia,DMR
 5052146,VK2HCR,Andrew R Wright,,Sydney,New South Wales,Australia,DMR
 5052147,VK2FAEW,James Zaiter,,Sydney,New South Wales,Australia,Other
+5052148,VK2HL,Hh Leykam,,Dee Why,New South Wales,Australia,CCS7
+5052149,VK2JN,James Nelson,,Sydney,New South Wales,Australia,Other
+5052150,VK2JN,James Nelson,,Sydney,New South Wales,Australia,Other
+5052151,VK2BSY,Dave Oliver,Dave,Wollongong,New South Wales,Australia,DMR
+5052152,VK2GV,Shannon Reneman,,Sydney,New South Wales,Australia,DMR
 5053001,VK3XDE,Paul Engler,,Melbourne,Victoria,Australia,Mobile
 5053002,VK3TE,Peter Brennan,,Karingal,Victoria,Australia,Portable
 5053003,VK3AJ,Peter Chaplin,,Upwey,Victoria,Australia,Mobile
@@ -32396,6 +32981,7 @@
 5053072,VK3SMC,Simon Mcclure,Simon,Knoxfield,Victoria,Australia,DMR
 5053073,VK3GP,David B Timms,,Horsham,Victoria,Australia,DMR
 5053074,VK3XBC,Duncan Maughan,,Melbourne ,Victoria,Australia,DMR
+5053075,VK3EY,Rob Puise,,Shepparton,Victoria,Australia,DMR
 5054001,VK4JV,Andrew Chapman,,Toowoomba,Queensland,Australia,DMR
 5054002,VK4JV,Andrew Chapman,,Toowoomba,Queensland,Australia,DMR
 5054003,VK4JV,Andrew Chapman,,Toowoomba,Queensland,Australia,DMR
@@ -32485,6 +33071,9 @@
 5054087,VK4DAK,David Kavanagh,,Toowoomba,Queensland,Australia,DMR
 5054088,VK4AGJ,Gj Borger,Greg,Toowoomba,Queensland,Australia,DMR
 5054089,AX4TUX,Adrian Richard Fewster,,Big Banana,Queensland,Australia,DMR
+5054090,VK4YA,James R Wisdom,,Capalaba,Queensland,Australia,DMR
+5054091,VK4PLY,Paul Beet,,Thornlands,Queensland,Australia,DMR
+5054092,VK4BNQ,Roger Stierli,,Gympie,Queensland,Australia,Other
 5055001,VK5FBFB,Brendan Blackman,,adelaide,South Australia,Australia,Portable
 5055002,VK5UZ,Udo Zott,,Adelaide ,South Australia,Australia,Mobile
 5055003,VK5RZ,Stephan Forka,,Seaford Rise,South Australia,Australia,Other
@@ -32618,6 +33207,7 @@
 5200079,HS0ZIM,Andy Andy,Andy,Chonburi,Rayong,Thailand,DMR
 5200080,HS4ZWW,Tataa Tataa,Tataa,Chonburi,Rayong,Thailand,DMR
 5200081,HS1AAZ,Dr.Panit Chantrabhakdee(O/P Name:A),,Bangkok,Bangkok,Thailand,CCS7
+5200085,HS5STV,Kittipol Sittisombat,Kitti,Chiang Rai,Chiang mai,Thailand,DMR
 5206001,HS0ZET,Ralf Klingler,,Nongkrot,Nakhon Sawan,Thailand,Portable
 5206002,HS3LIQ,Wiwat Metheekasiwat,,Nakhonratchasima,Nakhon Ratchasima,Thailand,
 5250001,9V1JC,Wiyanto Jacob,Jacob,Singapore,Singapore,Singapore,DMR
@@ -32870,6 +33460,12 @@
 5303083,ZL3LM,Lez Morrison,,Oamaru,South Island,New Zealand,DMR
 5303084,ZL3FK,F R Knewstubb,,Oamaru,South Island,New Zealand,DMR
 5303085,ZL2ARC,Alastair Christie,,Christchurch,South Island,New Zealand,DMR
+5303086,ZL4AA,Club Rooms Otago Branch 30 Nzart,,Dunedin,South Island,New Zealand,Club Fleet
+5303087,ZL4AA,Club Rooms Otago Branch 30 Nzart,,Dunedin,South Island,New Zealand,Club Fleet
+5303088,ZL4AA,Club Rooms Otago Branch 30 Nzart,,Dunedin,South Island,New Zealand,Club Fleet
+5303089,ZL4AA,Club Rooms Otago Branch 30 Nzart,,Dunedin,South Island,New Zealand,Club Fleet
+5303090,ZL4AA,Club Rooms Otago Branch 30 Nzart,,Dunedin,South Island,New Zealand,Club Fleet
+5303091,ZL4AA,Club Rooms Otago Branch 30 Nzart,,Dunedin,South Island,New Zealand,Club Fleet
 5351001,KH2MM,Jochen Althoff,,Dededo,GU,Guam,Portable
 5351002,WH2F,Stephan Buettner,,Dededo,Guam,United States,Portable
 5371001,P29ZTC,Terry Griffiths,,Port Moresby,NCD,Papua New Guinea,Mobile
@@ -33035,6 +33631,7 @@
 6556066,ZS6PX,Jaco Le Roux,Jaco,Vereeniging,Gauteng/Mpumalanga,South Africa,
 6556067,ZS6SL,Shaughn Leary,Erich,Boksburg,Gauteng/Mpumalanga,South Africa,
 6556068,ZS6HLR,Hennie Le Roux,Hennie,Vereeniging,Gauteng/Mpumalanga,South Africa,
+6556069,ZS6BM,Marinus ,,Roodepoort,Gauteng/Mpumalanga,South Africa,
 7020001,V31MP,Martin Pask,,Benque,San Ignacio,Belize,
 7020002,V31DL,Andre Scholz,,Cayo,Cayo District,Belize,Portable
 7020003,V3V,Dr Scholz,,Cayo,Cayo District,Belize,Club Fleet
@@ -33208,6 +33805,8 @@
 7249013,PY7MBL,Manoel Benvinuto De Lima Junior,JUNIOR ,caruaru,Pernambuco,Brazil,DMR
 7249014,PY7BMJ,Benjamim Marques,,PALMARES,Pernambuco,Brazil,Other
 7249015,PU7RAQ,Florisval Rodrigues Dos Santos,FLORISVAL,GARANHUNS,Pernambuco,Brazil,DMR
+7249016,PU7EEM,Claudio Maracaja,,Campina Grande,Pernambuco,Brazil,CCS7
+7249017,PU7RAO,Raimundo  Oliveira,,Joao Alfredo,Pernambuco,Brazil,CCS7
 7301001,CE1PDL,Ricardo Santos,,Arica,Arica,Chile,
 7301002,CA1MMA,Mauricio Morales Alveres,,Arica,Arica,Chile,Portable
 7301003,CE1CPI,Rc Copiapo,,Copiapo,Antofagasta,Atacama,Tarapac,Chile,Mobile
@@ -33331,6 +33930,7 @@
 7302093,CE2UDB,Raul Jofré,Coto,Vicuna,Coquimbo,Chile,DMR
 7302094,CE2DJA,Fernando Y. Lecaros S.,Yoshisan,ViñA Del Mar,Valparaiso,Chile,DMR
 7302095,CE2JEZ,Jeserel Contreras Barraza,,Ovalle,Coquimbo,Chile,DMR
+7302096,CD2LLR,Roger Loaiza,,La Serena,Coquimbo,Chile,DMR
 7303001,CA3SOC,Raul Romero,,Santiago,Reg.Metr. de Santiago,Chile,Mobile
 7303002,CE3YP,George ,George,Jorge,Reg.Metr. de Santiag,Chile,
 7303003,CE3BFE,Mario Reyne,romeopapa,Lampa,Reg.Metr. de Santiago,Chile,Otro
