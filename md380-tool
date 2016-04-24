@@ -513,6 +513,8 @@ Dump a core file of RAM.
     md380-tool coredump <filename.bin>
 Dumps memory in hex.
     md380-tool hexdump <0xcafebabe>
+Watches a hex address.
+    md380-tool hexwatch <0xcafebabe>
 Dump one word.
     md380-tool readword <0xcafebabe>
 Dump 1kB from arbitrary address
