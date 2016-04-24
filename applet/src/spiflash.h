@@ -13,6 +13,7 @@ enum spi_flash_addl_config {
   offset_rbeep,
   offset_datef,
   offset_userscsv,
-  offset_debug
+  offset_debug,
+  offset_promtg, offset_prompriv
 };
 

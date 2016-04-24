@@ -19,6 +19,7 @@
 #include "config.h"
 #include "gfx.h"
 #include "usersdb.h"
+#include "addl_config.h"
 
 
 /* Used to avoid duplicate call endings. */
@@ -115,7 +116,7 @@ void dmr_apply_squelch_hook(char *firstthing, char *mode){
   //printf("dmr_apply_squelch_hook for *mode=0x%02x.\n",*mode);
 
   //Promiscuous mode!
-  if(*mode==0x08){
+  if(*mode==0x08 && global_addl_config.promtg==1){
     printf("Applying monitor mode to a public call.\n");
     *mode=0x09;
     dmr_before_squelch();
@@ -131,7 +132,7 @@ void dmr_apply_privsquelch_hook(char *firstthing, char *mode){
   //printf("dmr_apply_squelch_hook for *mode=0x%02x.\n",*mode);
 
   //Promiscuous mode!
-  if(*mode==0x08){
+  if(*mode==0x08 && global_addl_config.promtg==1){
     printf("Applying monitor mode to a private call.\n");
     *mode=0x09;
     dmr_before_squelch();
