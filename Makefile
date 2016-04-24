@@ -14,8 +14,10 @@ applets: patches
 firmwares:
 	cd firmware && make all
 flash:
-#	cd patches/2.032 && make flash
 	cd applet && make flash
+flashdb:
+	wc -c < db/users.csv > data ; cat db/users.csv >> data
+	md380-tool spiflashwrite data 0x100000
 dist: applets
 	rm -rf $(RELEASE)
 	mkdir -p $(RELEASE)/python
@@ -24,3 +26,4 @@ dist: applets
 	mv $(RELEASE)/Firmware\ 2.32 $(RELEASE)/windows
 	rm $(RELEASE)/windows/MD-380-D2.32\(AD\).bin $(RELEASE)/windows/Operation.doc.pdf
 	cp DFU.py 99-md380.rules md380-dfu md380-tool $(RELEASE)/python/
+
