@@ -60,6 +60,7 @@ extern void* (*dmr_call_start)(void *pkt);
 extern void* (*dmr_handle_data)(void *pkt, int len);
 //! Function that handles an incoming SMS.
 extern void* (*dmr_sms_arrive)(void *pkt);
+
 //! Function that applies a squelch.
 extern void (*dmr_apply_squelch)(char *dmr_squelch_firsthing, int dmr_squelch_mode);
 //! Called before unsquelching.
@@ -73,8 +74,8 @@ extern char** dmr_squelch_firstthing;
 
 
 
-//! Pointer to the buffer that stores the bottom line of screen text.
-extern char *botlinetext;
+//Pointer to the buffer that stores the bottom line of screen text.
+char *botlinetext;
 
 
 //ROM copy of the welcome bitmap.
@@ -96,30 +97,38 @@ extern void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
 //! Functions and Variabes regarding the menu
 extern void*   (*main_menu)(void *);     // menu exec
 
-// menu in case of pressing back key
-extern void*   (*menu_entry_back)(void);
-extern void*   (*create_main_meny_entry)(void);
-
+extern void*   (*md380_menu_entry_back)(void);
+extern void*   (*md380_create_main_meny_entry)(void);
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
-extern void*   (*create_menu_entry)(int, void *, void *, void  *,
-                                    int , int, int);
+extern void*    (*md380_create_menu_entry)(int, void *, void *, void  *,
+                                           int , int, int);
 
 // for the hook funktion (hook used the space from this entry)
-extern void*   (*menu_entry_programradio)(void);
-extern char    *wt_programradio;  // menutext <- menu_entry_programradio
+extern void*    (*md380_menu_entry_programradio)(void);
+extern void*    (*md380_menu_numerical_input)(void);
 
-// not yet known ;)
-extern uint8_t *menu_id;
-extern uint8_t *menu_depth;
-extern uint8_t *menu_entry_selected;
-extern void    *menu_memory;
-extern void    *menu_unknown_02;
-extern uint8_t *menu_unkonwn_01;
+extern uint32_t *md380_menu_0x20001114;
+extern uint8_t  *md380_menu_0x200011e4;
+extern uint8_t  *md380_menu_0x2001d3c1;
+extern uint8_t  *md380_menu_0x2001d3ed;
+extern uint8_t  *md380_menu_0x2001d3ee;
+extern uint8_t  *md380_menu_0x2001d3ef;
+extern uint8_t  *md380_menu_0x2001d3f0;
+extern uint8_t  *md380_menu_0x2001d3f1;
+extern uint8_t  *md380_menu_0x2001d3f4;
+extern uint8_t  *md380_menu_depth;
+extern wchar_t  *md380_menu_edit_buf;
+extern uint8_t  *md380_menu_entry_selected;
+extern uint8_t  *md380_menu_id;
+extern void     *md380_menu_mem_base;
+extern void     *md380_menu_memory;
+extern uint8_t  *md380_wt_programradio;  // menutext <- menu_entry_programradio
+
 
 //! program_radio_unprohibited ... bulding site is an struct
-extern uint8_t *program_radio_unprohibited;
+extern uint8_t *md380_program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
 extern char* channelnum;

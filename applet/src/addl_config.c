@@ -52,5 +52,5 @@ void init_global_addl_config_hook(void) {
     global_addl_config.debug = 0;
   }
   // hooked call
-  create_main_meny_entry();
+  md380_create_main_meny_entry();
 }
