@@ -2,6 +2,9 @@
   \brief Menu hooks and extensions.
 */
 
+
+#define DEBUG
+
 #include <stdio.h>
 #include <string.h>
 
@@ -29,6 +32,7 @@ static wchar_t wt_datef_germany[]     = L"German";
 static wchar_t wt_promtg[]            = L"Promiscuous";
 static wchar_t wt_prompriv[]          = L"Private Spy";
 static wchar_t wt_edit[]              = L"Edit";
+static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
 
 struct MENU {
   void    *menu_titel;
@@ -37,7 +41,6 @@ struct MENU {
   uint8_t unknown_00;
   uint8_t unknown_01;
 };
-
 
 
 /* This hooks a function that is called a lot during menu processing.
@@ -519,6 +522,86 @@ void create_menu_entry_edit_screen(void) {
 }
 
 
+void create_menu_entry_edit_dmr_id_screen_store(void) {
+#ifdef DEBUG
+  printf("your enter: ");
+  printhex2((char *) md380_menu_edit_buf,14);
+  printf("\n");
+#endif
+  *md380_menu_id    = *md380_menu_id - 1;
+  *md380_menu_depth = *md380_menu_depth - 1;
+  create_menu_entry_hook( *md380_menu_id, md380_menu_edit_buf,    md380_menu_entry_back+1,  md380_menu_entry_back+1  ,6, 1 , 1);
+
+}
+
+
+uint32_t uli2w( uint32_t num, wchar_t *bf) {
+  int n=0;
+  unsigned int d=1;
+  while (num/d >= 10)
+    d*=10;     
+  while (d!=0) {       
+    int dgt = num / d;
+    num%=d;
+    d/=10;
+    if (n || dgt>0|| d==0) {
+      *bf++ = dgt+ '0';
+      ++n;
+    }   
+  }
+  *bf=0;   
+  return (n); // number of char
+}
+
+void create_menu_entry_edit_dmr_id_screen(void) {
+  struct MENU *menu_mem;
+  uint8_t i;
+  uint8_t *p;
+  uint32_t ret;
+  uint32_t dmr_id=2623666;
+  uint32_t nchars;
+
+  *md380_menu_0x2001d3c1 = *md380_menu_0x200011e4;
+  *md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
+
+
+
+// clear retrun buffer //  see 0x08012a98
+ for (i=0; i < 0x11; i++) {
+   p=(uint8_t *) *md380_menu_0x20001114;
+   p = p + i;
+   *p = 0;
+   }
+                                                                                                                                                                           
+  nchars=uli2w(dmr_id, md380_menu_edit_buf);
+  
+  
+#ifdef DEBUG  
+  printf("\ncreate_menu_entry_edit_dmr_id_screen %x %d \n", md380_menu_edit_buf, nchars);
+  printhex2((char *) md380_menu_edit_buf ,14);
+  printf("\n");
+#endif      
+  
+
+  *md380_menu_0x2001d3ed = 8;
+  *md380_menu_0x2001d3ee = nchars; //0;
+  *md380_menu_0x2001d3ef = nchars; //  startpos cursor
+  *md380_menu_0x2001d3f0 = 3; //3 = numerical input
+  *md380_menu_0x2001d3f1 = 0;nchars; // 0;
+  *md380_menu_0x2001d3f4 = 0;nchars; //0;
+
+  menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) +  sizeof(struct MENU);
+  menu_mem->menu_titel = wt_edit_dmr_id;
+  menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
+  menu_mem->numberof_menu_entries=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+  create_menu_entry_hook( *md380_menu_id, wt_edit_dmr_id,  create_menu_entry_edit_dmr_id_screen_store + 1 , md380_menu_numerical_input  + 1,  0x81, 0 , 1);
+}
+
+
+
 void create_menu_entry_addl_functions_screen(void) {
   struct MENU *menu_mem;
   int i;
@@ -530,18 +613,26 @@ void create_menu_entry_addl_functions_screen(void) {
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
-  menu_mem->numberof_menu_entries=6;
+  menu_mem->numberof_menu_entries=7;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  create_menu_entry_hook( *md380_menu_id,     wt_rbeep,    create_menu_entry_rbeep_screen+1,    md380_menu_entry_back+1, 0x98, 0 , 1);
-  create_menu_entry_hook( *md380_menu_id + 1, wt_datef,    create_menu_entry_datef_screen+1,    md380_menu_entry_back+1, 0x98, 0 , 1);
-  create_menu_entry_hook( *md380_menu_id + 2, wt_userscsv, create_menu_entry_userscsv_screen+1, md380_menu_entry_back+1, 0x98, 0 , 1);
-  create_menu_entry_hook( *md380_menu_id + 3, wt_debug,    create_menu_entry_debug_screen+1,    md380_menu_entry_back+1, 0x98, 0 , 1);
-  create_menu_entry_hook( *md380_menu_id + 4, wt_promtg,   create_menu_entry_promtg_screen+1,   md380_menu_entry_back+1, 0x98, 0 , 1);
-  create_menu_entry_hook( *md380_menu_id + 5, wt_edit,     create_menu_entry_edit_screen+1,     md380_menu_entry_back+1, 0x8a, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id,     wt_rbeep,       create_menu_entry_rbeep_screen+1,
+                          md380_menu_entry_back+1, 0x98, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id + 1, wt_datef,       create_menu_entry_datef_screen+1,
+                          md380_menu_entry_back+1, 0x98, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id + 2, wt_userscsv,    create_menu_entry_userscsv_screen+1,
+                          md380_menu_entry_back+1, 0x98, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id + 3, wt_debug,       create_menu_entry_debug_screen+1,
+                          md380_menu_entry_back+1, 0x98, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id + 4, wt_promtg,      create_menu_entry_promtg_screen+1,     
+                          md380_menu_entry_back+1, 0x98, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id + 5, wt_edit,        create_menu_entry_edit_screen+1, 
+                          md380_menu_entry_back+1, 0x8a, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id + 6, wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen+1, 
+                          md380_menu_entry_back+1, 0x8a, 0 , 1);
 
- for(i=0;i<6;i++) {  // not yet known ;)
+ for(i=0;i<7;i++) {  // not yet known ;)
    uint8_t *p;
    p = md380_menu_mem_base + ( *md380_menu_id + i ) * 0x14;
    p[0x10] = 2;
