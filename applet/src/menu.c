@@ -454,7 +454,7 @@ void create_menu_entry_debug_screen(void) {
 
 
 
-void m(void) {
+void create_menu_entry_edit_screen_store(void) {
 #ifdef DEBUG
   printf("your enter: ");
   printhex2((char *) md380_menu_edit_buf,14);
@@ -515,7 +515,7 @@ void create_menu_entry_edit_screen(void) {
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  create_menu_entry_hook( *md380_menu_id,  wt_edit ,  m + 1 , md380_menu_numerical_input  + 1,  0x81, 0 , 1);
+  create_menu_entry_hook( *md380_menu_id,  wt_edit ,  create_menu_entry_edit_screen_store + 1 , md380_menu_numerical_input  + 1,  0x81, 0 , 1);
 }
 
 
