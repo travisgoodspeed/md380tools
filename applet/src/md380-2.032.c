@@ -153,3 +153,5 @@ uint32_t *beep_process_unkown=0x2001d178;
 void (*md380_itow)(wchar_t *, int value)=0x080172ed;
 void (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct)=0x08026461;
 void (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;
+
+uint32_t *md380_dmr_id=0x2001c65c;
