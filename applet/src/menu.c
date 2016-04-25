@@ -312,10 +312,8 @@ void create_menu_entry_promtg_screen(void) {
 
   if (buf[0] == '1') {
     *md380_menu_entry_selected = 0;
-    global_addl_config.promtg = 1;
   } else {
     *md380_menu_entry_selected = 1;
-    global_addl_config.promtg = 0;
   }
 
   create_menu_entry_hook( *md380_menu_id,     wt_enable,  create_menu_entry_promtg_enable_screen+1, md380_menu_entry_back+1,  0x8b, 0 , 1);
