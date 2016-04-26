@@ -1,0 +1,24 @@
+##
+## Download, update format and Flash to radio script for DRM User database
+## by Giorgio IZ2XBZ @giorgiofox
+echo "Remove old database"
+
+rm /db/user.csv
+rm /db/user_formatterd.csv
+
+echo "Download new User database"
+
+curl 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | sed 's,<br/>,,' >db/users.csv
+
+echo "Formatting"
+#cutting unused column in CSV (like for example "nickname" and others at the end
+cut -d, -f4,8-10 --complement db/users.csv>db/users_formatted.csv
+
+wc -c < db/users_formatted.csv > data ; cat db/users_formatted.csv >> data
+
+
+echo "Begin UPDATE"
+read -p "Press [Enter] key to start flash..."
+sudo ./md380-tool spiflashwrite data 0x100000
+
+
