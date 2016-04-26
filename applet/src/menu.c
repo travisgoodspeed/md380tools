@@ -638,7 +638,7 @@ void create_menu_entry_addl_functions_screen(void) {
   create_menu_entry_hook( *md380_menu_id + 4, wt_promtg,      create_menu_entry_promtg_screen+1,
                           md380_menu_entry_back+1, 0x98, 0 , 1);
   create_menu_entry_hook( *md380_menu_id + 5, wt_edit,        create_menu_entry_edit_screen+1,
-                          md380_menu_entry_back+1, 0x8a, 0 , 1);
+                          md380_menu_entry_back+1, 0x8a, 0 , 0);  // disable this menu entry - no function jet 
   create_menu_entry_hook( *md380_menu_id + 6, wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen+1,
                           md380_menu_entry_back+1, 0x8a, 0 , 1);
 
