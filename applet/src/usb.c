@@ -133,7 +133,7 @@ int usb_dnld_hook(){
       adr = *((uint32_t*)(packet+1));
       uint32_t size = *((uint32_t*)(packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
-      if (check_spf_flash_type()) {
+      if (check_spi_flash_type()) {
         printf ("TDFU_SPIFLASHWRITE %x %d %x\n", adr, size, packet+9);
         spiflash_write(packet+9,  adr, size);
       }
@@ -167,7 +167,7 @@ int usb_dnld_hook(){
       adr = *((uint32_t*)(packet+1));
       size = *((uint32_t*)(packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
-      if (check_spf_flash_type()) {
+      if (check_spi_flash_type()) {
         printf ("DFU_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
         // enable write
 

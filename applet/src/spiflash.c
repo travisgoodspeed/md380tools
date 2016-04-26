@@ -18,7 +18,7 @@ int (spiflash_read_hook)(void *dst, long adr, long len) {
   return spiflash_read(dst, adr, len);
 }
 
-int check_spf_flash_type(void) {
+int check_spi_flash_type(void) {
     static int ok=0;
 
     if (ok==1) {

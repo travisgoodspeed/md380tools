@@ -3,7 +3,7 @@
 */
 
 
-extern int check_spf_flash_type(void); // 0 Error, 1 Success
+extern int check_spi_flash_type(void); // 0 Error, 1 Success
 
 
 extern uint32_t spi_flash_addl_config_start;
