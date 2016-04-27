@@ -128,12 +128,12 @@ with 16MByte SPI-Flash.**
     
        wc -c < db/users.csv > data ; cat db/users.csv >> data
     
-    program to flash with: **(very experimental)**
+    program to flash with: (very experimental)
     
        md380-tool spiflashwrite data 0x100000
 
 
-    or (all steps included): **(very experimental)**
+    or (all steps included): (very experimental)
 
        make flashdb  
     
