@@ -17,8 +17,9 @@ flash:
 	cd applet && make flash
 flashdb:
 	cd db && make clean update
-	wc -c < db/users.csv > data 
-	cat db/users.csv | sed 's/,\s+/,/g' | cut -d',' -f1-3,5-6 >> data
+	cat db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
+	wc -c < data.csv > data
+	cat data.csv >> data
 	./md380-tool spiflashwrite data 0x100000
 dist: applets
 	rm -rf $(RELEASE)
