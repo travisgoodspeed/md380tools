@@ -93,7 +93,7 @@ void *dmr_call_start_hook(char *pkt){
   sprintf(DebugLine1, "%d -> %d", src, dst );
 
   if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
-    sprintf(DebugLine2, ",no users.csv,see md380-tool,usage");   // , is line seperator ;)
+    sprintf(DebugLine2, ",ID not found,in users.csv,see md380-tool");   // , is line seperator ;)
   }
 
   //This prints a dot at every resynchronization frame.
