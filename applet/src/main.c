@@ -150,7 +150,7 @@ void demo(){
   }
   
   //Restore the bottom line of text before we return.
-  spiflash_read(botlinetext, 0x2054, 20);
+  md380_spiflash_read(botlinetext, 0x2054, 20);
 }
 
 

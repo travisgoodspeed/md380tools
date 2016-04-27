@@ -83,6 +83,16 @@ class Tool(DFU):
         """Returns so many bytes from an address."""
         self.set_address(adr);
         return self.upload(1,size,0);
+    def spiflashgetid(self):
+	size=4;
+        """Returns SPI Flash ID."""
+        cmd=0x05; #SPIFLASHGETID
+	cmdstr=(chr(cmd));
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
+                                   cmdstr)
+        self.get_status(); #this changes state
+        status=self.get_status(); #this gets the status
+        return self.upload(1,size,0);
     def spiflashpeek(self,adr,size=1024):
         """Returns so many bytes from SPI Flash."""
         cmd=0x01; #SPIFLASHREAD
@@ -318,8 +328,20 @@ def dump(dfu,filename,address):
         buf=dfu.peek(adr,1024);
         f.write(buf);
         f.close();
-
-
+def flashgetid(dfu):
+    buf=dfu.spiflashgetid();
+    print "SPI Flash ID: %x %x %x"%(buf[0],buf[1],buf[2])
+    if (buf[0] == 0xef and buf[1] == 0x40):
+        if (buf[2] == 0x18):
+            sys.stdout.write("W25Q128FV 16MByte\n");
+            size=16*1024*1024;
+        elif (buf[2] == 0x14):
+            sys.stdout.write("W25Q80BL 1MByte\n");
+            size=1*1024*1024;
+        else:
+            sys.stdout.write("Unkown SPI Flash - please report\n");
+            size=0;
+    return size;
 
 def flashdump(dfu,filename):
     """Dumps flash."""
@@ -343,25 +365,27 @@ def spiflashdump(dfu,filename):
         f.close();
 def spiflashwrite(dfu,filename,adr):
      """Programm SPI Flash."""
-     with open(filename,'rb') as f:
-        data = f.read()
-        size=len(data)
+     if (flashgetid(dfu) == 16*1024*1024):
+        with open(filename,'rb') as f:
+            data = f.read()
+            size=len(data)
 
-        for n in range(adr,adr+size+1,0x1000):
-           print "erase %x " % n
-           dfu.spiflash_erase64kblock(n)
-        fullparts = int(size/1024)
-        if fullparts > 0:
-           for n in range(0,fullparts,1):
-              print "%d %d %x %d " % (fullparts, n, adr+n*1024, 1024)
-              dfu.spiflashpoke( adr+n*1024,1024,data[n*1024:(n+1)*1024]);
-        lastpartsize= size - fullparts * 1024
+            for n in range(adr,adr+size+1,0x1000):
+                print "erase %x " % n
+                dfu.spiflash_erase64kblock(n)
+            fullparts = int(size/1024)
+            if fullparts > 0:
+                for n in range(0,fullparts,1):
+                    print "%d %d %x %d " % (fullparts, n, adr+n*1024, 1024)
+                    dfu.spiflashpoke( adr+n*1024,1024,data[n*1024:(n+1)*1024]);
+            lastpartsize= size - fullparts * 1024
 
-        if ( lastpartsize  > 0 ):
-           print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
-           dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
-
-        f.close();
+            if ( lastpartsize  > 0 ):
+                print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
+                dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
+            f.close();
+     else:
+         sys.stdout.write("can't programm spi flash wrong flash type\n");
 def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
     while True:
@@ -505,6 +529,8 @@ Dumps all the inbound and outbound text messages.
 Dumps all the keys.
     md380-tool keys
 
+Prints the SPI Flash Type.
+    md380-tool spiflashid
 Dump all of flash memory.
     md380-tool flashdump <filename.bin>
 Dump the complete SPI Flash image (16MByte).
@@ -566,6 +592,9 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'keys':
                 dfu=init_dfu();
                 keys(dfu);
+            elif sys.argv[1] == 'spiflashid':
+                dfu=init_dfu();
+                flashgetid(dfu);
             
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':

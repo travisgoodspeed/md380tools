@@ -2,9 +2,11 @@
   \brief spiflash defines
 */
 
+extern void spiflash_write_with_type_check(void *dst, long adr, long len);
 
-extern int check_spi_flash_type(void); // 0 Error, 1 Success
-
+extern int check_spi_flash_type(void);         // 0 Error, 1 Success
+extern uint32_t get_spi_flash_type(uint8_t *); // place for the id
+                                               // ret:0x00aabbcc  aa=MANUFACTURER ID, bb,cc Device Identification
 
 extern uint32_t spi_flash_addl_config_start;
 extern uint32_t spi_flash_addl_config_size;

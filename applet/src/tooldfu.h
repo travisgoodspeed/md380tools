@@ -19,7 +19,8 @@ fetching the raw buffer.
 #define TDFU_SPIFLASHWRITE           0x02 //u32 address, u32 size, u8 val[]  (don't work with many calls)
 #define TDFU_SPIFLASHERASE64K        0x03 //u32 address
 #define TDFU_SPIFLASHWRITE_NEW       0x04 //u32 address, u32 size, u8 val[]
-#define TDFU_SPIFLASHSECURITYREGREAD 0x08 // ()
+#define TDFU_SPIFLASHGETID           0x05 // (void) -> 4 Byte ID
+#define TDFU_SPIFLASHSECURITYREGREAD 0x08 // (void)
 
 
 //Radio Commands

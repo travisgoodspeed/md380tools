@@ -27,7 +27,7 @@ static char * getdata(char * dest, const char *  src, int count) {
  * This makes it easier to adapt to different kinds of sources.
  */
 static char * getdata(char * dest, const char * src, int count) {
-    spiflash_read(dest, (long) src, count);
+    md380_spiflash_read(dest, (long) src, count);
     return dest;
 }
 

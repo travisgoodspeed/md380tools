@@ -117,15 +117,22 @@ int usb_dnld_hook(){
       //sets the target address to the DMESG buffer.
       *dfu_target_adr=dmesg_start;
       break;
+
+//SPI-FLASH commands
+    case TDFU_SPIFLASHGETID:
+      //Re-uses the dmesg transmit buffer.
+      *dfu_target_adr=dmesg_tx_buf;
+      get_spi_flash_type((void *) dmesg_tx_buf); // 0x00aabbcc  aa=MANUFACTURER ID, bb,cc Device Identification
+      break;
     case TDFU_SPIFLASHREAD:
       //Re-uses the dmesg transmit buffer.
       *dfu_target_adr=dmesg_tx_buf;
       uint32_t adr= *((uint32_t*)(packet+1));
       printf("Dumping %d bytes from 0x%08x in SPI Flash\n",
             DMESG_SIZE, adr);
-      spiflash_read(dmesg_tx_buf,
-		    adr,
-		    DMESG_SIZE);
+      md380_spiflash_read(dmesg_tx_buf,
+		          adr,
+		          DMESG_SIZE);
       break;
     case TDFU_SPIFLASHWRITE:
       //Re-uses the dmesg transmit buffer.
@@ -135,7 +142,7 @@ int usb_dnld_hook(){
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       if (check_spi_flash_type()) {
         printf ("TDFU_SPIFLASHWRITE %x %d %x\n", adr, size, packet+9);
-        spiflash_write(packet+9,  adr, size);
+        md380_spiflash_write(packet+9,  adr, size);
       }
       break;
     case TDFU_SPIFLASHERASE64K:   // experimental
@@ -149,18 +156,18 @@ int usb_dnld_hook(){
 //      spiflash_block_erase64k(adr);
 
 
-        spiflash_enable();
-        spi_sendrecv(0x6);
-        spiflash_disable();
+        md380_spiflash_enable();
+        md380_spi_sendrecv(0x6);
+        md380_spiflash_disable();
 
-        spiflash_enable();
-        spi_sendrecv(0xd8);
-        spi_sendrecv((adr>> 16) & 0xff);
-        spi_sendrecv((adr>>  8) & 0xff);
-        spi_sendrecv(adr & 0xff);
-        spiflash_disable();
+        md380_spiflash_enable();
+        md380_spi_sendrecv(0xd8);
+        md380_spi_sendrecv((adr>> 16) & 0xff);
+        md380_spi_sendrecv((adr>>  8) & 0xff);
+        md380_spi_sendrecv(adr & 0xff);
+        md380_spiflash_disable();
       }  
-//      spiflash_wait();   // this is the problem :( 
+//      md380_spiflash_wait();   // this is the problem :( 
                            // must be polled via dfu commenad?
       break;
     case TDFU_SPIFLASHWRITE_NEW: // not working, this is not the problem
@@ -177,25 +184,25 @@ int usb_dnld_hook(){
           int page_adr;
           page_adr=adr+i;
           printf("%d %x\n",i,page_adr);
-          spiflash_wait();
+          md380_spiflash_wait();
 
-          spiflash_enable();
-          spi_sendrecv(0x6);
-          spiflash_disable();
+          md380_spiflash_enable();
+          md380_spi_sendrecv(0x6);
+          md380_spiflash_disable();
 
-          spiflash_enable();
-          spi_sendrecv(0x2);
+          md380_spiflash_enable();
+          md380_spi_sendrecv(0x2);
           printf("%x ", ((page_adr>> 16) & 0xff));
-          spi_sendrecv((page_adr>> 16) & 0xff);
+          md380_spi_sendrecv((page_adr>> 16) & 0xff);
           printf("%x ", ((page_adr>>  8) & 0xff));
-          spi_sendrecv((page_adr>>  8) & 0xff);
+          md380_spi_sendrecv((page_adr>>  8) & 0xff);
           printf("%x ", (page_adr & 0xff));
-          spi_sendrecv(page_adr & 0xff);
+          md380_spi_sendrecv(page_adr & 0xff);
           for (int ii=0; ii < 256; ii++) {
-            spi_sendrecv(packet[9+ii+i]);
+            md380_spi_sendrecv(packet[9+ii+i]);
           }
-          spiflash_disable();
-          spiflash_wait();
+          md380_spiflash_disable();
+          md380_spiflash_wait();
           printf("\n");
         }
       }
@@ -205,7 +212,7 @@ int usb_dnld_hook(){
       *dfu_target_adr=dmesg_tx_buf;
       printf("Dumping %d bytes from adr 0 SPI Flash security_registers\n",
 	     DMESG_SIZE);
-      spiflash_security_registers_read(dmesg_tx_buf,
+      md380_spiflash_security_registers_read(dmesg_tx_buf,
                                       0,
                                       3*256);
       break;
@@ -301,7 +308,7 @@ const char *getmfgstr(int speed, long *len){
   char buffer[]="@________ : ________";
   
   //Read four bytes from SPI Flash.
-  spiflash_read(&val,adr,4);
+  md380_spiflash_read(&val,adr,4);
   
   //Print them into the manufacturer string.
   strhex(buffer+1, adr);
