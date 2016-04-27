@@ -175,12 +175,9 @@ def upload_bootloader(dfu,filename):
 def upload_codeplug(dfu,filename):
     """Uploads a codeplug from the radio to the host."""
     dfu.md380_custom(0x91,0x01); #Programming Mode
-    dfu.md380_custom(0x91,0x01); #Programming Mode
     #dfu.md380_custom(0xa2,0x01); #Returns "DR780...", seems to crash client.
     #hexdump(dfu.get_command());  #Gets a string.
     dfu.md380_custom(0xa2,0x02);
-    dfu.get_command();  #Gets a string.
-    time.sleep(2);
     dfu.md380_custom(0xa2,0x02);
     dfu.md380_custom(0xa2,0x03);
     dfu.md380_custom(0xa2,0x04);
