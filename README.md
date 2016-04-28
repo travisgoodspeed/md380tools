@@ -21,7 +21,8 @@ These tools are all wrapped into `Makefile`, which will download the
 official firmware, patch and flash it.  Run `make flash` after booting
 into the recovery bootloader by holding PTT and the button just above
 it during power-on.  Once device has been powered on, run `make flashdb`
-to write the DMR MARC user's database to SPI Flash memory.
+to write the DMR MARC user's database to SPI Flash memory. This works only
+with Radios that have 16 MByte SPI Flash memory chip installed.
 
 ##License:##
 
