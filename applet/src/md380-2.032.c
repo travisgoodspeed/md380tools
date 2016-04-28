@@ -5,7 +5,7 @@
 
 
 #include "md380.h"
-
+#include "os.h"
 
 //So we don't get warnings about integer pointers, for just this header.
 #pragma GCC diagnostic ignored "-Wint-conversion"
@@ -92,6 +92,16 @@ char *welcomebmp=0x080f9ca8;
 INT8U (*OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt)=0x804bbf5;
 void* (*OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr)=0x804bcc1;
 
+int (*OS_ENTER_CRITICAL)()    = 0x08041df9;
+void (*OS_EXIT_CRITICAL)(int) = 0x08041e01;
+
+//! OSSem Create Hook used the place from 2 OSSemCreate Calls
+OS_EVENT *(*OSSemCreate)(uint16_t) = 0x803da2c+1;
+OS_EVENT  ** OSSemCreate_hook0_event_mem=0x2001d124;
+OS_EVENT  ** OSSemCreate_hook1_event_mem=0x2001d128;
+
+void (*OSSemPend)(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr)=0x803da78+1;
+uint8_t (*OSSemPost)(OS_EVENT *pevent)=0x803db68+1;
 
 //! Functions and Variabes regarding the menu
 void     *(*main_menu)(void *)=0x08039c23;
@@ -124,8 +134,6 @@ char* channelnum=0x2001d376;
 int (*read_channel_switch)()=0x0804d269;
 
 
-int (*OS_ENTER_CRITICAL)()    = 0x08041df9;
-void (*OS_EXIT_CRITICAL)(int) = 0x08041e01;
 
 
 void (*c5000_spi0_readreg)(int reg, char*buf)=0x0803e2f5;
