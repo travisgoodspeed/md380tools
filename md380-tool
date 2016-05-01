@@ -329,6 +329,7 @@ def dump(dfu,filename,address):
         f.write(buf);
         f.close();
 def flashgetid(dfu):
+    size=0;
     buf=dfu.spiflashgetid();
     print "SPI Flash ID: %x %x %x"%(buf[0],buf[1],buf[2])
     if (buf[0] == 0xef and buf[1] == 0x40):
@@ -340,7 +341,6 @@ def flashgetid(dfu):
             size=1*1024*1024;
         else:
             sys.stdout.write("Unkown SPI Flash - please report\n");
-            size=0;
     return size;
 
 def flashdump(dfu,filename):
