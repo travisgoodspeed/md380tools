@@ -384,6 +384,7 @@ def spiflashwrite(dfu,filename,adr):
             if ( lastpartsize  > 0 ):
                 print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
                 dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
+            sys.stdout.write("reboot radio now\n"); 
             dfu.md380_reboot();
             f.close();
      else:
