@@ -41,8 +41,13 @@ int check_spi_flash_type(void) {
       ok=1;
       return 1;
     } else {
-      printf("no W25Q128FV %x %x %x\n", (ret & 0xff0000)>>16, (ret & 0xff00) >> 8 , (ret & 0xff));
-      return 0;
+      if ( ret == 0x10dc01 ) { // 2. Manufacturer and Device Identification for W25Q128FV maybe
+        ok=1;
+        return 1;
+      } else {
+        printf("no W25Q128FV %x %x %x\n", (ret & 0xff0000)>>16, (ret & 0xff00) >> 8 , (ret & 0xff));
+        return 0;
+      }
     }
   }
 }
