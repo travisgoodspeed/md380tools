@@ -339,7 +339,7 @@ def flashgetid(dfu):
         elif (buf[2] == 0x14):
             sys.stdout.write("W25Q80BL 1MByte\n");
             size=1*1024*1024;
-    elfi (buf[0] == 0x10 and buf[1] == 0xdc):
+    elif (buf[0] == 0x10 and buf[1] == 0xdc):
         if (buf[2] == 0x01):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
             size=16*1024*1024;          
