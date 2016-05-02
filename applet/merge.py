@@ -200,6 +200,10 @@ if __name__== '__main__':
     #for adr in OSTaskNameSet_hook_list:
     #    merger.hookbl(adr, sapplet.getadr("OSTaskNameSet_hook"),0);
 
+    # os semaphore hook .. now we can crate own semaphores
+    merger.hookbl(0x080441f4,sapplet.getadr("OSSemCreate_hook"),0);
+    merger.hookstub(0x080441f4+4,0x0804420c+1);
+
     # gfx hooks
     merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine_green"),0);
     merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine_green"),0);

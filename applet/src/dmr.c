@@ -89,12 +89,19 @@ void *dmr_call_start_hook(char *pkt){
            (pkt[9]<<8)|
            (pkt[8]<<16));
 
+  uint8_t err;
+
+
+  OSSemPend(debug_line_sem, 0, &err);
+
   //printf("Call start %d -> %d\n", src,dst);
   sprintf(DebugLine1, "%d -> %d", src, dst );
 
   if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
     sprintf(DebugLine2, ",ID not found,in users.csv,see md380-tool");   // , is line seperator ;)
   }
+
+  OSSemPost(debug_line_sem);
 
   //This prints a dot at every resynchronization frame.
   //It can distract AMBE2+ logging.

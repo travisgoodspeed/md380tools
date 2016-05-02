@@ -11,7 +11,6 @@
 #include "string.h"
 #include "addl_config.h"
 
-
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
@@ -87,6 +86,7 @@ void lcd_background_led(int on) {
 void print_DebugLine(unsigned int bg_color) {
   char buf[30];
   int n,i,ii;
+  uint8_t err;
 
   gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
@@ -102,6 +102,12 @@ void print_DebugLine(unsigned int bg_color) {
 
   ii=0;
   n=0;
+
+  OSSemPend(debug_line_sem, 0, &err);
+#ifdef DEBUG
+  printf("err from OSSemPend(debug_line_sem ... %x",err);
+#endif
+
   for (i=0;i<strlen(DebugLine2) || n < 6 ;i++) {
     if (DebugLine2[i] == ',' || DebugLine2[i] == '\0') {
       buf[ii++]='\0';
@@ -112,8 +118,9 @@ void print_DebugLine(unsigned int bg_color) {
       if (ii<29) buf[ii++]=DebugLine2[i];
       }
   }
-                                           
+
   drawascii2(DebugLine1, 10, 42);
+  OSSemPost(debug_line_sem);
 
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);

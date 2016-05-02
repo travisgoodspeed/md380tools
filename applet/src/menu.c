@@ -3,7 +3,7 @@
 */
 
 
-#define DEBUG
+// #define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -30,7 +30,6 @@ static wchar_t wt_userscsv[]          = L"UsersCSV";
 static wchar_t wt_datef_original[]    = L"Original";
 static wchar_t wt_datef_germany[]     = L"German";
 static wchar_t wt_promtg[]            = L"Promiscuous";
-static wchar_t wt_prompriv[]          = L"Private Spy";
 static wchar_t wt_edit[]              = L"Edit";
 static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
 static wchar_t wt_no_w25q128[]        = L"No W25Q128";
