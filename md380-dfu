@@ -417,6 +417,9 @@ if __name__ == '__main__':
                     suf_len, vendor, product = dfu_suffix.check_suffix(data)
                     dfu = init_dfu()
                     firmware = data[:-suf_len]
+                elif sys.argv[2][-4:] == '.rdt':
+                    dfu = init_dfu()
+                    firmware = data[549:len(data)-16]
                 else:
                     dfu = init_dfu()
                     firmware = data
