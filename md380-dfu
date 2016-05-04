@@ -359,7 +359,9 @@ def usage():
     print("""
 Usage: md380-dfu <command> <arguments>
 
-Write a codeplug to the radio.
+Write a codeplug to the radio. Supported file types: RDT (from official Tytera editor), DFU (with suffix) and raw binaries
+    md380-dfu write <codeplug.rdt>
+    md380-dfu write <codeplug.dfu>
     md380-dfu write <codeplug.bin>
 
 Write firmware to the radio.
