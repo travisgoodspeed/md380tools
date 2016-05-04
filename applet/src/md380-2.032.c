@@ -103,6 +103,8 @@ OS_EVENT  ** OSSemCreate_hook1_event_mem=0x2001d128;
 void (*OSSemPend)(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr)=0x803da78+1;
 uint8_t (*OSSemPost)(OS_EVENT *pevent)=0x803db68+1;
 
+uint8_t (*md380_OSMboxPost)(OS_EVENT *pevent, void *pmsg)=0x080303b4+1;
+
 //! Functions and Variabes regarding the menu
 void     *(*main_menu)(void *)=0x08039c23;
 void     *(*md380_create_main_meny_entry)(void)=0x0800c189;

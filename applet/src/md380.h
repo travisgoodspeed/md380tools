@@ -95,6 +95,7 @@ extern OS_EVENT *(*OSSemCreate)(uint16_t);
 extern void (*OSSemPend)(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
 extern uint8_t (*OSSemPost)(OS_EVENT *pevent);
 
+extern uint8_t (*md380_OSMboxPost)(OS_EVENT *pevent, void *pmsg);
 
 
 //! Functions and Variabes regarding the menu

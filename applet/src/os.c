@@ -17,7 +17,7 @@
 OS_EVENT* debug_line_sem;
 
 OS_EVENT  ** OSSemCreate_hook0_event_mem;
-OS_EVENT  ** OSSemCreate_hook1_event_mem; 
+OS_EVENT  ** OSSemCreate_hook1_event_mem;
 
 
 INT8U (OSTaskCreateExt_hook)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt) {
@@ -44,4 +44,37 @@ if ( debug_line_sem == NULL ) {
 #ifdef DEBUG
  printf("debug_line_sem %x\n", debug_line_sem);
 #endif
+}
+
+
+void pevent_to_name(OS_EVENT *pevent, void *pmsg) {
+  if ( pevent == (void *) 0x20015f0c ) {
+    printf("to Beep_Process: %x ..", * (uint8_t*)pmsg);
+    switch (* (uint8_t*)pmsg  ) {
+      case 0x24:
+        printf("roger beep ");
+        break;
+      case 0x27:
+        printf("keypad tone ");
+        break;
+      case 0xe:
+        printf("fail to sync with relay ");
+        break;
+      default:
+        printf("not known ");
+        break;
+    }
+  }
+    printf("Data:       ");
+    printhex(pmsg, 10);
+    printf("\n");
+}
+
+
+uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
+  void *return_addr;
+  __asm__("mov %0,r14" : "=r" (return_addr));
+  printf("OSMboxPost_hook 0x%x 0x%x 0x%x ", return_addr, pevent, pmsg);
+  pevent_to_name(pevent, pmsg);
+  return(md380_OSMboxPost(pevent, pmsg));
 }
