@@ -139,6 +139,8 @@ with 16MByte SPI-Flash.**
        make flashdb  
     
 
+After successfully flashing, the radio will be restarted.
+
 ##Firmware Compilation##
 
 This archive does not ship with firmware.  Instead it grabs firmware
