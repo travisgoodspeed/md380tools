@@ -73,8 +73,10 @@ void pevent_to_name(OS_EVENT *pevent, void *pmsg) {
 
 uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   void *return_addr;
+  void *sp;
   __asm__("mov %0,r14" : "=r" (return_addr));
-  printf("OSMboxPost_hook 0x%x 0x%x 0x%x ", return_addr, pevent, pmsg);
+  __asm__("mov %0,r13" : "=r" (sp));
+  printf("OSMboxPost_hook r: 0x%x s: 0x%x p: 0x%x m: 0x%x ", return_addr, sp, pevent, pmsg);
   pevent_to_name(pevent, pmsg);
   return(md380_OSMboxPost(pevent, pmsg));
 }

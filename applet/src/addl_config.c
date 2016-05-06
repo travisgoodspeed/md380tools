@@ -12,17 +12,11 @@
 #include "config.h"
 #include "printf.h"
 #include "spiflash.h"
+#include "addl_config.h"
 
+struct addl_config global_addl_config;
 
-struct addl_config {
-  uint8_t  rbeep;
-  uint8_t  datef;
-  uint8_t  userscsv;
-  uint8_t  debug;
-  uint8_t  promtg;
-  } global_addl_config;
-
-void init_global_addl_config_hook(void) {
+void init_global_addl_config_struct() {
   int8_t buf[1];
 
   md380_spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1);
@@ -59,6 +53,12 @@ void init_global_addl_config_hook(void) {
   } else {
     global_addl_config.promtg=0;
   }
-  // hooked call
+  // global_addl_config.experimental is intentionally not permanent
+  global_addl_config.experimental = 0;
+}
+
+void init_global_addl_config_hook(void) {
+  init_global_addl_config_struct();
+
   md380_create_main_meny_entry();
 }

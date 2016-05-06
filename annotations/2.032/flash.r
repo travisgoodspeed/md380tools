@@ -30,9 +30,57 @@ CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
 
-
-
-
+CCa 0x0802631e call RTC_ExitInitMode(void)
+CCa 0x0802632c call RTC_WaitForSynchro
+CCa 0x0802634a ... maybe STM32LIB void RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
+CCa 0x0802639a ... maybe STM32LIB ErrorStatus RTC_SetDate(uint32_t RTC_Format, RTC_DateTypeDef* RTC_DateStruct)
+CCa 0x08026460 ... maybe STM32LIB void RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef* RTC_DateStruct)
+CCa 0x080264ac ... maybe STM32LIB void RTC_WakeUpClockConfig(uint32_t RTC_WakeUpClock)
+CCa 0x080264e4 ... maybe STM32LIB void RTC_SetWakeUpCounter(uint32_t RTC_WakeUpCounter)
+CCa 0x08026504 ... maybe STM32LIB ErrorStatus RTC_RefClockCmd(FunctionalState NewState)
+CCa 0x08026596 something to store to RTC backup registers (RTC_BKPxR)
+CCa 0x080265ba ... maybe STM32LIB void RTC_ITConfig(uint32_t RTC_IT, FunctionalState NewState)
+CCa 0x08026616 ... maybe STM32LIB void RTC_ClearFlag(uint32_t RTC_FLAG)
+CCa 0x08026662 ... maybe STM32LIB
+CCa 0x08026a9a ... maybe STM32LIB  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
+CCa 0x08026ab0 GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
+CCa 0x08026ab6 ... maybe STM32LIB
+CCa 0x08026aba ... maybe STM32LIB
+CCa 0x08026abe ... maybe STM32LIB .. (r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x08027c22 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x08027c2e GPIO_SetBits(GPIOC, 0x40)
+CCa 0x08028120 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x0802823a GPIO_SetBits(GPIOC, 0x40)
+CCa 0x08028246 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x080282b6 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x080282c2 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x0802fb0e GPIO_SetBits(GPIOD, 0x80)
+CCa 0x08030f40 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x08030f64 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x08032a3c Called from Task Start()
+CCa 0x0803a2c6 mybee vox
+CCa 0x0803d026 Switch LAMP on ....
+CCa 0x0803dc3a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803dc48 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803dd70 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e0b2 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e0be call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e0e2 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e100 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e110 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e1f4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e296 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e2a2 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e50e call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e51a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e542 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e54e call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e5d8 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e5e4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e69a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803e6a4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x080426c8 Function ... Init ADC1 (Bat) with dma  value via dma DMA2 DMA_S0CRin 0x2001cfcc
+CCa 0x080443f8 Create Process -LED Process- Thread Start  addr 0x809573d
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -72,7 +120,7 @@ af+ 0x800d66c 178 F_4139
 af+ 0x800d730 2 F_4147
 af+ 0x800d732 188 F_4283
 af+ 0x800d7f4 114 F_4038
-af+ 0x800d86c 30 F_4039
+af+ 0x800d86c 30 F_4039_something_write_to_screen
 af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785_Print_Date_and_Time
 CCa 0x800d8ca 0x2001d1ac Date
@@ -97,6 +145,7 @@ af+ 0x800de5c 96 F_972
 af+ 0x800debc 126 F_787
 CCa 0x800ded8 ConfigData + 0x17 (byte) F_787
 af+ 0x800df84 996 Volume_Menu
+CCa 0x800df8e call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
 CCa 0x800dfd6 ... V.o.l.u.m.e
 CCa 0x800e016 glob. String ..Volume (0-9)
 CCa 0x800e028 Default 1 sec
@@ -366,13 +415,17 @@ af+ 0x801906c 154 F_5102
 af+ 0x8019128 394 Create_Menu_Entry_Backlight
 CCa 0x801918c Get ConfigData + 0x15 F_5103
 af+ 0x80192b2 130 F_5104
+CCa 0x801931c GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801932c Set ConfigData + 0x15 F_5104
 af+ 0x801933c 130 F_5105
+CCa 0x80193a6 GPIO_SetBits(GPIOC, 0x40)
 af+ 0x80193c8 126 F_5106
+CCa 0x801942e GPIO_SetBits(GPIOC, 0x40)
 af+ 0x801944c 232 Create_Menu_Entry_Squelch
 af+ 0x8019534 164 F_5108
 af+ 0x80195f0 182 F_5109
 af+ 0x80196a6 138 F_5110
+CCa 0x8019718 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x8019728 Set ConfigData + 0x15 F_5110
 af+ 0x8019734 250 Create_Menu_Entry_Intro_Screen
 CCa 0x801975e ... I.n.t.r.o...S.c.r.e.e.n
@@ -553,22 +606,29 @@ af+ 0x801dcf0 1436 F_4171
 af+ 0x801e2d8 3408 F_4224
 af+ 0x801f03c 8 F_4292
 af+ 0x801f044 5240 F_4225
+CCa 0x801f228 GPIO_SetBits(GPIOC, 0x40) .. Bit 3 .. C3  2T/5T / RF_RX_INTER
 CCa 0x801f236 ConfigData + 0x15 (byte) F_4225
+CCa 0x801f334 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f342 ConfigData + 0x15 (byte) F_4225
+CCa 0x801f3b0 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f3be ConfigData + 0x15 (byte) F_4225
+CCa 0x801f40c GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f41a ConfigData + 0x15 (byte) F_4225
 CCa 0x801f55c ConfigData + 0xa  (byte) F_4225
 CCa 0x801f57c ConfigData + 0x9  (byte) F_4225
 CCa 0x801f5b6 sprite telephone
 CCa 0x801f7de ConfigData + 0x16 (byte) F_4225
 CCa 0x801f818 ConfigData + 0x16 (byte) F_4225
+CCa 0x801f878 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801f886 ConfigData + 0x0  (byte) F_4225
 CCa 0x801f890 ConfigData + 0x0  (byte) F_4225
 CCa 0x801f99a ConfigData + 0x15 (byte) F_4225
 CCa 0x801fc06 ConfigData + 0x1  (byte) F_4225
 CCa 0x801fc9c ConfigData + 0x16 (byte) F_4225
 CCa 0x801fd14 ConfigData + 0x16 (byte) F_4225
+CCa 0x801ffda GPIO_SetBits(GPIOC, 0x40)
 CCa 0x801ffe8 ConfigData + 0x15 (byte) F_4225
+CCa 0x80201c0 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x80201ce ConfigData + 0x15 (byte) F_4225
 CCa 0x802045c 0x2001cfe4 signal strength (byte) 0-5
 CCa 0x802046a 0x2001cfe4 signal strength (byte) 0-5
@@ -756,9 +816,13 @@ af+ 0x802612a 12 F_821
 af+ 0x8026138 112 RTC_Init
 af+ 0x80261a8 14 F_998
 af+ 0x80261b6 84 RTC_EnterInitMode
+CCa 0x80261b8 ... maybe STM32LIB ErrorStatus RTC_EnterInitMode(void)
 af+ 0x802620a 18 RTC_ExitInitMode
+CCa 0x802620a ... maybe STM32LIB Fuction void RTC_ExitInitMode(void)
 af+ 0x802621c 100 RTC_WaitForSynchro
+CCa 0x802621c ... maybe STM32LIB ErrorStatus RTC_WaitForSynchro(void)
 af+ 0x8026280 202 RTC_SetTime
+CCa 0x8026280 ... maybe STM32LIB ErrorStatus RTC_SetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
 af+ 0x802634a 80 RTC_GetTime
 af+ 0x802639a 198 RTC_SetDate
 af+ 0x8026460 76 RTC_GetDate
@@ -810,11 +874,15 @@ af+ 0x80279a8 170 F_4312
 af+ 0x8027a52 66 F_823
 af+ 0x8027aa8 58 F_4519_wtf
 af+ 0x8027ae8 2094 F_4520
+CCa 0x8027bae ... D.i.s.a.b.l.e.d
 CCa 0x8027c1c ConfigData + 0x15 (byte) F_4520
 CCa 0x8027c3c ConfigData + 0x15 (byte) F_4520
 CCa 0x802812e ConfigData + 0x15 (byte) F_4520
+CCa 0x80281d8 ... C.o.n.f.i.r.m
+CCa 0x80281f8 ... B.a.c.k.
 CCa 0x8028234 ConfigData + 0x15 (byte) F_4520
 CCa 0x8028254 ConfigData + 0x15 (byte) F_4520
+CCa 0x802828e last pressed key
 CCa 0x80282b0 ConfigData + 0x15 (byte) F_4520
 CCa 0x80282d0 ConfigData + 0x15 (byte) F_4520
 af+ 0x8028316 52 F_4313
@@ -1620,10 +1688,36 @@ af+ 0x8043e78 268 F_4000
 af+ 0x804403c 310 Start
 CCa 0x804408a ConfigData + 0x1  (byte) Start
 af+ 0x8044172 298 F_474
+CCa 0x8044184 _Start Mbox_
 af+ 0x804429c 684 Start_multiple_tasks
+CCa 0x80442c0 Create Process -Sys_Inter- Thread
+CCa 0x80442f4 Create Process -RTC_Timer- Thread
+CCa 0x8044328 Create Process -Call_Process- Thread
+CCa 0x804435c Create Process -FMTx_Process- Thread
+CCa 0x8044390 Create Process -RF_Pll- Thread
+CCa 0x80443c4 Create Process -PC_Tune- Thread
+CCa 0x804442c Create Process -Beep_Process- Thread
+CCa 0x8044460 Create Process -Af_Mute- Thread
+CCa 0x8044494 Create Process -TimeSlot- Thread
+CCa 0x80444c8 Create Process -Set_Vocoder- Thread
+CCa 0x80444fc Create Process -ChAccess_Rp- Thread
+CCa 0x8044530 Create Process -State_Change- Thread
 af+ 0x8044548 300 RTC_Timer
 CCa 0x804454e Get ConfigData + 0x2  (byte) ubfx r0, r0, 4, 1 .. lsls r0, r0, 0x1f  RTC_Timer
 CCa 0x8044550 Bit 4
+CCa 0x804462a Loop RTC_Timer
+CCa 0x804463a F_80_wtf an OS Function
+CCa 0x804463e F_4500 -
+CCa 0x8044642 F_4098 many function calls ... runs all functions
+CCa 0x8044646 This_function_called_Read_Channel_Switch
+CCa 0x804464a F_4520 something with keyboard
+CCa 0x804464e F_4495 ?
+CCa 0x8044658 F_4507 nothing
+CCa 0x804465e F_4170 display?
+CCa 0x8044662 F_4225 vip
+CCa 0x8044666 F_4505
+CCa 0x804466a F_4501
+CCa 0x804466e F_626
 af+ 0x8044674 626 FMTx_Process
 CCa 0x80447a4 ConfigData + 0x1  (byte) FMTx_Process
 CCa 0x80447b0 ConfigData + 0x1  (byte) FMTx_Process
@@ -1760,6 +1854,8 @@ af+ 0x8048f82 184 F_562
 af+ 0x804903a 14 OSTmrSignal___maybe
 af+ 0x8049048 52 F_876
 af+ 0x804907c 174 F_5016
+CCa 0x804910e _uC/OS-II TmrLock_
+CCa 0x804911a _uC/OS-II TmrSignal_
 af+ 0x804912a 58 F_5023
 af+ 0x8049164 110 F_194
 af+ 0x80491d2 74 F_195
@@ -2359,95 +2455,12 @@ af+ 0x8096c18 76 F_4542
 af+ 0x8096c64 50 F_4543
 af+ 0x8096c96 56 F_4544
 af+ 0x80f96b0 6 F_5074
-
-
 f ConfigData 0x50 @ 0x2001c658
 f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
 f WelcomeLine1 4 @ 0x2001cecc
 fC WelcomeLine1 *Welcome_Line1
 f WelcomeLine2 4 @ 0x2001cee0
-CCa 0x8044184 _Start Mbox_
-CCa 0x804910e _uC/OS-II TmrLock_
-CCa 0x804911a _uC/OS-II TmrSignal_
-CCa 0x800df8e call  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
-CCa 0x801931c GPIO_SetBits(GPIOC, 0x40)
-CCa 0x80193a6 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801942e GPIO_SetBits(GPIOC, 0x40)
-CCa 0x8019718 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801f228 GPIO_SetBits(GPIOC, 0x40) .. Bit 3 .. C3  2T/5T / RF_RX_INTER
-CCa 0x801f334 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801f3b0 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801f40c GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801f878 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x801ffda GPIO_SetBits(GPIOC, 0x40)
-CCa 0x80201c0 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x80261b8 ... maybe STM32LIB ErrorStatus RTC_EnterInitMode(void)
-CCa 0x802620a ... maybe STM32LIB Fuction void RTC_ExitInitMode(void)
-CCa 0x802621c ... maybe STM32LIB ErrorStatus RTC_WaitForSynchro(void)
-CCa 0x8026280 ... maybe STM32LIB ErrorStatus RTC_SetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
-CCa 0x0802631e call RTC_ExitInitMode(void)
-CCa 0x0802632c call RTC_WaitForSynchro
-CCa 0x0802634a ... maybe STM32LIB void RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
-CCa 0x0802639a ... maybe STM32LIB ErrorStatus RTC_SetDate(uint32_t RTC_Format, RTC_DateTypeDef* RTC_DateStruct)
-CCa 0x08026460 ... maybe STM32LIB void RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef* RTC_DateStruct)
-CCa 0x080264ac ... maybe STM32LIB void RTC_WakeUpClockConfig(uint32_t RTC_WakeUpClock)
-CCa 0x080264e4 ... maybe STM32LIB void RTC_SetWakeUpCounter(uint32_t RTC_WakeUpCounter)
-CCa 0x08026504 ... maybe STM32LIB ErrorStatus RTC_RefClockCmd(FunctionalState NewState)
-CCa 0x08026596 something to store to RTC backup registers (RTC_BKPxR)
-CCa 0x080265ba ... maybe STM32LIB void RTC_ITConfig(uint32_t RTC_IT, FunctionalState NewState)
-CCa 0x08026616 ... maybe STM32LIB void RTC_ClearFlag(uint32_t RTC_FLAG)
-CCa 0x08026662 ... maybe STM32LIB
-CCa 0x08026a9a ... maybe STM32LIB  ret r0 read_an_test_gpio (r0=gpio base address ,r1= test_mask)
-CCa 0x08026ab0 GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
-CCa 0x08026ab6 ... maybe STM32LIB
-CCa 0x08026aba ... maybe STM32LIB
-CCa 0x08026abe ... maybe STM32LIB .. (r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x08027c22 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x08027c2e GPIO_SetBits(GPIOC, 0x40)
-CCa 0x08028120 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x0802823a GPIO_SetBits(GPIOC, 0x40)
-CCa 0x08028246 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x080282b6 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x080282c2 GPIO_SetBits(GPIOC, 0x40)
-CCa 0x0802fb0e GPIO_SetBits(GPIOD, 0x80)
-CCa 0x08030f40 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x08030f64 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x08032a3c Called from Task Start()
-CCa 0x0803a2c6 mybee vox
-CCa 0x0803d026 Switch LAMP on ....
-CCa 0x0803dc3a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803dc48 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803dd70 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e0b2 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e0be call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e0e2 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e100 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e110 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e1f4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e296 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e2a2 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e50e call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e51a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e542 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e54e call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e5d8 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e5e4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e69a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x0803e6a4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
-CCa 0x080426c8 Function ... Init ADC1 (Bat) with dma  value via dma DMA2 DMA_S0CRin 0x2001cfcc
-CCa 0x080443f8 Create Process -LED Process- Thread Start  addr 0x809573d
-CCa 0x80442c0 Create Process -Sys_Inter- Thread
-CCa 0x80442f4 Create Process -RTC_Timer- Thread
-CCa 0x8044328 Create Process -Call_Process- Thread
-CCa 0x804435c Create Process -FMTx_Process- Thread
-CCa 0x8044390 Create Process -RF_Pll- Thread
-CCa 0x80443c4 Create Process -PC_Tune- Thread
-CCa 0x804442c Create Process -Beep_Process- Thread
-CCa 0x8044460 Create Process -Af_Mute- Thread
-CCa 0x8044494 Create Process -TimeSlot- Thread
-CCa 0x80444c8 Create Process -Set_Vocoder- Thread
-CCa 0x80444fc Create Process -ChAccess_Rp- Thread
-CCa 0x8044530 Create Process -State_Change- Thread
+
 
 CCa 0x08044620 set A7 POW_C
 CCa 0x080458de call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
