@@ -76,7 +76,7 @@ durch
 
 > 255
 
-Ein Beispiel einer fertigen ppm-Datei, die man als Einschaltlogo verwenden kann, findet man hier: {{:dmr:tytera_tyt_md-380:0x80f9ca8-saar-edition.zip|}}
+Einige Beispiele fertiger ppm-Dateien, die man als Einschaltlogo verwenden kann, findet man im Repository im Verzeichnis ''md380tools/patches/2.032''.
 
 Nach den besagten Änderungen kopiert man die bearbeitete PPM-Datei in das Verzeichnis ''md380tools/patches/2.032'' und trägt die Grafikdatei in das Makefile ein, indem man folgende Zeile einfügt und die entsprechend voerher aktive Zeile mit einer # auskommentiert:
 
@@ -126,8 +126,9 @@ M. RogerBeep | Schaltet den modifizierten Roger-Piep ein oder aus
 Date format | Hier kann zwischen der originalen Schreibweise und der deutschen Schreibweise des Datums umgeschaltet werden
 UsersCSV | Aktiviert/deaktiviert die im SPI-Flash einspielbare User-Datenbank (DMR-ID-Datenbank der DMR-MARC-Datenbank)
 Debug | Aktiviert/deaktiviert den Debug-Modus
-Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Monitoring-Funktion (siehe [[dmr:tytera_tyt_md-380:experimentelle_firmware_von_travis_goodspeed_-_kk4vcz#Freischaltung des Empfangs aller Talkgroups und Private Calls|Freischaltung des Empfangs aller Talkgroups und Private Calls]])
+Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Monitoring-Funktion (siehe **Freischaltung des Empfangs aller Talkgroups und Private Calls**)
 Edit DMR-ID | Ändern der DMR-ID des Funkgerätes bis zum nächsten Ausschalten des Gerätes. Nach dem Einschalten ist wieder die ID aus dem Codeplug aktiv.
+Experimental | Ändert bis zum nächsten Ausschalten des Gerätes das Verhalten, dass das Menü nicht geschlossen wird, wenn ein Signal empfangen wird.
 
 ###Aktivierung der User-Datenbank
 **Wichtiger Hinweis:** Diese Funktion sollte nur auf Funkgeräten mit 16 MB SPI-Flashspeicher (nach aktuellen Erkenntnissen in der Regel UHF-Geräte) ausgeführt werden, da auf 1 MB-Geräten (in der Regel VHF-Geräte) der Codeplug bei älteren Versionen des Quellcodes (vor dem 28.04.2016) überschrieben wird und ggf. das Funkgerät hierdurch zunächst nicht mehr nutzbar wird.</note>
