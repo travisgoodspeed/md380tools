@@ -63,3 +63,9 @@ target/
 *.bin
 *.elf
 version.h
+
+# user/repeater lists
+db/users.csv
+db/users.json
+db/repeaters.csv
+db/repeaters.json
