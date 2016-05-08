@@ -611,8 +611,9 @@ void create_menu_entry_edit_dmr_id_screen_store(void) {
 #ifdef DEBUG
   printf("\n%d\n",new_dmr_id);
 #endif
-
+// store new dmr_id to ram and spi flash (codeplug)
   *md380_dmr_id=new_dmr_id;
+  md380_spiflash_write(&new_dmr_id, 0x2084, 4);
 
   *md380_menu_id    = *md380_menu_id - 1;
   *md380_menu_depth = *md380_menu_depth - 1;
