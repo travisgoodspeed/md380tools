@@ -14,18 +14,17 @@
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() {
   static int flag=0;
+#ifdef DEBUG  
   printf("%x \n", *md380_f_4225_operatingmode);
-
-  if (global_addl_config.experimental == 1) {
-    if (*md380_f_4225_operatingmode == md380_f_4225_operatingmode_menu) {
-      flag=1;
-    }
-    if (*md380_f_4225_operatingmode == md380_f_4225_operatingmode_menu_exit) {
-      flag=0;
-    }
-    if (flag == 1) {
-      *md380_f_4225_operatingmode=md380_f_4225_operatingmode_menu;
-    }
+#endif
+  if (*md380_f_4225_operatingmode == md380_f_4225_operatingmode_menu) {
+    flag=1;
+  }
+  if (*md380_f_4225_operatingmode == md380_f_4225_operatingmode_menu_exit) {
+    flag=0;
+  }
+  if (flag == 1) {
+    *md380_f_4225_operatingmode=md380_f_4225_operatingmode_menu;
   }
   return(md380_f_4225_operatingmode);
 }
