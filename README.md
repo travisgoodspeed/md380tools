@@ -71,6 +71,11 @@ This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
 
+###Installation of required packages###
+Debian Stretch:
+
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+
 ##Convenient Usage:##
 
 Anything with `md380-tool` requires a recent version of our patched
