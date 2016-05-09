@@ -195,3 +195,28 @@ as PoC||GTFO 10:8.  (`pocorgtfo10.pdf` page 76.)
 
 Pat Hickey has some notes and tools up in his own repository,
 https://github.com/pchickey/md380-re
+
+
+
+## Customization ##
+
+Images extracted from the firmware have comments at the beginning of
+the file, telling md380-gfx where they came from. Comments begin with a '#', and end with a new line.
+
+Image editors like GIMP will discard the original comments, but you can
+replace them by opening the file in a text editor and copy-pasting the
+comment lines from the original extracted file to your custom image.
+
+#### Boot logo ####
+
+There are several boot logos provided that you can choose from by editing
+`patches/2.032/Makefile`, and commenting/uncommenting as you see fit.
+
+The original boot logo is 160x40 pixels, and only 2 colors.  This means
+an image that has the same properties can be written into the firmware
+as a direct replacement, as seen in the Makefile.
+
+An image with more than two colors requires the "relocate" argument to
+md380-gfx. There are examples of this in the Makefile as well.
+
+
