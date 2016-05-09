@@ -20,7 +20,7 @@ flashdb:
 	cat db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
-	./md380-tool spiflashwrite data 0x100000
+	./md380_tool.py spiflashwrite data 0x100000
 dist: applets
 	rm -rf $(RELEASE)
 	mkdir -p $(RELEASE)/python
@@ -28,5 +28,5 @@ dist: applets
 	cd $(RELEASE) && unzip ../firmware/D002.032.zip
 	mv $(RELEASE)/Firmware\ 2.32 $(RELEASE)/windows
 	rm $(RELEASE)/windows/MD-380-D2.32\(AD\).bin $(RELEASE)/windows/Operation.doc.pdf
-	cp DFU.py 99-md380.rules md380-dfu md380-tool $(RELEASE)/python/
+	cp DFU.py 99-md380.rules md380_dfu.py md380_tool.py $(RELEASE)/python/
 

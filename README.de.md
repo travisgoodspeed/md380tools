@@ -80,7 +80,7 @@ Einige Beispiele fertiger ppm-Dateien, die man als Einschaltlogo verwenden kann,
 
 Nach den besagten Änderungen kopiert man die bearbeitete PPM-Datei in das Verzeichnis ''md380tools/patches/2.032'' und trägt die Grafikdatei in das Makefile ein, indem man folgende Zeile einfügt und die entsprechend voerher aktive Zeile mit einer # auskommentiert:
 
- `../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-eigenes_logo.ppm relocate`
+ `../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-eigenes_logo.ppm relocate`
  
 Ist dies erledigt, kann man im Grunde im Verzeichnis md380tools, nachdem man das Funkgerät per drücken der PTT und der oberen Menütaste beim Einschalten in den Flash-Mode geschaltet hat und das Programmierkabel an das Funkgerät wie auch an den PC angesteckt hat, per 
 
@@ -91,8 +91,8 @@ zum einen die Firmware kompilieren und danach automatisch in das Funkgerät rein
 
 Sollte man mit der Grafik alles richtig gemacht haben, sollte man nun beim Einschalten sein eigenes Logo zu sehen bekommen.
 
-####Bereitstellung des Kommandozeilen-Tools md380-tool
-Mit dem md380-tool können verschiedene Interaktionen mit dem Funkgerät über das USB-Programmierkabel vorgenommen werden. Nachfolgend eine kleine Erläuterung der Kommando-Parameter, die hinter den Programmaufruf gesetzt werden (Beispiel: ''md380-tool calllog''):
+####Bereitstellung des Kommandozeilen-Tools md380_tool.py
+Mit dem md380_tool.py können verschiedene Interaktionen mit dem Funkgerät über das USB-Programmierkabel vorgenommen werden. Nachfolgend eine kleine Erläuterung der Kommando-Parameter, die hinter den Programmaufruf gesetzt werden (Beispiel: ''md380_tool.py calllog''):
 
 Parameter | Verwendung
 ----------- | -----------
@@ -113,7 +113,7 @@ hexwatch | Fortlaufende Ausgabe eines Hexdumps einer Speicheradresse (hier <0xca
 readword <0xcafebabe> | Ausgabe eines Speicherwortes (hier an der Adresse <0xcafebabe>)
 dump  <dateiname.bin> <address> | Schreib ein 1kB großes Abbild ab der angegebenen Adresse
 spiflashwrite <filename> <address> | Kopiert die angegebene Datei <filename> an die angegebene Speicheradresse <address> des SPI-Flashspeichers
-wc -c < db/users.csv > data ; cat db/users.csv >> data && md380-tool spiflashwrite data 0x100000 | Kopiert die User-Datenbank aus dem Repository in den SPI-Flashspeicher an die Adresse 0x100000 
+wc -c < db/users.csv > data ; cat db/users.csv >> data && md380_tool.py spiflashwrite data 0x100000 | Kopiert die User-Datenbank aus dem Repository in den SPI-Flashspeicher an die Adresse 0x100000 
 
 ###Erweitertes Menü mit weiteren Funktionen
 Die Firmware besitzt einen neuen Menüpunkt im Menü "Utilities" namens "Addl. Funct", was ein Kürzel für "Additional Functions" wäre, also hinzugefügte Funktionen.
@@ -148,7 +148,7 @@ Im Verzeichnis ''md380tools'' führt man dann wieder den Befehl:
 
 und danach
 
- `./md380-tool spiflashwrite data 0x100000`
+ `./md380_tool.py spiflashwrite data 0x100000`
 
 aus, was die User-Datenbank in das im Normalbetrieb befindliche und mit dem Programmierkabel am PC angeschlossene Funkgerät flasht.
 

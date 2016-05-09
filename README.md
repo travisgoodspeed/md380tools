@@ -9,13 +9,13 @@ radios from Connect Systems (CS700, etc) that these tools might
 someday be made compatible.
 
 Client Tools:
-* `md380-dfu` reads and writes MD380 codeplugs and firmware.
-* `md380-tool` communicates with the patched firmware. (Fancy stuff!)
+* `md380_dfu.py` reads and writes MD380 codeplugs and firmware.
+* `md380_tool.py` communicates with the patched firmware. (Fancy stuff!)
 
 Development Tools:
 * `stm32-dfu` modifies firmware for jailbroken devices. (No longer required.)
-* `md380-fw` wraps and unwraps devices firmware.
-* `md380-gfx` modifies firmware graphics.
+* `md380_fw.py` wraps and unwraps devices firmware.
+* `md380_gfx.py` modifies firmware graphics.
 
 These tools are all wrapped into `Makefile`, which will download the
 official firmware, patch and flash it.  Run `make flash` after booting
@@ -31,7 +31,7 @@ of India Pale Ale, to be delivered at a neighborly bar, preferably one
 without a god-damned squary-stary-box.
 
 The DFU tools are GPL licensed, forked from old examples in the
-Ubertooth Project.  If you want md380-dfu or stm32-dfu under different
+Ubertooth Project.  If you want md380_dfu.py or stm32-dfu under different
 terms, you should probably discuss it with the Great Scott Gadgets
 folks over some beer.
 
@@ -78,7 +78,7 @@ Debian Stretch:
 
 ##Convenient Usage:##
 
-Anything with `md380-tool` requires a recent version of our patched
+Anything with `md380_tool.py` requires a recent version of our patched
 firmware.  You can check your version in Menu/Utilities/Radio
 Info/Version.  If it's a recent date you're good; if it's a number,
 you need to upgrade.
@@ -86,46 +86,46 @@ you need to upgrade.
 To actively watch incoming calls, printing a call log with name and
 callsign:
 
-    md380-tool calllog
+    md380_tool.py calllog
 
 To dump the recent dmesg log:
 
-    md380-tool dmesg
+    md380_tool.py dmesg
 
 ##Advanced Usage:##
 
 To download a raw (headerless) codeplug into the MD380.
 
-    m380-dfu write <filename.img>
+    md380_dfu.py write <filename.img>
 
 To upload a raw codeplug from the MD380.
 
-    md380-dfu read <filename.img>
+    md380_dfu.py read <filename.img>
 
 To dump the bootloader from the MD380.  (Only in radio mode, only on Mac.)
 
-    md380-dfu readboot <filename.bin>
+    md380_dfu.py readboot <filename.bin>
 
 To exit programming mode, returning to radio mode.
 
-    md380-dfu detach
+    md380_dfu.py detach
 
 To extract the raw app binary from an ecrypted Tytera firmware image:
 
-    md380-fw --unwrap MD-380-D2.32\(AD\).bin app.bin
+    md380_fw.py --unwrap MD-380-D2.32\(AD\).bin app.bin
 
 To wrap a raw app binary into a flashable Tytera firmware image:
 
-    md380-fw --wrap app-patched.bin MD-380-D2.32-patched.bin
+    md380_fw.py --wrap app-patched.bin MD-380-D2.32-patched.bin
 
 To export all sprites and glyphs from a raw firmware image:
 
-    md380-gfx --dir=imgout --firmware=patched.bin extract
+    md380_gfx.py --dir=imgout --firmware=patched.bin extract
 
 To re-import a single modified PPM sprite (must restore text header
 of the originally exported .ppm file; gimp et al. discard it):
 
-    md380-gfx --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
+    md380_gfx.py --firmware=patched.bin --gfx=0x80f9ca8-poc.ppm write
 
 To flash the Ham-DMR UserDB to SPI Flash. **Works only on radios 
 with 16MByte SPI-Flash.**
@@ -136,7 +136,7 @@ with 16MByte SPI-Flash.**
     
     program to flash with: (very experimental)
     
-       md380-tool spiflashwrite data 0x100000
+       md380_tool.py spiflashwrite data 0x100000
 
 
     or (all steps included): (very experimental)
@@ -186,10 +186,10 @@ doesn't yet support the essential DMR features, but it does handle
 analog channels and banks well enough to load analog repeaters into
 your radio.
 
-This driver can't yet communicate with the radio, so use `md380-dfu
+This driver can't yet communicate with the radio, so use `md380_dfu.py
 read foo.img` to read an image out of the radio, then open it in Chirp
 after installing `chirp/md380.py` as a driver.  Once you've made your
-changes, you can load the image back in by running `md380-dfu write
+changes, you can load the image back in by running `md380_dfu.py write
 foo.img`.
 
 

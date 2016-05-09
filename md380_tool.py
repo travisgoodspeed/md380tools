@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 
-# md380-tool by KK4VCZ and Friends
+# md380_tool.py by KK4VCZ and Friends
 
 # This is the client for the patched MD380 firmware.  It does all
 # sorts of clever things that the official clients can't, but it
@@ -514,51 +514,51 @@ def init_dfu(alt=0):
 
 def usage():
     print("""
-Usage: md380-tool <command> <arguments>
+Usage: md380_tool.py <command> <arguments>
 
 Print a log of incoming DMR calls to stdout.
-    md380-tool calllog
+    md380_tool.py calllog
 
 Looks up the name by an ID number.
-    md380-tool lookup 12345
+    md380_tool.py lookup 12345
 
 Prints the dmesg buffer.
-    md380-tool dmesg
+    md380_tool.py dmesg
 Follow the dmesg buffer.
-    md380-tool dmesgtail
+    md380_tool.py dmesgtail
 
 Prints the C5000 baseband registers.
-    md380-tool c5000
+    md380_tool.py c5000
 Scans for DMR traffic on all color codes.
-    md380-tool findcc
+    md380_tool.py findcc
 Dumps all the inbound and outbound text messages.
-    md380-tool messages
+    md380_tool.py messages
 Dumps all the keys.
-    md380-tool keys
+    md380_tool.py keys
 
 Prints the SPI Flash Type.
-    md380-tool spiflashid
+    md380_tool.py spiflashid
 Dump all of flash memory.
-    md380-tool flashdump <filename.bin>
+    md380_tool.py flashdump <filename.bin>
 Dump the complete SPI Flash image (16MByte).
-    md380-tool spiflashdump <filename.bin>
+    md380_tool.py spiflashdump <filename.bin>
 Dump a core file of RAM.
-    md380-tool coredump <filename.bin>
+    md380_tool.py coredump <filename.bin>
 Dumps memory in hex.
-    md380-tool hexdump <0xcafebabe>
+    md380_tool.py hexdump <0xcafebabe>
 Watches a hex address.
-    md380-tool hexwatch <0xcafebabe>
+    md380_tool.py hexwatch <0xcafebabe>
 Dump one word.
-    md380-tool readword <0xcafebabe>
+    md380_tool.py readword <0xcafebabe>
 Dump 1kB from arbitrary address
-    md380-tool dump <filename.bin> <address>
+    md380_tool.py dump <filename.bin> <address>
 
 Copy File to SPI flash.
-    md380-tool spiflashwrite <filename> <address>"
+    md380_tool.py spiflashwrite <filename> <address>"
 
 Copy users.csv to SPI flash:
     wc -c < db/users.csv > data ; cat db/users.csv >> data
-    md380-tool spiflashwrite data 0x100000
+    md380_tool.py spiflashwrite data 0x100000
 
 
 """)

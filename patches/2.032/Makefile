@@ -5,25 +5,25 @@ clean:
 
 unwrapped.img:
 	cd ../../firmware && make D002.032.bin
-	../../md380-fw --unwrap ../../firmware/D002.032.bin unwrapped.img
+	../../md380_fw.py --unwrap ../../firmware/D002.032.bin unwrapped.img
 
 patched.img: unwrapped.img
 	./patch.py
 
 #Apply the logo.
-	../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-poc-gs.ppm relocate
-	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-poc.ppm write
-	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-shmoo.ppm write
-	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-shmoocon.ppm write
-	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-volnet.ppm write
-	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-troopers-color.ppm relocate
+	../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-poc-gs.ppm relocate
+	#../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-poc.ppm write
+	#../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-shmoo.ppm write
+	#../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-shmoocon.ppm write
+	#../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-volnet.ppm write
+	#../../md380_gfx.py --firmware=patched.img --gfx=0x80f9ca8-troopers-color.ppm relocate
 
 #Apply the font.
-	../../md380-gfx --firmware=patched.img --gfx=replacement-font-big-latin.pbm fontreplace
-	../../md380-gfx --firmware=patched.img --gfx=replacement-font-small-latin.pbm fontreplace
+	../../md380_gfx.py --firmware=patched.img --gfx=replacement-font-big-latin.pbm fontreplace
+	../../md380_gfx.py --firmware=patched.img --gfx=replacement-font-small-latin.pbm fontreplace
 
 patched.bin: patched.img
-	../../md380-fw --wrap patched.img patched.bin
+	../../md380_fw.py --wrap patched.img patched.bin
 
 
 #Use this to flash a physically jailbroken radio.
@@ -37,5 +37,5 @@ dfuflash: patched.img
 #Use this to flash an unmodified radio.
 #No soldering or jailbreak.bin necessary.
 flash: patched.bin
-	../../md380-dfu upgrade patched.bin
+	../../md380_dfu.py upgrade patched.bin
 

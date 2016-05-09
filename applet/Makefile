@@ -52,10 +52,10 @@ proj: 	$(PROJ_NAME).elf experiment.img
 
 #The wrapped file is the one that works with the Windows updater.
 wrapped: lib proj
-	../md380-fw --wrap experiment.img experiment.bin
+	../md380_fw.py --wrap experiment.img experiment.bin
 #This flashses from unix.
 flash: wrapped
-	../md380-dfu upgrade experiment.bin
+	../md380_dfu.py upgrade experiment.bin
 
 $(SRCS): config.h src/*.h
 $(PROJ_NAME).elf: $(SRCS)
