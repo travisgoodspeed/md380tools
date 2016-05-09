@@ -19,7 +19,7 @@
 # the TYT MD-380 by Travis Goodspeed, KK4VCZ.  To use this plugin,
 # copy or symlink it into the drivers/ directory of Chirp.
 #
-# You probably want to read your radio's image with 'md380-dfu read
+# You probably want to read your radio's image with 'md380_dfu.py read
 # radio.img' and then open it as a file with chirpw.
 
 

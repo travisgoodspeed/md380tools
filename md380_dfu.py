@@ -357,33 +357,33 @@ def init_dfu(alt=0):
 
 def usage():
     print("""
-Usage: md380-dfu <command> <arguments>
+Usage: md380_dfu.py <command> <arguments>
 
 Write a codeplug to the radio.
-    md380-dfu write <codeplug.bin>
+    md380_dfu.py write <codeplug.bin>
 
 Write firmware to the radio.
-    md380-dfu upgrade <firmware.bin>
+    md380_dfu.py upgrade <firmware.bin>
 
 Read a codeplug and write it to a file.
-    md380-dfu read <codeplug.bin>
+    md380_dfu.py read <codeplug.bin>
 
 Dump the bootloader from Flash memory.
-    md380-dfu readboot <filename.bin>
+    md380_dfu.py readboot <filename.bin>
 
 
 Print the time from the MD380.
-    md380-dfu time
+    md380_dfu.py time
 
 Detach the bootloader and execute the application firmware:
-    md380-dfu detach
+    md380_dfu.py detach
 
 Close the bootloader session.
-    md380-dfu reboot
+    md380_dfu.py reboot
 
 
 Upgrade to new firmware:
-    md380-dfu upgrade foo.bin
+    md380_dfu.py upgrade foo.bin
 """)
 
 if __name__ == '__main__':
@@ -395,7 +395,7 @@ if __name__ == '__main__':
                 upload_codeplug(dfu, sys.argv[2])
                 print('Read complete')
             elif sys.argv[1] == 'readboot':
-                print "This only wokrs from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.";
+                print "This only works from OS X.  Use the one in md380_tool.py with patched firmware for other bootloaders.";
                 import usb.core
                 dfu = init_dfu()
                 upload_bootloader(dfu, sys.argv[2])

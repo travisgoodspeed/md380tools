@@ -56,7 +56,7 @@ Because Block 1 is unused by the official protocol, we hook the UPLOAD
 and DNLOAD handlers to replace the behavior of that block in order to
 implement our own protocol extensions.  These extensions are
 implemented in `usb.c` and defined in `tooldfu.h`.  You can find
-example host implementations in `md380-tool`, which is a Python script
+example host implementations in `md380_tool.py`, which is a Python script
 from this repository, or `MD380Tool`, which is an Android app
 developed separately at https://github.com/travisgoodspeed/MD380Tool .
 
