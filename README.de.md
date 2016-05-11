@@ -168,3 +168,17 @@ Besitzt man ein Gerät mit zu kleinem SPI-Flashspeicher (siehe Hinweis oben), er
 Während des Flash-Vorgangs schaltet das Funkgerät in den USB-Programmiermodus - nach erfolgtem Schreiben der Daten startet das Funkgerät automatisch neu und man kann es vom Programmierkabel trennen.
 
 Nach dem Flash-Vorgang muss im Menü des Funkgerätes die Userdatenbank wie unter **Erweitertes Menü mit weiteren Funktionen beschrieben** aktiviert werden.
+
+## Support
+Es wurde eine neue Google-Group ins Leben gerufen, die die Tools
+supporten soll. Ebenso werden Fragen zur experimentellen / gepatchten 
+Firmware für Tytera MD-380 / Retevis-RT-3 und kompatible Geräte beantwortet.
+
+Zögert also nicht, eure Fragen dort zu stellen bzw. eure Probleme zu 
+schildern.
+
+URL für die Gruppe: https://groups.google.com/forum/#!forum/md380tools
+
+Diese ist aktuell öffentlich verfügbar und Bedarf zur Nutzung keiner 
+Registrierung, wenn man entsprechend per E-Mail diese bestückt: 
+md380tools@googlegroups.com
