@@ -224,4 +224,10 @@ as a direct replacement, as seen in the Makefile.
 An image with more than two colors requires the "relocate" argument to
 md380-gfx. There are examples of this in the Makefile as well.
 
+## Support ##
 
+To support users by using the md380tools or the resulting patched firmware 
+a Google Group is public opened and reachable via 
+https://groups.google.com/forum/#!forum/md380tools. No extra registration 
+should be necessary. You could also feed it via e-mail at 
+md380tools@googlegroups.com. So feel free to put in your questions into it!
