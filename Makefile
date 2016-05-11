@@ -16,7 +16,7 @@ firmwares:
 flash:
 	cd applet && make flash
 flashdb:
-	cd db && make clean update
+	cd db && make clean all
 	cat db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
