@@ -2,6 +2,8 @@
 
 from DFU import DFU, State, Request
 import time, sys, struct, usb.core
+md380_vendor   = 0x0483
+md380_product  = 0xdf11
 
 
 class UsersDB():
@@ -175,7 +177,7 @@ class Tool(DFU):
                                    cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
-        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
         return buf[0];
     def c5000poke(self,reg,val):
         """Writes a byte into a C5000 register."""
@@ -195,7 +197,7 @@ class Tool(DFU):
         self.get_status(); #this changes state
         #time.sleep(0.1);
         status=self.get_status(); #this gets the status
-        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
         
         #Okay, so at this point we have the buffer, but it's a ring
         #buffer that might have already looped, so we need to reorder
@@ -507,3 +509,101 @@ def init_dfu(alt=0):
             raise e
     
     return dfu
+
+
+def main(argv):
+    try:
+        if len(argv) == 2:
+            if argv[1] == 'dmesg':
+                dfu=init_dfu();
+                dmesg(dfu);
+            elif argv[1] == 'dmesgtail':
+                dfu=init_dfu();
+                dmesgtail(dfu);
+            elif argv[1] == 'calllog':
+                dfu=init_dfu();
+                calllog(dfu);
+            elif argv[1] == 'date':
+                dfu=init_dfu();
+                calldate(dfu);
+            elif argv[1] == 'adc1':
+                dfu=init_dfu();
+                calladc1(dfu);         	    	
+            elif argv[1] == 'channel':
+                dfu=init_dfu();
+                getchannel(dfu);
+            elif argv[1] == 'c5000':
+                dfu=init_dfu();
+                c5000(dfu);
+            elif argv[1] == 'rssi':
+                dfu=init_dfu();
+                rssi(dfu);
+            elif argv[1] == 'findcc':
+                dfu=init_dfu();
+                findcc(dfu);
+            elif argv[1] == 'messages':
+                dfu=init_dfu();
+                messages(dfu);
+            elif argv[1] == 'keys':
+                dfu=init_dfu();
+                keys(dfu);
+            elif argv[1] == 'spiflashid':
+                dfu=init_dfu();
+                flashgetid(dfu);
+            
+        elif len(argv) == 3:
+            if argv[1] == 'flashdump':
+                print "Dumping flash from 0x08000000 to '%s'." % argv[2];
+                dfu=init_dfu();
+                flashdump(dfu,argv[2]);
+            elif argv[1] == 'spiflashdump':
+                print "Dumping SPI Flash to '%s'." % argv[2];
+                dfu=init_dfu();
+                spiflashdump(dfu,argv[2]);
+            elif argv[1] == 'coredump':
+                print "Dumping ram from 0x20000000 to '%s'." % argv[2];
+                dfu=init_dfu();
+                coredump(dfu,argv[2]);
+            elif argv[1] == 'hexdump':
+                print "Dumping memory from %s." % argv[2];
+                dfu=init_dfu();
+                hexdump(dfu,argv[2]);
+            elif argv[1] == 'ramdump':
+                print "Dumping memory from %s." % argv[3];
+                dfu=init_dfu();
+                ramdump(dfu,argv[2],argv[3]);
+            elif argv[1] == 'hexwatch':
+                print "Dumping memory from %s." % argv[2];
+                dfu=init_dfu();
+                hexwatch(dfu,argv[2]);
+            elif argv[1] == 'lookup':
+                print users.getusername(int(argv[2]));
+            elif argv[1] == 'readword':
+                dfu=init_dfu();
+                readword(dfu, argv[2]);
+
+        elif len(argv) == 4:
+            if argv[1] == 'spiflashwrite':
+                filename=argv[2];
+                adr=int(argv[3],16);
+                if ( adr >= int("0x100000",16) ):
+		   dfu=init_dfu();
+                   spiflashwrite(dfu,argv[2],adr);
+                else:
+                   print "address to low"
+            if argv[1] == 'dump':
+                print "Dumping memory from %s." % argv[3];
+                dfu=init_dfu();
+                dump(dfu,argv[2],argv[3]);
+
+        else:
+            usage();
+
+    except RuntimeError, e:
+        print(e.args[0])
+        exit(1)
+    except Exception, e:
+        print e
+        #print dfu.get_status()
+        exit(1)
+
