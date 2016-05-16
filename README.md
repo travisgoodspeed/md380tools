@@ -53,7 +53,8 @@ The patched firmware is known to work on the following devices:
 
 * Universal Serial Bus Device Class Specification for Device
   Firmware Upgrade, version 1.1:
-  http://www.usb.org/developers/devclass_docs/DFU_1.1.pdf
+  http://www.usb.org/developers/docs/devclass_docs/DFU_1.1.pdf
+  
 
 
 ##Requirements:##
@@ -70,6 +71,11 @@ The patched firmware is known to work on the following devices:
 This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
+
+###Installation of required packages###
+Debian Stretch:
+
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
 
 ##Convenient Usage:##
 
@@ -195,3 +201,34 @@ as PoC||GTFO 10:8.  (`pocorgtfo10.pdf` page 76.)
 
 Pat Hickey has some notes and tools up in his own repository,
 https://github.com/pchickey/md380-re
+
+
+
+## Customization ##
+
+Images extracted from the firmware have comments at the beginning of
+the file, telling md380-gfx where they came from. Comments begin with a '#', and end with a new line.
+
+Image editors like GIMP will discard the original comments, but you can
+replace them by opening the file in a text editor and copy-pasting the
+comment lines from the original extracted file to your custom image.
+
+#### Boot logo ####
+
+There are several boot logos provided that you can choose from by editing
+`patches/2.032/Makefile`, and commenting/uncommenting as you see fit.
+
+The original boot logo is 160x40 pixels, and only 2 colors.  This means
+an image that has the same properties can be written into the firmware
+as a direct replacement, as seen in the Makefile.
+
+An image with more than two colors requires the "relocate" argument to
+md380-gfx. There are examples of this in the Makefile as well.
+
+## Support ##
+
+To support users by using the md380tools or the resulting patched firmware 
+a Google Group is public opened and reachable via 
+https://groups.google.com/forum/#!forum/md380tools. No extra registration 
+should be necessary. You could also feed it via e-mail at 
+md380tools@googlegroups.com. So feel free to put in your questions into it!

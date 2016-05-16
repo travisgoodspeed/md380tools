@@ -20,7 +20,7 @@
 #include "spiflash.h"
 #include "addl_config.h"
 
-static wchar_t wt_addl_func[]         = L"Addl. Funct";
+static wchar_t wt_addl_func[]         = L"MD380Tools";
 static wchar_t wt_datef[]             = L"Date format";
 static wchar_t wt_debug[]             = L"Debug";
 static wchar_t wt_disable[]           = L"Disable";

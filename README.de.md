@@ -116,7 +116,7 @@ spiflashwrite <filename> <address> | Kopiert die angegebene Datei <filename> an 
 wc -c < db/users.csv > data ; cat db/users.csv >> data && md380-tool spiflashwrite data 0x100000 | Kopiert die User-Datenbank aus dem Repository in den SPI-Flashspeicher an die Adresse 0x100000 
 
 ###Erweitertes Menü mit weiteren Funktionen
-Die Firmware besitzt einen neuen Menüpunkt im Menü "Utilities" namens "Addl. Funct", was ein Kürzel für "Additional Functions" wäre, also hinzugefügte Funktionen.
+Die Firmware besitzt einen neuen Menüpunkt im Menü "Utilities" namens "MD380Tools".
 
 Die dort aufgeführten Menüpunkte wären derzeit folgende (mit nachfolgender Beschreibung)
 
