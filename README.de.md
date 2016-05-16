@@ -20,6 +20,19 @@ Ebenso sind zur Nutzung folgende Pakete erforderlich:
 * PyUSB 1.0: (0.4 does not work.) http://sourceforge.net/apps/mediawiki/pyusb/
 * libusb 1.0: (0.4 does not work.) http://www.libusb.org/
 
+####Automatische Instalation der benötigten Pakete
+
+Debian Stretch:
+
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+
+Debian Jessie:
+
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git \
+                    make curl python-pip unzip
+    pip install pyusb -U # update PyUSB to 1.0
+
+
 ###Git-Repository klonen
 Mit dem Kommando
  `git clone https://github.com/travisgoodspeed/md380tools.git`
