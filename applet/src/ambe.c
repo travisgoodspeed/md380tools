@@ -18,13 +18,26 @@
 #include "gfx.h"
 
 
-
+int max_level;
+uint32_t ambe_encode_frame_cnt;
 
 int ambe_encode_thing_hook(char *a1, int a2, int *a3, int a4,
 		      short a5, short a6, short a7, int a8){
-  //printf("AMBE2+ function is hooked!\n");
+
+  short *s8;
+  int i=0;
+  int max=0;
   
-  //Call back to the original function.
+  s8=(short *)a3; 
+  
+  for (i=0; i<80; i++) {
+    if ( s8[i] > max ) {
+      max=s8[i];
+    }  
+  }
+     
+  max_level=max;
+  ambe_encode_frame_cnt++;
   return ambe_encode_thing(a1,a2,a3,a4,
 			   a5,a6,a7,a8);
 }
