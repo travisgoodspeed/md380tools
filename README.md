@@ -77,6 +77,13 @@ Debian Stretch:
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
 
+Debian Jessie:
+
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git make \
+                    curl python-pip unzip
+    pip install pyusb -U # update PyUSB to 1.0
+  
+
 ##Convenient Usage:##
 
 Anything with `md380-tool` requires a recent version of our patched

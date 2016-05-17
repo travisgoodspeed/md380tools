@@ -160,7 +160,7 @@ uint32_t *beep_process_unkown=0x2001d178;
 
 
 //! useful md380 firmware functions
-void (*md380_itow)(wchar_t *, int value)=0x080172ed;
+wchar_t * (*md380_itow)(wchar_t *, int value)=0x080172ed;
 void (*md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct)=0x08026461;
 void (*md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)=0x0802634b;
 
@@ -172,6 +172,7 @@ void (*md380_f_4137)()=0x080290c8+1;
 void (*md380_f_4520)()=0x08027ae8+1;
 void (*md380_f_4098)()=0x0804c1d0+1;
 void (*md380_f_4102)()=0x0804c2aa+1;
+void( *md380_f_4225)()=0x0801f044+1;
 
 uint8_t *md380_f_4225_operatingmode=0x2001d3f7;
 uint8_t md380_f_4225_operatingmode_menu=0x1b;       // see 0x0801f06a there are a lot of modes
