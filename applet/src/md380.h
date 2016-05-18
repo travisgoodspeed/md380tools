@@ -106,30 +106,30 @@ extern void*   (*md380_create_main_meny_entry)(void);
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
-extern void*    (*md380_create_menu_entry)(int, void *, void *, void  *,
+extern void*    (*md380_create_menu_entry)(int, const wchar_t *, void *, void  *,
                                            int , int, int);
 
 // for the hook funktion (hook used the space from this entry)
 extern void*    (*md380_menu_entry_programradio)(void);
 extern void*    (*md380_menu_numerical_input)(void);
 
-extern uint32_t *md380_menu_0x20001114;
-extern uint8_t  *md380_menu_0x200011e4;
-extern uint8_t  *md380_menu_0x2001d3c1;
-extern uint8_t  *md380_menu_0x2001d3ed;
-extern uint8_t  *md380_menu_0x2001d3ee;
-extern uint8_t  *md380_menu_0x2001d3ef;
-extern uint8_t  *md380_menu_0x2001d3f0;
-extern uint8_t  *md380_menu_0x2001d3f1;
-extern uint8_t  *md380_menu_0x2001d3f4;
-extern uint8_t  *md380_menu_depth;
-extern wchar_t  *md380_menu_edit_buf;
-extern uint8_t  *md380_menu_entry_selected;
-extern uint8_t  *md380_menu_id;
-extern void     *md380_menu_mem_base;
-extern void     *md380_menu_memory;
-extern uint8_t  *md380_wt_programradio;  // menutext <- menu_entry_programradio
-
+extern uint32_t 	*md380_menu_0x20001114;
+extern uint8_t  	*md380_menu_0x200011e4;
+extern uint8_t  	*md380_menu_0x2001d3c1;
+extern uint8_t  	*md380_menu_0x2001d3ed;
+extern uint8_t  	*md380_menu_0x2001d3ee;
+extern uint8_t  	*md380_menu_0x2001d3ef;
+extern uint8_t  	*md380_menu_0x2001d3f0;
+extern uint8_t  	*md380_menu_0x2001d3f1;
+extern uint8_t  	*md380_menu_0x2001d3f4;
+extern uint8_t  	*md380_menu_depth;
+extern wchar_t  	*md380_menu_edit_buf;
+extern uint8_t  	*md380_menu_entry_selected;
+extern uint8_t  	*md380_menu_id;
+extern void     	*md380_menu_mem_base;
+extern void     	*md380_menu_memory;
+extern const wchar_t	*md380_wt_programradio;  // menutext <- menu_entry_programradio
+ 
 
 //! program_radio_unprohibited ... bulding site is an struct
 extern uint8_t *md380_program_radio_unprohibited;

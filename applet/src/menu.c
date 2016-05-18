@@ -20,23 +20,23 @@
 #include "spiflash.h"
 #include "addl_config.h"
 
-static wchar_t wt_addl_func[]         = L"MD380Tools";
-static wchar_t wt_datef[]             = L"Date format";
-static wchar_t wt_debug[]             = L"Debug";
-static wchar_t wt_disable[]           = L"Disable";
-static wchar_t wt_enable[]            = L"Enable";
-static wchar_t wt_rbeep[]             = L"M. RogerBeep";
-static wchar_t wt_userscsv[]          = L"UsersCSV";
-static wchar_t wt_datef_original[]    = L"Original";
-static wchar_t wt_datef_germany[]     = L"German";
-static wchar_t wt_promtg[]            = L"Promiscuous";
-static wchar_t wt_edit[]              = L"Edit";
-static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
-static wchar_t wt_no_w25q128[]        = L"No W25Q128";
-static wchar_t wt_experimental[]      = L"Experimental";
+const static wchar_t wt_addl_func[]         = L"MD380Tools";
+const static wchar_t wt_datef[]             = L"Date format";
+const static wchar_t wt_debug[]             = L"Debug";
+const static wchar_t wt_disable[]           = L"Disable";
+const static wchar_t wt_enable[]            = L"Enable";
+const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
+const static wchar_t wt_userscsv[]          = L"UsersCSV";
+const static wchar_t wt_datef_original[]    = L"Original";
+const static wchar_t wt_datef_germany[]     = L"German";
+const static wchar_t wt_promtg[]            = L"Promiscuous";
+const static wchar_t wt_edit[]              = L"Edit";
+const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
+const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
+const static wchar_t wt_experimental[]      = L"Experimental";
 
 struct MENU {
-  void    *menu_titel;
+  const wchar_t  *menu_titel;
   void    *unknownp;
   uint8_t numberof_menu_entries;
   uint8_t unknown_00;
@@ -115,7 +115,7 @@ e0020000 Selected Page Index
 
 //void create_menu_entry_addl_functions_screen(void) ;
 
-void create_menu_entry_hook(int a, void * b , void * c, void  * d, int e, int f ,int g) {
+void create_menu_entry_hook(int a, const wchar_t * b , void * c, void  * d, int e, int f ,int g) {
 #ifdef DEBUG
   printf("0x%x Text: 0x%x GreenKey 0x%x RedKey 0x%x 0x%x 0x%x 0x%x\n", a,b,c,d,e,f,g);
   printf("b: ");
