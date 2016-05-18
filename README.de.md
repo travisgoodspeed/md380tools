@@ -20,7 +20,7 @@ Ebenso sind zur Nutzung folgende Pakete erforderlich:
 * PyUSB 1.0: (0.4 does not work.) http://sourceforge.net/apps/mediawiki/pyusb/
 * libusb 1.0: (0.4 does not work.) http://www.libusb.org/
 
-####Automatische Instalation der benötigten Pakete
+####Automatische Installation der benötigten Pakete
 
 Debian Stretch:
 
