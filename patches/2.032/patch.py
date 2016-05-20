@@ -15,16 +15,16 @@ if __name__ == '__main__':
     
 
 #     #These aren't quite enough to skip the Color Code check.  Not sure why.
-#     patcher.nopout(0x0803ea62,0xf040);  #Main CC check.
-#     patcher.nopout(0x0803ea64,0x80fd);
-#     patcher.nopout(0x0803e994,0xf040);  #Late Entry CC check.
-#     patcher.nopout(0x0803e996,0x8164);
-#     patcher.nopout(0x0803fd98);  #dmr_dll_parser CC check.
-#     patcher.nopout(0x0803fd9a);
-#     patcher.sethword(0x0803fd8e,0xe02d, #Check in dmr_dll_parser().
-#                      0xd02d);
-#     patcher.nopout(0x0803eafe,0xf100); #Disable CRC check, in case CC is included.
-#     patcher.nopout(0x0803eb00,0x80af);
+    patcher.nopout(0x0803ea62,0xf040);  #Main CC check.
+    patcher.nopout(0x0803ea64,0x80fd);
+    patcher.nopout(0x0803e994,0xf040);  #Late Entry CC check.
+    patcher.nopout(0x0803e996,0x8164);
+    patcher.nopout(0x0803fd98);  #dmr_dll_parser CC check.
+    patcher.nopout(0x0803fd9a);
+    patcher.sethword(0x0803fd8e,0xe02d, #Check in dmr_dll_parser().
+                     0xd02d);
+    patcher.nopout(0x0803eafe,0xf100); #Disable CRC check, in case CC is included.
+    patcher.nopout(0x0803eb00,0x80af);
     
         
     # Patches after here allow for an included applet.
