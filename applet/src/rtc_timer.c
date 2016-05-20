@@ -129,7 +129,7 @@ void f_4225_hook()
   static int green=0;
 
   int relative_peak_cb;
-  int centibel_valX;
+  int centibel_val;
 
   if ( global_addl_config.experimental == 1 ) {
 
@@ -143,17 +143,17 @@ void f_4225_hook()
         rx_active=1;
         
         relative_peak_cb = intCentibel(max_level) - fullscale_offset;
-        centibel_valX = relative_peak_cb + abs(relative_peak_cb % 10);  // centibel_valX dB FS * 10
+        centibel_val = relative_peak_cb;
 
 
         if ( lastframe % 5 == 1 ) { // reduce drawing
-          if (centibel_valX < -280) { // limit 160 pixel bargraph 10 150 -> 140 pixel for bargraph
-            centibel_valX = -280;
-          } else if (centibel_valX > 0) {
-            centibel_valX = 0;
+          if (centibel_val < -280) { // limit 160 pixel bargraph 10 150 -> 140 pixel for bargraph
+            centibel_val = -280;
+          } else if (centibel_val > 0) {
+            centibel_val = 0;
           }
-          centibel_valX += 280;  // shift to positive
-          centibel_valX /= 2;    // scale
+          centibel_val += 280;  // shift to positive
+          centibel_val /= 2;    // scale
 
           gfx_set_fg_color(0x999999);
           gfx_set_bg_color(0xff000000);
@@ -180,7 +180,7 @@ void f_4225_hook()
             gfx_set_fg_color(0x555555);
           }
           gfx_set_bg_color(0xff000000);
-          gfx_blockfill(10, 50, centibel_valX, 60);
+          gfx_blockfill(10, 50, centibel_val, 60);
           gfx_set_fg_color(0xff8032);
           gfx_set_bg_color(0xff000000);
         }
