@@ -131,7 +131,7 @@ void f_4225_hook()
   int relative_peak_cb;
   int centibel_val;
 
-  if ( global_addl_config.experimental == 1 ) {
+  if ( global_addl_config.micbargraph == 1 ) {
 
     if (fullscale_offset == 0 ) { // init int_centibel()
       fullscale_offset = intCentibel(3000);  // maybe wav max max_level 
