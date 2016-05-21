@@ -1,24 +1,23 @@
 
-md380_spiflash_read                    = 0x0802fd83;
-md380_spiflash_write                   = 0x0802fe6b;
-md380_spiflash_security_registers_read = 0x080301bd;
-md380_spiflash_enable                  = 0x0802fe37;
-md380_spiflash_disable                 = 0x0802fe53;
-md380_spiflash_wait                    = 0x0802fe15;
-md380_spiflash_block_erase64k          = 0x0802fbb7;
-md380_spiflash_sektor_erase4k          = 0x0802fb83;
-md380_spi_sendrecv                     = 0x0802fdc9;
+md380_spiflash_read                    = 0x802fd83;
+md380_spiflash_write                   = 0x802fe6b;
+md380_spiflash_security_registers_read = 0x80301bd;
+md380_spiflash_enable                  = 0x802fe37;
+md380_spiflash_disable                 = 0x802fe53;
+md380_spiflash_wait                    = 0x802fe15;
+md380_spiflash_block_erase64k          = 0x802fbb7;
+md380_spiflash_sektor_erase4k          = 0x802fb83;
+md380_spi_sendrecv                     = 0x802fdc9;
 
-gfx_drawtext = 0x0800D88B;
-gfx_drawbmp = 0x08022887;
-gfx_drawtext2 = 0x0801cf1d;
-gfx_chars_to_display = 0x0801cf1d;
+gfx_drawtext                           = 0x800D88B;
+gfx_drawbmp                            = 0x8022887;
+gfx_drawtext2                          = 0x801cf1d;
+gfx_chars_to_display                   = 0x801cf1d;
 
-gfx_select_font = 0x8020975;
-gfx_set_bg_color = 0x801c5e1;
-gfx_set_fg_color = 0x801c5e9;
-
-gfx_blockfill = 0x0801cb05;
+gfx_select_font                        = 0x8020975;
+gfx_set_bg_color                       = 0x801c5e1;
+gfx_set_fg_color                       = 0x801c5e9;
+gfx_blockfill                          = 0x0801cb05;
 
 
 /* Function that handles the end of a DMR call. */
