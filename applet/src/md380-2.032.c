@@ -105,7 +105,7 @@ uint8_t (*const md380_OSMboxPost)(OS_EVENT *pevent, void *pmsg)=0x080303b4+1;
 void            *(* const main_menu)(void *)=0x08039c23;
 void            *(* const md380_create_main_meny_entry)(void)=0x0800c189;
 void            *(* const md380_menu_numerical_input)(void) = 0x801a2d6;
-void            *(* const md380_create_menu_entry)(int a, const wchar_t *b , void *c, void  *d, int e, int f ,int g) = 0x0800c731  ; 
+//void            *(* const md380_create_menu_entry)(int a, const wchar_t *b , void *c, void  *d, int e, int f ,int g) = 0x0800c731  ; 
 void            *(* const md380_menu_entry_back)(void)=0x800f452;
 void            *(* const md380_menu_entry_programradio)(void)=0x80127d0;
 

@@ -106,7 +106,7 @@ extern void*   (* const md380_create_main_meny_entry)(void);
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
-extern  void  *    (* const md380_create_menu_entry)(int, const wchar_t *, void *, void  *,
+void  *  md380_create_menu_entry(int, const wchar_t *, void *, void  *,
                                            int , int, int);
 
 // for the hook funktion (hook used the space from this entry)
