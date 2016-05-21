@@ -13,56 +13,56 @@
 void strhex(char *, long);
 void wstrhex(wchar_t *, long);
 
-extern int  (* const md380_spiflash_read)(void *dst, long adr, long len);
-extern void (* const md380_spiflash_write)(void *dst, long adr, long len);
-extern int  (* const md380_spiflash_security_registers_read)(void *dst, long adr, long len);
-extern void (* const md380_spiflash_block_erase64k)(uint32_t);
-extern void (* const md380_spiflash_sektor_erase4k)(uint32_t);
+int   md380_spiflash_read(void *dst, long adr, long len);
+void  md380_spiflash_write(void *dst, long adr, long len);
+int   md380_spiflash_security_registers_read(void *dst, long adr, long len);
+void  md380_spiflash_block_erase64k(uint32_t);
+void  md380_spiflash_sektor_erase4k(uint32_t);
 
-extern void (* const md380_spiflash_enable)();
-extern void (* const md380_spiflash_disable)();
-extern void (* const md380_spiflash_wait)();
-
-
-extern uint8_t (* const md380_spi_sendrecv)(INT8U data); // SPI1
+void md380_spiflash_enable();
+void md380_spiflash_disable();
+void md380_spiflash_wait();
 
 
-
-extern void (* const gfx_drawtext)(wchar_t *str,          //16-bit, little endian.
-			    short sx, short sy, //Source coords, maybe?
-			    short x, short y,   //X and Y position
-			    int maxlen);
-extern void (* const gfx_drawbmp)(char *bmp,
-			   int idx,
-			   uint64_t pos);
-
-extern void (* const gfx_drawtext2)(wchar_t *str,    //16-bit, little endian.
-                      int x, int y,   //X and Y position
-                      int maxlen);
-
-extern void (* const gfx_chars_to_display)(wchar_t *str, int x, int y, int unknown);
+uint8_t md380_spi_sendrecv(INT8U data); // SPI1
 
 
-extern void (* const gfx_select_font)(void *p);
 
-extern void (* const gfx_set_bg_color)(int color);
-extern void (* const gfx_set_fg_color)(int color);
+void gfx_drawtext(wchar_t *str,          //16-bit, little endian.
+		  short sx, short sy, //Source coords, maybe?
+		  short x, short y,   //X and Y position
+		  int maxlen);
+void gfx_drawbmp(char *bmp,
+		 int idx,
+		 uint64_t pos);
 
-extern void (* const gfx_blockfill)(int xmin, int ymin, int xmax, int ymax);
+void gfx_drawtext2(wchar_t *str,    //16-bit, little endian.
+                   int x, int y,   //X and Y position
+                   int maxlen);
+
+extern void gfx_chars_to_display(wchar_t *str, int x, int y, int unknown);
+
+
+extern void gfx_select_font(void *p);
+
+void gfx_set_bg_color(int color);
+void gfx_set_fg_color(int color);
+
+void (* const gfx_blockfill)(int xmin, int ymin, int xmax, int ymax);
 
 //! Function that handles checking a DMR contact.
-extern void* (* const dmr_call_end)(void *pkt);
+void* dmr_call_end(void *pkt);
 //! Function that handles a DMR call.
-extern void* (* const dmr_call_start)(void *pkt);
+void* dmr_call_start(void *pkt);
 //! Function that handles a data packet.  (Also used in SMS.)
-extern void* (* const dmr_handle_data)(void *pkt, int len);
+void* dmr_handle_data(void *pkt, int len);
 //! Function that handles an incoming SMS.
-extern void* (* const dmr_sms_arrive)(void *pkt);
+void* dmr_sms_arrive(void *pkt);
 
 //! Function that applies a squelch.
-extern void (* const dmr_apply_squelch)(char *dmr_squelch_firsthing, int dmr_squelch_mode);
+void dmr_apply_squelch(char *dmr_squelch_firsthing, int dmr_squelch_mode);
 //! Called before unsquelching.
-extern int (* const dmr_before_squelch)();
+int dmr_before_squelch();
 
 
 //! Determines the squelching of an incoming call.
@@ -80,29 +80,29 @@ char * const botlinetext;
 extern char * const welcomebmp;
 
 //! Handle to the original (unhooked) upload handler.
-int (* const usb_upld_handle)(void*, char*, int, int);
+int usb_upld_handle(void*, char*, int, int);
 //! This returns a USB packet to the host from the upload handler.
-int (* const usb_send_packet)(void*, char*, uint16_t);
+int usb_send_packet(void*, char*, uint16_t);
 
-int (* const usb_dnld_handle)();
-int * const dnld_tohook;
+int usb_dnld_handle();
+extern int * const dnld_tohook;
 
 //! Function that handles uC/OS-II settings
-extern INT8U (* const OSTaskCreateExt)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
-extern void* (* const OSTaskNameSet)(INT8U prio, INT8U *pname, INT8U *perr);
+INT8U OSTaskCreateExt(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
+void* OSTaskNameSet(INT8U prio, INT8U *pname, INT8U *perr);
 
-extern OS_EVENT *(* const OSSemCreate)(uint16_t);
-extern void (* const OSSemPend)(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
-extern uint8_t (* const OSSemPost)(OS_EVENT *pevent);
+OS_EVENT * OSSemCreate(uint16_t);
+void OSSemPend(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
+uint8_t OSSemPost(OS_EVENT *pevent);
 
-extern uint8_t (* const md380_OSMboxPost)(OS_EVENT *pevent, void *pmsg);
+uint8_t md380_OSMboxPost(OS_EVENT *pevent, void *pmsg);
 
 
 //! Functions and Variabes regarding the menu
-extern void*   (* const main_menu)(void *);     // menu exec
+void*   main_menu(void *);     // menu exec
 
-extern void*   (* const md380_menu_entry_back)(void);
-extern void*   (* const md380_create_main_meny_entry)(void);
+void*   md380_menu_entry_back(void);
+void*   md380_create_main_meny_entry(void);
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
@@ -110,8 +110,8 @@ void  *  md380_create_menu_entry(int, const wchar_t *, void *, void  *,
                                            int , int, int);
 
 // for the hook funktion (hook used the space from this entry)
-extern void*    (* const md380_menu_entry_programradio)(void);
-extern void*    (* const md380_menu_numerical_input)(void);
+void*  md380_menu_entry_programradio(void);
+void*  md380_menu_numerical_input(void);
 
 extern uint32_t 	* const md380_menu_0x20001114;
 extern uint8_t  	* const md380_menu_0x200011e4;
@@ -138,35 +138,35 @@ extern uint8_t * const md380_program_radio_unprohibited;
 extern char* const  channelnum;
 
 //! Reads the current channel number from the rotary switch.
-extern int (* const read_channel_switch)();
+int read_channel_switch();
 
 
 //! Halts all threads.
-extern int (* const OS_ENTER_CRITICAL)();
+int OS_ENTER_CRITICAL();
 //! Resumes threads.
-extern void (* const OS_EXIT_CRITICAL)(int);
+void OS_EXIT_CRITICAL(int);
 
 
 
 //! Reads a register from the C5000.
-extern void (* const c5000_spi0_readreg)(int reg, char *buf);
+void c5000_spi0_readreg(int reg, char *buf);
 
 //! Writes a register in the C5000.
-extern void (* const c5000_spi0_writereg)(int reg, int val);
+void c5000_spi0_writereg(int reg, int val);
 
 
 //! Unknown AES function.
-extern char* (* const aes_cipher)(char *pkt);
+char* aes_cipher(char *pkt);
 
 //! Unknown AMBE2+ thing.
-extern int (* const ambe_encode_thing)(char *a1, int a2, int *a3, int a4,
-				short a5, short a6, short a7, int a8);
+int ambe_encode_thing(char *a1, int a2, int *a3, int a4,
+		      short a5, short a6, short a7, int a8);
 //! Decodes an AMBE2+ frame into bits.
-extern int (* const ambe_unpack)(int a1, int a2, char length, int a4);
+int ambe_unpack(int a1, int a2, char length, int a4);
 
 //! Populates the audio buffer.
-extern int (* const ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer,
-			      int a4, short a5, short a6, int a7);
+int ambe_decode_wav(int *a1, signed int eighty, char *bitbuffer,
+		    int a4, short a5, short a6, int a7);
 
 
 //! Functions and Variabes regarding the beep_
@@ -174,17 +174,17 @@ extern int (* const ambe_decode_wav)(int *a1, signed int eighty, char *bitbuffer
 extern uint32_t * const beep_process_unkown;
 
 //! useful firmware functions
-extern wchar_t * (* const md380_itow)(wchar_t *, int value);
-extern void  (* const md380_RTC_GetDate)(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
-extern void  (* const md380_RTC_GetTime)(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
+wchar_t * md380_itow(wchar_t *, int value);
+void  md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
+void  md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 extern uint32_t * const md380_dmr_id;
 
-extern void (* const md380_f_4137)();
-extern void (* const md380_f_4520)();
-extern void (* const md380_f_4098)();
-extern void (* const md380_f_4102)();
-extern void( * const md380_f_4225)();
+void md380_f_4137();
+void md380_f_4520();
+void md380_f_4098();
+void md380_f_4102();
+void md380_f_4225();
  
 extern uint8_t * const md380_f_4225_operatingmode;
 extern const uint8_t md380_f_4225_operatingmode_menu;
