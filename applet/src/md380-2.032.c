@@ -60,7 +60,7 @@ char * const channelnum=0x2001d376;
 //! Functions and Variabes regarding the beep_process
 uint32_t * const beep_process_unkown=0x2001d178;
 
-uint32_t * const md380_dmr_id=0x2001c65c;
+//uint32_t * const md380_dmr_id=0x2001c65c;
 
 
 uint8_t * const md380_f_4225_operatingmode=0x2001d3f7;

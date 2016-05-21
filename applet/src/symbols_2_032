@@ -17,21 +17,20 @@ gfx_chars_to_display                   = 0x801cf1d;
 gfx_select_font                        = 0x8020975;
 gfx_set_bg_color                       = 0x801c5e1;
 gfx_set_fg_color                       = 0x801c5e9;
-gfx_blockfill                          = 0x0801cb05;
-
+gfx_blockfill                          = 0x801cb05;
 
 /* Function that handles the end of a DMR call. */
-dmr_call_end = 0x0803f33d;
+dmr_call_end                           = 0x803f33d;
 /* Function that handles a DMR call. */
-dmr_call_start = 0x0803ec87;
+dmr_call_start                         = 0x0803ec87;
 /* Function that handles a DMR SMS. */
-dmr_handle_data = 0x0804b66d;
+dmr_handle_data                        = 0x0804b66d;
 /* Function that handles an incoming SMS. */
-dmr_sms_arrive = 0x0803f03d;
+dmr_sms_arrive                         = 0x0803f03d;
 /* //! Function that applies a squelch. */
-dmr_apply_squelch = 0x080303b5;
+dmr_apply_squelch                      = 0x080303b5;
 /* //! Called before unsquelching. */
-dmr_before_squelch = 0x0803ef6d;
+dmr_before_squelch                     = 0x0803ef6d;
 
 /*
 ///////! Determines the squelching of an incoming call.
@@ -140,9 +139,7 @@ md380_itow = 0x080172ed;
 md380_RTC_GetDate = 0x08026461;
 md380_RTC_GetTime = 0x0802634b;
 
-/*
-//////uint32_t * const md380_dmr_id=0x2001c65c;
-*/
+md380_dmr_id = 0x2001c65c;
 
 /* //! Functions and Variabes from the "RTC Timer" - task */
 

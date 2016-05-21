@@ -48,7 +48,7 @@ extern void gfx_select_font(void *p);
 void gfx_set_bg_color(int color);
 void gfx_set_fg_color(int color);
 
-void (* const gfx_blockfill)(int xmin, int ymin, int xmax, int ymax);
+void gfx_blockfill(int xmin, int ymin, int xmax, int ymax);
 
 //! Function that handles checking a DMR contact.
 void* dmr_call_end(void *pkt);
@@ -178,14 +178,15 @@ wchar_t * md380_itow(wchar_t *, int value);
 void  md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
 void  md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
-extern uint32_t * const md380_dmr_id;
+uint32_t md380_dmr_id;
+
 
 void md380_f_4137();
 void md380_f_4520();
 void md380_f_4098();
 void md380_f_4102();
 void md380_f_4225();
- 
+
 extern uint8_t * const md380_f_4225_operatingmode;
 extern const uint8_t md380_f_4225_operatingmode_menu;
 extern const uint8_t md380_f_4225_operatingmode_menu_exit;
