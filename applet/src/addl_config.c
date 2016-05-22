@@ -53,14 +53,6 @@ void init_global_addl_config_struct() {
   } else {
     global_addl_config.promtg=0;
   }
-
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_micbargraph, 1);
-  if (buf[0] == '1') {
-    global_addl_config.micbargraph=1;
-  } else {
-    global_addl_config.micbargraph=0;
-  }
-
   // global_addl_config.experimental is intentionally not permanent
   global_addl_config.experimental = 0;
 }
