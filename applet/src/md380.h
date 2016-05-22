@@ -13,21 +13,9 @@
 void strhex(char *, long);
 void wstrhex(wchar_t *, long);
 
-int   md380_spiflash_read(void *dst, long adr, long len);
-void  md380_spiflash_write(void *dst, long adr, long len);
-int   md380_spiflash_security_registers_read(void *dst, long adr, long len);
-void  md380_spiflash_block_erase64k(uint32_t);
-void  md380_spiflash_sektor_erase4k(uint32_t);
-
-void md380_spiflash_enable();
-void md380_spiflash_disable();
-void md380_spiflash_wait();
 
 
-uint8_t md380_spi_sendrecv(INT8U data); // SPI1
-
-
-
+// md380 gfx
 void gfx_drawtext(wchar_t *str,          //16-bit, little endian.
 		  short sx, short sy, //Source coords, maybe?
 		  short x, short y,   //X and Y position
@@ -50,6 +38,8 @@ void gfx_set_fg_color(int color);
 
 void gfx_blockfill(int xmin, int ymin, int xmax, int ymax);
 
+// md380 dmr
+
 //! Function that handles checking a DMR contact.
 void* dmr_call_end(void *pkt);
 //! Function that handles a DMR call.
@@ -71,13 +61,13 @@ extern char* const  dmr_squelch_mode;
 extern char** const dmr_squelch_firstthing;
 
 
-
 //Pointer to the buffer that stores the bottom line of screen text.
 char * const botlinetext;
 
-
 //ROM copy of the welcome bitmap.
 extern char * const welcomebmp;
+
+// md380 usb
 
 //! Handle to the original (unhooked) upload handler.
 int usb_upld_handle(void*, char*, int, int);
@@ -87,15 +77,37 @@ int usb_send_packet(void*, char*, uint16_t);
 int usb_dnld_handle();
 extern int * const dnld_tohook;
 
+
+// md380_spiflash
+int     md380_spiflash_read(void *dst, long adr, long len);
+void    md380_spiflash_write(void *dst, long adr, long len);
+int     md380_spiflash_security_registers_read(void *dst, long adr, long len);
+void    md380_spiflash_block_erase64k(uint32_t);
+void    md380_spiflash_sektor_erase4k(uint32_t);
+void    md380_spiflash_enable();
+void    md380_spiflash_disable();
+void    md380_spiflash_wait();
+uint8_t md380_spi_sendrecv(INT8U data); // SPI1
+
+
 //! Function that handles uC/OS-II settings
-INT8U OSTaskCreateExt(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
-void* OSTaskNameSet(INT8U prio, INT8U *pname, INT8U *perr);
+//Task
+INT8U       OSTaskCreateExt(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt);
+void*       OSTaskNameSet(INT8U prio, INT8U *pname, INT8U *perr);
 
-OS_EVENT * OSSemCreate(uint16_t);
-void OSSemPend(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
-uint8_t OSSemPost(OS_EVENT *pevent);
+//Semaphore
+OS_EVENT *  OSSemCreate(uint16_t);
+void        OSSemPend(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
+uint8_t     OSSemPost(OS_EVENT *pevent);
 
-uint8_t md380_OSMboxPost(OS_EVENT *pevent, void *pmsg);
+//Mbox
+uint8_t     md380_OSMboxPost(OS_EVENT *pevent, void *pmsg);
+
+//! Halts all threads.
+int         OS_ENTER_CRITICAL();
+//! Resumes threads.
+void        OS_EXIT_CRITICAL(int);
+
 
 
 //! Functions and Variabes regarding the menu
@@ -127,15 +139,13 @@ uint8_t   md380_menu_id;
 
 wchar_t	  md380_wt_programradio;  // menutext <- menu_entry_programradio
 
-
 extern void     	* const md380_menu_mem_base;
 extern void     	* const md380_menu_memory;
 extern wchar_t  	* const md380_menu_edit_buf;
 
 uint32_t  md380_menu_0x20001114;
- 
 
-//! program_radio_unprohibited ... bulding site is an struct
+//! program_radio_unprohibited (menu entry) ... bulding site is an struct
 uint8_t md380_program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
@@ -144,14 +154,6 @@ extern char* const  channelnum;
 //! Reads the current channel number from the rotary switch.
 int read_channel_switch();
 
-
-//! Halts all threads.
-int OS_ENTER_CRITICAL();
-//! Resumes threads.
-void OS_EXIT_CRITICAL(int);
-
-
-
 //! Reads a register from the C5000.
 void c5000_spi0_readreg(int reg, char *buf);
 
@@ -159,9 +161,12 @@ void c5000_spi0_readreg(int reg, char *buf);
 void c5000_spi0_writereg(int reg, int val);
 
 
+// md380 aes
+
 //! Unknown AES function.
 char* aes_cipher(char *pkt);
 
+// md380 ambe2+
 //! Unknown AMBE2+ thing.
 int ambe_encode_thing(char *a1, int a2, int *a3, int a4,
 		      short a5, short a6, short a7, int a8);
@@ -179,11 +184,12 @@ extern uint32_t * const beep_process_unkown;
 
 //! useful firmware functions
 wchar_t * md380_itow(wchar_t *, int value);
-void  md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
-void  md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
+void      md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
+void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 uint32_t md380_dmr_id;
 
+// debug and training stuff
 
 void md380_f_4137();
 void md380_f_4520();
