@@ -1,4 +1,4 @@
-# This Makefile grabs firmware from the web, then de 
+# This Makefile grabs firmware from the web, then decompresses it.
 
 all: D002.032.bin
 
@@ -7,23 +7,24 @@ clean:
 
 D002.032.bin: D002.032.zip
 	unzip --help >>/dev/null #Check that we have unzip
-	@unzip -p D002.032.zip 'Firmware 2.32/MD-380-D2.32(AD).bin' >D002.032.bin
-	@if md5sum -c D002.032.bin.md5 2>&1 > /dev/null; \
+	unzip -p D002.032.zip 'Firmware 2.32/MD-380-D2.32(AD).bin' >D002.032.bin
+	if md5sum -w -c D002.032.bin.md5 2>&1 > /dev/null; \
 	then echo "MD5 OK"; \
 	else \
 		echo "Firmware 2.32/MD-380-D2.32(AD).bin wrong md5sum"; \
 		rm D002.032.bin; \
+		false; \
 	fi;
 
 D002.032.zip:
 	curl --help >>/dev/null #Check that we have CURL.
 	curl 'http://www.va3xpr.net/?ddownload=9197' >D002.032.zip
-	@if md5sum -c D002.032.zip.md5 2>&1 > /dev/null; \
+	if md5sum -w -c D002.032.zip.md5 2>&1 > /dev/null; \
 	then echo "Download OK"; \
 	else \
 		echo "Download wrong md5sum"; \
 		rm D002.032.zip; \
-		exit; \
+		false; \
 	fi;
 
 
