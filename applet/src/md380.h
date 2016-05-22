@@ -113,26 +113,26 @@ void  *  md380_create_menu_entry(int, const wchar_t *, void *, void  *,
 void*  md380_menu_entry_programradio(void);
 void*  md380_menu_numerical_input(void);
 
-extern uint32_t 	* const md380_menu_0x20001114;
-extern uint8_t  	* const md380_menu_0x200011e4;
-extern uint8_t  	* const md380_menu_0x2001d3c1;
-extern uint8_t  	* const md380_menu_0x2001d3ed;
-extern uint8_t  	* const md380_menu_0x2001d3ee;
-extern uint8_t  	* const md380_menu_0x2001d3ef;
-extern uint8_t  	* const md380_menu_0x2001d3f0;
-extern uint8_t  	* const md380_menu_0x2001d3f1;
-extern uint8_t  	* const md380_menu_0x2001d3f4;
-extern uint8_t  	* const md380_menu_depth;
-extern wchar_t  	* const md380_menu_edit_buf;
-extern uint8_t  	* const md380_menu_entry_selected;
-extern uint8_t  	* const md380_menu_id;
+uint8_t   md380_menu_0x200011e4;
+uint8_t   md380_menu_0x2001d3c1;
+uint8_t   md380_menu_0x2001d3ed;
+uint8_t   md380_menu_0x2001d3ee;
+uint8_t   md380_menu_0x2001d3ef;
+uint8_t   md380_menu_0x2001d3f0;
+uint8_t   md380_menu_0x2001d3f1;
+uint8_t   md380_menu_0x2001d3f4;
+uint8_t   md380_menu_depth;
+uint8_t   md380_menu_entry_selected;
+uint8_t   md380_menu_id;
 extern void     	* const md380_menu_mem_base;
 extern void     	* const md380_menu_memory;
+extern wchar_t  	* const md380_menu_edit_buf;
 extern const wchar_t	* const md380_wt_programradio;  // menutext <- menu_entry_programradio
+extern uint32_t 	* const md380_menu_0x20001114;
  
 
 //! program_radio_unprohibited ... bulding site is an struct
-extern uint8_t * const md380_program_radio_unprohibited;
+uint8_t md380_program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
 extern char* const  channelnum;

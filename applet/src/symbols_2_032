@@ -81,35 +81,37 @@ OSSemPost = 0x803db68+1;
 md380_OSMboxPost = 0x080303b4+1;
 
 /* //! Functions and Variabes regarding the menu */
-main_menu = 0x08039c23;
-md380_create_menu_entry = 0x0800c731;
-md380_create_main_meny_entry = 0x0800c189;
-md380_menu_numerical_input = 0x801a2d6;
-md380_create_menu_entry = 0x0800c731  ; 
-md380_menu_entry_back = 0x800f452;
-md380_menu_entry_programradio = 0x80127d0;
+main_menu                              = 0x8039c23;
+md380_create_menu_entry                = 0x800c731;
+md380_create_main_meny_entry           = 0x800c189;
+md380_menu_numerical_input             = 0x801a2d6;
+md380_create_menu_entry                = 0x800c731  ; 
+md380_menu_entry_back                  = 0x800f452;
+md380_menu_entry_programradio          = 0x80127d0;
+
+
+md380_menu_0x200011e4                  = 0x200011e4;
+md380_menu_0x2001d3c1                  = 0x2001d3c1;
+md380_menu_0x2001d3ed                  = 0x2001d3ed;
+md380_menu_0x2001d3ee                  = 0x2001d3ee;
+md380_menu_0x2001d3ef                  = 0x2001d3ef;
+md380_menu_0x2001d3f0                  = 0x2001d3f0;
+md380_menu_0x2001d3f1                  = 0x2001d3f1;
+md380_menu_0x2001d3f4                  = 0x2001d3f4;
+md380_menu_depth                       = 0x200011e4;
+md380_menu_entry_selected              = 0x2001d3b2;
+md380_menu_id                          = 0x2001d3c2;
+md380_program_radio_unprohibited       = 0x2001d030 + 4;
 
 /*
-///uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
-///uint8_t  	* const md380_menu_0x200011e4 = 0x200011e4;
-///uint8_t  	* const md380_menu_0x2001d3c1 = 0x2001d3c1;
-///uint8_t  	* const md380_menu_0x2001d3ed = 0x2001d3ed;
-///uint8_t  	* const md380_menu_0x2001d3ee = 0x2001d3ee;
-///uint8_t  	* const md380_menu_0x2001d3ef = 0x2001d3ef;
-///uint8_t  	* const md380_menu_0x2001d3f0 = 0x2001d3f0;
-///uint8_t  	* const md380_menu_0x2001d3f1 = 0x2001d3f1;
-///uint8_t  	* const md380_menu_0x2001d3f4 = 0x2001d3f4;
-///uint8_t  	* const md380_menu_depth = 0x200011e4;
-///wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
-///uint8_t  	* const md380_menu_entry_selected = 0x2001d3b2;
-///uint8_t  	* const md380_menu_id = 0x2001d3c2;
 ///void     	* const md380_menu_mem_base = 0x20019df0;
 ///void     	* const md380_menu_memory = 0x2001c148;
-///uint8_t  	* const md380_program_radio_unprohibited = (uint8_t *)(0x2001d030 + 4);
 ///const wchar_t	* const md380_wt_programradio = 0x080d175c;
-
+///wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
+///uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
 ///char * const channelnum=0x2001d376;
 */
+
 read_channel_switch = 0x0804d269;
 
 

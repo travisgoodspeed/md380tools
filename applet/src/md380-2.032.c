@@ -34,8 +34,7 @@ OS_EVENT  ** const OSSemCreate_hook1_event_mem=0x2001d128;
 
 
 //! Functions and Variabes regarding the menu
-
-uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
+/*
 uint8_t  	* const md380_menu_0x200011e4 = 0x200011e4;
 uint8_t  	* const md380_menu_0x2001d3c1 = 0x2001d3c1;
 uint8_t  	* const md380_menu_0x2001d3ed = 0x2001d3ed;
@@ -45,13 +44,15 @@ uint8_t  	* const md380_menu_0x2001d3f0 = 0x2001d3f0;
 uint8_t  	* const md380_menu_0x2001d3f1 = 0x2001d3f1;
 uint8_t  	* const md380_menu_0x2001d3f4 = 0x2001d3f4;
 uint8_t  	* const md380_menu_depth = 0x200011e4;
-wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
 uint8_t  	* const md380_menu_entry_selected = 0x2001d3b2;
 uint8_t  	* const md380_menu_id = 0x2001d3c2;
+uint8_t  	* const md380_program_radio_unprohibited = (uint8_t *)(0x2001d030 + 4);
+*/
 void     	* const md380_menu_mem_base = 0x20019df0;
 void     	* const md380_menu_memory = 0x2001c148;
-uint8_t  	* const md380_program_radio_unprohibited = (uint8_t *)(0x2001d030 + 4);
+wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
 const wchar_t	* const md380_wt_programradio = 0x080d175c;
+uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
 
 
 char * const channelnum=0x2001d376;
