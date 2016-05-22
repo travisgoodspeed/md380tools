@@ -35,6 +35,8 @@ const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
+
+
 struct MENU {
   const wchar_t  *menu_titel;
   void    *unknownp;
@@ -612,7 +614,7 @@ void create_menu_entry_edit_screen(void) {
   uint8_t *p;
 
   md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
-  *md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
+  md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
 
 
 /*
@@ -634,7 +636,7 @@ void create_menu_entry_edit_screen(void) {
 
 // clear retrun buffer //  see 0x08012a98
  for (i=0; i < 0x11; i++) {
-   p=(uint8_t *) *md380_menu_0x20001114;
+   p=(uint8_t *) md380_menu_0x20001114;
    p = p + i;
    *p = 0;
    }
@@ -712,13 +714,13 @@ void create_menu_entry_edit_dmr_id_screen(void) {
   uint32_t nchars;
 
   md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
-  *md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
+  md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
 
 
 
 // clear retrun buffer //  see 0x08012a98
  for (i=0; i < 0x11; i++) {
-   p=(uint8_t *) *md380_menu_0x20001114;
+   p=(uint8_t *) md380_menu_0x20001114;
    p = p + i;
    *p = 0;
    }
@@ -808,7 +810,7 @@ void create_menu_utilies_hook(void) {
 #ifdef DEBUG
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
 #endif
-  create_menu_entry_hook(8, md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
+  create_menu_entry_hook(8, &md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
   create_menu_entry_hook(9, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
 }
 

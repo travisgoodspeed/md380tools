@@ -51,8 +51,8 @@ uint8_t  	* const md380_program_radio_unprohibited = (uint8_t *)(0x2001d030 + 4)
 void     	* const md380_menu_mem_base = 0x20019df0;
 void     	* const md380_menu_memory = 0x2001c148;
 wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
-const wchar_t	* const md380_wt_programradio = 0x080d175c;
-uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
+//const wchar_t	* const md380_wt_programradio = 0x080d175c;
+//uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
 
 
 char * const channelnum=0x2001d376;

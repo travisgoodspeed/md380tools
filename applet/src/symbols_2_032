@@ -102,13 +102,13 @@ md380_menu_depth                       = 0x200011e4;
 md380_menu_entry_selected              = 0x2001d3b2;
 md380_menu_id                          = 0x2001d3c2;
 md380_program_radio_unprohibited       = 0x2001d030 + 4;
+md380_wt_programradio                  = 0x080d175c;
+md380_menu_0x20001114                  = 0x20001114;
 
 /*
 ///void     	* const md380_menu_mem_base = 0x20019df0;
 ///void     	* const md380_menu_memory = 0x2001c148;
-///const wchar_t	* const md380_wt_programradio = 0x080d175c;
 ///wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
-///uint32_t 	* const md380_menu_0x20001114 = 0x20001114;
 ///char * const channelnum=0x2001d376;
 */
 
