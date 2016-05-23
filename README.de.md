@@ -20,7 +20,7 @@ Ebenso sind zur Nutzung folgende Pakete erforderlich:
 * PyUSB 1.0: (0.4 does not work.) http://sourceforge.net/apps/mediawiki/pyusb/
 * libusb 1.0: (0.4 does not work.) http://www.libusb.org/
 
-####Automatische Instalation der benötigten Pakete
+####Automatische Installation der benötigten Pakete
 
 Debian Stretch:
 
@@ -129,7 +129,7 @@ spiflashwrite <filename> <address> | Kopiert die angegebene Datei <filename> an 
 wc -c < db/users.csv > data ; cat db/users.csv >> data && md380-tool spiflashwrite data 0x100000 | Kopiert die User-Datenbank aus dem Repository in den SPI-Flashspeicher an die Adresse 0x100000 
 
 ###Erweitertes Menü mit weiteren Funktionen
-Die Firmware besitzt einen neuen Menüpunkt im Menü "Utilities" namens "MD380Tools".
+Die Firmware besitzt einen neuen Menüpunkt im Menü "Utilities" namens "MD380Tools". Diese Funktionen sind größtenteils nur in der UHF-Version (70 cm-Version) der Geräte nutzbar.
 
 Die dort aufgeführten Menüpunkte wären derzeit folgende (mit nachfolgender Beschreibung)
 
@@ -140,7 +140,7 @@ Date format | Hier kann zwischen der originalen Schreibweise und der deutschen S
 UsersCSV | Aktiviert/deaktiviert die im SPI-Flash einspielbare User-Datenbank (DMR-ID-Datenbank der DMR-MARC-Datenbank)
 Debug | Aktiviert/deaktiviert den Debug-Modus
 Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Monitoring-Funktion (siehe **Freischaltung des Empfangs aller Talkgroups und Private Calls**)
-Edit DMR-ID | Ändern der DMR-ID des Funkgerätes bis zum nächsten Ausschalten des Gerätes. Nach dem Einschalten ist wieder die ID aus dem Codeplug aktiv.
+Edit DMR-ID | Ändern der DMR-ID des Funkgerätes
 Experimental | Ändert bis zum nächsten Ausschalten des Gerätes das Verhalten, dass das Menü nicht geschlossen wird, wenn ein Signal empfangen wird.
 
 ###Aktivierung der User-Datenbank
