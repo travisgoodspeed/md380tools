@@ -36,7 +36,7 @@ static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 static wchar_t wt_experimental[]      = L"Experimental";
 
 struct MENU {
-  void    *menu_titel;
+  void    *menu_title;
   void    *unknownp;
   uint8_t numberof_menu_entries;
   uint8_t unknown_00;
@@ -131,7 +131,7 @@ void create_menu_entry_promtg_enable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_promtg;
+  menu_mem->menu_title = wt_promtg;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -148,7 +148,7 @@ void create_menu_entry_promtg_disable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_promtg;
+  menu_mem->menu_title = wt_promtg;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -165,7 +165,7 @@ void create_menu_entry_rbeep_enable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_rbeep;
+  menu_mem->menu_title = wt_rbeep;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -182,7 +182,7 @@ void create_menu_entry_rbeep_disable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_rbeep;
+  menu_mem->menu_title = wt_rbeep;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -199,7 +199,7 @@ void create_menu_entry_datef_original_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_datef_original;
+  menu_mem->menu_title = wt_datef_original;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -216,7 +216,7 @@ void create_menu_entry_datef_germany_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_datef_germany;
+  menu_mem->menu_title = wt_datef_germany;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -233,7 +233,7 @@ void create_menu_entry_userscsv_enable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_userscsv;
+  menu_mem->menu_title = wt_userscsv;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -250,7 +250,7 @@ void create_menu_entry_userscsv_disable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_userscsv;
+  menu_mem->menu_title = wt_userscsv;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -268,7 +268,7 @@ void create_menu_entry_experimental_enable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_experimental;
+  menu_mem->menu_title = wt_experimental;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -284,7 +284,7 @@ void create_menu_entry_experimental_disable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_experimental;
+  menu_mem->menu_title = wt_experimental;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -302,7 +302,7 @@ void create_menu_entry_debug_enable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_debug;
+  menu_mem->menu_title = wt_debug;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -319,7 +319,7 @@ void create_menu_entry_debug_disable_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_debug;
+  menu_mem->menu_title = wt_debug;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
@@ -341,7 +341,7 @@ void create_menu_entry_promtg_screen(void) {
   md380_spiflash_read(buf, spi_flash_addl_config_start + offset_promtg, 1);
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_promtg;
+  menu_mem->menu_title = wt_promtg;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=2;
@@ -374,7 +374,7 @@ void create_menu_entry_rbeep_screen(void) {
   md380_spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1);
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_rbeep;
+  menu_mem->menu_title = wt_rbeep;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=2;
@@ -403,7 +403,7 @@ void create_menu_entry_datef_screen(void) {
   md380_spiflash_read(buf, spi_flash_addl_config_start + offset_datef, 1);
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_datef;
+  menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=2;
@@ -436,7 +436,7 @@ void create_menu_entry_userscsv_screen(void) {
   if (data[0] == 0xef && data[1] == 0x40 && data[2] == 0x18) {
     md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
     menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-    menu_mem->menu_titel = wt_userscsv;
+    menu_mem->menu_title = wt_userscsv;
     menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
     menu_mem->numberof_menu_entries=2;
     menu_mem->unknown_00 = 0;
@@ -456,7 +456,7 @@ void create_menu_entry_userscsv_screen(void) {
     }
   } else {
     menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-    menu_mem->menu_titel = wt_userscsv;
+    menu_mem->menu_title = wt_userscsv;
     menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
     menu_mem->numberof_menu_entries=1;
     menu_mem->unknown_00 = 0;
@@ -473,7 +473,7 @@ void create_menu_entry_debug_screen(void) {
   md380_spiflash_read(buf, spi_flash_addl_config_start + offset_debug, 1);
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_debug;
+  menu_mem->menu_title = wt_debug;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=2;
@@ -503,7 +503,7 @@ void create_menu_entry_experimental_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_experimental;
+  menu_mem->menu_title = wt_experimental;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=2;
@@ -583,7 +583,7 @@ void create_menu_entry_edit_screen(void) {
   *md380_menu_0x2001d3f4 = 0;
 
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) +  sizeof(struct MENU);
-  menu_mem->menu_titel = wt_edit;
+  menu_mem->menu_title = wt_edit;
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -673,7 +673,7 @@ void create_menu_entry_edit_dmr_id_screen(void) {
   *md380_menu_0x2001d3f1 = 0;
   *md380_menu_0x2001d3f4 = 0;
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) +  sizeof(struct MENU);
-  menu_mem->menu_titel = wt_edit_dmr_id;
+  menu_mem->menu_title = wt_edit_dmr_id;
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -691,7 +691,7 @@ void create_menu_entry_addl_functions_screen(void) {
   printf("create_menu_entry_addl_functions_screen %d\n",*md380_menu_depth);
 #endif
   menu_mem = (md380_menu_memory + ((*md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-  menu_mem->menu_titel = wt_addl_func;
+  menu_mem->menu_title = wt_addl_func;
 
   menu_mem->unknownp = 0x14 * *md380_menu_id + md380_menu_mem_base;
 
