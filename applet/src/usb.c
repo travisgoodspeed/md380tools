@@ -140,7 +140,7 @@ int usb_dnld_hook(){
       adr = *((uint32_t*)(packet+1));
       uint32_t size = *((uint32_t*)(packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
-      if (check_spi_flash_type()) {
+      if (check_spi_flash_size()>adr) {
         printf ("TDFU_SPIFLASHWRITE %x %d %x\n", adr, size, packet+9);
         md380_spiflash_write(packet+9,  adr, size);
       }
@@ -150,7 +150,7 @@ int usb_dnld_hook(){
       *dfu_target_adr=dmesg_tx_buf;
       adr= *((uint32_t*)(packet+1));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
-      if (check_spi_flash_type()) {
+      if (check_spi_flash_size()>adr) {
         printf ("TDFU_SPIFLASHERASE64K %x \n", adr);
 //      spiflash_wait();     
 //      spiflash_block_erase64k(adr);
@@ -176,7 +176,7 @@ int usb_dnld_hook(){
       adr = *((uint32_t*)(packet+1));
       size = *((uint32_t*)(packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
-      if (check_spi_flash_type()) {
+      if (check_spi_flash_size()>adr) {
         printf ("DFU_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
         // enable write
 
