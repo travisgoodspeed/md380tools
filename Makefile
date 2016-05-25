@@ -2,7 +2,7 @@ RELEASE=md380tools-`date "+%Y-%m-%d"`
 
 #This strips out all unicode characters.
 #We'd rather just drop the accents.
-ICONV=iconv -f UTF-8 -t ascii --byte-subst= --unicode-subst= 
+ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 all: applets
 clean:
