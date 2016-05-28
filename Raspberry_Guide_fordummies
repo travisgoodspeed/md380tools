@@ -1,0 +1,21 @@
+Tested on 2016-05-10-raspbian-jessie by IZ2XBZ
+
+sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+
+sudo pip install pyusb -U
+
+git clone https://github.com/travisgoodspeed/md380tools.git
+
+cd md380tools
+
+sudo make clean
+
+##### turn on radio in DFU mode to begin firmware update with USB cable ######
+
+sudo make all flash
+
+##### turn radio normally on to begin database loading with USB cable #####
+
+sudo make flashdb
+
+
