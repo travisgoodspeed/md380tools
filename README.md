@@ -73,11 +73,28 @@ not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
 
 ###Installation of required packages###
-Debian Stretch:
+####Debian Stretch:####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
 
-Debian Jessie:
+####Debian Jessie (using backports.debian.org):####
+
+Add backports to your sources.list
+
+    deb http://ftp.debian.org/debian jessie-backports main
+
+to your sources.list (or add a new file with the ".list" extension to /etc/apt/sources.list.d/)
+You can also find a list of other mirrors at https://www.debian.org/mirror/list
+More info at http://backports.debian.org/Instructions/
+
+     apt update
+
+Install python-usb from backports, the rest from Jessie
+
+     apt -t jessie-backports install python-usb
+     apt install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0
+
+####Debian Jessie (using python-pip):####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git make \
                     curl python-pip unzip
