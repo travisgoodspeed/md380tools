@@ -127,7 +127,7 @@ class Tool(DFU):
     def spiflashpoke(self,adr,size,data):
         """Returns so many bytes from SPI Flash."""
         cmd=0x04; #SPIFLASHWRITE_NEW
-        print  size
+#        print  size
         cmdstr=(chr(cmd)+
                 chr(adr&0xFF)+
                 chr((adr>>8)&0xFF)+
@@ -142,12 +142,12 @@ class Tool(DFU):
         for i in range(0,size,1):
             cmdstr=cmdstr+data[i];
 
-        print len(cmdstr)
+#        print len(cmdstr)
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
                                    cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
-        print status
+#        print status
         return self.upload(1,size,0);
     def getsms(self,index):
         """Returns an inbound SMS from SPI Flash."""
@@ -375,18 +375,20 @@ def spiflashwrite(dfu,filename,adr):
             size=len(data)
             dfu.md380_custom(0x91,0x01);  # disable any radio and UI events
                                           # while on spi flash 
+            print "erase %d bytes @ 0x%x" % (size, adr);
             for n in range(adr,adr+size+1,0x1000):
-                print "erase %x " % n
+#                print "erase %x " % n
                 dfu.spiflash_erase64kblock(n)
             fullparts = int(size/1024)
+            print "flashing %d bytes @ 0x%x" % (size, adr);
             if fullparts > 0:
                 for n in range(0,fullparts,1):
-                    print "%d %d %x %d " % (fullparts, n, adr+n*1024, 1024)
+#                    print "%d %d %x %d " % (fullparts, n, adr+n*1024, 1024)
                     dfu.spiflashpoke( adr+n*1024,1024,data[n*1024:(n+1)*1024]);
             lastpartsize= size - fullparts * 1024
 
             if ( lastpartsize  > 0 ):
-                print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
+#                print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
                 dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
             sys.stdout.write("reboot radio now\n"); 
             dfu.md380_reboot();
