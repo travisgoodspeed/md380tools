@@ -497,10 +497,14 @@ void create_menu_entry_userscsv_screen(void) {
   int i;
   struct MENU *menu_mem;
   int8_t buf[1];
-  uint8_t data[4];
 
-  get_spi_flash_type(data);
-  if (data[0] == 0xef && data[1] == 0x40 && data[2] == 0x18) {
+  /*
+    Previously, this would check the flash type, but as all known
+    flash chips are at least 1MB, we can skip the check and always use
+    the memory.
+    
+  if(check_spi_flash_type()) {
+  */
     md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
     menu_mem = (md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
     menu_mem->menu_title = wt_userscsv;
@@ -521,6 +525,7 @@ void create_menu_entry_userscsv_screen(void) {
       p = md380_menu_mem_base + ( md380_menu_id + i ) * 0x14;
       p[0x10] = 0;
     }
+    /*
   } else {
     menu_mem = (md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
     menu_mem->menu_title = wt_userscsv;
@@ -530,6 +535,7 @@ void create_menu_entry_userscsv_screen(void) {
     menu_mem->unknown_01 = 0;
     create_menu_entry_hook( md380_menu_id, wt_no_w25q128, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
   }
+    */
 }
 
 void create_menu_entry_debug_screen(void) {

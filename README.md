@@ -73,16 +73,58 @@ not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
 
 ###Installation of required packages###
-Debian Stretch:
+####Debian Stretch:####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
 
-Debian Jessie:
+####Debian Jessie (using backports.debian.org):####
+
+Add backports to your sources.list
+
+    deb http://ftp.debian.org/debian jessie-backports main
+
+to your sources.list (or add a new file with the ".list" extension to /etc/apt/sources.list.d/)
+You can also find a list of other mirrors at https://www.debian.org/mirror/list
+More info at http://backports.debian.org/Instructions/
+
+     apt update
+
+Install python-usb from backports, the rest from Jessie
+
+     apt -t jessie-backports install python-usb
+     apt install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0
+
+####Debian Jessie (using python-pip):####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git make \
                     curl python-pip unzip
     pip install pyusb -U # update PyUSB to 1.0
   
+
+####Raspberry Pi Debian Jessie: #####
+
+```
+Tested on 2016-05-10-raspbian-jessie by IZ2XBZ
+
+sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+
+sudo pip install pyusb -U
+
+git clone https://github.com/travisgoodspeed/md380tools.git
+
+cd md380tools
+
+sudo make clean
+
+##### turn on radio in DFU mode to begin firmware update with USB cable ######
+
+sudo make all flash
+
+##### turn radio normally on to begin database loading with USB cable #####
+
+sudo make flashdb
+```
+
 
 ##Convenient Usage:##
 

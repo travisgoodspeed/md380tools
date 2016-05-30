@@ -1,5 +1,8 @@
 RELEASE=md380tools-`date "+%Y-%m-%d"`
 
+#This strips out all unicode characters.
+#We'd rather just drop the accents.
+ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 all: applets
 clean:
@@ -16,8 +19,8 @@ firmwares:
 flash:
 	cd applet && make flash
 flashdb:
-	cd db && make clean all
-	cat db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
+	cd db && make
+	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
 	./md380-tool spiflashwrite data 0x100000
