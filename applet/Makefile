@@ -59,7 +59,7 @@ flash: wrapped
 
 $(SRCS): config.h src/*.h
 $(PROJ_NAME).elf: $(SRCS)
-	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4
+	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_2_032
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
 	$(OBJDUMP) -t main.elf >main.img.sym
 
