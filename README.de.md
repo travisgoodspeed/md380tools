@@ -140,6 +140,7 @@ Date format | Hier kann zwischen der originalen Schreibweise und der deutschen S
 UsersCSV | Aktiviert/deaktiviert die im SPI-Flash einspielbare User-Datenbank (DMR-ID-Datenbank der DMR-MARC-Datenbank)
 Debug | Aktiviert/deaktiviert den Debug-Modus
 Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Monitoring-Funktion (siehe **Freischaltung des Empfangs aller Talkgroups und Private Calls**)
+Mic bargraph | Aktiviert die Modulations-Aussteuerungs-Anzeige
 Edit DMR-ID | Ändern der DMR-ID des Funkgerätes
 Experimental | Ändert bis zum nächsten Ausschalten des Gerätes das Verhalten, dass das Menü nicht geschlossen wird, wenn ein Signal empfangen wird.
 
