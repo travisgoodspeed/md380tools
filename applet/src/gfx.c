@@ -118,7 +118,7 @@ void print_DebugLine(unsigned int bg_color) {
       if (ii<29) buf[ii++]=DebugLine2[i];
       }
   }
-
+  drawascii2("                  ",10,102);
   drawascii2(DebugLine1, 10, 42);
   OSSemPost(debug_line_sem);
 
