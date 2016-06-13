@@ -53,6 +53,11 @@ if __name__ == '__main__':
     patcher.sethword(0x0809cf08, 0xd100);
     patcher.sethword(0x0809cf0a, 0x483c);
     patcher.sethword(0x0809cf0c, 0x4700);
+
+    #### Disable power on password (to flash an virgin codeplug 
+    #### with no password, if you lost this)
+    ### patcher.sethword(0x0801a4fe, 0xbdf7);
+
     # [0x0809cf00]> pd 7
     #             0x0809cf00      4048           ldr r0, [pc, 0x100]         ; [0x809d004:4]=-1
     #             0x0809cf02      0021           movs r1, 0

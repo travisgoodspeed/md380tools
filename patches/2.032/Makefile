@@ -17,6 +17,7 @@ patched.img: unwrapped.img
 	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-shmoocon.ppm write
 	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-volnet.ppm write
 	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-troopers-color.ppm relocate
+	#../../md380-gfx --firmware=patched.img --gfx=0x80f9ca8-bm_logo.ppm relocate
 
 #Apply the font.
 	../../md380-gfx --firmware=patched.img --gfx=replacement-font-big-latin.pbm fontreplace
