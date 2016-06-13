@@ -488,7 +488,7 @@ af+ 0x801a2f4 114 F_5126
 af+ 0x801a374 114 F_5127
 af+ 0x801a3ec 114 F_5128
 af+ 0x801a45e 146 F_5129
-af+ 0x801a4fc 520 F_5130
+af+ 0x801a4fc 520 Ask/Test_PowerOnPassword
 CCa 0x801a546 Get ConfigData + 0x18 F_5130
 CCa 0x801a54e Get ConfigData + 0x19 F_5130
 CCa 0x801a556 Get ConfigData + 0x1a F_5130
