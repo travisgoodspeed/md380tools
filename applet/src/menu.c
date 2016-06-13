@@ -816,7 +816,7 @@ void create_menu_utilies_hook(void) {
 #ifdef DEBUG
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
 #endif
-  create_menu_entry_hook(8, &md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
+  create_menu_entry_hook(8, md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
   create_menu_entry_hook(9, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
 }
 

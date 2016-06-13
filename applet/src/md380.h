@@ -137,7 +137,7 @@ uint8_t   md380_menu_depth;
 uint8_t   md380_menu_entry_selected;
 uint8_t   md380_menu_id;
 
-wchar_t	  md380_wt_programradio;  // menutext <- menu_entry_programradio
+wchar_t	  md380_wt_programradio[1];  // menutext <- menu_entry_programradio
 
 extern void     	* const md380_menu_mem_base;
 extern void     	* const md380_menu_memory;
