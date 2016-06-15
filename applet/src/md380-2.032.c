@@ -31,15 +31,5 @@ OS_EVENT       ** const OSSemCreate_hook1_event_mem=0x2001d128;
 
 //! Variabes regarding menu.c
 void     	* const md380_menu_mem_base = 0x20019df0;
-void     	* const md380_menu_memory = 0x2001c148;
+void     	* const md380_menu_memory   = 0x2001c148;
 wchar_t  	* const md380_menu_edit_buf = 0x2001b716;
-
-char            * const channelnum = 0x2001d376;
-
-//! Variabes regarding the beep_process
-uint32_t        * const beep_process_unkown=0x2001d178;
-
-//! Variabes regarding rtc_timer process
-uint8_t         * const md380_f_4225_operatingmode=0x2001d3f7;
-const uint8_t md380_f_4225_operatingmode_menu=0x1b;       // see 0x0801f06a there are a lot of modes
-const uint8_t md380_f_4225_operatingmode_menu_exit=0x1c;
