@@ -4,6 +4,8 @@ __pycache__/
 
 # C extensions
 *.so
+*.o
+*.a
 
 # Distribution / packaging
 .Python
@@ -69,3 +71,6 @@ db/users.csv
 db/users.json
 db/repeaters.csv
 db/repeaters.json
+
+# downloads
+firmware/D002.032.zip
