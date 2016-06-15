@@ -18,16 +18,19 @@
 #include "tooldfu.h"
 #include "config.h"
 #include "gfx.h"
-#include "usersdb.h"
 #include "addl_config.h"
 
 
 /* Used to avoid duplicate call endings. */
 int incall=0;
 
-/* Bufferspace to transfer data*/
-char DebugLine1[30];
-char DebugLine2[160];  // only for debug normal is 80
+/* global Bufferspace to transfer data*/
+//char DebugLine1[30];
+//char DebugLine2[160];  // only for debug normal is 80
+
+int g_dst;  // transferbuffer users.csv
+int g_src;
+    
 
 void *dmr_call_end_hook(char *pkt){
   /* This hook handles the dmr_contact_check() function, calling
@@ -89,19 +92,25 @@ void *dmr_call_start_hook(char *pkt){
            (pkt[9]<<8)|
            (pkt[8]<<16));
 
-  uint8_t err;
 
 
-  OSSemPend(debug_line_sem, 0, &err);
-
+//  OSSemPend(debug_line_sem, 0, &err);
+//
   //printf("Call start %d -> %d\n", src,dst);
-  sprintf(DebugLine1, "%d -> %d", src, dst );
+//  sprintf(DebugLine1, "%d -> %d", src, dst );
 
-  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
-    sprintf(DebugLine2, ",ID not found,in users.csv,see README.md,on Github");   // , is line seperator ;)
-  }
+//  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
+//    sprintf(DebugLine2, ",ID not found,in users.csv,see README.md,on Github");   // , is line seperator ;)
+//  }
 
-  OSSemPost(debug_line_sem);
+//  OSSemPost(debug_line_sem);
+
+  int primask=OS_ENTER_CRITICAL();
+  g_dst=dst;
+  g_src=src;
+  OS_EXIT_CRITICAL(primask);
+    
+
 
   //This prints a dot at every resynchronization frame.
   //It can distract AMBE2+ logging.

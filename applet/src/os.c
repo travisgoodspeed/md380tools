@@ -14,7 +14,7 @@
 #include "config.h"
 #include "os.h"
 
-OS_EVENT* debug_line_sem;
+OS_EVENT* debug_line_sem;  // not yet used 
 
 OS_EVENT  ** OSSemCreate_hook0_event_mem;
 OS_EVENT  ** OSSemCreate_hook1_event_mem;

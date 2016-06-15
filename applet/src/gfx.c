@@ -17,6 +17,7 @@
 
 
 
+
 //! Draws text at an address by calling back to the MD380 function.
 void drawtext(wchar_t *text,
 	      int x, int y){
@@ -80,66 +81,6 @@ void lcd_background_led(int on) {
     GPIO_SetBits(GPIOC, GPIO_Pin_6);
   } else {
     GPIO_ResetBits(GPIOC, GPIO_Pin_6);
-  }
-}
-
-void print_DebugLine(unsigned int bg_color) {
-  char buf[30];
-  int n,i,ii;
-  uint8_t err;
-
-  gfx_set_bg_color(bg_color);
-  gfx_set_fg_color(0x000000);
-  gfx_select_font((void *) 0x809bcec);
-
-  drawascii2("                  ",10,42);
-  drawascii2("                  ",10,54);
-  drawascii2("                  ",10,66);
-  drawascii2("                  ",10,78);
-  drawascii2("                  ",10,90);
-  drawascii2("                  ",10,102);
-
-
-  ii=0;
-  n=0;
-
-  OSSemPend(debug_line_sem, 0, &err);
-#ifdef DEBUG
-  printf("err from OSSemPend(debug_line_sem ... %x",err);
-#endif
-
-  for (i=0;i<strlen(DebugLine2) || n < 6 ;i++) {
-    if (DebugLine2[i] == ',' || DebugLine2[i] == '\0') {
-      buf[ii++]='\0';
-      drawascii2(buf, 10, 42+n*12);
-      ii=0;
-      n++;
-    } else {
-      if (ii<29) buf[ii++]=DebugLine2[i];
-      }
-  }
-  drawascii2("                  ",10,102);
-  drawascii2(DebugLine1, 10, 42);
-  OSSemPost(debug_line_sem);
-
-  gfx_select_font((void *) 0x80d0fac);
-  gfx_set_fg_color(0xff8032);
-  gfx_set_bg_color(0xff000000);
-}
-
-void print_DebugLine_green(char *bmp, int idx, uint64_t pos) {
-  if (global_addl_config.userscsv == 1) {
-    print_DebugLine(0x00ff00);
-  } else {
-    gfx_drawbmp(bmp, idx, pos);
-  }
-}
-
-void print_DebugLine_gray(void *bmp, int idx, uint64_t pos) {
-  if (global_addl_config.userscsv == 1) {
-    print_DebugLine(0x888888);
-  } else {
-    gfx_drawbmp(bmp, idx, pos);
   }
 }
 

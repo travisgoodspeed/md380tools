@@ -205,9 +205,9 @@ if __name__== '__main__':
     merger.hookstub(0x080441f4+4,0x0804420c+1);
 
     # gfx hooks
-    merger.hookbl(0x0802e4b0,sapplet.getadr("print_DebugLine_green"),0);
-    merger.hookbl(0x0802e582,sapplet.getadr("print_DebugLine_green"),0);
-    merger.hookbl(0x0801f5ba,sapplet.getadr("print_DebugLine_gray"),0);
+    merger.hookbl(0x0802e4b0,sapplet.getadr("rx_screen_green_hook"),0);
+    merger.hookbl(0x0802e582,sapplet.getadr("rx_screen_green_hook"),0);
+    merger.hookbl(0x0801f5ba,sapplet.getadr("rx_screen_gray_hook"),0);
 
     # date format  hook, this hook can modify the date format on the status line
     merger.hookbl(0x0800d8c8,sapplet.getadr("print_date_hook"),0);
