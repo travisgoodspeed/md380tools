@@ -110,7 +110,6 @@ void        OS_EXIT_CRITICAL(int);
 
 
 
-
 //! Functions and Variabes regarding the menu
 void*   main_menu(void *);     // menu exec
 
@@ -138,23 +137,19 @@ uint8_t   md380_menu_depth;
 uint8_t   md380_menu_entry_selected;
 uint8_t   md380_menu_id;
 
+wchar_t	  md380_wt_programradio[1];  // menutext <- menu_entry_programradio
 
-extern wchar_t	md380_wt_programradio[];  // menutext <- menu_entry_programradio
-
-extern void    * const md380_menu_mem_base;
-extern void    * const md380_menu_memory;
-extern wchar_t * const md380_menu_edit_buf;
-
-
+extern void     	* const md380_menu_mem_base;
+extern void     	* const md380_menu_memory;
+extern wchar_t  	* const md380_menu_edit_buf;
 
 uint32_t  md380_menu_0x20001114;
-
 
 //! program_radio_unprohibited (menu entry) ... bulding site is an struct
 uint8_t md380_program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
-extern char channelnum;
+extern char* const  channelnum;
 
 //! Reads the current channel number from the rotary switch.
 int read_channel_switch();
@@ -185,25 +180,23 @@ int ambe_decode_wav(int *a1, signed int eighty, char *bitbuffer,
 
 //! Functions and Variabes regarding the beep_
 // not yet known ;)
-extern uint32_t beep_process_unkown;
-
-//! Variabes regarding rtc_timer process
-extern uint8_t md380_f_4225_operatingmode[];
-extern uint8_t md380_f_4225_operatingmode_menu;
-extern uint8_t md380_f_4225_operatingmode_menu_exit;
+extern uint32_t * const beep_process_unkown;
 
 //! useful firmware functions
 wchar_t * md380_itow(wchar_t *, int value);
 void      md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
 void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
-//! useful firmware Variabes
-uint32_t  md380_dmr_id;
+uint32_t md380_dmr_id;
 
-//! debug and training stuff
+// debug and training stuff
+
 void md380_f_4137();
 void md380_f_4520();
 void md380_f_4098();
 void md380_f_4102();
 void md380_f_4225();
 
+extern uint8_t * const md380_f_4225_operatingmode;
+extern const uint8_t md380_f_4225_operatingmode_menu;
+extern const uint8_t md380_f_4225_operatingmode_menu_exit;

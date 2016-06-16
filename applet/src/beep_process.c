@@ -25,5 +25,5 @@ void F_294_replacement(uint16_t value) {
     multiplicand= 0xaa;
   }
 
- beep_process_unkown=(uint32_t) value * multiplicand;
+ *beep_process_unkown=(uint32_t) value * multiplicand;
 }

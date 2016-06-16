@@ -84,9 +84,6 @@ md380_program_radio_unprohibited       = 0x2001d030 + 4;
 md380_wt_programradio                  = 0x080d175c;
 md380_menu_0x20001114                  = 0x20001114;
 
-
-
-
 /* c5000 */
 c5000_spi0_readreg = 0x0803e2f5;
 c5000_spi0_writereg = 0x0803e2a9;
@@ -110,9 +107,7 @@ md380_RTC_GetTime = 0x0802634b;
 read_channel_switch = 0x0804d269;
 
 /* useful md380 variables */
-md380_dmr_id        = 0x2001c65c;  /* the own dmr-id */
-channelnum          = 0x2001d376;  /* the actual channel number */
-beep_process_unkown = 0x2001d178;
+md380_dmr_id = 0x2001c65c;  /* the own dmr-id */
 
 /* Functions and Variabes from the "RTC Timer" - task */
 md380_f_4137 = 0x080290c8+1;
@@ -121,9 +116,4 @@ md380_f_4098 = 0x0804c1d0+1;
 md380_f_4102 = 0x0804c2aa+1;
 md380_f_4225 = 0x0801f044+1;
 
-
-/* Variabes regarding rtc_timer process */
-md380_f_4225_operatingmode           = 0x2001d3f7;
-md380_f_4225_operatingmode_menu      = 0x1b;  /*see @ 0x801f06a */
-md380_f_4225_operatingmode_menu_exit = 0x1c;
 
