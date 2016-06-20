@@ -1,5 +1,5 @@
-RELEASE=md380tools-`date "+%Y-%m-%d"`
-
+#RELEASE=md380tools-`date "+%Y-%m-%d"`
+RELEASE=md380tools-`git log -1 --date=short --pretty=format:%cd`
 #This strips out all unicode characters.
 #We'd rather just drop the accents.
 ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
@@ -27,7 +27,8 @@ flashdb:
 dist: applets
 	rm -rf $(RELEASE)
 	mkdir -p $(RELEASE)/python
-	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d"`.bin
+	#cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d"`.bin
+	cp applet/experiment.bin $(RELEASE)/firmware-`git log -1 --date=short --pretty=format:%cd`.bin
 	cd $(RELEASE) && unzip ../firmware/D002.032.zip
 	mv $(RELEASE)/Firmware\ 2.32 $(RELEASE)/windows
 	rm $(RELEASE)/windows/MD-380-D2.32\(AD\).bin $(RELEASE)/windows/Operation.doc.pdf
