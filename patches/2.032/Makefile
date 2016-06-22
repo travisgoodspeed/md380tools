@@ -4,8 +4,8 @@ clean:
 	rm -f *~ *.bin *.img
 
 unwrapped.img:
-	cd ../../firmware && make D002.032.bin
-	../../md380-fw --unwrap ../../firmware/D002.032.bin unwrapped.img
+	cd ../../firmware && make unwrapped/D002.032.img
+	cp ../../firmware/unwrapped/D002.032.img $@
 
 patched.img: unwrapped.img
 	./patch.py
