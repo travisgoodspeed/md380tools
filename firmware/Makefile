@@ -81,32 +81,32 @@ $(BINDIR)/D013.009.bin: $(DLDIR)/D013.009.bin | $(BINDIR)
 
 $(DLDIR)/D002.022.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v222.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v222.zip' -o $@
 
 $(DLDIR)/D002.025.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v225.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v225.zip' -o $@
 
 $(DLDIR)/D002.026.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v226.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v226.zip' -o $@
 
 $(DLDIR)/D002.030.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v230.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v230.zip' -o $@
 
 $(DLDIR)/D002.032.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v232.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v232.zip' -o $@
 
 $(DLDIR)/D002.034.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/TYT-MD380-FW-2-34.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/TYT-MD380-FW-2-34.zip' -o $@
 
 $(DLDIR)/D003.008.zip: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/D003.008.zip' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/D003.008.zip' -o $@
 
 $(DLDIR)/D013.009.bin: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
-	curl -L 'https://archive.org/download/TYTMD380FW2/D013.009_tytera_walking_dead_firmware_by_ea8cwb.bin' >$@
+	curl -f -L 'https://archive.org/download/TYTMD380FW2/D013.009_tytera_walking_dead_firmware_by_ea8cwb.bin' -o $@
