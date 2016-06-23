@@ -1,0 +1,9 @@
+#1: FILENAME	2: URL	3:	ZIPPATH	4: FILESIZE	5: SHA256
+D002.022.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v222.zip	TYT-MD-380-Firmware-Upgrade/Upgraded software for newest version.bin	999936	18d0080b41cde2871a4801ea0de1876cb3320c2498f3ea04f89d647b7d722e74
+D002.025.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v225.zip	MD-380-D2/MD-380-D2.25.bin	993792	5d0e5671a2e2ee8d2163325b442448e5494b93bd1a3e48e978ddbee6bcfd5bc5
+D002.026.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v226.zip	TYT-MD-380-Firmware-D002-2/MD-380-D2.26.bin	993792	348f6a6bcddfe80327b5da29a4074fc036bace344891dcf8b7b2b76e7f20b60f
+D002.030.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v230.zip	MD-380-Firmware-v2/MD-380-D2.30.bin	994816	1c903d440e35917e8a16906ccae1cbbd539230a5a3352e3eb896ffc3e96eccc6
+D002.032.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v232.zip	Firmware 2.32/MD-380-D2.32(AD).bin	994816	e1a1a11a84d9afd2d2ceed61be8395e32a8034785abd0be0236478f7d8609f43
+D002.034.zip	https://archive.org/download/TYTMD380FW2/TYT-MD380-FW-2-34.zip	TYT-MD380-FW-2-34/MD-380-D2.34.bin	994816	9d9a9599f43ef82caefd9239cec3770cc6b411e47f760fa07c6f22167e26fdfb
+D003.008.zip	https://archive.org/download/TYTMD380FW2/D003.008.zip	D003.008.bin	995840	466a5d6973926de2148f4ff32382e235ed047c2ef27d5ec5683ab9b91b89489d
+D013.009.bin	https://archive.org/download/TYTMD380FW2/D013.009_tytera_walking_dead_firmware_by_ea8cwb.bin	D013.009.bin	994816	d39a718a4730424a04d8f8c982d14a4cd2c63f558ec2d3f18671b6128c1c0ccb
