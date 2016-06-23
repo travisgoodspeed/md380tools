@@ -26,31 +26,32 @@ binary: $(BINARIES)
 unwrap: $(UNWRAPPEDFILES)
 
 clean:
-	rm -rf $(BINDIR) $(UNWRAPDIR)
+	@rm -rf $(BINDIR) $(UNWRAPDIR)
 
 cleanall: clean
-	rm -rf $(DLDIR)
+	@rm -rf $(DLDIR)
 
 $(DLDIR):
-	mkdir -p $@
+	@mkdir -p $@
 $(BINDIR):
-	mkdir -p $@
+	@mkdir -p $@
 $(UNWRAPDIR):
-	mkdir -p $@
+	@mkdir -p $@
 
 $(UNWRAPDIR)/%.img: $(BINDIR)/%.bin | $(UNWRAPDIR)
 	../md380-fw --unwrap $< $@
 
 $(BINDIR)/%.bin: $(DLDIR)/%.zip | $(BINDIR)
 	unzip -p $< "$$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f3)" >$@
-	test $$(find $@ -size $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f4)c) || (rm -f $@ && echo "Filesize mismatch" && false)
-	test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f5) || (rm -f $@ && echo "SHA256 mismatch" && false)
+	@test $$(find $@ -size $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f4)c) || (rm -f $@ && echo "$@: filesize mismatch" && false)
+	@test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f5) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
 
 
 $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 	cp $< $@
-	test $$(find $@ -size $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f4)c) || (rm -f $@ && false)
+	@test $$(find $@ -size $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f4)c) || (rm -f $@ && echo "$@: filesize mismatch" && false)
+	@test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f5) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
 
 $(DLDIR)/%: | $(DLDIR)
-	which curl >>/dev/null #Check that we have curl.
+	@which curl >>/dev/null #Check that we have curl.
 	curl -f -L $$(cat firmware_files.txt | grep $(notdir $@) | cut -f2) -o $@
