@@ -10,7 +10,7 @@ CC=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 
-CFLAGS  = -std=gnu99 -g -O2 -Wall -Tmd380_applet.ld
+CFLAGS += -std=gnu99 -g -O2 -Wall -Tmd380_applet.ld
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
@@ -57,7 +57,7 @@ wrapped: lib proj
 flash: wrapped
 	../md380-dfu upgrade experiment.bin
 
-$(SRCS): config.h src/*.h
+$(SRCS): config.h src/*.h | lib
 $(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_2_032
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
