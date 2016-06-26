@@ -66,7 +66,10 @@ $(PROJ_NAME).elf: $(SRCS)
 #Temporary file containing the build date.
 #Might use version numbers when we're ready for releases.
 src/version.h: src/*.c
-	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
+#This sets version date string to date of build
+	#echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
+#This sets version date string to date of last commit instead of build:
+	echo "#define VERSIONDATE L\"`git log -1 --date=short --pretty=format:%cd`\"" > src/version.h
 clean:
 	$(MAKE) -C lib clean
 	rm -f *.img *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
