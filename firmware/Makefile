@@ -26,17 +26,17 @@ binary: $(BINARIES)
 unwrap: $(UNWRAPPEDFILES)
 
 clean:
-	@rm -rf $(BINDIR) $(UNWRAPDIR)
+	rm -rf $(BINDIR) $(UNWRAPDIR)
 
 cleanall: clean
-	@rm -rf $(DLDIR)
+	rm -rf $(DLDIR)
 
 $(DLDIR):
-	@mkdir -p $@
+	mkdir -p $@
 $(BINDIR):
-	@mkdir -p $@
+	mkdir -p $@
 $(UNWRAPDIR):
-	@mkdir -p $@
+	mkdir -p $@
 
 $(UNWRAPDIR)/%.img: $(BINDIR)/%.bin | $(UNWRAPDIR)
 	../md380-fw --unwrap $< $@
@@ -53,5 +53,5 @@ $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 	@test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $$(cat firmware_files.txt | grep $(basename $(notdir $@)) | cut -f5) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
 
 $(DLDIR)/%: | $(DLDIR)
-	@which curl >>/dev/null #Check that we have curl.
+	which curl >>/dev/null #Check that we have curl.
 	curl -f -L $$(cat firmware_files.txt | grep $(notdir $@) | cut -f2) -o $@
