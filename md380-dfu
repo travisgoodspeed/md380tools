@@ -226,6 +226,15 @@ def download_firmware(dfu, data):
             0x20000] #e
     block_ends  = [0x11, 0x41, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81]
     try:
+        #Are we in the right mode?
+        mfg=dfu.get_string(1);
+        if mfg!=u'AnyRoad Technology':
+            print("""ERROR: You forgot to enter the bootloader.
+Please hold PTT and the button above it while rebooting.  You
+should see the LED blinking green and red, and then your
+radio will be radio to accept this firmware update.""");
+            sys.exit(1);
+
         print("Beginning firmware upgrade.")
         status, timeout, state, discarded = dfu.get_status()
         assert state == State.dfuIDLE
