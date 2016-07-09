@@ -17,4 +17,22 @@ void red_led(int on);
 void lcd_background_led(int on);
 
 
+typedef struct gfx_pal {
+  long	ncol;
+  long  someb; 
+  const char * palptr;
+  } gfx_pal;
+
+
  
+typedef struct gfx_bitmap {
+  short            width;
+  short            height;
+  short            bytesperline;
+  short            bitsperpixel;
+  const char *     pixptr;
+  const gfx_pal *  palstruct;
+  const gfx_pal *  not_known;
+  } gfx_bitmap;
+                            
+extern const gfx_bitmap bmp_eye;

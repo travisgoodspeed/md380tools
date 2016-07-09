@@ -259,6 +259,19 @@ if __name__== '__main__':
     merger.hookbl(0x0803ef64, sapplet.getadr("dmr_apply_privsquelch_hook"),0); #Private calls.
     merger.hookbl(0x0803eea0, sapplet.getadr("dmr_apply_squelch_hook"),0);     #Public calls.
 
+    # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
+    print_ant_sym_hook_list=[
+       0x0802047c,
+       0x0802048a,
+       0x080208b0,
+       0x080208bc,
+       0x080328de,
+       0x08032932,
+       0x0803297a
+    ];
+    for adr in print_ant_sym_hook_list:
+        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
+
     # init the addl global config struct from spi flash
     merger.hookbl(0x080440a6,sapplet.getadr("init_global_addl_config_hook"),0);
 

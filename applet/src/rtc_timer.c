@@ -17,6 +17,8 @@
  
 static int flag=0;
 
+
+
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() {
 #ifdef DEBUG
@@ -82,14 +84,15 @@ void print_rx_screen(unsigned int bg_color) {
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);
   gfx_set_bg_color(0xff000000);
+                                              
 }
 
-void rx_screen_green_hook(char *bmp, int idx, uint64_t pos) {
+void rx_screen_green_hook(char *bmp, int x, int y) {
   if (global_addl_config.userscsv == 1) {
     print_rx_screen(0x00ff00);
   } else {
-    gfx_drawbmp(bmp, idx, pos);
-  }
+    gfx_drawbmp(bmp, x, y);
+    }
 }
 
 void rx_screen_gray_hook(void *bmp, int idx, uint64_t pos) {
