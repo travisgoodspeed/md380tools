@@ -135,8 +135,18 @@ void dmr_apply_squelch_hook(char *firstthing, char *mode){
   if(*mode==0x08 && global_addl_config.promtg==1){
     printf("Applying monitor mode to a public call.\n");
     *mode=0x09;
+    
+    /* I'm not quite sure what this function does, but it must be
+       called before dmr_apply_squelch() if the squelch mode is being
+       changed. --Travis
+     */
     dmr_before_squelch();
   }
+  
+  /* This is really OSMboxPost().  We should probably change up these
+     names now that we're figuring out what the functions really
+     do. --Travis
+   */
   dmr_apply_squelch(firstthing,mode);
 }
 
