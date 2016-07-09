@@ -95,11 +95,11 @@ void rx_screen_green_hook(char *bmp, int x, int y) {
     }
 }
 
-void rx_screen_gray_hook(void *bmp, int idx, uint64_t pos) {
+void rx_screen_gray_hook(void *bmp, int x, int y) {
   if (global_addl_config.userscsv == 1) {
     print_rx_screen(0x888888);
   } else {
-    gfx_drawbmp(bmp, idx, pos);
+    gfx_drawbmp(bmp, x, y);
   }
 }
 
