@@ -22,6 +22,7 @@ flashdb:
 	cd db && $(MAKE)
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
+	wc -l data.csv #count ID in database and show
 	cat data.csv >> data
 	./md380-tool spiflashwrite data 0x100000
 dist: applets
