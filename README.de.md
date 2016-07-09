@@ -57,6 +57,53 @@ auf.
 <note tip>**Firmware mit dem Tytera Updater einspielen:**
 Die gepatchte Firmware lässt sich auch mit dem Tytera Updater unter Windows ins Funkgerät flashen. Hierzu nimmt man einfach die ''experiment.bin'' aus dem Verzeichnis ''applet'' und spielt diese mit dem Updater ein.</note>
 
+##Installation unter Windows
+###Installation von Git
+Zunächst installiert man Git für Windows, indem man es unter https://git-scm.com/download/win herunterlädt und den Installationsprozess durchläuft. Am Ende der Installation wählt man günstigerweise die Option 'use windows default console window'.
+
+###Installation von Make
+Make für Windows lässt sich unter http://gnuwin32.sourceforge.net/packages/make.htm herunterladen.
+
+###Installationo von Python 2.7
+Zunächst lädt man Python 2.7 von  https://www.python.org/downloads/ runter und installiert dies in das Verzeichnis `C:\Python27`. Dort macht man eine Kopie von `python.exe` benennt diese um in `python2.exe`.
+
+Anschließend sind folgende Pfadangaben zu den Umgebungsvariablen hinzuzufügen durch Rechts-Klick auf den Start-Button -> System -> Erweiterte Systemeinstellungen -> Umgebungsvariablen. Hier die Variable "Path" auswählen und bearbeiten. Folgende Pfade hinzufügen:
+ C:\Program Files\GnuWin32\bin
+ C:\Python27
+
+###Installation von gcc-arm-none-eabi
+Unter https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update den Cross-Compiler tunerladen und am Ende der Installatin die Option 'add path to environment variable' anwählen, bevor man die Installation abschließt.
+
+nach erfolgter Installation, bitte das Rebooten des PCs nicht vergessen, damit alle Änderungen aktiv werden!
+
+###Installation von PyUSB
+PyUSB unter https://sourceforge.net/projects/pyusb/ herunterladen und entpacken. Mit "Start" -> "Ausführen" -> "cmd.exe" eine Eingabeaufforderung öffnen, mit `cd [zielordner]` in den Zielordner wechseln und mit `python setup.py install` das Paket installieren.
+
+###libusb-win32 installieren
+Unter https://sourceforge.net/projects/libusb-win32/ die libusb herunterladen, entpacken. Den `bin`-Ordner öffnen und das Programmierkabel in den Computer und das Funkgerät stecken.
+
+Nun das Funkgerät bei gedrückter PTT-Taste und gleichzeitig gedrückter oberer Funktionstaste einschalten und damit in den Flash-Modus schalten.
+
+Nun das Programm `inf-wizard.exe` starten -> Next
+Auswahl `digital radio in USB mode` -> Next -> Next
+Die .inf-Datei speichern und anschließend auf `Install Now` klicken.
+
+###Lokale Repository-Kopie erstellen
+Git aus dem Start-Menü starten und den Punkt 'Clone Existing Repository' auswählen.
+
+Source: http://github.com/travisgoodspeed/md380tools
+Target: C:/Users/post2/Documents/git/travisgoodspeed/md380tools
+
+Nach erfolgtem Clone-Vorgang:
+Den Ordner `md380tools` suchen, Rechtsklick -> Git Bash Here
+
+Um die experimentelle Firmware zu kompilieren und ins Radio zu flashen (hierbei das Radio in den Flash-Mode schalten mit PTT+oberer Taste beim Einschalten), folgende Befehlssequenz eingeben:
+`make clean flash`
+
+Um die User-Datenbank einzuspielen, das Radio im Normalbetrieb anschließen (einfach einschalten) und den Befehl `make flashdb` eingeben.
+
+Im Anschluss wird die Nutzerdatenbank aus dem Internet heruntergeladen, entsprechend aufbereitet und in das Funkgerät überspielt. Das Funkgerät wird nach erfolgtem Einspielen automatisch neu gestartet.
+ 
 ##Bisher verfügbare Features
 ###Freischaltung des Empfangs aller Talkgroups und Private Calls
 Die Firmware bietet seit Anfang an die Möglichkeit, sämtliche Talkgroups eines Repeaters, also nicht nur diejenigen, die in einer RX-Grouplist aufgeführt werden, sowie alle Private Calls, egal an welche ID, zu empfangen. Diese Funktion bietet die Möglichkeit, neben der Orientierung auf fremden Repeatern auch einen Bug der original Firmware ein wenig zu umgehen: Das Ignorieren des Admit Kriteriums. Durch die Tatsache, dass nun jede Talkgroup gehört werden kann, können Kollisionen mit anderen Signalen händisch vermieden werden.
