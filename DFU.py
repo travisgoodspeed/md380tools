@@ -94,7 +94,7 @@ class DFU(object):
     def get_string(self,i=0):
         """Gets a USB descriptor string, to distinguish firmware types."""
         import usb;
-        return usb.util.get_string(self._device,i);
+        return usb.util.get_string(self._device,i,None);
 
     def bcd(self,b):
         """Converts a byte from BCD to integer."""
