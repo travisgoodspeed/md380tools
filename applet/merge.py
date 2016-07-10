@@ -214,6 +214,9 @@ if __name__== '__main__':
     # skip ..."unused code"
     merger.hookstub(0x0800d8c8+4,0x0800d92e+1);
     
+    # Hook the startup AES check.
+    merger.hookbl(0x0804534c, sapplet.getadr("aes_startup_check_hook"),0);
+    
     # Patch a single call in the wrapper function so catch all
     # aes_loadkey() calls.
     merger.hookbl(0x080356aa,sapplet.getadr("aes_loadkey_hook"),0);

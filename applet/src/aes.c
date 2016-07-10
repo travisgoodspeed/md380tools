@@ -100,6 +100,29 @@ const char* getmotorolabasickey(int i){
   }
 }
 
+/* This hook intercepts calls to an initial AES check at startup that
+   might (or might not) be related to the ALPU-MP chip.
+*/
+void aes_startup_check_hook(){
+  printf("Performing AES startup check.\n");
+  //Call back to the original function.
+  int *toret=aes_startup_check();
+  
+  
+  /* aes_startup_check() will set the byte at 0x2001d39b to 0x42,
+     which is then checked repeatedly elsewhere in the code, causing
+     mysterious things to fail.  If we find that this check has failed,
+     let's force it back the other way and hope for the best.
+  */
+  if(*((char*)0x2001d39b)!=0x42){
+    printf("Startup AES check failed.  Attempting to forge the results.\n");
+    printf("*0x2001d39b = 0x%02x\n", *((char*)0x2001d39b));
+    
+    //Force the correct value.
+    *((char*)0x2001d39b)=0x42;
+  }
+}
+
 /* This hook intercepts calls to aes_loadkey(), so that AES keys can
    be printed to the dmesg log.
 */
