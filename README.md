@@ -192,9 +192,12 @@ with 16MByte SPI-Flash.**
     or (all steps included): (very experimental)
 
        make flashdb  
-    
 
 After successfully flashing, the radio will be restarted.
+
+To check the type / size of SPI-Flash
+
+    md380-tool spiflashid    
 
 ##Firmware Compilation##
 
