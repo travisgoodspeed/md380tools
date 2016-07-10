@@ -89,7 +89,9 @@ c5000_spi0_readreg = 0x0803e2f5;
 c5000_spi0_writereg = 0x0803e2a9;
 
 /* aes */
+aes_loadkey = 0x08035739;
 aes_cipher = 0x080356b1;
+
 
 /* Unknown AMBE2+ thing. */
 ambe_encode_thing = 0x08050d91;

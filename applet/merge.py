@@ -214,6 +214,10 @@ if __name__== '__main__':
     # skip ..."unused code"
     merger.hookstub(0x0800d8c8+4,0x0800d92e+1);
     
+    # Patch a single call in the wrapper function so catch all
+    # aes_loadkey() calls.
+    merger.hookbl(0x080356aa,sapplet.getadr("aes_loadkey_hook"),0);
+    
     #Function that calls aes_cipher() twice.  When are these called?
     merger.hookbl(0x0802177c,sapplet.getadr("aes_cipher_hook"),0);
     merger.hookbl(0x0802182c,sapplet.getadr("aes_cipher_hook"),0);

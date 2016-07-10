@@ -100,12 +100,29 @@ const char* getmotorolabasickey(int i){
   }
 }
 
+/* This hook intercepts calls to aes_loadkey(), so that AES keys can
+   be printed to the dmesg log.
+*/
+char *aes_loadkey_hook(char *key){
+  //Print the key that we are to load.
+  printf("aes_loadkey (0x%08x): ",key);
+  printhex(key,16);
+  printf("\n");
+  
+  key=aes_loadkey(key);
+  return key;
+}
+
 /* This hook intercepts calls to aes_cipher(), which is used to turn
    the 128-bit Enhanced Privacy Key into a 49-bit sequence that gets
    XORed with the audio before transmission and after reception.
    
    By changing the output to match Motorola's Basic Privacy, we can
    patch the MD380 to be compatible with a Motorola network.
+   
+   The function is also used for two startup checks, presumably
+   related to the ALPU-MP copy protection chip.  If those checks are
+   interfered with, the radio will boot to a blank white screen.
  */
 char *aes_cipher_hook(char *pkt){
   char *res;
