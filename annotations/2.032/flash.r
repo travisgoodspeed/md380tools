@@ -656,7 +656,7 @@ af+ 0x8020a58 3020 F_28
 af+ 0x8021624 48 F_30
 af+ 0x8021654 30 F_31
 af+ 0x8021672 26 F_32
-af+ 0x802168c 484 F_803
+af+ 0x802168c 484 aes_startup_check
 af+ 0x8021870 18 F_804
 af+ 0x8021882 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x8021894 18 Get_Welcome_Line2_from_spi_flash
@@ -1274,7 +1274,7 @@ af+ 0x803568c 8 F_350
 af+ 0x8035694 10 F_351
 af+ 0x80356a8 8 F_352
 af+ 0x80356b0 136 aes_cipher
-af+ 0x8035738 236 F_354
+af+ 0x8035738 236 aes_loadkey
 af+ 0x8035824 92 F_844
 af+ 0x8035880 42 F_355
 af+ 0x80358aa 68 F_356
