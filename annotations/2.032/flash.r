@@ -1799,8 +1799,8 @@ af+ 0x8046c94 2 F_177_Nice
 af+ 0x8046c98 8 F_1024
 af+ 0x8046ca0 22 PWR_GetFlagStatus
 af+ 0x8046cb6 14 Function_PWR_CR__
-af+ 0x8046cd0 232 F_515
-af+ 0x8046db8 10 F_516
+af+ 0x8046cd0 232 Delay
+af+ 0x8046db8 10 Delay_char
 af+ 0x8046dc2 62 maybe_get_random_from_rtc
 af+ 0x8046e00 156 alpu_check_licence
 af+ 0x8046eb0 2 F_180_Nice
@@ -1840,7 +1840,7 @@ af+ 0x8047b0c 2 F_187_Nice
 af+ 0x8047b10 182 F_188
 af+ 0x8047c64 2 F_189_Nice
 af+ 0x8047c68 16 F_555
-af+ 0x8047c7c 734 F_191
+af+ 0x8047c7c 734 Start_2_more_tasks__init_vocoder_tasks__Q
 af+ 0x8047f5c 1700 F_4524
 af+ 0x8048600 312 F_4525
 af+ 0x8048738 104 F_4526
