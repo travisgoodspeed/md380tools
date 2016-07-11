@@ -1230,7 +1230,8 @@ CCa 0x803292a Ant symbol
 CCa 0x8032950 clear ant_signal
 CCa 0x8032972 Ant symbol
 af+ 0x80329c0 104 OSTimeDly
-af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
+af+ 0x8032a3c 146 licence_check
+CCa 0x8032a5e 2 PWR_FLAG_SB: StandBy flag This flag indicates that the system was resumed from StandBy mode
 af+ 0x8032ace 28 F_337
 af+ 0x8032aea 10 F_114
 af+ 0x8032af4 24 F_115
