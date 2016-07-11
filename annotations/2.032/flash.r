@@ -1230,7 +1230,8 @@ CCa 0x803292a Ant symbol
 CCa 0x8032950 clear ant_signal
 CCa 0x8032972 Ant symbol
 af+ 0x80329c0 104 OSTimeDly
-af+ 0x8032a3c 146 Function_Function_Function_Function_Called_Big_I2C_Function
+af+ 0x8032a3c 146 licence_check
+CCa 0x8032a5e 2 PWR_FLAG_SB: StandBy flag This flag indicates that the system was resumed from StandBy mode
 af+ 0x8032ace 28 F_337
 af+ 0x8032aea 10 F_114
 af+ 0x8032af4 24 F_115
@@ -1791,17 +1792,17 @@ af+ 0x804690c 22 Not_Big_I2C_Function33
 af+ 0x8046914 14 F_506
 af+ 0x8046922 38 F_507
 af+ 0x8046948 38 F_508
-af+ 0x804696e 186 Not_Big_I2C_Function3
-af+ 0x8046a28 306 Big_I2C_Function
-af+ 0x8046b5a 236 Verry_Big_Function_with_I2C1
+af+ 0x804696e 186 alpu_transfer_init
+af+ 0x8046a28 306 alpu_transfer_read
+af+ 0x8046b5a 236 alpu_transfer_write
 af+ 0x8046c94 2 F_177_Nice
 af+ 0x8046c98 8 F_1024
 af+ 0x8046ca0 22 PWR_GetFlagStatus
 af+ 0x8046cb6 14 Function_PWR_CR__
 af+ 0x8046cd0 232 F_515
 af+ 0x8046db8 10 F_516
-af+ 0x8046dc2 62 F_179
-af+ 0x8046e00 156 Function_Function_Function_Called_Big_I2C_Function
+af+ 0x8046dc2 62 maybe_get_random_from_rtc
+af+ 0x8046e00 156 alpu_check_licence
 af+ 0x8046eb0 2 F_180_Nice
 af+ 0x8046eb4 8 F_520
 af+ 0x8046ebc 8 F_521
@@ -2061,7 +2062,7 @@ af+ 0x804fe18 6 I2C_ReceiveData
 af+ 0x804fe1e 52 I2C_GetLastEvent
 af+ 0x804fe52 66 I2C1_CheckEvent
 af+ 0x804fe94 212 F_653
-af+ 0x804ff74 244 Function_Called_Big_I2C_Function
+af+ 0x804ff74 244 alpu_xor
 af+ 0x8050068 270 Function_Function_Called_Big_I2C_Function
 af+ 0x8050176 2632 F_656
 af+ 0x8050bcc 102 F_238
