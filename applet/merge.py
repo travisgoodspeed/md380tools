@@ -304,6 +304,31 @@ if __name__== '__main__':
     for adr in beep_process_list:
         merger.hookbl(adr,sapplet.getadr("F_294_replacement"),0);
 
+######### i2c hooks
+    I2C_GenerateSTART_hook_list=[
+    0x8046a3a, 0x8046ac6, 0x8046b6c];
+    for adr in I2C_GenerateSTART_hook_list:
+        merger.hookbl(adr,sapplet.getadr("I2C_GenerateSTART_hook"),0);
+        
+    I2C_GenerateSTOP_hook_list=[
+    0x8046b50, 0x8046c3c];
+    for adr in I2C_GenerateSTOP_hook_list:
+        merger.hookbl(adr,sapplet.getadr("I2C_GenerateSTOP_hook"),0);
+    
+    I2C_ReceiveData_hook_list=[
+    0x8046b1c];
+    for adr in I2C_ReceiveData_hook_list:
+        merger.hookbl(adr,sapplet.getadr("I2C_ReceiveData_hook"),0);
+        
+    I2C_Send7bitAddress_hook_list=[
+    0x8046a66, 0x8046af2, 0x8046b98];
+    for adr in I2C_Send7bitAddress_hook_list:    
+        merger.hookbl(adr,sapplet.getadr("I2C_Send7bitAddress_hook"),0);
+        
+    I2C_SendData_hook_list=[
+    0x8046a90, 0x8046bc2, 0x8046c06];
+    for adr in I2C_SendData_hook_list:
+        merger.hookbl(adr,sapplet.getadr("I2C_SendData_hook"),0);
 
 ##########  Debug and training hooks
     Create_MenuEntrylist=[

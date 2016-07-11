@@ -42,6 +42,12 @@ md380_spiflash_block_erase64k          = 0x802fbb7;
 md380_spiflash_sektor_erase4k          = 0x802fb83;
 md380_spi_sendrecv                     = 0x802fdc9;
 
+/* i2c */
+md380_I2C_GenerateSTART                = 0x804fdc5;
+md380_I2C_GenerateSTOP                 = 0x804fde1;
+md380_I2C_ReceiveData                  = 0x804fe19;
+md380_I2C_Send7bitAddress              = 0x804fdfd;
+md380_I2C_SendData                     = 0x804fe13;
 
 /* Function that handles uC/OS-II settings */
 

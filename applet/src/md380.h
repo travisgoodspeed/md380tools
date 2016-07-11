@@ -87,6 +87,13 @@ void    md380_spiflash_disable();
 void    md380_spiflash_wait();
 uint8_t md380_spi_sendrecv(INT8U data); // SPI1
 
+// md380_i2c // stolen from ../../lib/src/peripherals/stm32f4xx_i2c.c
+void	md380_I2C_GenerateSTART(I2C_TypeDef* I2Cx, FunctionalState NewState);
+void	md380_I2C_GenerateSTOP(I2C_TypeDef* I2Cx, FunctionalState NewState);
+uint8_t	md380_I2C_ReceiveData(I2C_TypeDef* I2Cx);
+void	md380_I2C_Send7bitAddress(I2C_TypeDef* I2Cx, uint8_t Address, uint8_t I2C_Direction);
+void 	md380_I2C_SendData(I2C_TypeDef* I2Cx, uint8_t Data);
+
 
 //! Function that handles uC/OS-II settings
 //Task
