@@ -21,7 +21,7 @@ void I2C_GenerateSTART_hook(I2C_TypeDef* I2Cx, FunctionalState NewState) {
 
 #ifdef I2CPRINT  
   sleep(50);
-  printf("%s r: 0x%x S:%x\n", "GSA", return_addr,NewState);        
+  printf("%s RA: 0x%x S:%x\n", "GSA", return_addr,NewState);        
 #endif
   md380_I2C_GenerateSTART(I2Cx, NewState);
 }
