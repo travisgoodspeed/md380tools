@@ -2066,6 +2066,7 @@ af+ 0x804ff74 244 alpu_xor
 af+ 0x8050068 270 Function_Function_Called_Big_I2C_Function
 af+ 0x8050176 2632 alpu_compare_cpu_crypt_vs_alpu_crypt
 CCa 0x805017a first_8byte_seed_then_10byte_from_alpu
+CCa 0x805023e secret
 af+ 0x8050bcc 102 F_238
 af+ 0x8050c40 2 F_239_Nice
 af+ 0x8050c44 328 F_4522
