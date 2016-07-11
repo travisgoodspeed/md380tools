@@ -7,7 +7,7 @@
 
 
 # Begin by opening the application in R2 with this script.
-# r2 -a arm -m 0x0800C000 -b 16 -i flash.r ../../firmware/D002.032.bin
+# radare2 -a arm -m 0x0800C000 -b 16 -i flash.r ../../firmware/D002.032.bin
 
 # MD5 (../../firmware/D002.032.bin) = 8295594d00cb705eac7cd812642fccf2
 
