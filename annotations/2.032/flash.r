@@ -1801,7 +1801,7 @@ af+ 0x8046ca0 22 PWR_GetFlagStatus
 af+ 0x8046cb6 14 Function_PWR_CR__
 af+ 0x8046cd0 232 F_515
 af+ 0x8046db8 10 F_516
-af+ 0x8046dc2 62 F_179
+af+ 0x8046dc2 62 maybe_get_random_from_rtc
 af+ 0x8046e00 156 alpu_check_licence
 af+ 0x8046eb0 2 F_180_Nice
 af+ 0x8046eb4 8 F_520
