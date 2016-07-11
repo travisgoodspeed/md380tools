@@ -2064,7 +2064,7 @@ af+ 0x804fe52 66 I2C1_CheckEvent
 af+ 0x804fe94 212 F_653
 af+ 0x804ff74 244 alpu_xor
 af+ 0x8050068 270 Function_Function_Called_Big_I2C_Function
-af+ 0x8050176 2632 F_656
+af+ 0x8050176 2632 alpu_compare_cpu_crypt_vs_alpu_crypt
 af+ 0x8050bcc 102 F_238
 af+ 0x8050c40 2 F_239_Nice
 af+ 0x8050c44 328 F_4522
