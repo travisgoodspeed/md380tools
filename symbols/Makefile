@@ -12,7 +12,7 @@ images:
 
 
 test: all images
-	echo "" | ./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM) >symbols_d02_034
+	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM)
 
 run: symgrate images
 	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM) >symbols_d02_034
