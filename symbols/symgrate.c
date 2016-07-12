@@ -131,11 +131,11 @@ int findsymbol(const char *name, int adr){
   if(dadr && dscore>8)
     printf("%-20s = 0x%08x; /* %i byte match */\n",
 	   name,
-	   adr+isfunction,
+	   dadr+isfunction,
 	   dscore);
   else if(dadr)
     printf("/* %s has bad match of %i points at 0x%08x*/\n",
-	   name, dscore, adr+isfunction);
+	   name, dscore, dadr+isfunction);
   else
     printf("/* %s not found. */\n",
 	   name);
