@@ -1,4 +1,4 @@
-annotations for D013.009.img
+# annotations for D013.009.img
 
 af+ 0x8048c36 62 maybe_get_random_from_rtc
 af+ 0x8048c96 156 alpu_check_licence
