@@ -290,7 +290,7 @@ af+ 0x8016dcc 152 Create_Menu_Entry_VOX
 CCa 0x8016e60 ConfigData + 0x17 (Byte) F_5080
 af+ 0x8016f90 146 F_5081
 CCa 0x8017006 Set ConfigData + 0xb (Byte) F_5081
-af+ 0x8017028 180 Create_Menu_Entry_RadioSettings
+af+ 0x8017028 180 Create_Menu_Entry_RadioSettingsDateTime
 CCa 0x8017070 0x80171e8 Edit_Time_Back
 CCa 0x8017074 0x80170f0 Edit_Time
 CCa 0x8017082 ... Time
