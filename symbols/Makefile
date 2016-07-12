@@ -8,11 +8,13 @@ all: symgrate run
 clean:
 	rm -f symgrate symbols_*
 images:
-	cd ../firmware && make all
+	cd ../firmware && $(MAKE) all
+
 
 test: all images
 	echo "" | ./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM) >symbols_d02_034
-run: all images
+
+run: symgrate images
 	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM) >symbols_d02_034
 	./symgrate $(GOLD) $(UNWRAPPED)/D003.008.img <$(GOLDSYM) >symbols_d03_008
 	./symgrate $(GOLD) $(UNWRAPPED)/D013.009.img <$(GOLDSYM) >symbols_d13_009
