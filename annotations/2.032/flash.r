@@ -325,7 +325,7 @@ CCa 0x801744c 0x80174fc Edit_Time_Confirm
 CCa 0x8017450 ... 0.1.:.2.8.:.0.0
 af+ 0x8017470 134 Create_Menu_Entry_QuickText
 CCa 0x80174e8 Q.u.i.c.k...T.e.x.t
-af+ 0x80174fc Edit_Time_Confirm
+af+ 0x80174fc 104 Edit_Time_Confirm
 CCa 0x8017544 0x80175dc Edit_Time5_SetToRTC 
 CCa 0x8017548 Back
 af+ 0x80175dc 54 Edit_Time5_SetToRTC
@@ -1071,7 +1071,7 @@ af+ 0x802e988 92 F_4385
 af+ 0x802e9f0 54 F_824
 af+ 0x802ea44 202 F_4386
 af+ 0x802eb68 212 F_4444
-af+ 0x802ec54 Create_Menu_Entry_Inbox
+af+ 0x802ec54 504 Create_Menu_Entry_Inbox
 af+ 0x802f9bc 172 F_4138
 af+ 0x802fb00 130 F_300
 af+ 0x802fb82 52 spiflash_sektor_erase4k
