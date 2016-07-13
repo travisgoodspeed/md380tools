@@ -10,6 +10,10 @@ clean:
 images:
 	cd ../firmware && $(MAKE) all
 
+
+test: all images
+	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM)
+
 run: symgrate images
 	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM) >symbols_d02_034
 	./symgrate $(GOLD) $(UNWRAPPED)/D003.008.img <$(GOLDSYM) >symbols_d03_008

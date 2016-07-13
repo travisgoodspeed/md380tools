@@ -44,7 +44,7 @@ char *Dst;
 
 //These macros grab a byte from the device.
 #define src8(x) (*(Src+x-BASE))
-#define dst8(x) (*(Src+x-BASE))
+#define dst8(x) (*(Dst+x-BASE))
 
 //These macros grab a word from the device.
 #define src32(x) (*((int*)(Src+x-BASE)))
@@ -123,7 +123,7 @@ int findsymbol(const char *name, int adr){
       
       if(score>dscore){
 	dscore=score;
-	dadr=adr;
+	dadr=BASE+i;
       }
     }
   }
@@ -131,11 +131,11 @@ int findsymbol(const char *name, int adr){
   if(dadr && dscore>8)
     printf("%-20s = 0x%08x; /* %i byte match */\n",
 	   name,
-	   dadr+isfunction,
+	   dadr|isfunction,
 	   dscore);
   else if(dadr)
     printf("/* %s has bad match of %i points at 0x%08x*/\n",
-	   name, dscore, dadr+isfunction);
+	   name, dscore, dadr|isfunction);
   else
     printf("/* %s not found. */\n",
 	   name);
@@ -216,7 +216,6 @@ int main(int argc, char **argv){
   //Load the source and destination buffers.
   loadbuffer(Src,argv[1]);
   loadbuffer(Dst,argv[2]);
-  
   
   printf("/* Symbols for %s imported from %s. */\n",
 	 argv[2],
