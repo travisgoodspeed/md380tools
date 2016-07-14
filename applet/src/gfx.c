@@ -131,6 +131,6 @@ void print_date_hook(void) {  // copy from the md380 code
 void print_ant_sym_hook(char *bmp, int x, int y) {
   gfx_drawbmp(bmp, x, y);
   if(global_addl_config.promtg==1) {
-    gfx_drawbmp((char *) &bmp_eye, 50, 1);
+    gfx_drawbmp((char *) &bmp_eye, 65, 1);
     }
   }
