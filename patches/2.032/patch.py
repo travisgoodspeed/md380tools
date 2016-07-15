@@ -43,6 +43,31 @@ if __name__ == '__main__':
                     0x0809cf00+1
     );
     
+
+    #Disable the ALPU Licence Check (vocoder version)
+
+    patcher.nopout(0x8032a54);
+    patcher.nopout(0x8032a54+2);
+    patcher.nopout(0x8032a6a);
+    patcher.nopout(0x8032a6a+2);
+    patcher.nopout(0x8032a80);
+    patcher.nopout(0x8032a80+2);
+    patcher.nopout(0x8032a96);
+    patcher.nopout(0x8032a96+2);
+    patcher.nopout(0x8032aac);
+    patcher.nopout(0x8032aac+2);
+    patcher.nopout(0x8032ac2);
+    patcher.nopout(0x8032ac2+2);
+    patcher.nopout(0x8046fda);
+    patcher.nopout(0x8046fda+2);
+    patcher.nopout(0x804785a);
+    patcher.nopout(0x804785a+2);
+    patcher.nopout(0x8047b20);
+    patcher.nopout(0x8047b20+2);
+    patcher.nopout(0x8047f6c);
+    patcher.nopout(0x8047f6c+2);
+    patcher.nopout(0x8048904);
+    patcher.nopout(0x8048904+2);
     
     #This stub calls the target RESET vector,
     #if it's not FFFFFFFF.
