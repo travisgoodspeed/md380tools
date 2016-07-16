@@ -48,4 +48,15 @@ if __name__ == '__main__':
     patcher.nopout((0x0804abc0+0x10))
     patcher.nopout((0x0804abc0+0x12))
 
+    #Marks the version as "md380tools"
+    patcher.setwstring(0x080cfcac,
+                      "MD380Tools Ver.");
+
+    #Change the manufacturer string.
+    patcher.setstring(0x080f86c8,
+                      "Travis Goodspeed KK4VCZ");
+    #Change the device name.
+    patcher.setstring(0x080cfff4,
+                      "Patched MD380");
+
     patcher.export("patched.img")
