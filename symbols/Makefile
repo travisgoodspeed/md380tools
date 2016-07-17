@@ -19,6 +19,7 @@ test: all images
 run: symgrate images
 	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM) >symbols_d02_034
 	./symgrate $(GOLD) $(UNWRAPPED)/D003.008.img <$(GOLDSYM) >symbols_d03_008
+	./symgrate $(GOLD) $(UNWRAPPED)/D003.020.img <$(GOLDSYM) >symbols_d03_020
 	./symgrate $(GOLD) $(UNWRAPPED)/D013.009.img <$(GOLDSYM) >symbols_d13_009
 	./symgrate $(GOLD) $(UNWRAPPED)/S003.012.img <$(GOLDSYM) >symbols_s03_012
 	./symgrate $(GOLD) $(UNWRAPPED)/S013.012.img <$(GOLDSYM) >symbols_s13_012
