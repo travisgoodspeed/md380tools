@@ -21,6 +21,8 @@ run: symgrate images
 	./symgrate $(GOLD) $(UNWRAPPED)/S003.012.img <$(GOLDSYM) >symbols_s03_012
 	./symgrate $(GOLD) $(UNWRAPPED)/S013.012.img <$(GOLDSYM) >symbols_s13_012
 	./symgrate $(GOLD) $(UNWRAPPED)/D013.014.img <$(GOLDSYM) >symbols_d13_014
+	./symgrate $(GOLD) $(UNWRAPPED)/S013.020.img <$(GOLDSYM) >symbols_s13_020
+	./symgrate $(GOLD) $(UNWRAPPED)/D013.020.img <$(GOLDSYM) >symbols_d13_020
 	wc -l symbols_*
 	@echo "These are temporary symbol files that will be overwritten."
 	@echo "Move them elsewhere before editing."
