@@ -10,6 +10,8 @@ clean:
 images:
 	cd ../firmware && $(MAKE) all
 
+symgrate: symgrate.c
+	cc -std=c99 symgrate.c -o symgrate
 
 test: all images
 	./symgrate $(GOLD) $(UNWRAPPED)/D002.034.img <$(GOLDSYM)
