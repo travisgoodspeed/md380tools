@@ -58,18 +58,18 @@ OS_ENTER_CRITICAL = 0x08041df9;
 OS_EXIT_CRITICAL  = 0x08041e01;
 
 /* OSSem Create Hook used the place from 2 OSSemCreate Calls */
-OSSemCreate       = 0x803da2c+1;
-OSSemPend         = 0x803da78+1;
-OSSemPost         = 0x803db68+1;
+OSSemCreate       = 0x803da2d;
+OSSemPend         = 0x803da79;
+OSSemPost         = 0x803db69;
 
-md380_OSMboxPost = 0x080303b4+1;
+md380_OSMboxPost = 0x080303b5;
 
 /* //! Functions and Variabes regarding the menu */
 main_menu                              = 0x8039c23;
 md380_create_menu_entry                = 0x800c731;
 md380_create_main_meny_entry           = 0x800c189;
 md380_menu_numerical_input             = 0x801a2d6;
-md380_create_menu_entry                = 0x800c731  ; 
+md380_create_menu_entry                = 0x800c731;
 md380_menu_entry_back                  = 0x800f452;
 md380_menu_entry_programradio          = 0x80127d0;
 
@@ -116,10 +116,10 @@ read_channel_switch = 0x0804d269;
 md380_dmr_id = 0x2001c65c;  /* the own dmr-id */
 
 /* Functions and Variabes from the "RTC Timer" - task */
-md380_f_4137 = 0x080290c8+1;
-md380_f_4520 = 0x08027ae8+1;
-md380_f_4098 = 0x0804c1d0+1;
-md380_f_4102 = 0x0804c2aa+1;
-md380_f_4225 = 0x0801f044+1;
+md380_f_4137 = 0x080290c9;
+md380_f_4520 = 0x08027ae9;
+md380_f_4098 = 0x0804c1d1;
+md380_f_4102 = 0x0804c2ab;
+md380_f_4225 = 0x0801f045;
 
 
