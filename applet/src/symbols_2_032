@@ -114,7 +114,7 @@ read_channel_switch = 0x0804d269;
 
 /* useful md380 variables */
 md380_dmr_id = 0x2001c65c;  /* the own dmr-id */
-md380_radio_config = 0x2001d39b; /* from the spiflash Security Registers */
+md380_radio_config = 0x2001affc; /* from the spiflash Security Registers */
 
 /* Functions and Variabes from the "RTC Timer" - task */
 md380_f_4137 = 0x080290c9;
