@@ -63,7 +63,7 @@ class MD380Graphics():
               name,
               gfx['width'],
               gfx['height'],
-              int(math.ceil(math.log(len(gfx['palette']))/math.log(2)*gfx['width']/8.0)),
+              int(math.ceil(math.log(len(gfx['palette']))/math.log(2))*gfx['width']/8.0),
               int(math.ceil(math.log(len(gfx['palette']))/math.log(2))),
               name,
               name ))
