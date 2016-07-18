@@ -183,6 +183,9 @@ int ambe_decode_wav(int *a1, signed int eighty, char *bitbuffer,
 		    int a4, short a5, short a6, int a7);
 
 
+void Write_Command_2display(uint8_t data);
+void Write_Data_2display(uint8_t data);
+
 //! Functions and Variabes regarding the beep_
 // not yet known ;)
 extern uint32_t * const beep_process_unkown;
@@ -193,6 +196,9 @@ void      md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct
 void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
 uint32_t md380_dmr_id;
+
+extern uint8_t  const md380_radio_config[]; // from spiflash Security Registers
+                                            // tunig parameter
 
 // debug and training stuff
 

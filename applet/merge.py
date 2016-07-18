@@ -204,6 +204,11 @@ if __name__== '__main__':
     merger.hookbl(0x080441f4,sapplet.getadr("OSSemCreate_hook"),0);
     merger.hookstub(0x080441f4+4,0x0804420c+1);
 
+    # display hooks
+    ## display flip workaround see issue #178 not necessary on 0X3.020
+    merger.hookbl(0x08031fde,sapplet.getadr("display_init_hook_1"),0);
+    merger.hookbl(0x0803200e,sapplet.getadr("display_init_hook_2"),0);
+
     # gfx hooks
     merger.hookbl(0x0802e4b0,sapplet.getadr("rx_screen_green_hook"),0);
     merger.hookbl(0x0802e582,sapplet.getadr("rx_screen_green_hook"),0);
