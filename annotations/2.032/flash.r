@@ -119,7 +119,7 @@ af+ 0x800d518 320 F_4141
 af+ 0x800d66c 178 F_4139
 af+ 0x800d730 2 F_4147
 af+ 0x800d732 188 F_4283
-af+ 0x800d7f4 114 F_4038
+af+ 0x800d7f4 114 Clear_Display
 af+ 0x800d86c 30 F_4039_something_write_to_screen
 af+ 0x800d88a 36 gfx_drawtext
 af+ 0x800d8ae 254 F_785_Print_Date_and_Time
@@ -1638,7 +1638,7 @@ af+ 0x804262c 28 F_4508
 af+ 0x804264c 28 F_4509
 af+ 0x8042668 34 F_4338
 af+ 0x804268a 30 F_4468
-af+ 0x80426a8 30 F_4043
+af+ 0x80426a8 30 Reboot_Radio
 af+ 0x80426c8 536 Init_ADC
 CCa 0x80426f4 Bat_Voltage
 af+ 0x80428e0 332 F_455
@@ -1685,7 +1685,9 @@ af+ 0x8043dd0 80 F_471
 CCa 0x8043df8 Bat_Voltage
 af+ 0x8043e28 64 F_163
 af+ 0x8043e70 8 F_164
-af+ 0x8043e78 268 F_4000
+af+ 0x8043e78 268 Powering_Down
+CCa 0x8043f32 P.o.w.e.r.i.n.g.
+CCa 0x8043f4e D.o.w.n.
 af+ 0x804403c 310 Start
 CCa 0x804408a ConfigData + 0x1  (byte) Start
 af+ 0x8044172 298 F_474
