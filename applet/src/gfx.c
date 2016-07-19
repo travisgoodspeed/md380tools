@@ -35,10 +35,12 @@ const gfx_bitmap bmp_eye    = { 12, 12, 6, 4, eye_pix, &eye_pal, 0};
 //! Draws text at an address by calling back to the MD380 function.
 void drawtext(wchar_t *text,
 	      int x, int y){
+#ifdef CONFIG_GRAPHICS
   gfx_drawtext(text,
 	       0,0,
 	       x,y,
 	       15); //strlen(text));
+#endif
 }
 //! Draws text at an address by calling back to the MD380 function.
 void drawascii(char *ascii,
@@ -48,11 +50,13 @@ void drawascii(char *ascii,
   for(int i=0;i<15;i++)
     wide[i]=ascii[i];
   
+#ifdef CONFIG_GRAPHICS
   //Draw the wide string, not the original.
   gfx_drawtext(wide,
 	       0,0,
 	       x,y,
 	       15); //strlen(text));
+#endif
 }
 
 void drawascii2(char *ascii,
@@ -65,7 +69,9 @@ void drawascii2(char *ascii,
         if (ascii[i]=='\0')
            break;
         }
+#ifdef CONFIG_GRAPHICS
   gfx_drawtext2(wide, x, y, 0);
+#endif
 }
 
 void green_led(int on) {
@@ -99,6 +105,7 @@ void lcd_background_led(int on) {
 
 
 void print_date_hook(void) {  // copy from the md380 code
+#ifdef CONFIG_GRAPHICS
   wchar_t wide[40];
   RTC_DateTypeDef RTC_DateStruct;
     md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
@@ -124,12 +131,14 @@ void print_date_hook(void) {  // copy from the md380 code
 
                    
 //  gfx_drawbmp((char *) &bmp_eye, 20, 2);
-             
+#endif //CONFIG_GRAPHICS             
 }
 
 void print_ant_sym_hook(char *bmp, int x, int y) {
+#ifdef CONFIG_GRAPHICS
   gfx_drawbmp(bmp, x, y);
   if(global_addl_config.promtg==1) {
     gfx_drawbmp((char *) &bmp_eye, 65, 1);
-    }
   }
+#endif
+}

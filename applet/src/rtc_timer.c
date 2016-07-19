@@ -38,6 +38,7 @@ void * f_4225_internel_hook() {
 
 
 void print_rx_screen(unsigned int bg_color) {
+#ifdef CONFIG_GRAPHICS
   extern int g_dst;  // transferbuffer users.csv
   extern int g_src;
 
@@ -84,23 +85,27 @@ void print_rx_screen(unsigned int bg_color) {
   gfx_select_font((void *) 0x80d0fac);
   gfx_set_fg_color(0xff8032);
   gfx_set_bg_color(0xff000000);
-                                              
+#endif //CONFIG_GRAPHICS
 }
 
 void rx_screen_green_hook(char *bmp, int x, int y) {
+#ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     print_rx_screen(0x00ff00);
   } else {
     gfx_drawbmp(bmp, x, y);
-    }
+  }
+#endif //CONFIG_GRAPHICS
 }
 
 void rx_screen_gray_hook(void *bmp, int x, int y) {
+#ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     print_rx_screen(0x888888);
   } else {
     gfx_drawbmp(bmp, x, y);
   }
+#endif //CONFIG_GRAPHICS
 }
 
 
@@ -109,7 +114,7 @@ void rx_screen_gray_hook(void *bmp, int x, int y) {
 
 
 // Lab hooks - for training only :)
-
+#ifdef CONFIG_GRAPHICS
 void f_4137_hook() {
   void *return_addr;
   void *sp;
@@ -146,6 +151,7 @@ void f_4102_hook() {
   printf("Call md380_f_4102 from r: %x s: %x\n", return_addr,sp);
   md380_f_4102();
 }
+#endif //CONFIG_GRAPHICS
 
 // Takes a positive(!) integer amplitude and computes 200*log10(amp),
 // centi Bel, approximtely. If the given parameter is 0 or less, this
@@ -194,6 +200,7 @@ int main(void)
 
 void f_4225_hook()
 {
+#ifdef CONFIG_GRAPHICS
   static int rx_active; // flag to syncronice this hook ( operatingmode == 0x11 is also on rx seeded)
   static int fullscale_offset = 0;
   static uint32_t lastframe=0;
@@ -270,4 +277,5 @@ void f_4225_hook()
   }
 
 md380_f_4225();
+#endif
 }

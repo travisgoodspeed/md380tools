@@ -23,7 +23,7 @@ uint32_t ambe_encode_frame_cnt;
 
 int ambe_encode_thing_hook(char *a1, int a2, int *a3, int a4,
 		      short a5, short a6, short a7, int a8){
-
+#ifdef CONFIG_AMBE
   short *s8;
   int i=0;
   int max=0;
@@ -40,6 +40,9 @@ int ambe_encode_thing_hook(char *a1, int a2, int *a3, int a4,
   ambe_encode_frame_cnt++;
   return ambe_encode_thing(a1,a2,a3,a4,
 			   a5,a6,a7,a8);
+#else
+  return 0xdeadbeef;
+#endif
 }
 
 
@@ -65,8 +68,9 @@ int ambe_unpack_hook(int a1, int a2, char length, int a4){
   md380_putc(NULL,'\n');
 #endif //AMBECORRECTEDPRINT
 
-  
+#ifdef CONFIG_AMBE
   ambe_unpack(a1,a2,length,a4);
+#endif //CONFIG_AMBE
 
   /* Dump the new, uncorrected AMBE frame.  Bits won't make sense
      until after decoding. */
@@ -117,10 +121,12 @@ int ambe_decode_wav_hook(int *a1, signed int eighty, char *bitbuffer,
   OS_EXIT_CRITICAL(ambestate);
 #endif //AMBEPRINT
 
-  
+  int toret=0xdeadbeef;
+#ifdef CONFIG_AMBE
   //First we call the original function.
-  int toret=ambe_decode_wav(a1, eighty, bitbuffer,
-			    a4, a5, a6, a7);
+  toret=ambe_decode_wav(a1, eighty, bitbuffer,
+			a4, a5, a6, a7);
+#endif
 
   /* Print the parameters
   printf("ambe_decode_wav(0x%08x, %d, 0x%08x,\n"

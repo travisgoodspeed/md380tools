@@ -15,6 +15,10 @@
 #define CONFIG_SPIFLASH
 #define CONFIG_GRAPHICS
 #define CONFIG_SPIC5000
+#define CONFIG_AMBE
+#define CONFIG_DMR
+#define CONFIG_MENU
+#define CONFIG_AES
 
 
 /* Uncomment this to print AMBE frames for decoding with DSD.  You

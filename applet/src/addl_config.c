@@ -68,5 +68,7 @@ void init_global_addl_config_struct() {
 void init_global_addl_config_hook(void) {
   init_global_addl_config_struct();
 
+#ifdef CONFIG_MENU
   md380_create_main_meny_entry();
+#endif
 }

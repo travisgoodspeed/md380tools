@@ -104,6 +104,7 @@ const char* getmotorolabasickey(int i){
    might (or might not) be related to the ALPU-MP chip.
 */
 void aes_startup_check_hook(){
+#ifdef CONFIG_AES
   printf("Performing AES startup check.\n");
   //Call back to the original function.
   int *toret=aes_startup_check();
@@ -121,6 +122,7 @@ void aes_startup_check_hook(){
     //Force the correct value.
     *((char*)0x2001d39b)=0x42;
   }
+#endif //CONFIG_AES
 }
 
 /* This hook intercepts calls to aes_loadkey(), so that AES keys can

@@ -126,6 +126,7 @@ void *dmr_call_start_hook(char *pkt){
 
 
 void dmr_apply_squelch_hook(OS_EVENT *event, char * mode){
+#ifdef CONFIG_DMR
   /* The *mode byte is 0x09 for an unmuted call and 0x08 for a muted
      call.
   */
@@ -149,9 +150,11 @@ void dmr_apply_squelch_hook(OS_EVENT *event, char * mode){
      do. --Travis
    */
   md380_OSMboxPost(event, mode);
+#endif
 }
 
 void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode){
+#ifdef CONFIG_DMR
   /* The *mode byte is 0x09 for an unmuted call and 0x08 for a muted
      call.
   */
@@ -165,10 +168,12 @@ void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode){
     dmr_before_squelch();
   }
   md380_OSMboxPost(event, mode);
+#endif
 }
 
 
 void *dmr_handle_data_hook(char *pkt, int len){
+#ifdef CONFIG_DMR
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
 
@@ -185,10 +190,14 @@ void *dmr_handle_data_hook(char *pkt, int len){
 
   //Forward to the original function.
   return dmr_handle_data(pkt,len);
+#else
+  return 0xdeadbeef;
+#endif
 }
 
 
 void *dmr_sms_arrive_hook(void *pkt){
+#ifdef CONFIG_DMR
   /* This hooks the SMS arrival routine, but as best I can tell,
      dmr_sms_arrive() only handles the header and not the actual
      data payload, which is managed by dmr_handle_data() in each
@@ -222,4 +231,7 @@ SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
 
   //Forward to the original function.
   return dmr_sms_arrive(pkt);
+#else
+  return 0xdeadbeef;
+#endif
 }

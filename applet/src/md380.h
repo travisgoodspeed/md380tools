@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "config.h"
 #include "os.h"
 #include "peripherals/stm32f4xx_rtc.h"
 
