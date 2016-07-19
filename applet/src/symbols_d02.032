@@ -136,6 +136,8 @@ md380_dmr_id = 0x2001c65c;  /* the own dmr-id */
 
 md380_radio_config = 0x2001c974; /* from the spiflash Security Registers */
                                  /* see D002.032 @ 0x0802165c            */       
+
+md380_read_config_3000 = 0x8021655;
  
 /* Functions and Variabes from the "RTC Timer" - task */
 md380_f_4137 = 0x080290c9;

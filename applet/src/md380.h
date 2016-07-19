@@ -201,6 +201,8 @@ uint32_t md380_dmr_id;
 extern uint8_t  const md380_radio_config[]; // from spiflash Security Registers
                                             // tunig parameter
 
+
+void md380_read_config_3000(void);
 // debug and training stuff
 
 void md380_f_4137();
