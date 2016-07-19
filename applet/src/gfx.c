@@ -66,7 +66,6 @@ void drawascii2(char *ascii,
            break;
         }
   gfx_drawtext2(wide, x, y, 0);
-
 }
 
 void green_led(int on) {

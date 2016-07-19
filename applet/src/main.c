@@ -151,15 +151,14 @@ void demo(){
 */
 int main(void) {
   dmesg_init();
-
+  
+  /*
   RTC_TimeTypeDef RTC_TimeTypeTime;
   md380_RTC_GetTime(RTC_Format_BIN, &RTC_TimeTypeTime);
   printf("%d:%d:%d\n", RTC_TimeTypeTime.RTC_Hours,
                        RTC_TimeTypeTime.RTC_Minutes,
                        RTC_TimeTypeTime.RTC_Seconds);
-
-  printf("Channel %d selected.\n",
-	 read_channel_switch());
+  */
      
   //Done with the blinking, so start the radio application.
   printf("Starting main()\n");
