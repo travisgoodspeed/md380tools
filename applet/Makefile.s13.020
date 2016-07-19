@@ -46,8 +46,8 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped
 
 experiment.img: 
-	cd ../patches/2.032 && $(MAKE) all
-	cp ../patches/2.032/patched.img ./experiment.img
+	cd ../patches/S013.020 && $(MAKE) all
+	cp ../patches/S013.020/patched.img ./experiment.img
 
 
 lib: src/version.h config.h
@@ -55,7 +55,7 @@ lib: src/version.h config.h
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
-	cp ../patches/2.032/patched.img ./experiment.img
+	cp ../patches/S013.020/patched.img ./experiment.img
 	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img 0x0809D000
 
 #The wrapped file is the one that works with the Windows updater.
