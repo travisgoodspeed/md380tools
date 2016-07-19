@@ -316,7 +316,7 @@ const char *getmfgstr(int speed, long *len){
 #ifdef SPIFLASH
   //Read four bytes from SPI Flash.
   md380_spiflash_read(&val,adr,4);
-#endif SPIFLASH
+#endif //SPIFLASH
  
   //Print them into the manufacturer string.
   strhex(buffer+1, adr);

@@ -13,12 +13,18 @@
 #include "printf.h"
 
 
+
 int (spiflash_read_hook)(void *dst, long adr, long len) {
+#ifdef SPIFLASH
   printf("%x %x %d\n", dst, adr, len);
   return md380_spiflash_read(dst, adr, len);
+#else
+  return 0xdeadbeef;
+#endif
 }
 
 uint32_t get_spi_flash_type(uint8_t *data) {
+#ifdef SPIFLASH
   md380_spiflash_enable();
   md380_spi_sendrecv(0x9f);
   data[0]=md380_spi_sendrecv(0x00);
@@ -26,6 +32,10 @@ uint32_t get_spi_flash_type(uint8_t *data) {
   data[2]=md380_spi_sendrecv(0x00);
   md380_spiflash_disable();
   return( (data[0]<<16) | (data[1]<<8) | (data[2]));
+#else
+  //Return zero if we have no SPI Flash support.
+  return 0;
+#endif
 }
 
 
@@ -75,10 +85,14 @@ int check_spi_flash_size(void) {
 
 void spiflash_write_with_type_check(void *dst, long adr, long len) {
   if (check_spi_flash_size() > adr) {
+#ifdef SPIFLASH
     md380_spiflash_write(dst, adr, len);
+#endif
   }else{
     printf("Rejecting write to %x as past the end of SPI Flash.\n",
 	   adr);
   }
 }
+
+
 

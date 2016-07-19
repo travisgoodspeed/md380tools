@@ -134,7 +134,7 @@ void demo(){
     gfx_drawbmp(welcomebmp,0,i);
     sleep(30);
   }
-#endif GRAPHICS
+#endif //GRAPHICS
 
   //Restore the bottom line of text before we return.
   md380_spiflash_read(botlinetext, 0x2054, 20);
