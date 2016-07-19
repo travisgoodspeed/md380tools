@@ -119,7 +119,7 @@ void wstrhex(wchar_t *string, long value){
 /* Displays a startup demo on the device's screen, including some of
    the setting information and a picture or two. */
 void demo(){
-#ifdef GRAPHICS
+#ifdef CONFIG_GRAPHICS
   drawtext(L"MD380Tools ",
 	   160,20);
   drawtext(L"by KK4VCZ  ",
@@ -134,7 +134,7 @@ void demo(){
     gfx_drawbmp(welcomebmp,0,i);
     sleep(30);
   }
-#endif //GRAPHICS
+#endif //CONFIG_GRAPHICS
 
   //Restore the bottom line of text before we return.
   md380_spiflash_read(botlinetext, 0x2054, 20);

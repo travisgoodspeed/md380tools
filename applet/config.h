@@ -12,9 +12,9 @@
 
 /* Basic features that ought to be working in 2.032 but might be
    missing in later revisions. */
-#define SPIFLASH
-#define GRAPHICS
-#define SPIC5000
+#define CONFIG_SPIFLASH
+#define CONFIG_GRAPHICS
+#define CONFIG_SPIC5000
 
 
 /* Uncomment this to print AMBE frames for decoding with DSD.  You

@@ -119,7 +119,7 @@ int usb_dnld_hook(){
       break;
 
 //SPI-FLASH commands
-#ifdef SPIFLASH
+#ifdef CONFIG_SPIFLASH
     case TDFU_SPIFLASHGETID:
       //Re-uses the dmesg transmit buffer.
       *dfu_target_adr=dmesg_tx_buf;
@@ -178,7 +178,7 @@ int usb_dnld_hook(){
       size = *((uint32_t*)(packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       if (check_spi_flash_size()>adr) {
-        printf ("DFU_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
+        printf ("DFU_CONFIG_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
         // enable write
 
         for (int i=0;i<size;i=i+256) {
@@ -217,9 +217,9 @@ int usb_dnld_hook(){
                                       0,
                                       3*256);
       break;
-#endif //SPIFLASH
+#endif //CONFIG_SPIFLASH
       
-#ifdef SPIC5000
+#ifdef CONFIG_SPIC5000
 //Radio Commands
     case TDFU_C5000_READREG:
       //Re-uses the dmesg transmit buffer.
@@ -237,9 +237,9 @@ int usb_dnld_hook(){
       c5000_spi0_writereg(packet[1],packet[2]);
       OS_EXIT_CRITICAL(state);
       break;
-#endif //SPIC5000
+#endif //CONFIG_SPIC5000
 
-#ifdef GRAPHICS
+#ifdef CONFIG_GRAPHICS
 //Graphics commands.
     case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
       drawtext((wchar_t *) (packet+3),
@@ -247,7 +247,7 @@ int usb_dnld_hook(){
       break;
       
     case TDFU_BOX:
-#endif //GRAPHICS
+#endif //CONFIG_GRAPHICS
 
     default:
       printf("Unhandled DFU packet type 0x%02x.\n",packet[0]);
@@ -313,10 +313,10 @@ const char *getmfgstr(int speed, long *len){
   char *usbstring=(char*) 0x2001c080; //2.032
   char buffer[]="@________ : ________";
   
-#ifdef SPIFLASH
+#ifdef CONFIG_SPIFLASH
   //Read four bytes from SPI Flash.
   md380_spiflash_read(&val,adr,4);
-#endif //SPIFLASH
+#endif //CONFIG_SPIFLASH
  
   //Print them into the manufacturer string.
   strhex(buffer+1, adr);

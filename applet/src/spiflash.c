@@ -15,7 +15,7 @@
 
 
 int (spiflash_read_hook)(void *dst, long adr, long len) {
-#ifdef SPIFLASH
+#ifdef CONFIG_SPIFLASH
   printf("%x %x %d\n", dst, adr, len);
   return md380_spiflash_read(dst, adr, len);
 #else
@@ -24,7 +24,7 @@ int (spiflash_read_hook)(void *dst, long adr, long len) {
 }
 
 uint32_t get_spi_flash_type(uint8_t *data) {
-#ifdef SPIFLASH
+#ifdef CONFIG_SPIFLASH
   md380_spiflash_enable();
   md380_spi_sendrecv(0x9f);
   data[0]=md380_spi_sendrecv(0x00);
@@ -85,7 +85,7 @@ int check_spi_flash_size(void) {
 
 void spiflash_write_with_type_check(void *dst, long adr, long len) {
   if (check_spi_flash_size() > adr) {
-#ifdef SPIFLASH
+#ifdef CONFIG_SPIFLASH
     md380_spiflash_write(dst, adr, len);
 #endif
   }else{
