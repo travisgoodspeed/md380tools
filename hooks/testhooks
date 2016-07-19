@@ -1,0 +1,7 @@
+/* These are fake hooks, just for convenient testing. */
+
+/* Name           Address      Hook      */
+OS_ENTER_CRITICAL 0x08044925   0x080cdead
+md380_RTC_GetTime 0x0802b6d3   0x0800beef
+
+
