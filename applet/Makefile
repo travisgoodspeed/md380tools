@@ -10,7 +10,9 @@ CC=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 
-CFLAGS += -std=gnu99 -g -O2 -Wall -Tmd380_applet.ld
+LINKSCRIPT=applet_d02.032.ld
+
+CFLAGS += -std=gnu99 -g -O2 -Wall -T$(LINKSCRIPT)
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
