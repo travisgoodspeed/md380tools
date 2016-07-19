@@ -26,7 +26,7 @@ CFLAGS += -Iinc -Ilib -Ilib/inc -I.
 CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals
 
 SRCS += lib/startup_stm32f4xx.s # add startup file to build
-SRCS += src/md380-2.032.c             # MD380 library functions.
+SRCS += src/md380-2.032.c       # MD380 library functions.
 
 OBJS = $(SRCS:.c=.o)
 
@@ -46,14 +46,14 @@ lib: src/version.h config.h
 	$(MAKE) -C lib
 
 proj: 	$(PROJ_NAME).elf experiment.img
-	# use an fresh experiment.img
+	# use a fresh experiment.img
 	cp ../patches/2.032/patched.img ./experiment.img
 	python2 merge.py experiment.img $(PROJ_NAME).img 0x0809D000
 
 #The wrapped file is the one that works with the Windows updater.
 wrapped: lib proj
 	../md380-fw --wrap experiment.img experiment.bin
-#This flashses from unix.
+#This flashes from unix.
 flash: wrapped
 	../md380-dfu upgrade experiment.bin
 
