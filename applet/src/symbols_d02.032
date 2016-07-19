@@ -26,7 +26,7 @@ dmr_call_start                         = 0x0803ec87;
 dmr_handle_data                        = 0x0804b66d;
 /* Function that handles an incoming SMS. */
 dmr_sms_arrive                         = 0x0803f03d;
-/* //! Called before unsquelching. */
+/* Called before unsquelching. */
 dmr_before_squelch                     = 0x0803ef6d;
 
 

@@ -67,21 +67,6 @@ static void do_jump(uint32_t stacktop, uint32_t entrypoint)
 }
 
 
-static void led_setup(void) {
-  /* GPIOD Periph clock enable */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
-
-  /* PE 0 and 1 to in/out mode */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOE, &GPIO_InitStructure);
-  
-}
-
-
 
 /* This copies a character string into a USB Descriptor string, which
    is a UTF16 little-endian string preceeded by a one-byte length and
@@ -166,7 +151,6 @@ void demo(){
 */
 int main(void) {
   dmesg_init();
-  led_setup();
 
   RTC_TimeTypeDef RTC_TimeTypeTime;
   md380_RTC_GetTime(RTC_Format_BIN, &RTC_TimeTypeTime);
