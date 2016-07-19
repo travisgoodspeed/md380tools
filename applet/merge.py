@@ -1,4 +1,10 @@
-#! python2
+#! python2.7
+
+
+# This script implements our old methods for merging an MD380 firmware
+# image with its patches.  It is presently being rewritten to require
+# fewer explicit addresses, so that we can target our patches to more
+# than one version of the MD380 firmware.
 
 import sys;
 

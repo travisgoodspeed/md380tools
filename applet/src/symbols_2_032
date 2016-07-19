@@ -1,4 +1,13 @@
+/* This file contains symbols for version 2.032 of the firmware. */
 
+/* For maximum portability, try to use only symbols that cleanly */
+/* port to other versions.  Good candidates have long prologues. */
+
+/* Startup routines, very handy for hooking our startup. */
+startup_topline = 0x08021883;
+startup_botline = 0x08021895;
+
+/* Graphics functions. */
 gfx_drawtext                           = 0x800D88B;
 gfx_drawbmp                            = 0x8022887;
 gfx_drawtext2                          = 0x801cf1d;
@@ -22,14 +31,24 @@ dmr_before_squelch                     = 0x0803ef6d;
 
 
 
-/* Handle to the original (unhooked) upload handler. */
+/* Upload and download handlers. */
 usb_upld_handle = 0x0808d3d9;
+usb_dnld_handle = 0x0808ccbf;
+
 /* This returns a USB packet to the host from the upload handler. */
 usb_send_packet = 0x080577af;
 
+/* Higher-level USB functions.  These need stub hooks. */
+usb_modestring = 0x080969bd;
+usb_manufacturer = 0x080969df;
+usb_serialnumber = 0x080969ef;
+usb_setcallbacks = 0x08052c0d;
+usb_do_setup = 0x0808cc01;
 
-/* Original handler for the DFU DNLD event. */
-usb_dnld_handle = 0x0808ccbf;
+/* USB DFU functions. */
+usb_dfu_write = 0x0808e441;
+usb_dfu_read = 0x0808e491;
+
 
 /* spi-flash */
 md380_spiflash_read                    = 0x802fd83;
@@ -128,4 +147,8 @@ md380_f_4225 = 0x0801f045;
 /* relevant display functions */
 Write_Command_2display = 0x08031f75;
 Write_Data_2display = 0x08031f7d;
+
+
+/* Chinese font region. */
+chinese_font = 0x0809D000;
 
