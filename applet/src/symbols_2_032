@@ -128,3 +128,4 @@ md380_f_4225 = 0x0801f045;
 /* relevant display functions */
 Write_Command_2display = 0x08031f75;
 Write_Data_2display = 0x08031f7d;
+
