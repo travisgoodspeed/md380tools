@@ -3,7 +3,7 @@
 #SRCS += rtc_timer.o i2c.o display.o
 
 #Minimal set
-SRCS = main.o usb.o stm32f4xx_it.o system_stm32f4xx.o printf.o dmesg.o gfx.o
+SRCS = main.o usb.o stm32f4xx_it.o system_stm32f4xx.o printf.o dmesg.o
 PROJ_NAME=main
 
 

@@ -119,6 +119,7 @@ int usb_dnld_hook(){
       break;
 
 //SPI-FLASH commands
+#ifdef SPIFLASH
     case TDFU_SPIFLASHGETID:
       //Re-uses the dmesg transmit buffer.
       *dfu_target_adr=dmesg_tx_buf;
@@ -216,8 +217,9 @@ int usb_dnld_hook(){
                                       0,
                                       3*256);
       break;
-
+#endif //SPIFLASH
       
+#ifdef SPIC5000
 //Radio Commands
     case TDFU_C5000_READREG:
       //Re-uses the dmesg transmit buffer.
@@ -235,7 +237,9 @@ int usb_dnld_hook(){
       c5000_spi0_writereg(packet[1],packet[2]);
       OS_EXIT_CRITICAL(state);
       break;
+#endif //SPIC5000
 
+#ifdef GRAPHICS
 //Graphics commands.
     case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
       drawtext((wchar_t *) (packet+3),
@@ -243,6 +247,8 @@ int usb_dnld_hook(){
       break;
       
     case TDFU_BOX:
+#endif //GRAPHICS
+
     default:
       printf("Unhandled DFU packet type 0x%02x.\n",packet[0]);
     }
@@ -297,7 +303,7 @@ const char *loadusbstr(char *usbstring,
 const char *getmfgstr(int speed, long *len){
   //This will be turned off by another thread,
   //but when we call it often the light becomes visible.
-  green_led(1);
+  //green_led(1);
   
   //Hook the USB DNLOAD handler.
   hookusb();
@@ -307,9 +313,11 @@ const char *getmfgstr(int speed, long *len){
   char *usbstring=(char*) 0x2001c080; //2.032
   char buffer[]="@________ : ________";
   
+#ifdef SPIFLASH
   //Read four bytes from SPI Flash.
   md380_spiflash_read(&val,adr,4);
-  
+#endif SPIFLASH
+ 
   //Print them into the manufacturer string.
   strhex(buffer+1, adr);
   strhex(buffer+12, val);
