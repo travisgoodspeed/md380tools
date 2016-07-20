@@ -42,7 +42,9 @@ repository.  We use a heap-less printf library under the BSD license.
 
 The patched firmware is known to work on the following devices:
 
-* Tytera/TYT MD380
+* Tytera/TYT MD380 (old vocoder)
+* Tytera/TYT MD380 (new vocoder)
+* Tytera/TYT MD390 (new vocoder, no gps)
 * Retevis RT3
 
 ##Specifications:##
