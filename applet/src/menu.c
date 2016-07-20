@@ -734,7 +734,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void) {
   printf("\n%d\n",new_dmr_id);
 #endif
 // store new dmr_id to ram and spi flash (codeplug)
-  dmr_id = (uint32_t) &md380_radio_config[4];   // form D002.32 @ 0x0803ef02
+  dmr_id = (uint32_t*) &md380_radio_config[4];   // form D002.32 @ 0x0803ef02
   *dmr_id=new_dmr_id;
 
   md380_spiflash_write(&new_dmr_id, 0x2084, 4);
@@ -784,7 +784,7 @@ void create_menu_entry_edit_dmr_id_screen(void) {
    *p = 0;
    }
 
-  dmr_id = (uint32_t) &md380_radio_config[4];
+  dmr_id = (uint32_t *) &md380_radio_config[4];
   nchars=uli2w(*dmr_id, md380_menu_edit_buf);
 
 #ifdef DEBUG
