@@ -855,7 +855,7 @@ void create_menu_entry_addl_functions_screen(void) {
 void create_menu_utilies_hook(void) {
   int enabled;
 
-  if ( (md380_program_radio_unprohibited & 0x4) == 0x4 ) {
+  if ( (md380_program_radio_unprohibited[4] & 0x4) == 0x4 ) {
 #ifdef DEBUG
     printf("program_radio_unprohibited\n");
 #endif

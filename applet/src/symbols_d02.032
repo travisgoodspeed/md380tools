@@ -110,12 +110,12 @@ md380_menu_0x2001d3f4                  = 0x2001d3f4; /* from D002.032 @ 0x8012a8
 md380_menu_depth                       = 0x200011e4; /* from D002.032 @ 0x8012ada */
 md380_menu_entry_selected              = 0x2001d3b2; /* from D002.032 @ 0x801a038 */
 md380_menu_id                          = 0x2001d3c2; /* from D002.032 @ 0x801a00c */
-md380_program_radio_unprohibited       = 0x2001d034; /* ... only with offset 4 0x2001d030 */
+md380_program_radio_unprohibited       = 0x2001d030; /* from D002.032 @ 0x8012740 */
 md380_wt_programradio                  = 0x080d175c;
-md380_menu_0x20001114		       = 0x20001114; /* from D002.032 @ 0x0802c566 */
-md380_menu_mem_base		       = 0x20019df0; /* from D002.032 @ 0x0801a014 */
-md380_menu_memory	               = 0x2001c148; /* from D002.032 @ 0x08019fda */
-md380_menu_edit_buf		       = 0x2001b716; /* from D002.032 @ 0x0802c9a8 */
+md380_menu_0x20001114		       = 0x20001114; /* from D002.032 @ 0x802c566 */
+md380_menu_mem_base		       = 0x20019df0; /* from D002.032 @ 0x801a014 */
+md380_menu_memory	               = 0x2001c148; /* from D002.032 @ 0x8019fda */
+md380_menu_edit_buf		       = 0x2001b716; /* from D002.032 @ 0x802c9a8 */
 
 /* c5000 */
 c5000_spi0_readreg = 0x0803e2f5;

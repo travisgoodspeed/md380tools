@@ -156,7 +156,7 @@ extern wchar_t  	md380_menu_edit_buf[];
 uint32_t  md380_menu_0x20001114;
 
 //! program_radio_unprohibited (menu entry) ... bulding site is an struct
-uint8_t md380_program_radio_unprohibited;
+extern uint8_t md380_program_radio_unprohibited[];
 
 //! This points to the byte of the current channel.
 extern char  channelnum[];
