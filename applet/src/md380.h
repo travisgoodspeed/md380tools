@@ -172,6 +172,8 @@ void c5000_spi0_writereg(int reg, int val);
 
 
 // md380 aes
+int * aes_startup_check(void);
+char * aes_loadkey(char *);
 
 //! Unknown AES function.
 char* aes_cipher(char *pkt);
