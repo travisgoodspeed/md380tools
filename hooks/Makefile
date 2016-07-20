@@ -1,11 +1,15 @@
 UNWRAPPED=../firmware/unwrapped
 GOLD=../firmware/unwrapped/D002.032.img 
-GOLDSYM=../applet/src/symbols_2_032
+GOLDSYM=../applet/src/symbols_d02_032
+
 
 all: blhook
 
 clean:
 	rm -f blhook *~
+
+blhook:	blhook.c
+	cc -std=c99 blhook.c -o blhook
 
 images:
 	cd ../firmware && $(MAKE)
