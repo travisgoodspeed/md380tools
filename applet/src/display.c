@@ -17,7 +17,7 @@ void display_init_hook_1(void) {      // from 0x8033586 @ D003.020
                                       // 0x08033586 @ D003.020
    Write_Data_2display(0x8);         //  orginal MD380
   else
-   Write_Data_2display(0x8);          // orginal MD380
+   Write_Data_2display(0x48);          // orginal MD380
 #endif
 }
 
@@ -27,5 +27,6 @@ void display_init_hook_2(void) {
     Write_Data_2display(0x40);
   else
     Write_Data_2display(0x4f);
+#endif
 }
 
