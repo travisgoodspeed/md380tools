@@ -8,7 +8,7 @@ In the C:\Python27 folder, make a copy of python.exe and name it python2.exe
 
 Add the following to your path variable
 (Right-click Start button -> System -> Advanced System Settings -> Environment Varables -> Select Path -> Edit):
-C:\Program Files\GnuWin32\bin
+C:\Progra~1\GnuWin32\bin    [use 'Progra~1' and NOT 'Program Files' otherwise make will fail]
 C:\Python27
 
 Download and install gcc-arm-none-eabi from: https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update
