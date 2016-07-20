@@ -80,8 +80,8 @@ OS_EXIT_CRITICAL  = 0x08041e01;
 OSSemCreate       = 0x803da2d;
 
 /* OSSem Create Hook used the place from 2 OSSemCreate Calls */
-OSSemCreate_hook0_event_mem =	0x2001d124; /* from D002.032 @ 0x80441fa */
-OSSemCreate_hook1_event_mem =	0x2001d128; /* from D002.032 @ 0x8044206 */
+OSSemCreate_hook0_event_mem =	0x2001d124; /* from D002.032 @ 0x80441fa func 0x8044172 */
+OSSemCreate_hook1_event_mem =	0x2001d128; /* from D002.032 @ 0x8044206 func 0x8044172 */
 
 OSSemPend         = 0x803da79;
 OSSemPost         = 0x803db69;
@@ -99,23 +99,24 @@ md380_create_menu_entry                = 0x800c731;
 md380_menu_entry_back                  = 0x800f452;
 md380_menu_entry_programradio          = 0x80127d0;
 
-md380_menu_0x200011e4                  = 0x200011e4; /* from D002.032 @ 0x801ae26 */
-md380_menu_0x2001d3c1                  = 0x2001d3c1; /* from D002.032 @ 0x8012a7a */
-md380_menu_0x2001d3ed                  = 0x2001d3ed; /* from D002.032 @ 0x8012ab2 */
-md380_menu_0x2001d3ee                  = 0x2001d3ee; /* from D002.032 @ 0x8012aba */
-md380_menu_0x2001d3ef                  = 0x2001d3ef; /* from D002.032 @ 0x8012ac2 */
-md380_menu_0x2001d3f0                  = 0x2001d3f0; /* from D002.032 @ 0x8012ad2 */
-md380_menu_0x2001d3f1                  = 0x2001d3f1; /* from D002.032 @ 0x8012aca */
-md380_menu_0x2001d3f4                  = 0x2001d3f4; /* from D002.032 @ 0x8012a86 */
-md380_menu_depth                       = 0x200011e4; /* from D002.032 @ 0x8012ada */
-md380_menu_entry_selected              = 0x2001d3b2; /* from D002.032 @ 0x801a038 */
-md380_menu_id                          = 0x2001d3c2; /* from D002.032 @ 0x801a00c */
-md380_program_radio_unprohibited       = 0x2001d030; /* from D002.032 @ 0x8012740 */
+md380_menu_0x200011e4                  = 0x200011e4; /* from D002.032 @ 0x80127f4 func 0x80127d0 */
+md380_menu_0x2001d3c1                  = 0x2001d3c1; /* from D002.032 @ 0x8012a7a func 0x80127d0 */
+md380_menu_0x2001d3ed                  = 0x2001d3ed; /* from D002.032 @ 0x8012ab2 func 0x80127d0 */
+md380_menu_0x2001d3ee                  = 0x2001d3ee; /* from D002.032 @ 0x8012aba func 0x80127d0 */
+md380_menu_0x2001d3ef                  = 0x2001d3ef; /* from D002.032 @ 0x8012ac2 func 0x80127d0 */
+md380_menu_0x2001d3f0                  = 0x2001d3f0; /* from D002.032 @ 0x8012ad2 func 0x80127d0 */
+md380_menu_0x2001d3f1                  = 0x2001d3f1; /* from D002.032 @ 0x8012aca func 0x80127d0 */
+md380_menu_0x2001d3f4                  = 0x2001d3f4; /* from D002.032 @ 0x8012a86 func 0x80127d0 */
+md380_menu_depth                       = 0x200011e4; /* from D002.032 @ 0x8012ada func 0x80127d0 */
+
+md380_menu_entry_selected              = 0x2001d3b2; /* from D002.032 @ 0x801a038 func 0x8019fd0 */
+md380_menu_id                          = 0x2001d3c2; /* from D002.032 @ 0x801a00c func 0x8019fd0 */
+md380_program_radio_unprohibited       = 0x2001d030; /* from D002.032 @ 0x8012740 func 0x80126a8 */
 md380_wt_programradio                  = 0x080d175c;
-md380_menu_0x20001114		       = 0x20001114; /* from D002.032 @ 0x802c566 */
-md380_menu_mem_base		       = 0x20019df0; /* from D002.032 @ 0x801a014 */
-md380_menu_memory	               = 0x2001c148; /* from D002.032 @ 0x8019fda */
-md380_menu_edit_buf		       = 0x2001b716; /* from D002.032 @ 0x802c9a8 */
+md380_menu_0x20001114		       = 0x20001114; /* from D002.032 @ 0x802c566 func 0x802c55e */
+md380_menu_mem_base		       = 0x20019df0; /* from D002.032 @ 0x801a014 func 0x8019fd0 */
+md380_menu_memory	               = 0x2001c148; /* from D002.032 @ 0x8019fda func 0x8019fd0 */
+md380_menu_edit_buf		       = 0x2001b716; /* from D002.032 @ 0x802c9a8 func 0x802c99c */
 
 /* c5000 */
 c5000_spi0_readreg = 0x0803e2f5;
@@ -140,17 +141,17 @@ md380_itow = 0x080172ed;
 md380_RTC_GetDate = 0x08026461;
 md380_RTC_GetTime = 0x0802634b;
 read_channel_switch = 0x0804d269;
-channelnum = 0x2001d376; /* D002.032 @ 0x0804d35c */
+channelnum = 0x2001d376; /* D002.032 @ 0x0804d35c func 0x804d338 */
 
 /* useful md380 variables */
 
-md380_radio_config = 0x2001c658; /* from D002.032 @ 0x0803eefe */
+md380_radio_config = 0x2001c658; /* from D002.032 @ 0x0803eefe func 0x803ec86 */
 
 /* stuff to handle different display (flip (380/390) type */
 md380_copy_spiflash_security_bank2_to_ram = 0x8021655;
 
 /* from the spiflash Security Registers */
-md380_radio_config_bank2 = 0x2001c974; /* from D002.032 @ 0x0802165c */
+md380_radio_config_bank2 = 0x2001c974; /* from D002.032 @ 0x0802165c func 0x8021654 */
 
  
 /* Functions and Variabes from the "RTC Timer" - task */
@@ -168,23 +169,23 @@ Write_Data_2display = 0x08031f7d;
 chinese_font = 0x0809D000;
 
 /* Determines the squelching of an incoming call. */
-dmr_squelch_mode	=	0x2001d35f; /* from D002.032 @ 0x0803ed30 */
+dmr_squelch_mode	=	0x2001d35f; /* from D002.032 @ 0x0803ed30 func 0x803ec86 */
 /* Unknown function involved in squelching. */
-dmr_squelch_firstthing	=	0x2001d118; /* from D002.032 @ 0x0803ee9a */
+dmr_squelch_firstthing	=	0x2001d118; /* from D002.032 @ 0x0803ee9a func 0x803ec86 */
 
 /* Function pointer at this address calls DNLD. */
 dnld_tohook		= 	0x20000e9c;  /* i'cant find */
 
 /* Pointer to the buffer that stores the bottom line of screen text. */
-botlinetext		=	0x2001cee0; /* from D002.032 @ 0x0802189c */
+botlinetext		=	0x2001cee0; /* from D002.032 @ 0x0802189c func 0x8021894 */
 
 /* ROM copy of the welcome bitmap. */
 welcomebmp		=	0x080f9ca8;
 
 /* Variabes regarding the beep_process. */
-beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 */
+beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 */
 
 /* Variabes regarding rtc_timer process. */
-md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e */
+md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
 md380_f_4225_operatingmode_menu = 0x1b;       /*  see 0x0801f06a there are a lot of modes */
 md380_f_4225_operatingmode_menu_exit = 0x1c;
