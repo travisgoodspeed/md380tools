@@ -144,7 +144,7 @@ channelnum = 0x2001d376; /* D002.032 @ 0x0804d35c */
 
 /* useful md380 variables */
 
-md380_dmr_id = 0x2001c65c;  /* i'cant find */
+md380_radio_config = 0x2001c658; /* from D002.032 @ 0x0803eefe */
 
 /* stuff to handle different display (flip (380/390) type */
 md380_copy_spiflash_security_bank2_to_ram = 0x8021655;
