@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include <string.h>
 
-//#ifdef DEBUG
+#ifdef DEBUG
 #include "printf.h"
-//#endif
+#endif
 
 #include "dmesg.h"
 #include "md380.h"
@@ -812,26 +812,13 @@ void create_menu_entry_addl_functions_screen(void) {
   struct MENU *menu_mem;
   int i;
 
-  printf("md380_menu_memory: %x\n",md380_menu_memory);
-  printf("md380_menu_depth:  %x\n",md380_menu_depth);  
-  printf("md380_menu_mem_base: %x\n",md380_menu_mem_base);
-  printf("md380_menu_edit_buf: %x\n",md380_menu_edit_buf);
-  
-  
 #ifdef DEBUG
   printf("create_menu_entry_addl_functions_screen %d\n",md380_menu_depth);
 #endif
   menu_mem = (void *)(md380_menu_memory + md380_menu_depth * sizeof(struct MENU) + sizeof(struct MENU));
   
-  printf("md380_menu_mem %x\n", menu_mem);
-  printf("md380_menu_mem_x %x\n",((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU))); 
-
-   printf("s %d\n",   sizeof(struct MENU));
   menu_mem->menu_title = wt_addl_func;
-
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
-
- printf("menu_mem->unknownp %x\n", menu_mem->unknownp);
   menu_mem->numberof_menu_entries=9;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -860,8 +847,6 @@ void create_menu_entry_addl_functions_screen(void) {
  for(i=0;i<9;i++) {  // not yet known ;)
    uint8_t *p;
    p =(uint8_t *) md380_menu_mem_base + ( md380_menu_id + i ) * 0x14;
- printf("p %x\n", p);
- 
    p[0x10] = 2;
  }
 }
