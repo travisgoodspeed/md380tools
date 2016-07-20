@@ -147,7 +147,7 @@ uint8_t   md380_menu_depth;
 uint8_t   md380_menu_entry_selected;
 uint8_t   md380_menu_id;
 
-wchar_t	  md380_wt_programradio[1];  // menutext <- menu_entry_programradio
+extern wchar_t	  	md380_wt_programradio[];  // menutext <- menu_entry_programradio
 
 extern uint8_t     	md380_menu_mem_base[];
 extern uint8_t     	md380_menu_memory[];
@@ -200,21 +200,25 @@ wchar_t * md380_itow(wchar_t *, int value);
 void      md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
 void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
-uint32_t md380_dmr_id;
+uint32_t md380_dmr_id; // the actual used dmr id
 
+
+// stuff to handle different display (flip (380/390) type
 extern uint8_t  const md380_radio_config_bank2[]; // from spiflash Security Registers
                                                   // tunig parameter
-
 void md380_copy_spiflash_security_bank2_to_ram(void);
 
-// debug and training stuff
+// rtc_timer process stuff ( user interface task)
+// menu no exit ....
+extern uint8_t md380_f_4225_operatingmode[];
+extern uint8_t md380_f_4225_operatingmode_menu;
+extern uint8_t md380_f_4225_operatingmode_menu_exit;
 
+
+// debug and training stuff
 void md380_f_4137();
 void md380_f_4520();
 void md380_f_4098();
 void md380_f_4102();
 void md380_f_4225();
 
-extern uint8_t md380_f_4225_operatingmode[];
-extern uint8_t md380_f_4225_operatingmode_menu;
-extern uint8_t md380_f_4225_operatingmode_menu_exit;
