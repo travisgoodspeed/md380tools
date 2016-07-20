@@ -61,6 +61,9 @@ md380_spiflash_block_erase64k          = 0x802fbb7;
 md380_spiflash_sektor_erase4k          = 0x802fb83;
 md380_spi_sendrecv                     = 0x802fdc9;
 
+md380_copy_spiflash_security_bank2_to_ram = 0x8021655;
+
+
 /* i2c */
 md380_I2C_GenerateSTART                = 0x804fdc5;
 md380_I2C_GenerateSTOP                 = 0x804fde1;
@@ -134,10 +137,9 @@ read_channel_switch = 0x0804d269;
 /* useful md380 variables */
 md380_dmr_id = 0x2001c65c;  /* the own dmr-id */
 
-md380_radio_config = 0x2001c974; /* from the spiflash Security Registers */
-                                 /* see D002.032 @ 0x0802165c            */       
+md380_radio_config_bank2 = 0x2001c974; /* from the spiflash Security Registers */
+                                       /* see D002.032 @ 0x0802165c            */
 
-md380_read_config_3000 = 0x8021655;
  
 /* Functions and Variabes from the "RTC Timer" - task */
 md380_f_4137 = 0x080290c9;

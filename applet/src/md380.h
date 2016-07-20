@@ -198,11 +198,11 @@ void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct
 
 uint32_t md380_dmr_id;
 
-extern uint8_t  const md380_radio_config[]; // from spiflash Security Registers
-                                            // tunig parameter
+extern uint8_t  const md380_radio_config_bank2[]; // from spiflash Security Registers
+                                                  // tunig parameter
 
+void md380_copy_spiflash_security_bank2_to_ram(void);
 
-void md380_read_config_3000(void);
 // debug and training stuff
 
 void md380_f_4137();
