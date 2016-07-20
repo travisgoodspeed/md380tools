@@ -156,3 +156,37 @@ Write_Data_2display = 0x08031f7d;
 /* Chinese font region. */
 chinese_font = 0x0809D000;
 
+
+
+/* Determines the squelching of an incoming call. */
+dmr_squelch_mode	=	0x2001d35f;
+/* Unknown function involved in squelching. */
+dmr_squelch_firstthing	=	0x2001d118;
+
+/* Function pointer at this address calls DNLD. */
+dnld_tohook		= 	0x20000e9c;
+
+/* Pointer to the buffer that stores the bottom line of screen text. */
+botlinetext		=	0x2001cee0;
+
+/* ROM copy of the welcome bitmap. */
+welcomebmp		=	0x080f9ca8;
+
+/* Variabes regarding uC/OS-II. */
+OSSemCreate_hook0_event_mem =	0x2001d124;
+OSSemCreate_hook1_event_mem =	0x2001d128;
+
+/* Variabes regarding menu.c. */
+md380_menu_mem_base	=	0x20019df0;
+md380_menu_memory	=	0x2001c148;
+md380_menu_edit_buf	=	0x2001b716;
+
+channelnum		=	0x2001d376;
+
+/* Variabes regarding the beep_process. */
+beep_process_unkown	=	0x2001d178;
+
+/* Variabes regarding rtc_timer process. */
+md380_f_4225_operatingmode =	0x2001d3f7;
+md380_f_4225_operatingmode_menu = 0x1b;       /*  see 0x0801f06a there are a lot of modes */
+md380_f_4225_operatingmode_menu_exit = 0x1c;

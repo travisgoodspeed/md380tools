@@ -30,7 +30,7 @@ CFLAGS += -Iinc -Ilib -Ilib/inc -I.
 CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals
 
 SRCS += lib/startup_stm32f4xx.s # add startup file to build
-SRCS += src/md380-2.032.c       # MD380 library functions.
+#SRCS += src/md380-2.032.c       # MD380 library functions.
 
 OBJS = $(SRCS:.c=.o)
 

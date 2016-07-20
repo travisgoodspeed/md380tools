@@ -16,8 +16,8 @@
 
 OS_EVENT* debug_line_sem;  // not yet used 
 
-OS_EVENT  ** OSSemCreate_hook0_event_mem;
-OS_EVENT  ** OSSemCreate_hook1_event_mem;
+extern OS_EVENT  * OSSemCreate_hook0_event_mem[];
+extern OS_EVENT  * OSSemCreate_hook1_event_mem[];
 
 
 INT8U (OSTaskCreateExt_hook)(void (*task)(void *pd), void *pdata, OS_STK *ptos, INT8U prio, INT16U id, OS_STK *pbos, INT32U stk_size, void *pext, INT16U opt) {

@@ -55,16 +55,16 @@ int dmr_before_squelch();
 
 
 //! Determines the squelching of an incoming call.
-extern char* const  dmr_squelch_mode;
+extern char dmr_squelch_mode[];
 //! Unknown function involved in squelching.
-extern char** const dmr_squelch_firstthing;
+extern char* const dmr_squelch_firstthing[];
 
 
 //Pointer to the buffer that stores the bottom line of screen text.
-char * const botlinetext;
+extern char botlinetext[];
 
 //ROM copy of the welcome bitmap.
-extern char * const welcomebmp;
+extern char welcomebmp[];
 
 // md380 usb
 
@@ -74,7 +74,8 @@ int usb_upld_handle(void*, char*, int, int);
 int usb_send_packet(void*, char*, uint16_t);
 
 int usb_dnld_handle();
-extern int * const dnld_tohook;
+
+extern int dnld_tohook[];
 
 
 // md380_spiflash
@@ -115,6 +116,9 @@ int         OS_ENTER_CRITICAL();
 void        OS_EXIT_CRITICAL(int);
 
 
+extern OS_EVENT * OSSemCreate_hook0_event_mem[];
+extern OS_EVENT * OSSemCreate_hook1_event_mem[];
+
 
 //! Functions and Variabes regarding the menu
 void*   main_menu(void *);     // menu exec
@@ -145,9 +149,9 @@ uint8_t   md380_menu_id;
 
 wchar_t	  md380_wt_programradio[1];  // menutext <- menu_entry_programradio
 
-extern void     	* const md380_menu_mem_base;
-extern void     	* const md380_menu_memory;
-extern wchar_t  	* const md380_menu_edit_buf;
+extern uint8_t     	md380_menu_mem_base[];
+extern uint8_t     	md380_menu_memory[];
+extern wchar_t  	md380_menu_edit_buf[];
 
 uint32_t  md380_menu_0x20001114;
 
@@ -155,7 +159,7 @@ uint32_t  md380_menu_0x20001114;
 uint8_t md380_program_radio_unprohibited;
 
 //! This points to the byte of the current channel.
-extern char* const  channelnum;
+extern char  channelnum[];
 
 //! Reads the current channel number from the rotary switch.
 int read_channel_switch();
@@ -189,7 +193,7 @@ void Write_Data_2display(uint8_t data);
 
 //! Functions and Variabes regarding the beep_
 // not yet known ;)
-extern uint32_t * const beep_process_unkown;
+extern uint32_t  beep_process_unkown[];
 
 //! useful firmware functions
 wchar_t * md380_itow(wchar_t *, int value);
@@ -211,6 +215,6 @@ void md380_f_4098();
 void md380_f_4102();
 void md380_f_4225();
 
-extern uint8_t * const md380_f_4225_operatingmode;
-extern const uint8_t md380_f_4225_operatingmode_menu;
-extern const uint8_t md380_f_4225_operatingmode_menu_exit;
+extern uint8_t md380_f_4225_operatingmode[];
+extern uint8_t md380_f_4225_operatingmode_menu;
+extern uint8_t md380_f_4225_operatingmode_menu_exit;
