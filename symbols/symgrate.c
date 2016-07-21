@@ -98,8 +98,12 @@ int scorematch(int sadr, int dadr){
 //!Locates a symbol by name and address.
 int findsymbol(const char *name, int adr){
   int isfunction=adr&1;
+  if(adr<0xffff){
+    printf("%s = 0x%x;\n",
+           name,adr);
+    return adr|isfunction;
+  }
   adr=adr&~1;
-  
   if(adr&0x20000000){         //RAM
     printf("/* %s is a RAM address and cannot be converted. */\n",
 	   name);
@@ -183,8 +187,11 @@ int parseloop(){
   
   while(!feof(stdin)){
     //Read the line.
+    line[0]='\0';  // remove double last line
     fgets(line,1024,stdin);
-    
+    if (line[0]=='\0'){  // better check return from fgets
+      return 0;
+    }
     if(strlen(line)==1){ //empty line.
       printf("\n");
     }else if(line[0]=='/' && line[1]=='*'){ //commenty line
