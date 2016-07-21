@@ -42,7 +42,9 @@ repository.  We use a heap-less printf library under the BSD license.
 
 The patched firmware is known to work on the following devices:
 
-* Tytera/TYT MD380
+* Tytera/TYT MD380 (old vocoder)
+* Tytera/TYT MD380 (new vocoder)
+* Tytera/TYT MD390 (new vocoder, no gps)
 * Retevis RT3
 
 ##Specifications:##
@@ -75,7 +77,8 @@ is under development for Android.
 ###Installation of required packages###
 ####Debian Stretch:####
 
-    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
+                    libusb-1.0 python-usb
 
 ####Debian Jessie (using backports.debian.org):####
 
@@ -92,12 +95,13 @@ More info at http://backports.debian.org/Instructions/
 Install python-usb from backports, the rest from Jessie
 
      apt -t jessie-backports install python-usb
-     apt install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0
+     apt install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
+                 libusb-1.0
 
 ####Debian Jessie (using python-pip):####
 
-    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git make \
-                    curl python-pip unzip
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
+            libusb-1.0 git make curl python-pip unzip
     pip install pyusb -U # update PyUSB to 1.0
   
 
@@ -106,7 +110,8 @@ Install python-usb from backports, the rest from Jessie
 ```
 Tested on 2016-05-10-raspbian-jessie by IZ2XBZ
 
-sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
+             libnewlib-arm-none-eabi python-usb
 
 sudo pip install pyusb -U
 
