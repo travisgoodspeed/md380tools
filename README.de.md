@@ -8,6 +8,14 @@ Diese Seite versucht die experimentelle Firmware für das Tytera MD-380/Retevis 
 
 Übersetzung durch Kim - DG9VH
 
+###Unterstützte Geräte
+Die experimentelle Firmware unterstütz die folgenden Geräte:
+
+    Tytera/TYT MD380 (old vocoder)
+    Tytera/TYT MD380 (new vocoder)
+    Tytera/TYT MD390 (new vocoder, no gps)
+    Retevis RT3
+
 ##Installation
 Nachfolgende Schritte beziehen sich ausschließlich auf die Vorgehensweise unter Linux. Auf anderen Betriebssystemen kann entsprechend eine andere Vorgehensweise notwendig werden.
 
@@ -24,12 +32,13 @@ Ebenso sind zur Nutzung folgende Pakete erforderlich:
 
 Debian Stretch:
 
-    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 python-usb
+    apt-get install gcc-arm-none-eabi binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi libusb-1.0 python-usb
 
 Debian Jessie:
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git \
-                    make curl python-pip unzip
+                    libnewlib-arm-none-eabi make curl python-pip unzip
     pip install pyusb -U # update PyUSB to 1.0
 
 
