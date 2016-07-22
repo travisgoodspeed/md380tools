@@ -32,7 +32,7 @@ Run Git (from start menu)
 Select 'Clone Existing Repository'
 
 Source: http://github.com/travisgoodspeed/md380tools
-Target: C:/Users/post2/Documents/git/travisgoodspeed/md380tools
+Target: C:/Users/<username>/Documents/git/travisgoodspeed/md380tools
 
 Once cloned:
 Find md380tools folder
