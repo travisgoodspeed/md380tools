@@ -221,6 +221,9 @@ with 16MByte SPI-Flash.**
 
 After successfully flashing, the radio will be restarted.
 
+Special note on the users.csv flashdb process:
+* The users.csv file located in the db directory must be manually refreshed by running "sudo make clean" while inside the db directory otherwise it will continue using any already-existing users.csv file when running "sudo make flashdb" from the main md380tools directory. 
+
 To check the type / size of SPI-Flash
 
     md380-tool spiflashid    
