@@ -8,7 +8,8 @@ clean:
 
 users.csv:
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
-	perl -e 'print "\n5000,Status,,,,,,\n"' >>$@
+	perl -e 'print "\n"' >>$@
+	perl -ne 'print $$_;' < special_IDs.csv >>$@
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >>$@
 users.json:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
