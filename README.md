@@ -221,6 +221,13 @@ with 16MByte SPI-Flash.**
 
 After successfully flashing, the radio will be restarted.
 
+##Flashing on Linux Notes##
+
+* Please ensure the 99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.
+
+Special note on the users.csv flashdb process:
+* The users.csv file located in the db directory must be manually refreshed by running "make clean" while inside the db directory otherwise it will continue using any already-existing users.csv file when running "make flashdb" from the main md380tools directory. 
+
 To check the type / size of SPI-Flash
 
     md380-tool spiflashid    
