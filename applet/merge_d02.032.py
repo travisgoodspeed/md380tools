@@ -221,9 +221,7 @@ if __name__== '__main__':
     merger.hookbl(0x0801f5ba,sapplet.getadr("rx_screen_gray_hook"),0);
 
     # date format  hook, this hook can modify the date format on the status line
-    merger.hookbl(0x0800d8c8,sapplet.getadr("print_date_hook"),0);
-    # skip ..."unused code"
-    merger.hookstub(0x0800d8c8+4,0x0800d92e+1);
+    merger.hookbl(0x0800d92a, sapplet.getadr("print_date_hook"),0);
     
     # Hook the startup AES check.
     merger.hookbl(0x0804534c, sapplet.getadr("aes_startup_check_hook"),0);
