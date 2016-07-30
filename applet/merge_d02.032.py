@@ -207,8 +207,7 @@ if __name__== '__main__':
  #       merger.hookbl(adr, sapplet.getadr("OSTaskNameSet_hook"),0);
 
     # os semaphore hook .. now we can crate own semaphores
-    merger.hookbl(0x080441f4,sapplet.getadr("OSSemCreate_hook"),0);
-    merger.hookstub(0x080441f4+4,0x0804420c+1);
+    merger.hookbl(0x080441f6,sapplet.getadr("OSSemCreate_hook"),0);
 
     # display hooks
     ## display flip workaround see issue #178 not necessary on 0X3.020

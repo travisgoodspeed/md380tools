@@ -79,10 +79,6 @@ OS_EXIT_CRITICAL  = 0x08041e01;
 
 OSSemCreate       = 0x803da2d;
 
-/* OSSem Create Hook used the place from 2 OSSemCreate Calls */
-OSSemCreate_hook0_event_mem =	0x2001d124; /* from D002.032 @ 0x80441fa func 0x8044172 */
-OSSemCreate_hook1_event_mem =	0x2001d128; /* from D002.032 @ 0x8044206 func 0x8044172 */
-
 OSSemPend         = 0x803da79;
 OSSemPost         = 0x803db69;
 

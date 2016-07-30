@@ -115,11 +115,6 @@ int         OS_ENTER_CRITICAL();
 //! Resumes threads.
 void        OS_EXIT_CRITICAL(int);
 
-
-extern OS_EVENT * OSSemCreate_hook0_event_mem[];
-extern OS_EVENT * OSSemCreate_hook1_event_mem[];
-
-
 //! Functions and Variabes regarding the menu
 void*   main_menu(void *);     // menu exec
 
