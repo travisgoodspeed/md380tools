@@ -858,22 +858,22 @@ void create_menu_entry_addl_functions_screen(void) {
 
 
 void create_menu_utilies_hook(void) {
+  struct MENU *menu_mem;
   int enabled;
 
   if ( (md380_program_radio_unprohibited[4] & 0x4) == 0x4 ) {
-#ifdef DEBUG
-    printf("program_radio_unprohibited\n");
-#endif
     enabled=0;
   } else {
-#ifdef DEBUG
-    printf("program_radio_prohibited\n");
-#endif
     enabled=1;
   }
+
 #ifdef DEBUG
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
 #endif
+
+  menu_mem = (void *)(md380_menu_memory + md380_menu_depth * sizeof(struct MENU) + sizeof(struct MENU));
+  menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
+  menu_mem->numberof_menu_entries=4;
 
 #ifdef CONFIG_MENU
   create_menu_entry_hook(8, md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);

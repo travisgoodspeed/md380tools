@@ -257,10 +257,7 @@ if __name__== '__main__':
         merger.hookbl(adr,sapplet.getadr("ambe_unpack_hook"));
 
     # additional menu hook
-    merger.hookbl(0x08012740,sapplet.getadr("create_menu_utilies_hook"),0);
-    # skip ..."unused code"
-    merger.hookstub(0x08012740+4,0x08012786+1);
-    merger.setbyte(0x080126dc,0x04);  # menu has now 4 entry not 3
+    merger.hookbl(0x08012782,sapplet.getadr("create_menu_utilies_hook"),0);
 
     #Hook calls that produce WAV audio.  (Maybe.)
     wavdeclist=[
