@@ -18,7 +18,7 @@ except url.URLError as e:
 data = json.load(response)
 print "Fetching list of special IDs from BM master servers."
 
-file = open('special_IDs.csv', 'a')
+file = open('users.csv', 'a')
 # Add ID 5000 manually as this is not listed anywhere
 file.write('5000,Status,,,,,,\n')
 
