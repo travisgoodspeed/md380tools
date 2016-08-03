@@ -12,8 +12,7 @@ try:
     response = urllib2.urlopen(bm_master)
 except url.URLError as e:
     print("Unable to fetch list of BM masters!\n")
-    print e.reason
-    sys.exit(1)
+    sys.exit(0)
 
 data = json.load(response)
 print "Fetching list of special IDs from BM master servers.\n"
