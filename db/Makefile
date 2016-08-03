@@ -4,7 +4,7 @@ update: users.csv
 all: users.csv repeaters.csv users.json repeaters.json
 
 clean:
-	rm -f users.csv repeaters.csv users.json repeaters.json
+	rm -f users.csv repeaters.csv users.json repeaters.json special_IDs.csv
 
 users.csv:
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
