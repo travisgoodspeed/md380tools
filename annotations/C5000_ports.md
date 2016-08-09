@@ -1,5 +1,6 @@
 Pins of the C5000 that are routed to the microcontroller
 not yet complete!
+The LCD module is believed to be similar to the ILI9481.
 
 | Pin | Name |I/O| Datasheet Discription | Routed to STM32 | Comment
 |-----|------|---|-----------------------|-----------------|---------|
