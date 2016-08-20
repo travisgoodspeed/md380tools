@@ -1,0 +1,5 @@
+gfx_drawbmp          = 0x080237ff;
+gfx_drawtext         = 0x0800def7;
+md380_spiflash_read  = 0x08031477;
+botlinetext          = 0x2001e410;
+welcomebmp           = 0x080f8510;

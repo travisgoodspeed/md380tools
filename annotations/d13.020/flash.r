@@ -1,0 +1,2 @@
+af+ 0x080226c0 18 Get_Welcome_Line1_from_spi_flash
+af+ 0x080226d2 18 Get_Welcome_Line2_from_spi_flash

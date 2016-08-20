@@ -185,3 +185,9 @@ beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 *
 md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
 md380_f_4225_operatingmode_menu = 0x1b;       /*  see 0x0801f06a there are a lot of modes */
 md380_f_4225_operatingmode_menu_exit = 0x1c;
+
+
+chinese_font_p_start = 0x809c714;
+RTC_Timer = 0x8044549;
+Get_Welcome_Line1_from_spi_flash = 0x8021883;
+Get_Welcome_Line2_from_spi_flash = 0x8021895;

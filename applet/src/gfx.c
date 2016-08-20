@@ -42,6 +42,7 @@ void drawtext(wchar_t *text,
 	       15); //strlen(text));
 #endif
 }
+
 //! Draws text at an address by calling back to the MD380 function.
 void drawascii(char *ascii,
 	       int x, int y){
@@ -58,6 +59,8 @@ void drawascii(char *ascii,
 	       15); //strlen(text));
 #endif
 }
+
+#ifdef huhu
 
 void drawascii2(char *ascii,
                 int x, int y){
@@ -142,3 +145,5 @@ void print_ant_sym_hook(char *bmp, int x, int y) {
   }
 #endif
 }
+
+#endif
