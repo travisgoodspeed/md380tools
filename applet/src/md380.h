@@ -75,8 +75,18 @@ int usb_send_packet(void*, char*, uint16_t);
 
 int usb_dnld_handle();
 
-extern int dnld_tohook[];
+extern int	md380_dnld_tohook[];
 
+// This is the target address of the Application's DFU engine.
+extern char *	md380_dfutargetadr;
+extern char   	md380_packet[];
+extern int    	md380_packetlen[];
+extern int    	md380_blockadr[];
+extern char   	md380_dfu_state[];
+extern char * 	md380_dfu_target_adr[];
+extern char   	md380_thingy2[];
+extern char   	md380_usbstring[];
+extern wchar_t 	md380_usbbuf[];
 
 // md380_spiflash
 int     md380_spiflash_read(void *dst, long adr, long len);
