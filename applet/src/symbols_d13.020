@@ -23,3 +23,41 @@ md380_spi_sendrecv = 0x080314bd;
 md380_itow           = 0x08018b29;
 md380_RTC_GetDate    = 0x0802b50d;
 md380_RTC_GetTime    = 0x0802b3f7;
+
+
+/* Upload and download handlers. */
+usb_upld_handle      = 0x0808f309; /* 232 byte match */
+usb_dnld_handle      = 0x0808ebef; /* 432 byte match */
+
+/* This returns a USB packet to the host from the upload handler. */
+usb_send_packet      = 0x08059b03; /* 148 byte match */
+
+usb_serialnumber     = 0x0809662f; /* 12 byte match */
+usb_setcallbacks     = 0x08055101; /* 18 byte match */
+usb_do_setup         = 0x0808eb31; /* 90 byte match */
+
+usb_dfu_write        = 0x08090371; /* 274 byte match */
+usb_dfu_read         = 0x080903c1; /* 194 byte match */
+
+
+md380_dnld_tohook    = 0x20004674;
+md380_dfutargetadr   = 0x20004a14;
+md380_packet         = 0x2001ae74;
+md380_packetlen      = 0x2001e758;
+md380_blockadr       = 0x2001e754;
+md380_dfu_state      = 0x2001e962;
+md380_dfu_target_adr = 0x20004a14;
+md380_thingy2        = 0x2001e963;
+md380_usbstring      = 0x2001d504; /* unshure */
+md380_usbbuf         = 0x2001e0d0; /* unshure */
+
+
+c5000_spi0_readreg   = 0x0803ffd1; /* unshure */
+c5000_spi0_writereg  = 0x0803ff85; /* unshure */
+
+OS_ENTER_CRITICAL    = 0x08043de5; /* 146 byte match */
+OS_EXIT_CRITICAL     = 0x08043ded; /* 138 byte match */
+
+
+
+
