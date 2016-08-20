@@ -49,6 +49,20 @@ usb_do_setup = 0x0808cc01;
 usb_dfu_write = 0x0808e441;
 usb_dfu_read = 0x0808e491;
 
+/* Function pointer at this address calls DNLD. */
+md380_dnld_tohook	= 0x20000e9c;  /* i'cant find */
+md380_dfutargetadr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
+md380_packet		= 0x200199f0;  /* from D002.032 @ 0x0808cd00 func 0x0808ccbe usb_dnld_handle() */ 
+md380_packetlen		= 0x2001d20c;  /* from D002.032 @ 0x0808cce4 func 0x0808ccbe usb_dnld_handle() */
+md380_blockadr		= 0x2001d208;  /* from D002.032 @ 0x0808ccce func 0x0808ccbe usb_dnld_handle() */
+md380_dfu_state		= 0x2001d405;  /* from D002.032 @ 0x0808ccc2 func 0x0808ccbe usb_dnld_handle() */
+md380_dfu_target_adr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
+md380_thingy2		= 0x2001d041;  /* from D002.032 @ 0x0808d234 !!! +1 !!! func 0x0808ccbe usb_dnld_handle() */
+md380_usbstring		= 0x2001c080;  /* from D002.032 @ 0x080969e4 func 0x080969de */
+md380_usbbuf 		= 0x2001cc0c;  /* from D002.032 @ 0x080154de func 0x080154de */
+
+
+
 
 /* spi-flash */
 md380_spiflash_read                    = 0x802fd83;
@@ -168,18 +182,6 @@ chinese_font = 0x0809D000;
 dmr_squelch_mode	=	0x2001d35f; /* from D002.032 @ 0x0803ed30 func 0x803ec86 */
 /* Unknown function involved in squelching. */
 dmr_squelch_firstthing	=	0x2001d118; /* from D002.032 @ 0x0803ee9a func 0x803ec86 */
-
-/* Function pointer at this address calls DNLD. */
-md380_dnld_tohook	= 0x20000e9c;  /* i'cant find */
-md380_dfutargetadr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
-md380_packet		= 0x200199f0;  /* from D002.032 @ 0x0808cd00 func 0x0808ccbe usb_dnld_handle() */ 
-md380_packetlen		= 0x2001d20c;  /* from D002.032 @ 0x0808cce4 func 0x0808ccbe usb_dnld_handle() */
-md380_blockadr		= 0x2001d208;  /* from D002.032 @ 0x0808ccce func 0x0808ccbe usb_dnld_handle() */
-md380_dfu_state		= 0x2001d405;  /* from D002.032 @ 0x0808ccc2 func 0x0808ccbe usb_dnld_handle() */
-md380_dfu_target_adr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
-md380_thingy2		= 0x2001d041;  /* from D002.032 @ 0x0808d234 !!! +1 !!! func 0x0808ccbe usb_dnld_handle() */
-md380_usbstring		= 0x2001c080;  /* from D002.032 @ 0x080969e4 func 0x080969de */
-md380_usbbuf 		= 0x2001cc0c;  /* from D002.032 @ 0x080154de func 0x080154de */
 
 
   
