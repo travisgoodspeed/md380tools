@@ -170,7 +170,21 @@ dmr_squelch_mode	=	0x2001d35f; /* from D002.032 @ 0x0803ed30 func 0x803ec86 */
 dmr_squelch_firstthing	=	0x2001d118; /* from D002.032 @ 0x0803ee9a func 0x803ec86 */
 
 /* Function pointer at this address calls DNLD. */
-dnld_tohook		= 	0x20000e9c;  /* i'cant find */
+md380_dnld_tohook	= 0x20000e9c;  /* i'cant find */
+md380_dfutargetadr	= 0x2000112c;
+md380_packet		= 0x200199f0;
+md380_packetlen		= 0x2001d20c;
+md380_blockadr		= 0x2001d208; 
+md380_dfu_state		= 0x2001d405;
+md380_dfu_target_adr	= 0x2000112c; 
+md380_thingy2		= 0x2001d041;
+md380_usbstring		= 0x2001c080;
+md380_usbbuf 		= 0x2001cc0c;
+
+
+  
+
+
 
 /* Pointer to the buffer that stores the bottom line of screen text. */
 botlinetext		=	0x2001cee0; /* from D002.032 @ 0x0802189c func 0x8021894 */

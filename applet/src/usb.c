@@ -46,8 +46,6 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   //We have to send this much.
   uint16_t length= *(short*)(packet+6);
   
-  //This is the target address of the Application's DFU engine.
-  char *dfutargetadr=(char*) *((int*)0x2000112c); //2.032 DFU target adr.
   
   /* The DFU protocol specifies reads from block 0 as something
      special, but it doesn't say way to do about an address of 1.
@@ -55,7 +53,7 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
    */
   if(blockadr==1){
     //Some special addresses need help before the transfer.
-    if(dfutargetadr== dmesg_start){
+    if(md380_dfutargetadr == dmesg_start){
       //int state=OS_ENTER_CRITICAL();
       /* We can't send the DMESG buffer itself, because it's in the
 	 tightly coupled memory, so we'll memcpy() it to a buffer in
@@ -76,7 +74,7 @@ int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
     
     //Send the data from internal memory and return.
     usb_send_packet(iface,   //USB interface structure.
-		    dfutargetadr,
+		    md380_dfutargetadr,
 		    length); //Length must match.
     return 0;
   }
@@ -92,15 +90,6 @@ int usb_dnld_hook(){
      block address that it runs to.  The stock firmware has a bug
      in that it assumes the packet size is always 2048 bytes.
   */
-  static char *packet=(char*) 0x200199f0;//2.032
-  static int *packetlen=(int*) 0x2001d20c;//2.032
-  static int *blockadr=(int*) 0x2001d208;//2.032
-  static char *dfu_state=(char*) 0x2001d405;//2.032
-  static char **dfu_target_adr=(char**) 0x2000112c; //2.032
-  
-  //Don't know what these do.
-  //char *thingy=(char*) 0x2001d276;
-  char *thingy2=(char*) 0x2001d041;
   
   int state;
   
@@ -108,27 +97,27 @@ int usb_dnld_hook(){
      0.  We'll use block 1, because it handily fits in the gap without
      breaking backward compatibility with the older code.
    */
-  if(*blockadr==1){
-    switch(packet[0]){
+  if(*md380_blockadr==1){
+    switch(md380_packet[0]){
 
 //Memory commands
     case TDFU_DMESG:
       //The DMESG buffer might move, so this command
       //sets the target address to the DMESG buffer.
-      *dfu_target_adr=dmesg_start;
+      *md380_dfu_target_adr=dmesg_start;
       break;
 
 //SPI-FLASH commands
 #ifdef CONFIG_SPIFLASH
     case TDFU_SPIFLASHGETID:
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
+      *md380_dfu_target_adr=dmesg_tx_buf;
       get_spi_flash_type((void *) dmesg_tx_buf); // 0x00aabbcc  aa=MANUFACTURER ID, bb,cc Device Identification
       break;
     case TDFU_SPIFLASHREAD:
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
-      uint32_t adr= *((uint32_t*)(packet+1));
+      *md380_dfu_target_adr=dmesg_tx_buf;
+      uint32_t adr= *((uint32_t*)(md380_packet+1));
       printf("Dumping %d bytes from 0x%08x in SPI Flash\n",
             DMESG_SIZE, adr);
       md380_spiflash_read(dmesg_tx_buf,
@@ -137,19 +126,19 @@ int usb_dnld_hook(){
       break;
     case TDFU_SPIFLASHWRITE:
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
-      adr = *((uint32_t*)(packet+1));
-      uint32_t size = *((uint32_t*)(packet+5));
+      *md380_dfu_target_adr=dmesg_tx_buf;
+      adr = *((uint32_t*)(md380_packet+1));
+      uint32_t size = *((uint32_t*)(md380_packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       if (check_spi_flash_size()>adr) {
-        printf ("TDFU_SPIFLASHWRITE %x %d %x\n", adr, size, packet+9);
-        md380_spiflash_write(packet+9,  adr, size);
+        printf ("TDFU_SPIFLASHWRITE %x %d %x\n", adr, size, md380_packet+9);
+        md380_spiflash_write(md380_packet+9,  adr, size);
       }
       break;
     case TDFU_SPIFLASHERASE64K:   // experimental
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
-      adr= *((uint32_t*)(packet+1));
+      *md380_dfu_target_adr=dmesg_tx_buf;
+      adr= *((uint32_t*)(md380_packet+1));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       if (check_spi_flash_size()>adr) {
         printf ("TDFU_SPIFLASHERASE64K %x \n", adr);
@@ -173,12 +162,12 @@ int usb_dnld_hook(){
       break;
     case TDFU_SPIFLASHWRITE_NEW: // not working, this is not the problem
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
-      adr = *((uint32_t*)(packet+1));
-      size = *((uint32_t*)(packet+5));
+      *md380_dfu_target_adr=dmesg_tx_buf;
+      adr = *((uint32_t*)(md380_packet+1));
+      size = *((uint32_t*)(md380_packet+5));
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       if (check_spi_flash_size()>adr) {
-        printf ("DFU_CONFIG_SPIFLASHWRITE_new %x %d %x\n", adr, size, packet+9);
+        printf ("DFU_CONFIG_SPIFLASHWRITE_new %x %d %x\n", adr, size, md380_packet+9);
         // enable write
 
         for (int i=0;i<size;i=i+256) {
@@ -200,7 +189,7 @@ int usb_dnld_hook(){
           printf("%x ", (page_adr & 0xff));
           md380_spi_sendrecv(page_adr & 0xff);
           for (int ii=0; ii < 256; ii++) {
-            md380_spi_sendrecv(packet[9+ii+i]);
+            md380_spi_sendrecv(md380_packet[9+ii+i]);
           }
           md380_spiflash_disable();
           md380_spiflash_wait();
@@ -210,7 +199,7 @@ int usb_dnld_hook(){
       break;
     case TDFU_SPIFLASHSECURITYREGREAD:
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
+      *md380_dfu_target_adr=dmesg_tx_buf;
       printf("Dumping %d bytes from adr 0 SPI Flash security_registers\n",
 	     DMESG_SIZE);
       md380_spiflash_security_registers_read(dmesg_tx_buf,
@@ -223,18 +212,18 @@ int usb_dnld_hook(){
 //Radio Commands
     case TDFU_C5000_READREG:
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
+      *md380_dfu_target_adr=dmesg_tx_buf;
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       state=OS_ENTER_CRITICAL();
-      c5000_spi0_readreg(packet[1],dmesg_tx_buf);
+      c5000_spi0_readreg(md380_packet[1],dmesg_tx_buf);
       OS_EXIT_CRITICAL(state);
       break;
     case TDFU_C5000_WRITEREG:
       //Re-uses the dmesg transmit buffer.
-      *dfu_target_adr=dmesg_tx_buf;
+      *md380_dfu_target_adr=dmesg_tx_buf;
       memset(dmesg_tx_buf,0,DMESG_SIZE);
       state=OS_ENTER_CRITICAL();
-      c5000_spi0_writereg(packet[1],packet[2]);
+      c5000_spi0_writereg(md380_packet[1],md380_packet[2]);
       OS_EXIT_CRITICAL(state);
       break;
 #endif //CONFIG_SPIC5000
@@ -242,25 +231,25 @@ int usb_dnld_hook(){
 #ifdef CONFIG_GRAPHICS
 //Graphics commands.
     case TDFU_PRINT: // 0x80, u8 x, u8 y, u8 str[].
-      drawtext((wchar_t *) (packet+3),
-	       packet[1],packet[2]);
+      drawtext((wchar_t *) (md380_packet+3),
+	       md380_packet[1],md380_packet[2]);
       break;
       
     case TDFU_BOX:
 #endif //CONFIG_GRAPHICS
 
     default:
-      printf("Unhandled DFU packet type 0x%02x.\n",packet[0]);
+      printf("Unhandled DFU packet type 0x%02x.\n",md380_packet[0]);
     }
     
-    thingy2[0]=0;
-    thingy2[1]=0;
-    thingy2[2]=0;
-    thingy2[3]=3;
-    *dfu_state=3;
+    md380_thingy2[0]=0;
+    md380_thingy2[1]=0;
+    md380_thingy2[2]=0;
+    md380_thingy2[3]=3;
+    *md380_dfu_state=3;
     
-    *blockadr=0;
-    *packetlen=0;
+    *md380_blockadr=0;
+    *md380_packetlen=0;
     return 0;
   }else{
     /* For all other blocks, we default to the internal handler.
@@ -273,7 +262,7 @@ int usb_dnld_hook(){
 void hookusb(){
   //Be damned sure to call this *after* the table has been
   //initialized.
-  *dnld_tohook= (int) usb_dnld_hook;
+  *md380_dnld_tohook= (int) usb_dnld_hook;
   return;
 }
 
@@ -310,7 +299,6 @@ const char *getmfgstr(int speed, long *len){
   
   static long adr=0;
   long val;
-  char *usbstring=(char*) 0x2001c080; //2.032
   char buffer[]="@________ : ________";
   
 #ifdef CONFIG_SPIFLASH
@@ -326,12 +314,11 @@ const char *getmfgstr(int speed, long *len){
   adr+=4;
   
   //Return the string as our value.
-  return loadusbstr(usbstring,buffer,len);
+  return loadusbstr(md380_usbstring,buffer,len);
 }
 
 void loadfirmwareversion(){
-  wchar_t *buf=(wchar_t*) 0x2001cc0c;
-  memcpy(buf,VERSIONDATE,22);
+  memcpy(md380_usbbuf,VERSIONDATE,22);
   return;
 }
 
