@@ -14,20 +14,6 @@
 #include "spiflash.h"
 #include "addl_config.h"
 
-#define devel_ram_dump 
- 
-#ifdef devel_ram_dump
-void dump_ram_to_spi_flash() {
-  static int run = 0;
-  if ( run == 1) {
-    printf("dump\n");
-    for ( int i=0; i < (112+16); i++) {
-      md380_spiflash_write((void *) 0x20000000+(1024*i), 0x400000+(1024*i), 1024);
-    }  
-  }
-  run++;
-}
-#endif
      
 struct addl_config global_addl_config;
 
@@ -83,9 +69,6 @@ void init_global_addl_config_struct() {
 void init_global_addl_config_hook(void) {
   init_global_addl_config_struct();
 
-#ifdef devel_ram_dump
-  dump_ram_to_spi_flash();
-#endif
 
 #ifdef CONFIG_MENU
   md380_create_main_meny_entry();
