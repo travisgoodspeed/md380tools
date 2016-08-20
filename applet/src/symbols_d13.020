@@ -1,5 +1,25 @@
-gfx_drawbmp          = 0x080237ff;
-gfx_drawtext         = 0x0800def7;
-md380_spiflash_read  = 0x08031477;
+gfx_drawbmp          = 0x80237ff;
+gfx_drawtext         = 0x800def7;
+gfx_chars_to_display = 0x801dd09;
+gfx_drawtext2        = 0x801dd09;
+md380_spiflash_read  = 0x8031477;
 botlinetext          = 0x2001e410;
 welcomebmp           = 0x080f8510;
+md380_create_main_meny_entry = 0x0800c188;
+
+/* spi-flash */
+md380_spiflash_read  = 0x08031477;
+md380_spiflash_write = 0x0803155f;
+md380_spiflash_security_registers_read = 0x080318b1;
+md380_spiflash_enable = 0x0803152b; 
+md380_spiflash_disable = 0x08031547;
+md380_spiflash_wait  = 0x08031509; 
+md380_spiflash_block_erase64k = 0x080312ab;
+md380_spiflash_sektor_erase4k = 0x08031277;
+md380_spi_sendrecv = 0x080314bd;
+
+
+/* useful md380 firmware functions and variables*/
+md380_itow           = 0x08018b29;
+md380_RTC_GetDate    = 0x0802b50d;
+md380_RTC_GetTime    = 0x0802b3f7;

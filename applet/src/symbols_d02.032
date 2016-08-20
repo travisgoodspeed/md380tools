@@ -187,7 +187,20 @@ md380_f_4225_operatingmode_menu = 0x1b;       /*  see 0x0801f06a there are a lot
 md380_f_4225_operatingmode_menu_exit = 0x1c;
 
 
+
+/* symgrate food to finde non matched functions */
 chinese_font_p_start = 0x809c714;
 RTC_Timer = 0x8044549;
 Get_Welcome_Line1_from_spi_flash = 0x8021883;
 Get_Welcome_Line2_from_spi_flash = 0x8021895;
+Start = 0x0804403d;
+Start_multiple_tasks = 0x0804429d;
+Print_Date_and_Time = 0x800d8af;
+Volume_Menu = 0x800df85;
+FUNC_F_286-0x80286e8 = 0x80286e9;
+FUNC_F_287-0x8028960 = 0x8028961;
+FUNC_F_4140-0x800c7e8 = 0x800c7e9;
+FUNC_F_4154 = 0x800dad5;
+FUNC_F_4170 = 0x801d7fd;
+FUNC_F_4171 = 0x801dcf1;
+  
