@@ -3,7 +3,7 @@
 */
 
 //1kb buffer.  Verify that this is empty with reads.
-#define DMESG_START 0x2001d500
+#define DMESG_START  0x2001f700  //0x2001d500
 #define DMESG_SIZE 1024
 
 //This buffer is in TCRAM, cannot be DMAd.
