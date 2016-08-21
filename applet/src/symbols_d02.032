@@ -241,3 +241,6 @@ x802c99c = 0x802c99d;
 x80127d0 = 0x80127d1;
 Ask_Test_PowerOnPassword = 0x0801a4fd;
 Create_Menu_Utilies = 0x080126a9;
+
+x0803b524 = 0x0803b525;
+x0803b55c = 0x0803b55d;

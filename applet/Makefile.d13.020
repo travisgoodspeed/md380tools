@@ -1,9 +1,7 @@
 SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_config.o 
-SRCS += spiflash.o usb.o menu.o
-# menu.o
-#  dmr.o 
-# SRCS += os.o menu.o aes.o ambe.o usersdb.o beep_process.o
-# SRCS += rtc_timer.o i2c.o display.o
+SRCS += spiflash.o usb.o menu.o rtc_timer.o
+# SRCS += os.o aes.o ambe.o usersdb.o beep_process.o dmr.o
+# SRCS += i2c.o display.o
 PROJ_NAME=main
 
 

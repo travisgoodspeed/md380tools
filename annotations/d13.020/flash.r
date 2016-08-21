@@ -53,3 +53,9 @@ CCa 0x0801354e R.a.d.i.o...I.n.
 CCa 0x0801359a P.r.o.g.r.a.m..
 CCa 0x080135ce G.P.S./.B.e.i.D
 CCa 0x08013602 R.X...G.P.S.I.n.
+
+af+ 0x0801fe5c 5454 F_4225
+af+ 0x0802dfbc 1908 F_4137
+af+ 0x0802c83c 2370 F_4520
+af+ 0x0804eb64 152  F_4098
+af+ 0x0804ec66 298 F_4102
