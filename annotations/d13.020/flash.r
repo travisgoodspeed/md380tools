@@ -48,3 +48,8 @@ CCa 0x08018018 L.E.D...I.n.d.i.
 af+ 0x0801ad56 246 Create_Menu_Entry_LEDIndicator
 
 CCa 0x08013a1e E.n.t.e.r...P.
+CCa 0x0801351e R.a.d.i.o...S.e
+CCa 0x0801354e R.a.d.i.o...I.n.
+CCa 0x0801359a P.r.o.g.r.a.m..
+CCa 0x080135ce G.P.S./.B.e.i.D
+CCa 0x08013602 R.X...G.P.S.I.n.
