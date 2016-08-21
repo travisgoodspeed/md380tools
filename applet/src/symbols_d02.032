@@ -231,3 +231,13 @@ F_588 = 0x0804b633;
 F_586 = 0x0804b5f3;
 F_587 = 0x0804b60f;
 
+x80126a8 = 0x80126a9;
+x80127d0 = 0x80127d1; 
+x8019fd0 = 0x8019fd1;
+x802c55e = 0x802c55f;
+x802c99c = 0x802c99d;
+
+
+x80127d0 = 0x80127d1;
+Ask_Test_PowerOnPassword = 0x0801a4fd;
+Create_Menu_Utilies = 0x080126a9;

@@ -3,7 +3,7 @@
 */
 
 
-// #define DEBUG
+#define DEBUG
 
 #include <stdio.h>
 #include <string.h>

@@ -19,10 +19,32 @@ af+ 0x0803155e 704 spiflash_write
 af+ 0x08031830 52 spiflash_Erase_Security_Registers_44h
 af+ 0x08031864 76 spiflash_Program_Security_Registers_42h
 af+ 0x080318b0 78 spiflash_Read_Security_Registers_48h
-
+af+ 0x08023ee4 394 Edit_Message_Menu_Entry
 af+ 0x0801eb00 1436 F_4171
-
+af+ 0x080134a0 408 Create_Menu_Utilies
 af+ 0x801dd08 18 gfx_chars_to_display
+af+ 0x80136c0 930 Create_Menu_Entry_ProgramRadio
 
 af+ 0x0802b3f6 80 md380_RTC_GetTime
 af+ 0x0802b50c 76 md380_RTC_GetDate
+
+CCa 0x08013710 E.d.i.t...C.h.a.
+CCa 0x08013762 R.x...F.r.e.q.u
+CCa 0x080137ba C.h.a.n.n.e.l.
+CCa 0x080137e8 T.i.m.e...O.u.t
+CCa 0x08013824 C.T.C./.D.C.S
+CCa 0x08013890 C.o.l.o.r...C.o
+CCa 0x080138be R.e.p.e.a.t.e.r.
+CCa 0x080138ec T.x.C.o.n.t.a.
+CCa 0x0801391a G.r.o.u.p.L.i.s
+CCa 0x0801394a C.o.l.o.r...C.o
+CCa 0x08013978 R.e.p.e.a.t.e.r
+CCa 0x0801351e R.a.d.i.o...S.e
+af+ 0x08017cbc 1404 Create_Menu_Entry_RadioSettings
+CCa 0x08017f48 I.n.t.r.o...S.c.
+CCa 0x08017f94 K.e.y.p.a.d...L.
+CCa 0x08017fcc L.a.n.g.u.a.g.e
+CCa 0x08018018 L.E.D...I.n.d.i.
+af+ 0x0801ad56 246 Create_Menu_Entry_LEDIndicator
+
+CCa 0x08013a1e E.n.t.e.r...P.
