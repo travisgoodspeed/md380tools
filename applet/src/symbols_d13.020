@@ -109,3 +109,41 @@ md380_f_4137 = 0x0802dfbd;
 md380_f_4520 = 0x0802c83d;
 md380_f_4098 = 0x0804eb65;
 md380_f_4102 = 0x0804ec67;
+
+beep_process_unkown     =    0x2001e6c0;
+
+
+/* Function that handles uC/OS-II settings */
+OSTaskCreateExt      = 0x0804e581;
+OSTaskNameSet        = 0x0804e64d;
+
+OS_ENTER_CRITICAL    = 0x08043de5;
+OS_EXIT_CRITICAL     = 0x08043ded;
+
+OSSemCreate          = 0x0803f709;
+
+OSSemPend            = 0x0803f755;
+OSSemPost            = 0x0803f845;
+
+md380_OSMboxPost     = 0x0803119d;
+
+
+
+/* aes */
+aes_loadkey          = 0x08036cc1;
+aes_cipher           = 0x08036c39;
+aes_startup_check    = 0x0802256b;
+
+ambe_unpack          = 0x0804b235;
+dmr_call_end         = 0x08041431;
+dmr_call_start       = 0x08040a03;
+
+
+
+ambe_decode_wav      = 0x08053681;
+dmr_before_squelch   = 0x08040ce7;
+dmr_handle_data      = 0x0804dd71;
+dmr_sms_arrive       = 0x08040de1;
+
+ambe_encode_thing    = 0x080531d9;
+

@@ -59,3 +59,14 @@ af+ 0x0802dfbc 1908 F_4137
 af+ 0x0802c83c 2370 F_4520
 af+ 0x0804eb64 152  F_4098
 af+ 0x0804ec66 298 F_4102
+af+ 0x08030aa4 52 F_293
+af+ 0x08030ad8 16 F_294
+af+ 0x0802256a 324 aes_startup_check
+af+ 0x08049e14 798 Start_2_more_tasks__init_vocoder_tasks__Q
+af+ 0x08053680 140 ambe_decode_wav
+
+af+ 0x08040d44 94 F_858
+af+ 0x08040ce6 92 F_416
+af+ 0x0804dd70 430 dmr_handle_data
+af+ 0x08040de0 1540 dmr_sms_arrive
+af+ 0x080531d8 124 ambe_encode_thing__size_not_correct
