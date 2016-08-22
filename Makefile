@@ -7,6 +7,7 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 all: applets
 clean:
 	cd patches/2.032 && $(MAKE) clean
+	cd patches/d13.020 && $(MAKE) clean
 	cd firmware && $(MAKE) clean
 	cd applet && $(MAKE) clean
 	rm -f *~ *.pyc
