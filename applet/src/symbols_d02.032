@@ -49,6 +49,20 @@ usb_do_setup = 0x0808cc01;
 usb_dfu_write = 0x0808e441;
 usb_dfu_read = 0x0808e491;
 
+/* Function pointer at this address calls DNLD. */
+md380_dnld_tohook	= 0x20000e9c;  /* i'cant find */
+md380_dfutargetadr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
+md380_packet		= 0x200199f0;  /* from D002.032 @ 0x0808cd00 func 0x0808ccbe usb_dnld_handle() */ 
+md380_packetlen		= 0x2001d20c;  /* from D002.032 @ 0x0808cce4 func 0x0808ccbe usb_dnld_handle() */
+md380_blockadr		= 0x2001d208;  /* from D002.032 @ 0x0808ccce func 0x0808ccbe usb_dnld_handle() */
+md380_dfu_state		= 0x2001d405;  /* from D002.032 @ 0x0808ccc2 func 0x0808ccbe usb_dnld_handle() */
+md380_dfu_target_adr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
+md380_thingy2		= 0x2001d041;  /* from D002.032 @ 0x0808d234 !!! +1 !!! func 0x0808ccbe usb_dnld_handle() */
+md380_usbstring		= 0x2001c080;  /* from D002.032 @ 0x080969e4 func 0x080969de */
+md380_usbbuf 		= 0x2001cc0c;  /* from D002.032 @ 0x080154de func 0x080154de */
+
+
+
 
 /* spi-flash */
 md380_spiflash_read                    = 0x802fd83;
@@ -169,8 +183,10 @@ dmr_squelch_mode	=	0x2001d35f; /* from D002.032 @ 0x0803ed30 func 0x803ec86 */
 /* Unknown function involved in squelching. */
 dmr_squelch_firstthing	=	0x2001d118; /* from D002.032 @ 0x0803ee9a func 0x803ec86 */
 
-/* Function pointer at this address calls DNLD. */
-dnld_tohook		= 	0x20000e9c;  /* i'cant find */
+
+  
+
+
 
 /* Pointer to the buffer that stores the bottom line of screen text. */
 botlinetext		=	0x2001cee0; /* from D002.032 @ 0x0802189c func 0x8021894 */
@@ -183,3 +199,41 @@ beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 *
 
 /* Variabes regarding rtc_timer process. */
 md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
+
+
+
+
+/* symgrate food to finde non matched functions */
+chinese_font_p_start = 0x809c714;
+RTC_Timer = 0x8044549;
+Get_Welcome_Line1_from_spi_flash = 0x8021883;
+Get_Welcome_Line2_from_spi_flash = 0x8021895;
+Start = 0x0804403d;
+Start_multiple_tasks = 0x0804429d;
+Print_Date_and_Time = 0x800d8af;
+Volume_Menu = 0x800df85;
+FUNC_F_286-0x80286e8 = 0x80286e9;
+FUNC_F_287-0x8028960 = 0x8028961;
+FUNC_F_4140-0x800c7e8 = 0x800c7e9;
+FUNC_F_4154 = 0x800dad5;
+FUNC_F_4170 = 0x801d7fd;
+FUNC_F_4171 = 0x801dcf1;
+F0x080969de = 0x080969df;
+F0x080154de = 0x080154df;
+fcn.0808e328 = 0x0808e329;
+Create_Menu_Entry_Quick = 0x802c169;
+Edit_Message_Confirm_Send_Contacts = 0x802c8fb;
+F_588 = 0x0804b633;
+F_586 = 0x0804b5f3;
+F_587 = 0x0804b60f;
+x80126a8 = 0x80126a9;
+x80127d0 = 0x80127d1; 
+x8019fd0 = 0x8019fd1;
+x802c55e = 0x802c55f;
+x802c99c = 0x802c99d;
+x80127d0 = 0x80127d1;
+Ask_Test_PowerOnPassword = 0x0801a4fd;
+Create_Menu_Utilies = 0x080126a9;
+x0803b524 = 0x0803b525;
+x0803b55c = 0x0803b55d;
+x0802e240 = 0x0802e241;

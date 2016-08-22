@@ -19,7 +19,7 @@
 // why it's work, i have no idea ;)
 
 void F_294_replacement(uint16_t value) {
-  uint32_t multiplicand = 0x1dd;  // original value
+  uint32_t multiplicand = 0x1dd;  // original value  - original val @ d13.020 0x4a9
 
   if (global_addl_config.rbeep == 1) {
     multiplicand= 0xaa;

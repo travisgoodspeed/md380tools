@@ -3,7 +3,7 @@
 */
 
 //1kb buffer.  Verify that this is empty with reads.
-#define DMESG_START 0x2001d500
+#define DMESG_START  0x2001f700  //0x2001d500
 #define DMESG_SIZE 1024
 
 //This buffer is in TCRAM, cannot be DMAd.
@@ -21,4 +21,4 @@ void dmesg_flush();
 //Convenience functions.
 void printhex(char *buf, int len);
 
-void printhex2(char *buf, int len);
+void printhex2(const char *buf, int len);

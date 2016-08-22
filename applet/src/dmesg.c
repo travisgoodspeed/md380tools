@@ -56,7 +56,7 @@ void printhex(char *buf, int len){
 }
 
 /* Convenience function to print in hex. */
-void printhex2(char *buf, int len){
+void printhex2(const char *buf, int len){
   char strbuf[256];
   int i;
   for(i=0;i<len && len < 255 ;i++){

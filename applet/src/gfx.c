@@ -103,6 +103,19 @@ void lcd_background_led(int on) {
   }
 }
 
+/*
+void dump_ram_to_spi_flash() {
+  static int run = 0;
+  if ( run == 10) { 
+    printf("dump\n");
+    for ( int i=0; i < (112+16); i++) {
+      md380_spiflash_write((void *) 0x20000000+(1024*i), 0x400000+(1024*i), 1024);
+    }
+  }
+  run++;
+}
+
+*/
 
 void print_date_hook(void) {  // copy from the md380 code
 #ifdef CONFIG_GRAPHICS
@@ -129,6 +142,7 @@ void print_date_hook(void) {  // copy from the md380 code
   wide[10]='\0';
   gfx_chars_to_display( wide, 0xa, 0x60, 0x5e);
 
+//  dump_ram_to_spi_flash();
                    
 //  gfx_drawbmp((char *) &bmp_eye, 20, 2);
 #endif //CONFIG_GRAPHICS             
