@@ -54,6 +54,7 @@ lib: src/version.h config.h
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
+	cd ../patches/$(SRCVERSION) && $(MAKE) all
 	cp ../patches/$(SRCVERSION)/patched.img ./experiment.img
 	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img 0x0809b000
 
