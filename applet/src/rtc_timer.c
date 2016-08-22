@@ -20,6 +20,16 @@ static int flag=0;
 #define MD380_F_4225_OPERATINGMODE_MENU       0x1b       /*  see 0x0801f06a there are a lot of modes */
 #define MD380_F_4225_OPERATINGMODE_MENU_EXIT  0x1c
 
+#ifdef MD380_d02_32
+#define MD380_FONT_SMALL 0x809bcec /* 0x0800d8c0 */
+#define MD380_FONT_NORM  0x80d0fac /* 0x0800d992 */
+#endif 
+
+#ifdef MD380_d13_020
+#define MD380_FONT_SMALL 0x809a4c0 /* 0x0800df2a */
+#define MD380_FONT_NORM 0x80cf780  /* 0x0800dffa */
+#endif
+
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() {
 #ifdef DEBUG
@@ -50,21 +60,20 @@ void print_rx_screen(unsigned int bg_color) {
 
   gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
-  gfx_select_font((void *) 0x809bcec);
+  gfx_select_font((void *) MD380_FONT_SMALL);
 
   for (y=42; y<=102; y=y+12) {
     drawascii2("                  ",10,y);
   }
 
+
  int primask=OS_ENTER_CRITICAL();  // for form sake
  dst=g_dst;
  src=g_src;
  OS_EXIT_CRITICAL(primask);
-
  if (find_dmr_user(buf, src, (void *) 0x100000, 80) == 0) {
    sprintf(buf, ",ID not found,in users.csv,see README.md,on Github");   // , is line seperator ;)
  }
-
   ii=0;
   n=0;
 
@@ -83,7 +92,7 @@ void print_rx_screen(unsigned int bg_color) {
   sprintf(buf, "%d -> %d", src, dst );
   drawascii2(buf, 10, 42);
 
-  gfx_select_font((void *) 0x80d0fac);
+  gfx_select_font((void *) MD380_FONT_NORM);
   gfx_set_fg_color(0xff8032);
   gfx_set_bg_color(0xff000000);
 #endif //CONFIG_GRAPHICS

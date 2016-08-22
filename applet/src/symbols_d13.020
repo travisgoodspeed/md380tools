@@ -100,8 +100,7 @@ md380_menu_edit_buf                    = 0x2001cb9a;
 
 /* Variabes regarding rtc_timer process. */
 md380_f_4225_operatingmode            = 0x2001e94d; /* 0x0803bef0 */
-md380_f_4225_operatingmode_menu       = 0x1b;
-md380_f_4225_operatingmode_menu_exit  = 0x1c;
+
 /* hook 0x0801fe7c (alt: 0x0801f064) */
 md380_f_4225                          = 0x0801fe5d;
 
