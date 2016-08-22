@@ -130,6 +130,11 @@ void demo(){
   drawtext(L"@ d13.020",
 	   160,140);
 #endif  
+#ifdef MD380_d02_032
+  drawtext(L"@ d02.032",
+	   160,140);
+#endif
+
   sleep(1000);
   
   //Make the welcome image scroll across the screen.
