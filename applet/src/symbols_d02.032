@@ -200,6 +200,9 @@ beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 *
 /* Variabes regarding rtc_timer process. */
 md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
 
+
+
+
 /* symgrate food to finde non matched functions */
 chinese_font_p_start = 0x809c714;
 RTC_Timer = 0x8044549;
@@ -217,28 +220,20 @@ FUNC_F_4170 = 0x801d7fd;
 FUNC_F_4171 = 0x801dcf1;
 F0x080969de = 0x080969df;
 F0x080154de = 0x080154df;
-
 fcn.0808e328 = 0x0808e329;
-
 Create_Menu_Entry_Quick = 0x802c169;
 Edit_Message_Confirm_Send_Contacts = 0x802c8fb;
-
 F_588 = 0x0804b633;
 F_586 = 0x0804b5f3;
 F_587 = 0x0804b60f;
-
 x80126a8 = 0x80126a9;
 x80127d0 = 0x80127d1; 
 x8019fd0 = 0x8019fd1;
 x802c55e = 0x802c55f;
 x802c99c = 0x802c99d;
-
-
 x80127d0 = 0x80127d1;
 Ask_Test_PowerOnPassword = 0x0801a4fd;
 Create_Menu_Utilies = 0x080126a9;
-
 x0803b524 = 0x0803b525;
 x0803b55c = 0x0803b55d;
-
 x0802e240 = 0x0802e241;

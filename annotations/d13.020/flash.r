@@ -40,6 +40,7 @@ af+ 0x802c83c 2370 F_4520
 af+ 0x802dfbc 1908 F_4137
 af+ 0x8030aa4 52 F_293
 af+ 0x8030ad8 16 F_294
+af+ 0x803119c 86 OSMboxPost
 af+ 0x8031276 52 spiflash_sektor_erase4k
 af+ 0x80312aa 52 spiflash_block_erase64k
 af+ 0x80312de 76 spiflash_program_page
@@ -55,6 +56,7 @@ af+ 0x8031830 52 spiflash_Erase_Security_Registers_44h
 af+ 0x8031864 76 spiflash_Program_Security_Registers_42h
 af+ 0x80318b0 78 spiflash_Read_Security_Registers_48h
 af+ 0x803f708 76 OSSemCreate
+af+ 0x8040a02 740 dmr_audio_start
 af+ 0x8040ce6 92 F_416
 af+ 0x8040d44 94 F_858
 af+ 0x8040de0 1540 dmr_sms_arrive
@@ -68,5 +70,3 @@ af+ 0x804eb64 152  F_4098
 af+ 0x804ec66 298 F_4102
 af+ 0x80531d8 124 ambe_encode_thing__size_not_correct
 af+ 0x8053680 140 ambe_decode_wav
-af+ 0x8040a02 740 dmr_audio_start
-af+ 0x803119c 86 OSMboxPost
