@@ -14,7 +14,6 @@
 #include "spiflash.h"
 #include "addl_config.h"
 
-     
 struct addl_config global_addl_config;
 
 void init_global_addl_config_struct() {
@@ -68,7 +67,6 @@ void init_global_addl_config_struct() {
 
 void init_global_addl_config_hook(void) {
   init_global_addl_config_struct();
-
 
 #ifdef CONFIG_MENU
   md380_create_main_meny_entry();
