@@ -3,7 +3,7 @@
 */
 
 
-#define DEBUG
+//#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -121,7 +121,7 @@ void create_menu_entry_hook(int a, const wchar_t * b , void * c, void  * d, int 
 #ifdef DEBUG
   printf("0x%x Text: 0x%x GreenKey 0x%x RedKey 0x%x 0x%x 0x%x 0x%x\n", a,b,c,d,e,f,g);
   printf("b: ");
-  printhex2(b,14);
+  printhex2((char *) b,14);
   printf("\n");
   printf(" md380_menu_depth: %d\n", md380_menu_depth);
 #endif

@@ -21,4 +21,4 @@ void dmesg_flush();
 //Convenience functions.
 void printhex(char *buf, int len);
 
-void printhex2(char *buf, int len);
+void printhex2(const char *buf, int len);
