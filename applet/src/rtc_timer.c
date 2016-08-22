@@ -20,7 +20,8 @@ static int flag=0;
 #define MD380_F_4225_OPERATINGMODE_MENU       0x1b       /*  see 0x0801f06a there are a lot of modes */
 #define MD380_F_4225_OPERATINGMODE_MENU_EXIT  0x1c
 
-#ifdef MD380_d02_32
+/// sorry, must be transferd to symbols_ :)
+#ifdef MD380_d02_032
 #define MD380_FONT_SMALL 0x809bcec /* 0x0800d8c0 */
 #define MD380_FONT_NORM  0x80d0fac /* 0x0800d992 */
 #endif 
