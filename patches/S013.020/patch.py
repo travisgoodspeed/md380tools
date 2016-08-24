@@ -13,44 +13,33 @@ if __name__ == '__main__':
     print "Creating patches from unwrapped.img."
     patcher=Patcher("unwrapped.img")
     
-# # bypass vocoder copy protection on D013.020
+    # bypass vocoder copy protection on S013.020
+    patcher.nopout((0x8034a60))
+    patcher.nopout((0x8034a60+0x2))
+    patcher.nopout((0x8034a76))
+    patcher.nopout((0x8034a76+0x2))
+    patcher.nopout((0x8034a8c))
+    patcher.nopout((0x8034a8c+0x2))
+    patcher.nopout((0x8034aa2))
+    patcher.nopout((0x8034aa2+0x2))
+    patcher.nopout((0x8034ab8))
+    patcher.nopout((0x8034ab8+0x2))
+    patcher.nopout((0x8034ace))
+    patcher.nopout((0x8034ace+0x2))
+    patcher.nopout((0x8049f9a))
+    patcher.nopout((0x8049f9a+0x2))
+    patcher.nopout((0x804a820))
+    patcher.nopout((0x804a820+0x2))
+    patcher.nopout((0x804aae4))
+    patcher.nopout((0x804aae4+0x2))
+    patcher.nopout((0x804af70))
+    patcher.nopout((0x804af70+0x2))
+    patcher.nopout((0x804b9fc))
+    patcher.nopout((0x804b9fc+0x2))
 
-#     patcher.nopout((0x08033f30+0x18))
-#     patcher.nopout((0x08033f30+0x1a))
-
-#     patcher.nopout((0x08033f30+0x2e))
-#     patcher.nopout((0x08033f30+0x30))
-
-#     patcher.nopout((0x08033f30+0x44))
-#     patcher.nopout((0x08033f30+0x46))
-
-#     patcher.nopout((0x08033f30+0x5a))
-#     patcher.nopout((0x08033f30+0x5c))
-
-#     patcher.nopout((0x08033f30+0x70))
-#     patcher.nopout((0x08033f30+0x72))
-
-#     patcher.nopout((0x08033f30+0x86))
-#     patcher.nopout((0x08033f30+0x88))
-
-#     patcher.nopout((0x0804915c+0x12))
-#     patcher.nopout((0x0804915c+0x14))
-
-#     patcher.nopout((0x080499e2+0x12))
-#     patcher.nopout((0x080499e2+0x14))
-
-#     patcher.nopout((0x08049ca8+0x10))
-#     patcher.nopout((0x08049ca8+0x12))
-
-#     patcher.nopout((0x0804a134+0x10))
-#     patcher.nopout((0x0804a134+0x12))
-
-#     patcher.nopout((0x0804abc0+0x10))
-#     patcher.nopout((0x0804abc0+0x12))
-
-#     #Marks the version as "md380tools"
-#     patcher.setwstring(0x080cfcac,
-#                       "MD380Tools Ver.");
+    #Marks the version as "md380tools"
+    patcher.setwstring(0x080d0b6c,
+                       "MD380Tools Ver.");
 
 #     #Change the manufacturer string.
 #     patcher.setstring(0x080f86c8,
