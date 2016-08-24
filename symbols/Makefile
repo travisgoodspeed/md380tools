@@ -1,7 +1,7 @@
-
 UNWRAPPED=../firmware/unwrapped
-GOLD=../firmware/unwrapped/D002.032.img 
-GOLDSYM=../applet/src/symbols_d02.032
+#GOLD=../firmware/unwrapped/D002.032.img
+GOLD=../firmware/unwrapped/D013.020.img
+GOLDSYM=../applet/src/symbols_d13.020
 
 all: symgrate run
 
