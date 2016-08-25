@@ -2,13 +2,14 @@ gfx_drawbmp          = 0x80237ff;
 gfx_drawtext         = 0x800def7;
 gfx_chars_to_display = 0x801dd09;
 gfx_drawtext2        = 0x801dd09;
-md380_spiflash_read  = 0x8031477;
-botlinetext          = 0x2001e410;
-welcomebmp           = 0x080f8510;
 gfx_select_font      = 0x08021875;
 gfx_blockfill        = 0x0801d88d;
 gfx_set_bg_color     = 0x0801d369;
 gfx_set_fg_color     = 0x0801d371;
+
+botlinetext          = 0x2001e410;
+welcomebmp           = 0x080f8510;
+
 
 /* spi-flash */
 md380_spiflash_read  = 0x08031477;
@@ -40,7 +41,6 @@ usb_send_packet      = 0x08059b03; /* 148 byte match */
 usb_serialnumber     = 0x0809662f; /* 12 byte match */
 usb_setcallbacks     = 0x08055101; /* 18 byte match */
 usb_do_setup         = 0x0808eb31; /* 90 byte match */
-
 usb_dfu_write        = 0x08090371; /* 274 byte match */
 usb_dfu_read         = 0x080903c1; /* 194 byte match */
 
@@ -56,14 +56,21 @@ md380_thingy2        = 0x2001e963;
 md380_usbstring      = 0x2001d504; /* unshure */
 md380_usbbuf         = 0x2001e0d0; /* unshure */
 
-
-
-
 c5000_spi0_readreg   = 0x0803ffd1; /* unshure */
 c5000_spi0_writereg  = 0x0803ff85; /* unshure */
 
-OS_ENTER_CRITICAL    = 0x08043de5; /* 146 byte match */
-OS_EXIT_CRITICAL     = 0x08043ded; /* 138 byte match */
+/* Function that handles uC/OS-II settings */
+OSTaskCreateExt      = 0x0804e581;
+OSTaskNameSet        = 0x0804e64d;
+
+OS_ENTER_CRITICAL    = 0x08043de5;
+OS_EXIT_CRITICAL     = 0x08043ded;
+
+OSSemCreate          = 0x0803f709;
+OSSemPend            = 0x0803f755;
+OSSemPost            = 0x0803f845;
+
+md380_OSMboxPost     = 0x0803119d;
 
 
 /* //! Functions and Variabes regarding the menu */
@@ -111,20 +118,6 @@ md380_f_4102 = 0x0804ec67;
 
 beep_process_unkown     =    0x2001e6c0;
 
-
-/* Function that handles uC/OS-II settings */
-OSTaskCreateExt      = 0x0804e581;
-OSTaskNameSet        = 0x0804e64d;
-
-OS_ENTER_CRITICAL    = 0x08043de5;
-OS_EXIT_CRITICAL     = 0x08043ded;
-
-OSSemCreate          = 0x0803f709;
-
-OSSemPend            = 0x0803f755;
-OSSemPost            = 0x0803f845;
-
-md380_OSMboxPost     = 0x0803119d;
 
 
 
