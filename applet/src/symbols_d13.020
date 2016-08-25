@@ -77,24 +77,24 @@ md380_menu_entry_programradio          = 0x080136c0;
 
 /* hook 0x080135a8 */
 
-md380_menu_0x200011e4                  = 0x20004acc;
+md380_menu_0x200011e4                  = 0x20004acc; /* */
 md380_menu_0x2001d3c1                  = 0x2001e914;
-md380_menu_0x2001d3ed                  = 0x2001e943; 
-md380_menu_0x2001d3ee                  = 0x2001e943;
-md380_menu_0x2001d3ef                  = 0x2001e945;
-md380_menu_0x2001d3f0                  = 0x2001b274;
-md380_menu_0x2001d3f1                  = 0x2001e947;
-md380_menu_0x2001d3f4                  = 0x2001e94a;
+md380_menu_0x2001d3ed                  = 0x2001e943; /* */ 
+md380_menu_0x2001d3ee                  = 0x2001e944; /* war falsch 43 */
+md380_menu_0x2001d3ef                  = 0x2001e945; /* */
+md380_menu_0x2001d3f0                  = 0x2001b246; /* war falsch 74; */
+md380_menu_0x2001d3f1                  = 0x2001e947; /* */
+md380_menu_0x2001d3f4                  = 0x2001e94a; /* */
 md380_menu_depth                       = 0x20004acc;
 
 md380_menu_entry_selected              = 0x2001e903;
-md380_menu_id                          = 0x2001e915;
+md380_menu_id                          = 0x2001e915; /* */
 md380_program_radio_unprohibited       = 0x2001e574;
 md380_wt_programradio                  = 0x080cff30;
-md380_menu_0x20001114                  = 0x200049fc;
-md380_menu_mem_base                    = 0x2001b274;
-md380_menu_memory                      = 0x2001d5cc;
-md380_menu_edit_buf                    = 0x2001cb9a;
+md380_menu_0x20001114                  = 0x200049fc; /* */
+md380_menu_mem_base                    = 0x2001b274; /* */
+md380_menu_memory                      = 0x2001d5cc; /* */
+md380_menu_edit_buf                    = 0x2001cb9a; /* */
 
 
 
