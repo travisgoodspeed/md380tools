@@ -258,11 +258,40 @@ int usb_dnld_hook(){
   }
 }
 
+
+void * get_md380_dnld_tohook_addr(){
+  uint32_t * ram_start = (void  *) 0x20000000;
+  int ram_size = 0x1ffff / 4;
+  int i;
+  int n=0;
+  void * ret;
+ 
+  for (i = 0;  i < ram_size ; i++){
+    if (usb_dnld_handle == (void *) ram_start[i]){
+      ret=&ram_start[i];
+      n++;
+    } 
+  }
+
+  if (n == 1)
+    return(ret);
+  return (0);
+}
+
+
+
 //! Hooks the USB DFU DNLD event handler in RAM.
 void hookusb(){
   //Be damned sure to call this *after* the table has been
   //initialized.
-  *md380_dnld_tohook= (int) usb_dnld_hook;
+  int * dnld_tohook;
+  
+  dnld_tohook = get_md380_dnld_tohook_addr();
+  if (dnld_tohook){
+  * dnld_tohook = (int) usb_dnld_hook;
+  } else {
+    printf("can't find dnld_tohook_addr\n");
+  }  
   return;
 }
 

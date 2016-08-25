@@ -45,7 +45,6 @@ usb_dfu_write        = 0x08090371; /* 274 byte match */
 usb_dfu_read         = 0x080903c1; /* 194 byte match */
 
 
-md380_dnld_tohook    = 0x20004674;
 md380_dfutargetadr   = 0x20004a14;
 md380_packet         = 0x2001ae74;
 md380_packetlen      = 0x2001e758;

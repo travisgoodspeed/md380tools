@@ -75,7 +75,6 @@ int usb_send_packet(void*, char*, uint16_t);
 
 int usb_dnld_handle();
 
-extern int	md380_dnld_tohook[];
 
 // This is the target address of the Application's DFU engine.
 extern char *	md380_dfutargetadr;

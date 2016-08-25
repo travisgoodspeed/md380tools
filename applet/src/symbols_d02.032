@@ -50,7 +50,6 @@ usb_dfu_write = 0x0808e441;
 usb_dfu_read = 0x0808e491;
 
 /* Function pointer at this address calls DNLD. */
-md380_dnld_tohook	= 0x20000e9c;  /* i'cant find */
 md380_dfutargetadr	= 0x2000112c;  /* from D002.032 @ 0x0808cd1a func 0x0808ccbe usb_dnld_handle() */
 md380_packet		= 0x200199f0;  /* from D002.032 @ 0x0808cd00 func 0x0808ccbe usb_dnld_handle() */ 
 md380_packetlen		= 0x2001d20c;  /* from D002.032 @ 0x0808cce4 func 0x0808ccbe usb_dnld_handle() */
