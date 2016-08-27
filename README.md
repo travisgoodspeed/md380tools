@@ -17,6 +17,12 @@ Development Tools:
 * `md380-fw` wraps and unwraps devices firmware.
 * `md380-gfx` modifies firmware graphics.
 
+###The md380tools have D13.020 as basic now.###
+
+to build the d02.32 version
+
+	make flash_d02.032
+
 These tools are all wrapped into `Makefile`, which will download the
 official firmware, patch and flash it.  Run `make flash` after booting
 into the recovery bootloader by holding PTT and the button just above
@@ -290,13 +296,17 @@ https://github.com/pchickey/md380-re
 
 
 ## Customization ##
+Temponary not avaible, see https://github.com/travisgoodspeed/md380tools/issues/221
 
+
+<strike>
 Images extracted from the firmware have comments at the beginning of
 the file, telling md380-gfx where they came from. Comments begin with a '#', and end with a new line.
 
 Image editors like GIMP will discard the original comments, but you can
 replace them by opening the file in a text editor and copy-pasting the
 comment lines from the original extracted file to your custom image.
+
 
 #### Boot logo ####
 
@@ -309,7 +319,7 @@ as a direct replacement, as seen in the Makefile.
 
 An image with more than two colors requires the "relocate" argument to
 md380-gfx. There are examples of this in the Makefile as well.
-
+</strike>
 ## Support ##
 
 To support users by using the md380tools or the resulting patched firmware 
