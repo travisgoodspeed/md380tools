@@ -55,6 +55,8 @@ CCa 0x0802823a GPIO_SetBits(GPIOC, 0x40)
 CCa 0x08028246 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x080282b6 GPIO_SetBits(GPIOC, 0x40)
 CCa 0x080282c2 GPIO_SetBits(GPIOC, 0x40)
+CCa 0x0802ab68 beginn roger beep
+CCa 0x0802acd8 beginn dmr sync
 CCa 0x0802fb0e GPIO_SetBits(GPIOD, 0x80)
 CCa 0x08030f40 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x08030f64 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)

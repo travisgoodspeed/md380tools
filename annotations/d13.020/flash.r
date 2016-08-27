@@ -1,10 +1,5 @@
-af+ 0x080156a4 104 Create_Menu_Entry_RX_QRG_shown
-af+ 0x08015720 220 Create_Menu_Entry_RX_QRG_1
-CCa 0x08015780 md380_menu_0x2001d3ef
-CCa 0x080157e2 Create_Menu_Entry_RX_QRG_2
-CCa 0x080157e6 Create_Menu_Entry_RX_QRG_3
-CCa 0x080158c4 Create_Menu_Entry_RX_QRG_4
-af+ 0x08040670 880 F_414
+CCa 0x0802fd54 beginn dmr sync
+af+ 0x08033eb4 104 OSTimeDly
 af+ 0x800c188 1446 Create_MainMenyEntry
 CCa 0x800c18a md380_menu_0x200011e4
 CCa 0x800c192 md380_menu_id
@@ -722,11 +717,13 @@ CCa 0x801562a md380_menu_mem_base
 CCa 0x8015660 md380_menu_id
 CCa 0x8015672 md380_menu_0x200011e4
 CCa 0x8015678 md380_menu_memory
+af+ 0x80156a4 104 Create_Menu_Entry_RX_QRG_shown
 CCa 0x80156a6 md380_menu_0x200011e4
 CCa 0x80156ac md380_menu_memory
 CCa 0x80156c4 md380_menu_id
 CCa 0x80156cc md380_menu_mem_base
 CCa 0x80156f8 md380_menu_id
+af+ 0x8015720 220 Create_Menu_Entry_RX_QRG_1
 CCa 0x8015722 md380_menu_0x200011e4
 CCa 0x801572a md380_menu_0x200011e4
 CCa 0x8015730 md380_menu_0x2001d3f4
@@ -737,12 +734,15 @@ CCa 0x8015768 md380_menu_edit_buf
 CCa 0x8015770 md380_menu_0x2001d3ed
 CCa 0x8015778 md380_menu_0x2001d3ee
 CCa 0x8015780 md380_menu_0x2001d3ef
+CCa 0x8015780 md380_menu_0x2001d3ef
 CCa 0x8015788 md380_menu_0x2001d3f1
 CCa 0x8015790 md380_menu_0x2001d3f0
 CCa 0x8015798 md380_menu_0x200011e4
 CCa 0x80157a0 md380_menu_memory
 CCa 0x80157ba md380_menu_id
 CCa 0x80157c2 md380_menu_mem_base
+CCa 0x80157e2 Create_Menu_Entry_RX_QRG_2
+CCa 0x80157e6 Create_Menu_Entry_RX_QRG_3
 CCa 0x80157ea md380_menu_0x20001114
 CCa 0x80157f0 md380_menu_id
 af+ 0x80157fc 126 Create_Menu_Entry_RX_QRG_2
@@ -758,6 +758,7 @@ CCa 0x801587c md380_menu_0x200011e4
 CCa 0x8015884 md380_menu_memory
 CCa 0x801589e md380_menu_id
 CCa 0x80158a4 md380_menu_mem_base
+CCa 0x80158c4 Create_Menu_Entry_RX_QRG_4
 CCa 0x80158d6 md380_menu_id
 af+ 0x8015900 628 Create_Menu_Entry_RX_QRG_4
 CCa 0x801590a md380_menu_0x20001114
@@ -2711,6 +2712,11 @@ CCa 0x802e5d2 md380_menu_0x200011e4
 CCa 0x802e636 md380_menu_0x200011e4
 CCa 0x802e66e md380_menu_0x200011e4
 CCa 0x802f0da md380_menu_0x200011e4
+af+ 0x802f9dc 4056 Beep_Process
+CCa 0x802fa54 no dmr sync tone
+CCa 0x802fa66 dmr sync
+CCa 0x802fad8 roger beep
+CCa 0x802fbe4 beginn roger beep
 af+ 0x8030aa4 52 F_293
 af+ 0x8030ad8 16 F_294
 af+ 0x803119c 86 OSMboxPost
@@ -3166,6 +3172,7 @@ CCa 0x803ab20 md380_menu_0x200011e4
 CCa 0x803ab24 md380_menu_0x200011e4
 CCa 0x803ab2c md380_menu_id
 af+ 0x803f708 76 OSSemCreate
+af+ 0x8040670 880 F_414
 af+ 0x8040a02 740 dmr_audio_start
 af+ 0x8040ce6 92 F_416
 af+ 0x8040d44 94 F_858

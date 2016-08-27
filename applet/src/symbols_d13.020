@@ -55,8 +55,8 @@ md380_thingy2        = 0x2001e963;
 md380_usbstring      = 0x2001d504; /* unshure */
 md380_usbbuf         = 0x2001e0d0; /* unshure */
 
-c5000_spi0_readreg   = 0x0803ffd1; /* unshure */
-c5000_spi0_writereg  = 0x0803ff85; /* unshure */
+c5000_spi0_readreg   = 0x0803ffd1;
+c5000_spi0_writereg  = 0x0803ff85;
 
 /* Function that handles uC/OS-II settings */
 OSTaskCreateExt      = 0x0804e581;
@@ -70,6 +70,7 @@ OSSemPend            = 0x0803f755;
 OSSemPost            = 0x0803f845;
 
 md380_OSMboxPost     = 0x0803119d;
+md380_OSMboxPend     = 0x08031085;
 
 
 /* //! Functions and Variabes regarding the menu */

@@ -113,11 +113,12 @@ void*       OSTaskNameSet(INT8U prio, INT8U *pname, INT8U *perr);
 
 //Semaphore
 OS_EVENT *  OSSemCreate(uint16_t);
-void        OSSemPend(OS_EVENT *pevent, uint32_t timeout,  uint8_t *perr);
+void        OSSemPend(OS_EVENT *pevent, uint32_t timeout,  int8_t *perr);
 uint8_t     OSSemPost(OS_EVENT *pevent);
 
 //Mbox
 uint8_t     md380_OSMboxPost(OS_EVENT *pevent, void *pmsg);
+void *      md380_OSMboxPend(OS_EVENT *pevent, uint32_t timeout, int8_t *perr);
 
 //! Halts all threads.
 int         OS_ENTER_CRITICAL();

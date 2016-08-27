@@ -13,6 +13,7 @@
 #include "version.h"
 #include "config.h"
 #include "os.h"
+#include "addl_config.h"
 
 OS_EVENT* debug_line_sem;  // not yet used 
 
@@ -47,7 +48,7 @@ OS_EVENT * OSSemCreate_hook(uint16_t cnt) {
 
 
 void pevent_to_name(OS_EVENT *pevent, void *pmsg) {
-  if ( pevent == (void *) 0x20015f0c ) {
+  if ( pevent == (void *) 0x20015f0c ) {  // d02.032 FIXME
     printf("to Beep_Process: %x ..", * (uint8_t*)pmsg);
     switch (* (uint8_t*)pmsg  ) {
       case 0x24:
@@ -78,4 +79,32 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   printf("OSMboxPost_hook r: 0x%x s: 0x%x p: 0x%x m: 0x%x ", return_addr, sp, pevent, pmsg);
   pevent_to_name(pevent, pmsg);
   return(md380_OSMboxPost(pevent, pmsg));
+}
+
+void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr){
+  void * ret;
+  void * return_addr;
+  void * sp;
+
+  __asm__("mov %0,r14" : "=r" (return_addr));
+  __asm__("mov %0,r13" : "=r" (sp));
+  ret = md380_OSMboxPend(pevent, timeout, perr);
+  if ( ret != NULL && global_addl_config.debug == 1 ){
+    printf("OSMboxPend @ %x, %x \n",return_addr, * (uint8_t*) ret);
+    switch (* (uint8_t*) ret  ){
+      case 0x24:
+        printf("roger beep ");
+        break;
+      case 0xe:
+        printf("no dmr sync ");
+      case 0x11:
+        printf("dmr sync ");
+        break;
+      default:
+        printf("not known ");
+        break;
+    }
+    printf("\n");
+  }
+  return(ret);
 }

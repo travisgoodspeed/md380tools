@@ -96,7 +96,7 @@ OSSemPend         = 0x803da79;
 OSSemPost         = 0x803db69;
 
 md380_OSMboxPost = 0x080303b5;
-
+md380_OSMboxPend = 0x0803029d;
 
 
 /* //! Functions and Variabes regarding the menu */
