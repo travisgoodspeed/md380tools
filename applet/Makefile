@@ -1,6 +1,9 @@
-SRCS  = main.o usb.o gfx.o dmr.o printf.o dmesg.o stm32f4xx_it.o system_stm32f4xx.o
-SRCS += os.o menu.o aes.o ambe.o spiflash.o usersdb.o addl_config.o beep_process.o
-SRCS += rtc_timer.o i2c.o display.o
+SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_config.o 
+SRCS += spiflash.o usb.o menu.o rtc_timer.o beep_process.o usersdb.o os.o aes.o
+SRCS += ambe.o  dmr.o
+#### SRCS +=  display.o  # display flip is included @ d13.020
+#### SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
+
 PROJ_NAME=main
 
 
@@ -11,7 +14,7 @@ OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 
 GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
-SRCVERSION?=d02.032
+SRCVERSION?=d13.020
 
 LINKSCRIPT=applet_$(SRCVERSION).ld
 
@@ -32,7 +35,6 @@ CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals
 CFLAGS += -D "MD380_$(subst .,_,$(SRCVERSION))"  # ISO C99 requires whitespace after
 
 SRCS += lib/startup_stm32f4xx.s # add startup file to build
-#SRCS += src/md380-2.032.c       # MD380 library functions.
 
 OBJS = $(SRCS:.c=.o)
 
@@ -44,8 +46,8 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped
 
 experiment.img: 
-	cd ../patches/2.032 && $(MAKE) all
-	cp ../patches/2.032/patched.img ./experiment.img
+	cd ../patches/$(SRCVERSION) && $(MAKE) all
+	cp ../patches/$(SRCVERSION)/patched.img ./experiment.img
 
 
 lib: src/version.h config.h
@@ -53,8 +55,9 @@ lib: src/version.h config.h
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
-	cp ../patches/2.032/patched.img ./experiment.img
-	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img 0x0809D000
+	cd ../patches/$(SRCVERSION) && $(MAKE) all
+	cp ../patches/$(SRCVERSION)/patched.img ./experiment.img
+	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img 0x0809b000
 
 #The wrapped file is the one that works with the Windows updater.
 wrapped: lib proj

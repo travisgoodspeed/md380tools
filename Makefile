@@ -19,8 +19,8 @@ firmwares:
 	cd firmware && $(MAKE) all
 flash:
 	cd applet && $(MAKE) clean flash
-flash_ng:
-	cd applet && $(MAKE) -f Makefile.d13.020 clean flash
+flash_d02.032:
+	cd applet && $(MAKE) -f Makefile.d02.32 clean flash
 flashdb:
 	cd db && $(MAKE)
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
