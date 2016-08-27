@@ -10,6 +10,7 @@ CC=arm-none-eabi-gcc
 OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 
+GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
 SRCVERSION?=d02.032
 
 LINKSCRIPT=applet_$(SRCVERSION).ld
@@ -18,7 +19,7 @@ CFLAGS += -std=gnu99 -g -O2 -Wall -T$(LINKSCRIPT)
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
-
+CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
 ###################################################
 
 vpath %.c src

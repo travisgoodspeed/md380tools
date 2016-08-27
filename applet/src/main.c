@@ -134,7 +134,8 @@ void demo(){
   drawtext(L"@ d02.032",
 	   160,140);
 #endif
-
+  drawascii(GIT_VERSION,
+            160,180);
   sleep(1000);
   
   //Make the welcome image scroll across the screen.
