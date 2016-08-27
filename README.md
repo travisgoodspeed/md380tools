@@ -290,7 +290,9 @@ https://github.com/pchickey/md380-re
 
 
 ## Customization ##
-temponary not avaible see https://github.com/travisgoodspeed/md380tools/issues/221
+Temponary not avaible, see https://github.com/travisgoodspeed/md380tools/issues/221
+
+
 <strike>
 Images extracted from the firmware have comments at the beginning of
 the file, telling md380-gfx where they came from. Comments begin with a '#', and end with a new line.
