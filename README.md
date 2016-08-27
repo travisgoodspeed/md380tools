@@ -21,7 +21,7 @@ Development Tools:
 
 to build the d02.32 version
 
- cd applet;make -f Makefile.d02.032
+	make flash_d02.032
 
 These tools are all wrapped into `Makefile`, which will download the
 official firmware, patch and flash it.  Run `make flash` after booting
