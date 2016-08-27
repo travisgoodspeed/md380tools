@@ -17,6 +17,11 @@ Development Tools:
 * `md380-fw` wraps and unwraps devices firmware.
 * `md380-gfx` modifies firmware graphics.
 
+===The md380tools have D13.020 as basic now.
+
+to build the d02.32 version
+ cd applet;make -f Makefile.d02.032
+
 These tools are all wrapped into `Makefile`, which will download the
 official firmware, patch and flash it.  Run `make flash` after booting
 into the recovery bootloader by holding PTT and the button just above
