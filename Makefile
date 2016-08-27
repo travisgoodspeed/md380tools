@@ -13,6 +13,7 @@ clean:
 	rm -f *~ *.pyc
 patches: firmwares
 	cd patches/2.032 && $(MAKE) all
+	cd patches/d13.020 && $(MAKE) all
 applets: patches
 	cd applet && $(MAKE) all
 firmwares:
