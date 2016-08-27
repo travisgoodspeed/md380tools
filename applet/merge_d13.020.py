@@ -224,9 +224,9 @@ if __name__== '__main__':
         merger.hookbl(adr,sapplet.getadr("ambe_decode_wav_hook"));
 
     #Hooks the squelch routines, so we can do monitor mode in C.
-    merger.hookbl(0x080413de, sapplet.getadr("dmr_apply_privsquelch_hook"),0); #Private calls.
+    merger.hookbl(0x08040ce0, sapplet.getadr("dmr_apply_privsquelch_hook"),0); #Private calls.
     #########  this function has been changed 
-    merger.hookbl(0x0804105a, sapplet.getadr("dmr_apply_squelch_hook"),0);     #Public calls.
+    merger.hookbl(0x08040c1c, sapplet.getadr("dmr_apply_squelch_hook"),0);     #Public calls.
 
     # additional menu hook
     merger.hookbl(0x080135a8, sapplet.getadr("create_menu_utilies_hook"),0);

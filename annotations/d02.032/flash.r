@@ -80,6 +80,8 @@ CCa 0x0803e5d8 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base add
 CCa 0x0803e5e4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0803e69a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0803e6a4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0803eea0 dmr_apply_squelch_hook
+CCa 0x0803ef64 dmr_apply_privsquelch_hook
 CCa 0x080426c8 Function ... Init ADC1 (Bat) with dma  value via dma DMA2 DMA_S0CRin 0x2001cfcc
 CCa 0x080443f8 Create Process -LED Process- Thread Start  addr 0x809573d
 CCa 0x08044620 set A7 POW_C

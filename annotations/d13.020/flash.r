@@ -4,6 +4,7 @@ CCa 0x08015780 md380_menu_0x2001d3ef
 CCa 0x080157e2 Create_Menu_Entry_RX_QRG_2
 CCa 0x080157e6 Create_Menu_Entry_RX_QRG_3
 CCa 0x080158c4 Create_Menu_Entry_RX_QRG_4
+af+ 0x08040670 880 F_414
 af+ 0x800c188 1446 Create_MainMenyEntry
 CCa 0x800c18a md380_menu_0x200011e4
 CCa 0x800c192 md380_menu_id
