@@ -19,7 +19,7 @@ Development Tools:
 
 ###The md380tools have D13.020 as basic now.###
 
-to build the d02.32 version
+to build the "old" d02.32 version
 
 	make flash_d02.032
 
