@@ -202,7 +202,7 @@ md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x8
 
 
 
-/* symgrate food to finde non matched functions */
+/* symgrate food to find non matched functions */
 chinese_font_p_start = 0x809c714;
 RTC_Timer = 0x8044549;
 Get_Welcome_Line1_from_spi_flash = 0x8021883;
@@ -218,7 +218,7 @@ FUNC_F_4154 = 0x800dad5;
 FUNC_F_4170 = 0x801d7fd;
 FUNC_F_4171 = 0x801dcf1;
 F0x080969de = 0x080969df;
-F0x080154de = 0x080154df;
+loadfirmwareversion = 0x080154df;
 fcn.0808e328 = 0x0808e329;
 Create_Menu_Entry_Quick = 0x802c169;
 Edit_Message_Confirm_Send_Contacts = 0x802c8fb;

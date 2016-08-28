@@ -159,7 +159,7 @@ if __name__== '__main__':
     merger.hookstub(0x08021894, #startup_botline
                     sapplet.getadr("demo"));
     merger.hookstub(0x080154de,
-                    sapplet.getadr("loadfirmwareversion"));
+                    sapplet.getadr("loadfirmwareversion_hook"));
     merger.hookbl(0x0808cc36, #Call to usb_dfu_upload().
                   sapplet.getadr("usb_upld_hook"),
                   0x0808d3d8); #Old handler adr.
