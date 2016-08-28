@@ -64,7 +64,7 @@ OSTaskNameSet        = 0x0804e64d;
 
 OS_ENTER_CRITICAL    = 0x08043de5;
 OS_EXIT_CRITICAL     = 0x08043ded;
-
+OSTimeDly            = 0x08033eb5;
 OSSemCreate          = 0x0803f709;
 OSSemPend            = 0x0803f755;
 OSSemPost            = 0x0803f845;
@@ -76,7 +76,7 @@ md380_OSMboxPend     = 0x08031085;
 /* //! Functions and Variabes regarding the menu */
 main_menu                              = 0x0803b39b;
 md380_create_menu_entry                = 0x0800c72f;
-md380_create_main_meny_entry           = 0x0800c188;
+md380_create_main_meny_entry           = 0x0800c189;
 md380_menu_numerical_input             = 0x0801b042;
 md380_create_menu_entry                = 0x0800c72f;
 md380_menu_entry_back                  = 0x0800fc84;
@@ -103,6 +103,17 @@ md380_menu_mem_base                    = 0x2001b274; /* */
 md380_menu_memory                      = 0x2001d5cc; /* */
 md380_menu_edit_buf                    = 0x2001cb9a; /* */
 
+Create_Menu_Utilies                    = 0x080134a1;
+Create_Menu_Entry_RX_QRG_shown         = 0x080156a5;
+Create_Menu_Entry_RX_QRG_1             = 0x08015721;
+Create_Menu_Entry_RX_QRG_2             = 0x080157fd;
+Create_Menu_Entry_RX_QRG_3             = 0x0801587b;
+Create_Menu_Entry_RX_QRG_4             = 0x08015901;
+Create_Menu_Entry_LEDIndicator         = 0x801ad57;
+Get_Welcome_Line1_from_spi_flash       = 0x80226c1;
+Get_Welcome_Line2_from_spi_flash       = 0x80226d3;
+Edit_Message_Menu_Entry                = 0x8023ee5;
+F_4315                                 = 0x8025ae5;
 
 
 /* Variabes regarding rtc_timer process. */
@@ -116,8 +127,12 @@ md380_f_4520 = 0x0802c83d;
 md380_f_4098 = 0x0804eb65;
 md380_f_4102 = 0x0804ec67;
 
-beep_process_unkown     =    0x2001e6c0;
+Beep_Process            = 0x802f9dd;
+beep_process_unkown     = 0x2001e6c0;
 
+Start_multiple_tasks    = 0x8046521;
+Start                   = 0x80462bd;
+Start_2_more_tasks__init_vocoder_tasks = 0x8049e15;
 
 
 

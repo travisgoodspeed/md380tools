@@ -1,155 +1,155 @@
-/* Symbols for ../firmware/unwrapped/S013.020.img imported from ../firmware/unwrapped/D002.032.img. */
-/* This file contains symbols for version 2.032 of the firmware. */
-
-/* For maximum portability, try to use only symbols that cleanly */
-/* port to other versions.  Good candidates have long prologues. */
-
-/* Startup routines, very handy for hooking our startup. */
-/* startup_topline has bad match of 8 points at 0x0802299d*/
-/* startup_botline has bad match of 8 points at 0x080229af*/
-
-/* Graphics functions. */
-gfx_drawtext         = 0x0800def7; /* 28 byte match */
 gfx_drawbmp          = 0x08023adb; /* 58 byte match */
-/* gfx_drawtext2 has bad match of 4 points at 0x0801de3d*/
-/* gfx_chars_to_display has bad match of 4 points at 0x0801de3d*/
-
+gfx_drawtext         = 0x0800def7; /* 30 byte match */
+gfx_chars_to_display = 0x0801de3d; /* 0x0800df92 */
+gfx_drawtext2        = 0x0801de3d; /* 0x0800df92 */
 gfx_select_font      = 0x08021b51; /* 14 byte match */
-/* gfx_set_bg_color has bad match of 2 points at 0x0800de65*/
-/* gfx_set_fg_color has bad match of 2 points at 0x0800de65*/
 gfx_blockfill        = 0x0801d9c1; /* 200 byte match */
+gfx_set_bg_color     = 0x0801d49d; /* 0x0800df26 */
+gfx_set_fg_color     = 0x0801d4a5; /* 0x0800df20 */
 
-/* Function that handles the end of a DMR call. */
-dmr_call_end         = 0x08041f49; /* 16 byte match */
-/* Function that handles a DMR call. */
-dmr_call_start       = 0x0804151b; /* 18 byte match */
-/* Function that handles a DMR SMS. */
-/* dmr_handle_data has bad match of 2 points at 0x0800df1b*/
-/* Function that handles an incoming SMS. */
-/* dmr_sms_arrive has bad match of 2 points at 0x0800df1b*/
-/* //! Called before unsquelching. */
-/* dmr_before_squelch has bad match of 2 points at 0x0800de65*/
+/* botlinetext is a RAM address and cannot be converted. */
+welcomebmp           = 0x080f93d0; /* 10 byte match */
+
+
+/* spi-flash */
+md380_spiflash_read  = 0x080318b3; /* 80 byte match */
+md380_spiflash_write = 0x0803199b; /* 712 byte match */
+md380_spiflash_security_registers_read = 0x08031ced; /* 198 byte match */
+md380_spiflash_enable = 0x08031967; /* 12 byte match */
+md380_spiflash_disable = 0x08031983;
+md380_spiflash_wait  = 0x08031945; /* 46 byte match */
+md380_spiflash_block_erase64k = 0x080316e7; /* 540 byte match */
+md380_spiflash_sektor_erase4k = 0x080316b3; /* 592 byte match */
+md380_spi_sendrecv   = 0x080318f9; /* 10 byte match */
+
+
+/* useful md380 firmware functions and variables*/
+md380_itow           = 0x08018c5d; /* 238 byte match */
+md380_RTC_GetDate    = 0x0802b7e9; /* 554 byte match */
+md380_RTC_GetTime    = 0x0802b6d3; /* 832 byte match */
+md380_radio_config   = 
 
 
 
 /* Upload and download handlers. */
-usb_upld_handle      = 0x08090149; /* 232 byte match */
-usb_dnld_handle      = 0x0808fa2f; /* 432 byte match */
+usb_upld_handle      = 0x08090149; /* 306 byte match */
+usb_dnld_handle      = 0x0808fa2f; /* 446 byte match */
 
 /* This returns a USB packet to the host from the upload handler. */
-usb_send_packet      = 0x0805a943; /* 148 byte match */
+usb_send_packet      = 0x0805a943; /* 396 byte match */
 
-/* Higher-level USB functions.  These need stub hooks. */
-usb_modestring       = 0x080974bd; /* 12 byte match */
-/* usb_manufacturer has bad match of 6 points at 0x080974df*/
-usb_serialnumber     = 0x080974ef; /* 12 byte match */
-usb_setcallbacks     = 0x08055f41; /* 18 byte match */
-usb_do_setup         = 0x0808f971; /* 90 byte match */
-
-/* USB DFU functions. */
-usb_dfu_write        = 0x080911b1; /* 274 byte match */
-usb_dfu_read         = 0x08091201; /* 194 byte match */
+usb_serialnumber     = 0x080974ef; /* 14 byte match */
+usb_setcallbacks     = 0x08055f41; /* 518 byte match */
+usb_do_setup         = 0x0808f971; /* 636 byte match */
+usb_dfu_write        = 0x080911b1; /* 1024 byte match */
+usb_dfu_read         = 0x08091201; /* 1024 byte match */
 
 
-/* spi-flash */
-md380_spiflash_read  = 0x080318b3; /* 78 byte match */
-md380_spiflash_write = 0x0803199b; /* 712 byte match */
-md380_spiflash_security_registers_read = 0x08031ced; /* 146 byte match */
-md380_spiflash_enable = 0x08031967; /* 10 byte match */
-/* md380_spiflash_disable has bad match of 6 points at 0x08031983*/
-md380_spiflash_wait  = 0x08031945; /* 44 byte match */
-md380_spiflash_block_erase64k = 0x080316e7; /* 538 byte match */
-md380_spiflash_sektor_erase4k = 0x080316b3; /* 590 byte match */
-/* md380_spi_sendrecv has bad match of 8 points at 0x080318f9*/
+md380_dfutargetadr   =
+md380_packet         =
+md380_packetlen      =
+md380_blockadr       =
+md380_dfu_state      =
+md380_dfu_target_adr =
+md380_thingy2        =
+md380_usbstring      =
+md380_usbbuf         =
 
-/* i2c */
-md380_I2C_GenerateSTART = 0x080535d1; /* 212 byte match */
-md380_I2C_GenerateSTOP = 0x080535ed; /* 184 byte match */
-md380_I2C_ReceiveData = 0x08053625; /* 128 byte match */
-md380_I2C_Send7bitAddress = 0x08053609; /* 156 byte match */
-md380_I2C_SendData   = 0x0805361f; /* 134 byte match */
+c5000_spi0_readreg   = 0x08040ae9;
+c5000_spi0_writereg  = 0x08040a9d;
 
 /* Function that handles uC/OS-II settings */
-
-OSTaskCreateExt      = 0x0804f3ad; /* 26 byte match */
-OSTaskNameSet        = 0x0804f479; /* 22 byte match */
+OSTaskCreateExt      = 0x0804f3ad; /* 28 byte match */
+OSTaskNameSet        = 0x0804f479; /* 24 byte match */
 
 OS_ENTER_CRITICAL    = 0x08044925; /* 146 byte match */
 OS_EXIT_CRITICAL     = 0x0804492d; /* 138 byte match */
-
-/* OSSem Create Hook used the place from 2 OSSemCreate Calls */
+OSTimeDly            = 0x080349cd; /* 26 byte match */
 OSSemCreate          = 0x08040221; /* 18 byte match */
 OSSemPend            = 0x0804026d; /* 50 byte match */
 OSSemPost            = 0x0804035d; /* 16 byte match */
 
 md380_OSMboxPost     = 0x080315f1; /* 16 byte match */
 
+
 /* //! Functions and Variabes regarding the menu */
-main_menu            = 0x0803beb3; /* 12 byte match */
-md380_create_menu_entry = 0x0800c72f; /* 24 byte match */
-/* md380_create_main_meny_entry has bad match of 2 points at 0x0800c189*/
-/* md380_menu_numerical_input has bad match of 4 points at 0x0803d76e*/
-md380_create_menu_entry = 0x0800c72f; /* 24 byte match */
-/* md380_menu_entry_back has bad match of 4 points at 0x08013c20*/
-/* md380_menu_entry_programradio has bad match of 4 points at 0x0800fe74*/
+main_menu            = 0x0803beb3; /* 138 byte match */
+md380_create_menu_entry = 0x0800c72f; /* 88 byte match */
+md380_create_main_meny_entry = 0x0800c188; /* 1024 byte match */
+md380_menu_numerical_input = 
+md380_create_menu_entry = 0x0800c72f; /* 88 byte match */
+md380_menu_entry_back = 0x0800fc84; /* 38 byte match */
+md380_menu_entry_programradio =
 
-/* md380_menu_0x200011e4 is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3c1 is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3ed is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3ee is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3ef is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3f0 is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3f1 is a RAM address and cannot be converted. */
-/* md380_menu_0x2001d3f4 is a RAM address and cannot be converted. */
-/* md380_menu_depth is a RAM address and cannot be converted. */
-/* md380_menu_entry_selected is a RAM address and cannot be converted. */
-/* md380_menu_id is a RAM address and cannot be converted. */
-/* Unparsed line: md380_program_radio_unprohibited       = 0x2001d030 + 4;
- */
-md380_wt_programradio = 0x080d0df0; /* 150 byte match */
-/* md380_menu_0x20001114 is a RAM address and cannot be converted. */
 
-/* c5000 */
-/* c5000_spi0_readreg has bad match of 4 points at 0x0801c88d*/
-/* c5000_spi0_writereg has bad match of 4 points at 0x0801c88d*/
+md380_menu_0x200011e4 = 0x20004acc; 
+md380_menu_0x2001d3c1 =
+md380_menu_0x2001d3ed =
+md380_menu_0x2001d3ee =
+md380_menu_0x2001d3ef =
+md380_menu_0x2001d3f0 =
+md380_menu_0x2001d3f1 =
+md380_menu_0x2001d3f4 =
+md380_menu_depth      =
+
+md380_menu_entry_selected =
+md380_menu_id = 0x2001e9ec;
+md380_program_radio_unprohibited =
+md380_wt_programradio = 0x080d0df0; /* 298 byte match */
+md380_menu_0x20001114 =
+md380_menu_mem_base = 0x2001b274;
+md380_menu_memory =
+md380_menu_edit_buf =
+
+
+Create_Menu_Utilies = 
+Create_Menu_Entry_RX_QRG_shown = 
+Create_Menu_Entry_RX_QRG_1 = 0x0801580d; /* 76 byte match */
+Create_Menu_Entry_RX_QRG_2 = 
+Create_Menu_Entry_RX_QRG_3 = 0x08015967; /* 10 byte match */
+Create_Menu_Entry_RX_QRG_4 = 0x080159ed; /* 52 byte match */
+Create_Menu_Entry_LEDIndicator =
+Get_Welcome_Line1_from_spi_flash = 0x0802299d; /* 12 byte match */
+Get_Welcome_Line2_from_spi_flash = 0x080229af; /* 12 byte match */
+Edit_Message_Menu_Entry = 0x080241c1; /* 106 byte match */
+F_4315               = 0x08025dc1; /* 12 byte match */
+
+
+/* Variabes regarding rtc_timer process. */
+md380_f_4225_operatingmode =
+
+md380_f_4225	=
+
+md380_f_4137	=
+md380_f_4520	=
+md380_f_4098	=
+md380_f_4102	=
+
+Beep_Process         = 0x0802fe31; /* 328 byte match */
+beep_process_unkown =
+Start_multiple_tasks = 0x08046f81; /* 18 byte match */
+Start =
+Start_2_more_tasks__init_vocoder_tasks = 0x0804ac41; /* 178 byte match */
+
+
+
+
 
 /* aes */
-aes_loadkey          = 0x080377d9; /* 630 byte match */
-aes_cipher           = 0x08037751; /* 766 byte match */
-/* aes_startup_check has bad match of 6 points at 0x08022847*/
+aes_loadkey          = 0x080377d9; /* 634 byte match */
+aes_cipher           = 0x08037751; /* 770 byte match */
+aes_startup_check    = 0x08022847; /* 72 byte match */
 
-/* Unknown AMBE2+ thing. */
-/* ambe_encode_thing has bad match of 4 points at 0x0802bb51*/
-/* Decodes an AMBE2+ frame into bits. */
 ambe_unpack          = 0x0804c061; /* 38 byte match */
-
-/* Populates the audio buffer */
-/* ambe_decode_wav has bad match of 2 points at 0x0800e399*/
-
-
-/* useful md380 firmware functions */
-md380_itow           = 0x08018c5d; /* 238 byte match */
-md380_RTC_GetDate    = 0x0802b7e9; /* 552 byte match */
-md380_RTC_GetTime    = 0x0802b6d3; /* 830 byte match */
-/* read_channel_switch has bad match of 8 points at 0x08050a75*/
-
-/* useful md380 variables */
-/* md380_dmr_id is a RAM address and cannot be converted. */
-
-/* md380_radio_config is a RAM address and cannot be converted. */
-/* Functions and Variabes from the "RTC Timer" - task */
-/* md380_f_4137 has bad match of 2 points at 0x0800df1b*/
-/* md380_f_4520 has bad match of 4 points at 0x0800e539*/
-/* md380_f_4098 has bad match of 2 points at 0x0800de65*/
-/* md380_f_4102 has bad match of 2 points at 0x0800e02b*/
-/* md380_f_4225 has bad match of 4 points at 0x0800e539*/
-
-/* relevant display functions */
-/* Write_Command_2display has bad match of 6 points at 0x08034045*/
-/* Write_Data_2display has bad match of 2 points at 0x08014073*/
+dmr_call_end         = 0x08041f49; /* 192 byte match */
+dmr_call_start       = 0x0804151b; /* 536 byte match */
 
 
-/* Chinese font region. */
-chinese_font         = 0x0809c694; /* 1024 byte match */
 
+ambe_decode_wav      = 0x080544c1; /* 1024 byte match */
+dmr_before_squelch   = 0x080417ff; /* 180 byte match */
+dmr_handle_data      = 0x0804eb9d; /* 246 byte match */
+dmr_sms_arrive       = 0x080418f9; /* 376 byte match */
+
+ambe_encode_thing    = 0x08054019; /* 1024 byte match */
 

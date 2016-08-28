@@ -1,5 +1,3 @@
-CCa 0x0802fd54 beginn dmr sync
-af+ 0x08033eb4 104 OSTimeDly
 af+ 0x800c188 1446 Create_MainMenyEntry
 CCa 0x800c18a md380_menu_0x200011e4
 CCa 0x800c192 md380_menu_id
@@ -50,6 +48,7 @@ CCa 0x800dbda md380_menu_0x200011e4
 CCa 0x800dbee md380_menu_0x200011e4
 CCa 0x800ddc4 md380_menu_id
 CCa 0x800ddce md380_menu_mem_base
+af+ 0x800def6 36 gfx_drawtext
 CCa 0x800e142 md380_menu_0x2001d3f0
 CCa 0x800e1fe md380_menu_0x2001d3ee
 CCa 0x800e748 md380_menu_0x200011e4
@@ -104,6 +103,7 @@ CCa 0x800f87e md380_menu_id
 CCa 0x800f884 md380_menu_0x200011e4
 CCa 0x800f88c md380_menu_memory
 CCa 0x800fc66 md380_menu_memory
+af+ 0x800fc84 18 md380_menu_entry_back
 CCa 0x800fcc2 md380_menu_0x200011e4
 CCa 0x800fcc8 md380_menu_memory
 CCa 0x800fce4 md380_menu_id
@@ -1177,6 +1177,7 @@ CCa 0x80189be md380_menu_memory
 CCa 0x80189dc md380_menu_id
 CCa 0x80189e4 md380_menu_mem_base
 CCa 0x8018a16 md380_menu_id
+af+ 0x8018b28 236 md380_itow
 CCa 0x8018c16 md380_menu_0x200011e4
 CCa 0x8018c1e md380_menu_memory
 CCa 0x8018c30 md380_menu_0x2001d3ef
@@ -1469,6 +1470,7 @@ CCa 0x801b000 md380_menu_id
 CCa 0x801b008 md380_menu_mem_base
 CCa 0x801b030 md380_menu_0x20001114
 CCa 0x801b036 md380_menu_id
+af+ 0x801b042 26 md380_menu_numerical_input
 CCa 0x801b052 md380_menu_0x2001d3f4
 CCa 0x801b062 md380_menu_0x200011e4
 CCa 0x801b06a md380_menu_memory
@@ -1654,6 +1656,9 @@ CCa 0x801c0ba md380_menu_mem_base
 CCa 0x801c0ec md380_menu_id
 CCa 0x801c194 md380_menu_0x2001d3f4
 CCa 0x801c1b4 md380_menu_0x2001d3f4
+af+ 0x801d368 8 gfx_set_bg_color
+af+ 0x801d370 8 gfx_set_fg_color
+af+ 0x801d88c 30 gfx_blockfill
 CCa 0x801d9d2 md380_menu_0x2001d3ef
 CCa 0x801dc44 md380_menu_0x2001d3ef
 CCa 0x801dc52 md380_menu_0x2001d3ef
@@ -2141,6 +2146,7 @@ CCa 0x80214ba md380_menu_id
 CCa 0x80214c4 md380_menu_0x200011e4
 CCa 0x80214ce md380_menu_id
 CCa 0x80214e2 md380_menu_0x200011e4
+af+ 0x8021874 16 gfx_select_font
 af+ 0x802256a 324 aes_startup_check
 af+ 0x80226c0 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
@@ -2717,23 +2723,26 @@ CCa 0x802fa54 no dmr sync tone
 CCa 0x802fa66 dmr sync
 CCa 0x802fad8 roger beep
 CCa 0x802fbe4 beginn roger beep
+CCa 0x802fd54 beginn dmr sync
 af+ 0x8030aa4 52 F_293
 af+ 0x8030ad8 16 F_294
+af+ 0x8031084 258 md380_OSMboxPend
 af+ 0x803119c 86 OSMboxPost
-af+ 0x8031276 52 spiflash_sektor_erase4k
-af+ 0x80312aa 52 spiflash_block_erase64k
+af+ 0x8031276 52 md380_spiflash_sektor_erase4k
+af+ 0x80312aa 52 md380_spiflash_block_erase64k
 af+ 0x80312de 76 spiflash_program_page
 af+ 0x803132a 332 F_1069_spiflash_multiple_spiflash_program_page
-af+ 0x8031476 70 spiflash_read
-af+ 0x80314bc 58 spi1_sendrecv
+af+ 0x8031476 70 md380_spiflash_read
+af+ 0x80314bc 58 md380_spi_sendrecv
 af+ 0x80314f6 18 spiflash_write_enable
-af+ 0x8031508 34 spiflash_wait_for_read_status_register
+af+ 0x8031508 34 md380_spiflash_wait
 af+ 0x803152a 28 md380_spiflash_enable   
-af+ 0x8031546 24 disable_spi_flash_and_sem
-af+ 0x803155e 704 spiflash_write
+af+ 0x8031546 24 md380_spiflash_disable
+af+ 0x803155e 704 md380_spiflash_write
 af+ 0x8031830 52 spiflash_Erase_Security_Registers_44h
 af+ 0x8031864 76 spiflash_Program_Security_Registers_42h
-af+ 0x80318b0 78 spiflash_Read_Security_Registers_48h
+af+ 0x80318b0 78 md380_spiflash_security_registers_read
+af+ 0x8033eb4 104 OSTimeDly
 CCa 0x803427a md380_menu_0x200011e4
 CCa 0x8034282 md380_menu_memory
 CCa 0x803429e md380_menu_id
@@ -3171,23 +3180,40 @@ CCa 0x803ab1a md380_menu_0x200011e4
 CCa 0x803ab20 md380_menu_0x200011e4
 CCa 0x803ab24 md380_menu_0x200011e4
 CCa 0x803ab2c md380_menu_id
+af+ 0x803b39a 144 main_menu
 af+ 0x803f708 76 OSSemCreate
+af+ 0x803f754 218 OSSemPend
+af+ 0x803f844 92 OSSemPost
+af+ 0x803ff84 38 c5000_spi0_writereg
+af+ 0x803ffd0 42 c5000_spi0_readreg
 af+ 0x8040670 880 F_414
 af+ 0x8040a02 740 dmr_audio_start
 af+ 0x8040ce6 92 F_416
 af+ 0x8040d44 94 F_858
 af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
+af+ 0x8043de4 8 OS_ENTER_CRITICAL
+af+ 0x8043dec 6 OS_EXIT_CRITICAL
 af+ 0x80462bc 314 Start
 af+ 0x8046520 684 Start_multiple_tasks
 af+ 0x8049e14 798 Start_2_more_tasks__init_vocoder_tasks__Q
 CCa 0x804c74c md380_menu_edit_buf
 CCa 0x804c76e md380_menu_edit_buf
 af+ 0x804dd70 430 dmr_handle_data
-af+ 0x804e64d 90 OSTaskNameSet
+af+ 0x804e580 204 OSTaskCreateExt
+af+ 0x804e64c 90 OSTaskNameSet
 af+ 0x804eb64 152  F_4098
 af+ 0x804ec66 298 F_4102
 CCa 0x804ee2c md380_menu_0x200011e4
 af+ 0x80531d8 124 ambe_encode_thing__size_not_correct
 af+ 0x8053680 140 ambe_decode_wav
+af+ 0x8055100 68 usb_setcallbacks
+af+ 0x8059b02 40 usb_send_packet
 CCa 0x808632c md380_menu_0x2001d3ed
+af+ 0x808eb30 190 usb_do_setup
+af+ 0x808ebee 1444 usb_dnld_handle
+af+ 0x808f308 3036 usb_upld_handle
+af+ 0x8090370 80 usb_dfu_write
+af+ 0x80903c0 54 usb_dfu_read
+af+ 0x809662e 34 usb_serialnumber
+
