@@ -154,3 +154,9 @@ dmr_sms_arrive       = 0x08040de1;
 
 ambe_encode_thing    = 0x080531d9;
 
+
+/* AMBE Buffer variables, printed by ambe_decode_wav_hook */
+ambe_inbuffer = 0x2001410e;
+ambe_outbuffer0 = 0x20013f28;
+ambe_outbuffer1 = 0x20013fc8;
+ambe_mystery = 0x20013594;

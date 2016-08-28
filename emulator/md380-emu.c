@@ -49,8 +49,13 @@ void mapimage(){
   }
 }
 
+/* We declare the function weak for places where it's unknown,
+   as loadfirmwareversion() can't be found by symgrate. */
 extern short md380_usbbuf;
+#pragma weak loadfirmwareversion
 void loadfirmwareversion();
+
+
 //Prints the version info from the firmware.
 void version(){
   //Cast the buffer and read its contents.
