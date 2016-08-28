@@ -14,7 +14,7 @@ md380-emu: $(OBJS) firmware.o ram.o
 		-Xlinker  --section-start=.sram=0x20000000 
 run: all
 	rm -f out.raw out.wav
-	./md380-emu -d -i sample.amb -o out.raw
+	./md380-emu -d -i sample.amb -o out.raw -vv
 	sox -r 8000 -e signed-integer -L -b 16 -c 1 -v 5 out.raw out.wav
 play: run
 	mplayer out.wav

@@ -200,9 +200,14 @@ beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 *
 md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
 
 
+/* AMBE Buffer variables */
+ambe_inbuffer = 0x20011c8e;
+ambe_outbuffer0 = 0x20011aa8;
+ambe_outbuffer1 = 0x20011b48;
+ambe_mystery = 0x20011224;
 
 
-/* symgrate food to find non matched functions */
+/* symgrate failed to find these non matched symbols */
 chinese_font_p_start = 0x809c714;
 RTC_Timer = 0x8044549;
 Get_Welcome_Line1_from_spi_flash = 0x8021883;
