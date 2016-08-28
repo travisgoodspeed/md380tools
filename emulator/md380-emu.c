@@ -49,37 +49,32 @@ void mapimage(){
   }
 }
 
-int oldmain(int argc, char **argv){
-  mapimage();
-
-  //printf("Firmware loaded to %08x\n", firmware);
-  
-  //Either decode a file or just a test routine.
-  if(argc>1){
-    for(int i=1;i<argc;i++){
-      printf("Decoding %s\n",
-	     argv[i]);
-      decode_amb_file(argv[i],"out.raw");
-    }
-  }else{
-    printf("No files to decode.\n");
-  }
-  
-  return 0;
+extern short md380_usbbuf;
+void loadfirmwareversion();
+//Prints the version info from the firmware.
+void version(){
+  //Cast the buffer and read its contents.
+  short *buf=&md380_usbbuf;
+  loadfirmwareversion();
+  printf("Firmware Version: ");
+  while(*buf)
+    printf("%c",*buf++);
+  printf("\n");
 }
 
+//Prints usage info.
 void usage(char *argv0){
   printf("Usage: %s [OPTION]\n"
-	 "\t-d                     Decodes AMBE\n"
-	 "\t-e                     Encodes AMBE\n"
-	 "\t-V                     Version Info\n"
-	 "\t-h                     Help!\n"
+	 "\t-d          Decodes AMBE\n"
+	 "\t-e          Encodes AMBE\n"
+	 "\t-V          Version Info\n"
+	 "\t-h          Help!\n"
 	 "\n"
-	 "\t-v                     Verbose mode.\n"
-	 "\t-vv                    Very verbose!\n"
+	 "\t-v          Verbose mode.\n"
+	 "\t-vv         Very verbose!\n"
 	 "\n"
-	 "\t-i foo                 Input File\n"
-	 "\t-o bar                 Output File\n",
+	 "\t-i foo      Input File\n"
+	 "\t-o bar      Output File\n",
 	 argv0);
 }
 
@@ -113,7 +108,7 @@ int main(int argc, char **argv){
       infilename=strdup(optarg);
       break;
 
-      //verbosity
+      //verbosity, can be applied more than once
     case 'v':
       verbosity++;
       break;
@@ -141,7 +136,7 @@ int main(int argc, char **argv){
     printf("TODO: AMBE Encoding doesn't yet work.\n");
     break;
   case 'V'://Version
-    printf("TODO: Reading the version doesn't yet work.\n");
+    version();
     break;
   default:
     printf("Usage error 2.\n");
