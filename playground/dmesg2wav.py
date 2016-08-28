@@ -22,7 +22,7 @@ import wave;
 outfile=wave.open("output.wav",'w');
 
 def writeheader():
-    """Writes the .AMB file's header, as checked by DSD."""
+    """Writes the .WAV file's header."""
     outfile.setparams((1,2, 8000, 0, 'NONE', 'not compressed'));
 
 def writeframe(frame):

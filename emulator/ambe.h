@@ -11,3 +11,4 @@ void ambe_init_stuff();
 
 void decode_amb_file(char *infilename,
 		     char *outfilename);
+

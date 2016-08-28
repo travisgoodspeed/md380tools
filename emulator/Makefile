@@ -3,6 +3,9 @@ OBJS = md380-emu.o ambe.o
 CC=arm-linux-gnueabi-gcc-6 -static -g
 
 all: md380-emu
+clean:
+	rm -f *.o *~ md380-emu *.wav *.raw *.elf
+
 
 md380-emu: $(OBJS) firmware.o ram.o
 	$(CC) -o md380-emu $(OBJS) firmware.o ram.o \
@@ -11,8 +14,7 @@ md380-emu: $(OBJS) firmware.o ram.o
 		-Xlinker  --section-start=.sram=0x20000000 
 run: all
 	rm -f out.raw out.wav
-	touch out.raw
-	./md380-emu sample.amb
+	./md380-emu -d -i sample.amb -o out.raw
 	sox -r 8000 -e signed-integer -L -b 16 -c 1 -v 5 out.raw out.wav
 play: run
 	mplayer out.wav
@@ -22,10 +24,7 @@ dsdplay: all
 #This plays the audio in DSD, for comparison.
 	dsd -n -w sample.wav -r sample.amb
 	mplayer sample.wav
-emu: all
-	qemu-arm md380-emu sample.amb
-clean:
-	rm -f *.o *~ md380-emu *.wav *.raw *.elf
+
 firmware.o:
 #May need to adjust these flags for NX compatibility.
 	arm-linux-gnueabi-objcopy \

@@ -2,8 +2,8 @@
    This is a quick test to try and call functions from the Tytera
    MD380 firmware within a 32-bit ARM Linux machine.
    
-   This only runs on AARCH32 Linux, or on other Linux platforms with a
-   porper emulator.
+   This only runs on AARCH32 Linux, or on other Linux platforms with
+   qemu-binfmt.
 */
 
 #include<stdio.h>
@@ -15,7 +15,7 @@
 #include<fcntl.h>
 #include<unistd.h>
 #include<string.h>
-
+#include<getopt.h>
 
 #include "ambe.h"
 
@@ -49,9 +49,7 @@ void mapimage(){
   }
 }
 
-
-
-int main(int argc, char **argv){
+int oldmain(int argc, char **argv){
   mapimage();
 
   //printf("Firmware loaded to %08x\n", firmware);
@@ -67,5 +65,87 @@ int main(int argc, char **argv){
     printf("No files to decode.\n");
   }
   
+  return 0;
+}
+
+void usage(char *argv0){
+  printf("Usage: %s [OPTION]\n"
+	 "\t-d                     Decodes AMBE\n"
+	 "\t-e                     Encodes AMBE\n"
+	 "\t-V                     Version Info\n"
+	 "\t-h                     Help!\n"
+	 "\n"
+	 "\t-v                     Verbose mode.\n"
+	 "\t-vv                    Very verbose!\n"
+	 "\n"
+	 "\t-i foo                 Input File\n"
+	 "\t-o bar                 Output File\n",
+	 argv0);
+}
+
+
+char *infilename=NULL;
+char *outfilename=NULL;
+int verbosity=0;
+
+int main(int argc, char **argv){
+  int flags, opt;
+  char verb; //Main action of this run.
+
+  verb='h';
+  while((opt=getopt(argc,argv,"edVvo:i:"))!=-1){
+    switch(opt){
+      /* For any flag that sets the mode, we simply set the verb char
+	 to that mode.
+       */
+    case 'V'://Version
+    case 'd'://Decode AMBE
+    case 'e'://Encode AMBE
+    case 'h'://usage
+      verb=opt;
+      break;
+
+      //IO filenames
+    case 'o':
+      outfilename=strdup(optarg);
+      break;
+    case 'i':
+      infilename=strdup(optarg);
+      break;
+
+      //verbosity
+    case 'v':
+      verbosity++;
+      break;
+      
+    default:
+      printf("Unknown flag: %c\n",opt);
+      //exit(1);
+    }
+  }
+  
+  //Do the main verb.
+  switch(verb){
+  case 'h'://Usage
+    usage(argv[0]);
+    exit(1);
+    break;
+  case 'd'://DECODE
+    fprintf(stderr,"Decoding AMBE %s to 8kHz Raw Mono Signed %s.\n",
+	    infilename?infilename:"stdin",
+	    infilename?outfilename:"stdout");
+    decode_amb_file(infilename,
+		    outfilename);
+    break;
+  case 'e'://ENCODE
+    printf("TODO: AMBE Encoding doesn't yet work.\n");
+    break;
+  case 'V'://Version
+    printf("TODO: Reading the version doesn't yet work.\n");
+    break;
+  default:
+    printf("Usage error 2.\n");
+    exit(1);
+  }
   return 0;
 }
