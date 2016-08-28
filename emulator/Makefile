@@ -1,11 +1,11 @@
 
-
+OBJS = md380-emu.o ambe.o
 CC=arm-linux-gnueabi-gcc-6 -static -g
 
 all: md380-emu
 
-md380-emu: md380-emu.o firmware.o ram.o
-	$(CC) -o md380-emu md380-emu.o firmware.o ram.o \
+md380-emu: $(OBJS) firmware.o ram.o
+	$(CC) -o md380-emu $(OBJS) firmware.o ram.o \
 		-Xlinker --just-symbols=../applet/src/symbols_d02.032 \
 		-Xlinker --section-start=.firmware=0x0800C000 \
 		-Xlinker  --section-start=.sram=0x20000000 
