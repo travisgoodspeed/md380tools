@@ -321,7 +321,6 @@ void create_menu_entry_datef_american_screen(void) {
   global_addl_config.datef = 3;
 }
 
-
 void create_menu_entry_userscsv_enable_screen(void) {
   struct MENU *menu_mem;
 
