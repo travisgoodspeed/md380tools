@@ -130,8 +130,9 @@ Quick recipe for uploading the just build firmware:
 * connect cable to MD380.
 * power-on MD380 while holding PTT button and button above PTT.
 
-
-    ./md380-dfu upgrade applet/experiment.bin
+```
+./md380-dfu upgrade applet/experiment.bin
+```
 
 
 ####Raspberry Pi Debian Jessie: #####
