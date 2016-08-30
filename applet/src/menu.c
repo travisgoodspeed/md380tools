@@ -29,6 +29,8 @@ const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
 const static wchar_t wt_userscsv[]          = L"UsersCSV";
 const static wchar_t wt_datef_original[]    = L"Original";
 const static wchar_t wt_datef_germany[]     = L"German";
+const static wchar_t wt_datef_italy[]       = L"Italian";
+const static wchar_t wt_datef_american[]    = L"American";
 const static wchar_t wt_promtg[]            = L"Promiscuous";
 const static wchar_t wt_edit[]              = L"Edit";
 const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
@@ -56,7 +58,7 @@ void *main_menu_hook(void *menu){
 //  printf("main_menu() ");
 //  printhex(menu,32);
 //  printf("\n");
-  
+
 
   switch(* ((int*)menu)){
   case 0x0b:
@@ -280,6 +282,45 @@ void create_menu_entry_datef_germany_screen(void) {
   spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_datef, 1);
   global_addl_config.datef = 1;
 }
+
+void create_menu_entry_datef_italy_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem->menu_title = wt_datef_italy;
+
+  menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
+
+  menu_mem->numberof_menu_entries=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+#ifdef CONFIG_MENU
+  create_menu_entry_hook( md380_menu_id, wt_datef_italy, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
+#endif
+  spiflash_write_with_type_check("2", spi_flash_addl_config_start + offset_datef, 1);
+  global_addl_config.datef = 2;
+}
+
+void create_menu_entry_datef_american_screen(void) {
+  struct MENU *menu_mem;
+
+  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem->menu_title = wt_datef_american;
+
+  menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
+
+  menu_mem->numberof_menu_entries=1;
+  menu_mem->unknown_00 = 0;
+  menu_mem->unknown_01 = 0;
+
+#ifdef CONFIG_MENU
+  create_menu_entry_hook( md380_menu_id, wt_datef_american, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
+#endif
+  spiflash_write_with_type_check("3", spi_flash_addl_config_start + offset_datef, 1);
+  global_addl_config.datef = 3;
+}
+
 
 void create_menu_entry_userscsv_enable_screen(void) {
   struct MENU *menu_mem;
@@ -508,19 +549,28 @@ void create_menu_entry_datef_screen(void) {
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
-  menu_mem->numberof_menu_entries=2;
+  menu_mem->numberof_menu_entries=4;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
+  if (buf[0] == '0') {
+    md380_menu_entry_selected = 0;
+  }
   if (buf[0] == '1') {
     md380_menu_entry_selected = 1;
-  } else {
-    md380_menu_entry_selected = 0;
+  }
+  if (buf[0] == '2') {
+    md380_menu_entry_selected = 2;
+  }
+  if (buf[0] == '3') {
+    md380_menu_entry_selected = 3;
   }
 
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id,     wt_datef_original,  create_menu_entry_datef_original_screen + 1, md380_menu_entry_back+1,  0x8b, 0 , 1);
   create_menu_entry_hook( md380_menu_id + 1, wt_datef_germany,  create_menu_entry_datef_germany_screen + 1, md380_menu_entry_back+1, 0x8b, 0 , 1);
+  create_menu_entry_hook( md380_menu_id + 2, wt_datef_italy,  create_menu_entry_datef_italy_screen + 1, md380_menu_entry_back+1, 0x8b, 0 , 1);
+  create_menu_entry_hook( md380_menu_id + 3, wt_datef_american,  create_menu_entry_datef_american_screen + 1, md380_menu_entry_back+1, 0x8b, 0 , 1);
 #endif
 
   for(i=0;i<2;i++) { // not yet known ;)
@@ -539,7 +589,7 @@ void create_menu_entry_userscsv_screen(void) {
     Previously, this would check the flash type, but as all known
     flash chips are at least 1MB, we can skip the check and always use
     the memory.
-    
+
   if(check_spi_flash_type()) {
   */
     md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
@@ -821,7 +871,7 @@ void create_menu_entry_addl_functions_screen(void) {
   printf("create_menu_entry_addl_functions_screen %d\n",md380_menu_depth);
 #endif
   menu_mem = (void *)(md380_menu_memory + md380_menu_depth * sizeof(struct MENU) + sizeof(struct MENU));
-  
+
   menu_mem->menu_title = wt_addl_func;
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=9;
@@ -840,7 +890,7 @@ void create_menu_entry_addl_functions_screen(void) {
   create_menu_entry_hook( md380_menu_id + 4, wt_promtg,      create_menu_entry_promtg_screen+1,
                           md380_menu_entry_back+1, 0x98, 0 , 1);
   create_menu_entry_hook( md380_menu_id + 5, wt_edit,        create_menu_entry_edit_screen+1,
-                          md380_menu_entry_back+1, 0x8a, 0 , 0);  // disable this menu entry - no function jet 
+                          md380_menu_entry_back+1, 0x8a, 0 , 0);  // disable this menu entry - no function jet
   create_menu_entry_hook( md380_menu_id + 6, wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen+1,
                           md380_menu_entry_back+1, 0x8a, 0 , 1);
   create_menu_entry_hook( md380_menu_id + 7, wt_micbargraph, create_menu_entry_micbargraph_screen+1,
@@ -878,7 +928,7 @@ void create_menu_utilies_hook(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook(8, md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
 
-  if (menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu 
+  if (menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
     create_menu_entry_hook(11, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
   } else {
     create_menu_entry_hook(9, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
