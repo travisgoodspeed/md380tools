@@ -111,6 +111,30 @@ Install python-usb from backports, the rest from Jessie
     pip install pyusb -U # update PyUSB to 1.0
   
 
+####Ubuntu Xenial (16.04.1): ####
+
+    sudo apt-get update
+    sudo apt-get dist-upgrade
+    sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi
+
+Quick recipe for building new firmware:
+
+    git clone https://github.com/travisgoodspeed/md380tools.git
+    cd md380tools
+    sudo cp 99-md380.rules /etc/udev/rules.d/ 
+    make
+
+Quick recipe for uploading the just build firmware:
+
+* insert cable into USB.
+* connect cable to MD380.
+* power-on MD380 while holding PTT button and button above PTT.
+
+```
+./md380-dfu upgrade applet/experiment.bin
+```
+
+
 ####Raspberry Pi Debian Jessie: #####
 
 ```
