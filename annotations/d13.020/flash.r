@@ -2719,6 +2719,8 @@ CCa 0x802e636 md380_menu_0x200011e4
 CCa 0x802e66e md380_menu_0x200011e4
 CCa 0x802f0da md380_menu_0x200011e4
 af+ 0x802f9dc 4056 Beep_Process
+CCa 0x802fa36 re issue 227
+CCa 0x802fc1e beep 9
 CCa 0x802fa54 no dmr sync tone
 CCa 0x802fa66 dmr sync
 CCa 0x802fad8 roger beep

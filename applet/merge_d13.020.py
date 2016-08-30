@@ -249,6 +249,7 @@ if __name__== '__main__':
 
     # hooks regarding the beep_process
     beep_process_list=[
+      0x0802fc2e, 0x0802fc40, # beep "9"
       0x0802fbf4, 0x0802fc06, # roger beep
       0x0802fd6c, 0x0802fd7e, 0x0802fd8c, 0x0802fd9a #dmr sync
       ];
