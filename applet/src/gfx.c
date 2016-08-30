@@ -30,7 +30,7 @@ char eye_pix[] = {
   };
 const gfx_pal    eye_pal    = { 14, 0, eye_paltab};
 const gfx_bitmap bmp_eye    = { 12, 12, 6, 4, eye_pix, &eye_pal, 0};
-                    
+
 
 //! Draws text at an address by calling back to the MD380 function.
 void drawtext(wchar_t *text,
@@ -49,7 +49,7 @@ void drawascii(char *ascii,
   wchar_t wide[15];
   for(int i=0;i<15;i++)
     wide[i]=ascii[i];
-  
+
 #ifdef CONFIG_GRAPHICS
   //Draw the wide string, not the original.
   gfx_drawtext(wide,
@@ -87,7 +87,7 @@ void red_led(int on) {
   /* The RED LED is supposed to be on pin A0 by the schematic, but in
      point of fact it's on E1.  Expect more hassles like this.
   */
-  
+
   if (on) {
     GPIO_SetBits(GPIOE, GPIO_Pin_1);
   } else {
@@ -106,7 +106,7 @@ void lcd_background_led(int on) {
 /*
 void dump_ram_to_spi_flash() {
   static int run = 0;
-  if ( run == 10) { 
+  if ( run == 10) {
     printf("dump\n");
     for ( int i=0; i < (112+16); i++) {
       md380_spiflash_write((void *) 0x20000000+(1024*i), 0x400000+(1024*i), 1024);
@@ -121,7 +121,8 @@ void print_date_hook(void) {  // copy from the md380 code
 #ifdef CONFIG_GRAPHICS
   wchar_t wide[40];
   RTC_DateTypeDef RTC_DateStruct;
-    md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
+  md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
+
   if ( global_addl_config.datef == 0) {
     wide[0]='2';
     wide[1]='0';
@@ -130,7 +131,8 @@ void print_date_hook(void) {  // copy from the md380 code
     md380_itow(&wide[5], RTC_DateStruct.RTC_Month);
     wide[7]='/';
     md380_itow(&wide[8], RTC_DateStruct.RTC_Date);
-  } else {
+  }
+  if ( global_addl_config.datef == 1) {
     md380_itow(&wide[0], RTC_DateStruct.RTC_Date);
     wide[2]='.';
     md380_itow(&wide[3], RTC_DateStruct.RTC_Month);
@@ -139,13 +141,32 @@ void print_date_hook(void) {  // copy from the md380 code
     wide[7]='0';
     md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
   }
+  if ( global_addl_config.datef == 2) {
+    md380_itow(&wide[0], RTC_DateStruct.RTC_Date);
+    wide[2]='/';
+    md380_itow(&wide[3], RTC_DateStruct.RTC_Month);
+    wide[5]='/';
+    wide[6]='2';
+    wide[7]='0';
+    md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
+  }
+  if ( global_addl_config.datef == 3) {
+    md380_itow(&wide[0], RTC_DateStruct.RTC_Month);
+    wide[2]='/';
+    md380_itow(&wide[3], RTC_DateStruct.RTC_Date);
+    wide[5]='/';
+    wide[6]='2';
+    wide[7]='0';
+    md380_itow(&wide[8], RTC_DateStruct.RTC_Year);    
+  }
+
   wide[10]='\0';
   gfx_chars_to_display( wide, 0xa, 0x60, 0x5e);
 
 //  dump_ram_to_spi_flash();
-                   
+
 //  gfx_drawbmp((char *) &bmp_eye, 20, 2);
-#endif //CONFIG_GRAPHICS             
+#endif //CONFIG_GRAPHICS
 }
 
 void print_ant_sym_hook(char *bmp, int x, int y) {
