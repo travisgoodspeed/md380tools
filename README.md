@@ -111,6 +111,17 @@ Install python-usb from backports, the rest from Jessie
     pip install pyusb -U # update PyUSB to 1.0
   
 
+####Ubuntu Xenial (16.04.1): ####
+
+    sudo apt-get update
+    sudo apt-get dist-upgrade
+    sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb
+
+    git clone https://github.com/travisgoodspeed/md380tools.git
+    cd md380tools
+    make
+
+
 ####Raspberry Pi Debian Jessie: #####
 
 ```
