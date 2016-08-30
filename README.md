@@ -116,12 +116,12 @@ Install python-usb from backports, the rest from Jessie
     sudo apt-get update
     sudo apt-get dist-upgrade
     sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi
-    sudo cp 99-md380.rules /etc/udev/rules.d/ 
 
 Quick recipe for building new firmware:
 
     git clone https://github.com/travisgoodspeed/md380tools.git
     cd md380tools
+    sudo cp 99-md380.rules /etc/udev/rules.d/ 
     make
 
 Quick recipe for uploading the just build firmware:
