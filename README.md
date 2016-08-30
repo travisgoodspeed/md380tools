@@ -118,11 +118,19 @@ Install python-usb from backports, the rest from Jessie
     sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi
     sudo cp 99-md380.rules /etc/udev/rules.d/ 
 
-Quick recipe for new firmware:
+Quick recipe for building new firmware:
 
     git clone https://github.com/travisgoodspeed/md380tools.git
     cd md380tools
     make
+
+Quick recipe for uploading the just build firmware:
+
+* insert cable into USB.
+* connect cable to MD380.
+* power-on MD380 while holding PTT button and button above PTT.
+
+
     ./md380-dfu upgrade applet/experiment.bin
 
 
