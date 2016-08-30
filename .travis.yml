@@ -30,7 +30,6 @@ script:
   - cd applet
   - make -f Makefile.d02.032
   - cd ..
-  - cd db2
   - cd db
   - make all
 notifications:
