@@ -572,7 +572,7 @@ void create_menu_entry_datef_screen(void) {
   create_menu_entry_hook( md380_menu_id + 3, wt_datef_american,  create_menu_entry_datef_american_screen + 1, md380_menu_entry_back+1, 0x8b, 0 , 1);
 #endif
 
-  for(i=0;i<2;i++) { // not yet known ;)
+  for(i=0;i<4;i++) { // not yet known ;)
     uint8_t *p;
     p = (uint8_t *)md380_menu_mem_base + ( md380_menu_id + i ) * 0x14;
     p[0x10] = 0;
