@@ -12,13 +12,3 @@ extern uint32_t get_spi_flash_type(uint8_t *); // place for the id
 extern uint32_t spi_flash_addl_config_start;
 extern uint32_t spi_flash_addl_config_size;
 
-enum spi_flash_addl_config {
-  offset_rbeep,
-  offset_datef,
-  offset_userscsv,
-  offset_debug,
-  offset_promtg,
-  offset_prompriv,
-  offset_micbargraph
-};
-
