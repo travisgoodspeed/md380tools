@@ -651,11 +651,11 @@ def main():
             # print '\n---------------------\nNew glyph:'
             # md.gfxprint(gfx)
             target_checksum = gfx['oldchecksum']
-            print "DEBUG: Looking for graphics checksum %d...\n" % target_checksum
+            #print "DEBUG: Looking for graphics checksum %d...\n" % target_checksum
             candidates = md.gfxfind(target_checksum)
             if len(candidates) > 0:
-                print "DEBUG: Overwriting matching structure at %s.\n" % hex(candidates[0]['address'])
-                print 'replaces old glyph:'
+                #print "DEBUG: Overwriting matching structure at %s.\n" % hex(candidates[0]['address'])
+                #print 'replaces old glyph:'
                 md.glyphreplace(gfx, candidates[0]['address'])
                 modified = True
             else:
