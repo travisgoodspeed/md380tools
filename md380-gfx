@@ -648,8 +648,8 @@ def main():
 
         gfx, pbmfontsl = md.pbmparse(pbmfontsl)
         while gfx != None:
-            print '\n---------------------\nNew glyph:'
-            md.gfxprint(gfx)
+            # print '\n---------------------\nNew glyph:'
+            # md.gfxprint(gfx)
             target_checksum = gfx['oldchecksum']
             print "DEBUG: Looking for graphics checksum %d...\n" % target_checksum
             candidates = md.gfxfind(target_checksum)
