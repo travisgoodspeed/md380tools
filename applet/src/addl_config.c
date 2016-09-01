@@ -26,19 +26,7 @@ void init_global_addl_config_struct() {
     global_addl_config.rbeep = 0;
   }
 
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_datef, 1);
-  if (buf[0] == '0') {
-    global_addl_config.datef = 0;
-  }
-  if (buf[0] == '1') {
-    global_addl_config.datef = 1;
-  }
-  if (buf[0] == '2') {
-    global_addl_config.datef = 2;
-  }
-  if (buf[0] == '3') {
-    global_addl_config.datef = 3;
-  }
+  spiflash_read_datef();
 
   md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
   if (buf[0] == '1') {

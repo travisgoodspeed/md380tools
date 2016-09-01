@@ -138,20 +138,22 @@ void spiflash_write_uint8( int offset, uint8_t val )
     spiflash_write_with_type_check(buf, spi_flash_addl_config_start + offset, 1);
 }
 
-inline void spiflash_write_datef()
+uint8_t spiflash_read_uint8_ranged( int offset, uint8_t cnt )
 {
-  spiflash_write_uint8( offset_datef, global_addl_config.datef );    
+    uint8_t r = spiflash_read_uint8( offset );
+    if( r >= cnt ) {
+        r = cnt - 1 ;
+    }
+    return r ;
 }
 
-inline void spiflash_write_promtg()
+uint8_t spiflash_read_uint8( int offset )
 {
-  spiflash_write_uint8( offset_promtg, global_addl_config.promtg );    
+    char buf[1];
+    md380_spiflash_read(buf, spi_flash_addl_config_start + offset, 1);
+    return buf[0] - '0' ;
 }
 
-inline void spiflash_write_micbargraph()
-{
-  spiflash_write_uint8( offset_micbargraph, global_addl_config.micbargraph );    
-}
 
 void create_menu_entry_promtg_enable_screen(void) {
   struct MENU *menu_mem;
@@ -207,7 +209,7 @@ void create_menu_entry_micbargraph_enable_screen(void) {
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
   global_addl_config.micbargraph=1;
-  spiflash_write_micbargraph()
+  spiflash_write_micbargraph();
 }
 
 void create_menu_entry_micbargraph_disable_screen(void) {
@@ -226,7 +228,7 @@ void create_menu_entry_micbargraph_disable_screen(void) {
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
   global_addl_config.micbargraph=0;
-  spiflash_write_micbargraph()
+  spiflash_write_micbargraph();
 }
 
 void create_menu_entry_rbeep_enable_screen(void) {
@@ -564,7 +566,7 @@ void create_menu_entry_datef_screen(void) {
   struct MENU *menu_mem;
   int8_t buf[1];
 
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_datef, 1);
+  spiflash_read_datef();
 
   menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
   menu_mem->menu_title = wt_datef;
@@ -574,19 +576,8 @@ void create_menu_entry_datef_screen(void) {
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  if (buf[0] == '0') {
-    md380_menu_entry_selected = 0;
-  }
-  if (buf[0] == '1') {
-    md380_menu_entry_selected = 1;
-  }
-  if (buf[0] == '2') {
-    md380_menu_entry_selected = 2;
-  }
-  if (buf[0] == '3') {
-    md380_menu_entry_selected = 3;
-  }
-
+  md380_menu_entry_selected = global_addl_config.datef ;
+  
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id,     wt_datef_original,  create_menu_entry_datef_original_screen + 1, md380_menu_entry_back+1,  0x8b, 0 , 1);
   create_menu_entry_hook( md380_menu_id + 1, wt_datef_germany,  create_menu_entry_datef_germany_screen + 1, md380_menu_entry_back+1, 0x8b, 0 , 1);
