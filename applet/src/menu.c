@@ -274,7 +274,7 @@ void create_menu_entry_datef_original_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
-  menu_mem->menu_title = wt_datef_original;
+  menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
 
@@ -293,7 +293,7 @@ void create_menu_entry_datef_germany_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
-  menu_mem->menu_title = wt_datef_germany;
+  menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
 
@@ -312,7 +312,7 @@ void create_menu_entry_datef_italy_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
-  menu_mem->menu_title = wt_datef_italy;
+  menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
 
@@ -331,7 +331,7 @@ void create_menu_entry_datef_american_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
-  menu_mem->menu_title = wt_datef_american;
+  menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
 
@@ -350,7 +350,7 @@ void create_menu_entry_datef_iso_screen(void) {
   struct MENU *menu_mem;
 
   menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
-  menu_mem->menu_title = wt_datef_iso;
+  menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
 
