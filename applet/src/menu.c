@@ -596,6 +596,7 @@ void create_menu_entry_datef_screen(void) {
   menu_mem->unknown_01 = 0;
 
   md380_menu_entry_selected = global_addl_config.datef ;
+
   
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id,     wt_datef_original,  create_menu_entry_datef_original_screen + 1, md380_menu_entry_back+1,  0x8b, 0 , 1);
@@ -605,7 +606,7 @@ void create_menu_entry_datef_screen(void) {
   create_menu_entry_hook( md380_menu_id + 4, wt_datef_iso,  create_menu_entry_datef_iso_screen + 1, md380_menu_entry_back+1, 0x8b, 0 , 1);
 #endif
 
-  for(i=0;i<4;i++) { // not yet known ;)
+  for(i=0;i<5;i++) { // not yet known ;)
     uint8_t *p;
     p = (uint8_t *)md380_menu_mem_base + ( md380_menu_id + i ) * 0x14;
     p[0x10] = 0;
