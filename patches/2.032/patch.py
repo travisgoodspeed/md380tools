@@ -26,26 +26,8 @@ if __name__ == '__main__':
     patcher.nopout(0x0803eafe,0xf100); #Disable CRC check, in case CC is included.
     patcher.nopout(0x0803eb00,0x80af);
     
-        
-    # Patches after here allow for an included applet.
-    
-    #This cuts out the Chinese font, freeing ~200k for code patches.
-    patcher.ffrange(0x809c714,0x80d0f80);
-    
-    #This mirrors the RESET vector to 0x080C020, for use in booting.
-    patcher.setword(0x0800C020,
-                    patcher.getword(0x0800C004),
-                    0x00000000);
-
-
-    #This makes RESET point to our stub below.
-    patcher.setword(0x0800C004,
-                    0x0809cf00+1
-    );
-    
 
     #Disable the ALPU Licence Check (vocoder version)
-
     patcher.nopout(0x8032a54);
     patcher.nopout(0x8032a54+2);
     patcher.nopout(0x8032a6a);
@@ -68,6 +50,24 @@ if __name__ == '__main__':
     patcher.nopout(0x8047f6c+2);
     patcher.nopout(0x8048904);
     patcher.nopout(0x8048904+2);
+        
+    # Patches after here allow for an included applet.
+    
+    #This cuts out the Chinese font, freeing ~200k for code patches.
+    patcher.ffrange(0x809c714,0x80d0f80);
+    
+    #This mirrors the RESET vector to 0x080C020, for use in booting.
+    patcher.setword(0x0800C020,
+                    patcher.getword(0x0800C004),
+                    0x00000000);
+
+
+    #This makes RESET point to our stub below.
+    patcher.setword(0x0800C004,
+                    0x0809cf00+1
+    );
+    
+
     
     #This stub calls the target RESET vector,
     #if it's not FFFFFFFF.
