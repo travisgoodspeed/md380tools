@@ -198,7 +198,7 @@ Debug | Aktiviert/deaktiviert den Debug-Modus
 Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Monitoring-Funktion (siehe **Freischaltung des Empfangs aller Talkgroups und Private Calls**)
 Mic bargraph | Aktiviert die Modulations-Aussteuerungs-Anzeige
 Edit DMR-ID | Ändern der DMR-ID des Funkgerätes
-Experimental | Ändert bis zum nächsten Ausschalten des Gerätes das Verhalten, dass das Menü nicht geschlossen wird, wenn ein Signal empfangen wird.
+Experimental | Dieses Einstellung aktiviert experimentelle Funktionen welche nicht unbedingt funktionieren müssen. Zur Sicherheit ist diese Einstellung nicht Rebootfest.
 
 ###Aktivierung der User-Datenbank
 **Wichtiger Hinweis:** Diese Funktion sollte nur auf Funkgeräten mit 16 MB SPI-Flashspeicher (nach aktuellen Erkenntnissen in der Regel UHF-Geräte) ausgeführt werden, da auf 1 MB-Geräten (in der Regel VHF-Geräte) der Codeplug bei älteren Versionen des Quellcodes (vor dem 28.04.2016) überschrieben wird und ggf. das Funkgerät hierdurch zunächst nicht mehr nutzbar wird.</note>
