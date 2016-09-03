@@ -5,6 +5,7 @@ af+ 0x800fc84 18 md380_menu_entry_back
 af+ 0x801580c 220 Create_Menu_Entry_RX_QRG_1
 af+ 0x8015966 102 Create_Menu_Entry_RX_QRG_3
 af+ 0x80159ec 628 Create_Menu_Entry_RX_QRG_4
+af+ 0x8016b7e 58 F_4158
 af+ 0x8018c5c 236  md380_itow
 af+ 0x801d49c 8 gfx_set_bg_color
 af+ 0x801d4a4 8 gfx_set_fg_color

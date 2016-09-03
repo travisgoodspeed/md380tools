@@ -27,7 +27,7 @@ md380_spi_sendrecv   = 0x080318f9; /* 10 byte match */
 md380_itow           = 0x08018c5d; /* 238 byte match */
 md380_RTC_GetDate    = 0x0802b7e9; /* 554 byte match */
 md380_RTC_GetTime    = 0x0802b6d3; /* 832 byte match */
-md380_radio_config   = 
+md380_radio_config   = 0x2001dbac; /* 0x08041792 @ dmr_call_start */ 
 
 
 
@@ -46,14 +46,14 @@ usb_dfu_read         = 0x08091201; /* 1024 byte match */
 
 
 md380_dfutargetadr   =
-md380_packet         =
-md380_packetlen      =
-md380_blockadr       =
-md380_dfu_state      =
-md380_dfu_target_adr =
-md380_thingy2        =
-md380_usbstring      =
-md380_usbbuf         =
+md380_packet         = 0x2001ae74;
+md380_packetlen      = 0x2001e82c;
+md380_blockadr       = 0x2001e828;
+md380_dfu_state      = 0x2001ea3a;
+md380_dfu_target_adr = 0x20004a14;
+md380_thingy2        = 0x2001e655;
+md380_usbstring      = 0x2001d504; /* 0x080974f8 @ usb_serialnumber */
+md380_usbbuf         = 0x2001e1a0; /* 0x08016b7e @ F_4158 */
 
 c5000_spi0_readreg   = 0x08040ae9;
 c5000_spi0_writereg  = 0x08040a9d;
@@ -73,62 +73,63 @@ md380_OSMboxPost     = 0x080315f1; /* 16 byte match */
 
 
 /* //! Functions and Variabes regarding the menu */
-main_menu            = 0x0803beb3; /* 138 byte match */
-md380_create_menu_entry = 0x0800c72f; /* 88 byte match */
-md380_create_main_meny_entry = 0x0800c188; /* 1024 byte match */
-md380_menu_numerical_input = 
-md380_create_menu_entry = 0x0800c72f; /* 88 byte match */
-md380_menu_entry_back = 0x0800fc84; /* 38 byte match */
+main_menu                     = 0x0803beb3; /* 138 byte match */
+md380_create_menu_entry       = 0x0800c72f; /* 88 byte match */
+md380_create_main_meny_entry  = 0x0800c188; /* 1024 byte match */
+md380_menu_numerical_input    = 
+md380_create_menu_entry       = 0x0800c72f; /* 88 byte match */
+md380_menu_entry_back         = 0x0800fc84; /* 38 byte match */
 md380_menu_entry_programradio =
 
 
-md380_menu_0x200011e4 = 0x20004acc; 
-md380_menu_0x2001d3c1 =
-md380_menu_0x2001d3ed =
-md380_menu_0x2001d3ee =
-md380_menu_0x2001d3ef =
-md380_menu_0x2001d3f0 =
-md380_menu_0x2001d3f1 =
-md380_menu_0x2001d3f4 =
-md380_menu_depth      =
+md380_menu_0x200011e4            = 0x20004acc; 
+md380_menu_0x2001d3c1            =
+md380_menu_0x2001d3ed            =
+md380_menu_0x2001d3ee            =
+md380_menu_0x2001d3ef            =
+md380_menu_0x2001d3f0            =
+md380_menu_0x2001d3f1            =
+md380_menu_0x2001d3f4            =
+md380_menu_depth                 =
 
-md380_menu_entry_selected =
-md380_menu_id = 0x2001e9ec;
+md380_menu_entry_selected        =
+md380_menu_id                    = 0x2001e9ec;
 md380_program_radio_unprohibited =
-md380_wt_programradio = 0x080d0df0; /* 298 byte match */
-md380_menu_0x20001114 =
-md380_menu_mem_base = 0x2001b274;
-md380_menu_memory =
-md380_menu_edit_buf =
+md380_wt_programradio            = 0x080d0df0; /* 298 byte match */
+md380_menu_0x20001114            =
+md380_menu_mem_base              = 0x2001b274;
+md380_menu_memory                =
+md380_menu_edit_buf              =
 
 
-Create_Menu_Utilies = 
-Create_Menu_Entry_RX_QRG_shown = 
-Create_Menu_Entry_RX_QRG_1 = 0x0801580d; /* 76 byte match */
-Create_Menu_Entry_RX_QRG_2 = 
-Create_Menu_Entry_RX_QRG_3 = 0x08015967; /* 10 byte match */
-Create_Menu_Entry_RX_QRG_4 = 0x080159ed; /* 52 byte match */
-Create_Menu_Entry_LEDIndicator =
+Create_Menu_Utilies              = 
+Create_Menu_Entry_RX_QRG_shown   = 
+Create_Menu_Entry_RX_QRG_1       = 0x0801580d; /* 76 byte match */
+Create_Menu_Entry_RX_QRG_2       = 
+Create_Menu_Entry_RX_QRG_3       = 0x08015967; /* 10 byte match */
+Create_Menu_Entry_RX_QRG_4       = 0x080159ed; /* 52 byte match */
+Create_Menu_Entry_LEDIndicator   =
 Get_Welcome_Line1_from_spi_flash = 0x0802299d; /* 12 byte match */
 Get_Welcome_Line2_from_spi_flash = 0x080229af; /* 12 byte match */
-Edit_Message_Menu_Entry = 0x080241c1; /* 106 byte match */
-F_4315               = 0x08025dc1; /* 12 byte match */
+Edit_Message_Menu_Entry          = 0x080241c1; /* 106 byte match */
+F_4315                           = 0x08025dc1; /* 12 byte match */
 
 
 /* Variabes regarding rtc_timer process. */
-md380_f_4225_operatingmode =
+md380_f_4225_operatingmode       =
 
-md380_f_4225	=
+md380_f_4225	                 =
 
-md380_f_4137	=
-md380_f_4520	=
-md380_f_4098	=
-md380_f_4102	=
+md380_f_4137	                 =
+md380_f_4520	                 =
+md380_f_4098	                 =
+md380_f_4102	                 =
 
-Beep_Process         = 0x0802fe31; /* 328 byte match */
-beep_process_unkown =
-Start_multiple_tasks = 0x08046f81; /* 18 byte match */
-Start =
+Beep_Process                     = 0x0802fe31; /* 328 byte match */
+beep_process_unkown              =
+Start_multiple_tasks             = 0x08046f81; /* 18 byte match */
+Start                            =
+
 Start_2_more_tasks__init_vocoder_tasks = 0x0804ac41; /* 178 byte match */
 
 

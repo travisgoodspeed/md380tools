@@ -29,8 +29,10 @@ CCa 0x0803ee84 Skip ahead a bit if a match has been found.
 CCa 0x0803ee66 Value of 9 enables audio reception.
 CCa 0x0803ee8a Value of 8 enables light, but audio is muted.
 
+
 CCa 0x08014520 Create_Menu_Entry_RX_QRG_2
 CCa 0x08014524 Create_Menu_Entry_RX_QRG_3
+CCa 0x080154de md380_usbbuf
 CCa 0x0802631e call RTC_ExitInitMode(void)
 CCa 0x0802632c call RTC_WaitForSynchro
 CCa 0x0802634a ... maybe STM32LIB void RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct)
@@ -146,6 +148,13 @@ CCa 0x0804e9b8 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base add
 CCa 0x0804eb1e call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0804ec78 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0804ed92 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
+CCa 0x0808ccc2 md380_dfu_state
+CCa 0x0808ccce md380_blockadr
+CCa 0x0808cce4 md380_packetlen
+CCa 0x0808cd00 md380_packet
+CCa 0x0808cd1a md380_dfutargetadr
+CCa 0x0808cd1a md380_dfu_target_adr
+CCa 0x0808d234 !!! md380_thingy2 + 1 !!!!!!!!
 CCa 0x08093918 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x0809573d LED Process()
 CCa 0x08095740 from Codeplug Led Indikatore Enable 0x2001c658  ... maybe
@@ -181,6 +190,7 @@ CCa 0x0809589a call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base add
 CCa 0x0809589a GPIO_WriteBit(GPIOE, 1, 0) - RX_LED OFF
 CCa 0x080958a4 call GPIO_Set_Reset_Bits(r2 == 0 reset/ r2 == 1 set , r0 base address, r1 val)
 CCa 0x080958a4 GPIO_WriteBit(GPIOE, 2, 0) - TX_LED OFF
+CCa 0x080969e4 md380_usbstring
 CCa 0x800c000 0x2001dc10
 CCa 0x800c004 0x80fa969
 CCa 0x800c008 0x80937f1
@@ -6044,3 +6054,4 @@ f WelcomeBMP 1 @ 0x80f9ca8 # size is not correct
 f WelcomeLine1 4 @ 0x2001cecc
 fC WelcomeLine1 *Welcome_Line1
 f WelcomeLine2 4 @ 0x2001cee0
+
