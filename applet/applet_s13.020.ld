@@ -14,7 +14,7 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-  FLASH (rx)      : ORIGIN = 0x0809D000, LENGTH = 200K /* Chinese font region. */
+  FLASH (rx)      : ORIGIN = 0x809c000, LENGTH = 200K /* Chinese font region. */
 /*  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 128K  /* All of RAM. */
 /*  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 4K */
   RAM (xrw)       : ORIGIN = 0x1000b000, LENGTH = 20K /* Bytes after 1000a868 are free.*/

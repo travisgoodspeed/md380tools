@@ -48,4 +48,31 @@ if __name__ == '__main__':
 #     patcher.setstring(0x080cfff4,
 #                       "Patched MD380");
 
+    # freeing ~200k for code patches
+    patcher.ffrange(0x0809bda8,0x80d0614);
+
+    #This mirrors the RESET vector to 0x080C020, for use in booting.
+    patcher.setword(0x0800C020,
+                    patcher.getword(0x0800C004),
+                    0x00000000);
+
+    #This makes RESET point to our stub below.
+    patcher.setword(0x0800C004,
+                    0x0809bf00+1
+    );
+
+    # app start @  0x0809c000
+    patcher.sethword(0x0809bf00, 0x4840);
+    patcher.sethword(0x0809bf02, 0x2100);
+    patcher.sethword(0x0809bf04, 0x3901);
+    patcher.sethword(0x0809bf06, 0x4508);
+    patcher.sethword(0x0809bf08, 0xd100);
+    patcher.sethword(0x0809bf0a, 0x483c);
+    patcher.sethword(0x0809bf0c, 0x4700);
+                                        
+    #Stores the RESET handler for our stub.
+    patcher.setword(0x0809bffc,
+                    patcher.getword(0x0800C020),
+                    0xFFFFFFFF);
+                                                                                        
     patcher.export("patched.img")
