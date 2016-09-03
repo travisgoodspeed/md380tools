@@ -584,7 +584,6 @@ void create_menu_entry_rbeep_screen(void) {
 void create_menu_entry_datef_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
   spiflash_read_datef();
 
