@@ -247,8 +247,8 @@ void create_menu_entry_rbeep_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_rbeep, 1);
   global_addl_config.rbeep = 1;
+  spiflash_write_rbeep();
 }
 
 void create_menu_entry_rbeep_disable_screen(void) {
@@ -266,8 +266,8 @@ void create_menu_entry_rbeep_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_rbeep, 1);
   global_addl_config.rbeep = 0;
+  spiflash_write_rbeep();
 }
 
 void create_menu_entry_datef_original_screen(void) {
@@ -380,8 +380,8 @@ void create_menu_entry_userscsv_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_userscsv, 1);
   global_addl_config.userscsv = 1;
+  spiflash_write_userscsv();
 }
 
 void create_menu_entry_userscsv_disable_screen(void) {
@@ -399,8 +399,8 @@ void create_menu_entry_userscsv_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_userscsv, 1);
   global_addl_config.userscsv = 0;
+  spiflash_write_userscsv();
 }
 
 
@@ -457,8 +457,8 @@ void create_menu_entry_debug_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_debug, 1);
   global_addl_config.debug=1;
+  spiflash_write_debug();
 }
 
 void create_menu_entry_debug_disable_screen(void) {
@@ -476,8 +476,8 @@ void create_menu_entry_debug_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_debug, 1);
   global_addl_config.debug=0;
+  spiflash_write_debug();
 }
 
 
@@ -616,7 +616,6 @@ void create_menu_entry_datef_screen(void) {
 void create_menu_entry_userscsv_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
   /*
     Previously, this would check the flash type, but as all known
@@ -625,14 +624,15 @@ void create_menu_entry_userscsv_screen(void) {
 
   if(check_spi_flash_type()) {
   */
-    md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
+    spiflash_read_userscsv();
+    
     menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
     menu_mem->menu_title = wt_userscsv;
     menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
     menu_mem->numberof_menu_entries=2;
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
-    if (buf[0] == '1') {
+    if (global_addl_config.userscsv == 1) {
       md380_menu_entry_selected = 0;
     } else {
       md380_menu_entry_selected = 1;

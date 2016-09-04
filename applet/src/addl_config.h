@@ -47,9 +47,49 @@ inline void spiflash_write_promtg()
     spiflash_write_uint8( offset_promtg, global_addl_config.promtg );    
 }
 
+inline void spiflash_read_promtg()
+{
+    global_addl_config.promtg = spiflash_read_uint8_ranged( offset_promtg, 2 );    
+}
+
 inline void spiflash_write_micbargraph()
 {
     spiflash_write_uint8( offset_micbargraph, global_addl_config.micbargraph );    
+}
+
+inline void spiflash_write_rbeep()
+{
+    spiflash_write_uint8( offset_rbeep, global_addl_config.rbeep );    
+}
+
+inline void spiflash_read_rbeep()
+{
+    global_addl_config.rbeep = spiflash_read_uint8_ranged( offset_rbeep, 2 );    
+}
+
+inline void spiflash_write_debug()
+{
+    spiflash_write_uint8( offset_debug, global_addl_config.debug );    
+}
+
+inline void spiflash_read_debug()
+{
+    global_addl_config.debug = spiflash_read_uint8_ranged( offset_debug, 2 );    
+}
+
+inline void spiflash_read_micbargraph()
+{
+    global_addl_config.micbargraph = spiflash_read_uint8_ranged( offset_micbargraph, 2 );    
+}
+
+inline void spiflash_write_userscsv()
+{
+    spiflash_write_uint8( offset_userscsv, global_addl_config.userscsv );    
+}
+
+inline void spiflash_read_userscsv()
+{
+    global_addl_config.userscsv = spiflash_read_uint8_ranged( offset_userscsv, 2 );    
 }
 
 #endif
