@@ -247,8 +247,8 @@ void create_menu_entry_rbeep_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_rbeep, 1);
   global_addl_config.rbeep = 1;
+  spiflash_write_rbeep();
 }
 
 void create_menu_entry_rbeep_disable_screen(void) {
@@ -266,8 +266,8 @@ void create_menu_entry_rbeep_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_rbeep, 1);
   global_addl_config.rbeep = 0;
+  spiflash_write_rbeep();
 }
 
 void create_menu_entry_datef_original_screen(void) {
@@ -380,8 +380,8 @@ void create_menu_entry_userscsv_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_userscsv, 1);
   global_addl_config.userscsv = 1;
+  spiflash_write_userscsv();
 }
 
 void create_menu_entry_userscsv_disable_screen(void) {
@@ -399,8 +399,8 @@ void create_menu_entry_userscsv_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_userscsv, 1);
   global_addl_config.userscsv = 0;
+  spiflash_write_userscsv();
 }
 
 
@@ -457,8 +457,8 @@ void create_menu_entry_debug_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_debug, 1);
   global_addl_config.debug=1;
+  spiflash_write_debug();
 }
 
 void create_menu_entry_debug_disable_screen(void) {
@@ -476,8 +476,8 @@ void create_menu_entry_debug_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_debug, 1);
   global_addl_config.debug=0;
+  spiflash_write_debug();
 }
 
 
