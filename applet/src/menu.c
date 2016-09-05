@@ -117,7 +117,43 @@ e0020000 Selected Page Index
 }
 
 
+struct menu_mem_base_type {
+    const wchar_t* label ;  // [0]
+    void* green ;           // [4]
+    void* red ;             // [8]
+    uint8_t off12 ;         // [12]
+    uint8_t off13 ;         // [13]
+    uint16_t enabled ;      // [14]
+    uint16_t unknown1 ;     // [16]
+    uint16_t unknown2 ;     // [18]
+    // sizeof() == 20 (0x14)
+};
 
+void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) 
+{
+//    struct menu_mem_base_type *poi = (void*)((0x14 * menuid) + md380_menu_mem_base);    
+    struct menu_mem_base_type *poi = &((struct menu_mem_base_type*)md380_menu_mem_base)[menuid];    
+    
+    poi->label = label ;
+    poi->green = green_key ;
+    poi->red = red_key ;
+    poi->off12 = e ;
+    poi->off13 = f ;
+    poi->enabled = enabled ;
+}
+
+#ifdef DEBUG
+void dump_entry(int menuid) 
+{
+    struct menu_mem_base_type *poi = &((struct menu_mem_base_type*)md380_menu_mem_base)[menuid];    
+    
+    printf("dump_entry\n");
+    
+    printf("b: ");
+    printhex2((char *) poi->label,14);
+    printf("\n");
+}
+#endif  
 //void create_menu_entry_addl_functions_screen(void) ;
 
 void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
@@ -129,6 +165,9 @@ void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key
   printf(" md380_menu_depth: %d\n", md380_menu_depth);
 #endif
   md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
+#ifdef DEBUG
+  dump_entry(menuid);
+#endif  
 }
 
 void spiflash_write_uint8( int offset, uint8_t val )
