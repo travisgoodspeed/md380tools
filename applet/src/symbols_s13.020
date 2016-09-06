@@ -38,7 +38,7 @@ usb_dnld_handle      = 0x0808fa2f; /*  446 byte match */
 /* This returns a USB packet to the host from the upload handler. */
 usb_send_packet      = 0x0805a943; /*  396 byte match */
 
-__usb_serialnumber     = 0x080974ef; /* 14 byte match */
+usb_serialnumber     = 0x080974ef; /* 14 byte match */
 usb_setcallbacks     = 0x08055f41; /*  518 byte match */
 usb_do_setup         = 0x0808f971; /*  636 byte match */
 usb_dfu_write        = 0x080911b1; /*  1024 byte match */
