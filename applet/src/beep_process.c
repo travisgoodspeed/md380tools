@@ -25,6 +25,9 @@ void F_294_replacement(uint16_t value) {
 #ifdef MD380_d02_032
   uint32_t multiplicand = 0x1dd;
 #endif
+#ifdef MD380_s13_020
+  uint32_t multiplicand = 0x49a;
+#endif
 
   if (global_addl_config.rbeep == 1) {
 #ifdef MD380_d13_020
@@ -32,6 +35,9 @@ void F_294_replacement(uint16_t value) {
 #endif
 #ifdef MD380_d02_032
     multiplicand= 0xaa;
+#endif
+#ifdef MD380_s13_020
+    multiplicand= 0x200;
 #endif
   }
 

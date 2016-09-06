@@ -117,7 +117,43 @@ e0020000 Selected Page Index
 }
 
 
+struct menu_mem_base_type {
+    const wchar_t* label ;  // [0]
+    void* green ;           // [4]
+    void* red ;             // [8]
+    uint8_t off12 ;         // [12]
+    uint8_t off13 ;         // [13]
+    uint16_t enabled ;      // [14]
+    uint16_t unknown1 ;     // [16]
+    uint16_t unknown2 ;     // [18]
+    // sizeof() == 20 (0x14)
+};
 
+void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) 
+{
+//    struct menu_mem_base_type *poi = (void*)((0x14 * menuid) + md380_menu_mem_base);    
+    struct menu_mem_base_type *poi = &((struct menu_mem_base_type*)md380_menu_mem_base)[menuid];    
+    
+    poi->label = label ;
+    poi->green = green_key ;
+    poi->red = red_key ;
+    poi->off12 = e ;
+    poi->off13 = f ;
+    poi->enabled = enabled ;
+}
+
+#ifdef DEBUG
+void dump_entry(int menuid) 
+{
+    struct menu_mem_base_type *poi = &((struct menu_mem_base_type*)md380_menu_mem_base)[menuid];    
+    
+    printf("dump_entry\n");
+    
+    printf("b: ");
+    printhex2((char *) poi->label,14);
+    printf("\n");
+}
+#endif  
 //void create_menu_entry_addl_functions_screen(void) ;
 
 void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
@@ -129,6 +165,9 @@ void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key
   printf(" md380_menu_depth: %d\n", md380_menu_depth);
 #endif
   md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
+#ifdef DEBUG
+  dump_entry(menuid);
+#endif  
 }
 
 void spiflash_write_uint8( int offset, uint8_t val )
@@ -155,11 +194,15 @@ uint8_t spiflash_read_uint8( int offset )
     return buf[0] - '0' ;
 }
 
+struct MENU *get_menu_stackpoi()
+{
+    return ( void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+}
 
 void create_menu_entry_promtg_enable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = ( void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -178,7 +221,7 @@ void create_menu_entry_promtg_enable_screen(void) {
 void create_menu_entry_promtg_disable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -197,7 +240,7 @@ void create_menu_entry_promtg_disable_screen(void) {
 void create_menu_entry_micbargraph_enable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_micbargraph;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -216,7 +259,7 @@ void create_menu_entry_micbargraph_enable_screen(void) {
 void create_menu_entry_micbargraph_disable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_micbargraph;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -235,7 +278,7 @@ void create_menu_entry_micbargraph_disable_screen(void) {
 void create_menu_entry_rbeep_enable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_rbeep;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -247,14 +290,14 @@ void create_menu_entry_rbeep_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_rbeep, 1);
   global_addl_config.rbeep = 1;
+  spiflash_write_rbeep();
 }
 
 void create_menu_entry_rbeep_disable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_rbeep;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -266,14 +309,14 @@ void create_menu_entry_rbeep_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_rbeep, 1);
   global_addl_config.rbeep = 0;
+  spiflash_write_rbeep();
 }
 
 void create_menu_entry_datef_original_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -292,7 +335,7 @@ void create_menu_entry_datef_original_screen(void) {
 void create_menu_entry_datef_germany_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -311,7 +354,7 @@ void create_menu_entry_datef_germany_screen(void) {
 void create_menu_entry_datef_italy_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -330,7 +373,7 @@ void create_menu_entry_datef_italy_screen(void) {
 void create_menu_entry_datef_american_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -349,7 +392,7 @@ void create_menu_entry_datef_american_screen(void) {
 void create_menu_entry_datef_iso_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -368,7 +411,7 @@ void create_menu_entry_datef_iso_screen(void) {
 void create_menu_entry_userscsv_enable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_userscsv;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -380,14 +423,14 @@ void create_menu_entry_userscsv_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("1", spi_flash_addl_config_start + offset_userscsv, 1);
   global_addl_config.userscsv = 1;
+  spiflash_write_userscsv();
 }
 
 void create_menu_entry_userscsv_disable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_userscsv;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -399,15 +442,15 @@ void create_menu_entry_userscsv_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_userscsv, 1);
   global_addl_config.userscsv = 0;
+  spiflash_write_userscsv();
 }
 
 
 void create_menu_entry_experimental_enable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_experimental;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -425,7 +468,7 @@ void create_menu_entry_experimental_enable_screen(void) {
 void create_menu_entry_experimental_disable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_experimental;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -445,7 +488,7 @@ void create_menu_entry_experimental_disable_screen(void) {
 void create_menu_entry_debug_enable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_debug;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -457,14 +500,14 @@ void create_menu_entry_debug_enable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_debug, 1);
   global_addl_config.debug=1;
+  spiflash_write_debug();
 }
 
 void create_menu_entry_debug_disable_screen(void) {
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_debug;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -476,19 +519,18 @@ void create_menu_entry_debug_disable_screen(void) {
 #ifdef CONFIG_MENU
   create_menu_entry_hook( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
 #endif
-  spiflash_write_with_type_check("0", spi_flash_addl_config_start + offset_debug, 1);
   global_addl_config.debug=0;
+  spiflash_write_debug();
 }
 
 
 void create_menu_entry_promtg_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_promtg, 1);
+  spiflash_read_promtg();
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -496,7 +538,7 @@ void create_menu_entry_promtg_screen(void) {
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  if (buf[0] == '1') {
+  if (global_addl_config.promtg == 1) {
     md380_menu_entry_selected = 0;
   } else {
     md380_menu_entry_selected = 1;
@@ -517,11 +559,10 @@ void create_menu_entry_promtg_screen(void) {
 void create_menu_entry_micbargraph_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_micbargraph, 1);
+  spiflash_read_micbargraph();
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_micbargraph;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -529,7 +570,7 @@ void create_menu_entry_micbargraph_screen(void) {
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  if (buf[0] == '1') {
+  if (global_addl_config.micbargraph == 1) {
     md380_menu_entry_selected = 0;
   } else {
     md380_menu_entry_selected = 1;
@@ -552,18 +593,17 @@ void create_menu_entry_micbargraph_screen(void) {
 void create_menu_entry_rbeep_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1);
+  spiflash_read_rbeep();
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_rbeep;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
-  if (buf[0] == '1') {
+  if (global_addl_config.rbeep == 1) {
     md380_menu_entry_selected = 0;
   } else {
     md380_menu_entry_selected = 1;
@@ -587,7 +627,7 @@ void create_menu_entry_datef_screen(void) {
 
   spiflash_read_datef();
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -616,7 +656,6 @@ void create_menu_entry_datef_screen(void) {
 void create_menu_entry_userscsv_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
   /*
     Previously, this would check the flash type, but as all known
@@ -625,14 +664,15 @@ void create_menu_entry_userscsv_screen(void) {
 
   if(check_spi_flash_type()) {
   */
-    md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
-    menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+    spiflash_read_userscsv();
+    
+    menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = wt_userscsv;
     menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
     menu_mem->numberof_menu_entries=2;
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
-    if (buf[0] == '1') {
+    if (global_addl_config.userscsv == 1) {
       md380_menu_entry_selected = 0;
     } else {
       md380_menu_entry_selected = 1;
@@ -664,11 +704,10 @@ void create_menu_entry_userscsv_screen(void) {
 void create_menu_entry_debug_screen(void) {
   int i;
   struct MENU *menu_mem;
-  int8_t buf[1];
 
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_debug, 1);
+  spiflash_read_debug();
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_debug;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -676,12 +715,10 @@ void create_menu_entry_debug_screen(void) {
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
 
-  if (buf[0] == '1') {
+  if (global_addl_config.debug == 1) {
     md380_menu_entry_selected = 0;
-    global_addl_config.debug = 1;
   } else {
     md380_menu_entry_selected = 1;
-    global_addl_config.debug = 0;
   }
 
 #ifdef CONFIG_MENU
@@ -700,7 +737,7 @@ void create_menu_entry_experimental_screen(void) {
   int i;
   struct MENU *menu_mem;
 
-  menu_mem = (void *)((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_experimental;
 
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -784,7 +821,7 @@ void create_menu_entry_edit_screen(void) {
   md380_menu_0x2001d3f1 = 0;
   md380_menu_0x2001d3f4 = 0;
 
-  menu_mem =(void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) +  sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_edit;
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=1;
@@ -882,7 +919,7 @@ void create_menu_entry_edit_dmr_id_screen(void) {
   md380_menu_0x2001d3f0 = 3;      // 3 = numerical input
   md380_menu_0x2001d3f1 = 0;
   md380_menu_0x2001d3f4 = 0;
-  menu_mem = (void *)(md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) +  sizeof(struct MENU);
+  menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_edit_dmr_id;
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries=1;
@@ -903,7 +940,7 @@ void create_menu_entry_addl_functions_screen(void) {
 #ifdef DEBUG
   printf("create_menu_entry_addl_functions_screen %d\n",md380_menu_depth);
 #endif
-  menu_mem = (void *)(md380_menu_memory + md380_menu_depth * sizeof(struct MENU) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
 
   menu_mem->menu_title = wt_addl_func;
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
@@ -954,7 +991,7 @@ void create_menu_utilies_hook(void) {
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
 #endif
 
-  menu_mem = (void *)(md380_menu_memory + md380_menu_depth * sizeof(struct MENU) + sizeof(struct MENU));
+  menu_mem = get_menu_stackpoi();
   menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
   menu_mem->numberof_menu_entries++;
 

@@ -74,3 +74,6 @@ db/repeaters.json
 
 # firmware downloads
 firmware/dl
+
+# applet intermeds
+applet/*.lst

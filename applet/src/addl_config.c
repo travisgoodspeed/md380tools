@@ -16,48 +16,17 @@
 
 struct addl_config global_addl_config;
 
-void init_global_addl_config_struct() {
-  int8_t buf[1];
-
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_rbeep, 1);
-  if (buf[0] == '1') {
-    global_addl_config.rbeep = 1;
-  } else {
-    global_addl_config.rbeep = 0;
-  }
-
-  spiflash_read_datef();
-
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_userscsv, 1);
-  if (buf[0] == '1') {
-    global_addl_config.userscsv = 1;
-  } else {
-    global_addl_config.userscsv = 0;
-  }
-
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_debug, 1);
-  if (buf[0] == '1') {
-    global_addl_config.debug = 1;
-  } else {
-    global_addl_config.debug = 0;
-  }
-
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_promtg, 1);
-  if (buf[0] == '1') {
-    global_addl_config.promtg=1;
-  } else {
-    global_addl_config.promtg=0;
-  }
-
-  md380_spiflash_read(buf, spi_flash_addl_config_start + offset_micbargraph, 1);
-  if (buf[0] == '1') {
-    global_addl_config.micbargraph=1;
-  } else {
-    global_addl_config.micbargraph=0;
-  }
-
-  // global_addl_config.experimental is intentionally not permanent
-  global_addl_config.experimental = 0;
+void init_global_addl_config_struct() 
+{
+    spiflash_read_rbeep();
+    spiflash_read_datef();
+    spiflash_read_userscsv();
+    spiflash_read_debug();
+    spiflash_read_promtg();
+    spiflash_read_micbargraph();
+    
+    // global_addl_config.experimental is intentionally not permanent
+    global_addl_config.experimental = 0;
 }
 
 void init_global_addl_config_hook(void) {

@@ -31,6 +31,13 @@ static int flag=0;
 #define MD380_FONT_NORM 0x80cf780  /* 0x0800dffa */
 #endif
 
+#ifdef MD380_s13_020
+#define MD380_FONT_SMALL 0x809b380
+#define MD380_FONT_NORM  0x80d0640
+#endif
+
+
+
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() {
 #ifdef DEBUG
