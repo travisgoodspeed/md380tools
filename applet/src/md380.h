@@ -154,7 +154,6 @@ uint8_t   md380_menu_id;
 
 extern wchar_t	  	md380_wt_programradio[];  // menutext <- menu_entry_programradio
 
-extern uint8_t     	md380_menu_mem_base[];
 extern uint8_t     	md380_menu_memory[];
 extern wchar_t  	md380_menu_edit_buf[];
 
