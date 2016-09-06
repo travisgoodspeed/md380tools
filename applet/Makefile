@@ -23,6 +23,7 @@ CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
 CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+CFLAGS += -Wa,-a=$(@:.o=.lst)
 ###################################################
 
 vpath %.c src
