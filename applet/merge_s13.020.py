@@ -153,13 +153,13 @@ if __name__== '__main__':
     #Open the applet symbols
     sapplet=Symbols("%s.sym"%sys.argv[2]);
 
-    merger.hookstub(   #0x0809661e,    #USB manufacturer string handler function.
+    merger.hookstub(0x080974de,   #0x0809661e,    #USB manufacturer string handler function.
                     sapplet.getadr("getmfgstr"));
-    merger.hookstub(   #0x080226d2, #startup_botline
+    merger.hookstub(0x080229ae,  #0x080226d2, #startup_botline
                     sapplet.getadr("demo"));
-    merger.hookstub(   #0x08016a96,
+    merger.hookstub(0x08016b7e,  #0x08016a96,
                     sapplet.getadr("loadfirmwareversion_hook"));
-    merger.hookbl(     #0x0808eb66, #Call to usb_dfu_upload().
+    merger.hookbl(  0x0808f9a6,   #0x0808eb66, #Call to usb_dfu_upload().
                   sapplet.getadr("usb_upld_hook"));
                                                                                                                 
                                                                                                                     
