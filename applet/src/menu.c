@@ -209,7 +209,7 @@ void create_menu_entry_promtg_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -228,7 +228,7 @@ void create_menu_entry_promtg_disable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -247,7 +247,7 @@ void create_menu_entry_micbargraph_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_micbargraph;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -266,7 +266,7 @@ void create_menu_entry_micbargraph_disable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_micbargraph;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -285,7 +285,7 @@ void create_menu_entry_rbeep_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_rbeep;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -304,7 +304,7 @@ void create_menu_entry_rbeep_disable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_rbeep;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -323,7 +323,7 @@ void create_menu_entry_datef_original_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -342,7 +342,7 @@ void create_menu_entry_datef_germany_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -361,7 +361,7 @@ void create_menu_entry_datef_italy_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -380,7 +380,7 @@ void create_menu_entry_datef_american_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -399,7 +399,7 @@ void create_menu_entry_datef_iso_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -418,7 +418,7 @@ void create_menu_entry_userscsv_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_userscsv;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -437,7 +437,7 @@ void create_menu_entry_userscsv_disable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_userscsv;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -457,7 +457,7 @@ void create_menu_entry_experimental_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_experimental;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -475,7 +475,7 @@ void create_menu_entry_experimental_disable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_experimental;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -495,7 +495,7 @@ void create_menu_entry_debug_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_debug;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -514,7 +514,7 @@ void create_menu_entry_debug_disable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_debug;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
@@ -537,7 +537,7 @@ void create_menu_entry_promtg_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -567,7 +567,7 @@ void create_menu_entry_micbargraph_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_micbargraph;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -599,7 +599,7 @@ void create_menu_entry_rbeep_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_rbeep;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -628,7 +628,7 @@ void create_menu_entry_datef_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_datef;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=5;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -664,7 +664,7 @@ void create_menu_entry_userscsv_screen(void) {
     
     menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = wt_userscsv;
-    menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
     menu_mem->numberof_menu_entries=2;
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
@@ -704,7 +704,7 @@ void create_menu_entry_debug_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_debug;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -732,7 +732,7 @@ void create_menu_entry_experimental_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_experimental;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=2;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -813,7 +813,7 @@ void create_menu_entry_edit_screen(void) {
 
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_edit;
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -911,7 +911,7 @@ void create_menu_entry_edit_dmr_id_screen(void) {
   md380_menu_0x2001d3f4 = 0;
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_edit_dmr_id;
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -933,7 +933,7 @@ void create_menu_entry_addl_functions_screen(void) {
   menu_mem = get_menu_stackpoi();
 
   menu_mem->menu_title = wt_addl_func;
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries=9;
   menu_mem->unknown_00 = 0;
   menu_mem->unknown_01 = 0;
@@ -980,7 +980,7 @@ void create_menu_utilies_hook(void) {
 #endif
 
   menu_mem = get_menu_stackpoi();
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
+  menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
   menu_mem->numberof_menu_entries++;
 
 #ifdef CONFIG_MENU
