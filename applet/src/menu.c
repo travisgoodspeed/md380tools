@@ -209,7 +209,7 @@ void create_menu_entry_promtg_enable_screen(void) {
   menu_mem = get_menu_stackpoi();
   menu_mem->menu_title = wt_promtg;
 
-  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base
+  menu_mem->unknownp = md380_menu_id + md380_menu_mem_base;
 
   menu_mem->numberof_menu_entries=1;
   menu_mem->unknown_00 = 0;
