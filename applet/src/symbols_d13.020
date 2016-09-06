@@ -78,7 +78,6 @@ main_menu                              = 0x0803b39b;
 md380_create_menu_entry                = 0x0800c72f;
 md380_create_main_meny_entry           = 0x0800c189;
 md380_menu_numerical_input             = 0x0801b042;
-md380_create_menu_entry                = 0x0800c72f;
 md380_menu_entry_back                  = 0x0800fc84;
 md380_menu_entry_programradio          = 0x080136c0;
 
