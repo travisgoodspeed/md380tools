@@ -152,7 +152,7 @@ if __name__== '__main__':
     
     #Open the applet symbols
     sapplet=Symbols("%s.sym"%sys.argv[2]);
-
+    #############  All address comments from D13.020
     merger.hookstub(0x080974de,   #0x0809661e,    #USB manufacturer string handler function.
                     sapplet.getadr("getmfgstr"));
     merger.hookstub(0x080229ae,  #0x080226d2, #startup_botline
@@ -235,6 +235,42 @@ if __name__== '__main__':
     merger.hookbl(0x08041734, sapplet.getadr("dmr_apply_squelch_hook"),0);     #Public calls. # 0x08040c1c
 
                                 
+    # additional menu hook
+    merger.hookbl(0x08013642, sapplet.getadr("create_menu_utilies_hook"),0); # 0x080135a8
+
+    # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
+    print_ant_sym_hook_list=[
+         0x0802161a, 0x08021628, 0x0802161a, 0x08034936, 0x08021a84 
+#        0x0802136a, 0x08021378, 0x0802136a, 0x8033e1e, 0x080217a8
+        ]; # bad hooks, not work well
+    for adr in print_ant_sym_hook_list:
+        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
+
+    # init the addl global config struct from spi flash
+    merger.hookbl(0x08047026 ,sapplet.getadr("init_global_addl_config_hook"),0); # 0x08046326
+
+    # no menu exit on RX hook 
+    merger.hookbl(0x0801ffb0,sapplet.getadr("f_4225_internel_hook"),0);#0x0801fe7c
+
+    # OSMboxPend Hook to diag Beep_Process
+    merger.hookbl(0x0802fe54, sapplet.getadr("OSMboxPend_hook"));#0x0802fa00
+
+    # hooks regarding the beep_process
+    beep_process_list=[
+       0x08030082, 0x08030094, # beep "9"
+#      0x0802fc2e, 0x0802fc40, # beep "9"
+       0x08030048, 0x0803005a, # roger beep
+#      0x0802fbf4, 0x0802fc06, # roger beep
+       0x080301c0, 0x080301d2, 0x080301e0, 0x080301ee
+#      0x0802fd6c, 0x0802fd7e, 0x0802fd8c, 0x0802fd9a #dmr sync
+      ];
+    for adr in beep_process_list:
+      merger.hookbl(adr,sapplet.getadr("F_294_replacement"),0);
+
+
+    merger.hookbl(0x802ded6, sapplet.getadr("f_4225_hook"),0); # 0x080468e6
+    merger.hookbl(0x8047640, sapplet.getadr("f_4225_hook"),0); # 0x0802db42
+
                                                                                                                                                                                                                                       
 
     print "Merging %s into %s at %08x" % (
