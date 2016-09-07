@@ -144,21 +144,25 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // e f
     // 8b,0 simple yes no list items.
     // 6,2 confirmation dialog.
-    // 8c,0 single menu entry for complete contacts list.
     // 81,0 enter radio number for manual dial
+    // 81,0 enter radio number for new contact
     // 8a,0 utilities menu items
+    // 8c,0 single menu entry for complete contacts list.
     // 98,0 radio settings
+    // 93,0 message
     
     // enabled 
     // 0 = not visible
     // 1 = viseble
-    // 27 = zones menu (special handling)
-  
+    // 0x27 = zones menu (special handling)
+    // 0x3e7 = contacts menu handling
+    // 0x8 = quick text handling
+    
     if( global_addl_config.experimental == 1 ) {
         switch( enabled ) {
-            case 27 :
+            case 0x27 :
                 // zones menu.
-                break :
+                break ;
             case 0 :
                 enabled = 1 ; // cheating.
                 break ;
