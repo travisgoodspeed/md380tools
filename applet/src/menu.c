@@ -19,6 +19,7 @@
 #include "os.h"
 #include "spiflash.h"
 #include "addl_config.h"
+#include "radio_config.h"
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -156,20 +157,24 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
     
     // e f
-    // 8b,0 simple yes no list items.
-    // 6,2 confirmation dialog.
+    // 6,2 confirmation popup misc.
+    // 6,f confirmation popup scanlist.
+    // 6,f confirmation popup zone.
+    // 6,1 invalid number popup.
     // 81,0 enter radio number for manual dial
     // 81,0 enter radio number for new contact
     // 8a,0 utilities menu items
+    // 8b,0 simple yes no list items.
     // 8c,0 single menu entry for complete contacts list.
-    // 98,0 radio settings
     // 93,0 message
+    // 98,0 radio settings
     
     // item_count 
     // 0 = not visible
-    // 0x27 = zones menu (special handling)
-    // 0x3e7 = contacts menu handling
-    // 0x8 = quick text handling
+    
+    // f
+    // 0 = stable
+    // 2 = remove after timeout
     
     if( global_addl_config.experimental == 1 ) {
         switch( item_count ) {
@@ -319,7 +324,7 @@ void create_menu_entry_rbeep_enable_screen(void) {
   menu_mem->unknown_01 = 0;
 
 #ifdef CONFIG_MENU
-  md380_create_menu_entry( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
+  md380_create_menu_entry( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2, 1);
 #endif
   global_addl_config.rbeep = 1;
   spiflash_write_rbeep();
@@ -338,7 +343,7 @@ void create_menu_entry_rbeep_disable_screen(void) {
   menu_mem->unknown_01 = 0;
 
 #ifdef CONFIG_MENU
-  md380_create_menu_entry( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
+  md380_create_menu_entry( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2, 1);
 #endif
   global_addl_config.rbeep = 0;
   spiflash_write_rbeep();
@@ -1004,6 +1009,10 @@ void create_menu_utilies_hook(void) {
 
 #ifdef DEBUG
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
+   
+   radio_config_t *rc = (void*)md380_radio_config ;
+   printf( "backlight %x\n", rc->backlight_time );
+   printf( "dmr %d\n", rc->dmrid );
 #endif
 
   menu_mem = get_menu_stackpoi();
