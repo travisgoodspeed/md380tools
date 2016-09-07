@@ -188,6 +188,8 @@ if __name__== '__main__':
     merger.hookbl(0x80408e0, #Call to dmr_call_end()
                  sapplet.getadr("dmr_call_end_hook"));
 
+    merger.hookstub2(0x800c72e, sapplet.getadr("create_menu_entry_rev"));
+
     dmr_call_start_hook_list=[0x804076a,0x80408ca];
     for adr in dmr_call_start_hook_list:
         merger.hookbl(adr,sapplet.getadr("dmr_call_start_hook"));  

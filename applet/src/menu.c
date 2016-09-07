@@ -137,9 +137,9 @@ extern menu_mem_base_t md380_menu_mem_base[];
 void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) 
 {
     printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, enabled );
-    printf("label: ");
-    printhex2((char *)label,14);
-    printf("\n");
+//    printf("label: ");
+//    printhex2((char *)label,14);
+//    printf("\n");
     
     // e f
     // 8b,0 simple yes no list items.
@@ -163,8 +163,6 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     poi->enabled = enabled ;
     
 }
-
-//void create_menu_entry_addl_functions_screen(void) ;
 
 //void md380_create_menu_entry(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
 //#ifdef DEBUG
