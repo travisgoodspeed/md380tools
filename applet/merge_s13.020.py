@@ -162,7 +162,22 @@ if __name__== '__main__':
     merger.hookbl(  0x0808f9a6,   #0x0808eb66, #Call to usb_dfu_upload().
                   sapplet.getadr("usb_upld_hook"));
                                                                                                                 
-                                                                                                                    
+    merger.hookbl(0x080413f8, # 0x80408e0, #Call to dmr_call_end()
+                 sapplet.getadr("dmr_call_end_hook"));
+                         
+    dmr_call_start_hook_list=[0x08041282, 0x080413e2 ]; #0x804076a,0x80408ca];
+    for adr in dmr_call_start_hook_list:
+        merger.hookbl(adr,sapplet.getadr("dmr_call_start_hook"));  
+                                              
+    dmr_handle_data_hook_list=[0x08041456, 0x0804146e, 0x080414b4 ]; #0x804093e,0x8040956,0x804099c];
+    for adr in dmr_handle_data_hook_list:
+        merger.hookbl(adr, sapplet.getadr("dmr_handle_data_hook"));
+                                                                          
+    merger.hookbl( 0x0804143e, #0x8040926,
+                 sapplet.getadr("dmr_sms_arrive_hook"));
+                                                                              
+                                                                                  
+                                                                                                                                                                                                      
 
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
