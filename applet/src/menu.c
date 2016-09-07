@@ -1013,6 +1013,7 @@ void create_menu_utilies_hook(void) {
    radio_config_t *rc = (void*)md380_radio_config ;
    printf( "backlight %x\n", rc->backlight_time );
    printf( "dmr %d\n", rc->dmrid );
+   printf( "mode_ch %d\n", rc->mode_ch_mr );
 #endif
 
   menu_mem = get_menu_stackpoi();
