@@ -136,7 +136,22 @@ extern menu_mem_base_t md380_menu_mem_base[];
 
 void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) 
 {
-    printf("create_menu_entry_rev %x\n", menuid );
+    printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, enabled );
+    printf("label: ");
+    printhex2((char *)label,14);
+    printf("\n");
+    
+    // e f
+    // 8b,0 simple yes no list items.
+    // 6,2 confirmation dialog.
+    // 8c,0 single menu entry for complete contacts list.
+    // 81,0 enter radio number for manual dial
+    // 8a,0 utilities menu items
+    // 98,0 radio settings
+  
+    if( global_addl_config.experimental == 1 ) {
+        enabled = 1 ; // cheating.
+    }
     
     struct menu_mem_base_type *poi = &md380_menu_mem_base[menuid];    
     
@@ -149,18 +164,6 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     
 }
 
-#ifdef DEBUG
-void dump_entry(int menuid) 
-{
-    struct menu_mem_base_type *poi = &md380_menu_mem_base[menuid];    
-    
-    printf("dump_entry\n");
-    
-    printf("b: ");
-    printhex2((char *) poi->label,14);
-    printf("\n");
-}
-#endif  
 //void create_menu_entry_addl_functions_screen(void) ;
 
 void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
@@ -172,9 +175,6 @@ void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key
 //  printf(" md380_menu_depth: %d\n", md380_menu_depth);
 //#endif
   md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
-//#ifdef DEBUG
-//  dump_entry(menuid);
-//#endif  
 }
 
 void spiflash_write_uint8( int offset, uint8_t val )
