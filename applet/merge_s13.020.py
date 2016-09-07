@@ -187,6 +187,53 @@ if __name__== '__main__':
                        
     # date format  hook, this hook can modify the date format on the status line
     merger.hookbl(0x0800df92,sapplet.getadr("print_date_hook"),0);    # 0x0800df92
+
+    # Hook the startup AES check.
+    merger.hookbl(0x08048474,sapplet.getadr("aes_startup_check_hook"),0); # 0x0804764c
+
+    # Patch a single call in the wrapper function so catch all
+    # aes_loadkey() calls.
+    merger.hookbl(0x0803774a,sapplet.getadr("aes_loadkey_hook"),0); # 0x08036c32
+
+    #Function that calls aes_cipher() twice.  When are these called?
+    #there a 3 calls on d02.32 
+    aes_cipher_hook_list=[ 0x08022936,0x0804070a];     #0x802265a,0x803fbf2];
+    for adr in aes_cipher_hook_list:
+        merger.hookbl(adr, sapplet.getadr("aes_cipher_hook"));
+
+    #Hook lots of AMBE2+ encoder code and hope our places are correct.
+    ambelist=[
+              0x804b036, 0x804b16e, 0x804b1c6, 0x804b314, 0x804b38a, 0x804b504,
+              0x804b584, 0x804b6f0, 0x804b726
+    ];
+#              0x804a20a,0x804a342,0x804a39a,0x804a4e8,0x804a55e,
+#              0x804a6d8,0x804a758,0x804a8c4,0x804a8fa 
+    for adr in ambelist:
+        merger.hookbl(adr,sapplet.getadr("ambe_encode_thing_hook"));
+
+    #Hook calls within the AMBE2+ decoder.
+    unpacklist=[
+                0x8034c1e, 0x8034c2a, 0x8034c42, 0x8034c4e, 0x804bcea, 0x804c216, 
+                0x804c26a, 0x804c2c0
+#        0x8034106, 0x8034112, 0x803412a, 0x8034136, 0x804aebe, 0x804b3ea, 0x804b43e,
+#        0x804b494
+    ];
+    for adr in unpacklist:
+        merger.hookbl(adr,sapplet.getadr("ambe_unpack_hook"));
+
+    #Hook calls that produce WAV audio.  (Maybe.)
+    wavdeclist=[
+         0x804adc4, 0x804ba38, 0x804bb8e, 0x804bea0, 0x804bedc, 0x804bf9c, 0x804bfd8
+#        0x8049f98, 0x804ac0c, 0x804ad62, 0x804b074, 0x804b0b0, 0x804b170, 0x804b1ac
+    ];  
+    for adr in wavdeclist:
+        merger.hookbl(adr,sapplet.getadr("ambe_decode_wav_hook"));
+
+    #Hooks the squelch routines, so we can do monitor mode in C.
+    merger.hookbl(0x080417f8, sapplet.getadr("dmr_apply_privsquelch_hook"),0); #Private calls. # 0x08040ce0
+    #########  this function has been changed 
+    merger.hookbl(0x08041734, sapplet.getadr("dmr_apply_squelch_hook"),0);     #Public calls. # 0x08040c1c
+
                                 
                                                                                                                                                                                                                                       
 
