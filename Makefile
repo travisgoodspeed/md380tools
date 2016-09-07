@@ -22,6 +22,8 @@ flash:
 	cd applet && $(MAKE) clean flash
 flash_d02.032:
 	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
+flash_s13.020:
+	cd applet && $(MAKE) -f Makefile.s13.020 clean flash
 flashdb:
 	cd db && $(MAKE)
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv

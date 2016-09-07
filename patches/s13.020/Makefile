@@ -9,6 +9,10 @@ unwrapped.img:
 
 patched.img: unwrapped.img
 	./patch.py
+	../../md380-gfx --firmware=patched.img --gfx=replacement-font-big-latin.pbm fontreplace
+	../../md380-gfx --firmware=patched.img --gfx=replacement-font-small-latin.pbm fontreplace
+              
+              
 
 patched.bin: patched.img
 	../../md380-fw --wrap patched.img patched.bin

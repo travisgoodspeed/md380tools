@@ -134,6 +134,13 @@ void demo(){
   drawtext(L"@ d02.032",
 	   160,140);
 #endif
+#ifdef MD380_s13_020
+  drawtext(L"@ s13.020",
+           160,140);
+#endif
+             
+             
+
   drawascii(GIT_VERSION,
             160,180);
   sleep(1000);

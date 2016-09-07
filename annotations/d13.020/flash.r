@@ -3,7 +3,6 @@ CCa 0x800c18a md380_menu_0x200011e4
 CCa 0x800c192 md380_menu_id
 CCa 0x800c1ce md380_menu_0x200011e4
 CCa 0x800c1d6 md380_menu_memory
-CCa 0x800c1ea md380_menu_mem_base
 CCa 0x800c272 md380_menu_id
 CCa 0x800c2b6 md380_menu_id
 CCa 0x800c2ea md380_menu_id
@@ -20,28 +19,16 @@ CCa 0x800c4ca md380_menu_id
 CCa 0x800c4f2 md380_menu_id
 CCa 0x800c51a md380_menu_id
 CCa 0x800c542 md380_menu_id
-CCa 0x800c56a md380_menu_id
 CCa 0x800c576 md380_menu_0x200011e4
-CCa 0x800c57e md380_menu_id
 CCa 0x800c598 md380_menu_0x200011e4
 CCa 0x800c5e8 md380_menu_id
 CCa 0x800c60c md380_menu_id
 CCa 0x800c640 md380_menu_id
-CCa 0x800c66a md380_menu_id
-CCa 0x800c692 md380_menu_id
-CCa 0x800c6ba md380_menu_id
-CCa 0x800c6e2 md380_menu_id
 CCa 0x800c6ee md380_menu_0x200011e4
-CCa 0x800c6f6 md380_menu_id
 CCa 0x800c710 md380_menu_0x200011e4
-CCa 0x800c71c md380_menu_mem_base
-af+ 0x800c72e 86 F_249_Create_MenuEntry
-CCa 0x800c73a md380_menu_mem_base
-CCa 0x800c748 md380_menu_mem_base
-CCa 0x800c754 md380_menu_mem_base
-CCa 0x800c760 md380_menu_mem_base
-CCa 0x800c76c md380_menu_mem_base
-CCa 0x800c778 md380_menu_mem_base
+
+af+ 0x800c72e 86 md380_create_menu_entry
+
 CCa 0x800d982 md380_menu_0x200011e4
 CCa 0x800dbce md380_menu_0x200011e4
 CCa 0x800dbda md380_menu_0x200011e4
@@ -3219,3 +3206,15 @@ af+ 0x8090370 80 usb_dfu_write
 af+ 0x80903c0 54 usb_dfu_read
 af+ 0x809662e 34 usb_serialnumber
 
+f poi.to.md380_menu_id 4 0x0x0800c788
+f poi.to.md380_menu_mem_base 4 0x0800c7ac     
+f poi.to.menu_entry_back 4 0x0800c7b8
+f poi.to.0x2001e6ec 4 0x0800c7c0
+f poi.to.0x20001704 4 0x0800c7c4
+f poi.0x0800c7d4 4 0x0800c7d4
+f poi.0x0800c7d8 4 0x0800c7d8
+
+Cd 4 @ 0x0800c784
+Cd 4 @ 0x0800c788
+Cd 4 @ 0x0800c7ac
+f _ 0 0x0800c800
