@@ -148,9 +148,21 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // 81,0 enter radio number for manual dial
     // 8a,0 utilities menu items
     // 98,0 radio settings
+    
+    // enabled 
+    // 0 = not visible
+    // 1 = viseble
+    // 27 = zones menu (special handling)
   
     if( global_addl_config.experimental == 1 ) {
-        enabled = 1 ; // cheating.
+        switch( enabled ) {
+            case 27 :
+                // zones menu.
+                break :
+            case 0 :
+                enabled = 1 ; // cheating.
+                break ;
+        }
     }
     
     struct menu_mem_base_type *poi = &md380_menu_mem_base[menuid];    
