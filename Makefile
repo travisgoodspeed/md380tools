@@ -39,3 +39,5 @@ dist: applets
 	rm $(RELEASE)/windows/MD-380-D2.32\(AD\).bin $(RELEASE)/windows/Operation.doc.pdf
 	cp DFU.py 99-md380.rules md380-dfu md380-tool $(RELEASE)/python/
 
+doflash: applets
+	./md380-dfu upgrade applet/experiment.bin
