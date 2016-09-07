@@ -856,9 +856,9 @@ void create_menu_entry_edit_screen(void) {
 }
 
 
-void create_menu_entry_edit_dmr_id_screen_store(void) {
+void create_menu_entry_edit_dmr_id_screen_store(void) 
+{
   uint32_t new_dmr_id=0;
-  uint32_t *dmr_id;
   wchar_t *bf;
 
 #ifdef DEBUG
@@ -876,8 +876,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void) {
   printf("\n%d\n",new_dmr_id);
 #endif
 // store new dmr_id to ram and spi flash (codeplug)
-  dmr_id = (uint32_t*) &md380_radio_config[4];   // form D002.32 @ 0x0803ef02
-  *dmr_id=new_dmr_id;
+  md380_radio_config.dmrid = new_dmr_id;
 
   md380_spiflash_write(&new_dmr_id, 0x2084, 4);
 
@@ -907,12 +906,12 @@ uint32_t uli2w( uint32_t num, wchar_t *bf) {
   return (n); // number of char
 }
 
-void create_menu_entry_edit_dmr_id_screen(void) {
+void create_menu_entry_edit_dmr_id_screen(void)
+{
   struct MENU *menu_mem;
   uint8_t i;
   uint8_t *p;
   uint32_t nchars;
-  uint32_t * dmr_id;
 
   md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
   md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
@@ -926,8 +925,7 @@ void create_menu_entry_edit_dmr_id_screen(void) {
    *p = 0;
    }
 
-  dmr_id = (uint32_t *) &md380_radio_config[4];
-  nchars=uli2w(*dmr_id, md380_menu_edit_buf);
+  nchars=uli2w(md380_radio_config.dmrid, md380_menu_edit_buf);
 
 #ifdef DEBUG
   printf("\ncreate_menu_entry_edit_dmr_id_screen %x %d \n", md380_menu_edit_buf, nchars);
@@ -1010,7 +1008,7 @@ void create_menu_utilies_hook(void) {
 #ifdef DEBUG
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
    
-   radio_config_t *rc = (void*)md380_radio_config ;
+   radio_config_t *rc = &md380_radio_config ;
    printf( "backlight %x\n", rc->backlight_time );
    printf( "dmr %d\n", rc->dmrid );
    printf( "mode_ch %d\n", rc->mode_ch_mr );

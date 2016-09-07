@@ -25,8 +25,8 @@ struct radio_config {
 
 typedef struct radio_config radio_config_t ;
 
-
-
+extern radio_config_t md380_radio_config;
+                                      
 #ifdef __cplusplus
 }
 #endif

@@ -206,9 +206,6 @@ wchar_t * md380_itow(wchar_t *, int value);
 void      md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
 void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
 
-extern uint8_t  md380_radio_config[]; // needs more documentation 
-                                      // +4 (uint32) own DMR ID
-
 // stuff to handle different display (flip (380/390) type
 extern uint8_t  const md380_radio_config_bank2[]; // from spiflash Security Registers
                                                   // tunig parameter
