@@ -159,9 +159,6 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     
     if( global_addl_config.experimental == 1 ) {
         switch( item_count ) {
-            case 0x27 :
-                // zones menu.
-                break ;
             case 0 :
                 item_count = 1 ; // cheating.
                 break ;
