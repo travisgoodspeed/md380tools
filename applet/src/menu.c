@@ -141,6 +141,20 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
 //    printhex2((char *)label,14);
 //    printf("\n");
     
+    char lbl2[10];
+    char *lp = (void*)label ;
+    for(int i=0;i<10;i++) {
+        char c = lp[(i*2)];
+        lbl2[i] = c ;
+        if( c == 0 ) {
+            break ;
+        }
+    }
+    lbl2[9] = 0 ;
+    
+    void *gp = ((uint8_t*)green_key) - 1 ;
+    printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
+    
     // e f
     // 8b,0 simple yes no list items.
     // 6,2 confirmation dialog.
