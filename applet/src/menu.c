@@ -123,7 +123,7 @@ struct menu_mem_base_type {
     void* red ;             // [8]
     uint8_t off12 ;         // [12]
     uint8_t off13 ;         // [13]
-    uint16_t item_count ;      // [14]
+    uint16_t item_count ;   // [14]
     uint8_t off16 ;         // [16]
     uint8_t off17 ;         // [17]
     uint16_t unknown2 ;     // [18]
@@ -151,9 +151,8 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // 98,0 radio settings
     // 93,0 message
     
-    // enabled 
+    // item_count 
     // 0 = not visible
-    // 1 = viseble
     // 0x27 = zones menu (special handling)
     // 0x3e7 = contacts menu handling
     // 0x8 = quick text handling
