@@ -123,7 +123,7 @@ struct menu_mem_base_type {
     void* red ;             // [8]
     uint8_t off12 ;         // [12]
     uint8_t off13 ;         // [13]
-    uint16_t enabled ;      // [14]
+    uint16_t item_count ;      // [14]
     uint8_t off16 ;         // [16]
     uint8_t off17 ;         // [17]
     uint16_t unknown2 ;     // [18]
@@ -134,9 +134,9 @@ typedef struct menu_mem_base_type menu_mem_base_t ;
 
 extern menu_mem_base_t md380_menu_mem_base[];
 
-void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) 
+void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int item_count) 
 {
-    printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, enabled );
+    printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, item_count );
 //    printf("label: ");
 //    printhex2((char *)label,14);
 //    printf("\n");
@@ -159,12 +159,12 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // 0x8 = quick text handling
     
     if( global_addl_config.experimental == 1 ) {
-        switch( enabled ) {
+        switch( item_count ) {
             case 0x27 :
                 // zones menu.
                 break ;
             case 0 :
-                enabled = 1 ; // cheating.
+                item_count = 1 ; // cheating.
                 break ;
         }
     }
@@ -176,7 +176,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     poi->red = red_key ;
     poi->off12 = e ;
     poi->off13 = f ;
-    poi->enabled = enabled ;
+    poi->item_count = item_count ;
     
 }
 
