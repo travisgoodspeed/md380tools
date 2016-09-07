@@ -3,7 +3,7 @@
 */
 
 
-//#define DEBUG
+#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -136,6 +136,8 @@ extern menu_mem_base_t md380_menu_mem_base[];
 
 void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) 
 {
+    printf("create_menu_entry_rev %x\n", menuid );
+    
     struct menu_mem_base_type *poi = &md380_menu_mem_base[menuid];    
     
     poi->label = label ;
@@ -144,6 +146,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     poi->off12 = e ;
     poi->off13 = f ;
     poi->enabled = enabled ;
+    
 }
 
 #ifdef DEBUG
@@ -161,17 +164,17 @@ void dump_entry(int menuid)
 //void create_menu_entry_addl_functions_screen(void) ;
 
 void create_menu_entry_hook(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
-#ifdef DEBUG
-  printf("0x%x Text: 0x%x GreenKey 0x%x RedKey 0x%x 0x%x 0x%x 0x%x\n", menuid,label,green_key,red_key,e,f,enabled);
-  printf("b: ");
-  printhex2((char *) label,14);
-  printf("\n");
-  printf(" md380_menu_depth: %d\n", md380_menu_depth);
-#endif
+//#ifdef DEBUG
+//  printf("0x%x Text: 0x%x GreenKey 0x%x RedKey 0x%x 0x%x 0x%x 0x%x\n", menuid,label,green_key,red_key,e,f,enabled);
+//  printf("b: ");
+//  printhex2((char *) label,14);
+//  printf("\n");
+//  printf(" md380_menu_depth: %d\n", md380_menu_depth);
+//#endif
   md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
-#ifdef DEBUG
-  dump_entry(menuid);
-#endif  
+//#ifdef DEBUG
+//  dump_entry(menuid);
+//#endif  
 }
 
 void spiflash_write_uint8( int offset, uint8_t val )
