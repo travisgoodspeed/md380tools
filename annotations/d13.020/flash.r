@@ -3274,3 +3274,19 @@ f menu.timeslot_1.80154a4 0 0x80154a4
 f menu.timeslot_2.80154a4 0 0x80154a4
 
 af+ 0x80154a4 152 menu_timeslot
+
+f menucall.Contacts 0 0x800c278
+f menucall.Scan 0 0x800c2f4
+f menucall.Zone 0 0x800c326
+f menucall.Messages 0 0x800c358
+f menucall.Call_Log 0 0x800c38a
+f menucall.Utilities 0 0x800c3bc
+
+f menucall.Radio_Set 0 0x8013528
+f menucall.Radio_Inf 0 0x801355c
+f menucall.Program_R 0 0x080135a8
+f menucall.Program_R_patched 0 0x809d818
+f menucall.MD380Tool 0 0x809d834
+f menucall.GPS_BeiDo 0 0x80135dc
+f menucall.RX_GPSInf 0 0x8013610
+
