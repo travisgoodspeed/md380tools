@@ -206,6 +206,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     poi->item_count = item_count ;
     
 #ifdef FW_D13_020
+    // supress language menu.
     if( green_key == (void*)(0x801ab84 + 1) ) {
         poi->item_count = 0 ;
     }
