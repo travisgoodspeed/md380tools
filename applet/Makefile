@@ -79,7 +79,7 @@ src/version.h: src/*.c
 	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
+	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
 
 
 

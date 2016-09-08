@@ -1,9 +1,15 @@
 version: 0.0.{build}
-branches:
-  only:
-  - master
+
+environment:
+  global:
+    CYG_ROOT: C:\cygwin
+    CYG_MIRROR: http://cygwin.mirror.constant.com
+    CYG_CACHE: C:\cygwin\var\cache\setup
+    CYG_BASH: C:\cygwin\bin\bash
 
 install:
+  - c:\cygwin\setup-x86.exe --quiet-mode --no-shortcuts --only-site --root "%CYG_ROOT%" --site "%CYG_MIRROR%" --local-package-dir "%CYG_CACHE%" --packages autoconf,automake,bison,gcc-core,gcc-g++,mingw-runtime,mingw-binutils,mingw-gcc-core,mingw-gcc-g++,mingw-pthreads,mingw-w32api,libtool,make,python,gettext-devel,gettext,intltool,libiconv,pkg-config,git,curl,libxslt > NUL 2>&1'
+  - '%CYG_BASH% -lc "cygcheck -dc cygwin"'
   - if not exist "make.zip" curl -L -o make.zip http://gnuwin32.sourceforge.net/downlinks/make-bin-zip.php
   - if not exist "make-dep.zip" curl -L -o make-dep.zip http://gnuwin32.sourceforge.net/downlinks/make-dep-zip.php
   - if not exist "gcc-arm-none-eabi.zip" curl -L -o gcc-arm-none-eabi.zip https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update/+download/gcc-arm-none-eabi-4_8-2014q1-20140314-win32.zip
@@ -17,17 +23,23 @@ install:
   - unzip make-dep.zip -d c:\gnuwin32\
   - set PATH=C:\Program Files\git\bin;%PATH:C:\Program Files\git\bin;=% #move git to begining of PATH so find works correctly
   - set PATH=%PATH%;c:\gnuwin32\bin;c:\gcc\bin
+  - set PATH=%PATH%;c:\gcc\bin
 
 cache:
   - gcc-arm-none-eabi.zip
   - make.zip
   - make-dep.zip
+  - '%CYG_CACHE%'
 
 build_script:
-  - make all -j3
-  - make clean
-  - cd applet
-  - make -f Makefile.d02.032
-  - cd ..
-  - cd db
-  - make all
+# Please don't change anything here. Instead, add any extra build commands to ci-script.sh
+# This saves having to edit commands in three places for GnuWin32, CygWin & Linux
+  - bash -x ci-script.sh
+  - mv *.zip c:\
+  - rm -r *
+  - cd c:\
+  - mv *.zip %APPVEYOR_BUILD_FOLDER%
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - git fetch
+  - git reset --hard
+  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER;./ci-script.sh"'

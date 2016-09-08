@@ -3218,3 +3218,48 @@ Cd 4 @ 0x0800c784
 Cd 4 @ 0x0800c788
 Cd 4 @ 0x0800c7ac
 f _ 0 0x0800c800
+
+f menu.Contacts.800fcbc 0 0x800fcbc
+f menu.Scan.8037e34 0 0x8037e34
+f menu.Zone.80131ac 0 0x80131ac
+f menu.Messages.8023858 0 0x8023858
+f menu.Call_Log.8034274 0 0x8034274
+f menu.Utilities.80134a0 0 0x80134a0
+f menu.Radio Set.8017cbc 0 0x8017cbc
+f menu.Radio Inf.80165b8 0 0x80165b8
+f menu.Program R.80136c0 0 0x80136c0
+f menu.MD380Tool.809c3b0 0 0x809c3b0
+f menu.GPS_BeiDo.8016688 0 0x8016688
+f menu.RX GPSInf.8013638 0 0x8013638
+f menu.Talkaroun.8019170 0 0x8019170
+f menu.Tone_Ale.8019798 0 0x8019798
+f menu.Power.8019c7c 0 0x8019c7c
+f menu.Backlight.8019eb0 0 0x8019eb0
+f menu.Squelch.801a1e0 0 0x801a1e0
+f menu.Intro Scr.801a4c6 0 0x801a4c6
+f menu.Keypad Lo.801a6c8 0 0x801a6c8
+f menu.Language.801ab84 0 0x801ab84
+f menu.LED Indic.801ad56 0 0x801ad56
+f menu.VOX.80185d8 0 0x80185d8
+f menu.SiteRoam1.801ae5c 0 0x801ae5c
+f menu.Passwd Lo.801af7c 0 0x801af7c
+f menu.SiteRoam2.800fc84 0 0x800fc84
+f menu.Record.8018f04 0 0x8018f04
+f menu.Clock.8018868 0 0x8018868
+f menu.Mode.801840c 0 0x801840c
+f menu.GPS.8018248 0 0x8018248
+
+f menu.talkaround.TurnOn.8019290 0 0x8019290
+f menu.talkaround.TurnOff.80194f4 0 0x80194f4
+
+f menu.CH_Mode.80184e8 0 0x80184e8
+f menu.MR_Mode.801855c 0 0x801855c
+
+f menu.backlight.Always.801a440 0 0x801a440
+f menu.backlight.5S.801a03e 0 0x801a03e
+f menu.backlight.10S.801a0c8 0 0x801a0c8
+f menu.backlight.15S.801a154 0 0x801a154
+
+f menu.timeslot_1.80154a4 0 0x80154a4
+f menu.timeslot_2.80154a4 0 0x80154a4
+
