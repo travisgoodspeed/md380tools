@@ -147,6 +147,9 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     char *lp = (void*)label ;
     for(int i=0;i<10;i++) {
         char c = lp[(i*2)];
+        if( c == ' ' ) {
+            c = '_' ;
+        }
         lbl2[i] = c ;
         if( c == 0 ) {
             break ;
@@ -156,6 +159,13 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     
     void *gp = ((uint8_t*)green_key) - 1 ;
     printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
+    
+    register uint32_t *sp asm("sp");   
+    for(int i=15;i<20;i++) {
+        printf( "%d : 0x%x\n", i, sp[i] );        
+    }
+    printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
+    
 #endif    
     
     // e f
@@ -195,6 +205,12 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     poi->off13 = f ;
     poi->item_count = item_count ;
     
+#ifdef FW_D13_020
+    if( green_key == (void*)(0x801ab84 + 1) ) {
+        poi->item_count = 0 ;
+    }
+#endif
+
 }
 
 //void md380_create_menu_entry(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
