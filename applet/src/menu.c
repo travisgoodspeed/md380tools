@@ -3,7 +3,7 @@
 */
 
 
-#define DEBUG
+//#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -137,6 +137,7 @@ extern menu_mem_base_t md380_menu_mem_base[];
 
 void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int item_count) 
 {
+#ifdef DEBUG    
     printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, item_count );
 //    printf("label: ");
 //    printhex2((char *)label,14);
@@ -155,6 +156,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     
     void *gp = ((uint8_t*)green_key) - 1 ;
     printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
+#endif    
     
     // e f
     // 6,2 confirmation popup misc.
