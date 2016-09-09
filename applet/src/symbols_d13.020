@@ -102,6 +102,8 @@ md380_menu_mem_base                    = 0x2001b274; /* */
 md380_menu_memory                      = 0x2001d5cc; /* */
 md380_menu_edit_buf                    = 0x2001cb9a; /* */
 
+md380_radio_fm_dmr                     = 0x2001deb8;                                                                                                      
+
 Create_Menu_Utilies                    = 0x080134a1;
 Create_Menu_Entry_RX_QRG_shown         = 0x080156a5;
 Create_Menu_Entry_RX_QRG_1             = 0x08015721;
