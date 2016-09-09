@@ -93,11 +93,11 @@ int scorematch(int sadr, int dadr){
   }while(
 	 (
 	  //Halfwords exactly agree
-	  src32(sadr+i)==dst32(dadr+i)
+	  src16(sadr+i)==dst16(dadr+i)
 
 	  //or halfwords partially agree and might be a BL.
-	  || ( src32(sadr+i)&0xF000 == 0xF000 &&
-	       dst32(dadr+1)&0xF000 == 0xF000)
+	  || ( src16(sadr+i)&0xF000 == 0xF000 &&
+	       dst16(dadr+1)&0xF000 == 0xF000)
 	  )
 	 && i<1024);
 
