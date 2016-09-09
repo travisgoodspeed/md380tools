@@ -35,11 +35,11 @@ build_script:
 # Please don't change anything here. Instead, add any extra build commands to ci-script.sh
 # This saves having to edit commands in three places for GnuWin32, CygWin & Linux
   - bash -x ci-script.sh
-  - mv *.zip c:\
-  - rm -r *
-  - cd c:\
-  - mv *.zip %APPVEYOR_BUILD_FOLDER%
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - git fetch
-  - git reset --hard
-  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER;./ci-script.sh"'
+#  - mv *.zip c:\
+#  - rm -r *
+#  - cd c:\
+#  - mv *.zip %APPVEYOR_BUILD_FOLDER%
+#  - cd %APPVEYOR_BUILD_FOLDER%
+#  - git fetch
+#  - git reset --hard
+#  - '%CYG_BASH% -lc "cd $APPVEYOR_BUILD_FOLDER;./ci-script.sh"'
