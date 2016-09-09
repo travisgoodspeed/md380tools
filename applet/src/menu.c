@@ -160,11 +160,13 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     void *gp = ((uint8_t*)green_key) - 1 ;
     printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
     
+#if 0    
     register uint32_t *sp asm("sp");   
     for(int i=15;i<20;i++) {
         printf( "%d : 0x%x\n", i, sp[i] );        
     }
     printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
+#endif    
     
 #endif    
     
@@ -1031,19 +1033,29 @@ void create_menu_utilies_hook(void) {
    printf( "backlight %x\n", rc->backlight_time );
    printf( "dmr %d\n", rc->dmrid );
    printf( "mode_ch %d\n", rc->mode_ch_mr );
+
+   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
 #endif
 
   menu_mem = get_menu_stackpoi();
   menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-  menu_mem->numberof_menu_entries++;
+//  menu_mem->numberof_menu_entries++;
+  menu_mem->numberof_menu_entries = 6 ;
 
+   
 #ifdef CONFIG_MENU
   md380_create_menu_entry(8, md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
 
+#ifdef FW_D13_020
+    md380_create_menu_entry(11, wt_addl_func, create_menu_entry_addl_functions_screen+1, md380_menu_entry_back+1, 0x8a, 0, 1);
+#else
   if (menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
     md380_create_menu_entry(11, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
   } else {
     md380_create_menu_entry(9, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
   }
 #endif
+    
+#endif
+  
 }
