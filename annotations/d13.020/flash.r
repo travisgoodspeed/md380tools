@@ -3270,8 +3270,8 @@ f menu.backlight.5S.801a03e 0 0x801a03e
 f menu.backlight.10S.801a0c8 0 0x801a0c8
 f menu.backlight.15S.801a154 0 0x801a154
 
-f menu.timeslot_1.80154a4 0 0x80154a4
-f menu.timeslot_2.80154a4 0 0x80154a4
+f menu.Repeater_Slot.80153dc 0 0x80153dc
+f menu.Repeater_Slot_1_2.80154a4 0 0x80154a4
 
 af+ 0x80154a4 152 menu_timeslot
 
