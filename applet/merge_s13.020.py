@@ -106,6 +106,28 @@ class Merger():
             self.setword(adr+6,handler); # bx r0
         else:
             self.setword(adr+8,handler); # bx r0
+    def hookstub2(self, adr, handler):
+        """Hooks a function by placing an unconditional branch at adr to
+           handler.  The recipient function must have an identical calling
+           convention. """
+        adr=adr & ~1;          #Address must be even.
+        handler = handler | 1; #Destination address must be odd.
+        print "Inserting a stub hook at %08x to %08x." % (adr,handler);
+        
+        # insert trampoline
+        # rasm2 -a arm -b 16 '<asm code>'
+        self.sethword(adr,0xb401);   # push {r0}
+        self.sethword(adr+2,0xb401); # push {r0}
+        self.sethword(adr+4,0x4802); # ldr r0, [pc, 8]
+        self.sethword(adr+6,0x9001); # str r0, [sp, 4] (pc)
+        self.sethword(adr+8,0xbc01); # pop {r0}
+        self.sethword(adr+10,0xbd00); # pop {pc}
+        self.sethword(adr+12,0x4600); #NOP
+        self.sethword(adr+14,0x4600); #NOP, might be overwritten
+        if adr&2>0:
+            self.setword(adr+14,handler); 
+        else:
+            self.setword(adr+16,handler);
     def calcbl(self,adr,target):
         """Calculates the Thumb code to branch to a target."""
         offset=target-adr;
