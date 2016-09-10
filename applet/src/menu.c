@@ -974,9 +974,19 @@ void create_menu_entry_edit_dmr_id_screen(void)
 
 
 
-void create_menu_entry_addl_functions_screen(void) {
+void create_menu_entry_addl_functions_screen(void) 
+{
   struct MENU *menu_mem;
   int i;
+  
+#if 1   
+    register uint32_t *sp asm("sp");   
+    for(int i=0;i<20;i++) {
+        printf( "%d : 0x%x\n", i, sp[i] );        
+    }
+    //printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
+#endif    
+  
 
 #ifdef DEBUG
   printf("create_menu_entry_addl_functions_screen %d\n",md380_menu_depth);
