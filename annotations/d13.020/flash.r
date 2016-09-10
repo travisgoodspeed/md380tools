@@ -1652,6 +1652,10 @@ af+ 0x801d88c 30 gfx_blockfill
 f gfx_linefill 0 0x0801d81a
 af+ 0x0801d81a 104 gfx_linefill
 
+f screen_unknown1 0 0x0800e728
+f menu_6_15_1 0 0x0800e7a8
+f menu_6_1_1 0 0x0800e7cc
+
 CCa 0x801d9d2 md380_menu_0x2001d3ef
 CCa 0x801dc44 md380_menu_0x2001d3ef
 CCa 0x801dc52 md380_menu_0x2001d3ef
@@ -3296,4 +3300,8 @@ f menucall.MD380Tool 0 0x809d834
 f menucall.GPS_BeiDo 0 0x80135dc
 f menucall.RX_GPSInf 0 0x8013610
 
-f dispatch.greenkey 0 0x0800ed3a
+f menu.dispatcher.unkn1 0 0x0800eb98
+f menu.dispatch.greenkey 0 0x0800ed3a
+f menu.dispatch.redkey_maybe 0 0x0800f2a0
+af+ 0x0800eb98 1810 menu_dispatcher
+
