@@ -1,8 +1,5 @@
 /* 
  * File:   radio_config.h
- * Author: Simon IJskes
- *
- * Created on September 7, 2016, 9:59 PM
  */
 
 #ifndef RADIO_CONFIG_H
