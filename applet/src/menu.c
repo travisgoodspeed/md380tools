@@ -1044,7 +1044,7 @@ void create_menu_utilies_hook(void) {
    printf( "dmr %d\n", rc->dmrid );
    printf( "mode_ch %d\n", rc->mode_ch_mr );
 
-   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
+//   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
 #endif
 
   menu_mem = get_menu_stackpoi();
