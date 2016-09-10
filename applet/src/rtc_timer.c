@@ -66,14 +66,13 @@ void print_rx_screen(unsigned int bg_color) {
   int dst;
   int src;
 
+  // clear screen
+  gfx_set_fg_color(bg_color);
+  gfx_blockfill(0, 0, 200, 160);
+
   gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
   gfx_select_font((void *) MD380_FONT_SMALL);
-
-  for (y=42; y<=102; y=y+12) {
-    drawascii2("                  ",10,y);
-  }
-
 
  int primask=OS_ENTER_CRITICAL();  // for form sake
  dst=g_dst;
@@ -84,11 +83,22 @@ void print_rx_screen(unsigned int bg_color) {
  }
   ii=0;
   n=0;
+  int y_index = 0;
 
   for (i=0;i<strlen(buf) || n < 6 ;i++) {
     if (buf[i] == ',' || buf[i] == '\0') {
+      if (n == 2) {
+        y_index = y_index + 16;  // previous line was in big font
+      } else {
+        y_index = y_index + 13;  // previous line was in small font
+      }
+      if (n == 1) {  // This line holds the call sign
+        gfx_select_font((void *) MD380_FONT_NORM);
+      } else {
+        gfx_select_font((void *) MD380_FONT_SMALL);
+      }
       buf[ii++]='\0';
-      drawascii2(buf, 10, 42+n*12);
+      drawascii2(buf, 10, y_index);
       ii=0;
       n++;
     } else {
@@ -106,10 +116,10 @@ void print_rx_screen(unsigned int bg_color) {
 #endif //CONFIG_GRAPHICS
 }
 
-void rx_screen_green_hook(char *bmp, int x, int y) {
+void rx_screen_blue_hook(char *bmp, int x, int y) {
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
-    print_rx_screen(0x00ff00);
+    print_rx_screen(0xff8032);
   } else {
     gfx_drawbmp(bmp, x, y);
   }
