@@ -24,6 +24,7 @@ CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
 CFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+CFLAGS += -Wa,-a=$(@:.o=.lst)	
 ###################################################
 
 vpath %.c src
@@ -79,7 +80,7 @@ src/version.h: src/*.c
 	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
+	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
 
 
 
