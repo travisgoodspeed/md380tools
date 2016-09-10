@@ -3,7 +3,7 @@
 */
 
 
-#define DEBUG
+//#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -19,6 +19,7 @@
 #include "os.h"
 #include "spiflash.h"
 #include "addl_config.h"
+#include "radio_config.h"
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -136,6 +137,7 @@ extern menu_mem_base_t md380_menu_mem_base[];
 
 void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int item_count) 
 {
+#ifdef DEBUG    
     printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, item_count );
 //    printf("label: ");
 //    printhex2((char *)label,14);
@@ -145,6 +147,9 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     char *lp = (void*)label ;
     for(int i=0;i<10;i++) {
         char c = lp[(i*2)];
+        if( c == ' ' ) {
+            c = '_' ;
+        }
         lbl2[i] = c ;
         if( c == 0 ) {
             break ;
@@ -155,21 +160,35 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     void *gp = ((uint8_t*)green_key) - 1 ;
     printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
     
+#if 0    
+    register uint32_t *sp asm("sp");   
+    for(int i=15;i<20;i++) {
+        printf( "%d : 0x%x\n", i, sp[i] );        
+    }
+    printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
+#endif    
+    
+#endif    
+    
     // e f
-    // 8b,0 simple yes no list items.
-    // 6,2 confirmation dialog.
+    // 6,2 confirmation popup misc.
+    // 6,f confirmation popup scanlist.
+    // 6,f confirmation popup zone.
+    // 6,1 invalid number popup.
     // 81,0 enter radio number for manual dial
     // 81,0 enter radio number for new contact
     // 8a,0 utilities menu items
+    // 8b,0 simple yes no list items.
     // 8c,0 single menu entry for complete contacts list.
-    // 98,0 radio settings
     // 93,0 message
+    // 98,0 radio settings
     
     // item_count 
     // 0 = not visible
-    // 0x27 = zones menu (special handling)
-    // 0x3e7 = contacts menu handling
-    // 0x8 = quick text handling
+    
+    // f
+    // 0 = stable
+    // 2 = remove after timeout
     
     if( global_addl_config.experimental == 1 ) {
         switch( item_count ) {
@@ -188,6 +207,13 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     poi->off13 = f ;
     poi->item_count = item_count ;
     
+#ifdef FW_D13_020
+    // supress language menu.
+    if( green_key == (void*)(0x801ab84 + 1) ) {
+        poi->item_count = 0 ;
+    }
+#endif
+
 }
 
 //void md380_create_menu_entry(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
@@ -319,7 +345,7 @@ void create_menu_entry_rbeep_enable_screen(void) {
   menu_mem->unknown_01 = 0;
 
 #ifdef CONFIG_MENU
-  md380_create_menu_entry( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
+  md380_create_menu_entry( md380_menu_id, wt_enable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2, 1);
 #endif
   global_addl_config.rbeep = 1;
   spiflash_write_rbeep();
@@ -338,7 +364,7 @@ void create_menu_entry_rbeep_disable_screen(void) {
   menu_mem->unknown_01 = 0;
 
 #ifdef CONFIG_MENU
-  md380_create_menu_entry( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
+  md380_create_menu_entry( md380_menu_id, wt_disable, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2, 1);
 #endif
   global_addl_config.rbeep = 0;
   spiflash_write_rbeep();
@@ -851,9 +877,9 @@ void create_menu_entry_edit_screen(void) {
 }
 
 
-void create_menu_entry_edit_dmr_id_screen_store(void) {
+void create_menu_entry_edit_dmr_id_screen_store(void) 
+{
   uint32_t new_dmr_id=0;
-  uint32_t *dmr_id;
   wchar_t *bf;
 
 #ifdef DEBUG
@@ -871,8 +897,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void) {
   printf("\n%d\n",new_dmr_id);
 #endif
 // store new dmr_id to ram and spi flash (codeplug)
-  dmr_id = (uint32_t*) &md380_radio_config[4];   // form D002.32 @ 0x0803ef02
-  *dmr_id=new_dmr_id;
+  md380_radio_config.dmrid = new_dmr_id;
 
   md380_spiflash_write(&new_dmr_id, 0x2084, 4);
 
@@ -902,12 +927,12 @@ uint32_t uli2w( uint32_t num, wchar_t *bf) {
   return (n); // number of char
 }
 
-void create_menu_entry_edit_dmr_id_screen(void) {
+void create_menu_entry_edit_dmr_id_screen(void)
+{
   struct MENU *menu_mem;
   uint8_t i;
   uint8_t *p;
   uint32_t nchars;
-  uint32_t * dmr_id;
 
   md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
   md380_menu_0x20001114 =  (uint32_t) md380_menu_edit_buf;
@@ -921,8 +946,7 @@ void create_menu_entry_edit_dmr_id_screen(void) {
    *p = 0;
    }
 
-  dmr_id = (uint32_t *) &md380_radio_config[4];
-  nchars=uli2w(*dmr_id, md380_menu_edit_buf);
+  nchars=uli2w(md380_radio_config.dmrid, md380_menu_edit_buf);
 
 #ifdef DEBUG
   printf("\ncreate_menu_entry_edit_dmr_id_screen %x %d \n", md380_menu_edit_buf, nchars);
@@ -1004,19 +1028,34 @@ void create_menu_utilies_hook(void) {
 
 #ifdef DEBUG
    printf("create_menu_utilies_hook %d\n",md380_menu_depth);
+   
+   radio_config_t *rc = &md380_radio_config ;
+   printf( "backlight %x\n", rc->backlight_time );
+   printf( "dmr %d\n", rc->dmrid );
+   printf( "mode_ch %d\n", rc->mode_ch_mr );
+
+   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
 #endif
 
   menu_mem = get_menu_stackpoi();
   menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-  menu_mem->numberof_menu_entries++;
+//  menu_mem->numberof_menu_entries++;
+  menu_mem->numberof_menu_entries = 6 ;
 
+   
 #ifdef CONFIG_MENU
   md380_create_menu_entry(8, md380_wt_programradio, md380_menu_entry_programradio+1 ,           md380_menu_entry_back+1, 0x8a, 0 , enabled);
 
+#ifdef FW_D13_020
+    md380_create_menu_entry(11, wt_addl_func, create_menu_entry_addl_functions_screen+1, md380_menu_entry_back+1, 0x8a, 0, 1);
+#else
   if (menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
     md380_create_menu_entry(11, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
   } else {
     md380_create_menu_entry(9, wt_addl_func,          create_menu_entry_addl_functions_screen+1 , md380_menu_entry_back+1, 0x8a,0 , 1);
   }
 #endif
+    
+#endif
+  
 }
