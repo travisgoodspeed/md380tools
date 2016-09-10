@@ -1645,7 +1645,17 @@ CCa 0x801c194 md380_menu_0x2001d3f4
 CCa 0x801c1b4 md380_menu_0x2001d3f4
 af+ 0x801d368 8 gfx_set_bg_color
 af+ 0x801d370 8 gfx_set_fg_color
+
+f gfx_blockfill 30 0x801d88c
 af+ 0x801d88c 30 gfx_blockfill
+
+f gfx_linefill 0 0x0801d81a
+af+ 0x0801d81a 104 gfx_linefill
+
+f screen_unknown1 0 0x0800e728
+f menu_6_15_1 0 0x0800e7a8
+f menu_6_1_1 0 0x0800e7cc
+
 CCa 0x801d9d2 md380_menu_0x2001d3ef
 CCa 0x801dc44 md380_menu_0x2001d3ef
 CCa 0x801dc52 md380_menu_0x2001d3ef
@@ -3270,8 +3280,8 @@ f menu.backlight.5S.801a03e 0 0x801a03e
 f menu.backlight.10S.801a0c8 0 0x801a0c8
 f menu.backlight.15S.801a154 0 0x801a154
 
-f menu.timeslot_1.80154a4 0 0x80154a4
-f menu.timeslot_2.80154a4 0 0x80154a4
+f menu.Repeater_Slot.80153dc 0 0x80153dc
+f menu.Repeater_Slot_1_2.80154a4 0 0x80154a4
 
 af+ 0x80154a4 152 menu_timeslot
 
@@ -3289,4 +3299,9 @@ f menucall.Program_R_patched 0 0x809d818
 f menucall.MD380Tool 0 0x809d834
 f menucall.GPS_BeiDo 0 0x80135dc
 f menucall.RX_GPSInf 0 0x8013610
+
+f menu.dispatcher.unkn1 0 0x0800eb98
+f menu.dispatch.greenkey 0 0x0800ed3a
+f menu.dispatch.redkey_maybe 0 0x0800f2a0
+af+ 0x0800eb98 1810 menu_dispatcher
 
