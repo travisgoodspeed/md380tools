@@ -1,8 +1,5 @@
 /* 
  * File:   radio_config.h
- * Author: Simon IJskes
- *
- * Created on September 7, 2016, 9:59 PM
  */
 
 #ifndef RADIO_CONFIG_H
@@ -26,7 +23,15 @@ struct radio_config {
 typedef struct radio_config radio_config_t ;
 
 extern radio_config_t md380_radio_config;
-                                      
+    
+// lucky guess, written as documentation.
+// lives around md380_radio_fm_dmr = 0x2001deb8;  
+// from pc = 0x080134dc 
+// it would be nice if this correlates with chirp md380.py struct memory.
+struct channel_mode_unknown {
+    uint8_t fm_dmr_mode ; // if( fm_dmr_mode & 3 ) == 2 { is_dmr(); }
+};
+
 #ifdef __cplusplus
 }
 #endif

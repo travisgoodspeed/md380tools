@@ -7,7 +7,7 @@ unwrapped.img:
 	cd ../../firmware && make unwrapped/D002.032.img
 	cp ../../firmware/unwrapped/D002.032.img $@
 
-patched.img: unwrapped.img
+patched.img: unwrapped.img Makefile
 	./patch.py
 
 #Apply the logo.

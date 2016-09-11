@@ -158,7 +158,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     lbl2[9] = 0 ;
     
     void *gp = ((uint8_t*)green_key) - 1 ;
-    printf("f menu.%s.%x 0 0x%x\n", lbl2, gp, gp );
+    printf("f menugreen.%s.%x 0 0x%x\n", lbl2, gp, gp );
     
 #if 0    
     register uint32_t *sp asm("sp");   
@@ -175,8 +175,9 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // 6,f confirmation popup scanlist.
     // 6,f confirmation popup zone.
     // 6,1 invalid number popup.
-    // 81,0 enter radio number for manual dial
-    // 81,0 enter radio number for new contact
+    // 9,0 fullscr msg without timeout (my num,versions)
+    // 81,0 enter radio number (new contact,manual dial,edit dmrid,rxf,txf)
+    // 85,0 msgbox without timeout (rxf,txf)
     // 8a,0 utilities menu items
     // 8b,0 simple yes no list items.
     // 8c,0 single menu entry for complete contacts list.
@@ -190,13 +191,13 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // 0 = stable
     // 2 = remove after timeout
     
-    if( global_addl_config.experimental == 1 ) {
-        switch( item_count ) {
-            case 0 :
-                item_count = 1 ; // cheating.
-                break ;
-        }
-    }
+//    if( global_addl_config.experimental == 1 ) {
+//        switch( item_count ) {
+//            case 0 :
+//                item_count = 1 ; // cheating.
+//                break ;
+//        }
+//    }
     
     struct menu_mem_base_type *poi = &md380_menu_mem_base[menuid];    
     
@@ -974,9 +975,19 @@ void create_menu_entry_edit_dmr_id_screen(void)
 
 
 
-void create_menu_entry_addl_functions_screen(void) {
+void create_menu_entry_addl_functions_screen(void) 
+{
   struct MENU *menu_mem;
   int i;
+  
+#if 0
+    register uint32_t *sp asm("sp");   
+    for(int i=0;i<20;i++) {
+        printf( "%d : 0x%x\n", i, sp[i] );        
+    }
+    //printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
+#endif    
+  
 
 #ifdef DEBUG
   printf("create_menu_entry_addl_functions_screen %d\n",md380_menu_depth);
@@ -1034,7 +1045,7 @@ void create_menu_utilies_hook(void) {
    printf( "dmr %d\n", rc->dmrid );
    printf( "mode_ch %d\n", rc->mode_ch_mr );
 
-   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
+//   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
 #endif
 
   menu_mem = get_menu_stackpoi();
