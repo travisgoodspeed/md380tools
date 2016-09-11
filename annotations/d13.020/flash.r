@@ -3326,3 +3326,22 @@ f draw_datetime_row 0 0x0800df1a
 af+ 0x0800df1a 250 draw_datetime_row
 f F_4225 0 0x0801fe5c
 
+f update_scr_16 0 0x0802015e
+f update_scr_17 0 0x08020236
+f update_scr_18 0 0x08020376
+f update_scr_19 0 0x0802046c
+f update_scr_20 0 0x08020052
+f update_scr_21 0 0x0801fee0
+f update_scr_22 0 0x0801ff3e
+
+f update_scr_27 0 0x08020612
+f update_scr_28 0 0x080206b2
+f update_scr_29 0 0x080206ee
+f update_scr_30 0 0x0801ff8e
+f update_scr_31 0 0x08020018
+f update_scr_32 0 0x080207b4
+f update_scr_33 0 0x0802080e
+
+f update_scr_35 0 0x0802080e
+f update_scr_36 0 0x0802020e
+f update_scr_other 0 0x0802082c
