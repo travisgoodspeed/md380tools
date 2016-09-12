@@ -3326,6 +3326,9 @@ f draw_datetime_row 0 0x0800df1a
 af+ 0x0800df1a 250 draw_datetime_row
 f F_4225 0 0x0801fe5c
 
+f call_F_4225_1 0 0x0802db42
+f call_F_4225_2 0 0x080468e6
+
 f update_scr_16 0 0x0802015e
 f update_scr_17 0 0x08020236
 f update_scr_18 0 0x08020376
