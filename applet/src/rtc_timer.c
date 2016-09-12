@@ -2,6 +2,8 @@
   \brief wrapper functions for the "RTC Timer"-Task.
 */
 
+#define DEBUG
+
 #include <stdlib.h>
 
 #include "md380.h"
@@ -17,8 +19,36 @@
  
 static int flag=0;
 
-#define MD380_F_4225_OPERATINGMODE_MENU       0x1b       /*  see 0x0801f06a there are a lot of modes */
-#define MD380_F_4225_OPERATINGMODE_MENU_EXIT  0x1c
+/*  see 0x0801f06a there are a lot of modes */
+
+// 16  = ? not seen
+// 17  = public call rx
+// 18  = ? not seen
+// 19  = ? after rx call?
+// 27  = menu refresh
+// 28  = idle channel screen
+// 35  = volume screen
+//
+// high bit (0x80) signals transition
+// 156 = channel switch
+// 115 = menu start
+
+#define SCR_MODE_16 16
+#define SCR_MODE_17 17
+#define SCR_MODE_18 18
+#define SCR_MODE_CHAN_19 19 // when channel RX but other timeslot.
+#define SCR_MODE_20 20
+#define SCR_MODE_21 21 // initial screen?
+#define SCR_MODE_22 22
+#define SCR_MODE_MENU 27
+#define SCR_MODE_CHAN_IDLE 28
+#define SCR_MODE_29 29
+#define SCR_MODE_30 30
+#define SCR_MODE_31 31
+#define SCR_MODE_32 32
+#define SCR_MODE_33 33
+#define SCR_MODE_VOLUME 35
+#define SCR_MODE_36 36
 
 /// sorry, must be transferd to symbols_ :)
 #ifdef MD380_d02_032
@@ -41,16 +71,16 @@ static int flag=0;
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() {
 #ifdef DEBUG
-  printf("%x \n", *md380_f_4225_operatingmode);
+//    printf("<%d> \n", *md380_f_4225_operatingmode);
 #endif
-  if (*md380_f_4225_operatingmode == MD380_F_4225_OPERATINGMODE_MENU) {
+  if (*md380_f_4225_operatingmode == SCR_MODE_MENU) {
     flag=1;
   }
-  if (*md380_f_4225_operatingmode == MD380_F_4225_OPERATINGMODE_MENU_EXIT) {
+  if (*md380_f_4225_operatingmode == SCR_MODE_CHAN_IDLE ) {
     flag=0;
   }
   if (flag == 1) {
-    *md380_f_4225_operatingmode=MD380_F_4225_OPERATINGMODE_MENU;
+    *md380_f_4225_operatingmode=SCR_MODE_MENU;
   }
   return(md380_f_4225_operatingmode);
 }
@@ -216,25 +246,23 @@ int main(void)
 }
 */
 
-void f_4225_hook()
+
+void draw_micbargraph()
 {
-#ifdef CONFIG_GRAPHICS
-  static int rx_active; // flag to syncronice this hook ( operatingmode == 0x11 is also on rx seeded)
-  static int fullscale_offset = 0;
-  static uint32_t lastframe=0;
-  static int red=0;
-  static int green=0;
+    static int rx_active; // flag to syncronice this hook ( operatingmode == 0x11 is also on rx seeded)
+    static int fullscale_offset = 0;
+    static uint32_t lastframe=0;
+    static int red=0;
+    static int green=0;
 
-  int relative_peak_cb;
-  int centibel_val;
-
-  if ( global_addl_config.micbargraph == 1 ) {
-
+    int relative_peak_cb;
+    int centibel_val;
+    
     if (fullscale_offset == 0 ) { // init int_centibel()
-      fullscale_offset = intCentibel(3000);  // maybe wav max max_level
-      }
+        fullscale_offset = intCentibel(3000);  // maybe wav max max_level
+    }
 
-    if (*md380_f_4225_operatingmode == 0x11 && max_level < 4500 && max_level > 10) { // i hope we are on tx
+    if (*md380_f_4225_operatingmode == SCR_MODE_17 && max_level < 4500 && max_level > 10) { // i hope we are on tx
       if (lastframe < ambe_encode_frame_cnt) {	// check for new frame
         lastframe = ambe_encode_frame_cnt;
         rx_active=1;
@@ -284,7 +312,7 @@ void f_4225_hook()
       }
     }
 
-    if (*md380_f_4225_operatingmode == 0x12 && rx_active == 1 ) { // clear screen area
+    if (*md380_f_4225_operatingmode == SCR_MODE_18 && rx_active == 1 ) { // clear screen area
       gfx_set_fg_color(0xff8032);
       gfx_set_bg_color(0xff000000);
       gfx_blockfill(9, 49, 151, 65);
@@ -292,8 +320,45 @@ void f_4225_hook()
       red=0;
       green=0;
     }
-  }
+}
 
-md380_f_4225();
-#endif
+int update_divider = 0 ;
+
+#define MAX_STATUS_CHARS 40
+wchar_t status_line[MAX_STATUS_CHARS] = { 0 };
+
+void update_status_line()
+{
+    char buf[MAX_STATUS_CHARS];
+    sprintf(buf,"<%d> ", *md380_f_4225_operatingmode ); // potential buffer overrun!!!
+    for(int i=0;i<MAX_STATUS_CHARS;i++) {
+        status_line[i]= buf[i];
+    }
+    status_line[MAX_STATUS_CHARS-1]='\0';    
+}
+
+void f_4225_hook()
+{
+//#ifdef CONFIG_GRAPHICS
+
+    if ( global_addl_config.micbargraph == 1 ) {
+        draw_micbargraph();
+    }
+    
+    md380_f_4225();
+    
+    if ( global_addl_config.experimental == 0 ) {
+        return ;
+    }
+    
+    if( ++update_divider > 5 ) {
+        update_divider = 0 ;
+    }
+    
+    if( update_divider == 0 ) {
+        update_status_line();
+    }
+    
+    gfx_chars_to_display( status_line, 0xa, 0x60, 0x5e);        
+//#endif
 }
