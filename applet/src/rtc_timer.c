@@ -286,7 +286,7 @@ void draw_micbargraph()
 
           // paint legend
           gfx_set_fg_color(0x0000ff);
-          gfx_blockfill((-30+280)/2+10, 67, 150, 670);
+          gfx_blockfill((-30+280)/2+10, 67, 150, 70);
           gfx_set_fg_color(0x00ff00);
           gfx_blockfill((-130+280)/2+10, 67, (-30+280)/2-1+10, 70);
           gfx_set_fg_color(0x555555);
