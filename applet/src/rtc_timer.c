@@ -19,6 +19,15 @@
  
 static int flag=0;
 
+/* @ 0x2001e600 */
+/*
+ *
+ * uint8_t 
+ * 
+ * 0x80 set = no time displayed.
+ *
+ */
+
 /*  see 0x0801f06a there are a lot of modes */
 
 // 16  = ? not seen
@@ -66,6 +75,35 @@ static int flag=0;
 #define MD380_FONT_NORM  0x80d0640
 #endif
 
+#define MAX_STATUS_CHARS 40
+wchar_t status_line[MAX_STATUS_CHARS] = { L"12345678901234567890" };
+
+void update_status_line()
+{
+    char buf[MAX_STATUS_CHARS];
+    sprintf(buf,"%02d|", *md380_f_4225_operatingmode ); // potential buffer overrun!!!
+        
+    for(int i=0;i<MAX_STATUS_CHARS;i++) {
+        status_line[i]= buf[i];
+    }
+    status_line[MAX_STATUS_CHARS-1]='\0';    
+}
+
+void draw_status_line()
+{
+    gfx_set_fg_color(0);
+    gfx_set_bg_color(0x00ff8032); 
+    gfx_select_font( (void*)0x0809a4c0 );
+    
+    //gfx_chars_to_display( );
+    gfx_chars_to_display(status_line,10,96,94);    
+}
+
+extern void draw_datetime_row_hook() 
+{
+//    update_status_line();
+    draw_status_line();
+}
 
 
 // this hook switcht of the exit from the menu in case of RX
@@ -322,21 +360,6 @@ void draw_micbargraph()
     }
 }
 
-int update_divider = 0 ;
-
-#define MAX_STATUS_CHARS 40
-wchar_t status_line[MAX_STATUS_CHARS] = { 0 };
-
-void update_status_line()
-{
-    char buf[MAX_STATUS_CHARS];
-    sprintf(buf,"<%d> ", *md380_f_4225_operatingmode ); // potential buffer overrun!!!
-    for(int i=0;i<MAX_STATUS_CHARS;i++) {
-        status_line[i]= buf[i];
-    }
-    status_line[MAX_STATUS_CHARS-1]='\0';    
-}
-
 void f_4225_hook()
 {
 //#ifdef CONFIG_GRAPHICS
@@ -351,14 +374,5 @@ void f_4225_hook()
         return ;
     }
     
-    if( ++update_divider > 5 ) {
-        update_divider = 0 ;
-    }
-    
-    if( update_divider == 0 ) {
-        update_status_line();
-    }
-    
-    gfx_chars_to_display( status_line, 0xa, 0x60, 0x5e);        
 //#endif
 }
