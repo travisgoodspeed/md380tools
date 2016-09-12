@@ -282,15 +282,15 @@ void draw_micbargraph()
 
           gfx_set_fg_color(0x999999);
           gfx_set_bg_color(0xff000000);
-          gfx_blockfill(9, 49, 151, 61);
+          gfx_blockfill(9, 54, 151, 66);
 
           // paint legend
           gfx_set_fg_color(0x0000ff);
-          gfx_blockfill((-30+280)/2+10, 62, 150, 65);
+          gfx_blockfill((-30+280)/2+10, 67, 150, 70);
           gfx_set_fg_color(0x00ff00);
-          gfx_blockfill((-130+280)/2+10, 62, (-30+280)/2-1+10, 65);
+          gfx_blockfill((-130+280)/2+10, 67, (-30+280)/2-1+10, 70);
           gfx_set_fg_color(0x555555);
-          gfx_blockfill(10, 62, (-130+280)/2-1+10, 65);
+          gfx_blockfill(10, 67, (-130+280)/2-1+10, 70);
 
           // set color
           if ( relative_peak_cb > -3 || red > 0) {
@@ -305,7 +305,7 @@ void draw_micbargraph()
             gfx_set_fg_color(0x555555);
           }
           gfx_set_bg_color(0xff000000);
-          gfx_blockfill(10, 50, centibel_val, 60);
+          gfx_blockfill(10, 55, centibel_val, 65);
           gfx_set_fg_color(0xff8032);
           gfx_set_bg_color(0xff000000);
         }
@@ -315,7 +315,7 @@ void draw_micbargraph()
     if (*md380_f_4225_operatingmode == SCR_MODE_18 && rx_active == 1 ) { // clear screen area
       gfx_set_fg_color(0xff8032);
       gfx_set_bg_color(0xff000000);
-      gfx_blockfill(9, 49, 151, 65);
+      gfx_blockfill(9, 54, 151, 70);
       rx_active = 0;
       red=0;
       green=0;
