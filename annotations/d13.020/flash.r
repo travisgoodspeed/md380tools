@@ -3232,56 +3232,73 @@ Cd 4 @ 0x0800c788
 Cd 4 @ 0x0800c7ac
 f _ 0 0x0800c800
 
-f menu.Contacts.800fcbc 0 0x800fcbc
-f menu.Scan.8037e34 0 0x8037e34
-f menu.Zone.80131ac 0 0x80131ac
-f menu.Messages.8023858 0 0x8023858
-f menu.Call_Log.8034274 0 0x8034274
-f menu.Utilities.80134a0 0 0x80134a0
-f menu.Radio_Set.8017cbc 0 0x8017cbc
-f menu.Radio_Inf.80165b8 0 0x80165b8
-f menu.Program_R.80136c0 0 0x80136c0
-f menu.MD380Tool.809c3b0 0 0x809c3b0
-f menu.GPS_BeiDo.8016688 0 0x8016688
-f menu.RX_GPSInf.8013638 0 0x8013638
-f menu.Talkaroun.8019170 0 0x8019170
-f menu.Tone_Ale.8019798 0 0x8019798
-f menu.Power.8019c7c 0 0x8019c7c
-f menu.Squelch.801a1e0 0 0x801a1e0
-f menu.Intro_Scr.801a4c6 0 0x801a4c6
-f menu.Keypad_Lo.801a6c8 0 0x801a6c8
-f menu.Language.801ab84 0 0x801ab84
-f menu.LED_Indic.801ad56 0 0x801ad56
-f menu.VOX.80185d8 0 0x80185d8
-f menu.SiteRoam1.801ae5c 0 0x801ae5c
-f menu.Passwd_Lo.801af7c 0 0x801af7c
-f menu.SiteRoam2.800fc84 0 0x800fc84
-f menu.Record.8018f04 0 0x8018f04
-f menu.Clock.8018868 0 0x8018868
-f menu.GPS.8018248 0 0x8018248
+f menugreen.Contacts.800fcbc 0 0x800fcbc
+f menugreen.Scan.8037e34 0 0x8037e34
+f menugreen.Zone.80131ac 0 0x80131ac
+f menugreen.Messages.8023858 0 0x8023858
+f menugreen.Call_Log.8034274 0 0x8034274
+f menugreen.Utilities.80134a0 0 0x80134a0
+f menugreen.Radio_Set.8017cbc 0 0x8017cbc
+f menugreen.Radio_Inf.80165b8 0 0x80165b8
+f menugreen.MD380Tool.809c3b0 0 0x809c3b0
+f menugreen.GPS_BeiDo.8016688 0 0x8016688
+f menugreen.RX_GPSInf.8013638 0 0x8013638
+f menugreen.Talkaroun.8019170 0 0x8019170
+f menugreen.Tone_Ale.8019798 0 0x8019798
+f menugreen.Power.8019c7c 0 0x8019c7c
+f menugreen.Squelch.801a1e0 0 0x801a1e0
+f menugreen.Intro_Scr.801a4c6 0 0x801a4c6
+f menugreen.Keypad_Lo.801a6c8 0 0x801a6c8
+f menugreen.Language.801ab84 0 0x801ab84
+f menugreen.LED_Indic.801ad56 0 0x801ad56
+f menugreen.VOX.80185d8 0 0x80185d8
+f menugreen.SiteRoam1.801ae5c 0 0x801ae5c
+f menugreen.Passwd_Lo.801af7c 0 0x801af7c
+f menugreen.SiteRoam2.800fc84 0 0x800fc84
+f menugreen.Record.8018f04 0 0x8018f04
+f menugreen.Clock.8018868 0 0x8018868
+f menugreen.GPS.8018248 0 0x8018248
 
-f menu.Talk_Perm.8019998 0 0x8019998
-f menu.Keypad_To.8019b40 0 0x8019b40
+f menugreen.prog.80136c0 0 0x80136c0
+f menugreen.prog.rxf.80156a4 0 0x80156a4
+f menugreen.prog.rxf.show.8015720 0 0x8015720
+f menugreen.prog.rxf.edit.801587a 0 0x801587a
 
-f menu.All_Tones.80198b0 0 0x80198b0
-f menu.All_Tones.TurnOn.8019290 0 0x8019290
-f menu.All_Tones.TurnOff.80194f4 0 0x80194f4
+f menugreen.prog.txf.8015b74 0 0x8015b74
+f menugreen.prog.txf.show.8015be8 0 0x8015be8
+f menugreen.prog.txf.edit.8015d58 0 0x8015d58
 
-f menu.talkaround.TurnOn.8019290 0 0x8019290
-f menu.talkaround.TurnOff.80194f4 0 0x80194f4
 
-f menu.Mode.801840c 0 0x801840c
-f menu.CH_Mode.80184e8 0 0x80184e8
-f menu.MR_Mode.801855c 0 0x801855c
+f menugreen.prog.Channel_N.8016024 0 0x8016024
+f menugreen.prog.Time_Out_.8016320 0 0x8016320
+f menugreen.prog.CTC_DCS.800fc84 0 0x800fc84
+f menugreen.prog.Color_Cod.8015540 0 0x8015540
+f menugreen.prog.Repeater_.80153dc 0 0x80153dc
+f menugreen.prog.TxContact.8013e78 0 0x8013e78
+f menugreen.prog.GroupList.8013fbc 0 0x8013fbc
 
-f menu.Backlight.8019eb0 0 0x8019eb0
-f menu.backlight.Always.801a440 0 0x801a440
-f menu.backlight.5S.801a03e 0 0x801a03e
-f menu.backlight.10S.801a0c8 0 0x801a0c8
-f menu.backlight.15S.801a154 0 0x801a154
+f menugreen.Talk_Perm.8019998 0 0x8019998
+f menugreen.Keypad_To.8019b40 0 0x8019b40
 
-f menu.Repeater_Slot.80153dc 0 0x80153dc
-f menu.Repeater_Slot_1_2.80154a4 0 0x80154a4
+f menugreen.All_Tones.80198b0 0 0x80198b0
+f menugreen.All_Tones.TurnOn.8019290 0 0x8019290
+f menugreen.All_Tones.TurnOff.80194f4 0 0x80194f4
+
+f menugreen.talkaround.TurnOn.8019290 0 0x8019290
+f menugreen.talkaround.TurnOff.80194f4 0 0x80194f4
+
+f menugreen.Mode.801840c 0 0x801840c
+f menugreen.CH_Mode.80184e8 0 0x80184e8
+f menugreen.MR_Mode.801855c 0 0x801855c
+
+f menugreen.Backlight.8019eb0 0 0x8019eb0
+f menugreen.backlight.Always.801a440 0 0x801a440
+f menugreen.backlight.5S.801a03e 0 0x801a03e
+f menugreen.backlight.10S.801a0c8 0 0x801a0c8
+f menugreen.backlight.15S.801a154 0 0x801a154
+
+f menugreen.Repeater_Slot.80153dc 0 0x80153dc
+f menugreen.Repeater_Slot_1_2.80154a4 0 0x80154a4
 
 af+ 0x80154a4 152 menu_timeslot
 
@@ -3305,3 +3322,26 @@ f menu.dispatch.greenkey 0 0x0800ed3a
 f menu.dispatch.redkey_maybe 0 0x0800f2a0
 af+ 0x0800eb98 1810 menu_dispatcher
 
+f draw_datetime_row 0 0x0800df1a
+af+ 0x0800df1a 250 draw_datetime_row
+f F_4225 0 0x0801fe5c
+
+f update_scr_16 0 0x0802015e
+f update_scr_17 0 0x08020236
+f update_scr_18 0 0x08020376
+f update_scr_19 0 0x0802046c
+f update_scr_20 0 0x08020052
+f update_scr_21 0 0x0801fee0
+f update_scr_22 0 0x0801ff3e
+
+f update_scr_27 0 0x08020612
+f update_scr_28 0 0x080206b2
+f update_scr_29 0 0x080206ee
+f update_scr_30 0 0x0801ff8e
+f update_scr_31 0 0x08020018
+f update_scr_32 0 0x080207b4
+f update_scr_33 0 0x0802080e
+
+f update_scr_35 0 0x0802080e
+f update_scr_36 0 0x0802020e
+f update_scr_other 0 0x0802082c
