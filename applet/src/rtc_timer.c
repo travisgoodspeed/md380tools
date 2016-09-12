@@ -111,6 +111,7 @@ void draw_status_line()
 extern void draw_datetime_row_hook() 
 {
     progress++ ;
+    progress %= sizeof( progress_info );
     
     update_status_line();
     draw_status_line();
