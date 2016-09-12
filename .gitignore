@@ -71,6 +71,8 @@ db/users.csv
 db/users.json
 db/repeaters.csv
 db/repeaters.json
+data
+data.csv
 
 # firmware downloads
 firmware/dl
