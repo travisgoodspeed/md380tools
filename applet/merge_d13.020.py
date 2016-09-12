@@ -205,8 +205,8 @@ if __name__== '__main__':
     merger.hookbl(0x804647a,sapplet.getadr("OSSemCreate_hook"),0);
 
     # gfx hooks
-    merger.hookbl(0x08025d54,sapplet.getadr("rx_screen_green_hook"),0);
-    merger.hookbl(0x08025e26,sapplet.getadr("rx_screen_green_hook"),0);
+    merger.hookbl(0x08025d54,sapplet.getadr("rx_screen_blue_hook"),0);
+    merger.hookbl(0x08025e26,sapplet.getadr("rx_screen_blue_hook"),0);
     merger.hookbl(0x08020428,sapplet.getadr("rx_screen_gray_hook"),0);
 
     # date format  hook, this hook can modify the date format on the status line
