@@ -61,7 +61,8 @@ struct {
 #seekto 0x0005F80;
 struct {
   ul24 callid;   //DMR Call ID
-  u8   flags;    //c2 for private with no tone
+  u8   flags;    //c1 for group call without an rx tone
+                 //c2 for private with no tone
                  //e1 for a group call with an rx tone.
   char name[32]; //U16L chars, of course.
 } contacts[1000];
@@ -75,19 +76,45 @@ struct {
 } scanlists[20];
 
 #seekto 0x0001EE00;
-struct {
+struct { //0x1F025 into rdt
+//unknown features:
+    //emergency system
+    //private call confirm, emergency alarm ack, data call confirm
+    //auto scan
+    //lone worker
+    //scan list?
+    // rx and tx ref freq
+    // TOT in seconds
+    // TOT rekey delay
+    // analog signaling systems, analog ptt id
+    //  qt reverse, and reverse burst/turn-off code
+    // DCS probably doesn't work at all
+
   //First byte is 62 for digital, 61 for analog
   u8 mode;   //Upper nybble is 6 for normal squelch, 4 for tight squelch
              //Low nybble is
              //61 for digital, 61 for nbfm, 69 for wbfm
-  u8 slot;       //Upper nybble is the color color,   TODO
+  u8 slot;       //Upper nybble is the color code
                  //lower nybble is bitfield:
-                 // |4 for S1, |8 for S2              TODO
+                 // |4 for S1, |8 for S2
                  // |2 for RX-ONLY
+                 // |1 for talkaround allowed
+                 //slotnotes:  0000 0000
+                 //            colr 12rt
   char priv;           //Upper nybble is 0 for cleartex, 1 for Basic Privacy, 2 for Enhanced Privacy.
                        //Low nybble is key index.  (E is slot 15, 0 is slot 1.)
   char wase0;          //Unknown, normally E0
+                        //0xa0 for "compressed udp data header" turned on
   char power;          //24 for high power, 04 for low power TODO
+                        // high nibble:
+                         // |8 is color code admit criteria
+                         // |4 is cchannel free admit criteria
+                         // |2 is high power enabled, off for low power
+                         // |1 is vox enabled
+                        // low nibble: unknown, usually 0x4
+                       // 0 0  0 0   0 0  0 0
+                       // CcCf HpVx            
+
   char wasc3;          //Unknown, normally C3
   ul16 contact;        //Digital contact name.  (TX group.)  TODO
   char unknown[3];     //Certainly analog or digital settings, but I don't know the bits yet.
@@ -115,6 +142,71 @@ struct {
     u8 empty_10f2c[4];
 } info;
 
+#seekto 0x59C0; //0x5be5
+//not tested
+struct {
+    //char enhanced [ 8 ][ 16 ] ; //bitwise doesn't seem to like this
+    //this could be better, please fix me
+    struct {
+        char key[16];
+    } enhanced[8];
+    u16 basic[ 16 ] ;
+} encryption_keys;
+
+#seekto 0x2102; //0x2327 rdt
+// not yet tested
+struct {
+//  for each:
+//      0x01 is all alert tones toggle
+//      0x02 is emergency on
+//      0x03 is emergency off
+//      0x04 is high/low power
+//      0x05 is monitor
+//      0x06 is nuisance delete
+//      0x07 is one touch access 1
+//      0x08 is ota 2
+//      0x09 is ota 3
+//      0x0A is ota 4
+//      0x0B is ota 5
+//      0x0C must be ota 6
+//      0x0d is talkaround
+//      0x0e is scan toggle
+//      0x15 is squelch toggle
+//      0x16 is privacy toggle
+//      0x17 is vox toggle
+//      0x18 is zone select 
+//      0x1e is manual dial for private
+//      0x1f is lone work toggle
+
+    char button1short;
+    char button1long;
+    char button2short;
+    char button2long;
+} buttons;
+
+#seekto 0x20F1; //0x2316 rdt
+struct {
+// contacts has 8 options
+// utilities has 12 options
+// call log has 3 options
+// scan has 2 options
+    char contacts;  // upper:
+                    //  |8 is radio disable
+                    //  |4 is radio enable
+                    //  |2 is remote monitor
+                    //  |1 is radio check
+                    // lower:
+                    //  |8 is 
+                    //  |4 is 
+                    //  |2 is 
+                    //  |1 is
+    char utilities1; //when all options available, 0xff
+    char utilities2; //when all options available, 0xbf
+        // 0x3f if vox disabled, 0xbf if vox enabled
+    char utilities3; //when all options on, 0xfb
+        // 0xfb if front panel programming allowed, 0xff is fpp disabled
+    
+} menuoptions;
 
 #seekto 0x149e0;
 struct {
@@ -154,7 +246,11 @@ struct {
 #seekto 0x2f003;
 u8 selectedzone;
 
-
+#seekto 0xec20; //offset 0x225 bytes
+struct {
+    char name[32];          // U16L chars
+    ul16 contactidxs[32];    // list of contact indexes in this RX Group
+} rxgrouplist[200]; //supposed to be 250, but weirdness in last 12 rxgroups, so now 200
 
 """
 
