@@ -19,6 +19,15 @@
  
 static int flag=0;
 
+/* @ 0x2001e600 */
+/*
+ *
+ * uint8_t 
+ * 
+ * 0x80 set = no time displayed.
+ *
+ */
+
 /*  see 0x0801f06a there are a lot of modes */
 
 // 16  = ? not seen
@@ -66,23 +75,69 @@ static int flag=0;
 #define MD380_FONT_NORM  0x80d0640
 #endif
 
+#define MAX_STATUS_CHARS 40
+wchar_t status_line[MAX_STATUS_CHARS] = { L"12345678901234567890" };
+
+char progress_info[] = { "|/-\\" } ;
+
+int progress = 0 ;
+
+void update_status_line()
+{
+    int progress2 = progress ; // sample (thread safe) 
+
+    progress2 %= sizeof( progress_info );
+    char c = progress_info[progress2];
+    
+    char buf[MAX_STATUS_CHARS];
+    sprintf(buf,"%c|%02d|", c, md380_f_4225_operatingmode & 0x7F ); // potential buffer overrun!!!
+        
+    for(int i=0;i<MAX_STATUS_CHARS;i++) {
+        status_line[i]= buf[i];
+    }
+    status_line[MAX_STATUS_CHARS-1]='\0';    
+}
+
+void draw_status_line()
+{
+    gfx_set_fg_color(0);
+    gfx_set_bg_color(0x00ff8032); 
+    gfx_select_font( (void*)0x0809a4c0 );
+    
+    //gfx_chars_to_display( );
+    gfx_chars_to_display(status_line,10,96,94+20);    
+}
+
+extern void draw_datetime_row_hook() 
+{
+    progress++ ;
+    progress %= sizeof( progress_info );
+    
+    update_status_line();
+    draw_status_line();
+}
 
 
 // this hook switcht of the exit from the menu in case of RX
-void * f_4225_internel_hook() {
+void * f_4225_internel_hook() 
+{
+    if ( global_addl_config.experimental == 1 ) {
+        return &md380_f_4225_operatingmode ;
+    }
+    
 #ifdef DEBUG
-//    printf("<%d> \n", *md380_f_4225_operatingmode);
+//    printf("<%d> \n", md380_f_4225_operatingmode);
 #endif
-  if (*md380_f_4225_operatingmode == SCR_MODE_MENU) {
+  if (md380_f_4225_operatingmode == SCR_MODE_MENU) {
     flag=1;
   }
-  if (*md380_f_4225_operatingmode == SCR_MODE_CHAN_IDLE ) {
+  if (md380_f_4225_operatingmode == SCR_MODE_CHAN_IDLE ) {
     flag=0;
   }
   if (flag == 1) {
-    *md380_f_4225_operatingmode=SCR_MODE_MENU;
+    md380_f_4225_operatingmode = SCR_MODE_MENU;
   }
-  return(md380_f_4225_operatingmode);
+  return &md380_f_4225_operatingmode ;
 }
 
 
@@ -272,7 +327,7 @@ void draw_micbargraph()
         fullscale_offset = intCentibel(3000);  // maybe wav max max_level
     }
 
-    if (*md380_f_4225_operatingmode == SCR_MODE_17 && max_level < 4500 && max_level > 10) { // i hope we are on tx
+    if ( md380_f_4225_operatingmode == SCR_MODE_17 && max_level < 4500 && max_level > 10) { // i hope we are on tx
       if (lastframe < ambe_encode_frame_cnt) {	// check for new frame
         lastframe = ambe_encode_frame_cnt;
         rx_active=1;
@@ -322,7 +377,7 @@ void draw_micbargraph()
       }
     }
 
-    if (*md380_f_4225_operatingmode == SCR_MODE_18 && rx_active == 1 ) { // clear screen area
+    if ( md380_f_4225_operatingmode == SCR_MODE_18 && rx_active == 1 ) { // clear screen area
       gfx_set_fg_color(0xff8032);
       gfx_set_bg_color(0xff000000);
       gfx_blockfill(9, 54, 151, 70);
@@ -330,21 +385,6 @@ void draw_micbargraph()
       red=0;
       green=0;
     }
-}
-
-int update_divider = 0 ;
-
-#define MAX_STATUS_CHARS 40
-wchar_t status_line[MAX_STATUS_CHARS] = { 0 };
-
-void update_status_line()
-{
-    char buf[MAX_STATUS_CHARS];
-    sprintf(buf,"<%d> ", *md380_f_4225_operatingmode ); // potential buffer overrun!!!
-    for(int i=0;i<MAX_STATUS_CHARS;i++) {
-        status_line[i]= buf[i];
-    }
-    status_line[MAX_STATUS_CHARS-1]='\0';    
 }
 
 void f_4225_hook()
@@ -357,18 +397,9 @@ void f_4225_hook()
     
     md380_f_4225();
     
-    if ( global_addl_config.experimental == 0 ) {
-        return ;
-    }
+//    if ( global_addl_config.experimental == 0 ) {
+//        return ;
+//    }
     
-    if( ++update_divider > 5 ) {
-        update_divider = 0 ;
-    }
-    
-    if( update_divider == 0 ) {
-        update_status_line();
-    }
-    
-    gfx_chars_to_display( status_line, 0xa, 0x60, 0x5e);        
 //#endif
 }
