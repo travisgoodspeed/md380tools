@@ -3348,3 +3348,6 @@ f update_scr_33 0 0x0802080e
 f update_scr_35 0 0x0802080e
 f update_scr_36 0 0x0802020e
 f update_scr_other 0 0x0802082c
+
+f scr_1 0 0x0802daf8
+f scr_2 0 0x0802daf8
