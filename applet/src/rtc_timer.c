@@ -403,12 +403,19 @@ void dummy()
 {
 } 
 
+void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
+{
+    printf("dt: %d %d %S\n", sx, sy, str);
+    gfx_drawtext(str, sx, sy, x, y, maxlen);
+}
+
+
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
     if( y != 96 ) {
-        printf( "%d %d %S\n", x,y,str);
+        printf("ctd: %d %d %S\n", x, y, str);
     }
-    gfx_chars_to_display(str,x,y,xlen);
+    gfx_chars_to_display(str, x, y, xlen);
 }
 
 void f_4225_hook()
