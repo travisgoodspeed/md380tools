@@ -392,7 +392,7 @@ void f_4225_hook()
         draw_micbargraph();
     }
     
-    if ( global_addl_config.experimental == 1 ) {
+    if ( global_addl_config.debug == 1 ) {
         draw_updated_status_line();
     }
     
