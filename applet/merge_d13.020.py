@@ -255,6 +255,8 @@ if __name__== '__main__':
     merger.hookbl(0x0802d8e2, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0802d9e4, sapplet.getadr("gfx_chars_to_display_hook"),0);
 
+    merger.hookbl(0x08046804, sapplet.getadr("gfx_drawtext_hook"),0);
+    merger.hookbl(0x0804681a, sapplet.getadr("gfx_drawtext_hook"),0);
 
     # Hook the startup AES check.
     merger.hookbl(0x0804764c, sapplet.getadr("aes_startup_check_hook"),0);
