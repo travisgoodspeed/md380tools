@@ -3,6 +3,7 @@
 */
 
 #define DEBUG
+#define CONFIG_GRAPHICS
 
 #include <stdlib.h>
 
@@ -107,13 +108,18 @@ void draw_status_line()
     gfx_chars_to_display(status_line,10,96,94+20);    
 }
 
-extern void draw_datetime_row_hook() 
+void draw_updated_status_line()
 {
     progress++ ;
     progress %= sizeof( progress_info );
     
     update_status_line();
     draw_status_line();
+}
+
+extern void draw_datetime_row_hook() 
+{
+    draw_updated_status_line();
 }
 
 
@@ -378,10 +384,16 @@ void draw_micbargraph()
 
 void f_4225_hook()
 {
+    // this probably runs on other thread than the display task.
+    
 //#ifdef CONFIG_GRAPHICS
 
     if ( global_addl_config.micbargraph == 1 ) {
         draw_micbargraph();
+    }
+    
+    if ( global_addl_config.experimental == 1 ) {
+        draw_updated_status_line();
     }
     
     md380_f_4225();

@@ -3345,11 +3345,14 @@ f update_scr_31 0 0x08020018
 f update_scr_32 0 0x080207b4
 f update_scr_33 0 0x0802080e
 
-f update_scr_35 0 0x0802080e
+f update_scr_35 0 0x080201bc
 f update_scr_36 0 0x0802020e
 f update_scr_other 0 0x0802082c
+
+f after_update_scr 0 0x080213aa
 
 f scr_1 0 0x0802daf8
 
 f draw_botline_text 0 0x08046810
 f draw_topline_text_maybe 0 0x080467fa
+
