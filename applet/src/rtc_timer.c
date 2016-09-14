@@ -412,6 +412,7 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
 
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
+    // filter datetime (y=96)
     if( y != 96 ) {
         printf("ctd: %d %d %S\n", x, y, str);
     }
