@@ -31,6 +31,8 @@
 
 #include "printf.h"
 
+#include <stddef.h>
+
 typedef void (*putcf) (void*,char);
 static putcf stdout_putf;
 static void* stdout_putp;
@@ -133,6 +135,26 @@ static void putchw(void* putp,putcf putf,int n, char z, char* bf)
 		putf(putp,ch);
 	}
 
+static void putchwl(void* putp,putcf putf,int n, char z, void* bf)
+{
+    char fc=z? '0' : ' ';
+    wchar_t *p = bf ;
+    while (*p++ && n > 0) {
+        n--;
+    }
+    while (n-- > 0) {
+        putf(putp,fc);
+    }
+    p = bf ;
+    while(1) {
+        wchar_t c = *p++ ;
+        if( c == 0 ) {
+            break ;
+        }
+        putf(putp,c);
+    }
+}
+
 void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 	{
 	char bf[12];
@@ -200,6 +222,9 @@ void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
 					break;
 				case 's' : 
 					putchw(putp,putf,w,0,va_arg(va, char*));
+					break;
+				case 'S' : 
+					putchwl(putp,putf,w,0,va_arg(va, char*));
 					break;
 				case '%' :
 					putf(putp,ch);

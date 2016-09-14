@@ -112,7 +112,7 @@ void draw_status_line()
     gfx_set_bg_color(0x00ff8032); 
     gfx_select_font((void *) MD380_FONT_SMALL );
     
-    gfx_chars_to_display(status_line,10,96,94+20);    
+    gfx_chars_to_display(status_line,10,55,94+20);    
 }
 
 void draw_updated_status_line()
@@ -396,6 +396,19 @@ void draw_micbargraph()
       red=0;
       green=0;
     }
+}
+
+extern void dummy();
+void dummy() 
+{
+} 
+
+void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
+{
+    if( y != 96 ) {
+        printf( "%d %d %S\n", x,y,str);
+    }
+    gfx_chars_to_display(str,x,y,xlen);
 }
 
 void f_4225_hook()
