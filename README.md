@@ -134,6 +134,10 @@ Quick recipe for uploading the just build firmware:
 ./md380-dfu upgrade applet/experiment.bin
 ```
 
+For reverse engineering:
+
+    sudo apt-get install radare2
+
 
 ####Raspberry Pi Debian Jessie: #####
 
