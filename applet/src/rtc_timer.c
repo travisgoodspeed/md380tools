@@ -110,7 +110,7 @@ void draw_status_line()
     gfx_set_bg_color(0x00ff8032); 
     gfx_select_font( (void*)0x0809a4c0 );
     
-    gfx_chars_to_display(status_line,10,96,94+20);    
+    gfx_chars_to_display(status_line,10,55,94+20);    
 }
 
 void draw_updated_status_line()
