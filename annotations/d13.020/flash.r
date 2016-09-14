@@ -3356,3 +3356,13 @@ f scr_1 0 0x0802daf8
 f draw_botline_text 0 0x08046810
 f draw_topline_text_maybe 0 0x080467fa
 
+f call_gfx_chars_to_display_1 0 0x0801ea2e
+f call_gfx_chars_to_display_2 0 0x0801f02c
+f call_gfx_chars_to_display_3 0 0x0801f044
+f call_gfx_chars_to_display_4 0 0x0801f07a
+f call_gfx_chars_to_display_5 0 0x0801f092
+f call_gfx_chars_to_display_6 0 0x0802d660
+f call_gfx_chars_to_display_7 0 0x0802d70e
+f call_gfx_chars_to_display_8 0 0x0802d8e2
+f call_gfx_chars_to_display_9 0 0x0802d9e4
+
