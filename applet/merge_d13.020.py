@@ -214,6 +214,48 @@ if __name__== '__main__':
 
 #    merger.hookstub2(0x0800df1a, sapplet.getadr("draw_datetime_row_hook"));
 
+    merger.hookbl(0x0800c8f2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
+    merger.hookbl(0x0800cad2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
+    merger.hookbl(0x0800cd04, sapplet.getadr("gfx_chars_to_display_hook"),0);   
+    merger.hookbl(0x0800cd20, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800cd68, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800cdfe, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800ce1a, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800ce62, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800ceca, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800cee6, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800cf32, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d06e, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d080, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d0ea, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d150, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d19e, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d1d6, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d1f2, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d242, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d708, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d7b6, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d906, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d958, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800d974, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800df92, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800dff6, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800e174, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800e18e, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800e1b4, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800e1da, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0800ea82, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0801ea2e, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0801f02c, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0801f044, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0801f07a, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0801f092, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0802d660, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0802d70e, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0802d8e2, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    merger.hookbl(0x0802d9e4, sapplet.getadr("gfx_chars_to_display_hook"),0);
+
+
     # Hook the startup AES check.
     merger.hookbl(0x0804764c, sapplet.getadr("aes_startup_check_hook"),0);
 

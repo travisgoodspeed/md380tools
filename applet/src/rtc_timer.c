@@ -398,6 +398,19 @@ void draw_micbargraph()
     }
 }
 
+extern void dummy();
+void dummy() 
+{
+} 
+
+void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
+{
+    if( y != 96 ) {
+        printf( "%d %d %S\n", x,y,str);
+    }
+    gfx_chars_to_display(str,x,y,xlen);
+}
+
 void f_4225_hook()
 {
     // this probably runs on other thread than the display task.
