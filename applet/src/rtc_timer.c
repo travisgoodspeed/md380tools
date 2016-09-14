@@ -83,6 +83,9 @@ char progress_info[] = { "|/-\\" } ;
 
 int progress = 0 ;
 
+extern int g_dst;  // transferbuffer users.csv
+extern int g_src;
+  
 void update_status_line()
 {
     int progress2 = progress ; // sample (thread safe) 
@@ -90,8 +93,10 @@ void update_status_line()
     progress2 %= sizeof( progress_info );
     char c = progress_info[progress2];
     
+    int dst = g_dst ;
+    
     char buf[MAX_STATUS_CHARS];
-    sprintf(buf,"%c|%02d|", c, md380_f_4225_operatingmode & 0x7F ); // potential buffer overrun!!!
+    sprintf(buf,"%c|%02d|%5d", c, md380_f_4225_operatingmode & 0x7F, dst ); // potential buffer overrun!!!
         
     for(int i=0;i<MAX_STATUS_CHARS;i++) {
         status_line[i]= buf[i];
@@ -148,8 +153,6 @@ void * f_4225_internel_hook()
 
 void print_rx_screen(unsigned int bg_color) {
 #ifdef CONFIG_GRAPHICS
-  extern int g_dst;  // transferbuffer users.csv
-  extern int g_src;
 
   char buf[160];
   int n,i,ii,y;
