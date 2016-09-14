@@ -3,6 +3,7 @@
 */
 
 #define DEBUG
+#define CONFIG_GRAPHICS
 
 #include <stdlib.h>
 
@@ -82,6 +83,9 @@ char progress_info[] = { "|/-\\" } ;
 
 int progress = 0 ;
 
+extern int g_dst;  // transferbuffer users.csv
+extern int g_src;
+  
 void update_status_line()
 {
     int progress2 = progress ; // sample (thread safe) 
@@ -89,8 +93,10 @@ void update_status_line()
     progress2 %= sizeof( progress_info );
     char c = progress_info[progress2];
     
+    int dst = g_dst ;
+    
     char buf[MAX_STATUS_CHARS];
-    sprintf(buf,"%c|%02d|", c, md380_f_4225_operatingmode & 0x7F ); // potential buffer overrun!!!
+    sprintf(buf,"%c|%02d|%5d", c, md380_f_4225_operatingmode & 0x7F, dst ); // potential buffer overrun!!!
         
     for(int i=0;i<MAX_STATUS_CHARS;i++) {
         status_line[i]= buf[i];
@@ -102,18 +108,23 @@ void draw_status_line()
 {
     gfx_set_fg_color(0);
     gfx_set_bg_color(0x00ff8032); 
-    gfx_select_font( (void*)0x0809a4c0 );
+    gfx_select_font((void *) MD380_FONT_SMALL );
     
-    //gfx_chars_to_display( );
     gfx_chars_to_display(status_line,10,96,94+20);    
+}
+
+void draw_updated_status_line()
+{
+    progress++ ;
+    progress %= sizeof( progress_info );
+    
+    update_status_line();
+    draw_status_line();
 }
 
 extern void draw_datetime_row_hook() 
 {
-    progress++ ;
-    
-    update_status_line();
-    draw_status_line();
+    draw_updated_status_line();
 }
 
 
@@ -142,8 +153,6 @@ void * f_4225_internel_hook()
 
 void print_rx_screen(unsigned int bg_color) {
 #ifdef CONFIG_GRAPHICS
-  extern int g_dst;  // transferbuffer users.csv
-  extern int g_src;
 
   char buf[160];
   int n,i,ii,y;
@@ -378,10 +387,16 @@ void draw_micbargraph()
 
 void f_4225_hook()
 {
+    // this probably runs on other thread than the display task.
+    
 //#ifdef CONFIG_GRAPHICS
 
     if ( global_addl_config.micbargraph == 1 ) {
         draw_micbargraph();
+    }
+    
+    if ( global_addl_config.debug == 1 ) {
+        draw_updated_status_line();
     }
     
     md380_f_4225();
