@@ -53,7 +53,7 @@ md380_dfu_state      = 0x2001e962;
 md380_dfu_target_adr = 0x20004a14;
 md380_thingy2        = 0x2001e963;
 md380_usbstring      = 0x2001d504; /* unshure */
-md380_usbbuf         = 0x2001e0d0; /* unshure */
+md380_usbbuf         = 0x2001e0d0; /* unshure */ /* also gfx_chars_to_display buffer */
 
 c5000_spi0_readreg   = 0x0803ffd1;
 c5000_spi0_writereg  = 0x0803ff85;

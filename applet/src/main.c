@@ -138,11 +138,12 @@ void demo(){
   drawtext(L"@ s13.020",
            160,140);
 #endif
-             
-             
 
   drawascii(GIT_VERSION,
             160,180);
+
+  drawtext(VERSIONDATE,
+           160,220);
   sleep(1000);
   
   //Make the welcome image scroll across the screen.
