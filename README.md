@@ -136,7 +136,7 @@ Quick recipe for uploading the just build firmware:
 
 For reverse engineering:
 
-    sudo apt-get install radare2
+    sudo apt-get install radare2 radare2-plugins
 
 
 ####Raspberry Pi Debian Jessie: #####
