@@ -3386,5 +3386,6 @@ f draw_zone_label 0 0x0800e682
 f draw_zone_channel 0 0x0800e538
 af+ 0x0800e538 98 draw_zone_channel
 
+f scr_mode_stable 0 0x08020830
 
 

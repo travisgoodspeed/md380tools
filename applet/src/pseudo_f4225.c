@@ -61,6 +61,9 @@ void f4225()
             case 36 :
             default :                
         }
+    } else {
+        // mode is stable
+        // do drawing.
     }
 }
 
