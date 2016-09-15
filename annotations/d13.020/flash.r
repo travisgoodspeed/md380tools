@@ -3380,3 +3380,11 @@ af+ 0x0801dd2c 16 gfx_drawtext5
 
 f gfx_drawtext6 0 0x08027728
 af+ 0x08027728 154 gfx_drawtext6
+
+f draw_group_label 0 0x0800e5a6
+f draw_zone_label 0 0x0800e682
+f draw_zone_group 0 0x0800e538
+af+ 0x0800e538 98 draw_zone_group
+
+
+
