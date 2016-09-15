@@ -409,14 +409,24 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
-
+// r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
+    // filter datetime (y=96)
     if( y != 96 ) {
         printf("ctd: %d %d %S\n", x, y, str);
     }
     gfx_chars_to_display(str, x, y, xlen);
 }
+
+void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
+
+void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
+{
+    printf("dt4: %d %d %S\n", x, y, str);
+    f(str,x,y,xlen,ylen);
+}
+
 
 void f_4225_hook()
 {
