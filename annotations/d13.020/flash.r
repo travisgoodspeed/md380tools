@@ -3391,3 +3391,5 @@ f scr_mode_stable 0 0x08020830
 af+ keyboard_maybe 152 0x0804eb64
 f keyboard_maybe 0 0x0804eb64
 
+f poi_mode2 0 0x08020bf4
+

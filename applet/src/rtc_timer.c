@@ -435,8 +435,13 @@ void trace_scr_mode()
         old_opmode = md380_f_4225_operatingmode ;
         printf( "mode: %d\n", md380_f_4225_operatingmode);
     } else {
-        //printf( "%d ", md380_f_4225_operatingmode);
+//        printf( "%d ", md380_f_4225_operatingmode);
     }
+    
+    uint8_t *p = 0x2001e94b ;
+    uint16_t *p2 = 0x2001e844 ;
+    printf( "%d %d\n", *p, *p2 );
+    
 }
 
 void f_4225_hook()
@@ -455,15 +460,22 @@ void f_4225_hook()
         draw_updated_status_line();
     }
     
-    int mode = md380_f_4225_operatingmode ;
-    
+//    int mode = md380_f_4225_operatingmode ;
+//    
+//    if( mode == 27 ) {
+//        md380_f_4225_operatingmode = 28 ;
+//    }
+    printf( " %3d >>> ", md380_f_4225_operatingmode );
     md380_f_4225();
+    printf( " %3d <<< ", md380_f_4225_operatingmode );
     
-    if( mode & 0x7F ) {
-        if ( global_addl_config.debug == 1 ) {
-//            draw_updated_status_line();
-        }        
-    }
+//    if( mode != md380_f_4225_operatingmode ) {
+//        printf( "-> %d\n", md380_f_4225_operatingmode );
+//    }
+    
+    if ( global_addl_config.debug == 1 ) {
+        draw_status_line();
+    }        
     
 //    if ( global_addl_config.experimental == 0 ) {
 //        return ;

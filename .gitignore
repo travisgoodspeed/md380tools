@@ -80,3 +80,4 @@ firmware/dl
 # applet intermeds
 applet/*.lst
 applet/*.map
+/annotations/d13.020/asm.lst
