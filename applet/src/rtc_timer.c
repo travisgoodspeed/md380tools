@@ -427,10 +427,23 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     f(str,x,y,xlen,ylen);
 }
 
+int old_opmode = 0 ;
+
+void trace_scr_mode()
+{
+    if( old_opmode != md380_f_4225_operatingmode ) {
+        old_opmode = md380_f_4225_operatingmode ;
+        printf( "mode: %d\n", md380_f_4225_operatingmode);
+    } else {
+        printf( "%d ", md380_f_4225_operatingmode);
+    }
+}
 
 void f_4225_hook()
 {
     // this probably runs on other thread than the display task.
+    
+    trace_scr_mode();
     
 //#ifdef CONFIG_GRAPHICS
 
@@ -442,7 +455,15 @@ void f_4225_hook()
         draw_updated_status_line();
     }
     
+    int mode = md380_f_4225_operatingmode ;
+    
     md380_f_4225();
+    
+    if( mode & 0x7F ) {
+        if ( global_addl_config.debug == 1 ) {
+            draw_updated_status_line();
+        }        
+    }
     
 //    if ( global_addl_config.experimental == 0 ) {
 //        return ;
