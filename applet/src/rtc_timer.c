@@ -60,22 +60,6 @@ static int flag=0;
 #define SCR_MODE_VOLUME 35
 #define SCR_MODE_36 36
 
-/// sorry, must be transferd to symbols_ :)
-#ifdef MD380_d02_032
-#define MD380_FONT_SMALL 0x809bcec /* 0x0800d8c0 */
-#define MD380_FONT_NORM  0x80d0fac /* 0x0800d992 */
-#endif 
-
-#ifdef MD380_d13_020
-#define MD380_FONT_SMALL 0x809a4c0 /* 0x0800df2a */
-#define MD380_FONT_NORM 0x80cf780  /* 0x0800dffa */
-#endif
-
-#ifdef MD380_s13_020
-#define MD380_FONT_SMALL 0x809b380
-#define MD380_FONT_NORM  0x80d0640
-#endif
-
 #define MAX_STATUS_CHARS 40
 
 #define RX_POPUP_Y_START 12
@@ -110,7 +94,7 @@ void draw_status_line()
 {
     gfx_set_fg_color(0);
     gfx_set_bg_color(0x00ff8032); 
-    gfx_select_font((void *) MD380_FONT_SMALL );
+    gfx_select_font(gfx_font_small );
     
     gfx_chars_to_display(status_line,10,55,94+20);    
 }
@@ -167,7 +151,7 @@ void print_rx_screen(unsigned int bg_color) {
 
   gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
-  gfx_select_font((void *) MD380_FONT_SMALL);
+  gfx_select_font(gfx_font_small);
 
  int primask=OS_ENTER_CRITICAL();  // for form sake
  dst=g_dst;
@@ -183,9 +167,9 @@ void print_rx_screen(unsigned int bg_color) {
   for (i=0;i<strlen(buf) || n < 6 ;i++) {
     if (buf[i] == ',' || buf[i] == '\0') {
       if (n == 1) {  // This line holds the call sign
-        gfx_select_font((void *) MD380_FONT_NORM);
+        gfx_select_font(gfx_font_norm);
       } else {
-        gfx_select_font((void *) MD380_FONT_SMALL);
+        gfx_select_font(gfx_font_small);
       } 
 
       if (n == 2) {
@@ -206,7 +190,7 @@ void print_rx_screen(unsigned int bg_color) {
   sprintf(buf, "%d -> %d", src, dst );
   drawascii2(buf, 10, RX_POPUP_Y_START + 12);
 
-  gfx_select_font((void *) MD380_FONT_NORM);
+  gfx_select_font(gfx_font_norm);
   gfx_set_fg_color(0xff8032);
   gfx_set_bg_color(0xff000000);
 #endif //CONFIG_GRAPHICS
