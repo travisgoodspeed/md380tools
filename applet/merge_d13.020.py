@@ -258,6 +258,19 @@ if __name__== '__main__':
     merger.hookbl(0x08046804, sapplet.getadr("gfx_drawtext_hook"),0);
     merger.hookbl(0x0804681a, sapplet.getadr("gfx_drawtext_hook"),0);
 
+    merger.hookbl(0x0800e5ba, sapplet.getadr("gfx_drawtext4_hook"),0);
+    merger.hookbl(0x0800e604, sapplet.getadr("gfx_drawtext4_hook"),0);
+    merger.hookbl(0x0800e618, sapplet.getadr("gfx_drawtext4_hook"),0);
+    merger.hookbl(0x0800e634, sapplet.getadr("gfx_drawtext4_hook"),0);
+    merger.hookbl(0x0800e696, sapplet.getadr("gfx_drawtext4_hook"),0);
+    merger.hookbl(0x0802d6f2, sapplet.getadr("gfx_drawtext4_hook"),0);
+    merger.hookbl(0x0802d9c8, sapplet.getadr("gfx_drawtext4_hook"),0);
+
+#    merger.hookstub2(0x0802b142, sapplet.getadr("dummy"));
+
+#    merger.hookstub2(0x0801dcc0, sapplet.getadr("dummy"));
+#    merger.hookstub2(0x08027728, sapplet.getadr("dummy"));
+
     # Hook the startup AES check.
     merger.hookbl(0x0804764c, sapplet.getadr("aes_startup_check_hook"),0);
 

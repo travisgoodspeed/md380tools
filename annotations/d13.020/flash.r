@@ -3366,3 +3366,17 @@ f call_gfx_chars_to_display_7 0 0x0802d70e
 f call_gfx_chars_to_display_8 0 0x0802d8e2
 f call_gfx_chars_to_display_9 0 0x0802d9e4
 
+f gfx_drawtext3 0 0x0802b142
+af+ 0x0802b142 148 gfx_drawtext3
+
+f gfx_clear3 0 0x0801dcc0
+af+ 0x0801dcc0 40 gfx_clear3
+
+f gfx_drawtext4 0 0x0801dd1a
+af+ 0x0801dd1a 18 gfx_drawtext4
+
+f gfx_drawtext5 0 0x0801dd2c
+af+ 0x0801dd2c 16 gfx_drawtext5
+
+f gfx_drawtext6 0 0x08027728
+af+ 0x08027728 154 gfx_drawtext6
