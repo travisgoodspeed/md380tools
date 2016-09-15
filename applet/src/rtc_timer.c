@@ -435,7 +435,7 @@ void trace_scr_mode()
         old_opmode = md380_f_4225_operatingmode ;
         printf( "mode: %d\n", md380_f_4225_operatingmode);
     } else {
-        printf( "%d ", md380_f_4225_operatingmode);
+        //printf( "%d ", md380_f_4225_operatingmode);
     }
 }
 
@@ -461,7 +461,7 @@ void f_4225_hook()
     
     if( mode & 0x7F ) {
         if ( global_addl_config.debug == 1 ) {
-            draw_updated_status_line();
+//            draw_updated_status_line();
         }        
     }
     

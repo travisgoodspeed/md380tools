@@ -9,6 +9,7 @@ void f4225()
 {
     // change detection.
     if( mode >= 0x80 ) {
+        // new mode.
         mode &= 0x7F ;
         switch( mode ) {
             case 16 :
@@ -67,6 +68,25 @@ void f4225()
     }
 }
 
+{
+    F_4520();
+    0x0800d69c();
+    0x08036fbc( 2, *0x2001e510 );
+    0x0801e5f4( 50 );
+    f4225();
+    0x080384d4();
+    0x08032536();
+    ? = 0x0804fdf4();
+
+            0x08046ab0    9f49         ldr r1, [pc, 636] ; (0x08046d30)                                                                                                        
+            0x08046ab2    a048         ldr r0, [pc, 640] ; (0x08046d34)                                                                                                        
+            0x08046ab4    0068         ldr r0, [r0, 0]                                                                                                                         
+            0x08046ab6    eaf771fb     bl OSMboxPost ;[1]                                                                                                                      
+
+    c5000_spi0_writereg( 0x0E, 68 );
+            
+    c5000_spi0_writereg( 96, 0 );
+}
 
 if( *0x20004acc == 0xFF ) {
     Create_MainMenyEntry();

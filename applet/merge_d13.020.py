@@ -271,6 +271,9 @@ if __name__== '__main__':
 #    merger.hookstub2(0x0801dcc0, sapplet.getadr("dummy"));
 #    merger.hookstub2(0x08027728, sapplet.getadr("dummy"));
 
+# keyboard polling
+#    merger.hookstub2(0x0804eb64, sapplet.getadr("dummy"));
+
     # Hook the startup AES check.
     merger.hookbl(0x0804764c, sapplet.getadr("aes_startup_check_hook"),0);
 
