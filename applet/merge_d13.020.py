@@ -212,7 +212,7 @@ if __name__== '__main__':
     # date format  hook, this hook can modify the date format on the status line
     merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
 
-#    merger.hookstub2(0x0800df1a, sapplet.getadr("draw_datetime_row_hook"));
+    merger.hookstub2(0x0800df1a, sapplet.getadr("draw_datetime_row_hook"));
 
     merger.hookbl(0x0800c8f2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
     merger.hookbl(0x0800cad2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
