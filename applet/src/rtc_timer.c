@@ -147,7 +147,7 @@ void print_rx_screen(unsigned int bg_color) {
 
   // clear screen
   gfx_set_fg_color(bg_color);
-  gfx_blockfill(0, 0, 200, 160);
+  gfx_blockfill(2, 16, 157, 130); // if we go any lower, we wrap around to the top
 
   gfx_set_bg_color(bg_color);
   gfx_set_fg_color(0x000000);
@@ -187,7 +187,7 @@ void print_rx_screen(unsigned int bg_color) {
       }
   }
 
-  sprintf(buf, "%d -> %d", src, dst );
+  sprintf(buf, "%d -> %d", src, dst ); // overwrite DMR id with source -> destination
   drawascii2(buf, 10, RX_POPUP_Y_START + 12);
 
   gfx_select_font(gfx_font_norm);
