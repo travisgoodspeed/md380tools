@@ -1,9 +1,10 @@
 
 int mode ; // 0x2001e94d
 
- * sym q = 0x2001e94b (0x08020bf4);
- * sym r = 0x2001e94c (0x08020cd0);
- * sym s = 0x2001e844 (0x08020cd8);
+ * sym q = 0x2001e94b (0x08020bf4); mode2
+ * sym r = 0x2001e94c (0x08020cd0); last mode
+ * sym s = 0x2001e844 (0x08020cd8); cntr2
+ * sym t = 0x2001e892 (0x08020cf0); 
 
 void f4225()
 {
@@ -14,10 +15,39 @@ void f4225()
         switch( mode ) {
             case 16 :
             case 17 :
-                0x2001e90d (0x08021034)
+                // 0x2001e90d (0x08021034)
                 0x2001e90d = 0 ;
-                0x0802b80a(...);
-                
+                0x0802b80a(???,64);
+                // 0x2001dadc (0x08020d18)
+                // 0x2001e7f8 (0x08020d1c)
+                // set backlight timer
+                *0x2001e7f8 = 0x2001dadc[21] * 500 ;
+                if( q != 12 ) {
+                    if( t != 7 ) {
+                        // ???
+                        // 0x2001e604 (0x08020cd4)
+                        if( 0x2001e604 & 0x80 != 0 ) {
+                            if( 0x2001e604 & 0x02 != 0 ) {
+                                s = 200 ;
+                                r = 17 ;
+                                q = 2 ;
+                                0x080214fe();
+                            } else {
+                                if( 0x08021038 & 0x80 == 0 ) {
+                                    s = 5 ;
+                                    r = 17 ;
+                                    q = 2 ;     
+                                    Create_MainMenyEntry(...);
+                                    F_4315();
+                                }
+                            }
+                        }
+                        s = 200 ;
+                        r = 17 ;
+                        q = 2 ;
+                    }
+                }
+                return ;
             case 18 :
             case 19 :
                 if( q != 2 && q != 4 ) {
@@ -91,8 +121,9 @@ void f4225()
         }
     } else {
         // mode is stable
-        if( 0x2046f8a1[21] == 0 ) {
+        if( 0x2046f8a1[21] != 0 ) {
             if( 0x2001e7f8 = 0 ) {
+                // backlight expired
                 if( q != 12 ) {
                     // 0x0802084e
                     // ...
@@ -176,10 +207,11 @@ void f4225()
 
 loop2()
 {
+    // 0x0802db42
     F_4225();
     OSTimeDly(10);
-    if( *0x2001e892 == 2 ) {
-        
+    if( t == 2 ) {
+        // (0x0802db42)
         if( *0x2001e8b8 == 5/6/8/9/10/11 ) {
    |`````-> 0x0802db94    dff8980b     ldr.w r0, [pc, 2968] ; 0x0802e730                                                                                                       
    |        0x0802db98    0088         ldrh r0, [r0, 0]                                                                                                                        

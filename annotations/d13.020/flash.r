@@ -3397,6 +3397,9 @@ af+ 0x0802b0d4 110 gfx_drawtext9
 f F_4039_something_write_to_screen 0 0x0800ded8
 af+ 0x0800ded8 30 F_4039_something_write_to_screen
 
+f gfx_drawchar_1 0 0x0801d960
+
+
 f draw_channel_label 0 0x0800e5a6
 f draw_zone_label 0 0x0800e682
 f draw_zone_channel 0 0x0800e538
