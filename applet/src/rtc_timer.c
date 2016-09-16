@@ -6,7 +6,7 @@
 #define CONFIG_GRAPHICS
 
 #ifdef DEBUG
-#define PRINT(fmt, args...)    fprintf(stderr, fmt, ## args)
+#define PRINT(fmt, args...)    printf(fmt, ## args)
 #else
 #define PRINT(fmt, args...)    /* Don't do anything in release builds */
 #endif
