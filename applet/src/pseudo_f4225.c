@@ -14,6 +14,10 @@ void f4225()
         switch( mode ) {
             case 16 :
             case 17 :
+                0x2001e90d (0x08021034)
+                0x2001e90d = 0 ;
+                0x0802b80a(...);
+                
             case 18 :
             case 19 :
                 if( q != 2 && q != 4 ) {

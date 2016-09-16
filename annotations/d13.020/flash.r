@@ -3411,3 +3411,5 @@ f poi_mode2 0 0x08020bf4
 
 f return_to_mode_1_from10 0 0x0800fc96
 af+ 0x0800fc96 32 return_to_mode_1_from10
+
+f F_4315 0 0x08025ae4
