@@ -1642,8 +1642,6 @@ CCa 0x801c0ba md380_menu_mem_base
 CCa 0x801c0ec md380_menu_id
 CCa 0x801c194 md380_menu_0x2001d3f4
 CCa 0x801c1b4 md380_menu_0x2001d3f4
-af+ 0x801d368 8 gfx_set_bg_color
-af+ 0x801d370 8 gfx_set_fg_color
 
 f gfx_blockfill 30 0x801d88c
 af+ 0x801d88c 30 gfx_blockfill
@@ -3353,6 +3351,17 @@ f scr_1 0 0x0802daf8
 
 f draw_botline_text 0 0x08046810
 f draw_topline_text_maybe 0 0x080467fa
+
+# gfx_
+
+af+ 0x801d370 8 gfx_set_fg_color
+f gfx_set_fg_color 0 0x801d370
+
+af+ 0x080331e0 24 gfx_set_bg_color2
+f gfx_set_fg_color2 0 0x080331e0
+
+af+ 0x801d368 8 gfx_set_bg_color
+f gfx_set_bg_color 0 0x801d368
 
 af+ 0x800def6 36 gfx_drawtext
 f gfx_drawtext 0 0x800def6

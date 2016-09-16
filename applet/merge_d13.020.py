@@ -294,7 +294,7 @@ if __name__== '__main__':
 #    merger.hookstub2(0x0802b0d4, sapplet.getadr("dummy"));
 
     # something_write_to_screen (used to print call popups, poweroff)
-    merger.hookstub2(0x0800ded8, sapplet.getadr("something_write_to_screen_hook"));
+#    merger.hookstub2(0x0800ded8, sapplet.getadr("something_write_to_screen_hook"));
 #    merger.hookstub2(0x0800ded8, sapplet.getadr("dummy"));
 
 # keyboard polling

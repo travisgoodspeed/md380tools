@@ -86,6 +86,8 @@ uint16_t *cntr2 = 0x2001e844 ;
 // 4 post-rx?
 // 10 menu
 
+void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
+
 void update_status_line()
 {
     int progress2 = progress ; // sample (thread safe) 
@@ -109,9 +111,13 @@ extern void draw_status_line()
 {
     gfx_set_fg_color(0);
     gfx_set_bg_color(0x00ff8032); 
-    gfx_select_font(gfx_font_small );
+    gfx_select_font(gfx_font_norm);
+    gfx_select_font(gfx_font_small);
     
-    gfx_chars_to_display(status_line,10,55,94+20); 
+//    gfx_chars_to_display(status_line,10,55,94+20); 
+    gfx_chars_to_display(status_line,10,55,0); 
+    
+//    something_write_to_screen(status_line,0,48,160,68);
 }
 
 extern void draw_updated_status_line()
@@ -425,7 +431,7 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
-//    PRINT("dt4: %d %d %S\n", x, y, str);
+    PRINT("dt4: %S %d %d %d %d\n", str, x, y, xlen, ylen);
     f(str,x,y,xlen,ylen);
 }
 
@@ -436,6 +442,7 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 {
     PRINT("swts: %S %d %d %d %d\n", str, x1, y1, x2, y2);
 //    f(str,x,y,xlen,ylen);
+    something_write_to_screen(status_line,x1,y1,x2,y2);
 }
 
 int old_opmode = 0 ;
@@ -476,6 +483,11 @@ void f_4225_hook()
     PRINT("%S\n", status_line );
     
     if ( global_addl_config.debug == 1 ) {
+        static long fg = 0xff8032 ;
+        fg += 0x10 ;
+        gfx_set_fg_color(fg);
+        gfx_set_bg_color(0xff000000);
+        gfx_blockfill(0,0,100,100);
         draw_status_line();
     }        
     
