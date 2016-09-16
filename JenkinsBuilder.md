@@ -105,5 +105,5 @@ echo "Uploading the artifacts into github"
 
 **Now commit and see the magic working**
 
-Cheers, Tom / PD2TMS
+Cheers, Tom / PD2TMS  
 
