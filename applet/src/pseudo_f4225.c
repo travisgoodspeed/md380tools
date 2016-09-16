@@ -103,7 +103,6 @@ void f4225()
             case 1 :
                 break ; //?
             case 2 :
-                break ; //?
             case 4 :
                 break ; //?
             case 5 :
@@ -132,8 +131,9 @@ void f4225()
                 if( s == 0 ) {
                     q = 1 ;
                     s = 5 ;
+                    0x0800fc96();
                 }
-                break ; //?
+                return ;
             case 13 :
                 break ; //?
             default:
