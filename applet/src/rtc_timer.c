@@ -2,8 +2,14 @@
   \brief wrapper functions for the "RTC Timer"-Task.
 */
 
-#define DEBUG
+//#define DEBUG
 #define CONFIG_GRAPHICS
+
+#ifdef DEBUG
+#define PRINT(fmt, args...)    fprintf(stderr, fmt, ## args)
+#else
+#define PRINT(fmt, args...)    /* Don't do anything in release builds */
+#endif
 
 #include <stdlib.h>
 
@@ -389,7 +395,7 @@ void dummy()
 
 void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
-    printf("dt: %d %d %S\n", sx, sy, str);
+    PRINT("dt: %d %d %S\n", sx, sy, str);
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
@@ -398,7 +404,7 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
     // filter datetime (y=96)
     if( y != 96 ) {
-        printf("ctd: %d %d %S\n", x, y, str);
+        PRINT("ctd: %d %d %S\n", x, y, str);
     }
     gfx_chars_to_display(str, x, y, xlen);
 }
@@ -407,7 +413,7 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
-    printf("dt4: %d %d %S\n", x, y, str);
+    PRINT("dt4: %d %d %S\n", x, y, str);
     f(str,x,y,xlen,ylen);
 }
 
@@ -419,15 +425,22 @@ void trace_scr_mode()
         old_opmode = md380_f_4225_operatingmode ;
         printf( "mode: %d\n", md380_f_4225_operatingmode);
     } else {
-        printf( "%d ", md380_f_4225_operatingmode);
+//        printf( "%d ", md380_f_4225_operatingmode);
     }
+    
+    uint8_t *p = 0x2001e94b ;
+    uint16_t *p2 = 0x2001e844 ;
+    printf( "%d %d\n", *p, *p2 );
+    
 }
 
 void f_4225_hook()
 {
     // this probably runs on other thread than the display task.
     
+#ifdef DEBUG    
     trace_scr_mode();
+#endif    
     
 //#ifdef CONFIG_GRAPHICS
 
@@ -439,15 +452,22 @@ void f_4225_hook()
         draw_updated_status_line();
     }
     
-    int mode = md380_f_4225_operatingmode ;
-    
+//    int mode = md380_f_4225_operatingmode ;
+//    
+//    if( mode == 27 ) {
+//        md380_f_4225_operatingmode = 28 ;
+//    }
+    PRINT( " %3d >>> ", md380_f_4225_operatingmode );
     md380_f_4225();
+    PRINT( " %3d <<< ", md380_f_4225_operatingmode );
     
-    if( mode & 0x7F ) {
-        if ( global_addl_config.debug == 1 ) {
-            draw_updated_status_line();
-        }        
-    }
+//    if( mode != md380_f_4225_operatingmode ) {
+//        printf( "-> %d\n", md380_f_4225_operatingmode );
+//    }
+    
+    if ( global_addl_config.debug == 1 ) {
+        draw_status_line();
+    }        
     
 //    if ( global_addl_config.experimental == 0 ) {
 //        return ;

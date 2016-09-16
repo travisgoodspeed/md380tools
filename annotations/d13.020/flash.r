@@ -35,7 +35,6 @@ CCa 0x800dbda md380_menu_0x200011e4
 CCa 0x800dbee md380_menu_0x200011e4
 CCa 0x800ddc4 md380_menu_id
 CCa 0x800ddce md380_menu_mem_base
-af+ 0x800def6 36 gfx_drawtext
 CCa 0x800e142 md380_menu_0x2001d3f0
 CCa 0x800e1fe md380_menu_0x2001d3ee
 CCa 0x800e748 md380_menu_0x200011e4
@@ -1659,7 +1658,6 @@ f menu_6_1_1 0 0x0800e7cc
 CCa 0x801d9d2 md380_menu_0x2001d3ef
 CCa 0x801dc44 md380_menu_0x2001d3ef
 CCa 0x801dc52 md380_menu_0x2001d3ef
-af+ 0x801dd08 18 gfx_chars_to_display
 CCa 0x801dd68 md380_menu_0x2001d3f1
 CCa 0x801dd72 md380_menu_0x2001d3f0
 CCa 0x801dd9c md380_menu_0x2001d3f1
@@ -3356,6 +3354,12 @@ f scr_1 0 0x0802daf8
 f draw_botline_text 0 0x08046810
 f draw_topline_text_maybe 0 0x080467fa
 
+af+ 0x800def6 36 gfx_drawtext
+f gfx_drawtext 0 0x800def6
+
+af+ 0x801dd08 18 gfx_chars_to_display
+f gfx_chars_to_display 0 0x801dd08
+
 f call_gfx_chars_to_display_1 0 0x0801ea2e
 f call_gfx_chars_to_display_2 0 0x0801f02c
 f call_gfx_chars_to_display_3 0 0x0801f044
@@ -3381,6 +3385,12 @@ af+ 0x0801dd2c 16 gfx_drawtext5
 f gfx_drawtext6 0 0x08027728
 af+ 0x08027728 154 gfx_drawtext6
 
+f gfx_drawtext7 0 0x080277c2
+af+ 0x080277c2 16 gfx_drawtext7
+
+f gfx_drawtext8 0 0x08036fc0
+af+ 0x08036fc0 378 gfx_drawtext8
+
 f draw_channel_label 0 0x0800e5a6
 f draw_zone_label 0 0x0800e682
 f draw_zone_channel 0 0x0800e538
@@ -3388,4 +3398,8 @@ af+ 0x0800e538 98 draw_zone_channel
 
 f scr_mode_stable 0 0x08020830
 
+af+ keyboard_maybe 152 0x0804eb64
+f keyboard_maybe 0 0x0804eb64
+
+f poi_mode2 0 0x08020bf4
 
