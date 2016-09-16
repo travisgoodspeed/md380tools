@@ -3391,6 +3391,12 @@ af+ 0x080277c2 16 gfx_drawtext7
 f gfx_drawtext8 0 0x08036fc0
 af+ 0x08036fc0 378 gfx_drawtext8
 
+f gfx_drawtext9 0 0x0802b0d4
+af+ 0x0802b0d4 110 gfx_drawtext9
+
+f F_4039_something_write_to_screen 0 0x0800ded8
+af+ 0x0800ded8 30 F_4039_something_write_to_screen
+
 f draw_channel_label 0 0x0800e5a6
 f draw_zone_label 0 0x0800e682
 f draw_zone_channel 0 0x0800e538
