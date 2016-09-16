@@ -87,7 +87,58 @@ void f4225()
         }
     } else {
         // mode is stable
-        // do drawing.
+        if( 0x2046f8a1[21] == 0 ) {
+            if( 0x2001e7f8 = 0 ) {
+                if( q != 12 ) {
+                    // 0x0802084e
+                    // ...
+                }
+            }
+        }
+        // 0x08020870 
+        //...
+             
+        // 0x080208a6
+        switch( q ) {
+            case 1 :
+                break ; //?
+            case 2 :
+                break ; //?
+            case 4 :
+                break ; //?
+            case 5 :
+                break ; //?
+            case 6 :
+                break ; //?
+            case 7 :
+                // 0x080208da
+                s = s - 1 ;
+                if( s == 0 ) {
+                    // 0x080208f2
+                    s = 200 ;
+                    0x080214fe();
+                } else {
+                    // 0x08020900
+                    if( s == 100 ) {
+                        0x080215fc();
+                    }
+                }
+                return ;
+            case 10 :
+                // menu.
+                // ...
+                // 0x08020a7c
+                s = s - 1 ;
+                if( s == 0 ) {
+                    q = 1 ;
+                    s = 5 ;
+                }
+                break ; //?
+            case 13 :
+                break ; //?
+            default:
+                return ;
+        }
     }
 }
 
