@@ -212,7 +212,7 @@ if __name__== '__main__':
     # date format  hook, this hook can modify the date format on the status line
     merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
 
-#    merger.hookstub2(0x0800df1a, sapplet.getadr("draw_datetime_row_hook"));
+    # drawtext hooks
 
     merger.hookbl(0x0800c8f2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
     merger.hookbl(0x0800cad2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
@@ -238,7 +238,7 @@ if __name__== '__main__':
     merger.hookbl(0x0800d906, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800d958, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800d974, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800df92, sapplet.getadr("gfx_chars_to_display_hook"),0);
+#    merger.hookbl(0x0800df92, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800dff6, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800e174, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800e18e, sapplet.getadr("gfx_chars_to_display_hook"),0);
@@ -265,7 +265,7 @@ if __name__== '__main__':
     merger.hookbl(0x0800e696, sapplet.getadr("gfx_drawtext4_hook"),0);
     merger.hookbl(0x0802d6f2, sapplet.getadr("gfx_drawtext4_hook"),0);
     merger.hookbl(0x0802d9c8, sapplet.getadr("gfx_drawtext4_hook"),0);
-
+    
     # 0x800def7 gfx_drawtext
 #    merger.hookstub(0x800def6, sapplet.getadr("dummy"));
 
@@ -278,19 +278,38 @@ if __name__== '__main__':
     # 0x08027728 gfx_drawtext6
 #    merger.hookstub2(0x08027728, sapplet.getadr("dummy"));
 
-    # 0x08027728 gfx_drawtext7
+    # gfx_drawtext7
 #    merger.hookstub2(0x080277c2, sapplet.getadr("dummy"));
 
-    # 0x08027728 gfx_drawtext8
+    # gfx_drawtext8 (used to print menu entries, main display)
 #    merger.hookstub2(0x08036fc0, sapplet.getadr("dummy"));
 
+    # gfc_drawtext3
 #    merger.hookstub2(0x0802b142, sapplet.getadr("dummy"));
 
+    # gfx_clear3 (clear to eol)
 #    merger.hookstub2(0x0801dcc0, sapplet.getadr("dummy"));
-#    merger.hookstub2(0x08027728, sapplet.getadr("dummy"));
+
+    # gfx_drawtext9 (used to print call popups, poweroff)
+#    merger.hookstub2(0x0802b0d4, sapplet.getadr("dummy"));
+
+    # something_write_to_screen (used to print call popups, poweroff)
+#    merger.hookstub2(0x0800ded8, sapplet.getadr("something_write_to_screen_hook"));
+#    merger.hookstub2(0x0800ded8, sapplet.getadr("dummy"));
 
 # keyboard polling
 #    merger.hookstub2(0x0804eb64, sapplet.getadr("dummy"));
+
+    # F_4315
+#    merger.hookstub(0x08025ae4, sapplet.getadr("dummy"));
+
+    # call to Create_MainMenyEntry
+#    merger.hookbl(0x080202cc, sapplet.getadr("dummy"),0);
+
+#    merger.hookstub(0x08025ae4, sapplet.getadr("mode17_hook"));
+
+#    merger.hookbl(0x08020314, sapplet.getadr("mode17_hook"),0);
+#    merger.hookbl(0x0802032a, sapplet.getadr("mode17_hook"),0);
 
     # Hook the startup AES check.
     merger.hookbl(0x0804764c, sapplet.getadr("aes_startup_check_hook"),0);

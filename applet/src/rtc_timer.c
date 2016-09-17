@@ -50,7 +50,7 @@ static int flag=0;
 // 115 = menu start
 
 #define SCR_MODE_16 16
-#define SCR_MODE_17 17
+#define SCR_MODE_17 17 // rx/tx in progress.
 #define SCR_MODE_18 18
 #define SCR_MODE_CHAN_19 19 // when channel RX but other timeslot.
 #define SCR_MODE_20 20
@@ -78,6 +78,16 @@ int progress = 0 ;
 extern int g_dst;  // transferbuffer users.csv
 extern int g_src;
   
+uint8_t *mode2 = 0x2001e94b ;
+uint16_t *cntr2 = 0x2001e844 ;
+    
+// 1 idle
+// 2 rx
+// 4 post-rx?
+// 10 menu
+
+void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
+
 void update_status_line()
 {
     int progress2 = progress ; // sample (thread safe) 
@@ -88,7 +98,8 @@ void update_status_line()
     int dst = g_dst ;
     
     char buf[MAX_STATUS_CHARS];
-    sprintf(buf,"%c|%02d|%5d", c, md380_f_4225_operatingmode & 0x7F, dst ); // potential buffer overrun!!!
+//    sprintf(buf,"%c|%02d|%5d", c, md380_f_4225_operatingmode & 0x7F, dst ); // potential buffer overrun!!!
+    sprintf(buf,"%c|%02d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *cntr2 ); // potential buffer overrun!!!
         
     for(int i=0;i<MAX_STATUS_CHARS;i++) {
         status_line[i]= buf[i];
@@ -96,16 +107,20 @@ void update_status_line()
     status_line[MAX_STATUS_CHARS-1]='\0';    
 }
 
-void draw_status_line()
+extern void draw_status_line()
 {
     gfx_set_fg_color(0);
     gfx_set_bg_color(0x00ff8032); 
-    gfx_select_font(gfx_font_small );
+    gfx_select_font(gfx_font_norm);
+    gfx_select_font(gfx_font_small);
     
-    gfx_chars_to_display(status_line,10,55,94+20);    
+//    gfx_chars_to_display(status_line,10,55,94+20); 
+    gfx_chars_to_display(status_line,10,55,0); 
+    
+//    something_write_to_screen(status_line,0,48,160,68);
 }
 
-void draw_updated_status_line()
+extern void draw_updated_status_line()
 {
     progress++ ;
     progress %= sizeof( progress_info );
@@ -114,11 +129,10 @@ void draw_updated_status_line()
     draw_status_line();
 }
 
-extern void draw_datetime_row_hook() 
+extern void mode17_hook()
 {
-    draw_updated_status_line();
+    draw_status_line();
 }
-
 
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() 
@@ -202,7 +216,9 @@ void print_rx_screen(unsigned int bg_color) {
 #endif //CONFIG_GRAPHICS
 }
 
-void rx_screen_blue_hook(char *bmp, int x, int y) {
+void rx_screen_blue_hook(char *bmp, int x, int y) 
+{
+    PRINT("b");
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     print_rx_screen(0xff8032);
@@ -212,7 +228,9 @@ void rx_screen_blue_hook(char *bmp, int x, int y) {
 #endif //CONFIG_GRAPHICS
 }
 
-void rx_screen_gray_hook(void *bmp, int x, int y) {
+void rx_screen_gray_hook(void *bmp, int x, int y) 
+{
+    PRINT("g");
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     print_rx_screen(0x888888);
@@ -413,8 +431,18 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
-    PRINT("dt4: %d %d %S\n", x, y, str);
+    PRINT("dt4: %S %d %d %d %d\n", str, x, y, xlen, ylen);
     f(str,x,y,xlen,ylen);
+}
+
+/**
+ * write centered horizontally / vertically
+ */
+void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2)
+{
+    PRINT("swts: %S %d %d %d %d\n", str, x1, y1, x2, y2);
+//    f(str,x,y,xlen,ylen);
+    something_write_to_screen(status_line,x1,y1,x2,y2);
 }
 
 int old_opmode = 0 ;
@@ -423,14 +451,12 @@ void trace_scr_mode()
 {
     if( old_opmode != md380_f_4225_operatingmode ) {
         old_opmode = md380_f_4225_operatingmode ;
-        printf( "mode: %d\n", md380_f_4225_operatingmode);
+        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
     } else {
 //        printf( "%d ", md380_f_4225_operatingmode);
     }
     
-    uint8_t *p = 0x2001e94b ;
-    uint16_t *p2 = 0x2001e844 ;
-    printf( "%d %d\n", *p, *p2 );
+    PRINT( "%d %d\n", *mode2, *cntr2 );
     
 }
 
@@ -439,7 +465,7 @@ void f_4225_hook()
     // this probably runs on other thread than the display task.
     
 #ifdef DEBUG    
-    trace_scr_mode();
+    //trace_scr_mode();
 #endif    
     
 //#ifdef CONFIG_GRAPHICS
@@ -452,20 +478,16 @@ void f_4225_hook()
         draw_updated_status_line();
     }
     
-//    int mode = md380_f_4225_operatingmode ;
-//    
-//    if( mode == 27 ) {
-//        md380_f_4225_operatingmode = 28 ;
-//    }
-    PRINT( " %3d >>> ", md380_f_4225_operatingmode );
     md380_f_4225();
-    PRINT( " %3d <<< ", md380_f_4225_operatingmode );
     
-//    if( mode != md380_f_4225_operatingmode ) {
-//        printf( "-> %d\n", md380_f_4225_operatingmode );
-//    }
+    PRINT("%S\n", status_line );
     
     if ( global_addl_config.debug == 1 ) {
+//        static long fg = 0xff8032 ;
+//        fg += 0x10 ;
+//        gfx_set_fg_color(fg);
+//        gfx_set_bg_color(0xff000000);
+//        gfx_blockfill(0,0,100,100);
         draw_status_line();
     }        
     
