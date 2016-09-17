@@ -3357,11 +3357,14 @@ f draw_topline_text_maybe 0 0x080467fa
 af+ 0x801d370 8 gfx_set_fg_color
 f gfx_set_fg_color 0 0x801d370
 
-af+ 0x080331e0 24 gfx_set_bg_color2
+af+ 0x080331e0 24 gfx_set_fg_color2
 f gfx_set_fg_color2 0 0x080331e0
 
 af+ 0x801d368 8 gfx_set_bg_color
 f gfx_set_bg_color 0 0x801d368
+
+f gfx_set_bg_color2 0 0x080331c8
+
 
 af+ 0x800def6 36 gfx_drawtext
 f gfx_drawtext 0 0x800def6
