@@ -2139,7 +2139,6 @@ CCa 0x80214ba md380_menu_id
 CCa 0x80214c4 md380_menu_0x200011e4
 CCa 0x80214ce md380_menu_id
 CCa 0x80214e2 md380_menu_0x200011e4
-af+ 0x8021874 16 gfx_select_font
 af+ 0x802256a 324 aes_startup_check
 af+ 0x80226c0 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
@@ -3365,6 +3364,8 @@ f gfx_set_bg_color 0 0x801d368
 
 f gfx_set_bg_color2 0 0x080331c8
 
+af+ 0x8021874 16 gfx_select_font
+f gfx_select_font 0 0x8021874
 
 af+ 0x800def6 36 gfx_drawtext
 f gfx_drawtext 0 0x800def6
