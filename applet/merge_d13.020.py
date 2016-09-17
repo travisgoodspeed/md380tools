@@ -238,7 +238,7 @@ if __name__== '__main__':
     merger.hookbl(0x0800d906, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800d958, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800d974, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800df92, sapplet.getadr("gfx_chars_to_display_hook"),0);
+#    merger.hookbl(0x0800df92, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800dff6, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800e174, sapplet.getadr("gfx_chars_to_display_hook"),0);
     merger.hookbl(0x0800e18e, sapplet.getadr("gfx_chars_to_display_hook"),0);

@@ -2,7 +2,7 @@
   \brief wrapper functions for the "RTC Timer"-Task.
 */
 
-#define DEBUG
+//#define DEBUG
 #define CONFIG_GRAPHICS
 
 #ifdef DEBUG
@@ -483,11 +483,11 @@ void f_4225_hook()
     PRINT("%S\n", status_line );
     
     if ( global_addl_config.debug == 1 ) {
-        static long fg = 0xff8032 ;
-        fg += 0x10 ;
-        gfx_set_fg_color(fg);
-        gfx_set_bg_color(0xff000000);
-        gfx_blockfill(0,0,100,100);
+//        static long fg = 0xff8032 ;
+//        fg += 0x10 ;
+//        gfx_set_fg_color(fg);
+//        gfx_set_bg_color(0xff000000);
+//        gfx_blockfill(0,0,100,100);
         draw_status_line();
     }        
     
