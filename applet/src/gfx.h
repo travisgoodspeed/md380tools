@@ -36,3 +36,19 @@ typedef struct gfx_bitmap {
   } gfx_bitmap;
                             
 extern const gfx_bitmap bmp_eye;
+
+
+struct gfx_jmptbl {
+    void (*bg_fg_color_func)() ;
+    void (*unk_func)() ;
+};
+
+/* @ 0x2001da1c */
+typedef struct gfx_info {
+    uint8_t unk[48];
+    uint32_t fg_color ; // [48]
+    uint32_t bg_color ; // [52]
+    // ...
+    struct gfx_jmptbl jmptable ; // [72]
+    
+} gfx_info_t ;
