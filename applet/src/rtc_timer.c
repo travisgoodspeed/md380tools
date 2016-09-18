@@ -86,8 +86,11 @@ uint16_t *cntr2 = 0x2001e844 ;
 // 4 post-rx?
 // 10 menu
 
-void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
+//void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
+//void (*gfx_drawtext5)(wchar_t *str, int sx, int sy, int maxlen) = 0x0801dd2c + 1 ;
 
+char status_buf[MAX_STATUS_CHARS] = { "" };
+    
 void update_status_line()
 {
     int progress2 = progress ; // sample (thread safe) 
@@ -97,27 +100,26 @@ void update_status_line()
     
     int dst = g_dst ;
     
-    char buf[MAX_STATUS_CHARS];
-//    sprintf(buf,"%c|%02d|%5d", c, md380_f_4225_operatingmode & 0x7F, dst ); // potential buffer overrun!!!
-    sprintf(buf,"%c|%02d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *cntr2 ); // potential buffer overrun!!!
+    sprintf(status_buf,"%c|%02d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *cntr2 ); // potential buffer overrun!!!
         
     for(int i=0;i<MAX_STATUS_CHARS;i++) {
-        status_line[i]= buf[i];
+        status_line[i]= status_buf[i];
     }
     status_line[MAX_STATUS_CHARS-1]='\0';    
 }
 
 extern void draw_status_line()
 {
-    gfx_set_fg_color(0);
+    gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
-    gfx_select_font(gfx_font_norm);
-    gfx_select_font(gfx_font_small);
+    void *old = gfx_select_font(gfx_font_small);
     
-//    gfx_chars_to_display(status_line,10,55,94+20); 
     gfx_chars_to_display(status_line,10,55,0); 
+
+    gfx_select_font(old);
     
-//    something_write_to_screen(status_line,0,48,160,68);
+//    gfx_drawtext5(status_buf,10,55,0);
+//    something_write_to_screen(status_line,0,80,160,100);
 }
 
 extern void draw_updated_status_line()
@@ -411,9 +413,36 @@ void dummy()
 {
 } 
 
+//void gfx_drawtext5_hook(wchar_t *str, int sx, int sy, int maxlen)
+//{
+//    PRINT("dt5:%S %d %d %d\n", str, sx, sy, maxlen);
+//    //gfx_drawtext(str, sx, sy, x, y, maxlen);
+//}
+
+void gfx_drawtext8_hook(uint8_t *r0)
+{
+    uint8_t *p = 0x2001da1c ;
+    uint16_t *w = 0x2001da1c ;
+    
+    gfx_info_t *g = 0x2001da1c ;
+    
+    if( g->xpos == 10 && g->ypos == 55 ) {
+        // filter out status.
+        return ;
+    }
+    
+    PRINT("%s \n",r0);
+    PRINT("Dt8: %d %d %x %x\n", g->xpos, g->ypos, g->fg_color, g->bg_color );
+    
+//    PRINT("%s\n",r0);
+//    printhex(g,72);
+//    PRINT("\n");
+    //gfx_drawtext(str, sx, sy, x, y, maxlen);
+}
+
 void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
-    PRINT("dt: %d %d %S\n", sx, sy, str);
+    PRINT("dt: %d %d %S %x\n", sx, sy, str, str);
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
@@ -431,10 +460,11 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
-    PRINT("dt4: %S %d %d %d %d\n", str, x, y, xlen, ylen);
+    PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
     f(str,x,y,xlen,ylen);
 }
 
+#if 0
 /**
  * write centered horizontally / vertically
  */
@@ -444,6 +474,7 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 //    f(str,x,y,xlen,ylen);
     something_write_to_screen(status_line,x1,y1,x2,y2);
 }
+#endif
 
 int old_opmode = 0 ;
 
@@ -482,10 +513,17 @@ void f_4225_hook()
         draw_updated_status_line();
     }
     
+//#ifdef FW_D13_020
+//        if( (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ) {
+//            PRINT(">");
+//            OSTimeDly( 10000 );
+//        }
+//#endif        
+    
     md380_f_4225();
         
     if ( global_addl_config.debug == 1 ) {
-        PRINT("%S\n", status_line );
+//        PRINT("%S\n", status_line );
 //        static long fg = 0xff8032 ;
 //        fg += 0x10 ;
 //        gfx_set_fg_color(fg);
@@ -494,6 +532,7 @@ void f_4225_hook()
         draw_status_line();
 //#ifdef FW_D13_020
 //        if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
+//            PRINT("<");
 //            OSTimeDly( 1000 );
 //        }
 //#endif        

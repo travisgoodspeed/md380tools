@@ -3404,6 +3404,10 @@ af+ 0x080277c2 16 gfx_drawtext7
 f gfx_drawtext8 0 0x08036fc0
 af+ 0x08036fc0 378 gfx_drawtext8
 
+CCa 0x08036ff4 check_for_0_term 
+
+CCa 0x08033c96 mult_off21_off23_font
+
 f gfx_drawtext9 0 0x0802b0d4
 af+ 0x0802b0d4 110 gfx_drawtext9
 

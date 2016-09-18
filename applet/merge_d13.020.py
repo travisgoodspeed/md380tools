@@ -272,7 +272,7 @@ if __name__== '__main__':
 
     # 0x0801dd2c gfx_drawtext5
 #    merger.hookstub2(0x0801dd2c, sapplet.getadr("dummy"));
-    merger.hookstub2(0x0801dd2c, sapplet.getadr("gfx_drawtext5_hook"));
+#    merger.hookstub2(0x0801dd2c, sapplet.getadr("gfx_drawtext5_hook"));
 
     # 0x08027728 gfx_drawtext6
 #    merger.hookstub2(0x08027728, sapplet.getadr("dummy"));
@@ -282,7 +282,7 @@ if __name__== '__main__':
 
     # gfx_drawtext8 (used to print menu entries, main display)
 #    merger.hookstub2(0x08036fc0, sapplet.getadr("dummy"));
-    merger.hookstub2(0x08036fc0, sapplet.getadr("gfx_drawtext8_hook"));
+#    merger.hookstub2(0x08036fc0, sapplet.getadr("gfx_drawtext8_hook"));
 
     # gfc_drawtext3
 #    merger.hookstub2(0x0802b142, sapplet.getadr("dummy"));
