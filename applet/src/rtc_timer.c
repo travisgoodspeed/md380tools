@@ -2,7 +2,7 @@
   \brief wrapper functions for the "RTC Timer"-Task.
 */
 
-//#define DEBUG
+#define DEBUG
 #define CONFIG_GRAPHICS
 
 #ifdef DEBUG
@@ -69,7 +69,7 @@ static int flag=0;
 #define MAX_STATUS_CHARS 40
 
 #define RX_POPUP_Y_START 12
-wchar_t status_line[MAX_STATUS_CHARS] = { L"12345678901234567890" };
+wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
 
 char progress_info[] = { "|/-\\" } ;
 
@@ -92,7 +92,7 @@ void update_status_line()
 {
     int progress2 = progress ; // sample (thread safe) 
 
-    progress2 %= sizeof( progress_info );
+    progress2 %=  sizeof( progress_info ) - 1 ;
     char c = progress_info[progress2];
     
     int dst = g_dst ;
@@ -460,6 +460,10 @@ void trace_scr_mode()
     
 }
 
+#ifdef FW_D13_020
+void (*OSTimeDly)(uint32_t delay) = 0x8033eb4 + 1 ;        
+#endif        
+
 void f_4225_hook()
 {
     // this probably runs on other thread than the display task.
@@ -479,16 +483,20 @@ void f_4225_hook()
     }
     
     md380_f_4225();
-    
-    PRINT("%S\n", status_line );
-    
+        
     if ( global_addl_config.debug == 1 ) {
+        PRINT("%S\n", status_line );
 //        static long fg = 0xff8032 ;
 //        fg += 0x10 ;
 //        gfx_set_fg_color(fg);
 //        gfx_set_bg_color(0xff000000);
 //        gfx_blockfill(0,0,100,100);
         draw_status_line();
+//#ifdef FW_D13_020
+//        if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
+//            OSTimeDly( 1000 );
+//        }
+//#endif        
     }        
     
 //    if ( global_addl_config.experimental == 0 ) {
