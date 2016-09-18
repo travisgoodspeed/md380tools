@@ -45,7 +45,9 @@ struct gfx_jmptbl {
 
 /* @ 0x2001da1c */
 typedef struct gfx_info {
-    uint8_t unk[48];
+    uint16_t line2 ; // [2] gfx_linefill
+    uint8_t line1 ; // [12] gfx_linefill
+    
     uint32_t fg_color ; // [48]
     uint32_t bg_color ; // [52]
     // ...
