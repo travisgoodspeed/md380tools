@@ -426,13 +426,13 @@ void gfx_drawtext8_hook(uint8_t *r0)
     
     gfx_info_t *g = 0x2001da1c ;
     
-    if( g->xpos == 10 && g->ypos == 55 ) {
-        // filter out status.
-        return ;
-    }
+//    if( g->xpos == 10 && g->ypos == 55 ) {
+//        // filter out status.
+//        return ;
+//    }
     
     PRINT("%s \n",r0);
-    PRINT("Dt8: %d %d %x %x\n", g->xpos, g->ypos, g->fg_color, g->bg_color );
+    PRINT("Dt8: %d %d %08x %08x %x\n", g->xpos, g->ypos, g->fg_color, g->bg_color, g->off44 );
     
 //    PRINT("%s\n",r0);
 //    printhex(g,72);

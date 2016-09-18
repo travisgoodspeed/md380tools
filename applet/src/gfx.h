@@ -44,7 +44,8 @@ struct gfx_jmptbl {
 };
 
 typedef struct gfx_font {
-    uint8_t off0[21] ; 
+    //uint8_t off0[21] ; 
+    void *off16 ; // [16]
     uint8_t off21 ;// [21]
     uint8_t off22 ; // 
     uint8_t off23 ;// [23]
@@ -58,7 +59,8 @@ typedef struct gfx_info {
     uint8_t line1 ; // [12] gfx_linefill
     uint8_t off13[12-1];    
     void *fontpoi ; // [24] // x = fontpoi[21] * fontpoi[23];
-    uint8_t off28[10-4];
+    uint8_t off28[32-24-4];
+    uint16_t xpos2 ; // [32]
     uint16_t xpos ; // [34]
     uint16_t ypos ; // [36] index (-r6)
     uint8_t off38[44-36-2];   
@@ -79,29 +81,3 @@ typedef struct gfx_info {
  * if p == 0, return old pointer without setting new.
  */
 void* gfx_select_font(void *p);
-
-// 
-#if 0
-// r0 = string in ASCII (char index in table?)
-gfx_drawtext8( char *r0 )
-{
-    if( r0 == 0 ) {
-        return ;
-    }
-    // ...
-}
-
-gfx_drawtext7( char *r0, r1, r2 )
-{
-    gfx_info[34] = r1 ; // xpos
-    gfx_info[36] = r2 ; // ypos
-    gfx_drawtext8(r0);
-}
-
-gfx_drawtext5( char *r0, r1, r2, r3 )
-{
-    gfx_drawtext7( *r0, r1, r2 );
-    gfx_clear3( r3 );
-}
-
-#endif
