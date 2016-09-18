@@ -116,12 +116,15 @@ class Merger():
         
         # insert trampoline
         # rasm2 -a arm -b 16 '<asm code>'
-        self.sethword(adr,0xb401);   # push {r0}
-        self.sethword(adr+2,0xb401); # push {r0}
+        #self.sethword(adr,0xb401);   # push {r0}
+        #self.sethword(adr+2,0xb401); # push {r0}
+        self.sethword(adr,0xb501);   # push {r0,pc}
+        self.sethword(adr+2,0x4600); # NOP
         self.sethword(adr+4,0x4802); # ldr r0, [pc, 8]
         self.sethword(adr+6,0x9001); # str r0, [sp, 4] (pc)
-        self.sethword(adr+8,0xbc01); # pop {r0}
-        self.sethword(adr+10,0xbd00); # pop {pc}
+        self.sethword(adr+8,0xbd01); # pop {r0,pc}
+        #self.sethword(adr+10,0xbd00); # pop {pc}
+        self.sethword(adr+10,0x4600); #NOP
         self.sethword(adr+12,0x4600); #NOP
         self.sethword(adr+14,0x4600); #NOP, might be overwritten
         if adr&2>0:
@@ -274,6 +277,7 @@ if __name__== '__main__':
 
     # 0x0801dd2c gfx_drawtext5
 #    merger.hookstub2(0x0801dd2c, sapplet.getadr("dummy"));
+    merger.hookstub2(0x0801dd2c, sapplet.getadr("gfx_drawtext5_hook"));
 
     # 0x08027728 gfx_drawtext6
 #    merger.hookstub2(0x08027728, sapplet.getadr("dummy"));
@@ -282,7 +286,7 @@ if __name__== '__main__':
 #    merger.hookstub2(0x080277c2, sapplet.getadr("dummy"));
 
     # gfx_drawtext8 (used to print menu entries, main display)
-#    merger.hookstub2(0x08036fc0, sapplet.getadr("dummy"));
+    merger.hookstub2(0x08036fc0, sapplet.getadr("dummy"));
 
     # gfc_drawtext3
 #    merger.hookstub2(0x0802b142, sapplet.getadr("dummy"));
