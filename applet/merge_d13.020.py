@@ -120,17 +120,14 @@ class Merger():
         #self.sethword(adr+2,0xb401); # push {r0}
         self.sethword(adr,0xb501);   # push {r0,pc}
         self.sethword(adr+2,0x4600); # NOP
-        self.sethword(adr+4,0x4802); # ldr r0, [pc, 8]
+        self.sethword(adr+4,0x4801); # ldr r0, [pc, 4]
         self.sethword(adr+6,0x9001); # str r0, [sp, 4] (pc)
         self.sethword(adr+8,0xbd01); # pop {r0,pc}
-        #self.sethword(adr+10,0xbd00); # pop {pc}
-        self.sethword(adr+10,0x4600); #NOP
-        self.sethword(adr+12,0x4600); #NOP
-        self.sethword(adr+14,0x4600); #NOP, might be overwritten
+        self.sethword(adr+10,0x4600); #NOP, might be overwritten
         if adr&2>0:
-            self.setword(adr+14,handler); 
+            self.setword(adr+10,handler); 
         else:
-            self.setword(adr+16,handler);
+            self.setword(adr+12,handler);
     def calcbl(self,adr,target):
         """Calculates the Thumb code to branch to a target."""
         offset=target-adr;
