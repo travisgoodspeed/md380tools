@@ -212,57 +212,37 @@ if __name__== '__main__':
 
     # drawtext hooks
 
-    merger.hookbl(0x0800c8f2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
-    merger.hookbl(0x0800cad2, sapplet.getadr("gfx_chars_to_display_hook"),0);   
-    merger.hookbl(0x0800cd04, sapplet.getadr("gfx_chars_to_display_hook"),0);   
-    merger.hookbl(0x0800cd20, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800cd68, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800cdfe, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800ce1a, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800ce62, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800ceca, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800cee6, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800cf32, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d06e, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d080, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d0ea, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d150, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d19e, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d1d6, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d1f2, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d242, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d708, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d7b6, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d906, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d958, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800d974, sapplet.getadr("gfx_chars_to_display_hook"),0);
-#    merger.hookbl(0x0800df92, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800dff6, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800e174, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800e18e, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800e1b4, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800e1da, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0800ea82, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0801ea2e, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0801f02c, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0801f044, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0801f07a, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0801f092, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0802d660, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0802d70e, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0802d8e2, sapplet.getadr("gfx_chars_to_display_hook"),0);
-    merger.hookbl(0x0802d9e4, sapplet.getadr("gfx_chars_to_display_hook"),0);
+    dt2list=[
+        0x0800c8f2, 0x0800cad2,
+        0x0800cd04,        0x0800cd20,        0x0800cd68,        0x0800cdfe,
+        0x0800ce1a,        0x0800ce62,        0x0800ceca,        0x0800cee6,
+        0x0800cf32,        0x0800d06e,        0x0800d080,        0x0800d0ea,
+        0x0800d150,        0x0800d19e,        0x0800d1d6,        0x0800d1f2,
+        0x0800d242,        0x0800d708,        0x0800d7b6,        0x0800d906,
+        0x0800d958,        0x0800d974,
+    #    0x0800df92,
+        0x0800dff6, 0x0800e174,        0x0800e18e, 0x0800e1b4,
+        0x0800e1da, 0x0800ea82,        0x0801ea2e, 0x0801f02c,
+        0x0801f044, 0x0801f07a,        0x0801f092, 0x0802d660,
+        0x0802d70e, 0x0802d8e2,        0x0802d9e4, 
+    ];
+    for adr in dt2list:
+        merger.hookbl(adr,sapplet.getadr("gfx_chars_to_display_hook"));
 
     merger.hookbl(0x08046804, sapplet.getadr("gfx_drawtext_hook"),0);
     merger.hookbl(0x0804681a, sapplet.getadr("gfx_drawtext_hook"),0);
 
-    merger.hookbl(0x0800e5ba, sapplet.getadr("gfx_drawtext4_hook"),0);
-    merger.hookbl(0x0800e604, sapplet.getadr("gfx_drawtext4_hook"),0);
-    merger.hookbl(0x0800e618, sapplet.getadr("gfx_drawtext4_hook"),0);
-    merger.hookbl(0x0800e634, sapplet.getadr("gfx_drawtext4_hook"),0);
-    merger.hookbl(0x0800e696, sapplet.getadr("gfx_drawtext4_hook"),0);
-    merger.hookbl(0x0802d6f2, sapplet.getadr("gfx_drawtext4_hook"),0);
-    merger.hookbl(0x0802d9c8, sapplet.getadr("gfx_drawtext4_hook"),0);
+    dt4list=[
+        0x0800e5ba,
+        0x0800e604,
+        0x0800e618,
+        0x0800e634,
+        0x0800e696,
+        0x0802d6f2,
+        0x0802d9c8,
+    ];
+    for adr in dt4list:
+        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
     
     # 0x800def7 gfx_drawtext
 #    merger.hookstub(0x800def6, sapplet.getadr("dummy"));
