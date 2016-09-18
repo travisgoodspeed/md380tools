@@ -116,8 +116,6 @@ class Merger():
         
         # insert trampoline
         # rasm2 -a arm -b 16 '<asm code>'
-        #self.sethword(adr,0xb401);   # push {r0}
-        #self.sethword(adr+2,0xb401); # push {r0}
         self.sethword(adr,0xb501);   # push {r0,pc}
         self.sethword(adr+2,0x4600); # NOP
         self.sethword(adr+4,0x4801); # ldr r0, [pc, 4]
