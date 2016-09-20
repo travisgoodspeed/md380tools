@@ -105,6 +105,9 @@ void con_draw()
         return ;
     }
     
+    // be prepared, excelent opportunity to be bitten by stack overflow.
+    
+    // TODO: make real atomic, and skip if recursive.
 //    if( within_update ) {
 //        return ;
 //    }
