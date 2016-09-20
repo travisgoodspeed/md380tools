@@ -26,6 +26,7 @@
 #include "display.h"
 #include "dmr.h"
 #include "console.h"
+#include "util.h"
  
 static int flag=0;
 
@@ -60,6 +61,8 @@ uint8_t *mode3 = 0x2001e892 ;
 
 char status_buf[MAX_STATUS_CHARS] = { "" };
     
+char chan_buf[10];
+
 void update_status_line()
 {
     progress++ ;
@@ -76,6 +79,7 @@ void update_status_line()
         
 //    con_clrscr();
     con_print(0,0,status_buf);
+    con_print(0,1,chan_buf);
 }
 
 //extern void draw_updated_status_line()
@@ -228,11 +232,11 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
     con_draw();
-    
-//    // filter datetime (y=96)
-//    if( y != 96 ) {
-//        PRINT("ctd: %d %d %S\n", x, y, str);
-//    }
+
+    // filter datetime (y=96)
+    if( y != 96 ) {
+        PRINT("ctd: %d %d %S\n", x, y, str);
+    }
     gfx_chars_to_display(str, x, y, xlen);
 }
 
@@ -241,6 +245,9 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
     PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
+    if( x == 45 && y == 34 ) {
+        mkascii( chan_buf, sizeof(chan_buf), str );
+    }
     f(str,x,y,xlen,ylen);
 }
 

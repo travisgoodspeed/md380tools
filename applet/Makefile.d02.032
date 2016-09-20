@@ -3,6 +3,7 @@ SRCS += os.o menu.o aes.o ambe.o spiflash.o usersdb.o addl_config.o beep_process
 SRCS += rtc_timer.o i2c.o dispflip.o
 SRCS += display.o
 SRCS += console.o
+SRCS += util.o
 PROJ_NAME=main
 
 
