@@ -2145,7 +2145,11 @@ af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
 CCa 0x8022f1a md380_menu_edit_buf
 CCa 0x8022f46 md380_menu_edit_buf
 CCa 0x8022fde md380_menu_edit_buf
+
+
 af+ 0x80237fe 86 gfx_drawbmp
+f gfx_drawbmp 0 0x80237fe
+
 CCa 0x802385e md380_menu_0x200011e4
 CCa 0x8023866 md380_menu_memory
 CCa 0x8023884 md380_menu_id
