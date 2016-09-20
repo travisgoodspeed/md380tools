@@ -47,6 +47,7 @@ int progress = 0 ;
 
 uint8_t *mode2 = 0x2001e94b ;
 uint16_t *cntr2 = 0x2001e844 ;
+uint8_t *mode3 = 0x2001e892 ;
     
 // 1 idle
 // 2 rx
@@ -67,7 +68,7 @@ void update_status_line()
     
     int dst = g_dst ;
     
-    sprintf(status_buf,"%c|%02d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *cntr2 ); // potential buffer overrun!!!
+    sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
         
     for(int i=0;i<MAX_STATUS_CHARS;i++) {
         status_line[i]= status_buf[i];
@@ -129,7 +130,8 @@ void * f_4225_internel_hook()
 
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {
-    PRINT("b");
+    update_status_line();
+    PRINT("b: %S\n", status_line );
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0xff8032);
@@ -141,7 +143,8 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 
 void rx_screen_gray_hook(void *bmp, int x, int y) 
 {
-    PRINT("g");
+    update_status_line();
+    PRINT("g: %S\n", status_line );
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0x888888);
@@ -196,25 +199,6 @@ void f_4102_hook() {
 }
 #endif //CONFIG_GRAPHICS
 
-
-/*
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(void)
-{
-    long peak = 6000;
-    if (peak > 0) {
-	int fullscale_offset = int_centibel(32767);
-	int relative_peak_cb = int_centibel(peak) - fullscale_offset;
-	printf("%i.%i dBFS\en", relative_peak_cb / 10,
-	       abs(relative_peak_cb % 10));
-    } else {
-	printf("-Inf dBFS\n");
-    }
-    return 0;
-}
-*/
 
 
 
@@ -302,8 +286,25 @@ void trace_scr_mode()
 }
 
 #ifdef FW_D13_020
-void (*OSTimeDly)(uint32_t delay) = 0x8033eb4 + 1 ;        
-#endif        
+void OSTimeDly(uint32_t delay);
+#endif  
+
+//void state_fuzzing()
+//{
+//    static long cnt = 0 ;
+//    
+//    cnt++ ;
+//    
+//    if( cnt > 500 ) {
+//        
+//        if( cnt < 900 ) {
+//            *mode2 = 4 ;            
+//        } else {
+//            *mode2 = 1 ;
+//        }
+//        
+//    } 
+//}
 
 void f_4225_hook()
 {
@@ -333,13 +334,14 @@ void f_4225_hook()
     md380_f_4225();
 
     if ( global_addl_config.debug == 1 ) {
+//        state_fuzzing();
 //        PRINT("%S\n", status_line );
 //        static long fg = 0xff8032 ;
 //        fg += 0x10 ;
 //        gfx_set_fg_color(fg);
 //        gfx_set_bg_color(0xff000000);
 //        gfx_blockfill(0,0,100,100);
-        draw_status_line();
+        //draw_status_line();
 //#ifdef FW_D13_020
 //        if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
 //            PRINT("<");
