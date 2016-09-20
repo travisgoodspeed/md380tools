@@ -17,21 +17,16 @@ char con_buf[MAX_YPOS][MAX_XPOS];
 int con_xpos = 0 ;
 int con_ypos = 0 ;
 
-void con_addchar( char c )
+void con_goto(int x, int y)
 {
-    if( con_xpos >= MAX_XPOS ) {
-        return ;
-    }
-    if( con_ypos >= MAX_YPOS ) {
-        return ;        
-    }
-    
-    con_buf[con_ypos][con_xpos] = c ;
-    con_xpos++ ;
-    if( con_xpos >= MAX_XPOS ) {
-        return ;
-    }
-    con_buf[con_ypos][con_xpos] = 0 ;
+    con_xpos = x ;
+    con_ypos = y ;
+}
+
+void con_print(int x, int y, const char *s)
+{
+    con_goto(x,y);
+    con_puts(s);
 }
 
 void con_puts( const char *s )
@@ -51,6 +46,23 @@ void con_clrscr()
     for(int y=0;y<MAX_YPOS;y++) {
         con_buf[y][0] = 0 ;
     }
+}
+
+static void con_addchar( char c )
+{
+    if( con_xpos >= MAX_XPOS ) {
+        return ;
+    }
+    if( con_ypos >= MAX_YPOS ) {
+        return ;        
+    }
+    
+    con_buf[con_ypos][con_xpos] = c ;
+    con_xpos++ ;
+    if( con_xpos >= MAX_XPOS ) {
+        return ;
+    }
+    con_buf[con_ypos][con_xpos] = 0 ;
 }
 
 void con_putc( char c )

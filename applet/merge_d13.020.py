@@ -241,8 +241,8 @@ if __name__== '__main__':
         0x0802d6f2,
         0x0802d9c8,
     ];
-#    for adr in dt4list:
-#        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
+    for adr in dt4list:
+        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
     
     # 0x800def7 gfx_drawtext
 #    merger.hookstub(0x800def6, sapplet.getadr("dummy"));
