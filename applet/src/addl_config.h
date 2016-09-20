@@ -52,7 +52,7 @@ inline void spiflash_write_console()
 
 inline void spiflash_read_console()
 {
-    global_addl_config.console = spiflash_read_uint8_ranged( offset_console, 1 );    
+    global_addl_config.console = spiflash_read_uint8_ranged( offset_console, 2 );    
 }
 
 inline void spiflash_write_promtg()
