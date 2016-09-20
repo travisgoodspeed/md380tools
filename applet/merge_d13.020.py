@@ -280,6 +280,10 @@ if __name__== '__main__':
 # keyboard polling
 #    merger.hookstub2(0x0804eb64, sapplet.getadr("dummy"));
 
+# intercept disp_something
+#    merger.hookstub2(0x0800d69c, sapplet.getadr("dummy"));
+
+
     # F_4315
 #    merger.hookstub(0x08025ae4, sapplet.getadr("dummy"));
 
@@ -349,6 +353,14 @@ if __name__== '__main__':
 
     # OSMboxPend Hook to diag Beep_Process
     merger.hookbl(0x0802fa00, sapplet.getadr("OSMboxPend_hook"));
+    
+    # others
+    mbx_pend_list=[
+        0x0803b8fa, 0x0803c398, 0x0803c806, 0x08046be2, 0x08046bfa
+      ];
+    for adr in mbx_pend_list:
+      merger.hookbl(adr, sapplet.getadr("OSMboxPend_hook"));
+
 
     # hooks regarding the beep_process
     beep_process_list=[

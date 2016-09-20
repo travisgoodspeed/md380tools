@@ -81,30 +81,33 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   return(md380_OSMboxPost(pevent, pmsg));
 }
 
-void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr){
-  void * ret;
-  void * return_addr;
-  void * sp;
+#define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
 
-  __asm__("mov %0,r14" : "=r" (return_addr));
-  __asm__("mov %0,r13" : "=r" (sp));
-  ret = md380_OSMboxPend(pevent, timeout, perr);
-  if ( ret != NULL && global_addl_config.debug == 1 ){
-    printf("OSMboxPend @ %x, %x \n",return_addr, * (uint8_t*) ret);
-    switch (* (uint8_t*) ret  ){
-      case 0x24:
-        printf("roger beep ");
-        break;
-      case 0xe:
-        printf("no dmr sync ");
-      case 0x11:
-        printf("dmr sync ");
-        break;
-      default:
-        printf("not known ");
-        break;
+void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
+{
+    void * ret;
+    void * return_addr = __builtin_return_address(0);
+    //  void * sp;
+
+    //  __asm__("mov %0,r14" : "=r" (return_addr));
+    //  __asm__("mov %0,r13" : "=r" (sp));
+    ret = md380_OSMboxPend(pevent, timeout, perr);
+    if( ret != NULL && global_addl_config.debug == 1 ) {
+        printf("OSMboxPend @ 0x%x, 0x%x \n", UNTHUMB_POI(return_addr), * (uint8_t*) ret);
+        switch (* (uint8_t*) ret) {
+            case 0x24:
+                printf("roger beep ");
+                break;
+            case 0xe:
+                printf("no dmr sync ");
+            case 0x11:
+                printf("dmr sync ");
+                break;
+            default:
+                printf("not known ");
+                break;
+        }
+        printf("\n");
     }
-    printf("\n");
-  }
-  return(ret);
+    return (ret);
 }
