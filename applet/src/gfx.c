@@ -10,6 +10,7 @@
 #include "printf.h"
 #include "string.h"
 #include "addl_config.h"
+#include "display.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
