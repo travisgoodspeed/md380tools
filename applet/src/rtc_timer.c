@@ -23,6 +23,7 @@
 #include "addl_config.h"
 #include "ambe.h"
 #include "usersdb.h"
+#include "display.h"
  
 static int flag=0;
 
@@ -521,7 +522,7 @@ void f_4225_hook()
 //#endif        
     
     md380_f_4225();
-        
+
     if ( global_addl_config.debug == 1 ) {
 //        PRINT("%S\n", status_line );
 //        static long fg = 0xff8032 ;
