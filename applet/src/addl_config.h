@@ -67,14 +67,18 @@ inline void spiflash_read_rbeep()
     global_addl_config.rbeep = spiflash_read_uint8_ranged( offset_rbeep, 2 );    
 }
 
+extern int con_enabled ; 
+
 inline void spiflash_write_debug()
 {
     spiflash_write_uint8( offset_debug, global_addl_config.debug );    
+    con_enabled = global_addl_config.debug ;
 }
 
 inline void spiflash_read_debug()
 {
     global_addl_config.debug = spiflash_read_uint8_ranged( offset_debug, 2 );    
+    con_enabled = global_addl_config.debug ;
 }
 
 inline void spiflash_read_micbargraph()

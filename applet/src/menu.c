@@ -240,7 +240,8 @@ uint8_t spiflash_read_uint8_ranged( int offset, uint8_t cnt )
 {
     uint8_t r = spiflash_read_uint8( offset );
     if( r >= cnt ) {
-        r = cnt - 1 ;
+        // out of range, reset to default = 0
+        r = 0 ;
     }
     return r ;
 }

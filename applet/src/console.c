@@ -60,8 +60,8 @@ void con_putc( char c )
             con_clrscr();
             return ;
         case '\n' :
-//            con_xpos = 0 ;
-//            con_ypos++ ;
+            con_xpos = 0 ;
+            con_ypos++ ;
             return ;
     }
     con_addchar(c);    
@@ -69,10 +69,15 @@ void con_putc( char c )
 
 int within_update = 0 ;
 
+int con_enabled = 0 ;
+
 wchar_t wide[MAX_XPOS];
     
 void con_draw1()
 {
+    if( con_enabled == 0 ) {
+        return ;
+    }
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
     void *old = gfx_select_font(gfx_font_small);
