@@ -61,8 +61,8 @@ uint8_t *mode3 = 0x2001e892 ;
 
 char status_buf[MAX_STATUS_CHARS] = { "" };
     
-char chan_buf[10];
-char tg_buf[10];
+char chan_buf[15];
+char tg_buf[15];
 
 void update_status_line()
 {
@@ -80,8 +80,13 @@ void update_status_line()
         
 //    con_clrscr();
     con_print(0,0,status_buf);
-    con_print(0,1,chan_buf);
-    con_print(0,2,tg_buf);
+    con_goto(0,1);
+    con_puts("ch:");
+    con_puts(chan_buf);
+
+    con_goto(0,2);
+    con_puts("tg:");
+    con_puts(tg_buf);
 }
 
 //extern void draw_updated_status_line()
