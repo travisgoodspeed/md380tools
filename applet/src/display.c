@@ -13,6 +13,7 @@
 #include "printf.h"
 #include "string.h"
 #include "addl_config.h"
+#include "ambe.h"
 
 char eye_paltab[] = {
   0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -34,5 +35,106 @@ void draw_eye_opt()
 {
     if( global_addl_config.promtg == 1 ) {
         gfx_drawbmp((char *) &bmp_eye, 65, 1);
+    }
+}
+
+// Takes a positive(!) integer amplitude and computes 200*log10(amp),
+// centi Bel, approximtely. If the given parameter is 0 or less, this
+// function returns -1.  tnx to sellibitze
+int intCentibel(long ampli)
+{
+    if (ampli <= 0)
+	return -1;		// invalid
+    int log_2 = 0;
+    while (ampli >= 32 * 8) {
+	ampli >>= 1 + 3;
+	log_2 += 1 + 3;
+    }
+    while (ampli >= 32) {
+	ampli >>= 1;
+	log_2 += 1;
+    }
+    // 1 <= ampli < 32
+    static const short fine[] = {
+	-1, 0, 60, 95, 120, 140, 156, 169,
+	181, 191, 200, 208, 216, 223, 229, 235,
+	243, 249, 253, 258, 262, 266, 270, 274,
+	278, 281, 285, 288, 291, 294, 297, 300
+    };
+    return (log_2 * 301 + 2) / 5 + fine[ampli];
+}
+
+void draw_micbargraph()
+{
+    static int rx_active; // flag to syncronice this hook ( operatingmode == 0x11 is also on rx seeded)
+    static int fullscale_offset = 0;
+    static uint32_t lastframe=0;
+    static int red=0;
+    static int green=0;
+
+    int relative_peak_cb;
+    int centibel_val;
+    
+    if (fullscale_offset == 0 ) { // init int_centibel()
+        fullscale_offset = intCentibel(3000);  // maybe wav max max_level
+    }
+
+    if ( md380_f_4225_operatingmode == SCR_MODE_17 && max_level < 4500 && max_level > 10) { // i hope we are on tx
+      if (lastframe < ambe_encode_frame_cnt) {	// check for new frame
+        lastframe = ambe_encode_frame_cnt;
+        rx_active=1;
+
+        relative_peak_cb = intCentibel(max_level) - fullscale_offset;
+        centibel_val = relative_peak_cb;
+
+
+        if ( lastframe % 5 == 1 ) { // reduce drawing
+          if (centibel_val < -280) { // limit 160 pixel bargraph 10 150 -> 140 pixel for bargraph
+            centibel_val = -280;
+          } else if (centibel_val > 0) {
+            centibel_val = 0;
+          }
+          centibel_val += 280;  // shift to positive
+          centibel_val /= 2;    // scale
+
+          gfx_set_fg_color(0x999999);
+          gfx_set_bg_color(0xff000000);
+          gfx_blockfill(9, 54, 151, 66);
+
+          // paint legend
+          gfx_set_fg_color(0x0000ff);
+          gfx_blockfill((-30+280)/2+10, 67, 150, 70);
+          gfx_set_fg_color(0x00ff00);
+          gfx_blockfill((-130+280)/2+10, 67, (-30+280)/2-1+10, 70);
+          gfx_set_fg_color(0x555555);
+          gfx_blockfill(10, 67, (-130+280)/2-1+10, 70);
+
+          // set color
+          if ( relative_peak_cb > -3 || red > 0) {
+            if (red > 0) red--;
+            if ( relative_peak_cb > -3) red = 30;
+            gfx_set_fg_color(0x0000ff);
+          } else if ( relative_peak_cb > -130 || green > 0) {
+            if (green > 0) green--;
+            if ( relative_peak_cb > -130 ) green = 30;
+            gfx_set_fg_color(0x00ff00);
+          } else {
+            gfx_set_fg_color(0x555555);
+          }
+          gfx_set_bg_color(0xff000000);
+          gfx_blockfill(10, 55, centibel_val, 65);
+          gfx_set_fg_color(0xff8032);
+          gfx_set_bg_color(0xff000000);
+        }
+      }
+    }
+
+    if ( md380_f_4225_operatingmode == SCR_MODE_18 && rx_active == 1 ) { // clear screen area
+      gfx_set_fg_color(0xff8032);
+      gfx_set_bg_color(0xff000000);
+      gfx_blockfill(9, 54, 151, 70);
+      rx_active = 0;
+      red=0;
+      green=0;
     }
 }
