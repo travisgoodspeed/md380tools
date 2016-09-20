@@ -40,7 +40,7 @@ static int flag=0;
 
 #define MAX_STATUS_CHARS 40
 
-wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
+//wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
 
 char progress_info[] = { "|/-\\" } ;
 
@@ -62,6 +62,9 @@ char status_buf[MAX_STATUS_CHARS] = { "" };
     
 void update_status_line()
 {
+    progress++ ;
+    progress %= sizeof( progress_info );
+    
     int progress2 = progress ; // sample (thread safe) 
 
     progress2 %=  sizeof( progress_info ) - 1 ;
@@ -71,39 +74,21 @@ void update_status_line()
     
     sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
         
-    for(int i=0;i<MAX_STATUS_CHARS;i++) {
-        status_line[i]= status_buf[i];
-    }
-    status_line[MAX_STATUS_CHARS-1]='\0';    
-    
-    con_clrscr();
-    con_puts(status_buf);
+//    con_clrscr();
+    con_print(0,0,status_buf);
 }
 
-extern void draw_status_line()
-{
-//    gfx_set_fg_color(0xff000000);
-//    gfx_set_bg_color(0x00ff8032); 
-//    void *old = gfx_select_font(gfx_font_small);
+//extern void draw_updated_status_line()
+//{
 //    
-//    gfx_chars_to_display(status_line,10,55,0); 
-//
-//    gfx_select_font(old);
-}
+//    update_status_line();
+//    draw_status_line();
+//}
 
-extern void draw_updated_status_line()
-{
-    progress++ ;
-    progress %= sizeof( progress_info );
-    
-    update_status_line();
-    draw_status_line();
-}
-
-extern void mode17_hook()
-{
-    draw_status_line();
-}
+//extern void mode17_hook()
+//{
+//    draw_status_line();
+//}
 
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() 
@@ -132,7 +117,6 @@ void * f_4225_internel_hook()
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {
     update_status_line();
-    PRINT("b: %S\n", status_line );
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0xff8032);
@@ -145,7 +129,6 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 void rx_screen_gray_hook(void *bmp, int x, int y) 
 {
     update_status_line();
-    PRINT("g: %S\n", status_line );
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0x888888);
@@ -324,7 +307,7 @@ void f_4225_hook()
     }
     
     if ( global_addl_config.debug == 1 ) {
-        draw_updated_status_line();
+        update_status_line();
     }
     
 //#ifdef FW_D13_020
@@ -335,6 +318,8 @@ void f_4225_hook()
 //#endif        
     
     md380_f_4225();
+    
+    //con_draw();
 
     if ( global_addl_config.debug == 1 ) {
 //        state_fuzzing();
