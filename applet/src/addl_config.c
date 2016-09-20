@@ -24,6 +24,7 @@ void init_global_addl_config_struct()
     spiflash_read_debug();
     spiflash_read_promtg();
     spiflash_read_micbargraph();
+    spiflash_read_console();
     
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
