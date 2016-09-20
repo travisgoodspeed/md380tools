@@ -76,7 +76,8 @@ void update_status_line()
     }
     status_line[MAX_STATUS_CHARS-1]='\0';    
     
-    //con_puts(status_buf);
+    con_clrscr();
+    con_puts(status_buf);
 }
 
 extern void draw_status_line()
