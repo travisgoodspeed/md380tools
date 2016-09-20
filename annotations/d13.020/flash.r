@@ -3359,6 +3359,9 @@ f jmp_to_mainloop 0 0x080468f6
 f F_4520 0 0x802c83c
 af+ 0x802c83c 2370 F_4520
 
+af+ 0x0804fdf4 0 set_AAAA
+af+ 0x0804fdfe 0 set_CCCC
+
 # gfx_
 
 af+ 0x801d370 8 gfx_set_fg_color
