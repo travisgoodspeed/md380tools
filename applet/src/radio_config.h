@@ -10,13 +10,14 @@ extern "C" {
 #endif
 
 struct radio_config {
-    uint8_t unk1[4];   // [0]
-    uint32_t dmrid;    // [4]
-    uint8_t unk2[13];   // [8]
-    // [11] VOX
-    uint8_t backlight_time ; // [21] // times 5 seconds.
-    uint8_t off22 ; // [22]
-    uint8_t mode_ch_mr ; // [23] 255 = CH / 0 = MR
+    uint8_t unk1[4];        // [0]
+    uint32_t dmrid;         // [4]
+    uint8_t unk2[11-4-4];   // [8] 
+    uint8_t vox ;           // [11] VOX
+    uint8_t unk3[21-11-1];  //  
+    uint8_t backlight_time ;// [21] // times 5 seconds.
+    uint8_t off22 ;         // [22]
+    uint8_t mode_ch_mr ;    // [23] 255 = CH / 0 = MR
     // [156] led ind?
 };
 
