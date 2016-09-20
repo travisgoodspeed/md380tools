@@ -835,15 +835,15 @@ void create_menu_entry_console_screen(void)
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
 
-    if( global_addl_config.console == 1 ) {
+    if( global_addl_config.console == 0 ) {
         md380_menu_entry_selected = 0;
     } else {
         md380_menu_entry_selected = 1;
     }
 
 #ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_console_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_console_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+    md380_create_menu_entry(md380_menu_id, wt_disable, create_menu_entry_console_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+    md380_create_menu_entry(md380_menu_id + 1, wt_enable,  create_menu_entry_console_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 #endif
 
     for (i = 0; i < 2; i++) { // not yet known ;)
