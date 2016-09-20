@@ -15,16 +15,16 @@ enum spi_flash_addl_config {
   offset_micbargraph
 };
 
-
 extern struct addl_config {
-  uint8_t  rbeep;
-  uint8_t  datef;
-  uint8_t  userscsv;
-  uint8_t  debug;
-  uint8_t  promtg;
-  uint8_t  experimental;
-  uint8_t  micbargraph;
-  } global_addl_config;
+    uint8_t rbeep;
+    uint8_t datef;
+    uint8_t userscsv;
+    uint8_t debug;
+    uint8_t promtg;
+    uint8_t experimental;
+    uint8_t micbargraph;
+    uint8_t console;
+} global_addl_config;
 
 extern void init_global_addl_config_hook(void);
 

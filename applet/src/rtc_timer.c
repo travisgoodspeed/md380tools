@@ -62,6 +62,7 @@ uint8_t *mode3 = 0x2001e892 ;
 char status_buf[MAX_STATUS_CHARS] = { "" };
     
 char chan_buf[10];
+char tg_buf[10];
 
 void update_status_line()
 {
@@ -80,6 +81,7 @@ void update_status_line()
 //    con_clrscr();
     con_print(0,0,status_buf);
     con_print(0,1,chan_buf);
+    con_print(0,2,tg_buf);
 }
 
 //extern void draw_updated_status_line()
@@ -246,8 +248,18 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
     PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
     if( x == 45 && y == 34 ) {
-        mkascii( chan_buf, sizeof(chan_buf), str );
+        mkascii( tg_buf, sizeof(tg_buf), str );
+        if( !has_gui() ) {
+            return ;
+        }
     }
+    if( x == 34 && y == 75 ) {
+        mkascii( chan_buf, sizeof(chan_buf), str );
+        if( !has_gui() ) {
+            return ;
+        }
+    }
+    
     f(str,x,y,xlen,ylen);
 }
 
