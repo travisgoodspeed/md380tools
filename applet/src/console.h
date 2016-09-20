@@ -15,6 +15,8 @@ void con_putc( char c );
 void con_goto(int x, int y);
 void con_print(int x, int y, const char *s);
 
+void con_draw();
+
 #include "addl_config.h"
 
 inline int has_console()
