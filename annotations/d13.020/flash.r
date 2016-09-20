@@ -3362,6 +3362,10 @@ af+ 0x802c83c 2370 F_4520
 af+ 0x0804fdf4 0 set_AAAA
 af+ 0x0804fdfe 0 set_CCCC
 
+f disp_something 0 0x0800d69c
+af+ 0x0800d69c 0 disp_something
+ 
+
 # gfx_
 
 af+ 0x801d370 8 gfx_set_fg_color

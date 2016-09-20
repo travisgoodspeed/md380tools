@@ -280,6 +280,10 @@ if __name__== '__main__':
 # keyboard polling
 #    merger.hookstub2(0x0804eb64, sapplet.getadr("dummy"));
 
+# intercept disp_something
+#    merger.hookstub2(0x0800d69c, sapplet.getadr("dummy"));
+
+
     # F_4315
 #    merger.hookstub(0x08025ae4, sapplet.getadr("dummy"));
 
