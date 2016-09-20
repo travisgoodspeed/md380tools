@@ -24,6 +24,7 @@
 #include "ambe.h"
 #include "usersdb.h"
 #include "display.h"
+#include "dmr.h"
  
 static int flag=0;
 
@@ -38,16 +39,12 @@ static int flag=0;
 
 #define MAX_STATUS_CHARS 40
 
-#define RX_POPUP_Y_START 12
 wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
 
 char progress_info[] = { "|/-\\" } ;
 
 int progress = 0 ;
 
-extern int g_dst;  // transferbuffer users.csv
-extern int g_src;
-  
 uint8_t *mode2 = 0x2001e94b ;
 uint16_t *cntr2 = 0x2001e844 ;
     
@@ -129,71 +126,13 @@ void * f_4225_internel_hook()
 }
 
 
-void print_rx_screen(unsigned int bg_color) {
-#ifdef CONFIG_GRAPHICS
-
-  char buf[160];
-  int n,i,ii;
-  int dst;
-  int src;
-
-  // clear screen
-  gfx_set_fg_color(bg_color);
-  gfx_blockfill(2, 16, 157, 130); // if we go any lower, we wrap around to the top
-
-  gfx_set_bg_color(bg_color);
-  gfx_set_fg_color(0x000000);
-  gfx_select_font(gfx_font_small);
-
- int primask=OS_ENTER_CRITICAL();  // for form sake
- dst=g_dst;
- src=g_src;
- OS_EXIT_CRITICAL(primask);
- if (find_dmr_user(buf, src, (void *) 0x100000, 80) == 0) {
-   sprintf(buf, ",ID not found,in users.csv,see README.md,on Github");   // , is line seperator ;)
- }
-  ii=0;
-  n=0;
-  int y_index = RX_POPUP_Y_START;
-
-  for (i=0;i<strlen(buf) || n < 6 ;i++) {
-    if (buf[i] == ',' || buf[i] == '\0') {
-      if (n == 1) {  // This line holds the call sign
-        gfx_select_font(gfx_font_norm);
-      } else {
-        gfx_select_font(gfx_font_small);
-      } 
-
-      if (n == 2) {
-        y_index = y_index + 16;  // previous line was in big font
-      } else {
-        y_index = y_index + 12;  // previous line was in small font
-      }
-
-      buf[ii++]='\0';
-      drawascii2(buf, 10, y_index);
-      ii=0;
-      n++;
-    } else {
-      if (ii<29) buf[ii++]=buf[i];
-      }
-  }
-
-  sprintf(buf, "%d -> %d", src, dst ); // overwrite DMR id with source -> destination
-  drawascii2(buf, 10, RX_POPUP_Y_START + 12);
-
-  gfx_select_font(gfx_font_norm);
-  gfx_set_fg_color(0xff8032);
-  gfx_set_bg_color(0xff000000);
-#endif //CONFIG_GRAPHICS
-}
 
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {
     PRINT("b");
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
-    print_rx_screen(0xff8032);
+    draw_rx_screen(0xff8032);
   } else {
     gfx_drawbmp(bmp, x, y);
   }
@@ -205,7 +144,7 @@ void rx_screen_gray_hook(void *bmp, int x, int y)
     PRINT("g");
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
-    print_rx_screen(0x888888);
+    draw_rx_screen(0x888888);
   } else {
     gfx_drawbmp(bmp, x, y);
   }

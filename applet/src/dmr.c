@@ -7,6 +7,7 @@
   direct patches and callbacks are still necessary.
 */
 
+#include "dmr.h"
 
 #include <stdio.h>
 #include <string.h>
