@@ -1,6 +1,8 @@
 /*
  *  display.c
  * 
+ * for high-level drawing functions.
+ * 
  */
 
 #include "display.h"

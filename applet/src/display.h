@@ -1,6 +1,8 @@
 /*
  *  display.h
  * 
+ * for high-level drawing functions.
+ * 
  */
 
 #ifndef DISPLAY_H
