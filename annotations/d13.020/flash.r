@@ -3405,6 +3405,7 @@ f gfx_drawtext8 0 0x08036fc0
 af+ 0x08036fc0 378 gfx_drawtext8
 
 CCa 0x08036ff4 check_for_0_term 
+CCa 0x08037118 check_for_0_term_and_loop
 
 CCa 0x08033c96 mult_off21_off23_font
 
