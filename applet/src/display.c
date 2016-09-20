@@ -204,3 +204,23 @@ void draw_rx_screen(unsigned int bg_color)
     gfx_set_bg_color(0xff000000);
 #endif //CONFIG_GRAPHICS
 }
+
+/*
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void)
+{
+    long peak = 6000;
+    if (peak > 0) {
+	int fullscale_offset = int_centibel(32767);
+	int relative_peak_cb = int_centibel(peak) - fullscale_offset;
+	printf("%i.%i dBFS\en", relative_peak_cb / 10,
+	       abs(relative_peak_cb % 10));
+    } else {
+	printf("-Inf dBFS\n");
+    }
+    return 0;
+}
+*/
+
