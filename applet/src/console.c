@@ -75,9 +75,6 @@ wchar_t wide[MAX_XPOS];
     
 void con_draw1()
 {
-    if( con_enabled == 0 ) {
-        return ;
-    }
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
     void *old = gfx_select_font(gfx_font_small);
@@ -104,6 +101,10 @@ void con_draw1()
 
 void con_draw()
 {
+    if( con_enabled == 0 ) {
+        return ;
+    }
+    
 //    if( within_update ) {
 //        return ;
 //    }
