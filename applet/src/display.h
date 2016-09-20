@@ -44,6 +44,7 @@ extern "C" {
 
 void draw_eye_opt();
 void draw_micbargraph();
+void draw_rx_screen(unsigned int bg_color);
 
 
 #ifdef __cplusplus
