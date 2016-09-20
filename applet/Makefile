@@ -2,6 +2,7 @@ SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_con
 SRCS += spiflash.o usb.o menu.o rtc_timer.o beep_process.o usersdb.o os.o aes.o
 SRCS += ambe.o  dmr.o 
 SRCS += display.o
+SRCS += console.o
 #### SRCS +=  dispflip.o  # display flip is included @ d13.020
 #### SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
 

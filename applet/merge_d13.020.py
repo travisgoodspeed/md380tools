@@ -226,8 +226,8 @@ if __name__== '__main__':
         0x0801f044, 0x0801f07a,        0x0801f092, 0x0802d660,
         0x0802d70e, 0x0802d8e2,        0x0802d9e4, 
     ];
-#    for adr in dt2list:
-#        merger.hookbl(adr,sapplet.getadr("gfx_chars_to_display_hook"));
+    for adr in dt2list:
+        merger.hookbl(adr,sapplet.getadr("gfx_chars_to_display_hook"));
 
     merger.hookbl(0x08046804, sapplet.getadr("gfx_drawtext_hook"),0);
     merger.hookbl(0x0804681a, sapplet.getadr("gfx_drawtext_hook"),0);

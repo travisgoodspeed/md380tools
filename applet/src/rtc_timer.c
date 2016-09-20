@@ -25,6 +25,7 @@
 #include "usersdb.h"
 #include "display.h"
 #include "dmr.h"
+#include "console.h"
  
 static int flag=0;
 
@@ -74,20 +75,19 @@ void update_status_line()
         status_line[i]= status_buf[i];
     }
     status_line[MAX_STATUS_CHARS-1]='\0';    
+    
+    //con_puts(status_buf);
 }
 
 extern void draw_status_line()
 {
-    gfx_set_fg_color(0xff000000);
-    gfx_set_bg_color(0x00ff8032); 
-    void *old = gfx_select_font(gfx_font_small);
-    
-    gfx_chars_to_display(status_line,10,55,0); 
-
-    gfx_select_font(old);
-    
-//    gfx_drawtext5(status_buf,10,55,0);
-//    something_write_to_screen(status_line,0,80,160,100);
+//    gfx_set_fg_color(0xff000000);
+//    gfx_set_bg_color(0x00ff8032); 
+//    void *old = gfx_select_font(gfx_font_small);
+//    
+//    gfx_chars_to_display(status_line,10,55,0); 
+//
+//    gfx_select_font(old);
 }
 
 extern void draw_updated_status_line()
@@ -236,17 +236,19 @@ void gfx_drawtext8_hook(uint8_t *r0)
 
 void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
-    PRINT("dt: %d %d %S %x\n", sx, sy, str, str);
+    //PRINT("dt: %d %d %S %x\n", sx, sy, str, str);
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
-    // filter datetime (y=96)
-    if( y != 96 ) {
-        PRINT("ctd: %d %d %S\n", x, y, str);
-    }
+    con_draw();
+    
+//    // filter datetime (y=96)
+//    if( y != 96 ) {
+//        PRINT("ctd: %d %d %S\n", x, y, str);
+//    }
     gfx_chars_to_display(str, x, y, xlen);
 }
 
