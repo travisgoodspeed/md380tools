@@ -246,21 +246,24 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
+    wchar_t *str2 = str ;
     PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
     if( x == 45 && y == 34 ) {
         mkascii( tg_buf, sizeof(tg_buf), str );
-        if( !has_gui() ) {
-            return ;
-        }
+        // somehow, if f() is not called, the console is not drawn. 
+        // to fix later.
+//        if( !has_gui() ) {
+//            str2 = L"" ;
+//        }
     }
     if( x == 34 && y == 75 ) {
         mkascii( chan_buf, sizeof(chan_buf), str );
-        if( !has_gui() ) {
-            return ;
-        }
+//        if( !has_gui() ) {
+//            str2 = L"" ;
+//        }
     }
     
-    f(str,x,y,xlen,ylen);
+    f(str2,x,y,xlen,ylen);
 }
 
 #if 0
