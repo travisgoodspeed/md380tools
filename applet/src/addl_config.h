@@ -5,6 +5,8 @@
 #ifndef MD380TOOLS_ADDL_CONFIG_H_INCLUDED
 #define MD380TOOLS_ADDL_CONFIG_H_INCLUDED
 
+#include <stdint.h>
+
 enum spi_flash_addl_config {
   offset_rbeep,
   offset_datef,
@@ -12,7 +14,8 @@ enum spi_flash_addl_config {
   offset_debug,
   offset_promtg,
   offset_prompriv,
-  offset_micbargraph
+  offset_micbargraph,
+  offset_console,
 };
 
 extern struct addl_config {
@@ -42,6 +45,16 @@ inline void spiflash_read_datef()
     global_addl_config.datef = spiflash_read_uint8_ranged( offset_datef, 5 );    
 }
 
+inline void spiflash_write_console()
+{
+    spiflash_write_uint8( offset_console, global_addl_config.console );    
+}
+
+inline void spiflash_read_console()
+{
+    global_addl_config.console = spiflash_read_uint8_ranged( offset_console, 1 );    
+}
+
 inline void spiflash_write_promtg()
 {
     spiflash_write_uint8( offset_promtg, global_addl_config.promtg );    
@@ -67,18 +80,14 @@ inline void spiflash_read_rbeep()
     global_addl_config.rbeep = spiflash_read_uint8_ranged( offset_rbeep, 2 );    
 }
 
-extern int con_enabled ; 
-
 inline void spiflash_write_debug()
 {
     spiflash_write_uint8( offset_debug, global_addl_config.debug );    
-    con_enabled = global_addl_config.debug ;
 }
 
 inline void spiflash_read_debug()
 {
     global_addl_config.debug = spiflash_read_uint8_ranged( offset_debug, 2 );    
-    con_enabled = global_addl_config.debug ;
 }
 
 inline void spiflash_read_micbargraph()

@@ -81,10 +81,10 @@ void con_putc( char c )
 
 int within_update = 0 ;
 
-int con_enabled = 0 ;
-
 wchar_t wide[MAX_XPOS];
     
+#define LINE_HEIGHT 12 
+
 void con_draw1()
 {
     gfx_set_fg_color(0xff000000);
@@ -105,7 +105,7 @@ void con_draw1()
             }
         }
         *w = 0 ;
-        gfx_chars_to_display(wide, 0, y * 18, 0);
+        gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
     }
 
     gfx_select_font(old);    
@@ -113,7 +113,7 @@ void con_draw1()
 
 void con_draw()
 {
-    if( con_enabled == 0 ) {
+    if( !has_console() ) {
         return ;
     }
     

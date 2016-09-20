@@ -15,15 +15,19 @@ void con_putc( char c );
 void con_goto(int x, int y);
 void con_print(int x, int y, const char *s);
 
+#include "addl_config.h"
+
 inline int has_console()
 {
-    extern int con_enabled ;
-    return con_enabled ;
+    return global_addl_config.console ;
 }
 
 inline int has_gui()
 {
-    return 1 ;
+    if( !has_console() ) {
+        return 1 ;
+    }
+    return global_addl_config.debug ;
 }
 
 #ifdef __cplusplus
