@@ -97,12 +97,13 @@ void con_putc( char c )
 
 int within_update = 0 ;
 
-wchar_t wide[MAX_XPOS];
+wchar_t wide[MAX_BUF];
     
 #define LINE_HEIGHT 12 
 
 static void con_draw1()
 {
+    // save old values first.
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
     void *old = gfx_select_font(gfx_font_small);
