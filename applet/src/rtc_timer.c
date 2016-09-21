@@ -35,75 +35,8 @@ static int flag=0;
  *
  */
 
-#define MAX_STATUS_CHARS 40
-
-//wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
-
-char progress_info[] = { "|/-\\" } ;
-
-int progress = 0 ;
-
-uint8_t *mode2 = 0x2001e94b ;
-uint16_t *cntr2 = 0x2001e844 ;
-uint8_t *mode3 = 0x2001e892 ;
-    
-// 1 idle
-// 2 rx
-// 4 post-rx?
-// 10 menu
-
 //void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
 //void (*gfx_drawtext5)(wchar_t *str, int sx, int sy, int maxlen) = 0x0801dd2c + 1 ;
-
-char status_buf[MAX_STATUS_CHARS] = { "" };
-    
-//char chan_buf[15];
-//char tg_buf[15];
-
-void netmon_update()
-{
-    if( !has_console() ) {
-        return ;
-    }
-    
-    progress++ ;
-    progress %= sizeof( progress_info );
-    
-    int progress2 = progress ; // sample (thread safe) 
-
-    progress2 %=  sizeof( progress_info ) - 1 ;
-    char c = progress_info[progress2];
-    
-    int dst = g_dst ;
-    
-    sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
-        
-    con_clrscr();
-    con_puts(status_buf);
-    con_nl();    
-#ifdef FW_D13_020
-    {
-        // current channel name.
-        wchar_t *p = 0x2001cddc ;
-        con_puts("ch:");
-        con_putsw(p);
-        con_nl();    
-    }
-    {        
-        // current tg name.
-        wchar_t *p = 0x2001e1f4 ;
-        con_puts("tg:");
-        con_putsw(p);
-        con_nl();    
-    }
-#endif    
-//    con_puts("ch:");
-//    con_puts(chan_buf);
-//    con_nl();    
-//    con_puts("tg:");
-//    con_puts(tg_buf);
-//    con_nl();    
-}
 
 //extern void mode17_hook()
 //{
@@ -293,20 +226,20 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 }
 #endif
 
-int old_opmode = 0 ;
-
-void trace_scr_mode()
-{
-    if( old_opmode != md380_f_4225_operatingmode ) {
-        old_opmode = md380_f_4225_operatingmode ;
-        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
-    } else {
-//        printf( "%d ", md380_f_4225_operatingmode);
-    }
-    
-    PRINT( "%d %d\n", *mode2, *cntr2 );
-    
-}
+//int old_opmode = 0 ;
+//
+//void trace_scr_mode()
+//{
+//    if( old_opmode != md380_f_4225_operatingmode ) {
+//        old_opmode = md380_f_4225_operatingmode ;
+//        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
+//    } else {
+////        printf( "%d ", md380_f_4225_operatingmode);
+//    }
+//    
+//    PRINT( "%d %d\n", *mode2, *cntr2 );
+//    
+//}
 
 #ifdef FW_D13_020
 void OSTimeDly(uint32_t delay);
