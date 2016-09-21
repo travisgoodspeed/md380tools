@@ -248,3 +248,5 @@ x0802e240 = 0x0802e241;
 /* dummy entry. do not activate f_4315_hook() until found. */
 F_4315 = 0x0;
 
+/* dont hook before fixing this */
+draw_statusline = 0x0 ;

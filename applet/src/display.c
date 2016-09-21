@@ -224,3 +224,12 @@ int main(void)
 }
 */
 
+
+void draw_statusline_hook( uint32_t r0 )
+{
+    if( has_console() ) {
+        con_redraw();
+        return ;
+    }
+    draw_statusline( r0 );
+}
