@@ -196,3 +196,12 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
     }
     gfx_blockfill(xmin,ymin,xmax,ymax);
 }
+
+void draw_statusline_hook( uint32_t r0 )
+{
+    if( has_console() ) {
+        con_redraw();
+        return ;
+    }
+    draw_statusline( r0 );
+}
