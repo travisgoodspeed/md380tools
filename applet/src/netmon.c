@@ -22,11 +22,15 @@ uint8_t *mode2 = (void*)0x2001e94b ;
 uint16_t *cntr2 = (void*)0x2001e844 ;
 uint8_t *mode3 = (void*)0x2001e892 ;
     
+// mode2
 // 1 idle
-// 2 rx
-// 4 post-rx?
+// 2 rx/tx
+// 4 post-rx/tx
 // 10 menu
 
+// mode3 
+// 0 = idle?
+// 3 = unprog channel
 
 void netmon_update()
 {

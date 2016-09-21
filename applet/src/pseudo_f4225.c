@@ -39,6 +39,13 @@ void f4225()
                                     q = 2 ;     
                                     Create_MainMenyEntry(...);
                                     F_4315();
+                                    0x0800dcec();
+                                } else {
+                                    s = 5 ;
+                                    r = 17 ;
+                                    q = 2 ;     
+                                    F_4315();
+                                    0x0800dcec();
                                 }
                             }
                         }
@@ -268,4 +275,10 @@ loop2()
     if( *0x20004acc == 0xFF ) {
         Create_MainMenyEntry();
     }
+}
+
+// major display updates.
+F_4315()
+{
+    
 }
