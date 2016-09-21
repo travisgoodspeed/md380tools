@@ -55,7 +55,7 @@ void drawascii2(char *ascii,
         }
 #ifdef CONFIG_GRAPHICS
   gfx_drawtext2(wide, x, y, 0);
-  con_draw();
+  con_redraw();
 #endif
 }
 
