@@ -18,6 +18,7 @@
 #include "ambe.h"
 #include "usersdb.h"
 #include "dmr.h"
+#include "console.h"
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -224,3 +225,12 @@ int main(void)
 }
 */
 
+
+void draw_statusline_hook( uint32_t r0 )
+{
+    if( has_console() ) {
+        con_redraw();
+        return ;
+    }
+    draw_statusline( r0 );
+}

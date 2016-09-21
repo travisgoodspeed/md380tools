@@ -455,6 +455,9 @@ if __name__== '__main__':
     for adr in gfxblockfill:
         merger.hookbl(adr, sapplet.getadr("gfx_blockfill_hook"));
 
+    # 
+    merger.hookbl(0x08021782, sapplet.getadr("draw_statusline_hook"));
+
     # drawtext hooks
 
     dt2list=[

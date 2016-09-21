@@ -157,3 +157,5 @@ dmr_sms_arrive       = 0x080418f9; /* 376 byte match */
 
 ambe_encode_thing    = 0x08054019; /* 1024 byte match */
 
+/* dont hook before fixing this */
+draw_statusline = 0x0 ;
