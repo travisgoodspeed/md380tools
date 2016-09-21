@@ -3365,6 +3365,12 @@ af+ 0x0804fdfe 0 set_CCCC
 f disp_something 0 0x0800d69c
 af+ 0x0800d69c 0 disp_something
  
+f do_status_line @ 0x08033dac
+af+ 0x08033dac 244 do_status_line
+
+af+ 0x08036fba 2 do_nothing_1
+af+ 0x08036fbc 2 do_nothing_2
+
 
 # gfx_
 
