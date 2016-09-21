@@ -32,6 +32,10 @@ uint8_t *mode3 = (void*)0x2001e892 ;
 // 0 = idle?
 // 3 = unprog channel
 
+uint8_t last_radio_event ;
+uint8_t last_event2 ;
+uint8_t last_event3 ;
+
 void netmon_update()
 {
     if( !has_console() ) {
@@ -69,4 +73,8 @@ void netmon_update()
         con_nl();    
     }
 #endif    
+    {
+        sprintf(status_buf,"re: %2x e2:%2x e3:%2x\n", last_radio_event, last_event2, last_event3 );
+        con_puts(status_buf);
+    }
 }
