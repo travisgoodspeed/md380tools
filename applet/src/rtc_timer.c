@@ -25,6 +25,8 @@
 #include "usersdb.h"
 #include "display.h"
 #include "dmr.h"
+#include "console.h"
+#include "util.h"
  
 static int flag=0;
 
@@ -39,7 +41,7 @@ static int flag=0;
 
 #define MAX_STATUS_CHARS 40
 
-wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
+//wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
 
 char progress_info[] = { "|/-\\" } ;
 
@@ -47,6 +49,7 @@ int progress = 0 ;
 
 uint8_t *mode2 = 0x2001e94b ;
 uint16_t *cntr2 = 0x2001e844 ;
+uint8_t *mode3 = 0x2001e892 ;
     
 // 1 idle
 // 2 rx
@@ -58,8 +61,14 @@ uint16_t *cntr2 = 0x2001e844 ;
 
 char status_buf[MAX_STATUS_CHARS] = { "" };
     
+char chan_buf[10];
+char tg_buf[10];
+
 void update_status_line()
 {
+    progress++ ;
+    progress %= sizeof( progress_info );
+    
     int progress2 = progress ; // sample (thread safe) 
 
     progress2 %=  sizeof( progress_info ) - 1 ;
@@ -67,41 +76,25 @@ void update_status_line()
     
     int dst = g_dst ;
     
-    sprintf(status_buf,"%c|%02d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *cntr2 ); // potential buffer overrun!!!
+    sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
         
-    for(int i=0;i<MAX_STATUS_CHARS;i++) {
-        status_line[i]= status_buf[i];
-    }
-    status_line[MAX_STATUS_CHARS-1]='\0';    
+//    con_clrscr();
+    con_print(0,0,status_buf);
+    con_print(0,1,chan_buf);
+    con_print(0,2,tg_buf);
 }
 
-extern void draw_status_line()
-{
-    gfx_set_fg_color(0xff000000);
-    gfx_set_bg_color(0x00ff8032); 
-    void *old = gfx_select_font(gfx_font_small);
-    
-    gfx_chars_to_display(status_line,10,55,0); 
+//extern void draw_updated_status_line()
+//{
+//    
+//    update_status_line();
+//    draw_status_line();
+//}
 
-    gfx_select_font(old);
-    
-//    gfx_drawtext5(status_buf,10,55,0);
-//    something_write_to_screen(status_line,0,80,160,100);
-}
-
-extern void draw_updated_status_line()
-{
-    progress++ ;
-    progress %= sizeof( progress_info );
-    
-    update_status_line();
-    draw_status_line();
-}
-
-extern void mode17_hook()
-{
-    draw_status_line();
-}
+//extern void mode17_hook()
+//{
+//    draw_status_line();
+//}
 
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() 
@@ -129,7 +122,7 @@ void * f_4225_internel_hook()
 
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {
-    PRINT("b");
+    update_status_line();
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0xff8032);
@@ -141,7 +134,7 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 
 void rx_screen_gray_hook(void *bmp, int x, int y) 
 {
-    PRINT("g");
+    update_status_line();
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0x888888);
@@ -197,25 +190,6 @@ void f_4102_hook() {
 #endif //CONFIG_GRAPHICS
 
 
-/*
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(void)
-{
-    long peak = 6000;
-    if (peak > 0) {
-	int fullscale_offset = int_centibel(32767);
-	int relative_peak_cb = int_centibel(peak) - fullscale_offset;
-	printf("%i.%i dBFS\en", relative_peak_cb / 10,
-	       abs(relative_peak_cb % 10));
-    } else {
-	printf("-Inf dBFS\n");
-    }
-    return 0;
-}
-*/
-
 
 
 extern void dummy();
@@ -252,13 +226,15 @@ void gfx_drawtext8_hook(uint8_t *r0)
 
 void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
-    PRINT("dt: %d %d %S %x\n", sx, sy, str, str);
+    //PRINT("dt: %d %d %S %x\n", sx, sy, str, str);
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
+    con_draw();
+
     // filter datetime (y=96)
     if( y != 96 ) {
         PRINT("ctd: %d %d %S\n", x, y, str);
@@ -270,8 +246,24 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
+    wchar_t *str2 = str ;
     PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
-    f(str,x,y,xlen,ylen);
+    if( x == 45 && y == 34 ) {
+        mkascii( tg_buf, sizeof(tg_buf), str );
+        // somehow, if f() is not called, the console is not drawn. 
+        // to fix later.
+//        if( !has_gui() ) {
+//            str2 = L"" ;
+//        }
+    }
+    if( x == 34 && y == 75 ) {
+        mkascii( chan_buf, sizeof(chan_buf), str );
+//        if( !has_gui() ) {
+//            str2 = L"" ;
+//        }
+    }
+    
+    f(str2,x,y,xlen,ylen);
 }
 
 #if 0
@@ -302,8 +294,25 @@ void trace_scr_mode()
 }
 
 #ifdef FW_D13_020
-void (*OSTimeDly)(uint32_t delay) = 0x8033eb4 + 1 ;        
-#endif        
+void OSTimeDly(uint32_t delay);
+#endif  
+
+//void state_fuzzing()
+//{
+//    static long cnt = 0 ;
+//    
+//    cnt++ ;
+//    
+//    if( cnt > 500 ) {
+//        
+//        if( cnt < 900 ) {
+//            *mode2 = 4 ;            
+//        } else {
+//            *mode2 = 1 ;
+//        }
+//        
+//    } 
+//}
 
 void f_4225_hook()
 {
@@ -320,7 +329,7 @@ void f_4225_hook()
     }
     
     if ( global_addl_config.debug == 1 ) {
-        draw_updated_status_line();
+        update_status_line();
     }
     
 //#ifdef FW_D13_020
@@ -331,15 +340,18 @@ void f_4225_hook()
 //#endif        
     
     md380_f_4225();
+    
+    //con_draw();
 
     if ( global_addl_config.debug == 1 ) {
+//        state_fuzzing();
 //        PRINT("%S\n", status_line );
 //        static long fg = 0xff8032 ;
 //        fg += 0x10 ;
 //        gfx_set_fg_color(fg);
 //        gfx_set_bg_color(0xff000000);
 //        gfx_blockfill(0,0,100,100);
-        draw_status_line();
+        //draw_status_line();
 //#ifdef FW_D13_020
 //        if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
 //            PRINT("<");

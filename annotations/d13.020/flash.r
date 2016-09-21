@@ -2669,7 +2669,6 @@ CCa 0x802c682 md380_menu_0x20001114
 CCa 0x802c68c md380_menu_0x2001d3ef
 CCa 0x802c69c md380_menu_0x2001d3ef
 CCa 0x802c6a0 md380_menu_0x20001114
-af+ 0x802c83c 2370 F_4520
 CCa 0x802ca8e md380_menu_0x2001d3ed
 CCa 0x802ca96 md380_menu_0x2001d3ee
 CCa 0x802ca9e md380_menu_0x2001d3ef
@@ -3355,6 +3354,18 @@ f scr_1 0 0x0802daf8
 f draw_botline_text 0 0x08046810
 f draw_topline_text_maybe 0 0x080467fa
 
+f mainloop_entry 0 0x080468ae
+f jmp_to_mainloop 0 0x080468f6
+f F_4520 0 0x802c83c
+af+ 0x802c83c 2370 F_4520
+
+af+ 0x0804fdf4 0 set_AAAA
+af+ 0x0804fdfe 0 set_CCCC
+
+f disp_something 0 0x0800d69c
+af+ 0x0800d69c 0 disp_something
+ 
+
 # gfx_
 
 af+ 0x801d370 8 gfx_set_fg_color
@@ -3429,7 +3440,7 @@ af+ 0x0800e538 98 draw_zone_channel
 
 f scr_mode_stable 0 0x08020830
 
-af+ keyboard_maybe 152 0x0804eb64
+af+ 0x0804eb64 152 keyboard_maybe  
 f keyboard_maybe 0 0x0804eb64
 
 f poi_mode2 0 0x08020bf4
