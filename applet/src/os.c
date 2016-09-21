@@ -14,6 +14,7 @@
 #include "config.h"
 #include "os.h"
 #include "addl_config.h"
+#include "debug.h"
 
 OS_EVENT* debug_line_sem;  // not yet used 
 
@@ -80,8 +81,6 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   pevent_to_name(pevent, pmsg);
   return(md380_OSMboxPost(pevent, pmsg));
 }
-
-#define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {

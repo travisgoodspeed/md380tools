@@ -39,6 +39,22 @@ void con_puts( const char *s )
     }    
 }
 
+void con_putsw( const wchar_t *s )
+{
+    while( *s ) {
+        con_putc( *s++ );
+        if( con_xpos >= MAX_XPOS ) {
+            con_putc( '\n');
+        }
+    }        
+}
+
+void con_nl()
+{
+    con_xpos = 0 ;
+    con_ypos++ ;    
+}
+
 void con_clrscr()
 {
     con_xpos = 0 ;
@@ -72,8 +88,7 @@ void con_putc( char c )
             con_clrscr();
             return ;
         case '\n' :
-            con_xpos = 0 ;
-            con_ypos++ ;
+            con_nl();
             return ;
     }
     con_addchar(c);    
@@ -85,7 +100,7 @@ wchar_t wide[MAX_XPOS];
     
 #define LINE_HEIGHT 12 
 
-void con_draw1()
+static void con_draw1()
 {
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
@@ -111,7 +126,7 @@ void con_draw1()
     gfx_select_font(old);    
 }
 
-void con_draw()
+void con_redraw()
 {
     if( !has_console() ) {
         return ;

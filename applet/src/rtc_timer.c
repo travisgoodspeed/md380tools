@@ -5,12 +5,6 @@
 #define DEBUG
 #define CONFIG_GRAPHICS
 
-#ifdef DEBUG
-#define PRINT(fmt, args...)    printf(fmt, ## args)
-#else
-#define PRINT(fmt, args...)    /* Don't do anything in release builds */
-#endif
-
 #include <stdlib.h>
 
 #include "md380.h"
@@ -27,6 +21,8 @@
 #include "dmr.h"
 #include "console.h"
 #include "util.h"
+#include "debug.h"
+#include "netmon.h"
  
 static int flag=0;
 
@@ -61,11 +57,15 @@ uint8_t *mode3 = 0x2001e892 ;
 
 char status_buf[MAX_STATUS_CHARS] = { "" };
     
-char chan_buf[15];
+//char chan_buf[15];
 char tg_buf[15];
 
-void update_status_line()
+void netmon_update()
 {
+    if( !has_console() ) {
+        return ;
+    }
+    
     progress++ ;
     progress %= sizeof( progress_info );
     
@@ -78,23 +78,24 @@ void update_status_line()
     
     sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
         
-//    con_clrscr();
-    con_print(0,0,status_buf);
-    con_goto(0,1);
-    con_puts("ch:");
-    con_puts(chan_buf);
-
-    con_goto(0,2);
+    con_clrscr();
+    con_puts(status_buf);
+    con_nl();    
+#ifdef FW_D13_020
+    {
+        wchar_t *p = 0x2001cddc ;
+        con_puts("ch:");
+        con_putsw(p);
+        con_nl();    
+    }
+#endif    
+//    con_puts("ch:");
+//    con_puts(chan_buf);
+//    con_nl();    
     con_puts("tg:");
     con_puts(tg_buf);
+    con_nl();    
 }
-
-//extern void draw_updated_status_line()
-//{
-//    
-//    update_status_line();
-//    draw_status_line();
-//}
 
 //extern void mode17_hook()
 //{
@@ -127,7 +128,7 @@ void * f_4225_internel_hook()
 
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {
-    update_status_line();
+    netmon_update();
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0xff8032);
@@ -139,7 +140,7 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 
 void rx_screen_gray_hook(void *bmp, int x, int y) 
 {
-    update_status_line();
+    netmon_update();
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0x888888);
@@ -238,7 +239,7 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
-    con_draw();
+    con_redraw();
 
     // filter datetime (y=96)
     if( y != 96 ) {
@@ -251,8 +252,9 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
+    void * return_addr = __builtin_return_address(0);
     wchar_t *str2 = str ;
-    PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
+    PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
     if( x == 45 && y == 34 ) {
         mkascii( tg_buf, sizeof(tg_buf), str );
         // somehow, if f() is not called, the console is not drawn. 
@@ -261,12 +263,12 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 //            str2 = L"" ;
 //        }
     }
-    if( x == 34 && y == 75 ) {
-        mkascii( chan_buf, sizeof(chan_buf), str );
-//        if( !has_gui() ) {
-//            str2 = L"" ;
-//        }
-    }
+//    if( x == 34 && y == 75 ) {
+//        mkascii( chan_buf, sizeof(chan_buf), str );
+////        if( !has_gui() ) {
+////            str2 = L"" ;
+////        }
+//    }
     
     f(str2,x,y,xlen,ylen);
 }
@@ -333,21 +335,10 @@ void f_4225_hook()
         draw_micbargraph();
     }
     
-    if ( global_addl_config.debug == 1 ) {
-        update_status_line();
-    }
-    
-//#ifdef FW_D13_020
-//        if( (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ) {
-//            PRINT(">");
-//            OSTimeDly( 10000 );
-//        }
-//#endif        
+    netmon_update();
     
     md380_f_4225();
     
-    //con_draw();
-
     if ( global_addl_config.debug == 1 ) {
 //        state_fuzzing();
 //        PRINT("%S\n", status_line );
@@ -364,10 +355,6 @@ void f_4225_hook()
 //        }
 //#endif        
     }        
-    
-//    if ( global_addl_config.experimental == 0 ) {
-//        return ;
-//    }
     
 //#endif
 }
