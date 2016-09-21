@@ -11,6 +11,7 @@
 #include "string.h"
 #include "addl_config.h"
 #include "display.h"
+#include "console.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"

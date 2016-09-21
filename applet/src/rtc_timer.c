@@ -35,67 +35,8 @@ static int flag=0;
  *
  */
 
-#define MAX_STATUS_CHARS 40
-
-//wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
-
-char progress_info[] = { "|/-\\" } ;
-
-int progress = 0 ;
-
-uint8_t *mode2 = 0x2001e94b ;
-uint16_t *cntr2 = 0x2001e844 ;
-uint8_t *mode3 = 0x2001e892 ;
-    
-// 1 idle
-// 2 rx
-// 4 post-rx?
-// 10 menu
-
 //void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
 //void (*gfx_drawtext5)(wchar_t *str, int sx, int sy, int maxlen) = 0x0801dd2c + 1 ;
-
-char status_buf[MAX_STATUS_CHARS] = { "" };
-    
-//char chan_buf[15];
-char tg_buf[15];
-
-void netmon_update()
-{
-    if( !has_console() ) {
-        return ;
-    }
-    
-    progress++ ;
-    progress %= sizeof( progress_info );
-    
-    int progress2 = progress ; // sample (thread safe) 
-
-    progress2 %=  sizeof( progress_info ) - 1 ;
-    char c = progress_info[progress2];
-    
-    int dst = g_dst ;
-    
-    sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
-        
-    con_clrscr();
-    con_puts(status_buf);
-    con_nl();    
-#ifdef FW_D13_020
-    {
-        wchar_t *p = 0x2001cddc ;
-        con_puts("ch:");
-        con_putsw(p);
-        con_nl();    
-    }
-#endif    
-//    con_puts("ch:");
-//    con_puts(chan_buf);
-//    con_nl();    
-    con_puts("tg:");
-    con_puts(tg_buf);
-    con_nl();    
-}
 
 //extern void mode17_hook()
 //{
@@ -255,14 +196,14 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     void * return_addr = __builtin_return_address(0);
     wchar_t *str2 = str ;
     PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
-    if( x == 45 && y == 34 ) {
-        mkascii( tg_buf, sizeof(tg_buf), str );
-        // somehow, if f() is not called, the console is not drawn. 
-        // to fix later.
-//        if( !has_gui() ) {
-//            str2 = L"" ;
-//        }
-    }
+//    if( x == 45 && y == 34 ) {
+//        mkascii( tg_buf, sizeof(tg_buf), str );
+//        // somehow, if f() is not called, the console is not drawn. 
+//        // to fix later.
+////        if( !has_gui() ) {
+////            str2 = L"" ;
+////        }
+//    }
 //    if( x == 34 && y == 75 ) {
 //        mkascii( chan_buf, sizeof(chan_buf), str );
 ////        if( !has_gui() ) {
@@ -285,20 +226,20 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 }
 #endif
 
-int old_opmode = 0 ;
-
-void trace_scr_mode()
-{
-    if( old_opmode != md380_f_4225_operatingmode ) {
-        old_opmode = md380_f_4225_operatingmode ;
-        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
-    } else {
-//        printf( "%d ", md380_f_4225_operatingmode);
-    }
-    
-    PRINT( "%d %d\n", *mode2, *cntr2 );
-    
-}
+//int old_opmode = 0 ;
+//
+//void trace_scr_mode()
+//{
+//    if( old_opmode != md380_f_4225_operatingmode ) {
+//        old_opmode = md380_f_4225_operatingmode ;
+//        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
+//    } else {
+////        printf( "%d ", md380_f_4225_operatingmode);
+//    }
+//    
+//    PRINT( "%d %d\n", *mode2, *cntr2 );
+//    
+//}
 
 #ifdef FW_D13_020
 void OSTimeDly(uint32_t delay);

@@ -6,6 +6,7 @@
 #include "console.h"
 
 #include "md380.h"
+#include "gfx.h"
 
 
 #define MAX_XPOS 20 
