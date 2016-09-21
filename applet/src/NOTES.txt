@@ -48,7 +48,9 @@ OSMboxPend @ 0x803c80a, 0x7
 OSMboxPend @ 0x803c39c, 0x17 
 OSMboxPend @ 0x803c80a, 0x7 
 OSMboxPend @ 0x803c39c, 0x17 
-
+... ends in ...
+OSMboxPend @ 0x803c80a, 0x1 
+OSMboxPend @ 0x803c80a, 0x1 
 
 = after rx =
 OSMboxPend @ 0x803c80a, 0x9 
@@ -60,6 +62,7 @@ Call from 2041146 to 204 ended.
 OSMboxPend @ 0x803c80a, 0xa 
 popup grey
 OSMboxPend @ 0x802fa04, 0x24 
+roger beep 
 OSMboxPend @ 0x803c80a, 0xa 
 OSMboxPend @ 0x803c80a, 0x1 
 OSMboxPend @ 0x803c80a, 0x4 

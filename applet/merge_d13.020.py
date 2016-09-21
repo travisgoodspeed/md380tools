@@ -243,7 +243,11 @@ if __name__== '__main__':
     ];
     for adr in dt4list:
         merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
-    
+
+    # f_4315
+    merger.hookbl(0x080202d0, sapplet.getadr("f_4315_hook"));
+    merger.hookbl(0x080202fc, sapplet.getadr("f_4315_hook"));
+
     # 0x800def7 gfx_drawtext
 #    merger.hookstub(0x800def6, sapplet.getadr("dummy"));
 
@@ -283,9 +287,6 @@ if __name__== '__main__':
 # intercept disp_something
 #    merger.hookstub2(0x0800d69c, sapplet.getadr("dummy"));
 
-
-    # F_4315
-#    merger.hookstub(0x08025ae4, sapplet.getadr("dummy"));
 
     # call to Create_MainMenyEntry
 #    merger.hookbl(0x080202cc, sapplet.getadr("dummy"),0);

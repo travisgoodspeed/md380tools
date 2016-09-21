@@ -225,3 +225,6 @@ void md380_f_4098();
 void md380_f_4102();
 void md380_f_4225();
 
+// major display driver for popup during RX/TX
+void F_4315();
+

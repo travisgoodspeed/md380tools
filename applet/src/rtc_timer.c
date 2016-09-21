@@ -38,10 +38,15 @@ static int flag=0;
 //void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
 //void (*gfx_drawtext5)(wchar_t *str, int sx, int sy, int maxlen) = 0x0801dd2c + 1 ;
 
-//extern void mode17_hook()
-//{
-//    draw_status_line();
-//}
+extern void f_4315_hook()
+{
+    netmon_update();
+    con_redraw();
+    if( has_console() ) {
+        return ;
+    }
+    F_4315();
+}
 
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() 
@@ -65,7 +70,8 @@ void * f_4225_internel_hook()
   return &md380_f_4225_operatingmode ;
 }
 
-
+// 0x2001e895 != 32
+// 0x2001e895 == 64 -> rx_screen_blue_hook
 
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {

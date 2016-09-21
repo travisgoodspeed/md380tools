@@ -22,11 +22,19 @@ uint8_t *mode2 = (void*)0x2001e94b ;
 uint16_t *cntr2 = (void*)0x2001e844 ;
 uint8_t *mode3 = (void*)0x2001e892 ;
     
+// mode2
 // 1 idle
-// 2 rx
-// 4 post-rx?
+// 2 rx/tx
+// 4 post-rx/tx
 // 10 menu
 
+// mode3 
+// 0 = idle?
+// 3 = unprog channel
+
+uint8_t last_radio_event ;
+uint8_t last_event2 ;
+uint8_t last_event3 ;
 
 void netmon_update()
 {
@@ -65,4 +73,8 @@ void netmon_update()
         con_nl();    
     }
 #endif    
+    {
+        sprintf(status_buf,"re: %2x e2:%2x e3:%2x\n", last_radio_event, last_event2, last_event3 );
+        con_puts(status_buf);
+    }
 }

@@ -15,6 +15,8 @@
 #include "os.h"
 #include "addl_config.h"
 #include "debug.h"
+#include "console.h"
+#include "netmon.h"
 
 OS_EVENT* debug_line_sem;  // not yet used 
 
@@ -82,6 +84,7 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   return(md380_OSMboxPost(pevent, pmsg));
 }
 
+
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {
     void * ret;
@@ -91,8 +94,23 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     //  __asm__("mov %0,r14" : "=r" (return_addr));
     //  __asm__("mov %0,r13" : "=r" (sp));
     ret = md380_OSMboxPend(pevent, timeout, perr);
+    
+    if( has_console() ) {
+        if( ret != NULL ) {
+            if( ((uint32_t)pevent) == 0x20017468 ) {
+                last_radio_event = *(uint8_t*)ret ;
+            }
+            if( ((uint32_t)pevent) == 0x20017390 ) {
+                last_event2 = *(uint8_t*)ret ;
+            }
+            if( ((uint32_t)pevent) == 0x20017348 ) {
+                last_event3 = *(uint8_t*)ret ;
+            }
+        }
+    }
+    
     if( ret != NULL && global_addl_config.debug == 1 ) {
-        printf("OSMboxPend @ 0x%x, 0x%x \n", UNTHUMB_POI(return_addr), * (uint8_t*) ret);
+        printf("OSMboxPend @ 0x%x, 0x%x, 0x%x \n", UNTHUMB_POI(return_addr), pevent, *(uint8_t*)ret);
         switch (* (uint8_t*) ret) {
             case 0x24:
                 printf("roger beep ");
