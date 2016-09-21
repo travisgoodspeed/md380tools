@@ -6,6 +6,8 @@
 #ifndef NETMON_H
 #define NETMON_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
