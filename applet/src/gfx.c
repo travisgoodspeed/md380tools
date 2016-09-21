@@ -182,7 +182,6 @@ void print_ant_sym_hook(char *bmp, int x, int y)
 
 void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 {
-    //PRINT( "bf: %d %d %d %d\n", xmin, ymin, xmax, ymax );
     if( ymin == 0 && xmin == 61 ) {
         if( global_addl_config.promtg ) {
             return ;
@@ -190,6 +189,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
     }
     if( ymin == 0 ) {
         if( has_console() ) {
+            //PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+            con_redraw();
             return ;
         }
     }

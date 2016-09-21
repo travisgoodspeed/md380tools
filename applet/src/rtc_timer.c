@@ -204,7 +204,7 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
     if( has_console() ) {
         if( x == 45 && y == 34 ) {
-            y = 66 ; // lower text. 
+            y = 60 ; // lower text. 
     //        mkascii( tg_buf, sizeof(tg_buf), str );
     //        // somehow, if f() is not called, the console is not drawn. 
     //        // to fix later.
