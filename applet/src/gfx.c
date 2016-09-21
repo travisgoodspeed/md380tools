@@ -2,6 +2,8 @@
   \brief Graphics wrapper functions.
 */
 
+#define DEBUG
+
 #include "md380.h"
 #include "version.h"
 #include "tooldfu.h"
@@ -12,6 +14,7 @@
 #include "addl_config.h"
 #include "display.h"
 #include "console.h"
+#include "debug.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -174,4 +177,21 @@ void print_ant_sym_hook(char *bmp, int x, int y)
     gfx_drawbmp(bmp, x, y);
     draw_eye_opt();
 #endif
+}
+
+
+void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
+{
+    //PRINT( "bf: %d %d %d %d\n", xmin, ymin, xmax, ymax );
+    if( ymin == 0 && xmin == 61 ) {
+        if( global_addl_config.promtg ) {
+            return ;
+        }
+    }
+    if( ymin == 0 ) {
+        if( has_console() ) {
+            return ;
+        }
+    }
+    gfx_blockfill(xmin,ymin,xmax,ymax);
 }

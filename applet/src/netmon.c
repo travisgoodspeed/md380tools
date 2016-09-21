@@ -77,7 +77,7 @@ void netmon_update()
     }
 #endif    
     {
-        sprintf(status_buf,"re: %2x e2:%2x e3:%2x\n", last_radio_event, last_event2, last_event3 );
+        sprintf(status_buf,"re:%02x e2:%02x e3:%02x \n", last_radio_event, last_event2, last_event3 );
         con_puts(status_buf);
     }
 }
