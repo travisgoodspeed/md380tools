@@ -202,14 +202,15 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     void * return_addr = __builtin_return_address(0);
     wchar_t *str2 = str ;
     PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
-//    if( x == 45 && y == 34 ) {
+    if( x == 45 && y == 34 ) {
+        y = 76 ; // lower text. 
 //        mkascii( tg_buf, sizeof(tg_buf), str );
 //        // somehow, if f() is not called, the console is not drawn. 
 //        // to fix later.
 ////        if( !has_gui() ) {
 ////            str2 = L"" ;
 ////        }
-//    }
+    }
 //    if( x == 34 && y == 75 ) {
 //        mkascii( chan_buf, sizeof(chan_buf), str );
 ////        if( !has_gui() ) {
@@ -279,7 +280,9 @@ void f_4225_hook()
 //#ifdef CONFIG_GRAPHICS
 
     if ( global_addl_config.micbargraph == 1 ) {
-        draw_micbargraph();
+        if( !has_console() ) {
+            draw_micbargraph();
+        }
     }
     
     netmon_update();
