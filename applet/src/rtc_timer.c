@@ -58,7 +58,7 @@ uint8_t *mode3 = 0x2001e892 ;
 char status_buf[MAX_STATUS_CHARS] = { "" };
     
 //char chan_buf[15];
-char tg_buf[15];
+//char tg_buf[15];
 
 void netmon_update()
 {
@@ -83,8 +83,16 @@ void netmon_update()
     con_nl();    
 #ifdef FW_D13_020
     {
+        // current channel name.
         wchar_t *p = 0x2001cddc ;
         con_puts("ch:");
+        con_putsw(p);
+        con_nl();    
+    }
+    {        
+        // current tg name.
+        wchar_t *p = 0x2001e1f4 ;
+        con_puts("tg:");
         con_putsw(p);
         con_nl();    
     }
@@ -92,9 +100,9 @@ void netmon_update()
 //    con_puts("ch:");
 //    con_puts(chan_buf);
 //    con_nl();    
-    con_puts("tg:");
-    con_puts(tg_buf);
-    con_nl();    
+//    con_puts("tg:");
+//    con_puts(tg_buf);
+//    con_nl();    
 }
 
 //extern void mode17_hook()
@@ -255,14 +263,14 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     void * return_addr = __builtin_return_address(0);
     wchar_t *str2 = str ;
     PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
-    if( x == 45 && y == 34 ) {
-        mkascii( tg_buf, sizeof(tg_buf), str );
-        // somehow, if f() is not called, the console is not drawn. 
-        // to fix later.
-//        if( !has_gui() ) {
-//            str2 = L"" ;
-//        }
-    }
+//    if( x == 45 && y == 34 ) {
+//        mkascii( tg_buf, sizeof(tg_buf), str );
+//        // somehow, if f() is not called, the console is not drawn. 
+//        // to fix later.
+////        if( !has_gui() ) {
+////            str2 = L"" ;
+////        }
+//    }
 //    if( x == 34 && y == 75 ) {
 //        mkascii( chan_buf, sizeof(chan_buf), str );
 ////        if( !has_gui() ) {
