@@ -202,15 +202,13 @@ if __name__== '__main__':
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x804647a,sapplet.getadr("OSSemCreate_hook"),0);
 
-    # gfx hooks
-    merger.hookbl(0x08025d54,sapplet.getadr("rx_screen_blue_hook"),0);
-    merger.hookbl(0x08025e26,sapplet.getadr("rx_screen_blue_hook"),0);
-    merger.hookbl(0x08020428,sapplet.getadr("rx_screen_gray_hook"),0);
-
     # date format  hook, this hook can modify the date format on the status line
     merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
 
     # gfx_drawbmp hooks 
+
+    #########
+    # gfx_ primitives hooks, to be overriden later in this file.
 
     drwbmplist=[
         0x0800cdd0, 
@@ -457,6 +455,11 @@ if __name__== '__main__':
 
     # 
     merger.hookbl(0x08021782, sapplet.getadr("draw_statusline_hook"));
+
+    # rx popup overrides of gfx_drawbmp
+    merger.hookbl(0x08025d54,sapplet.getadr("rx_screen_blue_hook"),0);
+    merger.hookbl(0x08025e26,sapplet.getadr("rx_screen_blue_hook"),0);
+    merger.hookbl(0x08020428,sapplet.getadr("rx_screen_gray_hook"),0);
 
     # drawtext hooks
 
