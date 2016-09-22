@@ -13,7 +13,7 @@
 #define MAX_YPOS 20 
 
 #define MAX_BUF (MAX_XPOS * MAX_YPOS)
-char con_buf[MAX_YPOS][MAX_XPOS];
+char con_buf[MAX_YPOS][MAX_XPOS+1]; // +1 for terminating 0 every line.
 
 int con_xpos = 0 ;
 int con_ypos = 0 ;
@@ -76,9 +76,6 @@ static void con_addchar( char c )
     
     con_buf[con_ypos][con_xpos] = c ;
     con_xpos++ ;
-    if( con_xpos >= MAX_XPOS ) {
-        return ;
-    }
     con_buf[con_ypos][con_xpos] = 0 ;
 }
 
@@ -133,7 +130,12 @@ static void con_draw1()
             }
         }
         *w = 0 ;
+#if defined(FW_D13_020)
+        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, 20);
+#else
+#warning should find symbol gfx_drawtext4        
         gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
+#endif
     }
 
     gfx_select_font(old);    

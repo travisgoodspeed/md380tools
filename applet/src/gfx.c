@@ -188,17 +188,16 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 //        }
 //    }
     
-    if( global_addl_config.debug ) {
-        PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+    PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+    
+    if( ymin == 0 && xmin == 61 ) {
+        con_redraw();
+    }
+    if( is_console_visible() ) {
+        // no blockfills
+        return ;
     }
     
-    if( ymin == 0 ) {
-        if( has_console() ) {
-            //PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
-            con_redraw();
-            return ;
-        }
-    }
     gfx_blockfill(xmin,ymin,xmax,ymax);
     if( ymin == 0 && xmin == 61 ) {
         // if we have stat var for detecting first draw....
@@ -211,6 +210,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
+    PRINT( "@ 0x%x db: %d %d\n", __builtin_return_address(0), x, y );
+    
     // supress bmp drawing in console mode.
     if( is_console_visible() ) {
         if( x == 0 && y == 0 ) {
@@ -221,3 +222,19 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
     }
     gfx_drawbmp( bmp, x, y );
 }
+
+// r0 = str, r1 = x, r2 = y, r3 = xlen
+void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
+{
+    // filter datetime (y=96)
+    if( y != 96 ) {
+        PRINT("@ 0x%x ctd: %d %d %d %S\n", __builtin_return_address(0), x, y, xlen, str);
+    }
+    
+    if( is_console_visible() ) {
+        return ;
+    }
+    
+    gfx_chars_to_display(str, x, y, xlen);
+}
+

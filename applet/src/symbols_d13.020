@@ -165,3 +165,5 @@ ambe_outbuffer1 = 0x20013fc8;
 ambe_mystery = 0x20013594;
 
 draw_statusline = 0x08033dad ;
+
+gfx_drawtext4 = 0x0801dd1b ;

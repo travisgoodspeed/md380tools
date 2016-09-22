@@ -8,6 +8,7 @@
 #include "console.h"
 #include "md380.h"
 #include "printf.h"
+#include "dmr.h"
 
 #define MAX_STATUS_CHARS 40
 char status_buf[MAX_STATUS_CHARS] = { "uninitialized statusline" };
@@ -82,9 +83,15 @@ void netmon_update()
     con_nl();    
 #ifdef FW_D13_020
     {
+        uint8_t *chan = (uint8_t *)0x2001e8c1 ;
+        sprintf(status_buf, "ch: %d ", *chan ); 
+        con_puts(status_buf);
+        //con_nl();    
+    }
+    {
         // current channel name.
         wchar_t *p = (void*)0x2001cddc ;
-        con_puts("ch:");
+        con_puts("cn:");
         con_putsw(p);
         con_nl();    
     }
@@ -100,4 +107,16 @@ void netmon_update()
         sprintf(status_buf,"re:%02x e2:%02x e3:%02x\ne4:%02x\n", last_radio_event, last_event2, last_event3, last_event4 );
         con_puts(status_buf);
     }
+#ifdef FW_D13_020
+    {
+        uint8_t *smeter = (uint8_t *)0x2001e534 ;
+        sprintf(status_buf,"sm:%d\n", *smeter );
+        con_puts(status_buf);
+    }
+#endif    
+    {
+        sprintf(status_buf, "%d -> %d\n", g_src, g_dst); 
+        con_puts(status_buf);        
+    }
+    
 }

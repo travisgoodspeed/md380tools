@@ -81,3 +81,9 @@ typedef struct gfx_info {
  * if p == 0, return old pointer without setting new.
  */
 void* gfx_select_font(void *p);
+
+// max strlen = 18, if larger end in ".."
+void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen);
+
+// if larger than maxstrlen end in ".."
+void gfx_drawtext4(wchar_t *str, int x, int y, int xlen, int maxstrlen);
