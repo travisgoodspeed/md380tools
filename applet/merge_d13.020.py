@@ -268,8 +268,8 @@ if __name__== '__main__':
         0x080467e4 ,
         0x0804bf1a ,
     ];
-#    for adr in drwbmplist:
-#        merger.hookbl(adr, sapplet.getadr("dummy"));
+    for adr in drwbmplist:
+       merger.hookbl(adr, sapplet.getadr("gfx_drawbmp_hook"));
 
 #  grep "bl gfx_blockfill" asm.lst | cut -c 13-23 | awk '{ print $0 "," }' | less
 
@@ -594,8 +594,8 @@ if __name__== '__main__':
         0x080217a8,
         0x08033e1e, 
     ]; # bad hooks, not work well
-    for adr in print_ant_sym_hook_list:
-        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
+#    for adr in print_ant_sym_hook_list:
+#        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
 
     # init the addl global config struct from spi flash
     merger.hookbl(0x08046326,sapplet.getadr("init_global_addl_config_hook"),0);

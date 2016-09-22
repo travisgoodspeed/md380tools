@@ -3368,6 +3368,10 @@ af+ 0x0800d69c 0 disp_something
 f draw_statusline @ 0x08033dac
 af+ 0x08033dac 244 draw_statusline
 
+f draw_statusline_more @ 0x08021694
+af+ 0x08021694 294 draw_statusline_more
+
+
 af+ 0x08036fba 2 do_nothing_1
 af+ 0x08036fbc 2 do_nothing_2
 
