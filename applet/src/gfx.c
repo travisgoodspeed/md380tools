@@ -180,11 +180,6 @@ void print_ant_sym_hook(char *bmp, int x, int y)
 #endif
 }
 
-inline int is_menu_visible()
-{
-    return (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ;
-}
-
 void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 {
 //    if( ymin == 0 && xmin == 61 ) {
@@ -217,13 +212,12 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
     // supress bmp drawing in console mode.
-    if( has_console() ) {
-        if( !is_menu_visible() ) {
-            return ;            
-        }
+    if( is_console_visible() ) {
         if( x == 0 && y == 0 ) {
+            // antenne icon draw.
             con_redraw();
         }
+        return ;
     }
     gfx_drawbmp( bmp, x, y );
 }

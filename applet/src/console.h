@@ -6,7 +6,10 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
-#include "stddef.h"    
+#include <stddef.h>   
+
+#include "md380.h"
+#include "display.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,6 +44,20 @@ inline int has_gui()
     }
     return global_addl_config.debug ;
 }
+
+inline int is_menu_visible()
+{
+    return (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ;
+}
+
+inline int is_console_visible()
+{
+    if( !has_console() ) {
+        return 0 ;
+    }
+    return !is_menu_visible();
+}
+
 
 #ifdef __cplusplus
 }
