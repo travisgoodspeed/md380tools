@@ -5,12 +5,6 @@
 #define DEBUG
 #define CONFIG_GRAPHICS
 
-#ifdef DEBUG
-#define PRINT(fmt, args...)    printf(fmt, ## args)
-#else
-#define PRINT(fmt, args...)    /* Don't do anything in release builds */
-#endif
-
 #include <stdlib.h>
 
 #include "md380.h"
@@ -27,6 +21,8 @@
 #include "dmr.h"
 #include "console.h"
 #include "util.h"
+#include "debug.h"
+#include "netmon.h"
  
 static int flag=0;
 
@@ -39,62 +35,18 @@ static int flag=0;
  *
  */
 
-#define MAX_STATUS_CHARS 40
-
-//wchar_t status_line[MAX_STATUS_CHARS] = { L"uninitialized statusline" };
-
-char progress_info[] = { "|/-\\" } ;
-
-int progress = 0 ;
-
-uint8_t *mode2 = 0x2001e94b ;
-uint16_t *cntr2 = 0x2001e844 ;
-uint8_t *mode3 = 0x2001e892 ;
-    
-// 1 idle
-// 2 rx
-// 4 post-rx?
-// 10 menu
-
 //void (*something_write_to_screen)(wchar_t *str, int x1, int y1, int x2, int y2) = 0x0800ded8 + 1 ;
 //void (*gfx_drawtext5)(wchar_t *str, int sx, int sy, int maxlen) = 0x0801dd2c + 1 ;
 
-char status_buf[MAX_STATUS_CHARS] = { "" };
-    
-char chan_buf[10];
-char tg_buf[10];
-
-void update_status_line()
+extern void f_4315_hook()
 {
-    progress++ ;
-    progress %= sizeof( progress_info );
-    
-    int progress2 = progress ; // sample (thread safe) 
-
-    progress2 %=  sizeof( progress_info ) - 1 ;
-    char c = progress_info[progress2];
-    
-    int dst = g_dst ;
-    
-    sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
-        
-//    con_clrscr();
-    con_print(0,0,status_buf);
-    con_print(0,1,chan_buf);
-    con_print(0,2,tg_buf);
+    netmon_update();
+    con_redraw();
+    if( has_console() ) {
+        return ;
+    }
+    F_4315();
 }
-
-//extern void draw_updated_status_line()
-//{
-//    
-//    update_status_line();
-//    draw_status_line();
-//}
-
-//extern void mode17_hook()
-//{
-//    draw_status_line();
-//}
 
 // this hook switcht of the exit from the menu in case of RX
 void * f_4225_internel_hook() 
@@ -118,11 +70,12 @@ void * f_4225_internel_hook()
   return &md380_f_4225_operatingmode ;
 }
 
-
+// 0x2001e895 != 32
+// 0x2001e895 == 64 -> rx_screen_blue_hook
 
 void rx_screen_blue_hook(char *bmp, int x, int y) 
 {
-    update_status_line();
+    netmon_update();
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0xff8032);
@@ -134,7 +87,7 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 
 void rx_screen_gray_hook(void *bmp, int x, int y) 
 {
-    update_status_line();
+    netmon_update();
 #ifdef CONFIG_GRAPHICS
   if (global_addl_config.userscsv == 1) {
     draw_rx_screen(0x888888);
@@ -233,7 +186,7 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
-    con_draw();
+    con_redraw();
 
     // filter datetime (y=96)
     if( y != 96 ) {
@@ -246,21 +199,25 @@ void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
+    void * return_addr = __builtin_return_address(0);
     wchar_t *str2 = str ;
-    PRINT("dt4: %S %d %d %d %d (%x)\n", str, x, y, xlen, ylen, str);
-    if( x == 45 && y == 34 ) {
-        mkascii( tg_buf, sizeof(tg_buf), str );
-        // somehow, if f() is not called, the console is not drawn. 
-        // to fix later.
-//        if( !has_gui() ) {
-//            str2 = L"" ;
-//        }
-    }
-    if( x == 34 && y == 75 ) {
-        mkascii( chan_buf, sizeof(chan_buf), str );
-//        if( !has_gui() ) {
-//            str2 = L"" ;
-//        }
+    PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
+    if( has_console() ) {
+        if( x == 45 && y == 34 ) {
+            y = 60 ; // lower text. 
+    //        mkascii( tg_buf, sizeof(tg_buf), str );
+    //        // somehow, if f() is not called, the console is not drawn. 
+    //        // to fix later.
+    ////        if( !has_gui() ) {
+    ////            str2 = L"" ;
+    ////        }
+        }
+    //    if( x == 34 && y == 75 ) {
+    //        mkascii( chan_buf, sizeof(chan_buf), str );
+    ////        if( !has_gui() ) {
+    ////            str2 = L"" ;
+    ////        }
+    //    }
     }
     
     f(str2,x,y,xlen,ylen);
@@ -278,20 +235,20 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 }
 #endif
 
-int old_opmode = 0 ;
-
-void trace_scr_mode()
-{
-    if( old_opmode != md380_f_4225_operatingmode ) {
-        old_opmode = md380_f_4225_operatingmode ;
-        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
-    } else {
-//        printf( "%d ", md380_f_4225_operatingmode);
-    }
-    
-    PRINT( "%d %d\n", *mode2, *cntr2 );
-    
-}
+//int old_opmode = 0 ;
+//
+//void trace_scr_mode()
+//{
+//    if( old_opmode != md380_f_4225_operatingmode ) {
+//        old_opmode = md380_f_4225_operatingmode ;
+//        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
+//    } else {
+////        printf( "%d ", md380_f_4225_operatingmode);
+//    }
+//    
+//    PRINT( "%d %d\n", *mode2, *cntr2 );
+//    
+//}
 
 #ifdef FW_D13_020
 void OSTimeDly(uint32_t delay);
@@ -325,24 +282,15 @@ void f_4225_hook()
 //#ifdef CONFIG_GRAPHICS
 
     if ( global_addl_config.micbargraph == 1 ) {
-        draw_micbargraph();
+        if( !has_console() ) {
+            draw_micbargraph();
+        }
     }
     
-    if ( global_addl_config.debug == 1 ) {
-        update_status_line();
-    }
-    
-//#ifdef FW_D13_020
-//        if( (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ) {
-//            PRINT(">");
-//            OSTimeDly( 10000 );
-//        }
-//#endif        
+    netmon_update();
     
     md380_f_4225();
     
-    //con_draw();
-
     if ( global_addl_config.debug == 1 ) {
 //        state_fuzzing();
 //        PRINT("%S\n", status_line );
@@ -359,10 +307,6 @@ void f_4225_hook()
 //        }
 //#endif        
     }        
-    
-//    if ( global_addl_config.experimental == 0 ) {
-//        return ;
-//    }
     
 //#endif
 }

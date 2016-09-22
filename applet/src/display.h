@@ -8,6 +8,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,6 +49,8 @@ extern "C" {
 void draw_eye_opt();
 void draw_micbargraph();
 void draw_rx_screen(unsigned int bg_color);
+
+void draw_statusline( uint32_t r0 ); // in md380
 
 
 #ifdef __cplusplus

@@ -4,6 +4,7 @@ SRCS += rtc_timer.o i2c.o dispflip.o
 SRCS += display.o
 SRCS += console.o
 SRCS += util.o
+SRCS += netmon.o
 PROJ_NAME=main
 
 

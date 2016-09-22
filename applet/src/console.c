@@ -6,6 +6,7 @@
 #include "console.h"
 
 #include "md380.h"
+#include "gfx.h"
 
 
 #define MAX_XPOS 20 
@@ -37,6 +38,22 @@ void con_puts( const char *s )
             con_putc( '\n');
         }
     }    
+}
+
+void con_putsw( const wchar_t *s )
+{
+    while( *s ) {
+        con_putc( *s++ );
+        if( con_xpos >= MAX_XPOS ) {
+            con_putc( '\n');
+        }
+    }        
+}
+
+void con_nl()
+{
+    con_xpos = 0 ;
+    con_ypos++ ;    
 }
 
 void con_clrscr()
@@ -72,8 +89,7 @@ void con_putc( char c )
             con_clrscr();
             return ;
         case '\n' :
-            con_xpos = 0 ;
-            con_ypos++ ;
+            con_nl();
             return ;
     }
     con_addchar(c);    
@@ -81,12 +97,13 @@ void con_putc( char c )
 
 int within_update = 0 ;
 
-wchar_t wide[MAX_XPOS];
+wchar_t wide[MAX_BUF];
     
 #define LINE_HEIGHT 12 
 
-void con_draw1()
+static void con_draw1()
 {
+    // save old values first.
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
     void *old = gfx_select_font(gfx_font_small);
@@ -111,7 +128,7 @@ void con_draw1()
     gfx_select_font(old);    
 }
 
-void con_draw()
+void con_redraw()
 {
     if( !has_console() ) {
         return ;
