@@ -2,6 +2,8 @@
   \brief Graphics wrapper functions.
 */
 
+#define DEBUG
+
 #include "md380.h"
 #include "version.h"
 #include "tooldfu.h"
@@ -11,6 +13,8 @@
 #include "string.h"
 #include "addl_config.h"
 #include "display.h"
+#include "console.h"
+#include "debug.h"
 
 //Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -55,7 +59,7 @@ void drawascii2(char *ascii,
         }
 #ifdef CONFIG_GRAPHICS
   gfx_drawtext2(wide, x, y, 0);
-  con_draw();
+  //con_redraw();
 #endif
 }
 
@@ -167,10 +171,53 @@ void print_date_hook(void) {  // copy from the md380 code
 #endif //CONFIG_GRAPHICS
 }
 
+// deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
 {
 #ifdef CONFIG_GRAPHICS
     gfx_drawbmp(bmp, x, y);
     draw_eye_opt();
 #endif
+}
+
+void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
+{
+//    if( ymin == 0 && xmin == 61 ) {
+//        if( global_addl_config.promtg ) {
+//            return ;
+//        }
+//    }
+    
+    if( global_addl_config.debug ) {
+        PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+    }
+    
+    if( ymin == 0 ) {
+        if( has_console() ) {
+            //PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+            con_redraw();
+            return ;
+        }
+    }
+    gfx_blockfill(xmin,ymin,xmax,ymax);
+    if( ymin == 0 && xmin == 61 ) {
+        // if we have stat var for detecting first draw....
+        // we could clear by blockfill only once.
+        if( global_addl_config.promtg ) {
+            draw_eye_opt();
+        }
+    }
+}
+
+void gfx_drawbmp_hook( void *bmp, int x, int y )
+{
+    // supress bmp drawing in console mode.
+    if( is_console_visible() ) {
+        if( x == 0 && y == 0 ) {
+            // antenne icon draw.
+            con_redraw();
+        }
+        return ;
+    }
+    gfx_drawbmp( bmp, x, y );
 }

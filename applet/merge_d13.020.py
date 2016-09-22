@@ -202,13 +202,264 @@ if __name__== '__main__':
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x804647a,sapplet.getadr("OSSemCreate_hook"),0);
 
-    # gfx hooks
+    # date format  hook, this hook can modify the date format on the status line
+    merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
+
+    # gfx_drawbmp hooks 
+
+    #########
+    # gfx_ primitives hooks, to be overriden later in this file.
+
+    drwbmplist=[
+        0x0800cdd0, 
+        0x08020428, 
+        0x0802136a , # antenna symbol signal strength
+        0x08021378 , # antenna symbol signal strength
+        0x080217a8 , # antenna symbol signal strength
+        0x080217b4 ,
+        0x08025cfa ,
+        0x08025d48 ,
+        0x08025d54 ,
+        0x08025dbe ,
+        0x08025e0e ,
+        0x08025e26 ,
+        0x08028782 ,
+        0x080287ac ,
+        0x080287d6 ,
+        0x080287f4 ,
+        0x080288be ,
+        0x08028900 ,
+        0x08028924 ,
+        0x08028970 ,
+        0x08028984 ,
+        0x080289e4 ,
+        0x080289f8 ,
+        0x08028a30 ,
+        0x08028a6e ,
+        0x08028abe ,
+        0x08028afe ,
+        0x08028b58 ,
+        0x0802b900 ,
+        0x0802b99e ,
+        0x0802ba82 ,
+        0x0802bbe6 ,
+        0x0802bc7a ,
+        0x0802bd92 ,
+        0x0802be74 ,
+        0x0802befc ,
+        0x0802c050 ,
+        0x0802c05c ,
+        0x0802c17e ,
+        0x0802c20a ,
+        0x0802c2fa ,
+        0x0802c35e ,
+        0x0802c3da ,
+        0x0802cb08 ,
+        0x0802d67a ,
+        0x0802d938 ,
+        0x0802d954 ,
+        0x0802da68 ,
+        0x08031a78 ,
+        0x08031aaa ,
+        0x08033e1e ,  # antenna symbol signal strength
+        0x08033e6e ,
+        0x080467e4 ,
+        0x0804bf1a ,
+    ];
+    for adr in drwbmplist:
+       merger.hookbl(adr, sapplet.getadr("gfx_drawbmp_hook"));
+
+#  grep "bl gfx_blockfill" asm.lst | cut -c 13-23 | awk '{ print $0 "," }' | less
+
+    gfxblockfill=[
+        0x0800c85e ,
+        0x0800c86a ,
+        0x0800c876 ,
+        0x0800c882 ,
+        0x0800c896 ,
+        0x0800c8a2 ,
+        0x0800c8ae ,
+        0x0800c8ba ,
+        0x0800c8c6 ,
+        0x0800c8e0 ,
+        0x0800c906 ,
+        0x0800c912 ,
+        0x0800c926 ,
+        0x0800ca0a ,
+        0x0800ca16 ,
+        0x0800ca28 ,
+        0x0800ca46 ,
+        0x0800ca52 ,
+        0x0800ca66 ,
+        0x0800cafa ,
+        0x0800cb06 ,
+        0x0800cb12 ,
+        0x0800cb84 ,
+        0x0800cb90 ,
+        0x0800cb9c ,
+        0x0800cba8 ,
+        0x0800cbb4 ,
+        0x0800cbc8 ,
+        0x0800cbd4 ,
+        0x0800cbe8 ,
+        0x0800cbf4 ,
+        0x0800cc08 ,
+        0x0800cc1c ,
+        0x0800cc28 ,
+        0x0800cc9a ,
+        0x0800d028 ,
+        0x0800d056 ,
+        0x0800d166 ,
+        0x0800d172 ,
+        0x0800d1b2 ,
+        0x0800d2da ,
+        0x0800d2e6 ,
+        0x0800d2f2 ,
+        0x0800d2fe ,
+        0x0800d3fc ,
+        0x0800d408 ,
+        0x0800d414 ,
+        0x0800d420 ,
+        0x0800d4cc ,
+        0x0800d54c ,
+        0x0800d558 ,
+        0x0800d564 ,
+        0x0800d570 ,
+        0x0800d762 ,
+        0x0800d77c ,
+        0x0800d788 ,
+        0x0800d832 ,
+        0x0800d91c ,
+        0x0800d928 ,
+        0x0800d934 ,
+        0x0800dc06 ,
+        0x0800de8c ,
+        0x0800dea0 ,
+        0x0800deac ,
+        0x0800deb8 ,
+        0x0800dec4 ,
+        0x0800e064 ,
+        0x0800e072 ,
+        0x0800e07e ,
+        0x0800e08a ,
+        0x0800e0a0 ,
+        0x0800e19a ,
+        0x0800e1c0 ,
+        0x0800e338 ,
+        0x0800e34c ,
+        0x0800e358 ,
+        0x0800e364 ,
+        0x0800e370 ,
+        0x0800e6de ,
+        0x0800e91a ,
+        0x0800e934 ,
+        0x0800e976 ,
+        0x0800e982 ,
+        0x0800e98e ,
+        0x0800e9a0 ,
+        0x0800e9b4 ,
+        0x0800e9c0 ,
+        0x0800ea96 ,
+        0x0800eaba ,
+        0x0800ead4 ,
+        0x0800eaf6 ,
+        0x0800eb10 ,
+        0x0800ec18 ,
+        0x0801e754 ,
+        0x0801e762 ,
+        0x0801e772 ,
+        0x0801e808 ,
+        0x0801e818 ,
+        0x080200ce ,
+        0x08020578 ,
+        0x08020752 ,
+        0x08020c7e ,
+        0x08020c8a ,
+        0x08020c96 ,
+        0x08020ca2 ,
+        0x08020cae ,
+        0x08020cba ,
+        0x0802104c ,
+        0x0802113e ,
+        0x080211a6 ,
+        0x080211b2 ,
+        0x080211be ,
+        0x080211ca ,
+        0x080211d6 ,
+        0x080211e2 ,
+        0x0802124e ,
+        0x08025b48 ,
+        0x08025b6e ,
+        0x08025c10 ,
+        0x08025ca4 ,
+        0x08025cbe ,
+        0x08025cca ,
+        0x08025cd6 ,
+        0x08025df2 ,
+        0x08025e42 ,
+        0x08025e4e ,
+        0x0802bd0c ,
+        0x0802be5e ,
+        0x0802c194 ,
+        0x0802c266 ,
+        0x0802c352 ,
+        0x0802c6bc ,
+        0x0802c738 ,
+        0x0802cfda ,
+        0x0802cfec ,
+        0x0802cff8 ,
+        0x0802d00c ,
+        0x0802d018 ,
+        0x0802d5fc ,
+        0x0802d61c ,
+        0x0802d628 ,
+        0x0802d634 ,
+        0x0802d68e ,
+        0x0802d69a ,
+        0x0802d6a6 ,
+        0x0802d6b2 ,
+        0x0802d6be ,
+        0x0802d6ca ,
+        0x0802d75c ,
+        0x0802d768 ,
+        0x0802d780 ,
+        0x0802d794 ,
+        0x0802d7a0 ,
+        0x0802d7ac ,
+        0x0802d8a6 ,
+        0x0802d8b2 ,
+        0x0802d8be ,
+        0x0802d904 ,
+        0x0802d96a ,
+        0x0802d992 ,
+        0x0802d99e ,
+        0x0802da32 ,
+        0x0802da3e ,
+        0x0802da56 ,
+        0x0802da84 ,
+        0x0802da90 ,
+        0x0802da9c ,
+        0x0802daa8 ,
+        0x0802dab4 ,
+        0x0802dac0 ,
+        0x0802e184 ,
+        0x0802e190 ,
+        0x0802e26e ,
+        0x0802e27a ,
+        0x08033e92 ,
+        0x080370b2 ,
+        0x080370ce ,
+    ];
+    for adr in gfxblockfill:
+        merger.hookbl(adr, sapplet.getadr("gfx_blockfill_hook"));
+
+    # 
+    merger.hookbl(0x08021782, sapplet.getadr("draw_statusline_hook"));
+
+    # rx popup overrides of gfx_drawbmp
     merger.hookbl(0x08025d54,sapplet.getadr("rx_screen_blue_hook"),0);
     merger.hookbl(0x08025e26,sapplet.getadr("rx_screen_blue_hook"),0);
     merger.hookbl(0x08020428,sapplet.getadr("rx_screen_gray_hook"),0);
-
-    # date format  hook, this hook can modify the date format on the status line
-    merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
 
     # drawtext hooks
 
@@ -243,7 +494,11 @@ if __name__== '__main__':
     ];
     for adr in dt4list:
         merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
-    
+
+    # f_4315
+    merger.hookbl(0x080202d0, sapplet.getadr("f_4315_hook"));
+    merger.hookbl(0x080202fc, sapplet.getadr("f_4315_hook"));
+
     # 0x800def7 gfx_drawtext
 #    merger.hookstub(0x800def6, sapplet.getadr("dummy"));
 
@@ -283,9 +538,6 @@ if __name__== '__main__':
 # intercept disp_something
 #    merger.hookstub2(0x0800d69c, sapplet.getadr("dummy"));
 
-
-    # F_4315
-#    merger.hookstub(0x08025ae4, sapplet.getadr("dummy"));
 
     # call to Create_MainMenyEntry
 #    merger.hookbl(0x080202cc, sapplet.getadr("dummy"),0);
@@ -340,10 +592,13 @@ if __name__== '__main__':
 
     # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
     print_ant_sym_hook_list=[
-        0x0802136a, 0x08021378, 0x0802136a, 0x08021378, 0x8033e1e, 0x0802136a, 0x080217a8
-        ]; # bad hooks, not work well
-    for adr in print_ant_sym_hook_list:
-        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
+        0x0802136a, 
+        0x08021378, 
+        0x080217a8,
+        0x08033e1e, 
+    ]; # bad hooks, not work well
+#    for adr in print_ant_sym_hook_list:
+#        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
 
     # init the addl global config struct from spi flash
     merger.hookbl(0x08046326,sapplet.getadr("init_global_addl_config_hook"),0);
@@ -375,6 +630,8 @@ if __name__== '__main__':
     merger.hookbl(0x080468e6, sapplet.getadr("f_4225_hook"),0);
     merger.hookbl(0x0802db42, sapplet.getadr("f_4225_hook"),0);
     
+#    for adr in drwbmplist:
+#        merger.hookbl(adr, sapplet.getadr("dummy"));
 
 ############ i2c hooks
 ###    I2C_GenerateSTART_hook_list=[
