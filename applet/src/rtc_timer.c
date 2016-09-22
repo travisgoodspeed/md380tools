@@ -186,7 +186,7 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
-    con_redraw();
+    //con_redraw();
 
     // filter datetime (y=96)
     if( y != 96 ) {
