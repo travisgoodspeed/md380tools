@@ -171,6 +171,7 @@ void print_date_hook(void) {  // copy from the md380 code
 #endif //CONFIG_GRAPHICS
 }
 
+// deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
 {
 #ifdef CONFIG_GRAPHICS
@@ -191,6 +192,11 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 //            return ;
 //        }
 //    }
+    
+    if( global_addl_config.debug ) {
+        PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+    }
+    
     if( ymin == 0 ) {
         if( has_console() ) {
             //PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
