@@ -83,9 +83,15 @@ void netmon_update()
     con_nl();    
 #ifdef FW_D13_020
     {
+        uint8_t *chan = (uint8_t *)0x2001e8c1 ;
+        sprintf(status_buf, "ch: %d ", *chan ); 
+        con_puts(status_buf);
+        //con_nl();    
+    }
+    {
         // current channel name.
         wchar_t *p = (void*)0x2001cddc ;
-        con_puts("ch:");
+        con_puts("cn:");
         con_putsw(p);
         con_nl();    
     }
