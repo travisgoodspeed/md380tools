@@ -13,7 +13,7 @@
 #define MAX_YPOS 20 
 
 #define MAX_BUF (MAX_XPOS * MAX_YPOS)
-char con_buf[MAX_YPOS][MAX_XPOS];
+char con_buf[MAX_YPOS][MAX_XPOS+1]; // +1 for terminating 0 every line.
 
 int con_xpos = 0 ;
 int con_ypos = 0 ;
@@ -76,9 +76,6 @@ static void con_addchar( char c )
     
     con_buf[con_ypos][con_xpos] = c ;
     con_xpos++ ;
-    if( con_xpos >= MAX_XPOS ) {
-        return ;
-    }
     con_buf[con_ypos][con_xpos] = 0 ;
 }
 

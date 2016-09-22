@@ -183,42 +183,19 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
-// r0 = str, r1 = x, r2 = y, r3 = xlen
-void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
-{
-    //con_redraw();
-
-    // filter datetime (y=96)
-    if( y != 96 ) {
-        PRINT("ctd: %d %d %S\n", x, y, str);
-    }
-    gfx_chars_to_display(str, x, y, xlen);
-}
-
 void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
     void * return_addr = __builtin_return_address(0);
     wchar_t *str2 = str ;
-    PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
+    PRINT("@ 0x%x dt4: %d %d %d %d %S (%x)\n", return_addr, x, y, xlen, ylen, str, str);
     if( has_console() ) {
         if( x == 45 && y == 34 ) {
             return ;
-//            y = 60 ; // lower text. 
-    //        mkascii( tg_buf, sizeof(tg_buf), str );
-    //        // somehow, if f() is not called, the console is not drawn. 
-    //        // to fix later.
-    ////        if( !has_gui() ) {
-    ////            str2 = L"" ;
-    ////        }
         }
         if( x == 34 && y == 75 ) {
             return ;
-    //        mkascii( chan_buf, sizeof(chan_buf), str );
-    ////        if( !has_gui() ) {
-    ////            str2 = L"" ;
-    ////        }
         }
     }
     

@@ -81,3 +81,6 @@ typedef struct gfx_info {
  * if p == 0, return old pointer without setting new.
  */
 void* gfx_select_font(void *p);
+
+// r0 = str, r1 = x, r2 = y, r3 = xlen
+void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen);
