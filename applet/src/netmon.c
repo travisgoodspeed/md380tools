@@ -34,12 +34,13 @@ uint8_t *mode3 = (void*)0x2001e892 ;
 
 // radio events
 // 0x01 = idle
+// 0x02 = sync error? (tx only?)
 // 0x04 = sync
 // 0x07 = tx sound 
+// 0x08 = rx (but for different TG)
 // 0x09 = rx sound
 // 0x0a = rx idle (tail of rx)
 // 0x0e = sync attempt? (tx only?)
-// 0x02 = sync error? (tx only?)
 uint8_t last_radio_event ;
 //
 
@@ -53,8 +54,9 @@ uint8_t last_event2 ;
 // 0x01 = tx
 // 0x02 = rx
 uint8_t last_event3 ;
-//
 
+// ?
+// 0x17 = ?
 uint8_t last_event4 ;
 
 void netmon_update()
