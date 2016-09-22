@@ -8,6 +8,7 @@
 #include "console.h"
 #include "md380.h"
 #include "printf.h"
+#include "dmr.h"
 
 #define MAX_STATUS_CHARS 40
 char status_buf[MAX_STATUS_CHARS] = { "uninitialized statusline" };
@@ -32,16 +33,36 @@ uint8_t *mode3 = (void*)0x2001e892 ;
 // 0 = idle?
 // 3 = unprog channel
 
+// radio events
+// 0x01 = idle
+// 0x02 = sync error? (tx only?)
+// 0x04 = sync
+// 0x07 = tx sound 
+// 0x08 = rx (but for different TG)
+// 0x09 = rx sound
+// 0x0a = rx idle (tail of rx)
+// 0x0e = sync attempt? (tx only?)
 uint8_t last_radio_event ;
+//
 
-// 0x24 roger beep?
+// beep events 
+// 0x0e negative on ptt
 // 0x0f not programmed channel
+// 0x11 postive on ptt
+// 0x24 beep end-of-rx
 uint8_t last_event2 ;
+
+// 0x01 = tx
+// 0x02 = rx
 uint8_t last_event3 ;
+
+// ?
+// 0x17 = ?
+uint8_t last_event4 ;
 
 void netmon_update()
 {
-    if( !has_console() ) {
+    if( !is_console_visible() ) {
         return ;
     }
     
@@ -77,7 +98,19 @@ void netmon_update()
     }
 #endif    
     {
-        sprintf(status_buf,"re:%02x e2:%02x e3:%02x \n", last_radio_event, last_event2, last_event3 );
+        sprintf(status_buf,"re:%02x e2:%02x e3:%02x\ne4:%02x\n", last_radio_event, last_event2, last_event3, last_event4 );
         con_puts(status_buf);
     }
+#ifdef FW_D13_020
+    {
+        uint8_t *smeter = 0x2001e534 ;
+        sprintf(status_buf,"sm:%d\n", *smeter );
+        con_puts(status_buf);
+    }
+#endif    
+    {
+        sprintf(status_buf, "%d -> %d\n", g_src, g_dst); 
+        con_puts(status_buf);        
+    }
+    
 }

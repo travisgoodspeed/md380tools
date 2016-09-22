@@ -107,25 +107,28 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
             if( ((uint32_t)pevent) == 0x20017348 ) {
                 last_event3 = *(uint8_t*)ret ;
             }
+            if( ((uint32_t)pevent) == 0x20017450 ) {
+                last_event4 = *(uint8_t*)ret ;
+            }
         }
     }
     
     if( ret != NULL && global_addl_config.debug == 1 ) {
         printf("OSMboxPend @ 0x%x, 0x%x, 0x%x \n", UNTHUMB_POI(return_addr), pevent, *(uint8_t*)ret);
-        switch (* (uint8_t*) ret) {
-            case 0x24:
-                printf("roger beep ");
-                break;
-            case 0xe:
-                printf("no dmr sync ");
-            case 0x11:
-                printf("dmr sync ");
-                break;
-            default:
-                printf("not known ");
-                break;
-        }
-        printf("\n");
+//        switch (* (uint8_t*) ret) {
+//            case 0x24:
+//                printf("roger beep ");
+//                break;
+//            case 0xe:
+//                printf("no dmr sync ");
+//            case 0x11:
+//                printf("dmr sync ");
+//                break;
+//            default:
+//                printf("not known ");
+//                break;
+//        }
+//        printf("\n");
     }
     return (ret);
 }

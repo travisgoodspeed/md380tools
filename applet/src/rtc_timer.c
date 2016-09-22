@@ -237,41 +237,9 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 }
 #endif
 
-//int old_opmode = 0 ;
-//
-//void trace_scr_mode()
-//{
-//    if( old_opmode != md380_f_4225_operatingmode ) {
-//        old_opmode = md380_f_4225_operatingmode ;
-//        PRINT( "mode: %d\n", md380_f_4225_operatingmode);
-//    } else {
-////        printf( "%d ", md380_f_4225_operatingmode);
-//    }
-//    
-//    PRINT( "%d %d\n", *mode2, *cntr2 );
-//    
-//}
-
 #ifdef FW_D13_020
 void OSTimeDly(uint32_t delay);
 #endif  
-
-//void state_fuzzing()
-//{
-//    static long cnt = 0 ;
-//    
-//    cnt++ ;
-//    
-//    if( cnt > 500 ) {
-//        
-//        if( cnt < 900 ) {
-//            *mode2 = 4 ;            
-//        } else {
-//            *mode2 = 1 ;
-//        }
-//        
-//    } 
-//}
 
 void f_4225_hook()
 {
@@ -293,15 +261,16 @@ void f_4225_hook()
     
     md380_f_4225();
     
+#ifdef FW_D13_020
+    if( is_console_visible() ) {
+        uint8_t *mode2 = (void*)0x2001e94b ;
+        if( *mode2 == 2 ) {
+            *mode2 = 1;
+        }
+    }
+#endif
+    
     if ( global_addl_config.debug == 1 ) {
-//        state_fuzzing();
-//        PRINT("%S\n", status_line );
-//        static long fg = 0xff8032 ;
-//        fg += 0x10 ;
-//        gfx_set_fg_color(fg);
-//        gfx_set_bg_color(0xff000000);
-//        gfx_blockfill(0,0,100,100);
-        //draw_status_line();
 //#ifdef FW_D13_020
 //        if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
 //            PRINT("<");

@@ -188,13 +188,10 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 //        }
 //    }
     
-    if( global_addl_config.debug ) {
-        PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
-    }
+    PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
     
-    if( ymin == 0 ) {
+    if( ymin == 0 && xmin == 61 ) {
         if( has_console() ) {
-            //PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
             con_redraw();
             return ;
         }
@@ -211,6 +208,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
+    PRINT( "@ 0x%x db: %d %d\n", __builtin_return_address(0), x, y );
+    
     // supress bmp drawing in console mode.
     if( is_console_visible() ) {
         if( x == 0 && y == 0 ) {
