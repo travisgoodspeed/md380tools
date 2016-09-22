@@ -8,13 +8,17 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#include "addl_config.h"
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+//inline debug_printf(char *fmt, ...) 
 
 #ifdef DEBUG
-#define PRINT(fmt, args...)    printf(fmt, ## args)
+#define PRINT(fmt, args...)  { if( global_addl_config.debug ) {  printf(fmt, ## args); } } 
 #else
 #define PRINT(fmt, args...)    /* Don't do anything in release builds */
 #endif
