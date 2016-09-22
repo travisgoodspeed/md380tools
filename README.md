@@ -84,7 +84,7 @@ is under development for Android.
 ####Debian Stretch:####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
-                    libusb-1.0 python-usb
+                    libusb-1.0 python-usb make curl
 
 ####Debian Jessie (using backports.debian.org):####
 
@@ -102,12 +102,12 @@ Install python-usb from backports, the rest from Jessie
 
      apt -t jessie-backports install python-usb
      apt install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
-                 libusb-1.0
+                 libusb-1.0 make curl
 
 ####Debian Jessie (using python-pip):####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
-            libusb-1.0 git make curl python-pip unzip
+            libusb-1.0 git make curl python-pip unzip make curl
     pip install pyusb -U # update PyUSB to 1.0
   
 
@@ -115,7 +115,7 @@ Install python-usb from backports, the rest from Jessie
 
     sudo apt-get update
     sudo apt-get dist-upgrade
-    sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi
+    sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi make curl
 
 Quick recipe for building new firmware:
 
@@ -145,7 +145,7 @@ For reverse engineering:
 Tested on 2016-05-10-raspbian-jessie by IZ2XBZ
 
 sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
-             libnewlib-arm-none-eabi python-usb
+             libnewlib-arm-none-eabi python-usb make curl
 
 sudo pip install pyusb -U
 

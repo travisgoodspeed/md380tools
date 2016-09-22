@@ -107,6 +107,9 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
             if( ((uint32_t)pevent) == 0x20017348 ) {
                 last_event3 = *(uint8_t*)ret ;
             }
+            if( ((uint32_t)pevent) == 0x20017450 ) {
+                last_event4 = *(uint8_t*)ret ;
+            }
         }
     }
     

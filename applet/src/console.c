@@ -9,7 +9,7 @@
 #include "gfx.h"
 
 
-#define MAX_XPOS 20 
+#define MAX_XPOS 25 
 #define MAX_YPOS 20 
 
 #define MAX_BUF (MAX_XPOS * MAX_YPOS)
@@ -35,7 +35,7 @@ void con_puts( const char *s )
     while( *s ) {
         con_putc( *s++ );
         if( con_xpos >= MAX_XPOS ) {
-            con_putc( '\n');
+            con_nl();
         }
     }    
 }
@@ -45,7 +45,7 @@ void con_putsw( const wchar_t *s )
     while( *s ) {
         con_putc( *s++ );
         if( con_xpos >= MAX_XPOS ) {
-            con_putc( '\n');
+            con_nl();
         }
     }        
 }
