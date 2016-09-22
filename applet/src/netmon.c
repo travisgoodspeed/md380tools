@@ -109,7 +109,7 @@ void netmon_update()
     }
 #ifdef FW_D13_020
     {
-        uint8_t *smeter = 0x2001e534 ;
+        uint8_t *smeter = (uint8_t *)0x2001e534 ;
         sprintf(status_buf,"sm:%d\n", *smeter );
         con_puts(status_buf);
     }

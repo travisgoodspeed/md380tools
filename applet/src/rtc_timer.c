@@ -183,7 +183,7 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
     gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
 
-void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
+//void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
@@ -199,7 +199,12 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
         }
     }
     
-    f(str2,x,y,xlen,ylen);
+#if defined(FW_13_020)        
+    gfx_drawtext4(str2,x,y,xlen,ylen);
+#else
+#warning should find symbol gfx_drawtext4        
+#endif    
+//    f(str2,x,y,xlen,ylen);
 }
 
 #if 0
