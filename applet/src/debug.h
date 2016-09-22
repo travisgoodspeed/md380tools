@@ -15,7 +15,6 @@
 extern "C" {
 #endif
 
-//inline debug_printf(char *fmt, ...) 
 
 #ifdef DEBUG
 #define PRINT(fmt, args...)  { if( global_addl_config.debug ) {  printf(fmt, ## args); } } 
