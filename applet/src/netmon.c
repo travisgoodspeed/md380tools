@@ -61,7 +61,7 @@ uint8_t last_event4 ;
 
 void netmon_update()
 {
-    if( !has_console() ) {
+    if( !is_console_visible() ) {
         return ;
     }
     
