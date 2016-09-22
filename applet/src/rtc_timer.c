@@ -294,9 +294,11 @@ void f_4225_hook()
     md380_f_4225();
     
 #ifdef FW_D13_020
-    uint8_t *mode2 = (void*)0x2001e94b ;
-    if( *mode2 == 2 ) {
-        *mode2 = 1;
+    if( is_console_visible() ) {
+        uint8_t *mode2 = (void*)0x2001e94b ;
+        if( *mode2 == 2 ) {
+            *mode2 = 1;
+        }
     }
 #endif
     
