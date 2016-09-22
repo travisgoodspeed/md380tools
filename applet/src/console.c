@@ -130,7 +130,12 @@ static void con_draw1()
             }
         }
         *w = 0 ;
+#if defined(FW_D13_020)
+        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, 20);
+#else
+#warning should find symbol gfx_drawtext4        
         gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
+#endif
     }
 
     gfx_select_font(old);    

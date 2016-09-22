@@ -35,10 +35,10 @@ gfx_drawtext8( char *r0 )
 void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen)
 {
     gfx_drawtext6( str, x, y, 18);
-    gfx_clear3( 18 );
+    gfx_clear3( xlen );
 }
 
-void gfx_drawtext4(wchar_t *str, int x, int y, int xlen, int ylen?)
+void gfx_drawtext4(wchar_t *str, int x, int y, int xlen, int ylen)
 {
     gfx_drawtext6( str, x, y, ylen);    
     gfx_clear3( xlen );
