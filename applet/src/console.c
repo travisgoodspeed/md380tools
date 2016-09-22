@@ -103,11 +103,22 @@ wchar_t wide[MAX_BUF];
 
 static void con_draw1()
 {
-    // save old values first.
+    // TODO: save old values first.
+    void *old = gfx_select_font(gfx_font_small);
+    
+    // slow?
+    {
+        static int cnt = 0 ;
+        cnt++ ;
+        if( cnt % 16 == 0 ) {
+            gfx_set_fg_color(0x00ff8032); 
+            gfx_blockfill(0,0,159,109);
+        }
+    }
+    
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
-    void *old = gfx_select_font(gfx_font_small);
-
+    
     for(int y=0;y<=con_ypos;y++) {
         char *p = con_buf[y];
         wchar_t *w = wide ;

@@ -186,7 +186,7 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int m
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
-    con_redraw();
+    //con_redraw();
 
     // filter datetime (y=96)
     if( y != 96 ) {
@@ -204,7 +204,8 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     PRINT("dt4: 0x%x %S %d %d %d %d (%x)\n", return_addr, str, x, y, xlen, ylen, str);
     if( has_console() ) {
         if( x == 45 && y == 34 ) {
-            y = 60 ; // lower text. 
+            return ;
+//            y = 60 ; // lower text. 
     //        mkascii( tg_buf, sizeof(tg_buf), str );
     //        // somehow, if f() is not called, the console is not drawn. 
     //        // to fix later.
@@ -212,12 +213,13 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     ////            str2 = L"" ;
     ////        }
         }
-    //    if( x == 34 && y == 75 ) {
+        if( x == 34 && y == 75 ) {
+            return ;
     //        mkascii( chan_buf, sizeof(chan_buf), str );
     ////        if( !has_gui() ) {
     ////            str2 = L"" ;
     ////        }
-    //    }
+        }
     }
     
     f(str2,x,y,xlen,ylen);

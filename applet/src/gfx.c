@@ -59,7 +59,7 @@ void drawascii2(char *ascii,
         }
 #ifdef CONFIG_GRAPHICS
   gfx_drawtext2(wide, x, y, 0);
-  con_redraw();
+  //con_redraw();
 #endif
 }
 
@@ -171,17 +171,13 @@ void print_date_hook(void) {  // copy from the md380 code
 #endif //CONFIG_GRAPHICS
 }
 
+// deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
 {
 #ifdef CONFIG_GRAPHICS
     gfx_drawbmp(bmp, x, y);
     draw_eye_opt();
 #endif
-}
-
-inline int is_menu_visible()
-{
-    return (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ;
 }
 
 void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
@@ -191,6 +187,11 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 //            return ;
 //        }
 //    }
+    
+    if( global_addl_config.debug ) {
+        PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+    }
+    
     if( ymin == 0 ) {
         if( has_console() ) {
             //PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
@@ -211,10 +212,12 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
     // supress bmp drawing in console mode.
-    if( has_console() ) {
-        if( !is_menu_visible() ) {
-            return ;            
+    if( is_console_visible() ) {
+        if( x == 0 && y == 0 ) {
+            // antenne icon draw.
+            con_redraw();
         }
+        return ;
     }
     gfx_drawbmp( bmp, x, y );
 }
