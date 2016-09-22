@@ -59,7 +59,7 @@ void drawascii2(char *ascii,
         }
 #ifdef CONFIG_GRAPHICS
   gfx_drawtext2(wide, x, y, 0);
-  con_redraw();
+  //con_redraw();
 #endif
 }
 
@@ -220,6 +220,9 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
     if( has_console() ) {
         if( !is_menu_visible() ) {
             return ;            
+        }
+        if( x == 0 && y == 0 ) {
+            con_redraw();
         }
     }
     gfx_drawbmp( bmp, x, y );
