@@ -205,8 +205,6 @@ if __name__== '__main__':
     # date format  hook, this hook can modify the date format on the status line
     merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
 
-    # gfx_drawbmp hooks 
-
     #########
     # gfx_ primitives hooks, to be overriden later in this file.
 
@@ -452,6 +450,9 @@ if __name__== '__main__':
     ];
     for adr in gfxblockfill:
         merger.hookbl(adr, sapplet.getadr("gfx_blockfill_hook"));
+
+    # gfx_ primitives hooks, to be overriden later in this file.
+    #########
 
     # 
     merger.hookbl(0x08021782, sapplet.getadr("draw_statusline_hook"));

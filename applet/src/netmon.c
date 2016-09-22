@@ -32,12 +32,30 @@ uint8_t *mode3 = (void*)0x2001e892 ;
 // 0 = idle?
 // 3 = unprog channel
 
+// radio events
+// 0x01 = idle
+// 0x04 = sync
+// 0x07 = tx sound 
+// 0x09 = rx sound
+// 0x0a = rx idle (tail of rx)
+// 0x0e = sync attempt? (tx only?)
+// 0x02 = sync error? (tx only?)
 uint8_t last_radio_event ;
+//
 
-// 0x24 roger beep?
+// beep events 
+// 0x0e negative on ptt
 // 0x0f not programmed channel
+// 0x11 postive on ptt
+// 0x24 beep end-of-rx
 uint8_t last_event2 ;
+
+// 0x01 = tx
+// 0x02 = rx
 uint8_t last_event3 ;
+//
+
+uint8_t last_event4 ;
 
 void netmon_update()
 {
@@ -77,7 +95,7 @@ void netmon_update()
     }
 #endif    
     {
-        sprintf(status_buf,"re:%02x e2:%02x e3:%02x \n", last_radio_event, last_event2, last_event3 );
+        sprintf(status_buf,"re:%02x e2:%02x e3:%02x\ne4:%02x\n", last_radio_event, last_event2, last_event3, last_event4 );
         con_puts(status_buf);
     }
 }
