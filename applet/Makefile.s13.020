@@ -6,6 +6,7 @@ SRCS += display.o
 SRCS += console.o
 SRCS += util.o
 SRCS += netmon.o
+SRCS += debug.o
 #### SRCS +=  dispflip.o  # display flip is included @ d13.020
 #### SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
 

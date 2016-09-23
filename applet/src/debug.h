@@ -17,17 +17,19 @@ extern "C" {
 
 #define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
 
+void debug_printf(char *fmt, ...);
 
+    
 #ifdef DEBUG
-#define PRINT(fmt, args...)  { if( global_addl_config.debug ) {  printf(fmt, ## args); } } 
+#define PRINT(fmt, args...)   do { debug_printf(fmt, ## args); } while (0)
 #else
 #define PRINT(fmt, args...)    /* Don't do anything in release builds */
 #endif
 
 #ifdef DEBUG
-#define PRINTRET() { PRINT("@ 0x%x ", UNTHUMB_POI(__builtin_return_address(0)) ); }
+#define PRINTRET() do { debug_printf("@ 0x%x ", UNTHUMB_POI(__builtin_return_address(0)) ); } while (0)
 #else
-#define PRINTRET() 
+#define PRINTRET() /* Don't do anything in release builds */
 #endif    
     
 
