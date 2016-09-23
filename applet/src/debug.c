@@ -9,7 +9,7 @@
 
 void md380_putc(void* p, char c);
 
-inline void debug_printf2(char *fmt, ...)
+static void debug_printf2(char *fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
