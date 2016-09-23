@@ -3189,7 +3189,7 @@ af+ 0x803ff84 38 c5000_spi0_writereg
 af+ 0x803ffd0 42 c5000_spi0_readreg
 af+ 0x8040670 880 F_414
 af+ 0x8040a02 740 dmr_audio_start
-af+ 0x8040ce6 92 F_416
+af+ 0x8040ce6 92 dmr_before_squelch
 af+ 0x8040d44 94 F_858
 af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
@@ -3469,3 +3469,4 @@ f F_4315 0 0x08025ae4
 
 f promisc_audio_frame @ 0x08040cce 
 f normal_audio_frame @ 0x08040cc4
+f audio_for_me_or_not @ 0x08040c7a
