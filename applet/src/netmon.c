@@ -67,7 +67,7 @@ void netmon_update()
     }
     
     progress++ ;
-    progress %= sizeof( progress_info );
+    progress %= sizeof( progress_info ) - 1 ;
     
     int progress2 = progress ; // sample (thread safe) 
 

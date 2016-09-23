@@ -143,7 +143,7 @@ static void con_draw1()
 
 void con_redraw()
 {
-    if( !has_console() ) {
+    if( !is_console_visible() ) {
         return ;
     }
     
