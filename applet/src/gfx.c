@@ -2,7 +2,7 @@
   \brief Graphics wrapper functions.
 */
 
-//#define DEBUG
+#define DEBUG
 
 #include "md380.h"
 #include "version.h"
@@ -188,7 +188,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 //        }
 //    }
     
-    PRINT( "@ 0x%x bf: %d %d %d %d\n", __builtin_return_address(0), xmin, ymin, xmax, ymax );
+    PRINTRET();
+    PRINT( "bf: %d %d %d %d\n", xmin, ymin, xmax, ymax );
     
     if( ymin == 0 && xmin == 61 ) {
         con_redraw();
@@ -210,7 +211,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
-    PRINT( "@ 0x%x db: %d %d\n", __builtin_return_address(0), x, y );
+    PRINTRET();
+    PRINT( "db: %d %d\n", x, y );
     
     // supress bmp drawing in console mode.
     if( is_console_visible() ) {
@@ -228,7 +230,8 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
     // filter datetime (y=96)
     if( y != 96 ) {
-        PRINT("@ 0x%x ctd: %d %d %d %S\n", __builtin_return_address(0), x, y, xlen, str);
+        PRINTRET();
+        PRINT("ctd: %d %d %d %S\n", x, y, xlen, str);
     }
     
     if( is_console_visible() ) {
@@ -240,9 +243,8 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
-    void * return_addr = __builtin_return_address(0);
-    wchar_t *str2 = str ;
-    PRINT("@ 0x%x dt4: %d %d %d %d %S (%x)\n", return_addr, x, y, xlen, ylen, str, str);
+    PRINTRET();
+    PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
     if( has_console() ) {
         if( x == 45 && y == 34 ) {
             return ;
@@ -253,9 +255,8 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     }
     
 #if defined(FW_D13_020)        
-    gfx_drawtext4(str2,x,y,xlen,ylen);
+    gfx_drawtext4(str,x,y,xlen,ylen);
 #else
 #warning should find symbol gfx_drawtext4        
 #endif    
-//    f(str2,x,y,xlen,ylen);
 }

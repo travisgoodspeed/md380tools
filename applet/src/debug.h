@@ -15,6 +15,8 @@
 extern "C" {
 #endif
 
+#define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
+
 
 #ifdef DEBUG
 #define PRINT(fmt, args...)  { if( global_addl_config.debug ) {  printf(fmt, ## args); } } 
@@ -23,13 +25,11 @@ extern "C" {
 #endif
 
 #ifdef DEBUG
-#define PRINTRET() { PRINT("@ 0x%x ", __builtin_return_address(0) ); }
+#define PRINTRET() { PRINT("@ 0x%x ", UNTHUMB_POI(__builtin_return_address(0)) ); }
 #else
 #define PRINTRET() 
 #endif    
     
-#define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
-
 
 #ifdef __cplusplus
 }
