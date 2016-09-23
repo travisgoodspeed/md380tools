@@ -3,6 +3,7 @@
   
 */
 
+#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -88,7 +89,7 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {
     void * ret;
-    void * return_addr = __builtin_return_address(0);
+    //void * return_addr = __builtin_return_address(0);
     //  void * sp;
 
     //  __asm__("mov %0,r14" : "=r" (return_addr));
@@ -114,21 +115,22 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     }
     
     if( ret != NULL && global_addl_config.debug == 1 ) {
-        printf("OSMboxPend @ 0x%x, 0x%x, 0x%x \n", UNTHUMB_POI(return_addr), pevent, *(uint8_t*)ret);
-//        switch (* (uint8_t*) ret) {
-//            case 0x24:
-//                printf("roger beep ");
-//                break;
-//            case 0xe:
-//                printf("no dmr sync ");
-//            case 0x11:
-//                printf("dmr sync ");
-//                break;
-//            default:
-//                printf("not known ");
-//                break;
-//        }
-//        printf("\n");
+        PRINTRET();
+        PRINT("OMp 0x%x, 0x%x ", pevent, *(uint8_t*)ret);
+        switch (* (uint8_t*) ret) {
+            case 0x24:
+                printf("roger beep ");
+                break;
+            case 0xe:
+                printf("no dmr sync ");
+            case 0x11:
+                printf("dmr sync ");
+                break;
+            default:
+                printf("not known ");
+                break;
+        }
+        printf("\n");
     }
     return (ret);
 }

@@ -12,7 +12,7 @@
 #define MAX_XPOS 25 
 #define MAX_YPOS 20 
 
-#define MAX_BUF (MAX_XPOS * MAX_YPOS)
+#define MAX_BUF (MAX_XPOS + 1)
 char con_buf[MAX_YPOS][MAX_XPOS+1]; // +1 for terminating 0 every line.
 
 int con_xpos = 0 ;
@@ -122,9 +122,10 @@ static void con_draw1()
         wchar_t *we = wide + MAX_BUF -1 ;
         for(int x=0;x<MAX_XPOS;x++) {
             if( *p == 0 ) {
-                break ;
+                *w++ = ' ';                
+            } else {
+                *w++ = *p++ ;                
             }
-            *w++ = *p++ ;
             if( w >= we ) {
                 break ;
             }

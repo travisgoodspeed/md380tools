@@ -22,6 +22,12 @@ extern "C" {
 #define PRINT(fmt, args...)    /* Don't do anything in release builds */
 #endif
 
+#ifdef DEBUG
+#define PRINTRET() { PRINT("@ 0x%x ", __builtin_return_address(0) ); }
+#else
+#define PRINTRET() 
+#endif    
+    
 #define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
 
 
