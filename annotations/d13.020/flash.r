@@ -2723,8 +2723,12 @@ CCa 0x802fbe4 beginn roger beep
 CCa 0x802fd54 beginn dmr sync
 af+ 0x8030aa4 52 F_293
 af+ 0x8030ad8 16 F_294
+
+f md380_OSMboxPend @ 0x8031084
 af+ 0x8031084 258 md380_OSMboxPend
+
 af+ 0x803119c 86 OSMboxPost
+
 af+ 0x8031276 52 md380_spiflash_sektor_erase4k
 af+ 0x80312aa 52 md380_spiflash_block_erase64k
 af+ 0x80312de 76 spiflash_program_page
@@ -3462,3 +3466,6 @@ f return_to_mode_1_from10 0 0x0800fc96
 af+ 0x0800fc96 32 return_to_mode_1_from10
 
 f F_4315 0 0x08025ae4
+
+f promisc_audio_frame @ 0x08040cce 
+f normal_audio_frame @ 0x08040cc4

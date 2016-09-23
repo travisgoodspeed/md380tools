@@ -23,6 +23,7 @@
 #include "gfx.h"
 #include "addl_config.h"
 #include "os.h"
+#include "debug.h"
 
 
 /* Used to avoid duplicate call endings. */
@@ -70,7 +71,12 @@ void *dmr_call_end_hook(char *pkt){
   return dmr_call_end((void*)pkt);
 }
 
-void *dmr_call_start_hook(char *pkt){
+void *dmr_call_start_hook(uint8_t *pkt)
+{
+//    PRINTRET();
+//    PRINTHEX(pkt,10);
+//    PRINT("\n");
+    
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
 
