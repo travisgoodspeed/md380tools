@@ -3429,6 +3429,9 @@ af+ 0x080277c2 16 gfx_drawtext7
 f gfx_drawtext8 0 0x08036fc0
 af+ 0x08036fc0 378 gfx_drawtext8
 
+f gfx_drawchar @ 0x08021940
+af+ 0x08021940 18 gfx_drawchar
+
 CCa 0x08036ff4 check_for_0_term 
 CCa 0x08037118 check_for_0_term_and_loop
 
