@@ -5,6 +5,7 @@ SRCS += display.o
 SRCS += console.o
 SRCS += util.o
 SRCS += netmon.o
+SRCS += debug.o
 PROJ_NAME=main
 
 
