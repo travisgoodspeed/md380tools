@@ -228,7 +228,7 @@ int main(void)
 
 void draw_statusline_hook( uint32_t r0 )
 {
-    if( has_console() ) {
+    if( is_console_visible() ) {
         con_redraw();
         return ;
     }
