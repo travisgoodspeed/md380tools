@@ -9,7 +9,7 @@
 #include "gfx.h"
 
 
-#define MAX_XPOS 25 
+#define MAX_XPOS 30 
 #define MAX_YPOS 20 
 
 #define MAX_BUF (MAX_XPOS + 1)
@@ -132,7 +132,8 @@ static void con_draw1()
         }
         *w = 0 ;
 #if defined(FW_D13_020)
-        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, 20);
+//        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, MAX_XPOS, MAX_XPOS);
+        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, MAX_XPOS);
 #else
 #warning should find symbol gfx_drawtext4        
         gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
