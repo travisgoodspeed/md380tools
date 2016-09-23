@@ -147,5 +147,13 @@ void netmon_update()
         sprintf(status_buf, "%d -> %d\n", g_src, g_dst); 
         con_puts(status_buf);        
     }
+#ifdef FW_D13_020
+//    {
+//        // only valid when transmitting or receiving.
+//        uint32_t *recv = 0x2001e5e4 ;
+//        sprintf(status_buf, "%d\n", *recv); 
+//        con_puts(status_buf);        
+//    }
+#endif    
     
 }
