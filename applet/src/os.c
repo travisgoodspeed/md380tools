@@ -3,7 +3,7 @@
   
 */
 
-//#define DEBUG
+#define DEBUG
 
 #include <stdio.h>
 #include <string.h>
@@ -33,21 +33,20 @@ void *(OSTaskNameSet_hook)( INT8U prio, INT8U *name,  INT8U *err) {
   return OSTaskNameSet(prio, name, err);
 }
 
+OS_EVENT * OSSemCreate_hook(uint16_t cnt)
+{
+    OS_EVENT * sem;
 
+    sem = OSSemCreate(cnt);
 
-OS_EVENT * OSSemCreate_hook(uint16_t cnt) {
-  OS_EVENT * sem;
-
-  sem  = OSSemCreate(cnt);
-
-  debug_line_sem=OSSemCreate(1);
-  if ( debug_line_sem == NULL ) {
-    printf("can't create debug_line_sem\n");
+    debug_line_sem = OSSemCreate(1);
+    if( debug_line_sem == NULL ) {
+        printf("can't create debug_line_sem\n");
     }
-  #ifdef DEBUG
-  printf("debug_line_sem %x\n", debug_line_sem);
-  #endif
-  return (sem);
+//#ifdef DEBUG
+//    printf("debug_line_sem %x\n", debug_line_sem);
+//#endif
+    return (sem);
 }
 
 
