@@ -2,7 +2,7 @@
   \brief Graphics wrapper functions.
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include "md380.h"
 #include "version.h"
