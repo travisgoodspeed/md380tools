@@ -18,12 +18,13 @@ extern "C" {
 #define UNTHUMB_POI( adr ) (((uint32_t)adr) & ~1)
 
 void debug_printf(char *fmt, ...);
+void debug_printhex(void *buf, int len);
 
-    
+
 #ifdef DEBUG
-#define PRINT(fmt, args...)   do { debug_printf(fmt, ## args); } while (0)
+#define PRINT(fmt, args...) do { debug_printf(fmt, ## args); } while (0)
 #else
-#define PRINT(fmt, args...)    /* Don't do anything in release builds */
+#define PRINT(fmt, args...) /* Don't do anything in release builds */
 #endif
 
 #ifdef DEBUG
@@ -31,7 +32,13 @@ void debug_printf(char *fmt, ...);
 #else
 #define PRINTRET() /* Don't do anything in release builds */
 #endif    
-    
+
+#ifdef DEBUG
+#define PRINTHEX(buf,len) do { debug_printhex(buf,len); } while (0)
+#else
+#define PRINTHEX(buf,len) /* Don't do anything in release builds */
+#endif
+
 
 #ifdef __cplusplus
 }

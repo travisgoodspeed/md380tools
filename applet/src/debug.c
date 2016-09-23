@@ -20,3 +20,15 @@ void debug_printf(char *fmt, ...)
     tfp_format(0,md380_putc, fmt, va);
     va_end(va);
 }
+
+/* Convenience function to print in hex. */
+void debug_printhex(void *buf, int len)
+{
+    if( !global_addl_config.debug ) {
+        return ;
+    }
+    
+    for (int i = 0; i < len; i++) {
+        printf(" %02x", ((uint8_t*)buf)[i]);
+    }
+}

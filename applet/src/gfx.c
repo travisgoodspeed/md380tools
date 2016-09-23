@@ -2,7 +2,7 @@
   \brief Graphics wrapper functions.
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include "md380.h"
 #include "version.h"
@@ -106,7 +106,13 @@ void dump_ram_to_spi_flash() {
 
 */
 
-void print_date_hook(void) {  // copy from the md380 code
+void print_date_hook(void) 
+{  // copy from the md380 code
+    
+    if( is_console_visible() ) {
+        return ;
+    }
+    
 #ifdef CONFIG_GRAPHICS
   wchar_t wide[40];
   RTC_DateTypeDef RTC_DateStruct;

@@ -60,6 +60,9 @@ uint8_t last_event3 ;
 // 0x17 = ?
 uint8_t last_event4 ;
 
+// ?
+uint8_t last_event5 ;
+
 void netmon_update()
 {
     if( !is_console_visible() ) {
@@ -127,7 +130,7 @@ void netmon_update()
         con_nl();    
     }
     {
-        sprintf(status_buf,"re:%02x e2:%02x e3:%02x e4:%02x\n", last_radio_event, last_event2, last_event3, last_event4 );
+        sprintf(status_buf,"re:%02x e2:%02x e3:%02x\ne4:%02x e5:%02x\n", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
         con_puts(status_buf);
     }
 #ifdef FW_D13_020

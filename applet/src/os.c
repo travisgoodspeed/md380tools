@@ -105,31 +105,43 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
                 last_event2 = *(uint8_t*)ret ;
             }
             if( ((uint32_t)pevent) == 0x20017348 ) {
+//                PRINTHEX(ret,16);
+//                PRINT("\n");
                 last_event3 = *(uint8_t*)ret ;
             }
             if( ((uint32_t)pevent) == 0x20017450 ) {
+//                PRINTHEX(ret,16);
+//                PRINT("\n");
                 last_event4 = *(uint8_t*)ret ;
             }
+            if( ((uint32_t)pevent) == 0x20017438 ) {
+//                PRINTHEX(ret,16);
+//                PRINT("\n");
+                last_event5 = *(uint8_t*)ret ;
+            }
+            
         }
     }
-    
+
     if( ret != NULL && global_addl_config.debug == 1 ) {
         PRINTRET();
-        PRINT("OMp 0x%x, 0x%x ", pevent, *(uint8_t*)ret);
-        switch (* (uint8_t*) ret) {
-            case 0x24:
-                printf("roger beep ");
-                break;
-            case 0xe:
-                printf("no dmr sync ");
-            case 0x11:
-                printf("dmr sync ");
-                break;
-            default:
-                printf("not known ");
-                break;
+        PRINT("OMp 0x%x, 0x%x ", pevent, *(uint8_t*) ret);
+        if( pevent == 0x20017390 ) {
+            switch (* (uint8_t*) ret) {
+                case 0x24:
+                    printf("roger beep ");
+                    break;
+                case 0xe:
+                    printf("no dmr sync ");
+                case 0x11:
+                    printf("dmr sync ");
+                    break;
+                default:
+                    printf("not known ");
+                    break;
+            }
         }
-        printf("\n");
+        PRINT("\n");
     }
     return (ret);
 }

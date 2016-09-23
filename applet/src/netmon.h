@@ -18,6 +18,7 @@ extern uint8_t last_radio_event ;
 extern uint8_t last_event2 ;
 extern uint8_t last_event3 ;
 extern uint8_t last_event4 ;
+extern uint8_t last_event5 ;
 
 
 #ifdef __cplusplus
