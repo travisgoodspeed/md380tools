@@ -67,7 +67,7 @@ void netmon_update()
     }
     
     progress++ ;
-    progress %= sizeof( progress_info );
+    progress %= sizeof( progress_info ) - 1 ;
     
     int progress2 = progress ; // sample (thread safe) 
 
@@ -104,7 +104,30 @@ void netmon_update()
     }
 #endif    
     {
-        sprintf(status_buf,"re:%02x e2:%02x e3:%02x\ne4:%02x\n", last_radio_event, last_event2, last_event3, last_event4 );
+        con_puts("radio: ");
+        char *str = "?" ;
+        switch( last_radio_event ) {
+            case 0x1 :
+                str = "nosig" ;
+                break ;
+            case 0x4 :
+                str = "sync" ;
+                break ;
+            case 0x9 :
+                str = "rx voice" ;
+                break ;
+            case 0xa :
+                str = "rx silence" ;
+                break ;
+            case 0x7 :
+                str = "rx idle" ;
+                break ;
+        }
+        con_puts(str);
+        con_nl();    
+    }
+    {
+        sprintf(status_buf,"re:%02x e2:%02x e3:%02x e4:%02x\n", last_radio_event, last_event2, last_event3, last_event4 );
         con_puts(status_buf);
     }
 #ifdef FW_D13_020

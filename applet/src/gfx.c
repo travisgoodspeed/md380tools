@@ -2,7 +2,7 @@
   \brief Graphics wrapper functions.
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include "md380.h"
 #include "version.h"
@@ -238,3 +238,24 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
     gfx_chars_to_display(str, x, y, xlen);
 }
 
+void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
+{
+    void * return_addr = __builtin_return_address(0);
+    wchar_t *str2 = str ;
+    PRINT("@ 0x%x dt4: %d %d %d %d %S (%x)\n", return_addr, x, y, xlen, ylen, str, str);
+    if( has_console() ) {
+        if( x == 45 && y == 34 ) {
+            return ;
+        }
+        if( x == 34 && y == 75 ) {
+            return ;
+        }
+    }
+    
+#if defined(FW_D13_020)        
+    gfx_drawtext4(str2,x,y,xlen,ylen);
+#else
+#warning should find symbol gfx_drawtext4        
+#endif    
+//    f(str2,x,y,xlen,ylen);
+}
