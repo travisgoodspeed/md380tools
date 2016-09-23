@@ -6,6 +6,8 @@
   as a kernel log through hooked USB DFU functions.
 */
 
+#include <stdint.h>
+
 #include "printf.h"
 #include "dmesg.h"
 
@@ -47,12 +49,12 @@ void dmesg_flush(){
   dmesg_init();
 }
 
-
 /* Convenience function to print in hex. */
-void printhex(char *buf, int len){
-  for(int i=0;i<len;i++){
-    printf(" %02x",buf[i]&0xFF);
-  }
+void printhex(void *buf, int len)
+{
+    for (int i = 0; i < len; i++) {
+        printf(" %02x", ((uint8_t*)buf)[i]&0xFF);
+    }
 }
 
 /* Convenience function to print in hex. */
