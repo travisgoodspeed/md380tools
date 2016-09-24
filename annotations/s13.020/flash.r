@@ -17,7 +17,7 @@ af+ 0x8016b7e 58 F_4158
 af+ 0x8018c5c 236  md380_itow **
 af+ 0x801b172 26 md380_menu_numerical_input
 af+ 0x801d49c 8 gfx_set_bg_color **
-af+ 0x801d4a4 8 gfx_set_fg_color **
+
 af+ 0x801d9c0 30 gfx_blockfill **
 af+ 0x801de3c 18 gfx_chars_to_display **
 af+ 0x801de3c 18 gfx_drawtext2 **
@@ -91,3 +91,12 @@ af+ 0x08046fbc 314 Start
 
 
 
+f gfx_set_fg_color @ 0x801d4a4
+af+ 0x801d4a4 8 gfx_set_fg_color **
+
+f gfx_get_xpos @ 0x08021b64
+f gfx_get_ypos @ 0x08021b6c
+
+f gfx_info @ 0x2001daec
+
+f gfx_drawchar @ 0x08021b78

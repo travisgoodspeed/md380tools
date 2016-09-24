@@ -29,6 +29,8 @@ CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
 CFLAGS += -Wa,-a=$(@:.o=.lst)	
+# TODO: make this dynamic	
+CFLAGS += -DFW_S13_020=1	
 ###################################################
 
 vpath %.c src
