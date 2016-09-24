@@ -1,3 +1,7 @@
+
+gfx_info = 0x2001da1c ;
+gfx_drawchar = 0x0802189d ;
+
 gfx_drawbmp          = 0x80237ff;
 gfx_drawtext         = 0x800def7;
 gfx_chars_to_display = 0x801dd09;

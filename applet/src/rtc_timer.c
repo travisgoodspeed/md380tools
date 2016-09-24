@@ -156,12 +156,10 @@ void dummy()
 //    //gfx_drawtext(str, sx, sy, x, y, maxlen);
 //}
 
+#if defined(FW_D13_020)
 void gfx_drawtext8_hook(uint8_t *r0)
 {
-//    uint8_t *p = 0x2001da1c ;
-//    uint16_t *w = 0x2001da1c ;
-    
-    gfx_info_t *g = (gfx_info_t *)0x2001da1c ;
+    gfx_info_t *g = &gfx_info ;
     
 //    if( g->xpos == 10 && g->ypos == 55 ) {
 //        // filter out status.
@@ -176,6 +174,7 @@ void gfx_drawtext8_hook(uint8_t *r0)
 //    PRINT("\n");
     //gfx_drawtext(str, sx, sy, x, y, maxlen);
 }
+#endif
 
 void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
