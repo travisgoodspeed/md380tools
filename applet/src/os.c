@@ -84,6 +84,8 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   return(md380_OSMboxPost(pevent, pmsg));
 }
 
+OS_EVENT *radio_mbox = 0x20017468 ;
+OS_EVENT *beep_mbox = 0x20017390 ;
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {
@@ -97,29 +99,24 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     
     if( has_console() ) {
         if( ret != NULL ) {
-            if( ((uint32_t)pevent) == 0x20017468 ) {
+            if( pevent == radio_mbox ) {
                 last_radio_event = *(uint8_t*)ret ;
-            }
-            if( ((uint32_t)pevent) == 0x20017390 ) {
+            } else if( pevent == beep_mbox ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;
-            }
-            if( ((uint32_t)pevent) == 0x20017348 ) {
-//                PRINTHEX(ret,16);
-//                PRINT("\n");
+            } else if( ((uint32_t)pevent) == 0x20017348 ) {
                 last_event3 = *(uint8_t*)ret ;
-            }
-            if( ((uint32_t)pevent) == 0x20017450 ) {
-//                PRINTHEX(ret,16);
-//                PRINT("\n");
+            } else if( ((uint32_t)pevent) == 0x20017450 ) {
                 last_event4 = *(uint8_t*)ret ;
-            }
-            if( ((uint32_t)pevent) == 0x20017438 ) {
-//                PRINTHEX(ret,16);
-//                PRINT("\n");
+            } else if( ((uint32_t)pevent) == 0x20017438 ) {
                 last_event5 = *(uint8_t*)ret ;
-            }
-            
+            } else {
+#if defined(FW_D13_020)
+                PRINT( "unknown mbox 0x%x\n", pevent );
+#else
+#warning please consider finding mbox pointers for this firmware version                
+#endif                
+            }            
         }
     }
 
