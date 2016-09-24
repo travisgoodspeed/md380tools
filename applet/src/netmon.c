@@ -120,16 +120,19 @@ void netmon_update()
                 str = "tx denied" ;
                 break ;
             case 0x4 :
-                str = "sync" ;
+                str = "Out_Of_SYNC" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0x7 :
                 str = "rx idle" ;
                 break ;
+            case 0x8 :
+                str = "Other_Call" ; // TS 102 361-2 clause p 5.2.1.3.2
+                break ;
             case 0x9 :
-                str = "rx voice" ;
+                str = "My_Call" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0xe :
-                str = "tx request" ;
+                str = "Wait_for_TX_Response" ;
                 break ;
             case 0xa :
                 str = "rx silence" ;
