@@ -85,8 +85,8 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
 }
 
 // these are FW_D13_020 based pointer values
-OS_EVENT *radio_mbox = 0x20017468 ;
-OS_EVENT *beep_mbox = 0x20017390 ;
+OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ;
+OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ;
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {
@@ -100,9 +100,9 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     
     if( has_console() ) {
         if( ret != NULL ) {
-            if( pevent == radio_mbox ) {
+            if( pevent == mbox_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
-            } else if( pevent == beep_mbox ) {
+            } else if( pevent == mbox_beep ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;
             } else if( ((uint32_t)pevent) == 0x20017348 ) {
@@ -124,7 +124,7 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     if( ret != NULL && global_addl_config.debug == 1 ) {
         PRINTRET();
         PRINT("OMp 0x%x, 0x%x ", pevent, *(uint8_t*) ret);
-        if( pevent == 0x20017390 ) {
+        if( pevent == mbox_beep ) {
             switch (* (uint8_t*) ret) {
                 case 0x24:
                     printf("roger beep ");
