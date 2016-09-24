@@ -73,15 +73,18 @@ Create a new free-form job
 Builder 1
 ```
 make clean && make
+cd db ; make clean && make all
 ```
 
 Builder 2 (and yes is it ugly but working
 ```
 export SHORT_GIT_COMMIT=`echo ${GIT_COMMIT} | cut -c 1-7`
 export FILE=experiment-${SHORT_GIT_COMMIT}-${BUILD_NUMBER}-`date +%Y%m%d%H%M%S`.bin
+export PREVTAG="`git log --format="%h" --first-parent -n 1 --skip=1`"
+export COMMITMSG="`git log --format="%h: %B" ${PREVTAG}..HEAD  --no-merges`"
 
-# Clean up older copies if make didn't do that
-rm experiment-*-*.bin
+# Clean up older copies if make didnapos;t do that
+rm experiment-*-*.bin || echo "Nothing to delete here :)"
 cp applet/experiment.bin ${FILE}
 
 #####
@@ -91,19 +94,20 @@ echo "cd /var/www/example.org/md380
 put ${FILE}" | sftp foo@example.org
 
 #####
-# Publish to GitHub repo 
+# Publish to GitHub repo
 #####
 echo "Deleting release from github before creating new one"
 /go/bin/github-release delete --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} || echo "No such version, continuing"
 
 echo "Creating a new release in github"
-/go/bin/github-release release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} --name "${SHORT_GIT_COMMIT}"
+/go/bin/github-release release --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} --name "${SHORT_GIT_COMMIT}" --description "${COMMITMSG}" --pre-release
 
 echo "Uploading the artifacts into github"
-/go/bin/github-release upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} --name "${PROJECT_NAME}-${SHORT_GIT_COMMIT}.bin" --file ${FILE}
+/go/bin/github-release upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} --name "${SHORT_GIT_COMMIT}-${PROJECT_NAME}-firmware.bin" --file ${FILE}
+/go/bin/github-release upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} --name "${SHORT_GIT_COMMIT}-users.csv" --file db/users.csv
+/go/bin/github-release upload --user ${GITHUB_ORGANIZATION} --repo ${GITHUB_REPO} --tag ${SHORT_GIT_COMMIT} --name "${SHORT_GIT_COMMIT}-repeaters.csv" --file db/repeaters.csv
 ```
 
 **Now commit and see the magic working**
 
 Cheers, Tom / PD2TMS
-
