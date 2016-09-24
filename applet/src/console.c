@@ -9,7 +9,7 @@
 #include "gfx.h"
 
 
-#define MAX_XPOS 25 
+#define MAX_XPOS 27 
 #define MAX_YPOS 20 
 
 #define MAX_BUF (MAX_XPOS + 1)
