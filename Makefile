@@ -6,6 +6,7 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 all: applets
 clean:
+	rm -f data data.csv	
 	cd patches/2.032 && $(MAKE) clean
 	cd patches/d13.020 && $(MAKE) clean
 	cd firmware && $(MAKE) clean
