@@ -84,6 +84,7 @@ uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
   return(md380_OSMboxPost(pevent, pmsg));
 }
 
+// these are FW_D13_020 based pointer values
 OS_EVENT *radio_mbox = 0x20017468 ;
 OS_EVENT *beep_mbox = 0x20017390 ;
 
