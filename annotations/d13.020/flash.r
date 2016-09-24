@@ -3187,6 +3187,8 @@ af+ 0x803f754 218 OSSemPend
 af+ 0x803f844 92 OSSemPost
 af+ 0x803ff84 38 c5000_spi0_writereg
 af+ 0x803ffd0 42 c5000_spi0_readreg
+
+f F_414 @ 0x8040670
 af+ 0x8040670 880 F_414
 af+ 0x8040a02 740 dmr_audio_start
 af+ 0x8040ce6 92 dmr_before_squelch

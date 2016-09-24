@@ -9,6 +9,8 @@
 
 #define CONFIG_DMR
 
+#define NETMON
+
 #include "dmr.h"
 
 #include <stdio.h>
@@ -36,8 +38,34 @@ int incall=0;
 int g_dst;  // transferbuffer users.csv
 int g_src;
     
+typedef struct adr {
+    uint8_t b16 ;
+    uint8_t b8 ;
+    uint8_t b0 ;    
+} adr_t ;
 
-void *dmr_call_end_hook(char *pkt){
+
+typedef struct pkt {
+    uint32_t unk0 ;
+    uint8_t unk1 ;
+    adr_t dst ;
+    adr_t src ;    
+} pkt_t ;
+
+uint32_t adr( adr_t in )
+{
+    return in.b0 | (in.b8 << 8 ) | (in.b16 << 16 ) ;
+}
+
+void dump_pkf( const char *tag, pkt_t *pkt )
+{
+    NMPRINT("%s(%d,%d) ", tag, adr(pkt->src), adr(pkt->dst) );
+}
+
+void *dmr_call_end_hook(char *pkt)
+{
+    dump_pkf( "ce", (pkt_t*) pkt );
+    
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
 
@@ -76,23 +104,25 @@ void *dmr_call_start_hook(uint8_t *pkt)
 //    PRINTRET();
 //    PRINTHEX(pkt,10);
 //    PRINT("\n");
+
+    /* This hook handles the dmr_contact_check() function, calling
+       back to the original function where appropriate.
+
+       It is called several times per call, presumably when the
+       addresses are resent for late entry.  If you need to trigger
+       something to happen just once per call, it's better to put that
+       in dmr_call_end_hook().
+
+       pkt looks like this:
+
+       overhead
+       /    /         /--dst-\ /--src-\
+       08 1a 00 00 00 00 00 63 30 05 54 73 e3 ae
+       10 00 00 00 00 00 00 63 30 05 54 73 2c 36
+     */
+
+    dump_pkf( "cs", (pkt_t*) pkt );
     
-  /* This hook handles the dmr_contact_check() function, calling
-     back to the original function where appropriate.
-
-     It is called several times per call, presumably when the
-     addresses are resent for late entry.  If you need to trigger
-     something to happen just once per call, it's better to put that
-     in dmr_call_end_hook().
-
-     pkt looks like this:
-
-     overhead
-     /    /         /--dst-\ /--src-\
-     08 1a 00 00 00 00 00 63 30 05 54 73 e3 ae
-     10 00 00 00 00 00 00 63 30 05 54 73 2c 36
-   */
-
   //Destination adr as Big Endian.
   int dst=(pkt[7]|
            (pkt[6]<<8)|
@@ -190,6 +220,8 @@ void *dmr_handle_data_hook(char *pkt, int len){
      two bytes of C5000 overhead.
    */
 
+    dump_pkf( "da", (pkt_t*) pkt );
+    
   //Turn on the red LED to know that we're here.
   red_led(1);
 
@@ -235,7 +267,7 @@ SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
   red_led(1);
 
   printf("SMS header: ");
-  printhex((char*) pkt, 12+2);
+  printhex(pkt, 12+2);
   printf("\n");
 
   //Forward to the original function.
