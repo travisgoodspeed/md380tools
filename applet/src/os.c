@@ -102,6 +102,7 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
         if( ret != NULL ) {
             if( pevent == mbox_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
+                NMPRINT("%02x ", last_radio_event );
             } else if( pevent == mbox_beep ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;

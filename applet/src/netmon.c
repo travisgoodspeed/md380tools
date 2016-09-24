@@ -165,7 +165,10 @@ void netmon1_update()
 
 void netmon2_update()
 {
+    extern char *logbuf ;
+    
     con_clrscr();
+    con_puts(logbuf);
 }
 
 void netmon_update()

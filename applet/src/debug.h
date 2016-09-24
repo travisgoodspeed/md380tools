@@ -18,11 +18,21 @@ extern "C" {
 void debug_printf(char *fmt, ...);
 void debug_printhex(void *buf, int len);
 
+void netmon_printf(char *fmt, ...);
+
+extern char logbuf[];
+
 
 #ifdef DEBUG
 #define PRINT(fmt, args...) do { debug_printf(fmt, ## args); } while (0)
 #else
 #define PRINT(fmt, args...) /* Don't do anything in release builds */
+#endif
+
+#ifdef DEBUG
+#define NMPRINT(fmt, args...) do { netmon_printf(fmt, ## args); } while (0)
+#else
+#define NMPRINT(fmt, args...) /* Don't do anything in release builds */
 #endif
 
 #ifdef DEBUG
