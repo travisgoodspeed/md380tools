@@ -115,6 +115,9 @@ void netmon1_update()
             case 0x2 :
                 str = "tx denied" ;
                 break ;
+            case 0x3 :
+                str = "FM" ;
+                break ;
             case 0x4 :
                 str = "Out_Of_SYNC" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
