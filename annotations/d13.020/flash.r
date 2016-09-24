@@ -3470,3 +3470,6 @@ f F_4315 0 0x08025ae4
 f promisc_audio_frame @ 0x08040cce 
 f normal_audio_frame @ 0x08040cc4
 f audio_for_me_or_not @ 0x08040c7a
+f event_8 @ 0x08040c02
+f event_36 @ 0x08041616
+f event_4 @ 0x08041e44

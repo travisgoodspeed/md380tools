@@ -116,17 +116,23 @@ void netmon_update()
             case 0x1 :
                 str = "nosig" ;
                 break ;
+            case 0x2 :
+                str = "tx denied" ;
+                break ;
             case 0x4 :
                 str = "sync" ;
+                break ;
+            case 0x7 :
+                str = "rx idle" ;
                 break ;
             case 0x9 :
                 str = "rx voice" ;
                 break ;
+            case 0xe :
+                str = "tx request" ;
+                break ;
             case 0xa :
                 str = "rx silence" ;
-                break ;
-            case 0x7 :
-                str = "rx idle" ;
                 break ;
         }
         con_puts(str);

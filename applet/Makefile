@@ -75,7 +75,7 @@ flash: wrapped
 
 $(SRCS): config.h src/*.h | lib
 $(PROJ_NAME).elf: $(SRCS)
-	$(CC) $(CFLAGS) -Wl,-Map,$(basename $@).map $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_$(SRCVERSION)
+	$(CC) $(CFLAGS) -Wl,--no-wchar-size-warning -Wl,-Map,$(basename $@).map $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_$(SRCVERSION)
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
 	$(OBJDUMP) -t main.elf >main.img.sym
 

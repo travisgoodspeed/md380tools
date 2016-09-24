@@ -1,8 +1,6 @@
 /*
  *  debug.h
  * 
- *  Created on 21-Sep-2016 10:10:11 by Simon IJskes
- * 
  */
 
 #ifndef DEBUG_H
