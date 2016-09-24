@@ -98,7 +98,7 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     //  __asm__("mov %0,r13" : "=r" (sp));
     ret = md380_OSMboxPend(pevent, timeout, perr);
     
-    if( has_console() ) {
+    if( is_netmon_enabled() ) {
         if( ret != NULL ) {
             if( pevent == mbox_radio ) {
                 last_radio_event = *(uint8_t*)ret ;

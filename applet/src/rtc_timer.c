@@ -42,7 +42,7 @@ extern void f_4315_hook()
 {
     netmon_update();
     con_redraw();
-    if( has_console() ) {
+    if( is_netmon_enabled() ) {
         return ;
     }
     F_4315();
@@ -158,10 +158,10 @@ void dummy()
 
 void gfx_drawtext8_hook(uint8_t *r0)
 {
-    uint8_t *p = 0x2001da1c ;
-    uint16_t *w = 0x2001da1c ;
+//    uint8_t *p = 0x2001da1c ;
+//    uint16_t *w = 0x2001da1c ;
     
-    gfx_info_t *g = 0x2001da1c ;
+    gfx_info_t *g = (gfx_info_t *)0x2001da1c ;
     
 //    if( g->xpos == 10 && g->ypos == 55 ) {
 //        // filter out status.
@@ -213,7 +213,7 @@ void f_4225_hook()
 //#ifdef CONFIG_GRAPHICS
 
     if ( global_addl_config.micbargraph == 1 ) {
-        if( !has_console() ) {
+        if( !is_netmon_enabled() ) {
             draw_micbargraph();
         }
     }

@@ -32,19 +32,6 @@ void con_redraw();
 
 #include "addl_config.h"
 
-inline int has_console()
-{
-    return global_addl_config.console ;
-}
-
-inline int has_gui()
-{
-    if( !has_console() ) {
-        return 1 ;
-    }
-    return global_addl_config.debug ;
-}
-
 inline int is_menu_visible()
 {
     return (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ;
@@ -52,7 +39,7 @@ inline int is_menu_visible()
 
 inline int is_console_visible()
 {
-    if( !has_console() ) {
+    if( global_addl_config.console == 0 ) {
         return 0 ;
     }
     return !is_menu_visible();
