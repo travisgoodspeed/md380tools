@@ -170,13 +170,7 @@ void netmon2_update()
 {
     extern char nm_logbuf[];
     
-//    static int cnt = 0 ;
-//    cnt++ ;
-//    char buf[10];
-//    sprintf( buf, "%d\n", cnt );
-    
     con_clrscr();
-//    con_puts(buf);
     con_puts(nm_logbuf);
 }
 

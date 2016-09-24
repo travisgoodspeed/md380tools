@@ -73,6 +73,14 @@ typedef struct gfx_info {
     
 } gfx_info_t ;
 
+#ifdef FW_D13_020
+extern gfx_info_t gfx_info ; 
+
+void gfx_drawchar( uint8_t c );
+#else 
+#warning TODO: define gfx_info 
+#endif
+
 /**
  * 
  * @param p font pointer

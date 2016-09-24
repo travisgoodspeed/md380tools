@@ -9,7 +9,7 @@
 #include "gfx.h"
 
 
-#define MAX_XPOS 19 
+#define MAX_XPOS 25 
 #define MAX_YPOS 20 
 
 #define MAX_BUF (MAX_XPOS + 1)
@@ -94,8 +94,11 @@ void con_putc( char c )
 
 int within_update = 0 ;
 
+#if defined(FW_D13_020)
+#else 
 wchar_t wide[MAX_BUF];
-    
+#endif
+
 #define LINE_HEIGHT 12 
 
 static void con_draw1()
@@ -103,6 +106,8 @@ static void con_draw1()
     // TODO: save old values first.
     void *old = gfx_select_font(gfx_font_small);
     
+#if defined(FW_D13_020)
+#else 
     // slow?
     {
         static int cnt = 0 ;
@@ -112,10 +117,25 @@ static void con_draw1()
             gfx_blockfill(0,0,159,109);
         }
     }
+#endif
     
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
     
+#if defined(FW_D13_020)
+    for(int y=0;y<=con_ypos;y++) {
+        gfx_info.xpos = 0 ;
+        gfx_info.ypos = y * LINE_HEIGHT ;
+        char *p = con_buf[y];
+        for(int x=0;x<MAX_XPOS;x++) {
+            if( *p == 0 ) {
+                gfx_drawchar(' ');
+            } else {
+                gfx_drawchar(*p++);
+            }
+        }
+    }
+#else    
     for(int y=0;y<=con_ypos;y++) {
         char *p = con_buf[y];
         wchar_t *w = wide ;
@@ -131,14 +151,15 @@ static void con_draw1()
             }
         }
         *w = 0 ;
-#if defined(FW_D13_020)
-//        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, MAX_XPOS, MAX_XPOS);
-        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, MAX_XPOS);
-#else
-#warning should find symbol gfx_drawtext4        
+//#if defined(FW_D13_020)
+//////        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, MAX_XPOS, MAX_XPOS);
+////        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, MAX_XPOS);
+//#else
+//#warning should find symbol gfx_drawtext4        
         gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
-#endif
+//#endif
     }
+#endif
 
     gfx_select_font(old);    
 }
