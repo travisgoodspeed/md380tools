@@ -2,7 +2,8 @@
    \brief MD380 callback functions.
 */
 
-#include <stdio.h>
+//#include <stdio.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include "config.h"

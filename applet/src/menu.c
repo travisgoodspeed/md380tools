@@ -25,9 +25,10 @@
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"Debug";
-const static wchar_t wt_netmon[]            = L"NetMon";
-const static wchar_t wt_netmon_1[]            = L"NetMon 1";
-const static wchar_t wt_netmon_2[]            = L"NetMon 2";
+//const static wchar_t wt_netmon[]            = L"NetMon";
+const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
+const static wchar_t wt_netmon_1[]          = L"NetMon 1";
+const static wchar_t wt_netmon_2[]          = L"NetMon 2";
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";

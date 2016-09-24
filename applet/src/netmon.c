@@ -66,12 +66,8 @@ uint8_t last_event4 ;
 // ?
 uint8_t last_event5 ;
 
-void netmon_update()
+void netmon1_update()
 {
-    if( !is_console_visible() ) {
-        return ;
-    }
-    
     progress++ ;
     progress %= sizeof( progress_info ) - 1 ;
     
@@ -165,4 +161,36 @@ void netmon_update()
 //    }
 #endif    
     
+}
+
+void netmon2_update()
+{
+    extern char nm_logbuf[];
+    
+//    static int cnt = 0 ;
+//    cnt++ ;
+//    char buf[10];
+//    sprintf( buf, "%d\n", cnt );
+    
+    con_clrscr();
+//    con_puts(buf);
+    con_puts(nm_logbuf);
+}
+
+void netmon_update()
+{
+    if( !is_netmon_visible() ) {
+        return ;
+    }
+    
+    switch( global_addl_config.console ) {
+        case 0 :
+            return ;
+        case 1 :
+            netmon1_update();
+            return ;
+        case 2 :
+            netmon2_update();
+            return ;
+    }
 }

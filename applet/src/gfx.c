@@ -14,6 +14,7 @@
 #include "addl_config.h"
 #include "display.h"
 #include "console.h"
+#include "netmon.h"
 #include "debug.h"
 
 //Needed for LED functions.  Cut dependency.
@@ -252,7 +253,7 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     PRINTRET();
     PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
     
-    if( has_console() ) {
+    if( is_netmon_enabled() ) {
         if( x == 45 && y == 34 ) {
             return ;
         }
