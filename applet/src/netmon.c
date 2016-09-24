@@ -165,10 +165,16 @@ void netmon1_update()
 
 void netmon2_update()
 {
-    extern char *logbuf ;
+    extern char nm_logbuf[];
+    
+//    static int cnt = 0 ;
+//    cnt++ ;
+//    char buf[10];
+//    sprintf( buf, "%d\n", cnt );
     
     con_clrscr();
-    con_puts(logbuf);
+//    con_puts(buf);
+    con_puts(nm_logbuf);
 }
 
 void netmon_update()
@@ -176,6 +182,7 @@ void netmon_update()
     if( !is_netmon_visible() ) {
         return ;
     }
+    
     switch( global_addl_config.console ) {
         case 0 :
             return ;

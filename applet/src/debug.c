@@ -41,29 +41,29 @@ void debug_printhex(void *buf, int len)
     }
 }
 
-#define MAX_CHAR 60
-char logbuf[MAX_CHAR+1]; // +1 for 0 termination.
-static int pos = 0 ;
+#define MAX_CHAR 180
+char nm_logbuf[MAX_CHAR+1] = { "" } ; // +1 for 0 termination.
+int logbuf_pos = 0 ;
 
 void scroll_logbuf()
 {
     int inc = 20 ;
     
-    if( pos > inc ) {
-        char *src = logbuf + inc ;
-        char *dst = logbuf ;
+    if( logbuf_pos > inc ) {
+        char *src = nm_logbuf + inc ;
+        char *dst = nm_logbuf ;
         while( *src ) {
             *dst++ = *src++ ;
         }
         *dst = 0 ;
-        pos -= inc ;
+        logbuf_pos -= inc ;
     }
 }
 
 static void nm_clr()
 {
-    pos = 0 ;
-    logbuf[pos] = 0 ;    
+    logbuf_pos = 0 ;
+    nm_logbuf[logbuf_pos] = 0 ;    
 }
 
 static void netmon_putch(void* p, char c)
@@ -75,19 +75,19 @@ static void netmon_putch(void* p, char c)
     if( c == '\n' ) {
         c = '|' ;
     }
-    if( pos >= MAX_CHAR ) {
+    if( logbuf_pos >= MAX_CHAR ) {
         scroll_logbuf();
     }
-    if( pos < MAX_CHAR ) {
-        logbuf[pos] = c ;
-        pos++ ;
-        logbuf[pos] = 0 ;
+    if( logbuf_pos < MAX_CHAR ) {
+        nm_logbuf[logbuf_pos] = c ;
+        logbuf_pos++ ;
+        nm_logbuf[logbuf_pos] = 0 ;
     }
 }
 
 void netmon_printf(char *fmt, ...)
 {
-    if( is_netmon_enabled() ) {
+    if( !is_netmon_enabled() ) {
         return ;
     }
     
@@ -96,4 +96,3 @@ void netmon_printf(char *fmt, ...)
     tfp_format(0, netmon_putch, fmt, va);
     va_end(va);
 }
-

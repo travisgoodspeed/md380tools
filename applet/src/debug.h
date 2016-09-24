@@ -20,7 +20,7 @@ void debug_printhex(void *buf, int len);
 
 void netmon_printf(char *fmt, ...);
 
-extern char logbuf[];
+extern char nm_logbuf[];
 
 
 #ifdef DEBUG

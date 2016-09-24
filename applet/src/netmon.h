@@ -25,7 +25,7 @@ extern uint8_t last_event5 ;
 
 inline int is_netmon_enabled()
 {
-    return global_addl_config.console ;
+    return global_addl_config.console != 0 ;
 }
 
 inline int is_netmon_visible()
