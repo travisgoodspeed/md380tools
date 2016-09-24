@@ -94,7 +94,7 @@ void con_putc( char c )
 
 int within_update = 0 ;
 
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
 #else 
 wchar_t wide[MAX_BUF];
 #endif
@@ -106,7 +106,7 @@ static void con_draw1()
     // TODO: save old values first.
     void *old = gfx_select_font(gfx_font_small);
     
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
 #else 
     // slow?
     {
@@ -122,7 +122,7 @@ static void con_draw1()
     gfx_set_fg_color(0xff000000);
     gfx_set_bg_color(0x00ff8032); 
     
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
     for(int y=0;y<=con_ypos;y++) {
         gfx_info.xpos = 0 ;
         gfx_info.ypos = y * LINE_HEIGHT ;
