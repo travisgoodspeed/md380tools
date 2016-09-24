@@ -29,7 +29,7 @@ extern char nm_logbuf[];
 #define PRINT(fmt, args...) /* Don't do anything in release builds */
 #endif
 
-#ifdef DEBUG
+#ifdef NETMON
 #define NMPRINT(fmt, args...) do { netmon_printf(fmt, ## args); } while (0)
 #else
 #define NMPRINT(fmt, args...) /* Don't do anything in release builds */
