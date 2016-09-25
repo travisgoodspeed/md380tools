@@ -222,10 +222,6 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
 #warning TODO find language menu on this firmware version    
 #endif
 
-#ifdef FW_S13_020
-bal
-#endif
-
 }
 
 //void md380_create_menu_entry(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
