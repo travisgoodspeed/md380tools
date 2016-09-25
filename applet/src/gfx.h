@@ -73,7 +73,7 @@ typedef struct gfx_info {
     
 } gfx_info_t ;
 
-#ifdef FW_D13_020
+#if defined(FW_D13_020) || defined(FW_S13_020)
 extern gfx_info_t gfx_info ; 
 
 void gfx_drawchar( uint8_t c );
