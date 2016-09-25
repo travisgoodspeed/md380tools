@@ -32,6 +32,7 @@ uint8_t *mode3 = (void*)0x2001e892 ;
 // mode3 
 // 0 = idle?
 // 3 = unprog channel
+// 5 = block dmr processing?
 
 // radio events
 // 0x01 = idle
@@ -131,7 +132,7 @@ void netmon1_update()
                 str = "My_Call" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0xe :
-                str = "Wait_for_TX_Response" ;
+                str = "Wait_TX_Resp" ;
                 break ;
             case 0xa :
                 str = "rx silence" ;

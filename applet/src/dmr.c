@@ -10,6 +10,7 @@
 #define CONFIG_DMR
 
 #define NETMON
+#define DEBUG
 
 #include "dmr.h"
 
@@ -46,25 +47,45 @@ typedef struct adr {
 
 
 typedef struct pkt {
-    uint32_t unk0 ;
+    uint16_t hdr ;
+    uint8_t b0 ;
+    uint8_t b1 ;
     uint8_t unk1 ;
     adr_t dst ;
     adr_t src ;    
-} pkt_t ;
+} pkt_t;
 
-uint32_t adr( adr_t in )
+typedef struct raw_sh_hdr {
+    uint8_t b0 ;
+    // carefull bitfields are dangerous.
+    uint8_t ab2 : 4 ;  // last 4 bits
+    uint8_t sap : 4 ;  // first 4 bits
+    adr_t dst ;
+    adr_t src ;    
+} raw_sh_hdr_t;
+
+uint32_t adr(adr_t in)
 {
-    return in.b0 | (in.b8 << 8 ) | (in.b16 << 16 ) ;
+    return in.b0 | (in.b8 << 8) | (in.b16 << 16);
 }
 
-void dump_pkf( const char *tag, pkt_t *pkt )
+void dump_pkt( const char *tag, pkt_t *pkt )
 {
-    NMPRINT("%s(%d,%d) ", tag, adr(pkt->src), adr(pkt->dst) );
+//    NMPRINT("%s(%d,%d) ", tag, adr(pkt->src), adr(pkt->dst) );
+}
+
+int i ;
+
+void dump_raw_short_header( const char *tag, raw_sh_hdr_t *pkt )
+{
+    i = pkt->sap ;
+    NMPRINT("%s(%d,%d,%d) ", tag, pkt->sap, adr(pkt->src), adr(pkt->dst) );
+    PRINT("%s(%d,%d,%d)\n", tag, pkt->sap, adr(pkt->src), adr(pkt->dst) );
 }
 
 void *dmr_call_end_hook(char *pkt)
 {
-    dump_pkf( "ce", (pkt_t*) pkt );
+    //dump_pkt( "ce", (pkt_t*) pkt );
     
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
@@ -90,13 +111,14 @@ void *dmr_call_end_hook(char *pkt)
 
   //printf("\n");
   //printhex((char*)pkt,14);
-  if(incall)
-    printf("\nCall from %d to %d ended.\n",
-	   src,dst);
-  incall=0;
 
-  //Forward to the original function.
-  return dmr_call_end((void*)pkt);
+    if( incall ) {
+        printf("\nCall from %d to %d ended.\n", src, dst);
+    }
+    incall = 0;
+
+    //Forward to the original function.
+    return dmr_call_end((void*) pkt);
 }
 
 void *dmr_call_start_hook(uint8_t *pkt)
@@ -121,7 +143,7 @@ void *dmr_call_start_hook(uint8_t *pkt)
        10 00 00 00 00 00 00 63 30 05 54 73 2c 36
      */
 
-    dump_pkf( "cs", (pkt_t*) pkt );
+//    dump_pkt( "cs", (pkt_t*) pkt );
     
   //Destination adr as Big Endian.
   int dst=(pkt[7]|
@@ -156,8 +178,11 @@ void *dmr_call_start_hook(uint8_t *pkt)
   //It can distract AMBE2+ logging.
   //printf(".");
 
-  //Record that we are in a call, for later logging.
-  incall=1;
+    if( incall == 0 ) {
+        printf("\nCall from %d to %d started.\n", src, dst);
+    }
+    //Record that we are in a call, for later logging.
+    incall = 1;
 
   //Forward to the original function.
   return dmr_call_start(pkt);
@@ -220,7 +245,10 @@ void *dmr_handle_data_hook(char *pkt, int len){
      two bytes of C5000 overhead.
    */
 
-    dump_pkf( "da", (pkt_t*) pkt );
+    uint8_t *p = pkt ;    
+    p += 2 ;    
+    dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
+    
     
   //Turn on the red LED to know that we're here.
   red_led(1);
@@ -263,6 +291,10 @@ SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
        Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
    */
 
+    uint8_t *p = pkt ;    
+    p += 2 ;    
+    dump_raw_short_header( "sm", (raw_sh_hdr_t*) p );
+    
   //Turn on the red LED to know that we're here.
   red_led(1);
 
