@@ -96,7 +96,7 @@ void lcd_background_led(int on) {
 /*
 void dump_ram_to_spi_flash() {
   static int run = 0;
-  if ( run == 10) {
+  if ( run == 100) {
     printf("dump\n");
     for ( int i=0; i < (112+16); i++) {
       md380_spiflash_write((void *) 0x20000000+(1024*i), 0x400000+(1024*i), 1024);
