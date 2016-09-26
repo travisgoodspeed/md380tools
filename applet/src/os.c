@@ -3,7 +3,7 @@
   
 */
 
-#define DEBUG
+//#define DEBUG
 //#define NETMON
 
 #include <stdio.h>
@@ -129,15 +129,15 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
         if( pevent == mbox_beep ) {
             switch (* (uint8_t*) ret) {
                 case 0x24:
-                    printf("roger beep ");
+                    PRINT("roger beep ");
                     break;
                 case 0xe:
-                    printf("no dmr sync ");
+                    PRINT("no dmr sync ");
                 case 0x11:
-                    printf("dmr sync ");
+                    PRINT("dmr sync ");
                     break;
                 default:
-                    printf("not known ");
+                    PRINT("not known ");
                     break;
             }
         }

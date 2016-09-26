@@ -41,7 +41,7 @@ void debug_printhex(void *buf, int len)
     }
 }
 
-#define MAX_CHAR 180
+#define MAX_CHAR 200
 char nm_logbuf[MAX_CHAR+1] = { "" } ; // +1 for 0 termination.
 int logbuf_pos = 0 ;
 

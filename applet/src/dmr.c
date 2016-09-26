@@ -10,6 +10,7 @@
 #define CONFIG_DMR
 
 #define NETMON
+#define DEBUG
 
 #include "dmr.h"
 
@@ -44,67 +45,168 @@ typedef struct adr {
     uint8_t b0 ;    
 } adr_t ;
 
+// Table 6.1: Data Type information element definitions
+
+enum data_type {
+    PI_HDR = 0,
+    VOICE_LC_HDR = 1,
+    TERM_WITH_LC = 2,
+    CSBK = 3,
+    MBC_HDR = 4,
+    MBC_CONT = 5,
+    DATA_HDR = 6,
+    RATE_1_2_DATA = 7,
+    RATE_3_4_DATA = 8,
+    IDLE = 9,            
+    RATE_1_DATA = 10            
+};
 
 typedef struct pkt {
-    uint32_t unk0 ;
+    uint16_t hdr ;
+    uint8_t b0 ;
+    uint8_t b1 ;
     uint8_t unk1 ;
     adr_t dst ;
     adr_t src ;    
-} pkt_t ;
+} pkt_t;
 
-uint32_t adr( adr_t in )
+// 9.3.18 SAP identifier (SAP)
+enum sap_t {
+    UDT = 0,
+    TCP = 1,
+    UDP = 2,
+    IP = 3,
+    ARP = 4,
+    PPD = 5,
+    SD = 0xa, // Short Data 
+};
+
+typedef struct raw_sh_hdr {
+    uint8_t b0 ;
+    // carefull bitfields are dangerous.
+    uint8_t sap : 4 ;  // bit 7..4 (reverse from normal)
+    uint8_t ab2 : 4 ;  // bit 3..0 (reverse from normal)
+    adr_t dst ;
+    adr_t src ;    
+    uint8_t sp : 3 ; 
+    uint8_t dp : 3 ;
+    uint8_t sf : 2 ; // S & F
+} raw_sh_hdr_t;
+
+inline uint32_t get_adr(adr_t in)
 {
-    return in.b0 | (in.b8 << 8 ) | (in.b16 << 16 ) ;
+    return in.b0 | (in.b8 << 8) | (in.b16 << 16);
 }
 
-void dump_pkf( const char *tag, pkt_t *pkt )
+void dump_pkt( const char *tag, pkt_t *pkt )
 {
-    NMPRINT("%s(%d,%d) ", tag, adr(pkt->src), adr(pkt->dst) );
+//    NMPRINT("%s(%d,%d) ", tag, adr(pkt->src), adr(pkt->dst) );
+}
+
+int i ;
+
+void dump_raw_short_header( const char *tag, raw_sh_hdr_t *pkt )
+{
+    i = pkt->sap ;
+    NMPRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d) ", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
+    PRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d)\n", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
+}
+
+typedef struct lc {
+    uint8_t pf_flco ;    
+    uint8_t fid ;
+    uint8_t svc_opts ;
+    adr_t dst ;
+    adr_t src ;    
+} lc_t ;
+
+inline uint8_t get_flco( lc_t *lc )
+{
+    return lc->pf_flco & 0x3f ;
+}
+
+inline const char* get_flco_str( lc_t *lc )
+{
+    switch( get_flco(lc) ) {
+        case 0 :
+            // Group Voice Channel User
+            return "grp" ;
+        case 3 :
+            // Unit to Unit Voice Channel User
+            return "u2u" ;
+        default: 
+            return "?" ;
+    }
+}
+
+// Full Link Control PDU
+void dump_full_lc( lc_t *lc )
+{
+    uint8_t flco = get_flco(lc);
+    uint8_t fid = lc->fid ;
+    uint8_t opts = lc->svc_opts ;
+    
+    PRINT("flco=%d %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
+}
+
+void dumpraw_lc(uint8_t *pkt)
+{
+    uint8_t tp = (pkt[1] >> 4) ;
+    PRINT("type=%d ", tp );
+    
+    //if( tp == 0 || tp == )
+    lc_t *lc = pkt + 2 ;
+    dump_full_lc(lc);
 }
 
 void *dmr_call_end_hook(char *pkt)
 {
-    dump_pkf( "ce", (pkt_t*) pkt );
-    
-  /* This hook handles the dmr_contact_check() function, calling
-     back to the original function where appropriate.
+    PRINT("ce " );
+    dumpraw_lc(pkt);
 
-     pkt points to something like this:
+    /* This hook handles the dmr_contact_check() function, calling
+       back to the original function where appropriate.
 
-                    /--dst-\ /--src-\
-     08 2a 00 00 00 00 00 63 30 05 54 7c 2c 36
+       pkt points to something like this:
 
-     In a clean, simplex call this only occurs once, but on a
-     real-world link, you'll find it called multiple times at the end
-     of the packet.
-   */
+                      /--dst-\ /--src-\
+       08 2a 00 00 00 00 00 63 30 05 54 7c 2c 36
 
-  //Destination adr as Big Endian.
-  int dst=(pkt[7]|
-	   (pkt[6]<<8)|
-	   (pkt[5]<<16));
-  //Source comes next.
-  int src=(pkt[10]|
-	   (pkt[9]<<8)|
-	   (pkt[8]<<16));
+       In a clean, simplex call this only occurs once, but on a
+       real-world link, you'll find it called multiple times at the end
+       of the packet.
+     */
 
-  //printf("\n");
-  //printhex((char*)pkt,14);
-  if(incall)
-    printf("\nCall from %d to %d ended.\n",
-	   src,dst);
-  incall=0;
+    //Destination adr as Big Endian.
+    int dst = (pkt[7] |
+            (pkt[6] << 8) |
+            (pkt[5] << 16));
+    //Source comes next.
+    int src = (pkt[10] |
+            (pkt[9] << 8) |
+            (pkt[8] << 16));
 
-  //Forward to the original function.
-  return dmr_call_end((void*)pkt);
+    //printf("\n");
+    //printhex((char*)pkt,14);
+
+    if( incall ) {
+        printf("\nCall from %d to %d ended.\n", src, dst);
+    }
+    incall = 0;
+
+    //Forward to the original function.
+    return dmr_call_end((void*) pkt);
 }
 
 void *dmr_call_start_hook(uint8_t *pkt)
 {
 //    PRINTRET();
-//    PRINTHEX(pkt,10);
+//    PRINTHEX(pkt,11);
 //    PRINT("\n");
 
+    PRINT("cs " );
+    dumpraw_lc(pkt);
+    
     /* This hook handles the dmr_contact_check() function, calling
        back to the original function where appropriate.
 
@@ -121,46 +223,49 @@ void *dmr_call_start_hook(uint8_t *pkt)
        10 00 00 00 00 00 00 63 30 05 54 73 2c 36
      */
 
-    dump_pkf( "cs", (pkt_t*) pkt );
-    
-  //Destination adr as Big Endian.
-  int dst=(pkt[7]|
-           (pkt[6]<<8)|
-	   (pkt[5]<<16));
+    //    dump_pkt( "cs", (pkt_t*) pkt );
 
-  int src=(pkt[10]|
-           (pkt[9]<<8)|
-           (pkt[8]<<16));
+    //Destination adr as Big Endian.
+    int dst = (pkt[7] |
+            (pkt[6] << 8) |
+            (pkt[5] << 16));
 
-
-
-//  OSSemPend(debug_line_sem, 0, &err);
-//
-  //printf("Call start %d -> %d\n", src,dst);
-//  sprintf(DebugLine1, "%d -> %d", src, dst );
-
-//  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
-//    sprintf(DebugLine2, ",ID not found,in users.csv,see README.md,on Github");   // , is line seperator ;)
-//  }
-
-//  OSSemPost(debug_line_sem);
-
-  int primask=OS_ENTER_CRITICAL();
-  g_dst=dst;
-  g_src=src;
-  OS_EXIT_CRITICAL(primask);
-    
+    int src = (pkt[10] |
+            (pkt[9] << 8) |
+            (pkt[8] << 16));
 
 
-  //This prints a dot at every resynchronization frame.
-  //It can distract AMBE2+ logging.
-  //printf(".");
 
-  //Record that we are in a call, for later logging.
-  incall=1;
+    //  OSSemPend(debug_line_sem, 0, &err);
+    //
+    //printf("Call start %d -> %d\n", src,dst);
+    //  sprintf(DebugLine1, "%d -> %d", src, dst );
 
-  //Forward to the original function.
-  return dmr_call_start(pkt);
+    //  if( find_dmr_user(DebugLine2, src, (void *) 0x100000, 80) == 0){
+    //    sprintf(DebugLine2, ",ID not found,in users.csv,see README.md,on Github");   // , is line seperator ;)
+    //  }
+
+    //  OSSemPost(debug_line_sem);
+
+    int primask = OS_ENTER_CRITICAL();
+    g_dst = dst;
+    g_src = src;
+    OS_EXIT_CRITICAL(primask);
+
+
+
+    //This prints a dot at every resynchronization frame.
+    //It can distract AMBE2+ logging.
+    //printf(".");
+
+    if( incall == 0 ) {
+        printf("\nCall from %d to %d started.\n", src, dst);
+    }
+    //Record that we are in a call, for later logging.
+    incall = 1;
+
+    //Forward to the original function.
+    return dmr_call_start(pkt);
 }
 
 
@@ -220,7 +325,10 @@ void *dmr_handle_data_hook(char *pkt, int len){
      two bytes of C5000 overhead.
    */
 
-    dump_pkf( "da", (pkt_t*) pkt );
+    uint8_t *p = pkt ;    
+    p += 2 ;    
+    dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
+    
     
   //Turn on the red LED to know that we're here.
   red_led(1);
@@ -239,6 +347,9 @@ void *dmr_handle_data_hook(char *pkt, int len){
 
 void *dmr_sms_arrive_hook(void *pkt){
 #ifdef CONFIG_DMR
+    
+    // pkt = layer 3 PDU?
+    
   /* This hooks the SMS arrival routine, but as best I can tell,
      dmr_sms_arrive() only handles the header and not the actual
      data payload, which is managed by dmr_handle_data() in each
@@ -263,6 +374,10 @@ SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
        Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
    */
 
+    uint8_t *p = pkt ;    
+    p += 2 ;    
+    dump_raw_short_header( "sm", (raw_sh_hdr_t*) p );
+    
   //Turn on the red LED to know that we're here.
   red_led(1);
 
