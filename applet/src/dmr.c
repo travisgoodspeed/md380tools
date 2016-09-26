@@ -151,14 +151,17 @@ void dump_full_lc( lc_t *lc )
 
 void dumpraw_lc(uint8_t *pkt)
 {
-    PRINT("type=%d ", (pkt[1] >> 4) );
+    uint8_t tp = (pkt[1] >> 4) ;
+    PRINT("type=%d ", tp );
     
+    //if( tp == 0 || tp == )
     lc_t *lc = pkt + 2 ;
     dump_full_lc(lc);
 }
 
 void *dmr_call_end_hook(char *pkt)
 {
+    PRINT("ce " );
     dumpraw_lc(pkt);
 
     /* This hook handles the dmr_contact_check() function, calling
@@ -201,6 +204,7 @@ void *dmr_call_start_hook(uint8_t *pkt)
 //    PRINTHEX(pkt,11);
 //    PRINT("\n");
 
+    PRINT("cs " );
     dumpraw_lc(pkt);
     
     /* This hook handles the dmr_contact_check() function, calling
