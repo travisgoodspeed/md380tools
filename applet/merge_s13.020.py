@@ -293,7 +293,7 @@ if __name__== '__main__':
     merger.hookbl(0x802ded6, sapplet.getadr("f_4225_hook"),0); # 0x080468e6
     merger.hookbl(0x8047640, sapplet.getadr("f_4225_hook"),0); # 0x0802db42
 
-                                                                                                                                                                                                                                      
+#    merger.hookstub2(0x0800c72e, sapplet.getadr("create_menu_entry_rev"));
 
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
