@@ -47,7 +47,7 @@ sa type=6 sap=10 shrtdata src=5057 dst=2041069 0
 SMS header:  08 62 02 44 1f 2c 87 1f 2c b1 84 00 ed 49
 
 08 62 
-02 dpf=2
+02 dpf=2 (Data packet with unconfirmed delivery)
 44       
 1f 2c 87    src
 1f 2c b1    dst

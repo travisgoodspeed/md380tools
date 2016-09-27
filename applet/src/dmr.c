@@ -207,6 +207,7 @@ void dump_mbc( mbc_t *mbc )
 void dump_data( data_t *data )
 {
     //TODO: print DPF (6.1.1))
+    // 9.3.17 from part 1
     int sap = get_sap(data);
     int blocks = get_blocks(data);
     PRINT("sap=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), get_adr(data->src),get_adr(data->dst), blocks);
