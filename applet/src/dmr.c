@@ -45,8 +45,14 @@ typedef struct adr {
     uint8_t b0 ;    
 } adr_t ;
 
+inline uint32_t get_adr(adr_t in)
+{
+    return in.b0 | (in.b8 << 8) | (in.b16 << 16);
+}
+
 // Table 6.1: Data Type information element definitions
 
+// unused?
 enum data_type {
     PI_HDR = 0,
     VOICE_LC_HDR = 1,
@@ -93,21 +99,9 @@ typedef struct raw_sh_hdr {
     uint8_t sf : 2 ; // S & F
 } raw_sh_hdr_t;
 
-inline uint32_t get_adr(adr_t in)
-{
-    return in.b0 | (in.b8 << 8) | (in.b16 << 16);
-}
-
-void dump_pkt( const char *tag, pkt_t *pkt )
-{
-//    NMPRINT("%s(%d,%d) ", tag, adr(pkt->src), adr(pkt->dst) );
-}
-
-int i ;
-
+// unvalidated.
 void dump_raw_short_header( const char *tag, raw_sh_hdr_t *pkt )
 {
-    i = pkt->sap ;
     NMPRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d) ", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
     PRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d)\n", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
 }
@@ -119,6 +113,11 @@ typedef struct lc {
     adr_t dst ;
     adr_t src ;    
 } lc_t ;
+
+inline uint8_t get_flco( lc_t *lc )
+{
+    return lc->pf_flco & 0x3f ;
+}
 
 // Control Signalling Block (CSBK) PDU
 // TODO: finish / validate
@@ -133,11 +132,6 @@ typedef struct mbc {
         } sms ;
     } ;
 } mbc_t ;
-
-inline uint8_t get_flco( lc_t *lc )
-{
-    return lc->pf_flco & 0x3f ;
-}
 
 inline uint8_t get_csbko( mbc_t *mbc )
 {
@@ -197,8 +191,10 @@ void dump_full_lc( lc_t *lc )
     uint8_t opts = lc->svc_opts ;
     
     PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
+    
 }
 
+// unvalidated
 void dump_mbc( mbc_t *mbc )
 {
     uint8_t csbko = get_csbko(mbc);
@@ -220,12 +216,18 @@ void dumpraw_lc(uint8_t *pkt)
     uint8_t tp = (pkt[1] >> 4) ;
     PRINT("type=%d ", tp );
     
-    //if( tp == 0 || tp == )
-    lc_t *lc = pkt + 2 ;
+    lc_t *lc = (lc_t*)(pkt + 2);
     dump_full_lc(lc);
+
+    uint8_t flco = get_flco(lc);
+    
+    if( flco != 0 && flco != 3 ) {
+        PRINTHEX(pkt,14);        
+        PRINT("\n");
+    }
 }
 
-//TODO: validate
+// unvalidated
 void dumpraw_mbc(uint8_t *pkt)
 {
     uint8_t tp = (pkt[1] >> 4) ;
@@ -401,7 +403,8 @@ void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode){
 }
 
 
-void *dmr_handle_data_hook(char *pkt, int len){
+void *dmr_handle_data_hook(char *pkt, int len)
+{
 #ifdef CONFIG_DMR
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
@@ -410,9 +413,9 @@ void *dmr_handle_data_hook(char *pkt, int len){
      two bytes of C5000 overhead.
    */
 
-    uint8_t *p = (uint8_t *)pkt ;    
-    p += 2 ;    
-    dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
+//    uint8_t *p = (uint8_t *)pkt ;    
+//    p += 2 ;    
+//    dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
     
     
   //Turn on the red LED to know that we're here.
