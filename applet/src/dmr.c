@@ -154,6 +154,11 @@ inline uint8_t get_sap( data_t *data )
     return ( data->sap_poc >> 4 ) & 0xF ;
 }
 
+inline uint8_t get_dpf( data_t *data )
+{
+    return data->g_a_hc_poc_dpf & 0xF ;
+}
+
 inline uint8_t get_blocks( data_t *data )
 {
     return data->f_blocks & 0x7F ;
@@ -210,7 +215,8 @@ void dump_data( data_t *data )
     // 9.3.17 from part 1
     int sap = get_sap(data);
     int blocks = get_blocks(data);
-    PRINT("sap=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), get_adr(data->src),get_adr(data->dst), blocks);
+    int dpf = get_dpf(data);
+    PRINT("sap=%d %s dpf=%d src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, get_adr(data->src),get_adr(data->dst), blocks);
 }
 
 void dumpraw_lc(uint8_t *pkt)
