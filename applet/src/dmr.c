@@ -134,6 +134,16 @@ typedef struct mbc {
     } ;
 } mbc_t ;
 
+inline uint8_t get_flco( lc_t *lc )
+{
+    return lc->pf_flco & 0x3f ;
+}
+
+inline uint8_t get_csbko( mbc_t *mbc )
+{
+    return mbc->lb_pf_csbko & 0x3f ;
+}
+
 // Unconfirmed data Header
 typedef struct data {
     uint8_t g_a_hc_poc_dpf ;    
@@ -145,19 +155,14 @@ typedef struct data {
     
 } data_t ;
 
-inline uint8_t get_flco( lc_t *lc )
-{
-    return lc->pf_flco & 0x3f ;
-}
-
-inline uint8_t get_csbko( mbc_t *mbc )
-{
-    return mbc->lb_pf_csbko & 0x3f ;
-}
-
 inline uint8_t get_sap( data_t *data )
 {
     return ( data->sap_poc >> 4 ) & 0xF ;
+}
+
+inline uint8_t get_blocks( data_t *data )
+{
+    return data->f_blocks & 0x7F ;
 }
 
 inline const char* get_flco_str( lc_t *lc )
@@ -170,6 +175,16 @@ inline const char* get_flco_str( lc_t *lc )
             // Unit to Unit Voice Channel User
             return "u2u" ;
         default: 
+            return "?" ;
+    }
+}
+
+inline const char* sap_to_str( uint8_t sap ) 
+{
+    switch( sap ) {
+        case 10 :
+            return "shrtdata" ;
+        default:
             return "?" ;
     }
 }
@@ -196,7 +211,8 @@ void dump_mbc( mbc_t *mbc )
 void dump_data( data_t *data )
 {
     int sap = get_sap(data);
-    PRINT("sap=%02x src=%d dst=%d\n", sap, get_adr(data->src),get_adr(data->dst));
+    int blocks = get_blocks(data);
+    PRINT("sap=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), get_adr(data->src),get_adr(data->dst), blocks);
 }
 
 void dumpraw_lc(uint8_t *pkt)
@@ -228,7 +244,7 @@ void dumpraw_data(uint8_t *pkt)
     dump_data(data);
 }
 
-void *dmr_call_end_hook(char *pkt)
+void *dmr_call_end_hook(uint8_t *pkt)
 {
     /* This hook handles the dmr_contact_check() function, calling
        back to the original function where appropriate.
