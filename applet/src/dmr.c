@@ -120,9 +120,44 @@ typedef struct lc {
     adr_t src ;    
 } lc_t ;
 
+// Control Signalling Block (CSBK) PDU
+// TODO: finish / validate
+typedef struct mbc {
+    uint8_t lb_pf_csbko ;    
+    uint8_t fid ;    
+    union {
+        struct {
+            //uint8_t sap ; // ??
+            adr_t dst ;
+            adr_t src ;                
+        } sms ;
+    } ;
+} mbc_t ;
+
+// Unconfirmed data Header
+typedef struct data {
+    uint8_t g_a_hc_poc_dpf ;    
+    uint8_t sap_poc ;
+    adr_t dst ;
+    adr_t src ;                
+    uint8_t f_blocks ;
+    uint8_t fsn ;
+    
+} data_t ;
+
 inline uint8_t get_flco( lc_t *lc )
 {
     return lc->pf_flco & 0x3f ;
+}
+
+inline uint8_t get_csbko( mbc_t *mbc )
+{
+    return mbc->lb_pf_csbko & 0x3f ;
+}
+
+inline uint8_t get_sap( data_t *data )
+{
+    return ( data->sap_poc >> 4 ) & 0xF ;
 }
 
 inline const char* get_flco_str( lc_t *lc )
@@ -146,7 +181,22 @@ void dump_full_lc( lc_t *lc )
     uint8_t fid = lc->fid ;
     uint8_t opts = lc->svc_opts ;
     
-    PRINT("flco=%d %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
+    PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
+}
+
+void dump_mbc( mbc_t *mbc )
+{
+    uint8_t csbko = get_csbko(mbc);
+    uint8_t fid = mbc->fid ;
+    
+    PRINT("csbko=%02x fid=%02x ", csbko, fid);
+    PRINT("src=%d dst=%d\n",get_adr(mbc->sms.src),get_adr(mbc->sms.dst));
+}
+
+void dump_data( data_t *data )
+{
+    int sap = get_sap(data);
+    PRINT("sap=%02x src=%d dst=%d\n", sap, get_adr(data->src),get_adr(data->dst));
 }
 
 void dumpraw_lc(uint8_t *pkt)
@@ -159,11 +209,27 @@ void dumpraw_lc(uint8_t *pkt)
     dump_full_lc(lc);
 }
 
+//TODO: validate
+void dumpraw_mbc(uint8_t *pkt)
+{
+    uint8_t tp = (pkt[1] >> 4) ;
+    PRINT("type=%d ", tp );
+
+    mbc_t *mbc = pkt + 2 ;
+    dump_mbc(mbc);
+}
+
+void dumpraw_data(uint8_t *pkt)
+{
+    uint8_t tp = (pkt[1] >> 4) ;
+    PRINT("type=%d ", tp );
+
+    data_t *data = pkt + 2 ;
+    dump_data(data);
+}
+
 void *dmr_call_end_hook(char *pkt)
 {
-    PRINT("ce " );
-    dumpraw_lc(pkt);
-
     /* This hook handles the dmr_contact_check() function, calling
        back to the original function where appropriate.
 
@@ -194,6 +260,9 @@ void *dmr_call_end_hook(char *pkt)
     }
     incall = 0;
 
+    PRINT("ce " );
+    dumpraw_lc(pkt);
+
     //Forward to the original function.
     return dmr_call_end((void*) pkt);
 }
@@ -204,9 +273,6 @@ void *dmr_call_start_hook(uint8_t *pkt)
 //    PRINTHEX(pkt,11);
 //    PRINT("\n");
 
-    PRINT("cs " );
-    dumpraw_lc(pkt);
-    
     /* This hook handles the dmr_contact_check() function, calling
        back to the original function where appropriate.
 
@@ -264,6 +330,9 @@ void *dmr_call_start_hook(uint8_t *pkt)
     //Record that we are in a call, for later logging.
     incall = 1;
 
+    PRINT("cs " );
+    dumpraw_lc(pkt);
+    
     //Forward to the original function.
     return dmr_call_start(pkt);
 }
@@ -325,7 +394,7 @@ void *dmr_handle_data_hook(char *pkt, int len){
      two bytes of C5000 overhead.
    */
 
-    uint8_t *p = pkt ;    
+    uint8_t *p = (uint8_t *)pkt ;    
     p += 2 ;    
     dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
     
@@ -344,50 +413,51 @@ void *dmr_handle_data_hook(char *pkt, int len){
 #endif
 }
 
-
-void *dmr_sms_arrive_hook(void *pkt){
+void *dmr_sms_arrive_hook(void *pkt)
+{
 #ifdef CONFIG_DMR
-    
-    // pkt = layer 3 PDU?
-    
-  /* This hooks the SMS arrival routine, but as best I can tell,
-     dmr_sms_arrive() only handles the header and not the actual
-     data payload, which is managed by dmr_handle_data() in each
-     fragment chunk.
+
+    /* This hooks the SMS arrival routine, but as best I can tell,
+       dmr_sms_arrive() only handles the header and not the actual
+       data payload, which is managed by dmr_handle_data() in each
+       fragment chunk.
 
      *pkt points to a twelve byte header with two bytes of C5000
-     overhead.  The body packets will arrive at dmr_handle_data_hook()
-     in chunks of up to twelve bytes, varying by data rate.
+       overhead.  The body packets will arrive at dmr_handle_data_hook()
+       in chunks of up to twelve bytes, varying by data rate.
 
-     A full transaction from 3147092 to 99 looks like this:
+       A full transaction from 3147092 to 99 looks like this:
 
-             header
-             |   / /flg\ /--dst-\ /--src-\ /flg\ /crc\
-SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
-       Data: 08 7a 45 00 00 5c 00 03 00 00 40 11 5c a8
-       Data: 08 7a 0c 30 05 54 0c 00 00 63 0f a7 0f a7
-       Data: 08 72 00 48 d1 dc 00 3e e0 00 92 04 0d 00
-       Data: 08 72 0a 00 54 00 68 00 69 00 73 00 20 00
-       Data: 08 72 69 00 73 00 20 00 61 00 20 00 74 00
-       Data: 08 7a 65 00 73 00 74 00 20 00 66 00 72 00
-       Data: 08 7a 6f 00 6d 00 20 00 6b 00 6b 00 34 00
-       Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
-   */
+               header
+               |   / /flg\ /--dst-\ /--src-\ /flg\ /crc\
+  SMS header:  08 6a 02 40 00 00 63 30 05 54 88 00 83 0c
+         Data: 08 7a 45 00 00 5c 00 03 00 00 40 11 5c a8
+         Data: 08 7a 0c 30 05 54 0c 00 00 63 0f a7 0f a7
+         Data: 08 72 00 48 d1 dc 00 3e e0 00 92 04 0d 00
+         Data: 08 72 0a 00 54 00 68 00 69 00 73 00 20 00
+         Data: 08 72 69 00 73 00 20 00 61 00 20 00 74 00
+         Data: 08 7a 65 00 73 00 74 00 20 00 66 00 72 00
+         Data: 08 7a 6f 00 6d 00 20 00 6b 00 6b 00 34 00
+         Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
+     */
 
-    uint8_t *p = pkt ;    
-    p += 2 ;    
-    dump_raw_short_header( "sm", (raw_sh_hdr_t*) p );
+//    uint8_t *p = pkt;
+//    p += 2;
+//    dump_raw_short_header("sm", (raw_sh_hdr_t*) p);
+
+    //Turn on the red LED to know that we're here.
+    red_led(1);
+
+    printf("SMS header: ");
+    printhex(pkt, 12 + 2);
+    printf("\n");
     
-  //Turn on the red LED to know that we're here.
-  red_led(1);
+    PRINT("sa ");
+    dumpraw_data(pkt);
 
-  printf("SMS header: ");
-  printhex(pkt, 12+2);
-  printf("\n");
-
-  //Forward to the original function.
-  return dmr_sms_arrive(pkt);
+    //Forward to the original function.
+    return dmr_sms_arrive(pkt);
 #else
-  return 0xdeadbeef;
+    return 0xdeadbeef;
 #endif
 }
