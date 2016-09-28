@@ -159,6 +159,8 @@ dmr_before_squelch   = 0x08040ce7;
 dmr_handle_data      = 0x0804dd71;
 dmr_sms_arrive       = 0x08040de1;
 
+dmr_CSBK_handler = 0x080417e0 ;
+
 ambe_encode_thing    = 0x080531d9;
 
 
