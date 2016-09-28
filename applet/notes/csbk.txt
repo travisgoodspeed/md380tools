@@ -4,6 +4,8 @@
 
 bd : csbko=3d (Pre_CSBK PDU)
 00 : fid
+80 : Data content follows preambles / Target address is an individual
+06 : CBF (6 CSBK packets to follow)
 
 
 SMS header:  08 62 02 44 1f 29 9a 1f 38 98 84 00 09 28
