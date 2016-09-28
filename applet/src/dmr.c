@@ -282,6 +282,7 @@ void dumpraw_data(uint8_t *pkt)
     dump_data(data);
 }
 
+#ifdef FW_D13_020
 void dmr_CSBK_handler_hook(uint8_t *pkt)
 {
     PRINTRET();
@@ -290,6 +291,9 @@ void dmr_CSBK_handler_hook(uint8_t *pkt)
 
     dmr_CSBK_handler(pkt);
 }
+#else
+#warning please consider hooking this handler.
+#endif
 
 void *dmr_call_end_hook(uint8_t *pkt)
 {
