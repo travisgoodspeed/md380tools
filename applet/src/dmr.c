@@ -162,13 +162,13 @@ inline uint8_t get_dpf( data_t *data )
 
 inline const char* get_dpf_str( uint8_t dpf ) 
 {
-    switch( pdf ) {
+    switch( dpf ) {
         case 0 : 
             return "udt" ;
         case 1 :
             return "response packet" ;
         case 2 :
-            return "data packet with unconf del" ;
+            return "dpkt-unc" ;
         default:
             return "?" ;
     }
@@ -224,8 +224,7 @@ void dump_full_lc( lc_t *lc )
     uint8_t fid = lc->fid ;
     uint8_t opts = lc->svc_opts ;
     
-    PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
-    
+    PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));    
 }
 
 // unvalidated
@@ -245,7 +244,7 @@ void dump_data( data_t *data )
     int sap = get_sap(data);
     int blocks = get_blocks(data);
     int dpf = get_dpf(data);
-    PRINT("sap=%d %s dpf=%d src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, get_adr(data->src),get_adr(data->dst), blocks);
+    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
 }
 
 void dumpraw_lc(uint8_t *pkt)

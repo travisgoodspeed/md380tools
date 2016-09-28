@@ -34,13 +34,13 @@ uint8_t *mode3 = (void*)0x2001e892 ;
 // 3 = unprog channel
 // 5 = block dmr processing?
 
-// radio events
-// 0x01 = idle
-// 0x02 = sync error? (tx only?)
+// radio events (todo fix)
+// 0x01 = nosig
+// 0x02 = sync error? (tx only?) 
 // 0x03 = FM 
 // 0x04 = sync
 // 0x05 = ?
-// 0x07 = tx sound 
+// 0x07 = idle
 // 0x08 = rx (but for different TG)
 // 0x09 = rx sound
 // 0x0a = rx idle (tail of rx)

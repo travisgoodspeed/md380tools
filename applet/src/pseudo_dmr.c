@@ -66,19 +66,24 @@ void F_414()
 //            goto 0x08040914 ;
             return ;
         case 6 :
+            // data_hdr
             // sms arrive
             goto 0x08040916 ;
         case 7 :
+            // data_rate_1_2
             // dmr data
             goto 0x0804092c ;
         case 8 :
+            // data_rate_3_4
             // dmr data
             goto 0x08040944 ;
         case 9 :
-            // post 7 to radio_event_mbox
-            // post 23 to other_event_mbox
+            // idle
+            // post 0x7 to radio_event_mbox
+            // post 0x17 to other_event_mbox
             goto 0x0804095c ;
         case 10 :
+            // data_rate_1
             // dmr data
             goto 0x0804098a ;
         default:
