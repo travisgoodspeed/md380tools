@@ -1,3 +1,18 @@
+
+
+FW ?= D13_020
+
+ifeq ($(FW),D02_032)
+    INC_DISPFLIP=1
+    INC_I2C=1
+else ifeq ($(FW),D13_020)
+    A = 2 
+else ifeq ($(FW),S13_020)
+    A = 3 
+else 
+$(error select firmware version)
+endif
+
 SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_config.o 
 SRCS += spiflash.o usb.o menu.o rtc_timer.o beep_process.o usersdb.o os.o aes.o
 SRCS += ambe.o  dmr.o 
@@ -6,8 +21,12 @@ SRCS += console.o
 SRCS += util.o
 SRCS += netmon.o
 SRCS += debug.o
-#### SRCS +=  dispflip.o  # display flip is included @ d13.020
-#### SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
+ifdef INC_DISPFLIP
+SRCS +=  dispflip.o  # display flip is included @ d13.020
+endif
+ifdef INC_I2C
+SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
+endif
 
 PROJ_NAME=main
 
