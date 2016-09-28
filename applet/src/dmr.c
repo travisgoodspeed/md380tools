@@ -106,6 +106,7 @@ void dump_raw_short_header( const char *tag, raw_sh_hdr_t *pkt )
     PRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d)\n", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
 }
 
+// TODO: LC Start/Stop (LCSS)
 typedef struct lc {
     uint8_t pf_flco ;    
     uint8_t fid ;
@@ -159,6 +160,20 @@ inline uint8_t get_dpf( data_t *data )
     return data->g_a_hc_poc_dpf & 0xF ;
 }
 
+inline const char* get_dpf_str( uint8_t dpf ) 
+{
+    switch( pdf ) {
+        case 0 : 
+            return "udt" ;
+        case 1 :
+            return "response packet" ;
+        case 2 :
+            return "data packet with unconf del" ;
+        default:
+            return "?" ;
+    }
+}
+
 inline uint8_t get_blocks( data_t *data )
 {
     return data->f_blocks & 0x7F ;
@@ -181,6 +196,20 @@ inline const char* get_flco_str( lc_t *lc )
 inline const char* sap_to_str( uint8_t sap ) 
 {
     switch( sap ) {
+        case 0 :
+            return "UDT" ;
+        case 1 :
+            return "(1?)" ;
+        case 2 :
+            return "TCP" ;
+        case 3 :
+            return "UDP" ;
+        case 4 :
+            return "IP" ;
+        case 5 :
+            return "ARP" ;
+        case 9 :
+            return "prop" ;
         case 10 :
             return "shrtdata" ;
         default:
