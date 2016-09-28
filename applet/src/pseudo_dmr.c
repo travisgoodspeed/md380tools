@@ -57,10 +57,13 @@ void F_414()
             // dmr call end
             goto 0x080408d0 ;
         case 3 :
+            // @ 0x080408e6
             // CBSK
-            0x08040028(130,0,buf,10);
+            0x08040028(130,0,buf+2,10);
+            0x080417e0(buf);
             // post 7 to radio_event_mbox
-            goto 0x080408e6 ;
+            // ...
+            return ;
         case 4 :
             // @ 0x08040912 ;
             // MBC header
@@ -73,18 +76,18 @@ void F_414()
             // @ 0x08040916 ;
             // data_hdr
             // (sms arrive)
-            0x08040028(130,0,buf,12);
+            0x08040028(130,0,buf+2,12);
             sms_arrive(buf);
             return ;
         case 7 :
             // data_rate_1_2
             // (dmr data)
-            0x08040028(130,0,buf,12);
+            0x08040028(130,0,buf+2,12);
             goto 0x0804092c ;
         case 8 :
             // data_rate_3_4
             // {dmr data)
-            0x08040028(130,0,buf,18);
+            0x08040028(130,0,buf+2,18);
             goto 0x08040944 ;
         case 9 :
             // idle
@@ -94,7 +97,7 @@ void F_414()
         case 10 :
             // data_rate_1
             // (dmr data)
-            0x08040028(130,0,buf,24);
+            0x08040028(130,0,buf+2,24);
             goto 0x0804098a ;
         default:
             return ;
