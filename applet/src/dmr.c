@@ -160,7 +160,7 @@ inline uint8_t get_dpf( data_t *data )
     return data->g_a_hc_poc_dpf & 0xF ;
 }
 
-inline const char* get_dpf_str( uint8_t dpf ) 
+inline const char* dpf_to_str( uint8_t dpf ) 
 {
     switch( dpf ) {
         case 0 : 
@@ -269,7 +269,7 @@ void dumpraw_mbc(uint8_t *pkt)
     uint8_t tp = (pkt[1] >> 4) ;
     PRINT("type=%d ", tp );
 
-    mbc_t *mbc = pkt + 2 ;
+    mbc_t *mbc = (mbc_t*)(pkt + 2);
     dump_mbc(mbc);
 }
 
@@ -278,7 +278,7 @@ void dumpraw_data(uint8_t *pkt)
     uint8_t tp = (pkt[1] >> 4) ;
     PRINT("type=%d ", tp );
 
-    data_t *data = pkt + 2 ;
+    data_t *data = (data_t*)(pkt + 2);
     dump_data(data);
 }
 
