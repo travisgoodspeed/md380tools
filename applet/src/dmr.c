@@ -450,11 +450,6 @@ void *dmr_handle_data_hook(char *pkt, int len)
      two bytes of C5000 overhead.
    */
 
-//    uint8_t *p = (uint8_t *)pkt ;    
-//    p += 2 ;    
-//    dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
-    
-    
   //Turn on the red LED to know that we're here.
   red_led(1);
 
@@ -496,10 +491,6 @@ void *dmr_sms_arrive_hook(void *pkt)
          Data: 08 7a 6f 00 6d 00 20 00 6b 00 6b 00 34 00
          Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
      */
-
-//    uint8_t *p = pkt;
-//    p += 2;
-//    dump_raw_short_header("sm", (raw_sh_hdr_t*) p);
 
     //Turn on the red LED to know that we're here.
     red_led(1);
