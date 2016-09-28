@@ -25,10 +25,21 @@ firmwares:
 
 flash:
 	cd applet && $(MAKE) clean flash
+	
+image_D02:
+	$(MAKE) -C applet --eval=FW=D02_032 all  
 
+image_D13:
+	$(MAKE) -C applet --eval=FW=D13_020 all  
+	
+image_S13:
+	$(MAKE) -C applet --eval=FW=S13_020 all  
+	
+# proto
 flash1:
 	cd applet && $(MAKE) --eval=FW=D02_032 clean flash
 	
+# proto
 flash2:
 	cd applet && $(MAKE) --eval=FW=S13_020 clean flash
 	
@@ -49,13 +60,15 @@ dist: applets
 	rm -rf $(RELEASE) $(RELEASE).zip
 	mkdir -p $(RELEASE)/python
 #Main release.
-	cd applet && $(MAKE) clean all
+	$(MAKE) clean image_D13
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-NoGPS"`.bin
 #For GPS radios.
-	cd applet && $(MAKE) -f Makefile.s13.020 clean all
+	$(MAKE) clean image_S13
+#	cd applet && $(MAKE) -f Makefile.s13.020 clean all
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-GPS"`.bin
 #Older
-	cd applet && $(MAKE) -f Makefile.d02.032 clean all
+	$(MAKE) clean image_D02
+#	cd applet && $(MAKE) -f Makefile.d02.032 clean all
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-OLD"`.bin
 #Include the Official Installer
 	cd $(RELEASE) && unzip ../firmware/dl/D002.032.zip
