@@ -42,3 +42,16 @@ SMS header:  08 62 01 a0 1f 24 ed 00 13 c1 00 08 da b1
 sa type=6 sap=10 shrtdata src=5057 dst=2041069 0
 
 
+= ........ =
+
+SMS header:  08 62 02 44 1f 2c 87 1f 2c b1 84 00 ed 49
+
+08 62 
+02 dpf=2 (Data packet with unconfirmed delivery)
+44       
+1f 2c 87    src
+1f 2c b1    dst
+84 (4 blocks to follow + f bit) 
+00 (n(s) / fsn)
+ed 49 crc
+

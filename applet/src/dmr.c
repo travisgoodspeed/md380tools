@@ -106,6 +106,7 @@ void dump_raw_short_header( const char *tag, raw_sh_hdr_t *pkt )
     PRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d)\n", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
 }
 
+// TODO: LC Start/Stop (LCSS)
 typedef struct lc {
     uint8_t pf_flco ;    
     uint8_t fid ;
@@ -154,6 +155,25 @@ inline uint8_t get_sap( data_t *data )
     return ( data->sap_poc >> 4 ) & 0xF ;
 }
 
+inline uint8_t get_dpf( data_t *data )
+{
+    return data->g_a_hc_poc_dpf & 0xF ;
+}
+
+inline const char* dpf_to_str( uint8_t dpf ) 
+{
+    switch( dpf ) {
+        case 0 : 
+            return "udt" ;
+        case 1 :
+            return "response packet" ;
+        case 2 :
+            return "dpkt-unc" ;
+        default:
+            return "?" ;
+    }
+}
+
 inline uint8_t get_blocks( data_t *data )
 {
     return data->f_blocks & 0x7F ;
@@ -176,6 +196,20 @@ inline const char* get_flco_str( lc_t *lc )
 inline const char* sap_to_str( uint8_t sap ) 
 {
     switch( sap ) {
+        case 0 :
+            return "UDT" ;
+        case 1 :
+            return "(1?)" ;
+        case 2 :
+            return "TCP" ;
+        case 3 :
+            return "UDP" ;
+        case 4 :
+            return "IP" ;
+        case 5 :
+            return "ARP" ;
+        case 9 :
+            return "prop" ;
         case 10 :
             return "shrtdata" ;
         default:
@@ -190,8 +224,7 @@ void dump_full_lc( lc_t *lc )
     uint8_t fid = lc->fid ;
     uint8_t opts = lc->svc_opts ;
     
-    PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
-    
+    PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));    
 }
 
 // unvalidated
@@ -207,9 +240,11 @@ void dump_mbc( mbc_t *mbc )
 void dump_data( data_t *data )
 {
     //TODO: print DPF (6.1.1))
+    // 9.3.17 from part 1
     int sap = get_sap(data);
     int blocks = get_blocks(data);
-    PRINT("sap=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), get_adr(data->src),get_adr(data->dst), blocks);
+    int dpf = get_dpf(data);
+    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
 }
 
 void dumpraw_lc(uint8_t *pkt)
@@ -234,7 +269,7 @@ void dumpraw_mbc(uint8_t *pkt)
     uint8_t tp = (pkt[1] >> 4) ;
     PRINT("type=%d ", tp );
 
-    mbc_t *mbc = pkt + 2 ;
+    mbc_t *mbc = (mbc_t*)(pkt + 2);
     dump_mbc(mbc);
 }
 
@@ -243,7 +278,7 @@ void dumpraw_data(uint8_t *pkt)
     uint8_t tp = (pkt[1] >> 4) ;
     PRINT("type=%d ", tp );
 
-    data_t *data = pkt + 2 ;
+    data_t *data = (data_t*)(pkt + 2);
     dump_data(data);
 }
 
@@ -414,11 +449,6 @@ void *dmr_handle_data_hook(char *pkt, int len)
      two bytes of C5000 overhead.
    */
 
-//    uint8_t *p = (uint8_t *)pkt ;    
-//    p += 2 ;    
-//    dump_raw_short_header( "da", (raw_sh_hdr_t*) p );
-    
-    
   //Turn on the red LED to know that we're here.
   red_led(1);
 
@@ -460,10 +490,6 @@ void *dmr_sms_arrive_hook(void *pkt)
          Data: 08 7a 6f 00 6d 00 20 00 6b 00 6b 00 34 00
          Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
      */
-
-//    uint8_t *p = pkt;
-//    p += 2;
-//    dump_raw_short_header("sm", (raw_sh_hdr_t*) p);
 
     //Turn on the red LED to know that we're here.
     red_led(1);
