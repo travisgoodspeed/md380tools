@@ -1,0 +1,15 @@
+
+@ 0x80408fa  08 32 bd 00 80 06 1f 29 9a 1f 38 98 a0 a5
+@ 0x80408fa  08 32 bd 00 80 05 1f 29 9a 1f 38 98 a0 a5
+
+bd : csbko=3d (Pre_CSBK PDU)
+00 : fid
+
+
+SMS header:  08 62 02 44 1f 29 9a 1f 38 98 84 00 09 28
+sa type=6 sap=4 IP dpf=2 dpkt-unc src=2046104 dst=2042266 4
+Data:        08 72 45 00 00 28 00 06 00 00 40 11 00 50
+Data:        08 72 0c 1f 38 98 0c 1f 29 9a 0f a7 0f a7
+Data:        08 72 00 14 80 f8 00 0a e0 00 87 04 0d 00
+Data:        08 72 0a 00 67 00 00 00 00 00 2e 9c 97 73
+

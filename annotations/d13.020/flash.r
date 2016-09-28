@@ -3193,8 +3193,19 @@ af+ 0x8040670 880 F_414
 af+ 0x8040a02 740 dmr_audio_start
 af+ 0x8040ce6 92 dmr_before_squelch
 af+ 0x8040d44 94 F_858
+
 af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
+
+f handle_CSBK @ 0x080408e6 
+f handle_DataHeader @ 0x08040916
+f handle_DataRate1_2 @ 0x0804092c
+f handle_DataRate3_4 @ 0x08040944
+f handle_DataRate1 @ 0x0804098a
+
+f CSBK_handler @ 0x080417e0
+af+ 0x080417e0 0 CSBK_handler
+
 af+ 0x8043de4 8 OS_ENTER_CRITICAL
 af+ 0x8043dec 6 OS_EXIT_CRITICAL
 af+ 0x80462bc 314 Start
