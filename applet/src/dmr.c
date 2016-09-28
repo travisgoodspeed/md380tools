@@ -282,6 +282,15 @@ void dumpraw_data(uint8_t *pkt)
     dump_data(data);
 }
 
+void dmr_CSBK_handler_hook(uint8_t *pkt)
+{
+    PRINTRET();
+    PRINTHEX(pkt,14);
+    PRINT("\n");
+
+    dmr_CSBK_handler(pkt);
+}
+
 void *dmr_call_end_hook(uint8_t *pkt)
 {
     /* This hook handles the dmr_contact_check() function, calling

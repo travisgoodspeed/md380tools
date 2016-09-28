@@ -6,6 +6,8 @@
 #ifndef DMR_H
 #define DMR_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -13,6 +15,8 @@ extern "C" {
 extern int g_dst;  // transferbuffer users.csv
 extern int g_src;
   
+
+void dmr_CSBK_handler(uint8_t *pkt);
 
 
 

@@ -196,8 +196,9 @@ if __name__== '__main__':
     for adr in dmr_handle_data_hook_list:
         merger.hookbl(adr, sapplet.getadr("dmr_handle_data_hook"));
             
-    merger.hookbl(0x8040926, sapplet.getadr("dmr_sms_arrive_hook"));
+    merger.hookbl(0x08040926, sapplet.getadr("dmr_sms_arrive_hook"));
 
+    merger.hookbl(0x080408f6, sapplet.getadr("dmr_CSBK_handler_hook"));
     
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x804647a,sapplet.getadr("OSSemCreate_hook"),0);
