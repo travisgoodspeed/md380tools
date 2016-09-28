@@ -26,6 +26,12 @@ firmwares:
 flash:
 	cd applet && $(MAKE) clean flash
 
+flash1:
+	cd applet && $(MAKE) --eval=FW=D02_032 clean flash
+	
+flash2:
+	cd applet && $(MAKE) --eval=FW=S13_020 clean flash
+	
 flash_d02.032:
 	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
 

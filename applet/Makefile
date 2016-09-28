@@ -8,14 +8,17 @@ ifeq ($(FW),D02_032)
     FWDEFINE=FW_D02_032
     SRCVERSION=d02.032
     PATCHDIR=2.032
+    MERGEBASE=0x0809D000
 else ifeq ($(FW),D13_020)
     FWDEFINE=FW_D13_020
     SRCVERSION=d13.020
     PATCHDIR=d13.020
+    MERGEBASE=0x0809b000
 else ifeq ($(FW),S13_020)
     FWDEFINE=FW_S13_020
     SRCVERSION=s13.020
     PATCHDIR=s13.020
+    MERGEBASE=0x809c000
 else 
 $(error select firmware version)
 endif
@@ -88,7 +91,7 @@ proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
 	cd ../patches/$(PATCHDIR) && $(MAKE) all
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
-	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img 0x0809b000
+	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img $(MERGEBASE)
 
 #The wrapped file is the one that works with the Windows updater.
 wrapped: lib proj
