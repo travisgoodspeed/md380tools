@@ -58,19 +58,24 @@ void F_414()
             goto 0x080408d0 ;
         case 3 :
             // CBSK
+            0x08040028(130,0,buf,10);
             // post 7 to radio_event_mbox
             goto 0x080408e6 ;
         case 4 :
-//            goto 0x08040912 ;
+            // @ 0x08040912 ;
+            // MBC header
             return ;
         case 5 :
-//            goto 0x08040914 ;
+            // @ 0x08040914 ;
+            // MBC next
             return ;
         case 6 :
+            // @ 0x08040916 ;
             // data_hdr
             // (sms arrive)
             0x08040028(130,0,buf,12);
-            goto 0x08040916 ;
+            sms_arrive(buf);
+            return ;
         case 7 :
             // data_rate_1_2
             // (dmr data)
