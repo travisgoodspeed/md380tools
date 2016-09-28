@@ -5,10 +5,17 @@ FW ?= D13_020
 ifeq ($(FW),D02_032)
     INC_DISPFLIP=1
     INC_I2C=1
+    FWDEFINE=FW_D02_032
+    SRCVERSION=d02.032
+    PATCHDIR=2.032
 else ifeq ($(FW),D13_020)
-    A = 2 
+    FWDEFINE=FW_D13_020
+    SRCVERSION=d13.020
+    PATCHDIR=d13.020
 else ifeq ($(FW),S13_020)
-    A = 3 
+    FWDEFINE=FW_S13_020
+    SRCVERSION=s13.020
+    PATCHDIR=s13.020
 else 
 $(error select firmware version)
 endif
@@ -38,7 +45,6 @@ OBJCOPY=arm-none-eabi-objcopy
 OBJDUMP=arm-none-eabi-objdump
 
 GIT_VERSION := $(shell git describe --dirty --always --tags)
-SRCVERSION?=d13.020
 
 LINKSCRIPT=applet_$(SRCVERSION).ld
 
@@ -47,8 +53,7 @@ CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
 CFLAGS += -Wa,-a=$(@:.o=.lst)
-# TODO: make this dynamic	
-CFLAGS += -DFW_D13_020=1	
+CFLAGS += -D$(FWDEFINE)	
 ###################################################
 
 vpath %.c src
@@ -72,8 +77,8 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped
 
 experiment.img: 
-	cd ../patches/$(SRCVERSION) && $(MAKE) all
-	cp ../patches/$(SRCVERSION)/patched.img ./experiment.img
+	cd ../patches/$(PATCHDIR) && $(MAKE) all
+	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 
 
 lib: src/version.h config.h
@@ -81,8 +86,8 @@ lib: src/version.h config.h
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
-	cd ../patches/$(SRCVERSION) && $(MAKE) all
-	cp ../patches/$(SRCVERSION)/patched.img ./experiment.img
+	cd ../patches/$(PATCHDIR) && $(MAKE) all
+	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img 0x0809b000
 
 #The wrapped file is the one that works with the Windows updater.
