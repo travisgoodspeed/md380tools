@@ -1,7 +1,6 @@
 
 = keycodes =
 
-241 some special key, maybe 'menu is active' so normal keyboard handling disabled.
 
 0   digit 0
 .
@@ -14,7 +13,9 @@ c,12   down
 d,13   red
 e,14   * lock
 f,15   # 
-
+16      ?
+241 some special key, maybe 'menu is active' so normal keyboard handling disabled.
+255
 
 ./md380-tool hexwatch 0x2001e890
 
