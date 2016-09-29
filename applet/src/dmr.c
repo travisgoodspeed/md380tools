@@ -203,7 +203,7 @@ inline const char* get_flco_str( lc_t *lc )
         case 7 :
             return "talker alias blk 3" ;
         case 8 :
-            return "gpsinfo"
+            return "gpsinfo" ;
         default: 
             return "?" ;
     }
