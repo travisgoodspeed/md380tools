@@ -470,6 +470,10 @@ void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode){
 
 void *dmr_handle_data_hook(char *pkt, int len)
 {
+//    PRINTRET();
+//    PRINTHEX(pkt,len);
+//    PRINT("\n");
+    
 #ifdef CONFIG_DMR
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.
