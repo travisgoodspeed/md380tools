@@ -3,7 +3,7 @@
   
 */
 
-//#define DEBUG
+#define DEBUG
 //#define NETMON
 
 #include <stdio.h>
@@ -50,44 +50,57 @@ OS_EVENT * OSSemCreate_hook(uint16_t cnt)
     return (sem);
 }
 
+#if defined(FW_D13_020)
+OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ;
+OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ;
+#elif defined(FW_D02_032)
+OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
+OS_EVENT *mbox_beep = (OS_EVENT *)0x20015f0c ;
+#warning please consider finding mbox pointers for this firmware version                
+#else
+OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
+OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ; // wrong
+#warning please consider finding mbox pointers for this firmware version                
+#endif
 
-void pevent_to_name(OS_EVENT *pevent, void *pmsg) {
-  if ( pevent == (void *) 0x20015f0c ) {  // d02.032 FIXME
-    printf("to Beep_Process: %x ..", * (uint8_t*)pmsg);
-    switch (* (uint8_t*)pmsg  ) {
-      case 0x24:
-        printf("roger beep ");
-        break;
-      case 0x27:
-        printf("keypad tone ");
-        break;
-      case 0xe:
-        printf("fail to sync with relay ");
-        break;
-      default:
-        printf("not known ");
-        break;
+
+void pevent_to_name(OS_EVENT *pevent, void *pmsg)
+{
+    if( pevent == mbox_beep ) { 
+        printf("to Beep_Process: %x ..", * (uint8_t*) pmsg);
+        switch (* (uint8_t*) pmsg) {
+            case 0x24:
+                printf("roger beep ");
+                break;
+            case 0x27:
+                printf("keypad tone ");
+                break;
+            case 0xe:
+                printf("fail to sync with relay ");
+                break;
+            default:
+                printf("not known ");
+                break;
+        }
     }
-  }
     printf("Data:       ");
     printhex(pmsg, 10);
     printf("\n");
 }
 
 
-uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) {
+uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) 
+{
   void *return_addr;
   void *sp;
   __asm__("mov %0,r14" : "=r" (return_addr));
   __asm__("mov %0,r13" : "=r" (sp));
+
   printf("OSMboxPost_hook r: 0x%x s: 0x%x p: 0x%x m: 0x%x ", return_addr, sp, pevent, pmsg);
   pevent_to_name(pevent, pmsg);
+
   return(md380_OSMboxPost(pevent, pmsg));
 }
-
-// these are FW_D13_020 based pointer values
-OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ;
-OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ;
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {

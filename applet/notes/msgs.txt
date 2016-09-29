@@ -1,0 +1,37 @@
+
+= during channel knob turn =
+
+// beep = 0 ?
+OSMboxPost_hook r: 0x802d427 s: 0x2001527c p: 0x20017390 m: 0x2001e8a8 Data:        00 0c 01 00 00 00 00 00 00 00
+
+// radio = 3 
+OSMboxPost_hook r: 0x802d4ab s: 0x2001527c p: 0x20017468 m: 0x2001e8aa Data:        03 00 00 00 00 00 00 00 00 00
+// radio = 1
+OSMboxPost_hook r: 0x803f95d s: 0x2001524c p: 0x20017468 m: 0x2001e8aa Data:        01 00 00 00 00 00 00 00 00 00
+
+// e3 
+OSMboxPost_hook r: 0x803fa75 s: 0x2001524c p: 0x20017348 m: 0x2001e8e9 Data:        02 00 00 00 00 01 00 00 01 00
+
+// e5
+OSMboxPost_hook r: 0x803c953 s: 0x2001aa60 p: 0x20017438 m: 0x2001e8a9 Data:        0c 01 00 00 00 00 00 00 00 00
+
+
+= turn to unused =
+OSMboxPost_hook r: 0x802d5d9 s: 0x20015254 p: 0x20017390 m: 0x2001e8a8 Data:        0f 0c 01 00 00 00 00 00 00 00
+@ 0x802fa04 OMp 0x20017390, 0xf not known 
+
+= start scan =
+OSMboxPost_hook r: 0x802e7a1 s: 0x2001527c p: 0x20017390 m: 0x2001e8a8 Data:        09 0c 01 00 00 00 00 00 00 00
+@ 0x802fa04 OMp 0x20017390, 0x9 not known 
+
+OSMboxPost_hook r: 0x803f95d s: 0x2001525c p: 0x20017468 m: 0x2001e8aa Data:        01 00 00 00 00 00 00 00 00 00
+@ 0x803c80a OMp 0x20017468, 0x1 
+OSMboxPost_hook r: 0x803fa75 s: 0x2001525c p: 0x20017348 m: 0x2001e8e9 Data:        02 00 00 00 00 01 00 00 01 00
+@ 0x8046be6 Mp 0x20017348, 0x2 
+OSMboxPost_hook r: 0x803f95d s: 0x20015254 p: 0x20017468 m: 0x2001e8aa Data:        01 00 00 00 00 00 00 00 00 00
+@ 0x803c80a OMp 0x20017468, 0x1 
+OSMboxPost_hook r: 0x803fa75 s: 0x20015254 p: 0x20017348 m: 0x2001e8e9 Data:        02 00 00 00 00 01 00 00 01 00
+@ 0x8046be6 OMp 0x20017348, 0x2 
+OSMboxPost_hook r: 0x803f95d s: 0x20015254 p: 0x20017468 m: 0x2001e8aa Data:        01 00 00 00 00 00 00 00 00 00
+
+

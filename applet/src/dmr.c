@@ -106,8 +106,14 @@ void dump_raw_short_header( const char *tag, raw_sh_hdr_t *pkt )
     PRINT("%s(sap=%d,src=%d,dst=%d,sp=%d,dp=%d)\n", tag, pkt->sap, get_adr(pkt->src), get_adr(pkt->dst), pkt->sp, pkt->dp );
 }
 
+typedef struct lc_hdr {
+    uint8_t pf_flco ;    
+    uint8_t fid ;
+} lc_hdr_t ;
+
 // TODO: LC Start/Stop (LCSS)
 typedef struct lc {
+    //TODO lc_hdr include.
     uint8_t pf_flco ;    
     uint8_t fid ;
     uint8_t svc_opts ;
@@ -188,6 +194,16 @@ inline const char* get_flco_str( lc_t *lc )
         case 3 :
             // Unit to Unit Voice Channel User
             return "u2u" ;
+        case 4 :
+            return "talker alias hdr" ;
+        case 5 :
+            return "talker alias blk 1" ;
+        case 6 :
+            return "talker alias blk 2" ;
+        case 7 :
+            return "talker alias blk 3" ;
+        case 8 :
+            return "gpsinfo" ;
         default: 
             return "?" ;
     }
@@ -454,6 +470,10 @@ void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode){
 
 void *dmr_handle_data_hook(char *pkt, int len)
 {
+//    PRINTRET();
+//    PRINTHEX(pkt,len);
+//    PRINT("\n");
+    
 #ifdef CONFIG_DMR
   /* This hook handles the dmr_contact_check() function, calling
      back to the original function where appropriate.

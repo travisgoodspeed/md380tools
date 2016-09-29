@@ -3501,3 +3501,82 @@ f audio_for_me_or_not @ 0x08040c7a
 f event_8 @ 0x08040c02
 f event_36 @ 0x08041616
 f event_4 @ 0x08041e44
+
+af+ 0x0804edd0 2 dummy_0x0804edd0
+af+ 0x0804f688 2 dummy_0x0804f688
+
+f keypressed @ 0x2001e5f8
+f keylocked @ 0x2001e5f9
+
+f create_Sys_Inter @ 0x08046548
+f create_RTC_Timer @ 0x0804657c
+f create_State_Change @ 0x080467b8
+
+f This_function_called_Read_Channel_Switch @ 0x0804fd04
+af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
+
+f keyup_keydown @ 0x2001e889
+f keycode @ 0x2001e890
+
+
+f channel_data @ 0x2001def8
+
+CCa 0x0800d246  keycode
+CCa 0x0800ded4  keycode
+CCa 0x0800ea30  keycode
+CCa 0x0800f0ca  keycode
+CCa 0x0800f0d4  keycode
+CCa 0x0800f68c  keycode
+CCa 0x080157fe  keycode
+CCa 0x08015cce  keycode
+CCa 0x08016228  keycode
+CCa 0x08016c02  keycode
+CCa 0x08016fe8  keycode
+CCa 0x0801758c  keycode
+CCa 0x0801b044  keycode
+CCa 0x0801b9e4  keycode
+CCa 0x08023ef4  keycode
+CCa 0x08024070  keycode
+CCa 0x080244bc  keycode
+CCa 0x0802473c  keycode
+CCa 0x08023ef4  keycode
+CCa 0x08024070  keycode
+CCa 0x080244bc  keycode
+CCa 0x080256bc  keycode
+CCa 0x080256fa  keycode
+CCa 0x08025f7a  keycode
+CCa 0x08025fa8  keycode
+CCa 0x0802ceaa keycode
+CCa 0x0802ced4 keycode
+CCa 0x0802d0dc keycode
+CCa 0x0802dfbe keycode
+CCa 0x0802e02c keycode
+CCa 0x0802e036 keycode
+CCa 0x0802e044 keycode
+CCa 0x0802e0bc keycode
+CCa 0x0802e0d2 keycode
+CCa 0x0802e0e8 keycode
+CCa 0x0802e0fe keycode
+CCa 0x0802e114 keycode
+CCa 0x0802e12a keycode
+CCa 0x0802e1f8 keycode
+CCa 0x0802e308 keycode
+CCa 0x0802e312 keycode
+CCa 0x0802e320 keycode
+CCa 0x0802e370 keycode
+CCa 0x0802e386 keycode
+CCa 0x0802e39c keycode
+CCa 0x0802e3b2 keycode
+CCa 0x0802e3c8 keycode
+CCa 0x0802e3de keycode
+CCa 0x0802e3f4 keycode
+CCa 0x0802e51e keycode
+CCa 0x0802e6ca keycode
+CCa 0x0802e6e6 keycode
+CCa 0x08035bc4 keycode
+CCa 0x0804fb24 keycode
+CCa 0x0803a8d0 keycode
+CCa 0x0803a8fe keycode
+CCa 0x08035bc4 keycode
+CCa 0x0803be76 keycode
+CCa 0x0802eb20  keycode

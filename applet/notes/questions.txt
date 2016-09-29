@@ -1,0 +1,9 @@
+
+= loose data packets? =
+
+Call from 2047075 to 204 ended.
+ce type=2 flco=00 grp fid=0 svc=0 src=2047075 dst=204
+Data:        08 aa 5a c2 5e ab a8 65 ed c7 38 33 d9 36 f6 e4 65 97 1b 48 8a 6d 0f c6 10 b4
+Data:        08 82 77 1d a4 61 2a 3b 2c 75 8c 81 d0 50 9c 97 33 03 88 87
+
+
