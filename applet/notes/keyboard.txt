@@ -1,0 +1,34 @@
+
+= keycodes =
+
+241 some special key, maybe 'menu is active' so normal keyboard handling disabled.
+
+0   digit 0
+.
+.
+.
+9   digit 9
+a   green
+b   up
+c   down
+d   red
+e   * lock
+f   # 
+
+
+./md380-tool hexwatch 0x2001e890
+
+= structure mods @ 0x0800f0ca =
+
+0x2001def8
+
+idx 44 ( 2 * key ) // key = 0...9
+
+idx 44 = @ 0x2001df24
+
+
+= structure mods @ 0x0800f0ca =
+@ 0x2001e700
+ 
+idx[10,11] = value from idx[44] above.
+

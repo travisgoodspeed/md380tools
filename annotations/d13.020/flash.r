@@ -3522,23 +3522,18 @@ f keycode @ 0x2001e890
 f channel_data @ 0x2001def8
 
 CCa 0x0800d246  keycode
-CCa 0x0800ded4  keycode
 CCa 0x0800ea30  keycode
 CCa 0x0800f0ca  keycode
 CCa 0x0800f0d4  keycode
-CCa 0x0800f68c  keycode
 CCa 0x080157fe  keycode
 CCa 0x08015cce  keycode
-CCa 0x08016228  keycode
 CCa 0x08016c02  keycode
 CCa 0x08016fe8  keycode
 CCa 0x0801758c  keycode
 CCa 0x0801b044  keycode
-CCa 0x0801b9e4  keycode
 CCa 0x08023ef4  keycode
 CCa 0x08024070  keycode
 CCa 0x080244bc  keycode
-CCa 0x0802473c  keycode
 CCa 0x08023ef4  keycode
 CCa 0x08024070  keycode
 CCa 0x080244bc  keycode
@@ -3579,4 +3574,6 @@ CCa 0x0803a8d0 keycode
 CCa 0x0803a8fe keycode
 CCa 0x08035bc4 keycode
 CCa 0x0803be76 keycode
-CCa 0x0802eb20  keycode
+
+af+ 0x0801dd5c 2182 often_called_something_keycode_menu
+
