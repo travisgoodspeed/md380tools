@@ -8,12 +8,12 @@
 .
 .
 9   digit 9
-a   green
-b   up
-c   down
-d   red
-e   * lock
-f   # 
+a,10   green
+b,11   up
+c,12   down
+d,13   red
+e,14   * lock
+f,15   # 
 
 
 ./md380-tool hexwatch 0x2001e890

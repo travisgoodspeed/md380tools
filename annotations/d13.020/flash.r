@@ -3485,9 +3485,6 @@ af+ 0x0800e538 98 draw_zone_channel
 
 f scr_mode_stable 0 0x08020830
 
-af+ 0x0804eb64 152 keyboard_maybe  
-f keyboard_maybe 0 0x0804eb64
-
 f poi_mode2 0 0x08020bf4
 
 f return_to_mode_1_from10 0 0x0800fc96
@@ -3576,4 +3573,7 @@ CCa 0x08035bc4 keycode
 CCa 0x0803be76 keycode
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
+f store_keycode @ 0x0804fb24
+
+af+ 0x0804eb64 152 unknown_0x0804eb64
 
