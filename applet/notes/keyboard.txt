@@ -1,6 +1,7 @@
 
 = keycodes =
 
+@ 0x2001e890
 
 0   digit 0
 .
@@ -27,9 +28,21 @@ idx 44 ( 2 * key ) // key = 0...9
 
 idx 44 = @ 0x2001df24
 
+looks like choose menu item.
 
 = structure mods @ 0x0800f0ca =
 @ 0x2001e700
  
 idx[10,11] = value from idx[44] above.
+
+===================
+
+0x2001e7be key unconsumed flag?
+f keyup_keydown @ 0x2001e889
+
+0x2001e7b8 ?
+0x2001e7ba internal keycode
+0x2001e7bc last internal keycode
+0x2001e7bd time key pressed
+
 
