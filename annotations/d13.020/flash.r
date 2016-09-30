@@ -3515,7 +3515,6 @@ af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 f keyup_keydown @ 0x2001e889
 f keycode @ 0x2001e890
 
-
 f channel_data @ 0x2001def8
 
 CCa 0x0800d246  keycode
