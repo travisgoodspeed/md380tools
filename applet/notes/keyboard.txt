@@ -38,5 +38,11 @@ idx[10,11] = value from idx[44] above.
 ===================
 
 0x2001e7be key unconsumed flag?
+f keyup_keydown @ 0x2001e889
+
+0x2001e7b8 ?
+0x2001e7ba internal keycode
+0x2001e7bc last internal keycode
+0x2001e7bd time key pressed
 
 

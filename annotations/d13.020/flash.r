@@ -3376,8 +3376,8 @@ f jmp_to_mainloop 0 0x080468f6
 f F_4520 0 0x802c83c
 af+ 0x802c83c 2370 F_4520
 
-af+ 0x0804fdf4 0 set_AAAA
-af+ 0x0804fdfe 0 set_CCCC
+af+ 0x0804fdf4 10 set_AAAA
+af+ 0x0804fdfe 10 set_CCCC
 
 f disp_something 0 0x0800d69c
 af+ 0x0800d69c 0 disp_something
@@ -3502,9 +3502,6 @@ f event_4 @ 0x08041e44
 af+ 0x0804edd0 2 dummy_0x0804edd0
 af+ 0x0804f688 2 dummy_0x0804f688
 
-f keypressed @ 0x2001e5f8
-f keylocked @ 0x2001e5f9
-
 f create_Sys_Inter @ 0x08046548
 f create_RTC_Timer @ 0x0804657c
 f create_State_Change @ 0x080467b8
@@ -3512,10 +3509,23 @@ f create_State_Change @ 0x080467b8
 f This_function_called_Read_Channel_Switch @ 0x0804fd04
 af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 
+# keyborked
+
 f keyup_keydown @ 0x2001e889
 f keycode @ 0x2001e890
+f keypressed @ 0x2001e5f8
+f keylocked @ 0x2001e5f9
+f keypressed_duringmenu @ 0x2001e5f3
+f keypress_time @ 0x2001e7be
+f keypress_max_time @ 0x2001e7b8
+
+f keypress_max_time_reached @ 0x0804face
 
 f channel_data @ 0x2001def8
+
+f store_keycode @ 0x0804fb24
+f someting_keyb @ 0x0804f94c
+af+ 0x0804f94c 348 someting_keyb
 
 CCa 0x0800d246  keycode
 CCa 0x0800ea30  keycode
@@ -3572,7 +3582,14 @@ CCa 0x08035bc4 keycode
 CCa 0x0803be76 keycode
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
-f store_keycode @ 0x0804fb24
 
-af+ 0x0804eb64 152 unknown_0x0804eb64
+f biglist_pollsubsys_maybe @ 0x0804eb64
+af+ 0x0804eb64 152 biglist_pollsubsys_maybe
+af+ 0x0804fc32 2 dummy_0x0804fc32
+af+ 0x0804fc2e 2 dummy_0x0804fc2e
+af+ 0x0804fc2e 2 dummy_0x0804fc2e
 
+# modes
+f op_mode1 @ 0x2001e94d
+f op_mode2 @ 0x2001e94b
+f op_mode3 @ 0x2001e892
