@@ -3588,6 +3588,10 @@ af+ 0x0804eb64 152 biglist_pollsubsys_maybe
 af+ 0x0804fc32 2 dummy_0x0804fc32
 af+ 0x0804fc2e 2 dummy_0x0804fc2e
 af+ 0x0804fc2e 2 dummy_0x0804fc2e
+af+ 0x0804fc26 2 dummy_0x0804fc26
+af+ 0x0804fc28 2 dummy_0x0804fc28
+af+ 0x0804fc2a 2 dummy_0x0804fc2a
+af+ 0x0804fc2c 2 dummy_0x0804fc2c
 
 # modes
 f op_mode1 @ 0x2001e94d
