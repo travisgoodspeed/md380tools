@@ -36,6 +36,11 @@ inline int is_netmon_visible()
     return !is_menu_visible();
 }
 
+inline int is_statusline_visible()
+{
+    return global_addl_config.experimental != 0 ;
+}
+
 #ifdef __cplusplus
 }
 #endif

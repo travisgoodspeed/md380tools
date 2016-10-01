@@ -171,5 +171,6 @@ ambe_outbuffer1 = 0x20013fc8;
 ambe_mystery = 0x20013594;
 
 draw_statusline = 0x08033dad ;
+draw_datetime_row = 0x0800df1b ;
 
 gfx_drawtext4 = 0x0801dd1b ;
