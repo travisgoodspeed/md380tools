@@ -3513,8 +3513,13 @@ f keyup_keydown @ 0x2001e889
 f keycode @ 0x2001e890
 f keycode_old @ 0x2001e891
 f keypressed_duringmenu @ 0x2001e5f3
-f keypress_time @ 0x2001e7be
 f keypress_max_time @ 0x2001e7b8
+f keypress_time_some_button @ 0x2001e7ac
+f keypress_time_lower_button @ 0x2001e7b0
+f keypress_time_upper_button @ 0x2001e7b2
+f keypress_time_all @ 0x2001e7be
+
+f keypress_flag @ 0x2001e5f8
 
 f keypress_max_time_reached @ 0x0804face
 
@@ -3527,9 +3532,18 @@ f base_for_longpress_struct @ 0x2001e5ec
 f check_for_ptt_switch @ 0x0804ebfc
 af+ 0x0804ebfc 106 check_for_ptt_switch
 
+f kb_enter_alpha @ 0x0802e0b8
+
+f get_keycode_from_table @ 0x804f8e4
+f get_keycode_from_table_2 @ 0x804f8ea
+f kb_internal_code @ 0x2001e7ba
+f kb_keydown_debounce @ 0x2001e889
+
+f big_switch @ 0x0802d1b2
+
 f store_keycode @ 0x0804fb24
 f someting_keyb @ 0x0804f94c
-af+ 0x0804f94c 348 someting_keyb
+af+ 0x0804f94c 384 someting_keyb
 
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
@@ -3555,6 +3569,7 @@ f dispatch_event @ 0x0803c39c
 
 f event4_mbox_poi @ 0x2001e660
 f event3_mbox_poi @ 0x2001e658
+f event2_mbox_poi_beep @ 0x2001e67c
 
 # tasks
 

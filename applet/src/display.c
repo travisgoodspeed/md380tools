@@ -236,22 +236,6 @@ void draw_statusline_hook( uint32_t r0 )
     draw_statusline( r0 );
 }
 
-static void wide_putch(void* p, char c)
-{
-    *(*((wchar_t**) p))++ = c;
-}
-
-int wide_sprintf(wchar_t* ws, const char* fmt, ...)
-{
-    va_list va;
-    va_start(va, fmt);
-    tfp_format(&ws, wide_putch, fmt, va);
-    wide_putch(&ws,0);
-    va_end(va);    
-}
-
-//const static wchar_t tst[]         = L"MD380Tools";
-
 void draw_alt_statusline()
 {
     wchar_t buf[20];
@@ -263,7 +247,8 @@ void draw_alt_statusline()
     wide_sprintf(buf,"tg: %d", g_dst );
     gfx_chars_to_display(buf,10,96,94);
 
-    wide_sprintf(buf,"" );
+//    wide_sprintf(buf,"" );
+    wide_sprintf(buf,"%d", md380_f_4225_operatingmode & 0x7F );
     gfx_chars_to_display(buf,95,96,157);
 
     gfx_set_fg_color(0);

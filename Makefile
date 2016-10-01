@@ -83,9 +83,11 @@ dist: applets
 doflash: applets
 	./md380-dfu upgrade applet/experiment.bin
 
-ci:
-	$(MAKE) -C db clean all
+all_images:
 	$(MAKE) clean image_D02
 	$(MAKE) clean image_S13
 	$(MAKE) clean image_D13
+
+ci: all_images
+	$(MAKE) -C db clean all
 	

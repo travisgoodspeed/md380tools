@@ -31,6 +31,7 @@ SRCS += console.o
 SRCS += util.o
 SRCS += netmon.o
 SRCS += debug.o
+SRCS += keyb.o
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020
 endif
