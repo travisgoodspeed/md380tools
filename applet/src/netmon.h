@@ -38,6 +38,7 @@ inline int is_netmon_visible()
 
 inline int is_statusline_visible()
 {
+    //return 1 ;
     return global_addl_config.experimental != 0 ;
 }
 

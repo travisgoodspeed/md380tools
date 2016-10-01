@@ -236,10 +236,42 @@ void draw_statusline_hook( uint32_t r0 )
     draw_statusline( r0 );
 }
 
+static void wide_putch(void* p, char c)
+{
+    *(*((wchar_t**) p))++ = c;
+}
+
+int wide_sprintf(wchar_t* ws, const char* fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    tfp_format(&ws, wide_putch, fmt, va);
+    wide_putch(&ws,0);
+    va_end(va);    
+}
+
+//const static wchar_t tst[]         = L"MD380Tools";
+
+void draw_alt_statusline()
+{
+    wchar_t buf[20];
+    
+    gfx_set_fg_color(0);
+    gfx_set_bg_color(0xff8032);
+    gfx_select_font(gfx_font_small);
+
+    wide_sprintf(buf,"tg: %d", g_dst );
+    gfx_chars_to_display(buf,10,96,94);
+
+    wide_sprintf(buf,"" );
+    gfx_chars_to_display(buf,95,96,157);
+}
+
 void draw_datetime_row_hook()
 {
     if( is_statusline_visible() ) {
-       return ; 
+        draw_alt_statusline();
+        return ; 
     }
     draw_datetime_row();
 }
