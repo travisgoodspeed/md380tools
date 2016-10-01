@@ -265,6 +265,10 @@ void draw_alt_statusline()
 
     wide_sprintf(buf,"" );
     gfx_chars_to_display(buf,95,96,157);
+
+    gfx_set_fg_color(0);
+    gfx_set_bg_color(0xff000000);
+    gfx_select_font(gfx_font_norm);
 }
 
 void draw_datetime_row_hook()

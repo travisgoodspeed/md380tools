@@ -34,9 +34,6 @@ void gfx_drawtext2(wchar_t *str,    //16-bit, little endian.
 extern void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen);
 
 
-extern uint32_t gfx_font_small[];
-extern uint32_t gfx_font_norm[];
-
 
 void gfx_set_bg_color(int color);
 void gfx_set_fg_color(int color);
