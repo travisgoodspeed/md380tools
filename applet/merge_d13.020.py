@@ -712,7 +712,7 @@ if __name__== '__main__':
 ###    #    merger.hookbl(adr,sapplet.getadr("create_menu_entry_hook"),0);
 ###
 
-    #All _maybe_ hooks on OSMboxPost
+    ### only for debug and information addiction
     OSMboxPost_hook_list=[
         0x08011140 ,
         0x080111ec ,
@@ -847,8 +847,8 @@ if __name__== '__main__':
         0x0804090c ,
         0x0804096e ,
         0x08040984 ,
-        0x08040c1c ,
-        0x08040ce0 ,
+#        0x08040c1c , # hooked for promisc
+#        0x08040ce0 , # hooked for promisc
         0x08040d9c ,
         0x08040f5a ,
         0x0804105a ,
@@ -897,8 +897,8 @@ if __name__== '__main__':
         0x0808ee3c ,
         0x0808eeea ,
         ];
-    for adr in OSMboxPost_hook_list:
-        merger.hookbl(adr,sapplet.getadr("OSMboxPost_hook"),0);
+#    for adr in OSMboxPost_hook_list:
+#        merger.hookbl(adr,sapplet.getadr("OSMboxPost_hook"),0);
 
 ###    #Throwaway hook to see if adr is called.
 ###    #merger.hookstub(0x0803f03c,
