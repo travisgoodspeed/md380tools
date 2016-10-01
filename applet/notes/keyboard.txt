@@ -40,13 +40,19 @@ idx[10,11] = value from idx[44] above.
 
 ===================
 
-0x2001e7be key unconsumed flag?
-f keyup_keydown @ 0x2001e889
+b 0x2001e5f8 key pressed long press(b2=4). pressed(b0=1)  ???(b1=2)
+b 0x2001e5f9 locked(b1=2) 
 
-0x2001e7b8 ?
-0x2001e7ba internal keycode
-0x2001e7bc last internal keycode
-0x2001e7bd time key pressed
-0x2001e5f8 key pressed 4=long press. 1=pressed 
-0x2001e890 last key pressed
+b 0x2001e7b0 time upper button pressed 
+b 0x2001e7b2 time lower button pressed 
+h 0x2001e7ba internal keycode
+h 0x2001e7bc last internal keycode
+b 0x2001e7be time key pressed (in main screen)
+? 0x2001e7c0 internal keycode2 (related to)
+
+b 0x2001e889 key debounce counter (0...3)
+b 0x2001e890 last key pressed
+
+
+b 0x2001e7b8 keypress_max_time
 

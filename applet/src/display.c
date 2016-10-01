@@ -247,7 +247,8 @@ void draw_alt_statusline()
     wide_sprintf(buf,"tg: %d", g_dst );
     gfx_chars_to_display(buf,10,96,94);
 
-    wide_sprintf(buf,"" );
+//    wide_sprintf(buf,"" );
+    wide_sprintf(buf,"%d", md380_f_4225_operatingmode & 0x7F );
     gfx_chars_to_display(buf,95,96,157);
 
     gfx_set_fg_color(0);
