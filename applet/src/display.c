@@ -241,7 +241,7 @@ static void wide_putch(void* p, char c)
     *(*((wchar_t**) p))++ = c;
 }
 
-int wide_sprintf(wchar_t* ws, const char* fmt, ...)
+void wide_sprintf(wchar_t* ws, const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
