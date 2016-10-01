@@ -3500,10 +3500,6 @@ f event_4 @ 0x08041e44
 af+ 0x0804edd0 2 dummy_0x0804edd0
 af+ 0x0804f688 2 dummy_0x0804f688
 
-f create_Sys_Inter @ 0x08046548
-f create_RTC_Timer @ 0x0804657c
-f create_State_Change @ 0x080467b8
-
 f This_function_called_Read_Channel_Switch @ 0x0804fd04
 af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 
@@ -3527,6 +3523,9 @@ f read_40_from_2100_spi @ 0x08022716
 f menu_pointer_maybe_channel_data @ 0x2001def8
 
 f base_for_longpress_struct @ 0x2001e5ec
+
+f check_for_ptt_switch @ 0x0804ebfc
+af+ 0x0804ebfc 106 check_for_ptt_switch
 
 f store_keycode @ 0x0804fb24
 f someting_keyb @ 0x0804f94c
@@ -3552,8 +3551,18 @@ f op_mode3 @ 0x2001e892
 
 af+ 0x801eb00 1436 handle_keycode_F_4171
 
-f state_change_task @ 0x0803c330
 f dispatch_event @ 0x0803c39c
 
 f event4_mbox_poi @ 0x2001e660
 f event3_mbox_poi @ 0x2001e658
+
+# tasks
+
+f create_Sys_Inter @ 0x08046548
+f create_RTC_Timer @ 0x0804657c
+f create_State_Change @ 0x080467b8
+f create_ChAccess_Pr @ 0x0804678a
+
+f task_state_change @ 0x0803c330
+f task_rtc_timer @ 0x080467cc
+
