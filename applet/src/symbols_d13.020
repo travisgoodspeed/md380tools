@@ -174,3 +174,7 @@ draw_statusline = 0x08033dad ;
 draw_datetime_row = 0x0800df1b ;
 
 gfx_drawtext4 = 0x0801dd1b ;
+
+/* keyb */
+f_4101 = 0x0804ec67 ;
+

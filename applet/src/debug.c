@@ -85,7 +85,7 @@ static void netmon_putch(void* p, char c)
     }
 }
 
-void netmon_printf(char *fmt, ...)
+void netmon_printf(const char *fmt, ...)
 {
     if( !is_netmon_enabled() ) {
         return ;

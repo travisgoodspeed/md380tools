@@ -643,7 +643,11 @@ if __name__== '__main__':
 
     merger.hookbl(0x080468e6, sapplet.getadr("f_4225_hook"),0);
     merger.hookbl(0x0802db42, sapplet.getadr("f_4225_hook"),0);
-    
+
+    # keyboard
+    merger.hookbl(0x0804ebc2, sapplet.getadr("f_4101_hook"),0);
+
+
 #    for adr in drwbmplist:
 #        merger.hookbl(adr, sapplet.getadr("dummy"));
 

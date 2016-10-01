@@ -18,7 +18,7 @@ extern "C" {
 void debug_printf(char *fmt, ...);
 void debug_printhex(void *buf, int len);
 
-void netmon_printf(char *fmt, ...);
+void netmon_printf(const char *fmt, ...);
 
 extern char nm_logbuf[];
 
