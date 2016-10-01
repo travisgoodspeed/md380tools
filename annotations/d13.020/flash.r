@@ -3519,7 +3519,7 @@ f keypress_time_lower_button @ 0x2001e7b0
 f keypress_time_upper_button @ 0x2001e7b2
 f keypress_time_all @ 0x2001e7be
 
-f keypress_flag @   0x2001e5f0
+f keypress_flag @ 0x2001e5f0
 
 f keypress_max_time_reached @ 0x0804face
 
