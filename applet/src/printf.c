@@ -105,22 +105,22 @@ static int a2d(char ch)
 	else if (ch>='A' && ch<='F')
 		return ch-'A'+10;
 	else return -1;
-	}
+}
 
-static char a2i(char ch, char** src,int base,int* nump)
-	{
-	char* p= *src;
-	int num=0;
-	int digit;
-	while ((digit=a2d(ch))>=0) {
-		if (digit>base) break;
-		num=num*base+digit;
-		ch=*p++;
-		}
-	*src=p;
-	*nump=num;
-	return ch;
-	}
+static char a2i(char ch, const char** src, int base, int* nump)
+{
+    const char* p = *src;
+    int num = 0;
+    int digit;
+    while ((digit = a2d(ch)) >= 0) {
+        if( digit > base ) break;
+        num = num * base + digit;
+        ch = *p++;
+    }
+    *src = p;
+    *nump = num;
+    return ch;
+}
 
 static void putchw(void* putp,putcf putf,int n, char z, char* bf)
 	{
@@ -155,7 +155,7 @@ static void putchwl(void* putp,putcf putf,int n, char z, void* bf)
     }
 }
 
-void tfp_format(void* putp,putcf putf,char *fmt, va_list va)
+void tfp_format(void* putp,putcf putf,const char *fmt, va_list va)
 	{
 	char bf[12];
     
@@ -267,4 +267,18 @@ void tfp_sprintf(char* s,char *fmt, ...)
 	va_end(va);
 	}
 
+
+static void wide_putch(void* p, char c)
+{
+    *(*((wchar_t**) p))++ = c;
+}
+
+void wide_sprintf(wchar_t* ws, const char* fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    tfp_format(&ws, wide_putch, fmt, va);
+    wide_putch(&ws,0);
+    va_end(va);    
+}
 

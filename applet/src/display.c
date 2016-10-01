@@ -236,22 +236,6 @@ void draw_statusline_hook( uint32_t r0 )
     draw_statusline( r0 );
 }
 
-static void wide_putch(void* p, char c)
-{
-    *(*((wchar_t**) p))++ = c;
-}
-
-void wide_sprintf(wchar_t* ws, const char* fmt, ...)
-{
-    va_list va;
-    va_start(va, fmt);
-    tfp_format(&ws, wide_putch, fmt, va);
-    wide_putch(&ws,0);
-    va_end(va);    
-}
-
-//const static wchar_t tst[]         = L"MD380Tools";
-
 void draw_alt_statusline()
 {
     wchar_t buf[20];
