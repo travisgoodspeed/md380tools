@@ -52,3 +52,5 @@ CCa 0x0803a8d0 keycode
 CCa 0x0803a8fe keycode
 CCa 0x08035bc4 keycode
 CCa 0x0803be76 keycode
+
+f poi.to.md380_menu_id 4 0x0x0800c788
