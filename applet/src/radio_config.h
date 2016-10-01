@@ -36,7 +36,7 @@ struct radio_config2 {
 
 // 
 struct long_press_struct {
-    // b1=ptt key
+    // unk0: b1=ptt key
     uint8_t unk0 ;
     uint8_t unk1 ;
     uint8_t longpress_flags ;

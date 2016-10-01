@@ -19,6 +19,7 @@
 #include "usersdb.h"
 #include "dmr.h"
 #include "console.h"
+#include "netmon.h"
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -233,4 +234,48 @@ void draw_statusline_hook( uint32_t r0 )
         return ;
     }
     draw_statusline( r0 );
+}
+
+static void wide_putch(void* p, char c)
+{
+    *(*((wchar_t**) p))++ = c;
+}
+
+int wide_sprintf(wchar_t* ws, const char* fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    tfp_format(&ws, wide_putch, fmt, va);
+    wide_putch(&ws,0);
+    va_end(va);    
+}
+
+//const static wchar_t tst[]         = L"MD380Tools";
+
+void draw_alt_statusline()
+{
+    wchar_t buf[20];
+    
+    gfx_set_fg_color(0);
+    gfx_set_bg_color(0xff8032);
+    gfx_select_font(gfx_font_small);
+
+    wide_sprintf(buf,"tg: %d", g_dst );
+    gfx_chars_to_display(buf,10,96,94);
+
+    wide_sprintf(buf,"" );
+    gfx_chars_to_display(buf,95,96,157);
+}
+
+void draw_datetime_row_hook()
+{
+#if defined(FW_D13_020)
+    if( is_statusline_visible() ) {
+        draw_alt_statusline();
+        return ; 
+    }
+    draw_datetime_row();
+#else
+#warning please consider hooking.    
+#endif    
 }

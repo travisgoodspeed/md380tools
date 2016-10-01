@@ -52,6 +52,7 @@ void draw_rx_screen(unsigned int bg_color);
 
 void draw_statusline( uint32_t r0 ); // in md380
 
+void draw_datetime_row(); // in md380
 
 #ifdef __cplusplus
 }
