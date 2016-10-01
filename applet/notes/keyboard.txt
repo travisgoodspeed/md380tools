@@ -15,6 +15,9 @@ d,13   red
 e,14   * lock
 f,15   # 
 16      ?
+17     lower side button (M)
+18     upper side button
+
 241 some special key, maybe 'menu is active' so normal keyboard handling disabled.
 255    ?
 
@@ -44,5 +47,6 @@ f keyup_keydown @ 0x2001e889
 0x2001e7ba internal keycode
 0x2001e7bc last internal keycode
 0x2001e7bd time key pressed
-
+0x2001e5f8 key pressed 4=long press. 1=pressed 
+0x2001e890 last key pressed
 
