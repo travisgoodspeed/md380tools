@@ -25,6 +25,34 @@ typedef struct radio_config radio_config_t ;
 
 extern radio_config_t md380_radio_config;
     
+// @ 0x2100 len=0x40 in spi fw:D13
+struct radio_config2 {
+    uint8_t button1_short ;
+    uint8_t button1_long ;
+    uint8_t button2_short ;
+    uint8_t button2_long ;
+    // [0x11] long press time in 4 msec units
+};
+
+// 
+struct long_press_struct {
+    uint8_t unk[2] ;
+    uint8_t longpress_flags ;
+};
+
+// probably one big struct, or loose vars.
+struct keyboard_data {
+    // pressed=b0
+    uint8_t pressed ;
+    // flags1: locked=b1 
+    uint8_t flags1 ;  // config from radio_config2 0x6,0x7 (also locked flag)
+    uint8_t flags2 ;  // config from radio_config2 0x8,0x9,0xa,0xb
+    uint8_t flags3 ;  // config from radio_config2 0xc,0xd,    
+};
+struct keyboard_data2 {
+    uint8_t flags0 ;  // config from radio_config2 0xe,0xf
+};
+
 // lucky guess, written as documentation.
 // lives around md380_radio_fm_dmr = 0x2001deb8;  
 // from pc = 0x080134dc 
