@@ -5,6 +5,6 @@ radare:
 experiment:
 	radare2 -a arm -m 0x0800C000  -b 16 -i flash.r ../../applet/experiment.img
 
-asm.lst:
+asm.lst: flash.r
 	radare2 -a arm -m 0x0800C000  -b 16 -i disasm.r -q ../../firmware/unwrapped/D013.020.img
 	
