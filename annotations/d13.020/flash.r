@@ -1814,7 +1814,6 @@ CCa 0x801ea32 md380_menu_0x2001d3f1
 CCa 0x801ea46 md380_menu_0x2001d3ef
 CCa 0x801ea80 md380_menu_0x2001d3ef
 CCa 0x801eaac md380_menu_0x2001d3f1
-af+ 0x801eb00 1436 F_4171
 CCa 0x801eb0a md380_menu_0x2001d3f1
 CCa 0x801eb14 md380_menu_0x2001d3f0
 CCa 0x801eb22 md380_menu_0x2001d3f0
@@ -3513,6 +3512,7 @@ af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 
 f keyup_keydown @ 0x2001e889
 f keycode @ 0x2001e890
+f keycode_old @ 0x2001e891
 f keypressed @ 0x2001e5f8
 f keylocked @ 0x2001e5f9
 f keypressed_duringmenu @ 0x2001e5f3
@@ -3527,59 +3527,6 @@ f store_keycode @ 0x0804fb24
 f someting_keyb @ 0x0804f94c
 af+ 0x0804f94c 348 someting_keyb
 
-CCa 0x0800d246  keycode
-CCa 0x0800ea30  keycode
-CCa 0x0800f0ca  keycode
-CCa 0x0800f0d4  keycode
-CCa 0x080157fe  keycode
-CCa 0x08015cce  keycode
-CCa 0x08016c02  keycode
-CCa 0x08016fe8  keycode
-CCa 0x0801758c  keycode
-CCa 0x0801b044  keycode
-CCa 0x08023ef4  keycode
-CCa 0x08024070  keycode
-CCa 0x080244bc  keycode
-CCa 0x08023ef4  keycode
-CCa 0x08024070  keycode
-CCa 0x080244bc  keycode
-CCa 0x080256bc  keycode
-CCa 0x080256fa  keycode
-CCa 0x08025f7a  keycode
-CCa 0x08025fa8  keycode
-CCa 0x0802ceaa keycode
-CCa 0x0802ced4 keycode
-CCa 0x0802d0dc keycode
-CCa 0x0802dfbe keycode
-CCa 0x0802e02c keycode
-CCa 0x0802e036 keycode
-CCa 0x0802e044 keycode
-CCa 0x0802e0bc keycode
-CCa 0x0802e0d2 keycode
-CCa 0x0802e0e8 keycode
-CCa 0x0802e0fe keycode
-CCa 0x0802e114 keycode
-CCa 0x0802e12a keycode
-CCa 0x0802e1f8 keycode
-CCa 0x0802e308 keycode
-CCa 0x0802e312 keycode
-CCa 0x0802e320 keycode
-CCa 0x0802e370 keycode
-CCa 0x0802e386 keycode
-CCa 0x0802e39c keycode
-CCa 0x0802e3b2 keycode
-CCa 0x0802e3c8 keycode
-CCa 0x0802e3de keycode
-CCa 0x0802e3f4 keycode
-CCa 0x0802e51e keycode
-CCa 0x0802e6ca keycode
-CCa 0x0802e6e6 keycode
-CCa 0x08035bc4 keycode
-CCa 0x0804fb24 keycode
-CCa 0x0803a8d0 keycode
-CCa 0x0803a8fe keycode
-CCa 0x08035bc4 keycode
-CCa 0x0803be76 keycode
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
 
@@ -3597,3 +3544,9 @@ af+ 0x0804fc2c 2 dummy_0x0804fc2c
 f op_mode1 @ 0x2001e94d
 f op_mode2 @ 0x2001e94b
 f op_mode3 @ 0x2001e892
+
+af+ 0x801eb00 1436 handle_keycode_F_4171
+
+f state_change_task @ 0x0803c330
+f dispatch_event @ 0x0803c39c
+
