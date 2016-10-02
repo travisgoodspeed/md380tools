@@ -37,10 +37,10 @@ image_S13:
 	$(MAKE) -C applet --eval=FW=S13_020 all  
 	
 flash_d02.032:
-	cd applet && $(MAKE) --eval=FW=D02_032 clean flash
+	cd applet && $(MAKE) -DFW=D02_032 clean flash
 	
 flash_s13.020:
-	cd applet && $(MAKE) --eval=FW=S13_020 clean flash
+	cd applet && $(MAKE) -DFW=S13_020 clean flash
 	
 #flash_d02.032:
 #	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
