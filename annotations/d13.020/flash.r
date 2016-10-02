@@ -3542,9 +3542,16 @@ f kb_keydown_debounce @ 0x2001e889
 f big_switch @ 0x0802d1b2
 
 f store_keycode @ 0x0804fb24
-f someting_keyb @ 0x0804f94c
-af+ 0x0804f94c 384 someting_keyb
+f kb_poller @ 0x0804f94c
+af+ 0x0804f94c 384 kb_poller
+CCa 0x0804fa32 definite keydown
+CCa 0x0804fa1e jump if b0 not set, reset debounce
+CCa 0x0804fa30 not debounced yet, jump
+CCa 0x0804fa4e jump if long keypress count is reached
 
+f keypress_status @ 0x2001e5f0
+
+f dispatch_keyboard_2 @ 0x0802c83c
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
 
