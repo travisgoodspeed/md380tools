@@ -40,17 +40,6 @@ int incall=0;
 int g_dst;  // transferbuffer users.csv
 int g_src;
     
-typedef struct adr {
-    uint8_t b16 ;
-    uint8_t b8 ;
-    uint8_t b0 ;    
-} adr_t ;
-
-inline uint32_t get_adr(adr_t in)
-{
-    return in.b0 | (in.b8 << 8) | (in.b16 << 16);
-}
-
 // Table 6.1: Data Type information element definitions
 
 // unused?
@@ -127,65 +116,6 @@ inline uint8_t get_flco( lc_t *lc )
     return lc->pf_flco & 0x3f ;
 }
 
-// Control Signalling Block (CSBK) PDU
-// TODO: finish / validate
-typedef struct mbc {
-    uint8_t lb_pf_csbko ;    
-    uint8_t fid ;    
-    union {
-        struct {
-            //uint8_t sap ; // ??
-            adr_t dst ;
-            adr_t src ;                
-        } sms ;
-    } ;
-} mbc_t ;
-
-inline uint8_t get_csbko( mbc_t *mbc )
-{
-    return mbc->lb_pf_csbko & 0x3f ;
-}
-
-// Unconfirmed data Header
-typedef struct data {
-    uint8_t g_a_hc_poc_dpf ;    
-    uint8_t sap_poc ;
-    adr_t dst ;
-    adr_t src ;                
-    uint8_t f_blocks ;
-    uint8_t fsn ;
-    
-} data_t ;
-
-inline uint8_t get_sap( data_t *data )
-{
-    return ( data->sap_poc >> 4 ) & 0xF ;
-}
-
-inline uint8_t get_dpf( data_t *data )
-{
-    return data->g_a_hc_poc_dpf & 0xF ;
-}
-
-inline const char* dpf_to_str( uint8_t dpf ) 
-{
-    switch( dpf ) {
-        case 0 : 
-            return "udt" ;
-        case 1 :
-            return "response packet" ;
-        case 2 :
-            return "dpkt-unc" ;
-        default:
-            return "?" ;
-    }
-}
-
-inline uint8_t get_blocks( data_t *data )
-{
-    return data->f_blocks & 0x7F ;
-}
-
 inline const char* get_flco_str( lc_t *lc )
 {
     switch( get_flco(lc) ) {
@@ -210,29 +140,25 @@ inline const char* get_flco_str( lc_t *lc )
     }
 }
 
-inline const char* sap_to_str( uint8_t sap ) 
+// Control Signalling Block (CSBK) PDU
+// TODO: finish / validate
+typedef struct mbc {
+    uint8_t lb_pf_csbko ;    
+    uint8_t fid ;    
+    union {
+        struct {
+            //uint8_t sap ; // ??
+            adr_t dst ;
+            adr_t src ;                
+        } sms ;
+    } ;
+} mbc_t ;
+
+inline uint8_t get_csbko( mbc_t *mbc )
 {
-    switch( sap ) {
-        case 0 :
-            return "UDT" ;
-        case 1 :
-            return "(1?)" ;
-        case 2 :
-            return "TCP" ;
-        case 3 :
-            return "UDP" ;
-        case 4 :
-            return "IP" ;
-        case 5 :
-            return "ARP" ;
-        case 9 :
-            return "prop" ;
-        case 10 :
-            return "shrtdata" ;
-        default:
-            return "?" ;
-    }
+    return mbc->lb_pf_csbko & 0x3f ;
 }
+
 
 // Full Link Control PDU
 void dump_full_lc( lc_t *lc )
@@ -543,14 +469,19 @@ void *dmr_sms_arrive_hook(void *pkt)
      */
 
     //Turn on the red LED to know that we're here.
-    red_led(1);
+//    red_led(1);
 
-    printf("SMS header: ");
-    printhex(pkt, 12 + 2);
-    printf("\n");
+//    printf("SMS header: ");
+//    printhex(pkt, 12 + 2);
+//    printf("\n");
+
+    {
+        data_t *data = (pkt + 2);
+        rst_data_header(data);
+    }
     
-    PRINT("sa ");
-    dumpraw_data(pkt);
+//    PRINT("sa ");
+//    dumpraw_data(pkt);
 
     //Forward to the original function.
     return dmr_sms_arrive(pkt);

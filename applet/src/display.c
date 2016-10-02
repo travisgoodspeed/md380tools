@@ -252,7 +252,7 @@ void draw_statusline_hook( uint32_t r0 )
 
 void draw_alt_statusline()
 {
-    wchar_t buf[20];
+    wchar_t buf[40];
     
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);
@@ -271,12 +271,14 @@ void draw_alt_statusline()
     }
 //    wide_sprintf(buf,"d:%d %c %d", g_dst, mode, cnt );
     wide_sprintf(buf,"d:%d %c", rst_dst, mode );
-    gfx_chars_to_display(buf,10,96,94);
+//    wide_sprintf(buf,"d:%d %c %d:%d:%d", rst_dst, mode, rst_hdr_src, rst_hdr_dst, rst_hdr_sap );
+//    gfx_chars_to_display(buf,10,96,94);
+    gfx_chars_to_display(buf,10,96,157);
 
-    wide_sprintf(buf,"" );
+//    wide_sprintf(buf,"" );
 //    wide_sprintf(buf,"%d", md380_f_4225_operatingmode & 0x7F );
 //    wide_sprintf(buf,"%d", cnt );    
-    gfx_chars_to_display(buf,95,96,157);
+//    gfx_chars_to_display(buf,95,96,157);
 
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff000000);
