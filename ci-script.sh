@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e errexit	#otherwise bash continues after error!
 make clean
 make all # d13.020

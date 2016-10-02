@@ -28,19 +28,19 @@ flash:
 	cd applet && $(MAKE) clean flash
 	
 image_D02:
-	$(MAKE) -C applet -DFW=D02_032 all  
+	$(MAKE) -C applet FW=D02_032 all  
 
 image_D13:
-	$(MAKE) -C applet -DFW=D13_020 all  
+	$(MAKE) -C applet FW=D13_020 all  
 	
 image_S13:
-	$(MAKE) -C applet -DFW=S13_020 all  
+	$(MAKE) -C applet FW=S13_020 all  
 	
 flash_d02.032:
-	cd applet && $(MAKE) -DFW=D02_032 clean flash
+	cd applet && $(MAKE) FW=D02_032 clean flash
 	
 flash_s13.020:
-	cd applet && $(MAKE) -DFW=S13_020 clean flash
+	cd applet && $(MAKE) FW=S13_020 clean flash
 	
 #flash_d02.032:
 #	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
