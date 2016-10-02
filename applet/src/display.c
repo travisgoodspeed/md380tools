@@ -180,12 +180,13 @@ void draw_rx_screen(unsigned int bg_color)
     int y_index = RX_POPUP_Y_START;
     
     char *oldpoi = buf ;
+    int end = 0 ;
 
     for (i = 0; i < BSIZE || n < 6; i++) {
         if( buf[i] == 0 ) {
-            break ;
+            end = 1 ;
         }
-        if( buf[i] == ',' ) {
+        if( buf[i] == ',' || buf[i] == 0 ) {
             
             buf[i] = '\0';
             
@@ -205,6 +206,9 @@ void draw_rx_screen(unsigned int bg_color)
             n++;
             
             oldpoi = buf + i + 1 ;
+        }
+        if( end ) {
+            break ;
         }
     }
 
