@@ -20,6 +20,7 @@
 #include "dmr.h"
 #include "console.h"
 #include "netmon.h"
+#include "radiostate.h"
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -244,11 +245,24 @@ void draw_alt_statusline()
     gfx_set_bg_color(0xff8032);
     gfx_select_font(gfx_font_small);
 
-    wide_sprintf(buf,"tg: %d", g_dst );
+    static int cnt = 0 ;
+    cnt++ ;
+    
+    char mode = ' ' ;
+    if( rst_voice_active ) {
+        if( rst_mycall ) {
+            mode = '+' ; // on my tg            
+        } else {
+            mode = '!' ; // on other tg
+        }
+    }
+//    wide_sprintf(buf,"d:%d %c %d", g_dst, mode, cnt );
+    wide_sprintf(buf,"d:%d %c", g_dst, mode );
     gfx_chars_to_display(buf,10,96,94);
 
-//    wide_sprintf(buf,"" );
-    wide_sprintf(buf,"%d", md380_f_4225_operatingmode & 0x7F );
+    wide_sprintf(buf,"" );
+//    wide_sprintf(buf,"%d", md380_f_4225_operatingmode & 0x7F );
+//    wide_sprintf(buf,"%d", cnt );    
     gfx_chars_to_display(buf,95,96,157);
 
     gfx_set_fg_color(0);

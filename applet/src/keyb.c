@@ -67,5 +67,7 @@ void kb_handler_hook()
 #else
 #warning please consider hooking.    
 #endif    
-    trace_keyb();
+    if( global_addl_config.debug ) {
+        trace_keyb();
+    }
 }
