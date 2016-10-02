@@ -9,6 +9,7 @@
 #include "md380.h"
 #include "printf.h"
 #include "dmr.h"
+#include "radiostate.h"
 
 #define MAX_STATUS_CHARS 40
 char status_buf[MAX_STATUS_CHARS] = { "uninitialized statusline" };
@@ -142,7 +143,7 @@ void netmon1_update()
         con_nl();    
     }
     {
-        sprintf(status_buf,"re:%02x e2:%02x e3:%02x\ne4:%02x e5:%02x\n", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
+        sprintf(status_buf,"re:%02x be:%02x e3:%02x e4:%02x\ne5:%02x ", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
         con_puts(status_buf);
     }
 #ifdef FW_D13_020
@@ -152,6 +153,10 @@ void netmon1_update()
         con_puts(status_buf);
     }
 #endif    
+    {
+        sprintf(status_buf,"hdr: %d:%d:%d\n", rst_hdr_src, rst_hdr_dst, rst_hdr_sap );
+        con_puts(status_buf);
+    }
     {
         sprintf(status_buf, "%d -> %d\n", g_src, g_dst); 
         con_puts(status_buf);        

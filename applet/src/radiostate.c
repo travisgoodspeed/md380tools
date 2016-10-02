@@ -14,6 +14,10 @@ int rst_src = 0 ;
 int rst_dst = 0 ;
 int rst_mycall = 0 ;
 
+int rst_hdr_sap ;
+int rst_hdr_src ;
+int rst_hdr_dst ;
+
 // TODO locking. because 1 writer locking no prio. readers only visualize.
 
 void rst_voice_lc_header(int src, int dst)
@@ -43,4 +47,11 @@ void rst_signal_other_call()
 void rst_signal_my_call()
 {
     rst_mycall = 1 ;
+}
+
+void rst_data_header(data_t *data)
+{
+    rst_hdr_sap = get_sap(data);
+    rst_hdr_src = get_adr(data->src);
+    rst_hdr_dst = get_adr(data->dst);
 }
