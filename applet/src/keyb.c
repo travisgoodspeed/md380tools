@@ -28,8 +28,12 @@ void trace_keyb()
 //        netmon_printf("%02x:", keycode);    
     }
     
-    if( get_main_mode() != 28 ) {
-        return ;
+    switch( get_main_mode() ) {
+        case 28 :
+        case 19 :
+            break ;
+        default:
+            return ;
     }
     
     int keycode = *keycode_p ;
