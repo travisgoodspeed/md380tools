@@ -182,7 +182,10 @@ void draw_rx_screen(unsigned int bg_color)
     char *oldpoi = buf ;
 
     for (i = 0; i < BSIZE || n < 6; i++) {
-        if( buf[i] == ',' || buf[i] == '\0' ) {
+        if( buf[i] == 0 ) {
+            break ;
+        }
+        if( buf[i] == ',' ) {
             
             buf[i] = '\0';
             
