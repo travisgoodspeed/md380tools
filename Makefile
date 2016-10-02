@@ -1,3 +1,4 @@
+
 RELEASE=md380tools-`date "+%Y-%m-%d"`
 
 #This strips out all unicode characters.
@@ -35,19 +36,17 @@ image_D13:
 image_S13:
 	$(MAKE) -C applet --eval=FW=S13_020 all  
 	
-# proto
-flash1:
+flash_d02.032:
 	cd applet && $(MAKE) --eval=FW=D02_032 clean flash
 	
-# proto
-flash2:
+flash_s13.020:
 	cd applet && $(MAKE) --eval=FW=S13_020 clean flash
 	
-flash_d02.032:
-	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
+#flash_d02.032:
+#	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
 
-flash_s13.020:
-	cd applet && $(MAKE) -f Makefile.s13.020 clean flash
+#flash_s13.020:
+#	cd applet && $(MAKE) -f Makefile.s13.020 clean flash
 
 flashdb:
 	cd db && $(MAKE)
