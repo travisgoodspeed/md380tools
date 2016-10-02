@@ -14,39 +14,6 @@
 uint8_t *keypressed_p = 0x2001e5f8 ;
 uint8_t *keycode_p = 0x2001e890 ;
     
-//void intercept_keyb()
-//{    
-//    int keycode = *keycode_p ;
-//    int keypressed = *keypressed_p & 1 ;
-//    
-//    if( keycode == 0xA ) {
-//        // menu
-//        return ;
-//    }
-//    
-//    if( !keypressed ) {
-//        return ;
-//    }
-//    switch( keycode ) {
-//        case 7 :
-//        case 8 :
-//        case 9 :
-//            break ;
-//        default:
-//            // early escape.
-//            return ;
-//    }
-//    
-//    // clear
-//    *keypressed_p &= ~1 ;
-//    
-//    if( is_netmon_visible() ) {
-////        netmon_printf("%02x  ", *keypress_flag);    
-//        netmon_printf("%02x:", keycode);    
-//    }
-//        
-//}
-
 inline int get_main_mode()
 {
     return md380_f_4225_operatingmode & 0x7F ;
@@ -87,6 +54,7 @@ void trace_keyb()
 
 extern void kb_handler();
 
+// kb_poller())
 void kb_handler_hook()
 {    
 #if defined(FW_D13_020)
