@@ -42,7 +42,7 @@ inline void spiflash_write_datef()
 
 inline void spiflash_read_datef()
 {
-    global_addl_config.datef = spiflash_read_uint8_ranged( offset_datef, 5 );    
+    global_addl_config.datef = spiflash_read_uint8_ranged( offset_datef, 6 );    
 }
 
 inline void spiflash_write_console()

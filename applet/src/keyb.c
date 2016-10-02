@@ -31,6 +31,7 @@ void trace_keyb()
     switch( get_main_mode() ) {
         case 28 :
         case 19 :
+        case 17 :
             break ;
         default:
             return ;
