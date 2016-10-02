@@ -33,24 +33,24 @@ static char * getdata(char * dest, const char * src, int count) {
 
 #endif
 
-
 /* copies a line of text starting at in[] that is terminated
  * with a linefeed '\n' or '\0' to out[]. At most outsize characters
  * are written to out[] (including null terminator). Lines that
  * don't fit into out[] are truncated. out[] will always be
  * null terminated if outsize > 0.
  */
-static void readline(char *out, const char *in, int outsize) {
-    if (outsize <= 0) return;
+static void readline(char *out, const char *in, int outsize)
+{
+    if( outsize <= 0 ) return;
     char buff[64];
-    const int blen = sizeof(buff);
+    const int blen = sizeof (buff);
     outsize -= 1; // for null terminator
     while (outsize > 0) {
         int chunk = outsize > blen ? blen : outsize;
         getdata(buff, in, chunk);
         for (int i = 0; i < chunk; ++i) {
             char c = buff[i];
-            if (c == '\0' || c == '\n') {
+            if( c == '\0' || c == '\n' ) {
                 *out++ = '\0';
                 return;
             }

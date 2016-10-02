@@ -11,6 +11,8 @@ extern "C" {
 #endif
 
 extern int rst_voice_active ;    
+extern int rst_src ;
+extern int rst_dst ;
 extern int rst_mycall ;
     
 void rst_voice_lc_header(int src, int dst);

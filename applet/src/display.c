@@ -152,8 +152,9 @@ void draw_rx_screen(unsigned int bg_color)
 {
 #ifdef CONFIG_GRAPHICS
 
-    char buf[160];
-    int n, i, ii;
+#define BSIZE 100    
+    char buf[BSIZE];
+    int n, i;
     int dst;
     int src;
 
@@ -169,15 +170,25 @@ void draw_rx_screen(unsigned int bg_color)
     dst = g_dst;
     src = g_src;
     OS_EXIT_CRITICAL(primask);
-    if( find_dmr_user(buf, src, (void *) 0x100000, 80) == 0 ) {
+    
+    if( find_dmr_user(buf, src, (void *) 0x100000, BSIZE) == 0 ) {
         sprintf(buf, ",ID not found,in users.csv,see README.md,on Github"); // , is line seperator ;)
     }
-    ii = 0;
+    buf[BSIZE-1] = 0 ;
+    
     n = 0;
     int y_index = RX_POPUP_Y_START;
+    
+    char *oldpoi = buf ;
 
-    for (i = 0; i < strlen(buf) || n < 6; i++) {
-        if( buf[i] == ',' || buf[i] == '\0' ) {
+    for (i = 0; i < BSIZE || n < 6; i++) {
+        if( buf[i] == 0 ) {
+            break ;
+        }
+        if( buf[i] == ',' ) {
+            
+            buf[i] = '\0';
+            
             if( n == 1 ) { // This line holds the call sign
                 gfx_select_font(gfx_font_norm);
             } else {
@@ -190,12 +201,10 @@ void draw_rx_screen(unsigned int bg_color)
                 y_index = y_index + 12; // previous line was in small font
             }
 
-            buf[ii++] = '\0';
-            drawascii2(buf, 10, y_index);
-            ii = 0;
+            drawascii2(oldpoi, 10, y_index);
             n++;
-        } else {
-            if( ii < 29 ) buf[ii++] = buf[i];
+            
+            oldpoi = buf + i + 1 ;
         }
     }
 
@@ -257,7 +266,7 @@ void draw_alt_statusline()
         }
     }
 //    wide_sprintf(buf,"d:%d %c %d", g_dst, mode, cnt );
-    wide_sprintf(buf,"d:%d %c", g_dst, mode );
+    wide_sprintf(buf,"d:%d %c", rst_dst, mode );
     gfx_chars_to_display(buf,10,96,94);
 
     wide_sprintf(buf,"" );
