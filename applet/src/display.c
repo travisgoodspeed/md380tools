@@ -257,7 +257,7 @@ void draw_alt_statusline()
         }
     }
 //    wide_sprintf(buf,"d:%d %c %d", g_dst, mode, cnt );
-    wide_sprintf(buf,"d:%d %c", g_dst, mode );
+    wide_sprintf(buf,"d:%d %c", rst_dst, mode );
     gfx_chars_to_display(buf,10,96,94);
 
     wide_sprintf(buf,"" );
