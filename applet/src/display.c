@@ -288,6 +288,9 @@ void draw_alt_statusline()
 void draw_datetime_row_hook()
 {
 #if defined(FW_D13_020)
+    if( is_netmon_visible() ) {
+        return ;
+    }
     if( is_statusline_visible() ) {
         draw_alt_statusline();
         return ; 
