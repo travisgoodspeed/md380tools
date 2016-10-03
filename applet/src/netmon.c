@@ -195,7 +195,7 @@ typedef struct {
     uint32_t txf ; // [0x14]
     uint16_t rxtone ;
     uint16_t txtone ;
-    uint16_t unk1 ;
+    uint32_t unk1 ;
     wchar_t name[16];
 } ci_t ;
 
@@ -217,6 +217,9 @@ void netmon2_update()
         int ts1 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;
         int ts2 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;
         sprintf(status_buf,"cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
+        con_puts(status_buf);
+
+        sprintf(status_buf,"cn:%S\n", ci->name ); // asume zero terminated.
         con_puts(status_buf);
     }
     
