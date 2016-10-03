@@ -172,7 +172,40 @@ void netmon1_update()
     
 }
 
+void print_bcd( uint8_t bcd )
+{    
+    sprintf(status_buf,"%d%d", (bcd>>4)&0xf, bcd&0xf );
+    con_puts(status_buf);        
+}
+
+void printfreq( uint8_t p[] )
+{
+    print_bcd( p[3] );
+    print_bcd( p[2] );
+    print_bcd( p[1] );
+    print_bcd( p[0] );
+}
+
 void netmon2_update()
+{
+    con_clrscr();
+    {
+        uint8_t *p = 0x2001deb8 + 0x10 ;
+        
+        con_puts("rx:");
+        printfreq(p);
+        con_nl();
+        
+        p += 4 ;
+        
+        con_puts("tx:");
+        printfreq(p);
+        con_nl();
+    }
+    
+}
+
+void netmon3_update()
 {
     extern char nm_logbuf[];
     
@@ -194,6 +227,9 @@ void netmon_update()
             return ;
         case 2 :
             netmon2_update();
+            return ;
+        case 3 :
+            netmon3_update();
             return ;
     }
 }
