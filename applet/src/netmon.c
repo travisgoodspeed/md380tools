@@ -93,16 +93,16 @@ void netmon1_update()
         //con_nl();    
     }
     {
-        // current channel name.
+        // current zone name.
         wchar_t *p = (void*)0x2001cddc ;
-        con_puts("cn:");
+        con_puts("zn:");
         con_putsw(p);
         con_nl();    
     }
     {        
-        // current tg name.
+        // current channel name.
         wchar_t *p = (void*)0x2001e1f4 ;
-        con_puts("tg:");
+        con_puts("cn:");
         con_putsw(p);
         con_nl();    
     }
@@ -186,12 +186,17 @@ void printfreq( uint8_t p[] )
     print_bcd( p[0] );
 }
 
+// chirp memory struct?
 typedef struct {
     uint8_t off0 ;
-    uint8_t cc_slot_flags ; // 
-    uint8_t off4[12];
+    uint8_t cc_slot_flags ; // [0x01]
+    uint8_t off4[12]; // [0x05] = power&flags?
     uint32_t rxf ; // [0x10]
     uint32_t txf ; // [0x14]
+    uint16_t rxtone ;
+    uint16_t txtone ;
+    uint16_t unk1 ;
+    wchar_t name[16];
 } ci_t ;
 
 void netmon2_update()
@@ -200,21 +205,17 @@ void netmon2_update()
     
     con_clrscr();
     {
-        uint8_t *p = 0x2001deb8 + 0x10 ;
-        
         con_puts("rx:");
         printfreq(&ci->rxf);
         con_nl();
-        
-        p += 4 ;
         
         con_puts("tx:");
         printfreq(&ci->txf);
         con_nl();
 
         int cc = ( ci->cc_slot_flags >> 4 ) & 0xf ;
-        int ts1 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;
-        int ts2 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;
+        int ts1 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;
+        int ts2 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;
         sprintf(status_buf,"cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
         con_puts(status_buf);
     }
