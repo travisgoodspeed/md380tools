@@ -186,21 +186,37 @@ void printfreq( uint8_t p[] )
     print_bcd( p[0] );
 }
 
+typedef struct {
+    uint8_t off0 ;
+    uint8_t cc_slot_flags ; // 
+    uint8_t off4[12];
+    uint32_t rxf ; // [0x10]
+    uint32_t txf ; // [0x14]
+} ci_t ;
+
 void netmon2_update()
 {
+    ci_t *ci = 0x2001deb8 ;
+    
     con_clrscr();
     {
         uint8_t *p = 0x2001deb8 + 0x10 ;
         
         con_puts("rx:");
-        printfreq(p);
+        printfreq(&ci->rxf);
         con_nl();
         
         p += 4 ;
         
         con_puts("tx:");
-        printfreq(p);
+        printfreq(&ci->txf);
         con_nl();
+
+        int cc = ( ci->cc_slot_flags >> 4 ) & 0xf ;
+        int ts1 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;
+        int ts2 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;
+        sprintf(status_buf,"cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
+        con_puts(status_buf);
     }
     
 }
