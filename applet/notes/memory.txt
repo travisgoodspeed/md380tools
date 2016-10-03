@@ -1,0 +1,13 @@
+
+channelnum
+0x2001e850
+
+=0x2001deb8
+current_channel_info
+
+looks like chirp struct.
+
+struct {
+    // [0x10] lbcd RX freq
+    // [0x14] lbcd TX freq
+}

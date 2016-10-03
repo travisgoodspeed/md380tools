@@ -3588,3 +3588,14 @@ f create_ChAccess_Pr @ 0x0804678a
 f task_state_change @ 0x0803c330
 f task_rtc_timer @ 0x080467cc
 
+# memory
+f write_block_to_spi 0x08022cac
+af+ 0x08022cac 26 write_block_to_spi
+f write_block_to_spi2 0x080231a8
+af+ 0x080231a8 26 write_block_to_spi2
+
+f selected_channel @ 0x2001e850
+#CCa 0x2001e850 selected_channel
+
+f current_channel_info @ 0x2001deb8
+
