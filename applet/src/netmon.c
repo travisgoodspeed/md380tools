@@ -158,7 +158,7 @@ void netmon1_update()
         con_puts(status_buf);
     }
     {
-        sprintf(status_buf, "%d -> %d\n", g_src, g_dst); 
+        sprintf(status_buf, "vce: %d:%d\n", g_src, g_dst); 
         con_puts(status_buf);        
     }
 #ifdef FW_D13_020
