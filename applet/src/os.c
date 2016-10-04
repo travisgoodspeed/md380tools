@@ -4,7 +4,7 @@
 */
 
 //#define DEBUG
-//#define NETMON
+#define NETMON
 
 #include <stdio.h>
 #include <string.h>
@@ -88,18 +88,25 @@ void pevent_to_name(OS_EVENT *pevent, void *pmsg)
     printf("\n");
 }
 
-
-uint8_t OSMboxPost_hook (OS_EVENT *pevent, void *pmsg) 
+uint8_t OSMboxPost_hook(OS_EVENT *pevent, void *pmsg)
 {
-  void *return_addr;
-  void *sp;
-  __asm__("mov %0,r14" : "=r" (return_addr));
-  __asm__("mov %0,r13" : "=r" (sp));
+    void *return_addr;
+    void *sp;
+    __asm__("mov %0,r14" : "=r" (return_addr));
+    __asm__("mov %0,r13" : "=r" (sp));
 
-  printf("OSMboxPost_hook r: 0x%x s: 0x%x p: 0x%x m: 0x%x ", return_addr, sp, pevent, pmsg);
-  pevent_to_name(pevent, pmsg);
+    if( pevent == mbox_radio ) {
+        uint8_t event = *(uint8_t*)pmsg ;
+        if( event == 0x4 ) {
+            NMPRINTRET();
+            NMPRINT("%02x\n", event );
+        }
+    }
+    
+    //  printf("OSMboxPost_hook r: 0x%x s: 0x%x p: 0x%x m: 0x%x ", return_addr, sp, pevent, pmsg);
+    //  pevent_to_name(pevent, pmsg);
 
-  return(md380_OSMboxPost(pevent, pmsg));
+    return (md380_OSMboxPost(pevent, pmsg));
 }
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
@@ -116,7 +123,7 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
         if( ret != NULL ) {
             if( pevent == mbox_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
-                NMPRINT("%02x ", last_radio_event );
+//                NMPRINT("%02x ", last_radio_event );
             } else if( pevent == mbox_beep ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;

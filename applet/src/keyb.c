@@ -5,7 +5,6 @@
 
 #include "keyb.h"
 
-//#include "netmon.h"
 #include "debug.h"
 #include "netmon.h"
 
@@ -24,8 +23,7 @@ void trace_keyb()
     int keypressed = *keypressed_p ;
     
     if( is_netmon_visible() ) {
-        netmon_printf("%02x  ", keypressed );    
-//        netmon_printf("%02x:", keycode);    
+        NMPRINT("%02x  ", keypressed );    
     }
     
     switch( get_main_mode() ) {
@@ -48,6 +46,9 @@ void trace_keyb()
             break ;
         case 9 :
             global_addl_config.console = 2 ;
+            break ;
+        case 15 :
+            global_addl_config.console = 3 ;
             break ;
         default:
             // early exit

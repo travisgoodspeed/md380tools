@@ -3577,11 +3577,23 @@ f dispatch_event @ 0x0803c39c
 
 f radio_event_dispatch @ 0x0803c81c
 
+# events
+
 f event4_mbox_poi @ 0x2001e660
-f event3_mbox_poi @ 0x2001e658
 f event2_mbox_poi_beep @ 0x2001e67c
 # 0x20017468
 f event1_mbox_poi_radio @ 0x2001e65c 
+# 0x20017348
+f event3_mbox_poi @ 0x2001e664
+# 20017438
+f event5_mbox_poi @ 0x2001e658
+
+# radioevents
+
+f some_radio_state @ 0x2001e8b0 
+f some_radio_state_prev @ 0x2001e8af
+
+f re_test_for_04 @ 0x08041da8
 
 # tasks
 

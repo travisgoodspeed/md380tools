@@ -138,6 +138,9 @@ void netmon1_update()
             case 0xa :
                 str = "rx silence" ;
                 break ;
+            case 0xd :
+                str = "num13 0xd" ;
+                break ;
             case 0xe :
                 str = "Wait_TX_Resp" ;
                 break ;
