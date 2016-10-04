@@ -3575,8 +3575,6 @@ af+ 0x801eb00 1436 handle_keycode_F_4171
 
 f dispatch_event @ 0x0803c39c
 
-f radio_event_dispatch @ 0x0803c81c
-
 # events
 
 f event4_mbox_poi @ 0x2001e660
@@ -3595,6 +3593,20 @@ f some_radio_state_prev @ 0x2001e8af
 
 f re_test_for_04 @ 0x08041da8
 
+f re_wait_for_event @ 0x0803c7fc
+
+f re_handle_1 @ 0x0803c85c
+f re_handle_2 @ 0x0803ca2c
+f re_handle_3 @ 0x0803c8cc
+f re_handle_4 @ 0x0803c956
+f re_handle_5 @ 0x0803c984
+f re_handle_7 @ 0x0803c9fc
+f re_handle_8 @ 0x0803ca08
+f re_handle_9 @ 0x0803ca14
+f re_handle_a @ 0x0803ca20
+
+f re_last_radio_event @ 0x2001e8a1
+    
 # tasks
 
 f create_Sys_Inter @ 0x08046548
