@@ -2,7 +2,6 @@
   \brief Menu hooks and extensions.
 */
 
-
 //#define DEBUG
 #define CONFIG_MENU
 
@@ -687,33 +686,76 @@ void create_menu_entry_netmon_disable_screen(void)
     spiflash_write_console();
 }
 
-void create_menu_entry_netmon_screen(void)
-{
 #if defined(FW_D13_020)    
-    int i;
-    struct MENU *menu_mem;
+int enabled = 1 ;
+#else
+int enabled = 0 ;
+#endif
 
-    menu_mem = get_menu_stackpoi();
+void mn_submenu_init()
+{
+    struct MENU *menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = wt_netmon;
 
     menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-    menu_mem->numberof_menu_entries = 4;
+    menu_mem->numberof_menu_entries = 0;
     menu_mem->unknown_00 = 0;
-    menu_mem->unknown_01 = 0;
+    menu_mem->unknown_01 = 0;    
+}
+
+void mn_submenu_add(const wchar_t * label, void (*func)())
+{
+    struct MENU *menu_mem = get_menu_stackpoi();
+    
+    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, 
+        label, func, md380_menu_entry_back + 1, 0x8b, 0, 1);
+
+    menu_mem->numberof_menu_entries++ ;
+}
+
+void mn_submenu_finalize()
+{
+    struct MENU *menu_mem = get_menu_stackpoi();
+    
+    int i;
+    for (i = 0; i < menu_mem->numberof_menu_entries; i++) { // not yet known ;)
+        md380_menu_mem_base[md380_menu_id + i].off16 = 0;
+    }    
+}
+
+void create_menu_entry_netmon_screen(void)
+{
+    if( !enabled ) {
+        return ;
+    }
+    
+    mn_submenu_init();
+    
+//    int i;
+//    struct MENU *menu_mem;
+//
+//    menu_mem = get_menu_stackpoi();
+//    menu_mem->menu_title = wt_netmon;
+//
+//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+//    menu_mem->numberof_menu_entries = 4;
+//    menu_mem->unknown_00 = 0;
+//    menu_mem->unknown_01 = 0;
 
     md380_menu_entry_selected = global_addl_config.console ;
 
-#ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_disable, create_menu_entry_netmon_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 1, wt_netmon_1,  create_menu_entry_netmon1_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 2, wt_netmon_2,  create_menu_entry_netmon2_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 3, wt_netmon_3,  create_menu_entry_netmon3_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-#endif
+//#ifdef CONFIG_MENU
+//    md380_create_menu_entry(md380_menu_id, wt_disable, create_menu_entry_netmon_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 1, wt_netmon_1,  create_menu_entry_netmon1_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 2, wt_netmon_2,  create_menu_entry_netmon2_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 3, wt_netmon_3,  create_menu_entry_netmon3_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//#endif
+    mn_submenu_add(wt_disable,  create_menu_entry_netmon_disable_screen + 1);
+    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen + 1);
+    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen + 1);
+    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen + 1);
 
-    for (i = 0; i < menu_mem->numberof_menu_entries; i++) { // not yet known ;)
-        md380_menu_mem_base[md380_menu_id + i].off16 = 0;
-    }
-#endif    
+    mn_submenu_finalize();
 }
 
 void create_menu_entry_experimental_screen(void) {
