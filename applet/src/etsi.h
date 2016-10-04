@@ -93,6 +93,10 @@ inline const char* sap_to_str( uint8_t sap )
     }
 }
 
+typedef struct {
+    uint8_t filler ;
+} data_blk_t ;
+
 
 #ifdef __cplusplus
 }

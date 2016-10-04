@@ -27,6 +27,8 @@ void rst_term_with_lc( int src, int dst );
 
 void rst_data_header(data_hdr_t *data);
         
+void rst_data_block(data_blk_t *data);
+
 void rst_signal_other_call();
 void rst_signal_my_call();
 

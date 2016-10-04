@@ -411,32 +411,36 @@ void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode)
 #endif
 }
 
-
 void *dmr_handle_data_hook(char *pkt, int len)
 {
-//    PRINTRET();
-//    PRINTHEX(pkt,len);
-//    PRINT("\n");
-    
+    //    PRINTRET();
+    //    PRINTHEX(pkt,len);
+    //    PRINT("\n");
+
 #ifdef CONFIG_DMR
-  /* This hook handles the dmr_contact_check() function, calling
-     back to the original function where appropriate.
+    /* This hook handles the dmr_contact_check() function, calling
+       back to the original function where appropriate.
 
-     Packes are up to twelve bytes, but they are always preceeded by
-     two bytes of C5000 overhead.
-   */
+       Packes are up to twelve bytes, but they are always preceeded by
+       two bytes of C5000 overhead.
+     */
 
-  //Turn on the red LED to know that we're here.
-  red_led(1);
+//    //Turn on the red LED to know that we're here.
+//    red_led(1);
 
-  printf("Data:       ");
-  printhex(pkt,len+2);
-  printf("\n");
+    printf("Data:       ");
+    printhex(pkt, len + 2);
+    printf("\n");
 
-  //Forward to the original function.
-  return dmr_handle_data(pkt,len);
+    {
+        data_blk_t *data = (pkt + 2);
+        rst_data_block(data);
+    }
+
+    //Forward to the original function.
+    return dmr_handle_data(pkt, len);
 #else
-  return 0xdeadbeef;
+    return 0xdeadbeef;
 #endif
 }
 

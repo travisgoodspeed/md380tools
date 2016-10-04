@@ -55,3 +55,7 @@ void rst_data_header(data_hdr_t *data)
     rst_hdr_src = get_adr(data->src);
     rst_hdr_dst = get_adr(data->dst);
 }
+
+void rst_data_block(data_blk_t *data)
+{
+}
