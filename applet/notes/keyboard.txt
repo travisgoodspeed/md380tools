@@ -40,7 +40,7 @@ idx[10,11] = value from idx[44] above.
 
 ===================
 
-b 0x2001e5f0 key press status: b7=long press, 
+b 0x2001e5f0 key press status: b7=long press,  (incorrect?)
 b 0x2001e5f3 key press status: b5=not long press, 
 b 0x2001e5f8 key pressed long press(b2=4). pressed(b0=1)  ???(b1=2)
 b 0x2001e5f9 locked(b1=2) 

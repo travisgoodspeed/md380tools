@@ -66,7 +66,19 @@ uint8_t last_event3 ;
 uint8_t last_event4 ;
 
 // ?
-uint8_t last_event5 ;
+uint8_t last_event5;
+
+void print_hdr()
+{
+    sprintf(status_buf, "hdr: %d:%d:%d\n", rst_hdr_src, rst_hdr_dst, rst_hdr_sap);
+    con_puts(status_buf);
+}
+
+void print_vce()
+{
+    sprintf(status_buf, "vce: %d:%d\n", g_src, g_dst);
+    con_puts(status_buf);
+}
 
 void netmon1_update()
 {
@@ -160,11 +172,8 @@ void netmon1_update()
     }
 #endif    
     {
-        sprintf(status_buf,"hdr: %d:%d:%d\n", rst_hdr_src, rst_hdr_dst, rst_hdr_sap );
-        con_puts(status_buf);
-    }
-    {
-        sprintf(status_buf, "vce: %d:%d\n", g_src, g_dst); 
+        uint8_t *p = 0x2001e5f0 ;
+        sprintf(status_buf, "st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
         con_puts(status_buf);        
     }
 #ifdef FW_D13_020

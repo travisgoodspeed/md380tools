@@ -3504,7 +3504,7 @@ f c5000_read_inter @ 0x08040680
 f c5000_read_dll_cc @ 0x080406ec
 f c5000_read_dll_datatype @ 0x080407a8
 
-f struct_cc @ 0x2001de78
+f struct_channel_info2 @ 0x2001de78
 
 
 af+ 0x0804edd0 2 dummy_0x0804edd0
@@ -3559,7 +3559,7 @@ CCa 0x0804fa1e jump if b0 not set, reset debounce
 CCa 0x0804fa30 not debounced yet, jump
 CCa 0x0804fa4e jump if long keypress count is reached
 
-f keypress_status @ 0x2001e5f0
+f some_radio_status @ 0x2001e5f0
 
 f dispatch_keyboard_2 @ 0x0802c83c
 
