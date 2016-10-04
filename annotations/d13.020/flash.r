@@ -3609,6 +3609,8 @@ f handle_inter_recvdata @ 0x080406c6
 f handle_inter_recvmessage @ 0x080406d0
 f handle_inter_quit_and_phy @ 0x080406da
 
+f jump_if_b7_0 @ 0x080406ce
+
 f some_radio_state @ 0x2001e8b0 
 f some_radio_state_prev @ 0x2001e8af
 
