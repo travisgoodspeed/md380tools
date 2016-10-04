@@ -3601,6 +3601,14 @@ f event1_buffer @ 0x2001e8aa
 
 # radioevents
 
+f handle_inter_request_deny @ 0x08040690
+f handle_inter_sendstart @ 0x080406a2
+f handle_inter_sendstop @ 0x080406ac
+f handle_inter_lateentry @ 0x080406b4
+f handle_inter_recvdata @ 0x080406c6
+f handle_inter_recvmessage @ 0x080406d0
+f handle_inter_quit_and_phy @ 0x080406da
+
 f some_radio_state @ 0x2001e8b0 
 f some_radio_state_prev @ 0x2001e8af
 
