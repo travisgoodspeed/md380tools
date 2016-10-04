@@ -190,11 +190,11 @@ void printfreq( uint8_t p[] )
 typedef struct {
     uint8_t off0 ;
     uint8_t cc_slot_flags ; // [0x01]
-    uint8_t off4[12]; // [0x05] = power&flags?
+    uint8_t off4[12]; // [0x05] = power&flags? // [0x0A] ?
     uint32_t rxf ; // [0x10]
     uint32_t txf ; // [0x14]
-    uint16_t rxtone ;
-    uint16_t txtone ;
+    uint16_t rxtone ; // [0x18]
+    uint16_t txtone ; // [0x16]
     uint32_t unk1 ;
     wchar_t name[16];
 } ci_t ;

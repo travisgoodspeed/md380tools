@@ -747,7 +747,7 @@ CCa 0x80158a4 md380_menu_mem_base
 CCa 0x80158c4 Create_Menu_Entry_RX_QRG_4
 CCa 0x80158d6 md380_menu_id
 af+ 0x8015900 628 Create_Menu_Entry_RX_QRG_4
-f Create_Menu_Entry_RX_QRG_4 0x8015900
+f Create_Menu_Entry_RX_QRG_4 @ 0x8015900
 CCa 0x801590a md380_menu_0x20001114
 CCa 0x8015918 md380_menu_0x20001114
 CCa 0x801592a md380_menu_0x2001d3ef
@@ -3590,10 +3590,10 @@ f task_state_change @ 0x0803c330
 f task_rtc_timer @ 0x080467cc
 
 # memory
-f write_current_channel_to_spi 0x08022cac
-af+ 0x08022cac 26 write_current_channel_to_spi
-f write_current_channel_to_spi2 0x080231a8
-af+ 0x080231a8 26 write_current_channel_to_spi2
+f write_current_channel_info_to_spi @ 0x08022cac
+af+ 0x08022cac 26 write_current_channel_info_to_spi
+f write_current_channel_info_to_spi_long @ 0x080231a8
+af+ 0x080231a8 26 write_current_channel_info_to_spi_long
 
 f selected_channel @ 0x2001e850
 #CCa 0x2001e850 selected_channel
