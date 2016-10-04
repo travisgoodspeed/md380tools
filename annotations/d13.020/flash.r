@@ -3604,3 +3604,14 @@ f selected_channel @ 0x2001e850
 
 f current_channel_info @ 0x2001deb8
 
+# c5000
+f c5000_pll_init @ 0x0803f95c
+f c5000_strange_init @ 0x0803f982
+f c5000_iffreq_init @ 0x0803f9c6
+
+f simplex_or_repeater_flagword @ 0x2001e898
+
+f some_io_config @ 0x0803fffa
+af+ 0x0803fffa 2 some_io_config
+af+ 0x0803ffaa 2 some_io_config2
+
