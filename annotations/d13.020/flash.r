@@ -3597,6 +3597,8 @@ f event3_mbox_poi @ 0x2001e664
 # 20017438
 f event5_mbox_poi @ 0x2001e658
 
+f event1_buffer @ 0x2001e8aa
+
 # radioevents
 
 f some_radio_state @ 0x2001e8b0 
