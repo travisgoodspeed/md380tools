@@ -747,6 +747,7 @@ CCa 0x80158a4 md380_menu_mem_base
 CCa 0x80158c4 Create_Menu_Entry_RX_QRG_4
 CCa 0x80158d6 md380_menu_id
 af+ 0x8015900 628 Create_Menu_Entry_RX_QRG_4
+f Create_Menu_Entry_RX_QRG_4 @ 0x8015900
 CCa 0x801590a md380_menu_0x20001114
 CCa 0x8015918 md380_menu_0x20001114
 CCa 0x801592a md380_menu_0x2001d3ef
@@ -3574,9 +3575,13 @@ af+ 0x801eb00 1436 handle_keycode_F_4171
 
 f dispatch_event @ 0x0803c39c
 
+f radio_event_dispatch @ 0x0803c81c
+
 f event4_mbox_poi @ 0x2001e660
 f event3_mbox_poi @ 0x2001e658
 f event2_mbox_poi_beep @ 0x2001e67c
+# 0x20017468
+f event1_mbox_poi_radio @ 0x2001e65c 
 
 # tasks
 
@@ -3589,13 +3594,24 @@ f task_state_change @ 0x0803c330
 f task_rtc_timer @ 0x080467cc
 
 # memory
-f write_block_to_spi 0x08022cac
-af+ 0x08022cac 26 write_block_to_spi
-f write_block_to_spi2 0x080231a8
-af+ 0x080231a8 26 write_block_to_spi2
+f write_current_channel_info_to_spi @ 0x08022cac
+af+ 0x08022cac 26 write_current_channel_info_to_spi
+f write_current_channel_info_to_spi_long @ 0x080231a8
+af+ 0x080231a8 26 write_current_channel_info_to_spi_long
 
 f selected_channel @ 0x2001e850
 #CCa 0x2001e850 selected_channel
 
 f current_channel_info @ 0x2001deb8
+
+# c5000
+f c5000_pll_init @ 0x0803f95c
+f c5000_strange_init @ 0x0803f982
+f c5000_iffreq_init @ 0x0803f9c6
+
+f simplex_or_repeater_flagword @ 0x2001e898
+
+f some_io_config @ 0x0803fffa
+af+ 0x0803fffa 2 some_io_config
+af+ 0x0803ffaa 2 some_io_config2
 
