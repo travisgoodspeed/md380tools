@@ -689,6 +689,7 @@ void create_menu_entry_netmon_disable_screen(void)
 
 void create_menu_entry_netmon_screen(void)
 {
+#if defined(FW_D13_020)    
     int i;
     struct MENU *menu_mem;
 
@@ -712,6 +713,7 @@ void create_menu_entry_netmon_screen(void)
     for (i = 0; i < menu_mem->numberof_menu_entries; i++) { // not yet known ;)
         md380_menu_mem_base[md380_menu_id + i].off16 = 0;
     }
+#endif    
 }
 
 void create_menu_entry_experimental_screen(void) {
