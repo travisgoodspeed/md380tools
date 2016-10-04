@@ -3197,11 +3197,13 @@ af+ 0x8040d44 94 F_858
 af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
 
-f handle_CSBK @ 0x080408e6 
-f handle_DataHeader @ 0x08040916
-f handle_DataRate1_2 @ 0x0804092c
-f handle_DataRate3_4 @ 0x08040944
-f handle_DataRate1 @ 0x0804098a
+f c5000_handle_CSBK @ 0x080408e6 
+f c5000_handle_DataHeader @ 0x08040916
+f c5000_handle_DataRate1_2 @ 0x0804092c
+f c5000_handle_DataRate3_4 @ 0x08040944
+f c5000_handle_DataRate1 @ 0x0804098a
+f c5000_handle_PI @ 0x080408a4
+f c5000_handle_idle @ 0x0804095c
 
 f CSBK_handler @ 0x080417e0
 af+ 0x080417e0 0 CSBK_handler
@@ -3494,9 +3496,16 @@ f F_4315 0 0x08025ae4
 f promisc_audio_frame @ 0x08040cce 
 f normal_audio_frame @ 0x08040cc4
 f audio_for_me_or_not @ 0x08040c7a
-f event_8 @ 0x08040c02
+f re_create_event_8 @ 0x08040c02
 f event_36 @ 0x08041616
 f event_4 @ 0x08041e44
+
+f c5000_read_inter @ 0x08040680
+f c5000_read_dll_cc @ 0x080406ec
+f c5000_read_dll_datatype @ 0x080407a8
+
+f struct_cc @ 0x2001de78
+
 
 af+ 0x0804edd0 2 dummy_0x0804edd0
 af+ 0x0804f688 2 dummy_0x0804f688
@@ -3577,6 +3586,8 @@ f dispatch_event @ 0x0803c39c
 
 # events
 
+# 0x20017468
+
 f event4_mbox_poi @ 0x2001e660
 f event2_mbox_poi_beep @ 0x2001e67c
 # 0x20017468
@@ -3604,6 +3615,7 @@ f re_handle_7 @ 0x0803c9fc
 f re_handle_8 @ 0x0803ca08
 f re_handle_9 @ 0x0803ca14
 f re_handle_a @ 0x0803ca20
+f re_handle_e @ 0x0803ca3a
 
 f re_last_radio_event @ 0x2001e8a1
     
