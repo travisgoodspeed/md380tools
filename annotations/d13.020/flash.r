@@ -3575,9 +3575,13 @@ af+ 0x801eb00 1436 handle_keycode_F_4171
 
 f dispatch_event @ 0x0803c39c
 
+f radio_event_dispatch @ 0x0803c81c
+
 f event4_mbox_poi @ 0x2001e660
 f event3_mbox_poi @ 0x2001e658
 f event2_mbox_poi_beep @ 0x2001e67c
+# 0x20017468
+f event1_mbox_poi_radio @ 0x2001e65c 
 
 # tasks
 
