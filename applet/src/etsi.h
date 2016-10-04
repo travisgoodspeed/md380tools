@@ -37,14 +37,15 @@ typedef struct data {
     adr_t src ;                
     uint8_t f_blocks ;
     uint8_t fsn ;    
-} data_t ;
+    uint16_t crc ;    
+} data_hdr_t ;
 
-inline uint8_t get_sap( data_t *data )
+inline uint8_t get_sap( data_hdr_t *data )
 {
     return ( data->sap_poc >> 4 ) & 0xF ;
 }
 
-inline uint8_t get_dpf( data_t *data )
+inline uint8_t get_dpf( data_hdr_t *data )
 {
     return data->g_a_hc_poc_dpf & 0xF ;
 }
@@ -63,7 +64,7 @@ inline const char* dpf_to_str( uint8_t dpf )
     }
 }
 
-inline uint8_t get_blocks( data_t *data )
+inline uint8_t get_blocks( data_hdr_t *data )
 {
     return data->f_blocks & 0x7F ;
 }

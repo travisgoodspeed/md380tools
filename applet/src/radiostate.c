@@ -49,7 +49,7 @@ void rst_signal_my_call()
     rst_mycall = 1 ;
 }
 
-void rst_data_header(data_t *data)
+void rst_data_header(data_hdr_t *data)
 {
     rst_hdr_sap = get_sap(data);
     rst_hdr_src = get_adr(data->src);

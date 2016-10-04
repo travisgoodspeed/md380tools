@@ -180,7 +180,7 @@ void dump_mbc( mbc_t *mbc )
     PRINT("src=%d dst=%d\n",get_adr(mbc->sms.src),get_adr(mbc->sms.dst));
 }
 
-void dump_data( data_t *data )
+void dump_data( data_hdr_t *data )
 {
     //TODO: print DPF (6.1.1))
     // 9.3.17 from part 1
@@ -221,7 +221,7 @@ void dumpraw_data(uint8_t *pkt)
     uint8_t tp = (pkt[1] >> 4) ;
     PRINT("type=%d ", tp );
 
-    data_t *data = (data_t*)(pkt + 2);
+    data_hdr_t *data = (data_hdr_t*)(pkt + 2);
     dump_data(data);
 }
 
@@ -476,7 +476,7 @@ void *dmr_sms_arrive_hook(void *pkt)
 //    printf("\n");
 
     {
-        data_t *data = (pkt + 2);
+        data_hdr_t *data = (pkt + 2);
         rst_data_header(data);
     }
     
