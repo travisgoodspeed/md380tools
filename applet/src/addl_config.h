@@ -52,7 +52,11 @@ inline void spiflash_write_console()
 
 inline void spiflash_read_console()
 {
+#if defined(FW_D13_020)    
     global_addl_config.console = spiflash_read_uint8_ranged( offset_console, 4 );    
+#else
+    global_addl_config.console = 0 ;
+#endif    
 }
 
 inline void spiflash_write_promtg()
