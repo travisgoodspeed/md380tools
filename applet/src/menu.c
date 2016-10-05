@@ -307,8 +307,19 @@ void mn_submenu_finalize()
     struct MENU *menu_mem = get_menu_stackpoi();
     
     int i;
-    for (i = 0; i < menu_mem->numberof_menu_entries; i++) { // not yet known ;)
+    for (i = 0; i < menu_mem->numberof_menu_entries; i++) { 
+        // conflicts with 'selected' icon.
+        //md380_menu_mem_base[md380_menu_id + i].off16 = 2; // numbered icons
         md380_menu_mem_base[md380_menu_id + i].off16 = 0;
+    }    
+}
+
+void mn_submenu_finalize2()
+{
+    struct MENU *menu_mem = get_menu_stackpoi();
+    
+    for (int i = 0; i < menu_mem->numberof_menu_entries; i++) { 
+        md380_menu_mem_base[md380_menu_id + i].off16 = 2; // numbered icons
     }    
 }
 
@@ -962,7 +973,7 @@ void create_menu_entry_addl_functions_screen(void)
     md380_create_menu_entry(md380_menu_id + 9, wt_netmon, create_menu_entry_netmon_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
 #endif
 
-    mn_submenu_finalize();
+    mn_submenu_finalize2();
 }
 
 void create_menu_utilies_hook(void)
