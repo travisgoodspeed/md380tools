@@ -11,9 +11,6 @@
 #include "dmr.h"
 #include "radiostate.h"
 
-#define MAX_STATUS_CHARS 40
-char status_buf[MAX_STATUS_CHARS] = { "uninitialized statusline" };
-
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
 
@@ -78,6 +75,14 @@ void print_vce()
     con_printf("vce: %d:%d\n", g_src, g_dst);
 }
 
+void print_smeter()
+{
+#ifdef FW_D13_020
+    uint8_t *smeter = (uint8_t *) 0x2001e534;
+    con_printf("sm:%d\n", *smeter);
+#endif    
+}
+
 void netmon1_update()
 {
     progress++ ;
@@ -116,7 +121,6 @@ void netmon1_update()
     }
 #endif    
     {
-        con_puts("radio: ");
         char *str = "?" ;
         switch( last_radio_event ) {
             case 0x1 :
@@ -153,18 +157,12 @@ void netmon1_update()
                 str = "Wait_TX_Resp" ;
                 break ;
         }
-        con_puts(str);
-        con_nl();    
+        con_printf("radio: %s\n", str);
     }
     {
         con_printf("re:%02x be:%02x e3:%02x e4:%02x\ne5:%02x ", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
     }
-#ifdef FW_D13_020
-    {
-        uint8_t *smeter = (uint8_t *)0x2001e534 ;
-        con_printf("sm:%d\n", *smeter );
-    }
-#endif    
+    print_smeter();
     {
         uint8_t *p = 0x2001e5f0 ;
         con_printf("st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
@@ -181,8 +179,7 @@ void netmon1_update()
 
 void print_bcd( uint8_t bcd )
 {    
-    sprintf(status_buf,"%d%d", (bcd>>4)&0xf, bcd&0xf );
-    con_puts(status_buf);        
+    con_printf("%d%d", (bcd>>4)&0xf, bcd&0xf );
 }
 
 void printfreq( uint8_t p[] )
@@ -223,11 +220,9 @@ void netmon2_update()
         int cc = ( ci->cc_slot_flags >> 4 ) & 0xf ;
         int ts1 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;
         int ts2 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;
-        sprintf(status_buf,"cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
-        con_puts(status_buf);
+        con_printf("cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
 
-        sprintf(status_buf,"cn:%S\n", ci->name ); // asume zero terminated.
-        con_puts(status_buf);
+        con_printf("cn:%S\n", ci->name ); // assume zero terminated.
     }
     print_hdr();
     print_vce();
