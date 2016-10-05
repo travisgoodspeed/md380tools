@@ -139,7 +139,7 @@ void netmon1_update()
                 str = "num5" ; 
                 break ;
             case 0x7 :
-                str = "rx idle" ;
+                str = "data_idle/csbk_rx" ;
                 break ;
             case 0x8 :
                 str = "Other_Call" ; // TS 102 361-2 clause p 5.2.1.3.2
@@ -204,7 +204,7 @@ void printfreq( uint8_t p[] )
 // chirp memory struct?
 typedef struct {
     uint8_t off0 ;
-    uint8_t cc_slot_flags ; // [0x01]
+    uint8_t cc_slot_flags ; // [0x01] cccc....
     uint8_t off4[12]; // [0x05] = power&flags? // [0x0A] ?
     uint32_t rxf ; // [0x10]
     uint32_t txf ; // [0x14]

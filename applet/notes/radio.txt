@@ -40,7 +40,7 @@ repeater off air
 
 [2] 
 0x20 = dll_received? 
-0x40 = ?
+0x40 = do not send event 4.
 
 [3]
 0x03 = sync? rx? 
@@ -48,5 +48,3 @@ repeater off air
 0x01 = tx
 0x00 = pre-tx
 
-
-[
