@@ -26,6 +26,8 @@ repeater off air
 ...
 00 02 00 02
 
+[0]
+?
 
 [1]
 0x2 = rx nosig
@@ -36,7 +38,7 @@ repeater off air
 0xd = tx
 0x42 = rx 
 0x82 = eot rx
-
+b7 = beep in progress.
 
 [2] 
 0x20 = dll_received? 
