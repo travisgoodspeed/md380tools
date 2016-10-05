@@ -3687,6 +3687,8 @@ f c5000_jump_if_vod @ 0x0804087a
 
 f dmr_pi_dummy @ 0x8040a00
 
+f is_this_the_check_for_group_rx_list @ 0x08040b94
+
 #
 f simplex_or_repeater_flagword @ 0x2001e898
 
