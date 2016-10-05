@@ -3597,7 +3597,23 @@ f event3_mbox_poi @ 0x2001e664
 # 20017438
 f event5_mbox_poi @ 0x2001e658
 
+f event1_buffer @ 0x2001e8aa
+
 # radioevents
+
+f handle_inter_request_deny @ 0x08040690
+f handle_inter_sendstart @ 0x080406a2
+f handle_inter_sendstop @ 0x080406b4
+f handle_inter_lateentry @ 0x080406c6
+f handle_inter_recvdata @ 0x0804077a
+f handle_inter_recvmessage @ 0x080409ac
+f handle_inter_quit @ 0x080409be
+f handle_inter_phy @ 0x080409d0
+
+f jump_if_b7_0 @ 0x080406ce
+
+f maybe_read_packet @ 0x08040028
+af+ 0x08040028 2 maybe_read_packet
 
 f some_radio_state @ 0x2001e8b0 
 f some_radio_state_prev @ 0x2001e8af

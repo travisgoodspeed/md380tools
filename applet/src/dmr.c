@@ -448,7 +448,7 @@ void *dmr_sms_arrive_hook(void *pkt)
 {
 #ifdef CONFIG_DMR
 
-    /* This hooks the SMS arrival routine, but as best I can tell,
+    /* This hooks the SMS arrival routine, 
        dmr_sms_arrive() only handles the header and not the actual
        data payload, which is managed by dmr_handle_data() in each
        fragment chunk.

@@ -27,4 +27,24 @@ repeater off air
 00 02 00 02
 
 
-[2] 0x20 = dll_received? 0x40 = ?
+[1]
+0x2 = rx nosig
+0x6 = pre-tx
+0x89 = pre-tx   
+0x99 = pre-tx
+0x9 = tx
+0xd = tx
+0x42 = rx 
+0x82 = eot rx
+
+
+[2] 
+0x20 = dll_received? 
+0x40 = do not send event 4.
+
+[3]
+0x03 = sync? rx? 
+0x02 = no sig
+0x01 = tx
+0x00 = pre-tx
+
