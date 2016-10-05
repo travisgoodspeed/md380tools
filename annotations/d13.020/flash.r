@@ -3662,7 +3662,7 @@ f c5000_handle_7 @ 0x0804092c
 f c5000_handle_8 @ 0x08040944
 f c5000_handle_9 @ 0x0804095c
 f c5000_handle_A @ 0x0804098a
-
+f c5000_handle_B_F @ 0x080409a2
 
 f c5000_handle_Voice_LC @ 0x080408ba
 f c5000_handle_Terminator_LC @ 0x080408d0
@@ -3684,6 +3684,8 @@ f c5000_read_dll_datatype @ 0x080407a8
 f c5000_dispatch_dll_datatype @ 0x0804087e
 f c5000_check_for_lcss_continue @ 0x08040858
 f c5000_jump_if_vod @ 0x0804087a
+
+f dmr_pi_dummy @ 0x8040a00
 
 #
 f simplex_or_repeater_flagword @ 0x2001e898
