@@ -297,8 +297,7 @@ void mn_submenu_add(const wchar_t * label, void (*func)())
 {
     struct MENU *menu_mem = get_menu_stackpoi();
     
-    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, 
-        label, func, md380_menu_entry_back + 1, 0x8b, 0, 1);
+    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, label, func, md380_menu_entry_back + 1, 0x8b, 0, 1);
 
     menu_mem->numberof_menu_entries++ ;
 }
@@ -457,17 +456,19 @@ void create_menu_entry_debug_disable_screen(void)
 
 void create_menu_entry_promtg_screen(void)
 {
-    struct MENU *menu_mem;
-
     spiflash_read_promtg();
 
-    menu_mem = get_menu_stackpoi();
-    menu_mem->menu_title = wt_promtg;
+    mn_submenu_init(wt_promtg);
 
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-    menu_mem->numberof_menu_entries = 2;
-    menu_mem->unknown_00 = 0;
-    menu_mem->unknown_01 = 0;
+//    struct MENU *menu_mem;
+//
+//    menu_mem = get_menu_stackpoi();
+//    menu_mem->menu_title = wt_promtg;
+//
+//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+//    menu_mem->numberof_menu_entries = 2;
+//    menu_mem->unknown_00 = 0;
+//    menu_mem->unknown_01 = 0;
 
     if( global_addl_config.promtg == 1 ) {
         md380_menu_entry_selected = 0;
@@ -475,27 +476,32 @@ void create_menu_entry_promtg_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-#ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_promtg_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_promtg_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-#endif
+//#ifdef CONFIG_MENU
+//    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_promtg_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_promtg_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//#endif
+
+    mn_submenu_add(wt_enable, create_menu_entry_promtg_enable_screen + 1);
+    mn_submenu_add(wt_disable, create_menu_entry_promtg_disable_screen + 1);
 
     mn_submenu_finalize();
 }
 
 void create_menu_entry_micbargraph_screen(void)
 {
-    struct MENU *menu_mem;
-
     spiflash_read_micbargraph();
 
-    menu_mem = get_menu_stackpoi();
-    menu_mem->menu_title = wt_micbargraph;
+    mn_submenu_init(wt_micbargraph);
 
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-    menu_mem->numberof_menu_entries = 2;
-    menu_mem->unknown_00 = 0;
-    menu_mem->unknown_01 = 0;
+//    struct MENU *menu_mem;
+//
+//    menu_mem = get_menu_stackpoi();
+//    menu_mem->menu_title = wt_micbargraph;
+//
+//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+//    menu_mem->numberof_menu_entries = 2;
+//    menu_mem->unknown_00 = 0;
+//    menu_mem->unknown_01 = 0;
 
     if( global_addl_config.micbargraph == 1 ) {
         md380_menu_entry_selected = 0;
@@ -503,37 +509,46 @@ void create_menu_entry_micbargraph_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-#ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_micbargraph_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_micbargraph_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-#endif
+//#ifdef CONFIG_MENU
+//    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_micbargraph_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_micbargraph_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//#endif
 
+    mn_submenu_add(wt_enable, create_menu_entry_micbargraph_enable_screen + 1);
+    mn_submenu_add(wt_disable, create_menu_entry_micbargraph_disable_screen + 1);
+    
     mn_submenu_finalize();
 }
 
 void create_menu_entry_rbeep_screen(void)
 {
-    struct MENU *menu_mem;
-
     spiflash_read_rbeep();
 
-    menu_mem = get_menu_stackpoi();
-    menu_mem->menu_title = wt_rbeep;
+    mn_submenu_init(wt_rbeep);
 
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-    menu_mem->numberof_menu_entries = 2;
-    menu_mem->unknown_00 = 0;
-    menu_mem->unknown_01 = 0;
+//    struct MENU *menu_mem;
+//
+//    menu_mem = get_menu_stackpoi();
+//    menu_mem->menu_title = wt_rbeep;
+//
+//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+//    menu_mem->numberof_menu_entries = 2;
+//    menu_mem->unknown_00 = 0;
+//    menu_mem->unknown_01 = 0;
+
     if( global_addl_config.rbeep == 1 ) {
         md380_menu_entry_selected = 0;
     } else {
         md380_menu_entry_selected = 1;
     }
 
-#ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_rbeep_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
-#endif
+//#ifdef CONFIG_MENU
+//    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_rbeep_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
+//#endif
+
+    mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen + 1);
+    mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen + 1);
 
     mn_submenu_finalize();
 }
