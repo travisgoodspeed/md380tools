@@ -43,6 +43,7 @@ b7 = beep in progress.
 [2] 
 0x20 = dll_received? 
 0x40 = do not send event 4.
+0x10 = (only when mycall)
 
 [3]
 0x03 = sync? rx? 
