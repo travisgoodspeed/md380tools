@@ -32,8 +32,15 @@ void con_redraw();
 
 #include "addl_config.h"
 
+extern uint8_t *mode2 ;
+
 inline int is_menu_visible()
 {
+#ifdef FW_D13_020
+    if( *mode2 == 10 ) {
+        return 1 ;
+    }
+#endif    
     return (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ;
 }
 
