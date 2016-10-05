@@ -57,7 +57,9 @@ CFLAGS += -std=gnu99 -g -O2 -Wall -T$(LINKSCRIPT)
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CFLAGS += -fshort-wchar
+ifdef MKLISTING
 CFLAGS += -Wa,-a=$(@:.o=.lst)
+endif
 CFLAGS += -D$(FWDEFINE)	
 ###################################################
 
