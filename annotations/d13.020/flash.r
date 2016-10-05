@@ -3185,8 +3185,6 @@ af+ 0x803b39a 144 main_menu
 af+ 0x803f708 76 OSSemCreate
 af+ 0x803f754 218 OSSemPend
 af+ 0x803f844 92 OSSemPost
-af+ 0x803ff84 38 c5000_spi0_writereg
-af+ 0x803ffd0 42 c5000_spi0_readreg
 
 f F_414 @ 0x8040670
 af+ 0x8040670 880 F_414
@@ -3197,13 +3195,6 @@ af+ 0x8040d44 94 F_858
 af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
 
-f c5000_handle_CSBK @ 0x080408e6 
-f c5000_handle_DataHeader @ 0x08040916
-f c5000_handle_DataRate1_2 @ 0x0804092c
-f c5000_handle_DataRate3_4 @ 0x08040944
-f c5000_handle_DataRate1 @ 0x0804098a
-f c5000_handle_PI @ 0x080408a4
-f c5000_handle_idle @ 0x0804095c
 
 f CSBK_handler @ 0x080417e0
 af+ 0x080417e0 0 CSBK_handler
@@ -3500,9 +3491,6 @@ f re_create_event_8 @ 0x08040c02
 f event_36 @ 0x08041616
 f event_4 @ 0x08041e44
 
-f c5000_read_inter @ 0x08040680
-f c5000_read_dll_cc @ 0x080406ec
-f c5000_read_dll_datatype @ 0x080407a8
 
 f struct_channel_info2 @ 0x2001de78
 
@@ -3635,6 +3623,8 @@ f re_handle_e @ 0x0803ca3a
 
 f re_last_radio_event @ 0x2001e8a1
     
+f phone_ringing @ 0x0804df0e
+
 # tasks
 
 f create_Sys_Inter @ 0x08046548
@@ -3661,6 +3651,41 @@ f c5000_pll_init @ 0x0803f95c
 f c5000_strange_init @ 0x0803f982
 f c5000_iffreq_init @ 0x0803f9c6
 
+f c5000_handle_0 @ 0x080408a4
+f c5000_handle_1 @ 0x080408ba
+f c5000_handle_2 @ 0x080408d0
+f c5000_handle_3 @ 0x080408e6
+f c5000_handle_4 @ 0x08040912
+f c5000_handle_5 @ 0x08040914
+f c5000_handle_6 @ 0x08040916
+f c5000_handle_7 @ 0x0804092c
+f c5000_handle_8 @ 0x08040944
+f c5000_handle_9 @ 0x0804095c
+f c5000_handle_A @ 0x0804098a
+
+
+f c5000_handle_Voice_LC @ 0x080408ba
+f c5000_handle_Terminator_LC @ 0x080408d0
+f c5000_handle_CSBK @ 0x080408e6
+f c5000_handle_DataHeader @ 0x08040916
+f c5000_handle_DataRate1_2 @ 0x0804092c
+f c5000_handle_DataRate3_4 @ 0x08040944
+f c5000_handle_DataRate1 @ 0x0804098a
+f c5000_handle_PI @ 0x080408a4
+f c5000_handle_idle @ 0x0804095c
+
+af+ 0x803ff84 38 c5000_spi0_writereg
+af+ 0x803ffd0 42 c5000_spi0_readreg
+
+f c5000_read_inter @ 0x08040680
+f c5000_read_dll_cc @ 0x080406ec
+f c5000_read_dll_datatype @ 0x080407a8
+
+f c5000_dispatch_dll_datatype @ 0x0804087e
+f c5000_check_for_lcss_continue @ 0x08040858
+f c5000_jump_if_vod @ 0x0804087a
+
+#
 f simplex_or_repeater_flagword @ 0x2001e898
 
 f some_io_config @ 0x0803fffa
