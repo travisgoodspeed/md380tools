@@ -70,14 +70,12 @@ uint8_t last_event5;
 
 void print_hdr()
 {
-    sprintf(status_buf, "hdr: %d:%d:%d\n", rst_hdr_src, rst_hdr_dst, rst_hdr_sap);
-    con_puts(status_buf);
+    con_printf("hdr: %d:%d:%d\n", rst_hdr_src, rst_hdr_dst, rst_hdr_sap);
 }
 
 void print_vce()
 {
-    sprintf(status_buf, "vce: %d:%d\n", g_src, g_dst);
-    con_puts(status_buf);
+    con_printf("vce: %d:%d\n", g_src, g_dst);
 }
 
 void netmon1_update()
@@ -92,17 +90,15 @@ void netmon1_update()
     
     //int dst = g_dst ;
     
-    sprintf(status_buf,"%c|%02d|%2d|%2d|%4d", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); // potential buffer overrun!!!
         
     con_clrscr();
-    con_puts(status_buf);
-    con_nl();    
+    
+    con_printf("%c|%02d|%2d|%2d|%4d\n", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); 
+    
 #ifdef FW_D13_020
     {
         uint8_t *chan = (uint8_t *)0x2001e8c1 ;
-        sprintf(status_buf, "ch: %d ", *chan ); 
-        con_puts(status_buf);
-        //con_nl();    
+        con_printf("ch: %d ", *chan ); 
     }
     {
         // current zone name.
@@ -161,28 +157,24 @@ void netmon1_update()
         con_nl();    
     }
     {
-        sprintf(status_buf,"re:%02x be:%02x e3:%02x e4:%02x\ne5:%02x ", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
-        con_puts(status_buf);
+        con_printf("re:%02x be:%02x e3:%02x e4:%02x\ne5:%02x ", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
     }
 #ifdef FW_D13_020
     {
         uint8_t *smeter = (uint8_t *)0x2001e534 ;
-        sprintf(status_buf,"sm:%d\n", *smeter );
-        con_puts(status_buf);
+        con_printf("sm:%d\n", *smeter );
     }
 #endif    
     {
         uint8_t *p = 0x2001e5f0 ;
-        sprintf(status_buf, "st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
-        con_puts(status_buf);        
+        con_printf("st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
     }
 #ifdef FW_D13_020
-//    {
-//        // only valid when transmitting or receiving.
-//        uint32_t *recv = 0x2001e5e4 ;
-//        sprintf(status_buf, "%d\n", *recv); 
-//        con_puts(status_buf);        
-//    }
+    {
+        // only valid when transmitting or receiving.
+        uint32_t *recv = 0x2001e5e4 ;
+        con_printf("%d\n", *recv); 
+    }
 #endif    
     
 }
@@ -237,6 +229,8 @@ void netmon2_update()
         sprintf(status_buf,"cn:%S\n", ci->name ); // asume zero terminated.
         con_puts(status_buf);
     }
+    print_hdr();
+    print_vce();
     
 }
 

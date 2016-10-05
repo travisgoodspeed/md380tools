@@ -8,6 +8,7 @@
 #include "md380.h"
 #include "gfx.h"
 
+#include <stdarg.h>
 
 #define MAX_XPOS 27 
 #define MAX_YPOS 20 
@@ -90,6 +91,19 @@ void con_putc( char c )
             return ;
     }
     con_addchar(c);    
+}
+
+static void con_putch(void* p, char c)
+{
+    con_putc(c);
+}
+
+void con_printf(const char* fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    tfp_format(0, con_putch, fmt, va);
+    va_end(va);        
 }
 
 int within_update = 0 ;
