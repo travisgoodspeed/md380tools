@@ -17,7 +17,6 @@ int progress = 0 ;
 #ifndef FW_D13_020
 #warning should be symbols, not sure if it is worth the effort
 #endif
-uint8_t *mode2 = (void*)0x2001e94b ;
 uint16_t *cntr2 = (void*)0x2001e844 ;
 uint8_t *mode3 = (void*)0x2001e892 ;
     
@@ -98,7 +97,7 @@ void netmon1_update()
         
     con_clrscr();
     
-    con_printf("%c|%02d|%2d|%2d|%4d\n", c, md380_f_4225_operatingmode & 0x7F, *mode2, *mode3, *cntr2 ); 
+    con_printf("%c|%02d|%2d|%2d|%4d\n", c, md380_f_4225_operatingmode & 0x7F, gui_opmode2, *mode3, *cntr2 ); 
     
 #ifdef FW_D13_020
     {

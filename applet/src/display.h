@@ -25,18 +25,18 @@ extern "C" {
 // 35  = volume screen
 //
 // high bit (0x80) signals transition
-// 156 = channel switch
+// 156(28) = channel switch
 // 115 = menu start
 
 #define SCR_MODE_16 16
-#define SCR_MODE_17 17 // rx/tx in progress.
-#define SCR_MODE_18 18
-#define SCR_MODE_CHAN_19 19 // when channel RX but other timeslot.
+#define SCR_MODE_RX_VOICE 17 // rx/tx in progress.
+#define SCR_MODE_RX_TERMINATOR 18 // rx call end LC
+#define SCR_MODE_IDLE 19 // when channel RX but other timeslot.
 #define SCR_MODE_20 20
 #define SCR_MODE_21 21 // initial screen?
 #define SCR_MODE_22 22
 #define SCR_MODE_MENU 27
-#define SCR_MODE_CHAN_IDLE 28
+#define SCR_MODE_CHAN_IDLE_INIT 28
 #define SCR_MODE_29 29
 #define SCR_MODE_30 30
 #define SCR_MODE_31 31
@@ -53,6 +53,8 @@ void draw_rx_screen(unsigned int bg_color);
 void draw_statusline( uint32_t r0 ); // in md380
 
 void draw_datetime_row(); // in md380
+
+extern uint8_t gui_opmode2 ;
 
 #ifdef __cplusplus
 }
