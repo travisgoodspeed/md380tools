@@ -1,0 +1,28 @@
+
+on poweron:
+mode1: -1 -> 28 
+
+on menu: 
+mode1: 28 -> 27 (1)
+
+on back from menu, no rx:
+mode1: 27 -> 28 (1)
+
+on rx on other timeslot:
+mode1: 28 -> 19 (1)
+
+on menu, while rx other:
+mode1: 19 -> 27 (1)
+mode1: 27 -> 19 (1)
+
+after rx other, menu:
+mode1: 19 -> 27 (1)
+
+
+= gui_opmode2 =
+
+1 : idle
+2 : popup voice
+4 : popup terminate
+5 : msg received menu 
+10 : menu
