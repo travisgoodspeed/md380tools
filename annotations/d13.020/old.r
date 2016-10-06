@@ -1,4 +1,7 @@
 
+f poi_mode2 0 0x08020bf4
+
+
 CCa 0x0800d246  keycode
 CCa 0x0800ea30  keycode
 CCa 0x0800f0ca  keycode

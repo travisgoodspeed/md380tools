@@ -3477,8 +3477,6 @@ af+ 0x0800e538 98 draw_zone_channel
 
 f scr_mode_stable 0 0x08020830
 
-f poi_mode2 0 0x08020bf4
-
 f return_to_mode_1_from10 0 0x0800fc96
 af+ 0x0800fc96 32 return_to_mode_1_from10
 
