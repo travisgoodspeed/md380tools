@@ -49,51 +49,54 @@ extern void f_4315_hook()
 }
 
 // this hook switcht of the exit from the menu in case of RX
-void * f_4225_internel_hook() 
+
+static int new_anti = 1 ;
+
+void * f_4225_internel_hook()
 {
-    if ( global_addl_config.experimental == 1 ) {
-        return &md380_f_4225_operatingmode ;
+    if( new_anti || global_addl_config.experimental == 1 ) {
+        return &md380_f_4225_operatingmode;
     }
-    
+
 #ifdef DEBUG
-//    printf("<%d> \n", md380_f_4225_operatingmode);
+    //    printf("<%d> \n", md380_f_4225_operatingmode);
 #endif
-  if (md380_f_4225_operatingmode == SCR_MODE_MENU) {
-    flag=1;
-  }
-  if (md380_f_4225_operatingmode == SCR_MODE_CHAN_IDLE ) {
-    flag=0;
-  }
-  if (flag == 1) {
-    md380_f_4225_operatingmode = SCR_MODE_MENU;
-  }
-  return &md380_f_4225_operatingmode ;
+    if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
+        flag = 1;
+    }
+    if( md380_f_4225_operatingmode == SCR_MODE_CHAN_IDLE_INIT ) {
+        flag = 0;
+    }
+    if( flag == 1 ) {
+        md380_f_4225_operatingmode = SCR_MODE_MENU;
+    }
+    return &md380_f_4225_operatingmode;
 }
 
 // 0x2001e895 != 32
 // 0x2001e895 == 64 -> rx_screen_blue_hook
 
-void rx_screen_blue_hook(char *bmp, int x, int y) 
+void rx_screen_blue_hook(char *bmp, int x, int y)
 {
     netmon_update();
 #ifdef CONFIG_GRAPHICS
-  if (global_addl_config.userscsv == 1) {
-    draw_rx_screen(0xff8032);
-  } else {
-    gfx_drawbmp(bmp, x, y);
-  }
+    if( global_addl_config.userscsv == 1 && !is_menu_visible() ) {
+        draw_rx_screen(0xff8032);
+    } else {
+        gfx_drawbmp(bmp, x, y);
+    }
 #endif //CONFIG_GRAPHICS
 }
 
-void rx_screen_gray_hook(void *bmp, int x, int y) 
+void rx_screen_gray_hook(void *bmp, int x, int y)
 {
     netmon_update();
 #ifdef CONFIG_GRAPHICS
-  if (global_addl_config.userscsv == 1) {
-    draw_rx_screen(0x888888);
-  } else {
-    gfx_drawbmp(bmp, x, y);
-  }
+    if( global_addl_config.userscsv == 1 && !is_menu_visible() ) {
+        draw_rx_screen(0x888888);
+    } else {
+        gfx_drawbmp(bmp, x, y);
+    }
 #endif //CONFIG_GRAPHICS
 }
 
@@ -201,13 +204,55 @@ void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2
 void OSTimeDly(uint32_t delay);
 #endif  
 
+void trace_scr_mode()
+{
+    static int old = -1 ;
+    int new = md380_f_4225_operatingmode & 0x7F ;
+    int upd = md380_f_4225_operatingmode > 0x7F ;
+    if( upd == 0 ) {
+        // to prevent flooding. 
+        // still interesting flooding. it keeps on setting mode 19. when rx in other timeslot.
+        return ;
+    }
+    if( old != new ) {
+        PRINT( "mode1: %d -> %d (%d)\n", old, new, upd );
+        old = new ;
+    }
+}
+
+void trace_scr_mode2()
+{
+    static int old = -1 ;
+    int new = gui_opmode2 ;
+    if( old != new ) {
+        PRINT( "mode2: %d -> %d\n", old, new );
+        old = new ;
+    }
+}
+
 void f_4225_hook()
 {
     // this probably runs on other thread than the display task.
     
 #ifdef DEBUG    
-    //trace_scr_mode();
-#endif    
+    trace_scr_mode();
+    trace_scr_mode2();
+#endif   
+    if( new_anti ) {
+        static int old = -1 ;
+        int new = md380_f_4225_operatingmode & 0x7F ;
+        if( old != new ) {
+            if( gui_opmode2 == 10 ) {
+                // menu displayed.
+                if( new == SCR_MODE_IDLE || new == SCR_MODE_RX_VOICE || new == SCR_MODE_RX_TERMINATOR ) {
+                    // from menu to popup transition.
+                    md380_f_4225_operatingmode = SCR_MODE_MENU ;
+                }
+            } else {
+                old = new ;
+            }
+        }
+    }
     
 //#ifdef CONFIG_GRAPHICS
 
@@ -219,25 +264,15 @@ void f_4225_hook()
     
     netmon_update();
     
+    int new = md380_f_4225_operatingmode & 0x7F ;
+    
     md380_f_4225();
     
-#ifdef FW_D13_020
-    if( is_console_visible() ) {
-        uint8_t *mode2 = (void*)0x2001e94b ;
-        if( *mode2 == 2 ) {
-            *mode2 = 1;
+    if( new ) {
+        if( is_console_visible() ) {
+            if( gui_opmode2 == 2 ) {
+                gui_opmode2 = 1;
+            }
         }
     }
-#endif
-    
-    if ( global_addl_config.debug == 1 ) {
-//#ifdef FW_D13_020
-//        if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
-//            PRINT("<");
-//            OSTimeDly( 1000 );
-//        }
-//#endif        
-    }        
-    
-//#endif
 }
