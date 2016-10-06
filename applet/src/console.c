@@ -115,6 +115,14 @@ wchar_t wide[MAX_BUF];
 
 #define LINE_HEIGHT 12 
 
+#if 0
+#define bgcolor 0x00ff8032
+#define fgcolor 0xff000000
+#endif
+#define bgcolor 0x00000000
+#define fgcolor 0x00ffffff
+
+
 static void con_draw1()
 {
     // TODO: save old values first.
@@ -127,14 +135,14 @@ static void con_draw1()
         static int cnt = 0 ;
         cnt++ ;
         if( cnt % 16 == 0 ) {
-            gfx_set_fg_color(0x00ff8032); 
+            gfx_set_fg_color(bgcolor); 
             gfx_blockfill(0,0,159,109);
         }
     }
 #endif
     
-    gfx_set_fg_color(0xff000000);
-    gfx_set_bg_color(0x00ff8032); 
+    gfx_set_fg_color(fgcolor);
+    gfx_set_bg_color(bgcolor); 
     
 #if defined(FW_D13_020) || defined(FW_S13_020)
     for(int y=0;y<=con_ypos;y++) {
