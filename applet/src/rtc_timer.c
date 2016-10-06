@@ -264,15 +264,11 @@ void f_4225_hook()
     
     netmon_update();
     
-    int new = md380_f_4225_operatingmode & 0x7F ;
-    
     md380_f_4225();
     
-//    if( new ) {
-        if( is_console_visible() ) {
-            if( gui_opmode2 == 2 ) {
-                gui_opmode2 = 1;
-            }
+    if( is_console_visible() ) {
+        if( gui_opmode2 == 2 ) {
+            gui_opmode2 = 1;
         }
-//    }
+    }
 }
