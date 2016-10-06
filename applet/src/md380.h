@@ -134,8 +134,7 @@ void*   md380_create_main_meny_entry(void);
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
-void*  md380_create_menu_entry(int, const wchar_t *, void *, void  *,
-                               int , int, int);
+void  md380_create_menu_entry(int, const wchar_t *, void (*green_key)(), void  (*red_key)(), int , int, int);
 
 // for the hook funktion (hook used the space from this entry)
 void*  md380_menu_entry_programradio(void);

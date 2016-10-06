@@ -8,10 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef DEBUG
-#include "printf.h"
-#endif
-
+#include "debug.h"
 #include "dmesg.h"
 #include "md380.h"
 #include "version.h"
@@ -60,7 +57,7 @@ struct MENU {
    Its exact purpose is unknown, but I'm working on that.
  */
 void *main_menu_hook(void *menu){
-#ifdef DEBUG
+#if 0
   void *menustruct;
 
 //  printf("main_menu() ");
@@ -128,7 +125,7 @@ struct menu_mem_base_type {
     const wchar_t* label ;  // [0]
     void* green ;           // [4]
     void* red ;             // [8]
-    uint8_t off12 ;         // [12]
+    uint8_t off12 ;         // [12]  
     uint8_t off13 ;         // [13]
     uint16_t item_count ;   // [14]
     uint8_t off16 ;         // [16]
@@ -141,14 +138,19 @@ typedef struct menu_mem_base_type menu_mem_base_t ;
 
 extern menu_mem_base_t md380_menu_mem_base[];
 
-void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int item_count) 
+#define MKTHUMB(adr) ((void(*))(((uint32_t)adr) | 0x1))
+
+void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)(), void  (*red_key)(), int e, int f ,int item_count) 
 {
-#ifdef DEBUG    
-    printf("create_menu_entry_rev %x %x %x %x\n", menuid, e, f, item_count );
-//    printf("label: ");
-//    printhex2((char *)label,14);
-//    printf("\n");
+//    PRINT("create_menu_entry_rev %x %S %x %x %x\n", menuid, label, e, f, item_count );
+//    PRINT("%x\n", green_key);
     
+//    green_key = MKTHUMB(green_key);
+//    PRINT("%x\n", green_key);
+    
+//    red_key = MKTHUMB(red_key);
+    
+#if 0
     char lbl2[10];
     char *lp = (void*)label ;
     for(int i=0;i<10;i++) {
@@ -181,6 +183,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void * green_key,
     // 6,f confirmation popup scanlist.
     // 6,f confirmation popup zone.
     // 6,1 invalid number popup.
+    // a,0 ctcss (only editable in FM)
     // 9,0 fullscr msg without timeout (my num,versions)
     // 81,0 enter radio number (new contact,manual dial,edit dmrid,rxf,txf)
     // 85,0 msgbox without timeout (rxf,txf)
@@ -279,7 +282,7 @@ void mn_create_single_timed_ack( const wchar_t *title, const wchar_t *label )
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
     
-    md380_create_menu_entry(md380_menu_id, label, md380_menu_entry_back + 1, md380_menu_entry_back + 1, 6, 2, 1);
+    md380_create_menu_entry(md380_menu_id, label, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 2, 1);
 }
 
 void mn_submenu_init(const wchar_t *title)
@@ -297,7 +300,31 @@ void mn_submenu_add(const wchar_t * label, void (*func)())
 {
     struct MENU *menu_mem = get_menu_stackpoi();
     
-    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, label, func, md380_menu_entry_back + 1, 0x8b, 0, 1);
+    func = MKTHUMB(func);
+    
+    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, label, func, MKTHUMB(md380_menu_entry_back), 0x8b, 0, 1);
+
+    menu_mem->numberof_menu_entries++ ;
+}
+
+void mn_submenu_add_98(const wchar_t * label, void (*func)())
+{
+    struct MENU *menu_mem = get_menu_stackpoi();
+    
+    func = MKTHUMB(func);
+    
+    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, label, func, MKTHUMB(md380_menu_entry_back), 0x98, 0, 1);
+
+    menu_mem->numberof_menu_entries++ ;
+}
+
+void mn_submenu_add_8a(const wchar_t * label, void (*func)(), int enabled)
+{
+    struct MENU *menu_mem = get_menu_stackpoi();
+    
+    func = MKTHUMB(func);
+    
+    md380_create_menu_entry(md380_menu_id + menu_mem->numberof_menu_entries, label, func, MKTHUMB(md380_menu_entry_back), 0x8a, 0, enabled);
 
     menu_mem->numberof_menu_entries++ ;
 }
@@ -306,8 +333,7 @@ void mn_submenu_finalize()
 {
     struct MENU *menu_mem = get_menu_stackpoi();
     
-    int i;
-    for (i = 0; i < menu_mem->numberof_menu_entries; i++) { 
+    for (int i = 0; i < menu_mem->numberof_menu_entries; i++) { 
         // conflicts with 'selected' icon.
         //md380_menu_mem_base[md380_menu_id + i].off16 = 2; // numbered icons
         md380_menu_mem_base[md380_menu_id + i].off16 = 0;
@@ -492,8 +518,8 @@ void create_menu_entry_promtg_screen(void)
 //    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_promtg_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif
 
-    mn_submenu_add(wt_enable, create_menu_entry_promtg_enable_screen + 1);
-    mn_submenu_add(wt_disable, create_menu_entry_promtg_disable_screen + 1);
+    mn_submenu_add(wt_enable, create_menu_entry_promtg_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_promtg_disable_screen);
 
     mn_submenu_finalize();
 }
@@ -525,8 +551,8 @@ void create_menu_entry_micbargraph_screen(void)
 //    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_micbargraph_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif
 
-    mn_submenu_add(wt_enable, create_menu_entry_micbargraph_enable_screen + 1);
-    mn_submenu_add(wt_disable, create_menu_entry_micbargraph_disable_screen + 1);
+    mn_submenu_add(wt_enable, create_menu_entry_micbargraph_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_micbargraph_disable_screen);
     
     mn_submenu_finalize();
 }
@@ -558,8 +584,8 @@ void create_menu_entry_rbeep_screen(void)
 //    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_rbeep_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif
 
-    mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen + 1);
-    mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen + 1);
+    mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen);
 
     mn_submenu_finalize();
 }
@@ -591,12 +617,12 @@ void create_menu_entry_datef_screen(void)
 //    md380_create_menu_entry(md380_menu_id + 5, wt_datef_alt, create_menu_entry_datef_alt_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif
 
-    mn_submenu_add(wt_datef_original, create_menu_entry_datef_original_screen + 1 );
-    mn_submenu_add(wt_datef_germany, create_menu_entry_datef_germany_screen + 1 );
-    mn_submenu_add(wt_datef_italy, create_menu_entry_datef_italy_screen + 1 );
-    mn_submenu_add(wt_datef_american, create_menu_entry_datef_american_screen + 1 );
-    mn_submenu_add(wt_datef_iso, create_menu_entry_datef_iso_screen + 1 );
-    mn_submenu_add(wt_datef_alt, create_menu_entry_datef_alt_screen + 1 );
+    mn_submenu_add(wt_datef_original, create_menu_entry_datef_original_screen);
+    mn_submenu_add(wt_datef_germany, create_menu_entry_datef_germany_screen);
+    mn_submenu_add(wt_datef_italy, create_menu_entry_datef_italy_screen);
+    mn_submenu_add(wt_datef_american, create_menu_entry_datef_american_screen);
+    mn_submenu_add(wt_datef_iso, create_menu_entry_datef_iso_screen);
+    mn_submenu_add(wt_datef_alt, create_menu_entry_datef_alt_screen);
     
     mn_submenu_finalize();
 }
@@ -633,8 +659,8 @@ void create_menu_entry_userscsv_screen(void)
 //    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_userscsv_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_userscsv_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif
-    mn_submenu_add(wt_enable, create_menu_entry_userscsv_enable_screen + 1);
-    mn_submenu_add(wt_disable, create_menu_entry_userscsv_disable_screen + 1);
+    mn_submenu_add(wt_enable, create_menu_entry_userscsv_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_userscsv_disable_screen);
 
     mn_submenu_finalize();
     /*
@@ -677,8 +703,8 @@ void create_menu_entry_debug_screen(void)
 //    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_debug_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif
     
-    mn_submenu_add(wt_enable, create_menu_entry_debug_enable_screen + 1);
-    mn_submenu_add(wt_disable, create_menu_entry_debug_disable_screen + 1);
+    mn_submenu_add(wt_enable, create_menu_entry_debug_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_debug_disable_screen);
 
     mn_submenu_finalize();
 }
@@ -732,10 +758,10 @@ void create_menu_entry_netmon_screen(void)
 
     md380_menu_entry_selected = global_addl_config.console;
 
-    mn_submenu_add(wt_disable, create_menu_entry_netmon_disable_screen + 1);
-    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen + 1);
-    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen + 1);
-    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen + 1);
+    mn_submenu_add(wt_disable, create_menu_entry_netmon_disable_screen);
+    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen);
+    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen);
+    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen);
 
     mn_submenu_finalize();
 }
@@ -764,15 +790,15 @@ void create_menu_entry_experimental_screen(void)
 //    md380_create_menu_entry(md380_menu_id, wt_enable, create_menu_entry_experimental_enable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //    md380_create_menu_entry(md380_menu_id + 1, wt_disable, create_menu_entry_experimental_disable_screen + 1, md380_menu_entry_back + 1, 0x8b, 0, 1);
 //#endif //CONFIG_MENU
-    mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen + 1);
-    mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen + 1);
+    mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen);
 
     mn_submenu_finalize();
 }
 
 void create_menu_entry_edit_screen_store(void)
 {
-#ifdef DEBUG
+#if 0
     printf("your enter: ");
     printhex2((char *) md380_menu_edit_buf, 14);
     printf("\n");
@@ -781,7 +807,7 @@ void create_menu_entry_edit_screen_store(void)
     md380_menu_depth = md380_menu_depth - 1;
 
 #ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, md380_menu_entry_back + 1, md380_menu_entry_back + 1, 6, 1, 1);
+    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
 #endif
 }
 
@@ -835,7 +861,7 @@ void create_menu_entry_edit_screen(void)
     menu_mem->unknown_01 = 0;
 
 #ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_edit, create_menu_entry_edit_screen_store + 1, md380_menu_numerical_input + 1, 0x81, 0, 1);
+    md380_create_menu_entry(md380_menu_id, wt_edit, MKTHUMB(create_menu_entry_edit_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
 #endif
 }
 
@@ -844,7 +870,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
     uint32_t new_dmr_id = 0;
     wchar_t *bf;
 
-#ifdef DEBUG
+#if 0
     printf("your enter: ");
     printhex2((char *) md380_menu_edit_buf, 14);
     printf("\n");
@@ -855,7 +881,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
         new_dmr_id *= 10;
         new_dmr_id += (*bf++) - '0';
     }
-#ifdef DEBUG
+#if 0
     printf("\n%d\n", new_dmr_id);
 #endif
     // store new dmr_id to ram and spi flash (codeplug)
@@ -866,7 +892,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
     md380_menu_id = md380_menu_id - 1;
     md380_menu_depth = md380_menu_depth - 1;
 #ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, md380_menu_entry_back + 1, md380_menu_entry_back + 1, 6, 1, 1);
+    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
 #endif
 }
 
@@ -910,7 +936,7 @@ void create_menu_entry_edit_dmr_id_screen(void)
 
     nchars = uli2w(md380_radio_config.dmrid, md380_menu_edit_buf);
 
-#ifdef DEBUG
+#if 0
     printf("\ncreate_menu_entry_edit_dmr_id_screen %x %d \n", md380_menu_edit_buf, nchars);
     printhex2((char *) md380_menu_edit_buf, 14);
     printf("\n");
@@ -930,7 +956,7 @@ void create_menu_entry_edit_dmr_id_screen(void)
     menu_mem->unknown_01 = 0;
 
 #ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen_store + 1, md380_menu_numerical_input + 1, 0x81, 0, 1);
+    md380_create_menu_entry(md380_menu_id, wt_edit_dmr_id, MKTHUMB(create_menu_entry_edit_dmr_id_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
 #endif
 }
 
@@ -938,8 +964,6 @@ void create_menu_entry_addl_functions_screen(void)
 {
     mn_submenu_init(wt_addl_func);
     
-    struct MENU *menu_mem;
-
 #if 0
     register uint32_t * sp asm("sp");
     for (int i = 0; i < 20; i++) {
@@ -949,30 +973,43 @@ void create_menu_entry_addl_functions_screen(void)
 #endif    
 
 
-#ifdef DEBUG
-    printf("create_menu_entry_addl_functions_screen %d\n", md380_menu_depth);
-#endif
-    menu_mem = get_menu_stackpoi();
+//    struct MENU *menu_mem;
+//
+//#if 0
+//    printf("create_menu_entry_addl_functions_screen %d\n", md380_menu_depth);
+//#endif
+//    menu_mem = get_menu_stackpoi();
+//
+//    menu_mem->menu_title = wt_addl_func;
+//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+//    menu_mem->numberof_menu_entries = 10;
+//    menu_mem->unknown_00 = 0;
+//    menu_mem->unknown_01 = 0;
 
-    menu_mem->menu_title = wt_addl_func;
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-    menu_mem->numberof_menu_entries = 10;
-    menu_mem->unknown_00 = 0;
-    menu_mem->unknown_01 = 0;
+//#ifdef CONFIG_MENU
+//    md380_create_menu_entry(md380_menu_id, wt_rbeep, create_menu_entry_rbeep_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 1, wt_datef, create_menu_entry_datef_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 2, wt_userscsv, create_menu_entry_userscsv_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 3, wt_debug, create_menu_entry_debug_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 4, wt_promtg, create_menu_entry_promtg_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 5, wt_edit, create_menu_entry_edit_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 0); // disable this menu entry - no function jet
+//    md380_create_menu_entry(md380_menu_id + 6, wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 7, wt_micbargraph, create_menu_entry_micbargraph_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 8, wt_experimental, create_menu_entry_experimental_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
+//    md380_create_menu_entry(md380_menu_id + 9, wt_netmon, create_menu_entry_netmon_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
+//#endif
 
-#ifdef CONFIG_MENU
-    md380_create_menu_entry(md380_menu_id, wt_rbeep, create_menu_entry_rbeep_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 1, wt_datef, create_menu_entry_datef_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 2, wt_userscsv, create_menu_entry_userscsv_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 3, wt_debug, create_menu_entry_debug_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 4, wt_promtg, create_menu_entry_promtg_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 5, wt_edit, create_menu_entry_edit_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 0); // disable this menu entry - no function jet
-    md380_create_menu_entry(md380_menu_id + 6, wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 7, wt_micbargraph, create_menu_entry_micbargraph_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 8, wt_experimental, create_menu_entry_experimental_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
-    md380_create_menu_entry(md380_menu_id + 9, wt_netmon, create_menu_entry_netmon_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
-#endif
-
+    mn_submenu_add_98(wt_rbeep, create_menu_entry_rbeep_screen);
+    mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
+    mn_submenu_add_98(wt_userscsv, create_menu_entry_userscsv_screen);
+    mn_submenu_add_98(wt_debug, create_menu_entry_debug_screen);
+    mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
+    mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
+    mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
+    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
+    mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
+    mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
+    
     mn_submenu_finalize2();
 }
 
@@ -988,13 +1025,16 @@ void create_menu_utilies_hook(void)
     }
 
 #ifdef DEBUG
-    printf("create_menu_utilies_hook %d\n", md380_menu_depth);
+//    printf("create_menu_utilies_hook %d\n", md380_menu_depth);
 
+#if 0
+// TODO: move to somewhere else    
     radio_config_t *rc = &md380_radio_config;
     printf("backlight %x\n", rc->backlight_time);
     printf("dmr %d\n", rc->dmrid);
     printf("mode_ch %d\n", rc->mode_ch_mr);
-
+#endif
+    
     //   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
 #endif
 
@@ -1005,10 +1045,10 @@ void create_menu_utilies_hook(void)
 
 
 #ifdef CONFIG_MENU
-    md380_create_menu_entry(8, md380_wt_programradio, md380_menu_entry_programradio + 1, md380_menu_entry_back + 1, 0x8a, 0, enabled);
+    md380_create_menu_entry(8, md380_wt_programradio, MKTHUMB(md380_menu_entry_programradio), MKTHUMB(md380_menu_entry_back), 0x8a, 0, enabled);
 
 #ifdef FW_D13_020
-    md380_create_menu_entry(11, wt_addl_func, create_menu_entry_addl_functions_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
+    md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
 #else
     if( menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
         md380_create_menu_entry(11, wt_addl_func, create_menu_entry_addl_functions_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
