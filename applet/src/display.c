@@ -85,8 +85,22 @@ void draw_micbargraph()
     if( fullscale_offset == 0 ) { // init int_centibel()
         fullscale_offset = intCentibel(3000); // maybe wav max max_level
     }
+    
+    int is_tx = 0 ;
+    int is_rx = 0 ;
 
-    if( md380_f_4225_operatingmode == SCR_MODE_RX_VOICE && max_level < 4500 && max_level > 10 ) { // i hope we are on tx
+    is_tx = md380_f_4225_operatingmode == SCR_MODE_RX_VOICE && max_level > 10 ;
+    is_rx = md380_f_4225_operatingmode == SCR_MODE_RX_TERMINATOR ;
+
+#ifdef FW_D13_020
+    {
+        uint8_t *rs = 0x2001e5f0 ;
+        is_tx = rs[1] & 1 ;
+        is_rx = rs[1] & 2 ;
+    }
+#endif    
+
+    if( is_tx && max_level < 4500 ) { 
         if( lastframe < ambe_encode_frame_cnt ) { // check for new frame
             lastframe = ambe_encode_frame_cnt;
             rx_active = 1;
@@ -136,7 +150,7 @@ void draw_micbargraph()
         }
     }
 
-    if( md380_f_4225_operatingmode == SCR_MODE_RX_TERMINATOR && rx_active == 1 ) { // clear screen area
+    if( is_rx && rx_active == 1 ) { // clear screen area
         gfx_set_fg_color(0xff8032);
         gfx_set_bg_color(0xff000000);
         gfx_blockfill(9, 54, 151, 70);
