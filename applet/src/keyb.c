@@ -3,7 +3,7 @@
  * 
  */
 
-#define DEBUG
+//#define DEBUG
 
 #include "keyb.h"
 
@@ -72,7 +72,7 @@ void trace_keyb()
         return ;
     }
     
-    PRINT("%d %d\n", get_main_mode(), *mode2 );
+    //PRINT("%d %d\n", get_main_mode(), *mode2 );
     
     int keycode = *keycode_p ;
     switch( keycode ) {
