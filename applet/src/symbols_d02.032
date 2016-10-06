@@ -250,3 +250,5 @@ F_4315 = 0x0;
 
 /* dont hook before fixing this */
 draw_statusline = 0x0 ;
+
+gui_opmode2 = 0x2001d3f5 ;

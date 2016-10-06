@@ -163,3 +163,6 @@ ambe_encode_thing    = 0x08054019; /* 1024 byte match */
 
 /* dont hook before fixing this */
 draw_statusline = 0x0 ;
+
+
+gui_opmode2 = 0x2001ea22 ;
