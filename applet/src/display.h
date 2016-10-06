@@ -25,7 +25,7 @@ extern "C" {
 // 35  = volume screen
 //
 // high bit (0x80) signals transition
-// 156 = channel switch
+// 156(28) = channel switch
 // 115 = menu start
 
 #define SCR_MODE_16 16

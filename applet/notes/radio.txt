@@ -38,7 +38,9 @@ repeater off air
 0xd = tx
 0x42 = rx 
 0x82 = eot rx
-b7 = beep in progress.
+=bits=
+0x80 = beep in progress.
+0x40 = rx active
 
 [2] 
 0x20 = dll_received? 
