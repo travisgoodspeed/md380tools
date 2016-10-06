@@ -3,11 +3,15 @@
  * 
  */
 
+#define DEBUG
+
 #include "keyb.h"
 
 #include "debug.h"
 #include "netmon.h"
 #include "mbox.h"
+#include "debug.h"
+#include "console.h"
 
 #include <stdint.h>
 
@@ -51,9 +55,9 @@ void trace_keyb()
 {
     int keypressed = *keypressed_p ;
     
-    if( is_netmon_visible() ) {
-        NMPRINT("%02x  ", keypressed );    
-    }
+//    if( is_netmon_visible() ) {
+//        NMPRINT("%02x  ", keypressed );    
+//    }
     
     switch( get_main_mode() ) {
         case 28 :
@@ -63,6 +67,12 @@ void trace_keyb()
         default:
             return ;
     }
+    
+    if( is_menu_visible() ) {
+        return ;
+    }
+    
+    PRINT("%d %d\n", get_main_mode(), *mode2 );
     
     int keycode = *keycode_p ;
     switch( keycode ) {
