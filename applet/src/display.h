@@ -61,4 +61,3 @@ extern uint8_t gui_opmode2 ;
 #endif
 
 #endif /* DISPLAY_H */
-
