@@ -26,7 +26,7 @@ applets: patches
 	cd applet && $(MAKE) all
 
 firmwares:
-	cd firmware && $(MAKE) all
+	$(MAKE) -C firmware all
 
 flash:
 	cd applet && $(MAKE) clean flash
