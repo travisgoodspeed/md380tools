@@ -26,7 +26,7 @@ binary: $(BINARIES)
 unwrap: $(UNWRAPPEDFILES)
 
 clean:
-	rm -rf $(BINDIR) $(UNWRAPDIR)
+	rm -rf $(BINDIR) $(UNWRAPDIR) $(DLDIR)
 
 cleanall: clean
 	rm -rf $(DLDIR)

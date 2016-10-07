@@ -9,14 +9,14 @@ all: applets
 	
 clean:
 	$(MAKE) -C patches/2.032 clean
+	$(MAKE) -C patches/3.020 clean
+	$(MAKE) -C patches/s13.020 clean
 	$(MAKE) -C patches/d13.020 clean
 	$(MAKE) -C firmware clean
 	$(MAKE) -C applet clean
+	$(MAKE) -C db clean
 	rm -f *~ *.pyc
 	rm -f data data.csv	
-
-clean2: clean
-	$(MAKE) -C db clean
 
 patches: firmwares
 	cd patches/2.032 && $(MAKE) all
@@ -46,12 +46,6 @@ flash_d02.032:
 flash_s13.020:
 	cd applet && $(MAKE) FW=S13_020 clean flash
 	
-#flash_d02.032:
-#	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
-
-#flash_s13.020:
-#	cd applet && $(MAKE) -f Makefile.s13.020 clean flash
-
 flashdb:
 	cd db && $(MAKE)
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
@@ -89,7 +83,7 @@ doflash: applets
 all_images:
 	$(MAKE) -C applet ci
 
-ci: clean2 
+ci: clean
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
 	

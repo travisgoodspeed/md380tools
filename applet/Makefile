@@ -120,7 +120,7 @@ src/version.h: src/*.c
 
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
+	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h *.map
 
 image_D02:
 	$(MAKE) FW=D02_032 all  
