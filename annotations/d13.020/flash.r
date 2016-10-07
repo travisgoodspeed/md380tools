@@ -3225,7 +3225,7 @@ af+ 0x80903c0 54 usb_dfu_read
 af+ 0x809662e 34 usb_serialnumber
 
 f poi.to.md380_menu_mem_base 4 0x0800c7ac     
-f poi.to.menu_entry_back 4 0x0800c7b8
+f menu_entry_back_1 @ 0x800fc85
 f poi.to.0x2001e6ec 4 0x0800c7c0
 f poi.to.0x20001704 4 0x0800c7c4
 f poi.0x0800c7d4 4 0x0800c7d4
@@ -3693,4 +3693,10 @@ f simplex_or_repeater_flagword @ 0x2001e898
 f some_io_config @ 0x0803fffa
 af+ 0x0803fffa 2 some_io_config
 af+ 0x0803ffaa 2 some_io_config2
+
+#
+
+f some_state_var @ 0x2001e8b8
+f some_state_var2 @ 0x2001e534
+f convert_freq_to_str @ 0x800e398
 

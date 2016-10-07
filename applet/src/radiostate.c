@@ -8,6 +8,7 @@
 #include "radiostate.h"
 
 #include "debug.h"
+#include "syslog.h"
 
 int rst_voice_active = 0 ;
 int rst_src = 0 ;
@@ -26,7 +27,8 @@ void rst_voice_lc_header(int src, int dst)
     rst_src = src ;
     rst_dst = dst ;
     if( !rst_voice_active ) {
-        PRINT("\n* Call from %d to %d started.\n", src, dst);        
+        PRINT("\n* Call from %d to %d started.\n", src, dst);
+        LOGR("cs %d->%d\n", src, dst );
     }
     rst_voice_active = 1 ;    
 }
@@ -35,6 +37,7 @@ void rst_term_with_lc( int src, int dst )
 {
     if( rst_voice_active ) {
         PRINT("\n* Call from %d to %d ended.\n", src, dst);
+        LOGR("ce %d->%d\n", src, dst );
     }
     rst_voice_active = 0 ;
 }
@@ -54,6 +57,8 @@ void rst_data_header(data_hdr_t *data)
     rst_hdr_sap = get_sap(data);
     rst_hdr_src = get_adr(data->src);
     rst_hdr_dst = get_adr(data->dst);
+
+    LOGR("dh %d:%d->%d\n", rst_hdr_sap, rst_hdr_src, rst_hdr_dst );
 }
 
 void rst_data_block(data_blk_t *data)

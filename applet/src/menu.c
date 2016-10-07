@@ -971,7 +971,8 @@ void create_menu_entry_addl_functions_screen(void)
     }
     //printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
 #endif    
-
+    PRINTRET();
+    PRINT("create_menu_entry_addl_functions_screen\n");
 
 //    struct MENU *menu_mem;
 //

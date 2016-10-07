@@ -10,6 +10,7 @@
 #include "printf.h"
 #include "dmr.h"
 #include "radiostate.h"
+#include "syslog.h"
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -230,10 +231,7 @@ void netmon2_update()
 
 void netmon3_update()
 {
-    extern char nm_logbuf[];
-    
-    con_clrscr();
-    con_puts(nm_logbuf);
+    syslog_dump_console();
 }
 
 void netmon_update()

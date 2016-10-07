@@ -12,6 +12,7 @@
 #include "mbox.h"
 #include "debug.h"
 #include "console.h"
+#include "syslog.h"
 
 #include <stdint.h>
 
@@ -28,6 +29,10 @@ int beep_event_probe = 0 ;
 void handle_hotkey( int keycode )
 {
     switch( keycode ) {
+        case 6 :
+            syslog_printf("hello\n");
+            syslog_dump_dmesg();
+            break ;
         case 7 :
             global_addl_config.console = 0 ;
             break ;
@@ -76,6 +81,7 @@ void trace_keyb()
     
     int keycode = *keycode_p ;
     switch( keycode ) {
+        case 6 :
         case 7 :
         case 8 :
         case 9 :
