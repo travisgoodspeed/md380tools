@@ -86,7 +86,7 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped	
 
 experiment.img: 
-	cd ../patches/$(PATCHDIR) && $(MAKE) all
+	$(MAKE) -C ../patches/$(PATCHDIR) all
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 
 
