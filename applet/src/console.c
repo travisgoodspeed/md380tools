@@ -11,7 +11,7 @@
 #include <stdarg.h>
 
 #define MAX_XPOS 27 
-#define MAX_YPOS 20 
+#define MAX_YPOS 10 
 
 #define MAX_BUF (MAX_XPOS + 1)
 char con_buf[MAX_YPOS][MAX_XPOS+1]; // +1 for terminating 0 every line.
