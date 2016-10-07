@@ -175,7 +175,7 @@ void draw_rx_screen(unsigned int bg_color)
     // clear screen
     gfx_set_fg_color(bg_color);
 //    gfx_blockfill(2, 16, 157, 130); // if we go any lower, we wrap around to the top
-    gfx_blockfill(2, 16, 157, 129); // if we go any lower, we wrap around to the top
+    gfx_blockfill(0, 16, 159, 127); 
 
     gfx_set_bg_color(bg_color);
     gfx_set_fg_color(0x000000);
