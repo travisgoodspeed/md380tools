@@ -46,11 +46,13 @@ flash_d02.032:
 flash_s13.020:
 	cd applet && $(MAKE) FW=S13_020 clean flash
 	
-flashdb:
-	cd db && $(MAKE)
+data:
+	$(MAKE) -C db 
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
+	
+flashdb: data
 	./md380-tool spiflashwrite data 0x100000
 
 dist: applets
@@ -86,5 +88,6 @@ all_images:
 ci: clean
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
-	
+	$(MAKE) data
+
 	
