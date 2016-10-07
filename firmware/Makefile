@@ -56,4 +56,5 @@ $(DLDIR)/%: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
 	-echo *
 	-cat firmware_files.txt
+	-echo $$(cat firmware_files.txt | grep "^$(notdir $@)" | cut -f2)
 	curl -f -L $$(cat firmware_files.txt | grep "^$(notdir $@)" | cut -f2) -o $@
