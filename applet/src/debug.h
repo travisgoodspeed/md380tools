@@ -29,11 +29,11 @@ extern char nm_logbuf[];
 #define PRINT(fmt, args...) /* Don't do anything in release builds */
 #endif
 
-#ifdef NETMON
-#define NMPRINT(fmt, args...) do { netmon_printf(fmt, ## args); } while (0)
-#else
-#define NMPRINT(fmt, args...) /* Don't do anything in release builds */
-#endif
+//#ifdef NETMON
+//#define NMPRINT(fmt, args...) do { netmon_printf(fmt, ## args); } while (0)
+//#else
+#define NMPRINT(fmt, args...) /* obsolete */
+//#endif
 
 #ifdef DEBUG
 #define PRINTRET() do { debug_printf("@ 0x%x ", UNTHUMB_POI(__builtin_return_address(0)) ); } while (0)
@@ -41,11 +41,11 @@ extern char nm_logbuf[];
 #define PRINTRET() /* Don't do anything in release builds */
 #endif    
 
-#ifdef NETMON
-#define NMPRINTRET() do { netmon_printf("@ 0x%x ", UNTHUMB_POI(__builtin_return_address(0)) ); } while (0)
-#else
+//#ifdef NETMON
+//#define NMPRINTRET() do { netmon_printf("@ 0x%x ", UNTHUMB_POI(__builtin_return_address(0)) ); } while (0)
+//#else
 #define NMPRINTRET() /* Don't do anything in release builds */
-#endif    
+//#endif    
 
 #ifdef DEBUG
 #define PRINTHEX(buf,len) do { debug_printhex(buf,len); } while (0)

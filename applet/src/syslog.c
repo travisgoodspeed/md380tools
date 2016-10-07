@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "printf.h"
 #include "dmesg.h"
+#include "console.h"
 
 #define SYSLOG_SIZE 200 
 
@@ -60,8 +61,18 @@ void syslog_dump_dmesg()
 {
     int e = end + SYSLOG_SIZE ;
     
-    for(int i=begin;i<e;i++) {
+    for(int i=begin;i<=e;i++) {
         int i2 = wrap(i);
         md380_putc(0,syslog_buf[i2]);
+    }
+}
+
+void syslog_dump_console()
+{
+    con_clrscr();
+    int e = end + SYSLOG_SIZE ;
+    for(int i=begin;i<=e;i++) {
+        int i2 = wrap(i);
+        con_putc(syslog_buf[i2]);
     }
 }

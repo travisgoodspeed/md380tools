@@ -98,8 +98,8 @@ uint8_t OSMboxPost_hook(OS_EVENT *pevent, void *pmsg)
     if( pevent == mbox_radio ) {
         uint8_t event = *(uint8_t*)pmsg ;
         if( event == 0x4 ) {
-            NMPRINTRET();
-            NMPRINT("%02x\n", event );
+//            NMPRINTRET();
+//            NMPRINT("%02x\n", event );
         }
     }
     
