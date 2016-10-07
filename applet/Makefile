@@ -83,7 +83,7 @@ OBJS = $(SRCS:.c=.o)
 
 .PHONY: lib proj pre
 
-all: lib proj wrapped
+all: lib proj wrapped	
 
 experiment.img: 
 	cd ../patches/$(PATCHDIR) && $(MAKE) all
@@ -122,5 +122,18 @@ clean:
 	$(MAKE) -C lib clean
 	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
 
+image_D02:
+	$(MAKE) FW=D02_032 all  
 
+image_D13:
+	$(MAKE) FW=D13_020 all  
+	
+image_S13:
+	$(MAKE) FW=S13_020 all  
+
+ci:
+	$(MAKE) clean image_D02
+	$(MAKE) clean image_S13
+	$(MAKE) clean image_D13
+	
 

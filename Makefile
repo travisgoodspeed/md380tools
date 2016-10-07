@@ -6,13 +6,17 @@ RELEASE=md380tools-`date "+%Y-%m-%d"`
 ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 all: applets
+	
 clean:
-	rm -f data data.csv	
-	cd patches/2.032 && $(MAKE) clean
-	cd patches/d13.020 && $(MAKE) clean
-	cd firmware && $(MAKE) clean
-	cd applet && $(MAKE) clean
+	$(MAKE) -C patches/2.032 clean
+	$(MAKE) -C patches/d13.020 clean
+	$(MAKE) -C firmware clean
+	$(MAKE) -C applet clean
 	rm -f *~ *.pyc
+	rm -f data data.csv	
+
+clean2: clean
+	$(MAKE) -C db clean
 
 patches: firmwares
 	cd patches/2.032 && $(MAKE) all
@@ -83,10 +87,10 @@ doflash: applets
 	./md380-dfu upgrade applet/experiment.bin
 
 all_images:
-	$(MAKE) clean image_D02
-	$(MAKE) clean image_S13
-	$(MAKE) clean image_D13
+	$(MAKE) -C applet ci
 
-ci: clean all_images
-	$(MAKE) -C db clean all
+ci: clean2 
+	$(MAKE) -C applet ci
+	$(MAKE) -C db ci
+	
 	
