@@ -86,7 +86,7 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped	
 
 experiment.img: 
-	$(MAKE) -C ../patches/$(PATCHDIR) all
+	$(MAKE) -C ../patches/$(PATCHDIR) clean all
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 
 
@@ -135,5 +135,3 @@ ci:
 	$(MAKE) clean image_D02
 	$(MAKE) clean image_S13
 	$(MAKE) clean image_D13
-	
-
