@@ -85,7 +85,10 @@ doflash: applets
 all_images:
 	$(MAKE) -C applet ci
 
-ci: clean
+download:
+	$(MAKE) -C firmware download
+
+ci: clean download
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
 	$(MAKE) data
