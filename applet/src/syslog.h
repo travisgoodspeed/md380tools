@@ -18,6 +18,8 @@ inline int is_syslog_enabled()
 
 void syslog_printf(const char *fmt, ...);
 
+#define LOG1(...) syslog_printf(__VA_ARGS__)
+
 void syslog_dump_dmesg();
 
 #ifdef __cplusplus
