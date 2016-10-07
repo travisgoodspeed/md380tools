@@ -1,4 +1,6 @@
 
+f poi.to.menu_entry_back 4 0x0800c7b8
+
 f poi_mode2 0 0x08020bf4
 
 
