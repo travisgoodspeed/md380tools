@@ -34,6 +34,7 @@ SRCS += debug.o
 SRCS += keyb.o
 SRCS += radiostate.o
 SRCS += mbox.o
+SRCS += syslog.o
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020
 endif
