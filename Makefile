@@ -87,6 +87,6 @@ all_images:
 	$(MAKE) clean image_S13
 	$(MAKE) clean image_D13
 
-ci: all_images
+ci: clean all_images
 	$(MAKE) -C db clean all
 	
