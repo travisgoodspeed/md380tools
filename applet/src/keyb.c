@@ -29,8 +29,14 @@ int beep_event_probe = 0 ;
 void handle_hotkey( int keycode )
 {
     switch( keycode ) {
+        case 5 :
+            syslog_clear();
+            break ;
         case 6 :
-            syslog_printf("hello\n");
+        {
+            static int cnt = 0 ;
+            syslog_printf("hello %d\n",cnt++);
+        }
             syslog_dump_dmesg();
             break ;
         case 7 :
@@ -81,6 +87,7 @@ void trace_keyb()
     
     int keycode = *keycode_p ;
     switch( keycode ) {
+        case 5 :            
         case 6 :
         case 7 :
         case 8 :
