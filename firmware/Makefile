@@ -54,4 +54,6 @@ $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 
 $(DLDIR)/%: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
+	-echo *
+	-cat firmware_files.txt
 	curl -f -L $$(cat firmware_files.txt | grep "^$(notdir $@)" | cut -f2) -o $@
