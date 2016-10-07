@@ -83,10 +83,10 @@ OBJS = $(SRCS:.c=.o)
 
 .PHONY: lib proj pre
 
-all: lib proj wrapped
+all: lib proj wrapped	
 
 experiment.img: 
-	cd ../patches/$(PATCHDIR) && $(MAKE) all
+	$(MAKE) -C ../patches/$(PATCHDIR) clean all
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 
 
@@ -95,7 +95,7 @@ lib: src/version.h config.h
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
-	cd ../patches/$(PATCHDIR) && $(MAKE) all
+	$(MAKE) -C ../patches/$(PATCHDIR) clean all
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img $(MERGEBASE)
 
@@ -120,7 +120,18 @@ src/version.h: src/*.c
 
 clean:
 	$(MAKE) -C lib clean
-	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
+	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h *.map
 
+image_D02:
+	$(MAKE) FW=D02_032 all  
 
+image_D13:
+	$(MAKE) FW=D13_020 all  
+	
+image_S13:
+	$(MAKE) FW=S13_020 all  
 
+ci:
+	$(MAKE) clean image_D02
+	$(MAKE) clean image_S13
+	$(MAKE) clean image_D13

@@ -1,7 +1,7 @@
 
 all: patched.bin
 clean:
-	rm -f *~ *.bin *.img
+	rm -f *~ *.bin *.img *.pyc
 
 unwrapped.img:
 	cd ../../firmware && make unwrapped/D002.032.img

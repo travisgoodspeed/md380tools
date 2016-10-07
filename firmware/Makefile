@@ -26,7 +26,7 @@ binary: $(BINARIES)
 unwrap: $(UNWRAPPEDFILES)
 
 clean:
-	rm -rf $(BINDIR) $(UNWRAPDIR)
+	rm -rf $(BINDIR) $(UNWRAPDIR) $(DLDIR)
 
 cleanall: clean
 	rm -rf $(DLDIR)
@@ -54,4 +54,7 @@ $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 
 $(DLDIR)/%: | $(DLDIR)
 	which curl >>/dev/null #Check that we have curl.
+	-echo *
+	-cat firmware_files.txt
+	-echo $$(cat firmware_files.txt | grep "^$(notdir $@)" | cut -f2)
 	curl -f -L $$(cat firmware_files.txt | grep "^$(notdir $@)" | cut -f2) -o $@

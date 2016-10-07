@@ -6,13 +6,17 @@ RELEASE=md380tools-`date "+%Y-%m-%d"`
 ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 all: applets
+	
 clean:
-	rm -f data data.csv	
-	cd patches/2.032 && $(MAKE) clean
-	cd patches/d13.020 && $(MAKE) clean
-	cd firmware && $(MAKE) clean
-	cd applet && $(MAKE) clean
+	$(MAKE) -C patches/2.032 clean
+	$(MAKE) -C patches/3.020 clean
+	$(MAKE) -C patches/s13.020 clean
+	$(MAKE) -C patches/d13.020 clean
+	$(MAKE) -C firmware clean
+	$(MAKE) -C applet clean
+	$(MAKE) -C db clean
 	rm -f *~ *.pyc
+	rm -f data data.csv	
 
 patches: firmwares
 	cd patches/2.032 && $(MAKE) all
@@ -22,7 +26,7 @@ applets: patches
 	cd applet && $(MAKE) all
 
 firmwares:
-	cd firmware && $(MAKE) all
+	$(MAKE) -C firmware all
 
 flash:
 	cd applet && $(MAKE) clean flash
@@ -42,17 +46,13 @@ flash_d02.032:
 flash_s13.020:
 	cd applet && $(MAKE) FW=S13_020 clean flash
 	
-#flash_d02.032:
-#	cd applet && $(MAKE) -f Makefile.d02.032 clean flash
-
-#flash_s13.020:
-#	cd applet && $(MAKE) -f Makefile.s13.020 clean flash
-
-flashdb:
-	cd db && $(MAKE)
+data:
+	$(MAKE) -C db 
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
+	
+flashdb: data
 	./md380-tool spiflashwrite data 0x100000
 
 dist: applets
@@ -83,10 +83,14 @@ doflash: applets
 	./md380-dfu upgrade applet/experiment.bin
 
 all_images:
-	$(MAKE) clean image_D02
-	$(MAKE) clean image_S13
-	$(MAKE) clean image_D13
+	$(MAKE) -C applet ci
 
-ci: clean all_images
-	$(MAKE) -C db clean all
+download:
+	$(MAKE) -C firmware download
+
+ci: clean download
+	$(MAKE) -C applet ci
+	$(MAKE) -C db ci
+	$(MAKE) data
+
 	

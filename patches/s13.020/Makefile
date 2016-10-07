@@ -1,7 +1,7 @@
 
 all: patched.bin
 clean:
-	rm -f *~ *.bin *.img
+	rm -f *~ *.bin *.img *.pyc
 
 unwrapped.img:
 	cd ../../firmware && $(MAKE) unwrapped/S013.020.img
