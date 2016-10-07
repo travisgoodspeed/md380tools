@@ -1,3 +1,3 @@
 #!/bin/bash
 set -e errexit	#otherwise bash continues after error!
-make ci
+make -C applet ci
