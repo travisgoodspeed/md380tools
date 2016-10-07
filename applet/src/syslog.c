@@ -13,6 +13,12 @@
 
 #define SYSLOG_SIZE 200 
 
+#define MAXLINES 10 
+int lines[MAXLINES];
+int line_poi = 0 ;
+int line_end = 0 ;
+int first_char = 1 ;
+
 char syslog_buf[SYSLOG_SIZE];
 
 static int end = 0 ;
@@ -26,6 +32,19 @@ int inline wrap( int idx )
     return idx ;
 }
 
+void register_line_begin( int idx, char c )
+{
+    if( first_char ) {
+        lines[line_poi] = idx ;
+        line_poi++ ;
+        line_poi %= MAXLINES ;
+        first_char = 0 ;
+    }
+    if( c == '\n' ) {
+        first_char = 1 ;
+    }
+}
+
 void syslog_putch( char c )
 {
     if( c == '\n' ) {
@@ -33,11 +52,13 @@ void syslog_putch( char c )
         c = '.' ;
     }
     syslog_buf[end] = c ;
+    register_line_begin(end,c);
     end = wrap(end+1);
     if( end == begin ) {
         // full.
         begin = wrap(begin+1);
     }
+    
 }
 
 static void syslog_prch(void* p, char c)
@@ -73,7 +94,12 @@ void syslog_dump_dmesg()
 void syslog_dump_console()
 {
     con_clrscr();
-    int i = begin ;
+    
+    int idx = line_poi ;
+    int pos = lines[idx];
+    
+    int i = pos ;
+//    int i = begin ;
     while(1) {
         i = wrap(i);
         if( i == end ) {
@@ -82,4 +108,11 @@ void syslog_dump_console()
         con_putc(syslog_buf[i]);
         i++ ;
     }
+}
+
+void syslog_clear()
+{
+    end = 0 ;
+    begin = 0 ;
+    line_poi = 0 ;
 }

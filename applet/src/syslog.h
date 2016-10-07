@@ -23,6 +23,7 @@ void syslog_printf(const char *fmt, ...);
 
 void syslog_dump_dmesg();
 void syslog_dump_console();
+void syslog_clear();
 
 #ifdef __cplusplus
 }
