@@ -85,6 +85,7 @@ doflash: applets
 all_images:
 	$(MAKE) -C applet ci
 
+# or else make will fail.
 download:
 	$(MAKE) -C firmware download
 
