@@ -59,20 +59,27 @@ void syslog_printf(const char *fmt, ...)
 
 void syslog_dump_dmesg()
 {
-    int e = end + SYSLOG_SIZE ;
-    
-    for(int i=begin;i<=e;i++) {
-        int i2 = wrap(i);
-        md380_putc(0,syslog_buf[i2]);
+    int i = begin ;
+    while(1) {
+        i = wrap(i);
+        if( i == end ) {
+            break ;
+        }
+        md380_putc(0,syslog_buf[i]);
+        i++ ;
     }
 }
 
 void syslog_dump_console()
 {
     con_clrscr();
-    int e = end + SYSLOG_SIZE ;
-    for(int i=begin;i<=e;i++) {
-        int i2 = wrap(i);
-        con_putc(syslog_buf[i2]);
+    int i = begin ;
+    while(1) {
+        i = wrap(i);
+        if( i == end ) {
+            break ;
+        }
+        con_putc(syslog_buf[i]);
+        i++ ;
     }
 }
