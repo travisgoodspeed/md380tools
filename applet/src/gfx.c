@@ -2,7 +2,7 @@
   \brief Graphics wrapper functions.
 */
 
-//#define DEBUG
+#define DEBUG
 
 #include "md380.h"
 #include "version.h"
@@ -187,7 +187,15 @@ void print_ant_sym_hook(char *bmp, int x, int y)
 #endif
 }
 
-void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
+/**
+ * 
+ * @param x_from 0...159
+ * @param y_from 0...127
+ * @param x_to   0...159
+ * @param y_to   0...127
+ */
+
+void gfx_blockfill_hook(int x_from, int y_from, int x_to, int y_to)
 {
 //    if( ymin == 0 && xmin == 61 ) {
 //        if( global_addl_config.promtg ) {
@@ -195,10 +203,10 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 //        }
 //    }
     
-    PRINTRET();
-    PRINT( "bf: %d %d %d %d\n", xmin, ymin, xmax, ymax );
+//    PRINTRET();
+//    PRINT( "bf: %d %d %d %d\n", x_from, y_from, x_to, y_to );
     
-    if( ymin == 0 && xmin == 61 ) {
+    if( y_from == 0 && x_from == 61 ) {
         con_redraw();
     }
     if( is_console_visible() ) {
@@ -206,8 +214,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
         return ;
     }
     
-    gfx_blockfill(xmin,ymin,xmax,ymax);
-    if( ymin == 0 && xmin == 61 ) {
+    gfx_blockfill(x_from,y_from,x_to,y_to);
+    if( y_from == 0 && x_from == 61 ) {
         // if we have stat var for detecting first draw....
         // we could clear by blockfill only once.
         if( global_addl_config.promtg ) {
@@ -218,8 +226,8 @@ void gfx_blockfill_hook(int xmin, int ymin, int xmax, int ymax)
 
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
-    PRINTRET();
-    PRINT( "db: %d %d\n", x, y );
+//    PRINTRET();
+//    PRINT( "db: %d %d\n", x, y );
     
     // supress bmp drawing in console mode.
     if( is_console_visible() ) {
@@ -237,8 +245,8 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 {
     // filter datetime (y=96)
     if( y != 96 ) {
-        PRINTRET();
-        PRINT("ctd: %d %d %d %S\n", x, y, xlen, str);
+//        PRINTRET();
+//        PRINT("ctd: %d %d %d %S\n", x, y, xlen, str);
     }
     
     if( is_console_visible() ) {
@@ -250,8 +258,8 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
-    PRINTRET();
-    PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
+//    PRINTRET();
+//    PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
     
     if( is_netmon_enabled() ) {
         if( x == 45 && y == 34 ) {

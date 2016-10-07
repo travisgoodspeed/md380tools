@@ -16,7 +16,6 @@
 #define MAXLINES 10 
 int lines[MAXLINES];
 int line_poi = 0 ;
-int line_end = 0 ;
 int first_char = 1 ;
 
 char syslog_buf[SYSLOG_SIZE];
