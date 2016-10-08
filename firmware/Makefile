@@ -1,5 +1,5 @@
 
-ifeq ($(MAKE_VERSION),3.16)
+ifeq ($(MAKE_VERSION),3.81)
 OPT = download
 else
 endif

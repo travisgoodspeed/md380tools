@@ -90,7 +90,7 @@ doflash: applets
 download:
 	$(MAKE) -C firmware download
 
-all_images: download
+all_images: 
 	$(MAKE) -C applet ci
 	
 ci: mostlyclean download
