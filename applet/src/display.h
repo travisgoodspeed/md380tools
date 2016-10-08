@@ -54,6 +54,12 @@ void draw_statusline( uint32_t r0 ); // in md380
 
 void draw_datetime_row(); // in md380
 
+#define OPM2_IDLE 1
+#define OPM2_VOICE 2
+#define OPM2_TERM 4
+#define OPM2_MSG_POPUP 5
+#define OPM2_MENU 10
+
 extern uint8_t gui_opmode2 ;
 
 #ifdef __cplusplus

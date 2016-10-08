@@ -99,6 +99,12 @@ void draw_micbargraph()
         is_rx = rs[1] & 2 ;
     }
 #endif    
+    // TODO check gui_opmode2 
+//    if( gui_opmode2 == OPM2_VOICE ) {
+//        // TODO  
+//    } else if( gui_opmode2 == OPM2_TERM ) {
+//        // TODO  
+//    }
 
     if( is_tx && max_level < 4500 ) { 
         if( lastframe < ambe_encode_frame_cnt ) { // check for new frame
