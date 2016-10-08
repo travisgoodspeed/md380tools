@@ -73,6 +73,11 @@ int intCentibel(long ampli)
 
 void draw_micbargraph()
 {
+    if( gui_opmode2 == OPM2_MENU ) {
+        // case for pressing the PTT during 'Manual Dial' in 'Contacts'
+        return ;
+    }
+    
     static int rx_active; // flag to syncronice this hook ( operatingmode == 0x11 is also on rx seeded)
     static int fullscale_offset = 0;
     static uint32_t lastframe = 0;
@@ -99,12 +104,6 @@ void draw_micbargraph()
         is_rx = rs[1] & 2 ;
     }
 #endif    
-    // TODO check gui_opmode2 
-//    if( gui_opmode2 == OPM2_VOICE ) {
-//        // TODO  
-//    } else if( gui_opmode2 == OPM2_TERM ) {
-//        // TODO  
-//    }
 
     if( is_tx && max_level < 4500 ) { 
         if( lastframe < ambe_encode_frame_cnt ) { // check for new frame

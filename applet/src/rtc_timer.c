@@ -23,6 +23,7 @@
 #include "util.h"
 #include "debug.h"
 #include "netmon.h"
+#include "syslog.h"
  
 static int flag=0;
 
@@ -226,6 +227,7 @@ void trace_scr_mode2()
     int new = gui_opmode2 ;
     if( old != new ) {
         PRINT( "mode2: %d -> %d\n", old, new );
+        LOGG( "mode2: %d -> %d\n", old, new );
         old = new ;
     }
 }
