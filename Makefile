@@ -19,17 +19,17 @@ clean:
 	rm -f data data.csv	
 
 patches: firmwares
-	cd patches/2.032 && $(MAKE) all
-	cd patches/d13.020 && $(MAKE) all
+	$(MAKE) -C patches/2.032 all
+	$(MAKE) -C patches/d13.020 all
 
 applets: patches
-	cd applet && $(MAKE) all
+	$(MAKE) -C applet all
 
 firmwares:
 	$(MAKE) -C firmware all
 
 flash:
-	cd applet && $(MAKE) clean flash
+	$(MAKE) -C applet clean flash
 	
 image_D02:
 	$(MAKE) -C applet FW=D02_032 all  
@@ -82,16 +82,16 @@ dist: applets
 doflash: applets
 	./md380-dfu upgrade applet/experiment.bin
 
-all_images:
-	$(MAKE) -C applet ci
 
 # or else make will fail.
 download:
 	$(MAKE) -C firmware download
 
+all_images: download
+	$(MAKE) -C applet ci
+	
 ci: clean download
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
 	$(MAKE) data
-
 	
