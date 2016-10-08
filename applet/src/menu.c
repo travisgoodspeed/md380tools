@@ -924,9 +924,9 @@ void create_menu_utilies_hook(void)
     md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
 #else
     if( menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
-        md380_create_menu_entry(11, wt_addl_func, create_menu_entry_addl_functions_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
+        md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     } else {
-        md380_create_menu_entry(9, wt_addl_func, create_menu_entry_addl_functions_screen + 1, md380_menu_entry_back + 1, 0x8a, 0, 1);
+        md380_create_menu_entry(9, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     }
 #endif
 
