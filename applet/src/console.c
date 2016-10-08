@@ -176,27 +176,13 @@ static void con_draw1()
 //    }
 //#endif
     
-//    gfx_set_fg_color(bgcolor); 
-//    gfx_blockfill(0, 0, 159, 127); 
+    // erase bottom stripe.
+    gfx_set_fg_color(bgcolor); 
+    gfx_blockfill(0, MAX_Y-10, MAX_X, MAX_Y); 
     
     gfx_set_fg_color(fgcolor);
     gfx_set_bg_color(bgcolor); 
 
-    
-#ifdef VARIANT
-    for(int y=0;y<=con_ypos;y++) {
-        gfx_info.xpos = 0 ;
-        gfx_info.ypos = y * LINE_HEIGHT ;
-        char *p = con_buf[y];
-        for(int x=0;x<MAX_XPOS;x++) {
-            if( *p == 0 ) {
-                gfx_drawchar('_');
-            } else {
-                gfx_drawchar(*p++);
-            }
-        }
-    }
-#else    
     for(int y=0;y<Y_SIZE;y++) {
         char *p = con_buf[y];
         wchar_t *w = wide ;
@@ -220,7 +206,6 @@ static void con_draw1()
         *sp2 = 0;
         gfx_drawtext7(small, 0, y * LINE_HEIGHT);
     }
-#endif
 
     gfx_select_font(old);    
 }
