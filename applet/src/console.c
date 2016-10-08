@@ -7,6 +7,7 @@
 
 #include "md380.h"
 #include "gfx.h"
+#include "printf.h"
 
 #include <stdarg.h>
 
@@ -18,6 +19,14 @@ char con_buf[MAX_YPOS][MAX_XPOS+1]; // +1 for terminating 0 every line.
 
 int con_xpos = 0 ;
 int con_ypos = 0 ;
+
+static int con_dirty_flag = 0 ;
+
+#undef VARIANT
+
+//#if defined(FW_D13_020) || defined(FW_S13_020)
+//#define VARIANT
+//#endif
 
 void con_goto(int x, int y)
 {
@@ -55,7 +64,9 @@ void con_putsw( const wchar_t *s )
 void con_nl()
 {
     con_xpos = 0 ;
-    con_ypos++ ;    
+    con_ypos++ ;  
+    
+    con_dirty_flag = 1 ;
 }
 
 void con_clrscr()
@@ -65,6 +76,8 @@ void con_clrscr()
     for(int y=0;y<MAX_YPOS;y++) {
         con_buf[y][0] = 0 ;
     }
+
+    con_dirty_flag = 1 ;
 }
 
 static void con_addchar( char c )
@@ -80,6 +93,8 @@ static void con_addchar( char c )
     con_buf[con_ypos][con_xpos] = c ;
     con_xpos++ ;
     con_buf[con_ypos][con_xpos] = 0 ;
+
+    con_dirty_flag = 1 ;
 }
 
 void con_putc( char c )
@@ -115,7 +130,7 @@ void con_printf(const char* fmt, ...)
 
 int within_update = 0 ;
 
-#if defined(FW_D13_020) || defined(FW_S13_020)
+#if VARIANT
 #else 
 wchar_t wide[MAX_BUF];
 #endif
@@ -135,30 +150,34 @@ static void con_draw1()
     // TODO: save old values first.
     void *old = gfx_select_font(gfx_font_small);
     
-#if defined(FW_D13_020) || defined(FW_S13_020)
-#else 
-    // slow?
-    {
-        static int cnt = 0 ;
-        cnt++ ;
-        if( cnt % 16 == 0 ) {
-            gfx_set_fg_color(bgcolor); 
-            gfx_blockfill(0,0,159,109);
-        }
-    }
-#endif
+//#if defined(FW_D13_020) || defined(FW_S13_020)
+//#else 
+//    // slow?
+//    {
+//        static int cnt = 0 ;
+//        cnt++ ;
+//        if( cnt % 16 == 0 ) {
+//            gfx_set_fg_color(bgcolor); 
+//            gfx_blockfill(0,0,159,109);
+//        }
+//    }
+//#endif
+    
+//    gfx_set_fg_color(bgcolor); 
+//    gfx_blockfill(0, 0, 159, 127); 
     
     gfx_set_fg_color(fgcolor);
     gfx_set_bg_color(bgcolor); 
+
     
-#if defined(FW_D13_020) || defined(FW_S13_020)
+#ifdef VARIANT
     for(int y=0;y<=con_ypos;y++) {
         gfx_info.xpos = 0 ;
         gfx_info.ypos = y * LINE_HEIGHT ;
         char *p = con_buf[y];
         for(int x=0;x<MAX_XPOS;x++) {
             if( *p == 0 ) {
-                gfx_drawchar(' ');
+                gfx_drawchar('_');
             } else {
                 gfx_drawchar(*p++);
             }
@@ -171,7 +190,7 @@ static void con_draw1()
         wchar_t *we = wide + MAX_BUF -1 ;
         for(int x=0;x<MAX_XPOS;x++) {
             if( *p == 0 ) {
-                *w++ = ' ';                
+                *w++ = '%';                
             } else {
                 *w++ = *p++ ;                
             }
@@ -185,8 +204,11 @@ static void con_draw1()
 ////        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, MAX_XPOS);
 //#else
 //#warning should find symbol gfx_drawtext4        
-        gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
+//        gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
 //#endif
+
+//        gfx_drawtext2(wide,0, y * LINE_HEIGHT, 0 );
+        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 159, 27);
     }
 #endif
 
@@ -198,6 +220,11 @@ void con_redraw()
     if( !is_console_visible() ) {
         return ;
     }
+    
+    if( !con_dirty_flag ) {
+        return ;
+    }
+    con_dirty_flag = 0 ;
     
     // be prepared, excelent opportunity to be bitten by stack overflow.
     
