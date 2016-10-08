@@ -68,6 +68,7 @@ void con_clrscr()
 
 static void con_addchar( char c )
 {
+    // intentional non-wrap.
     if( con_xpos >= MAX_XPOS ) {
         return ;
     }
