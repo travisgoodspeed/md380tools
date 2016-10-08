@@ -1,8 +1,6 @@
 /*
  *  util.h
  * 
- *  Created on 20-Sep-2016 23:53:14 by Simon IJskes
- * 
  */
 
 #ifndef UTIL_H
