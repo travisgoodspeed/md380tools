@@ -103,18 +103,21 @@ void syslog_draw_poll()
         return ;
     }
     
+    int con_height = 9 ;
+    
     syslog_redraw_flag = 0 ;
     
     con_clrscr();
     
     int idx = line_poi ;
     idx += MAXLINES ;
-    idx -= 10 ;
+    idx -= con_height ;
     idx %= MAXLINES ;
     
     int pos = lines[idx];
     
     int i = pos ;
+    int linecnt = 0 ;
 //    int i = begin ;
     while(1) {
         i = wrap(i);
@@ -124,9 +127,13 @@ void syslog_draw_poll()
         char c = syslog_buf[i];
         con_printc(c);
         if( c == '\n' ) {
+            linecnt++ ;
             con_nl();
         }
         i++ ;
+    }
+    for(int i=linecnt;i<con_height;i++) {
+        con_nl();        
     }
 }
 
@@ -135,4 +142,7 @@ void syslog_clear()
     end = 0 ;
     begin = 0 ;
     line_poi = 0 ;
+    for(int i=0;i<MAXLINES;i++) {
+        lines[i] = 0 ;
+    }
 }
