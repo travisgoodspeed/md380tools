@@ -7,17 +7,26 @@
 
 #include "md380.h"
 #include "gfx.h"
+#include "printf.h"
 
 #include <stdarg.h>
 
 #define MAX_XPOS 27 
-#define MAX_YPOS 10 
+#define Y_SIZE 10
 
 #define MAX_BUF (MAX_XPOS + 1)
-char con_buf[MAX_YPOS][MAX_XPOS+1]; // +1 for terminating 0 every line.
+char con_buf[Y_SIZE][MAX_XPOS+1]; // +1 for terminating 0 every line.
 
 int con_xpos = 0 ;
 int con_ypos = 0 ;
+
+static int con_dirty_flag = 0 ;
+
+#undef VARIANT
+
+//#if defined(FW_D13_020) || defined(FW_S13_020)
+//#define VARIANT
+//#endif
 
 void con_goto(int x, int y)
 {
@@ -55,16 +64,25 @@ void con_putsw( const wchar_t *s )
 void con_nl()
 {
     con_xpos = 0 ;
-    con_ypos++ ;    
+    con_ypos++ ;  
+
+    if( con_ypos > Y_SIZE ) {
+        con_ypos = Y_SIZE ;
+        return ;
+    }
+        
+    con_dirty_flag = 1 ;
 }
 
 void con_clrscr()
 {
     con_xpos = 0 ;
     con_ypos = 0 ;
-    for(int y=0;y<MAX_YPOS;y++) {
+    for(int y=0;y<Y_SIZE;y++) {
         con_buf[y][0] = 0 ;
     }
+
+    con_dirty_flag = 1 ;
 }
 
 static void con_addchar( char c )
@@ -73,13 +91,22 @@ static void con_addchar( char c )
     if( con_xpos >= MAX_XPOS ) {
         return ;
     }
-    if( con_ypos >= MAX_YPOS ) {
+    if( con_ypos >= Y_SIZE ) {
         return ;        
+    }
+    
+    if( c < ' ' ) {
+        c = '.' ;
+    }
+    if( c >= 127 ) {
+        c = '.' ;
     }
     
     con_buf[con_ypos][con_xpos] = c ;
     con_xpos++ ;
     con_buf[con_ypos][con_xpos] = 0 ;
+
+    con_dirty_flag = 1 ;
 }
 
 void con_putc( char c )
@@ -115,9 +142,10 @@ void con_printf(const char* fmt, ...)
 
 int within_update = 0 ;
 
-#if defined(FW_D13_020) || defined(FW_S13_020)
+#if VARIANT
 #else 
 wchar_t wide[MAX_BUF];
+char small[MAX_BUF];
 #endif
 
 #define LINE_HEIGHT 12 
@@ -135,60 +163,49 @@ static void con_draw1()
     // TODO: save old values first.
     void *old = gfx_select_font(gfx_font_small);
     
-#if defined(FW_D13_020) || defined(FW_S13_020)
-#else 
-    // slow?
-    {
-        static int cnt = 0 ;
-        cnt++ ;
-        if( cnt % 16 == 0 ) {
-            gfx_set_fg_color(bgcolor); 
-            gfx_blockfill(0,0,159,109);
-        }
-    }
-#endif
+//#if defined(FW_D13_020) || defined(FW_S13_020)
+//#else 
+//    // slow?
+//    {
+//        static int cnt = 0 ;
+//        cnt++ ;
+//        if( cnt % 16 == 0 ) {
+//            gfx_set_fg_color(bgcolor); 
+//            gfx_blockfill(0,0,159,109);
+//        }
+//    }
+//#endif
+    
+    // erase bottom stripe.
+    gfx_set_fg_color(bgcolor); 
+    gfx_blockfill(0, MAX_Y-10, MAX_X, MAX_Y); 
     
     gfx_set_fg_color(fgcolor);
     gfx_set_bg_color(bgcolor); 
-    
-#if defined(FW_D13_020) || defined(FW_S13_020)
-    for(int y=0;y<=con_ypos;y++) {
-        gfx_info.xpos = 0 ;
-        gfx_info.ypos = y * LINE_HEIGHT ;
-        char *p = con_buf[y];
-        for(int x=0;x<MAX_XPOS;x++) {
-            if( *p == 0 ) {
-                gfx_drawchar(' ');
-            } else {
-                gfx_drawchar(*p++);
-            }
-        }
-    }
-#else    
-    for(int y=0;y<=con_ypos;y++) {
+
+    for(int y=0;y<Y_SIZE;y++) {
         char *p = con_buf[y];
         wchar_t *w = wide ;
         wchar_t *we = wide + MAX_BUF -1 ;
+        char *sp2 = small ;
         for(int x=0;x<MAX_XPOS;x++) {
             if( *p == 0 ) {
-                *w++ = ' ';                
+                char c = ' ' ;
+                *w++ = c ;         
+                *sp2++ = c ;
             } else {
-                *w++ = *p++ ;                
+                char c = *p++ ;
+                *w++ = c ;         
+                *sp2++ = c ;
             }
             if( w >= we ) {
                 break ;
             }
         }
         *w = 0 ;
-//#if defined(FW_D13_020)
-//////        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, MAX_XPOS, MAX_XPOS);
-////        gfx_drawtext4(wide, 0, y * LINE_HEIGHT, 0, MAX_XPOS);
-//#else
-//#warning should find symbol gfx_drawtext4        
-        gfx_chars_to_display(wide, 0, y * LINE_HEIGHT, 0);
-//#endif
+        *sp2 = 0;
+        gfx_drawtext7(small, 0, y * LINE_HEIGHT);
     }
-#endif
 
     gfx_select_font(old);    
 }
@@ -198,6 +215,11 @@ void con_redraw()
     if( !is_console_visible() ) {
         return ;
     }
+    
+    if( !con_dirty_flag ) {
+        return ;
+    }
+    con_dirty_flag = 0 ;
     
     // be prepared, excelent opportunity to be bitten by stack overflow.
     

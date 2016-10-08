@@ -14,6 +14,16 @@
 extern "C" {
 #endif
 
+// 160 pixels wide, 128 pixels high
+#define MAX_X 159
+#define MAX_Y 127    
+    
+// status text coordinates    
+#define STATUS_X 10
+#define STATUS_Y 55    
+    
+    
+    
 /*  see 0x0801f06a there are a lot of modes */
 
 // 16  = ? not seen

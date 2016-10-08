@@ -53,6 +53,12 @@ void gfx_drawtext5( char *r0, int r1, int r2, int r3 )
     gfx_clear3( r3 );
 }
 
+void gfx_drawtext6(wchar_t *str, int x, int y, int ylen)
+{
+    // do complicated things, and stick ".." at the end in a buffer on stack.
+    gfx_drawtext7(str,x,y);
+}
+
 void gfx_drawtext7( char *r0, int r1, int r2 )
 {
     gfx_info[34] = r1 ; // xpos
