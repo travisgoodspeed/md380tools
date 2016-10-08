@@ -35,7 +35,7 @@ void handle_hotkey( int keycode )
         case 6 :
         {
             static int cnt = 0 ;
-            syslog_printf("hello %d\n",cnt++);
+            syslog_printf("=dump %d=\n",cnt++);
         }
             syslog_dump_dmesg();
             break ;

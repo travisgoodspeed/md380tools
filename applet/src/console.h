@@ -26,7 +26,9 @@ void con_clrscr();
 void con_nl();
 
 void con_goto(int x, int y);
-void con_print(int x, int y, const char *s);
+void con_print_pos(int x, int y, const char *s);
+void con_print(const char *s);
+void con_printc(char c);
 
 void con_redraw();
 
