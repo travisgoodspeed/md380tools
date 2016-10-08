@@ -82,17 +82,14 @@ int check_spi_flash_size(void) {
   }
 }
 
-
-void spiflash_write_with_type_check(void *dst, long adr, long len) {
-  if (check_spi_flash_size() > adr) {
+void spiflash_write_with_type_check(void *dst, long adr, long len)
+{
+    if( check_spi_flash_size() > adr ) {
 #ifdef CONFIG_SPIFLASH
-    md380_spiflash_write(dst, adr, len);
+        md380_spiflash_write(dst, adr, len);
 #endif
-  }else{
-    printf("Rejecting write to %x as past the end of SPI Flash.\n",
-	   adr);
-  }
+    } else {
+        printf("Rejecting write to %x as past the end of SPI Flash.\n",
+                adr);
+    }
 }
-
-
-

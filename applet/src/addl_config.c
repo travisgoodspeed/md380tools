@@ -14,7 +14,7 @@
 #include "spiflash.h"
 #include "addl_config.h"
 
-struct addl_config global_addl_config;
+addl_config_t global_addl_config;
 
 uint8_t spiflash_read_uint8( int offset )
 {
@@ -115,7 +115,17 @@ inline void spiflash_read_userscsv()
     global_addl_config.userscsv = spiflash_read_uint8_ranged( offset_userscsv, 2 );    
 }
 
-void cfg_load()
+void cfg_read_struct( addl_config_t *cfg )
+{
+    md380_spiflash_read(cfg, spi_flash_addl_config_start, sizeof(addl_config_t));
+}
+
+void cfg_write_struct( addl_config_t *cfg )
+{
+    spiflash_write_with_type_check(cfg, spi_flash_addl_config_start, sizeof(addl_config_t));
+}
+
+void read_compat()
 {
     spiflash_read_rbeep();
     spiflash_read_datef();
@@ -123,14 +133,12 @@ void cfg_load()
     spiflash_read_debug();
     spiflash_read_promtg();
     spiflash_read_micbargraph();
-    spiflash_read_console();
-        
-    // global_addl_config.experimental is intentionally not permanent
-    global_addl_config.experimental = 0;
+    spiflash_read_console();    
 }
 
-void cfg_save()
+void write_compat()
 {
+    // compat
     spiflash_write_promtg();
     spiflash_write_micbargraph();
     spiflash_write_micbargraph();
@@ -138,9 +146,30 @@ void cfg_save()
     spiflash_write_datef();
     spiflash_write_userscsv();
     spiflash_write_debug();
-    spiflash_write_console();
-    
+    spiflash_write_console();    
 }
+
+void cfg_load()
+{
+    cfg_read_struct( &global_addl_config );
+    
+    int version = global_addl_config.version ;
+    if( version == '0' || version == '1' ) {
+        // old style
+        read_compat();
+    }
+    
+    // global_addl_config.experimental is intentionally not permanent
+    global_addl_config.experimental = 0;
+}
+
+void cfg_save()
+{
+    global_addl_config.version = 1 ;
+    cfg_write_struct( &global_addl_config );
+
+    //TODO: maybe allow for an option to write back compat, for downgrades. no fun.
+}   
 
 void init_global_addl_config_hook(void)
 {

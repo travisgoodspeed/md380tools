@@ -18,8 +18,8 @@ enum spi_flash_addl_config {
   offset_console,
 };
 
-extern struct addl_config {
-    uint8_t rbeep;
+typedef struct addl_config {
+    uint8_t version;
     uint8_t datef;
     uint8_t userscsv;
     uint8_t debug;
@@ -27,14 +27,17 @@ extern struct addl_config {
     uint8_t experimental;
     uint8_t micbargraph;
     uint8_t console;
-} global_addl_config;
+    uint8_t rbeep;
+    uint8_t reserve[20];
+} addl_config_t ;
+
+extern addl_config_t global_addl_config;
 
 extern void init_global_addl_config_hook(void);
 
 extern void spiflash_write_uint8( int offset, uint8_t val );
 extern uint8_t spiflash_read_uint8( int offset );
 extern uint8_t spiflash_read_uint8_ranged( int offset, uint8_t cnt );
-
 
 void cfg_save();
 
