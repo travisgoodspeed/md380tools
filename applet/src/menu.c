@@ -239,31 +239,6 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //  md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
 //}
 
-void spiflash_write_uint8( int offset, uint8_t val )
-{
-    char buf[2];
-    buf[0] = '0' + val ;
-    buf[1] = 0 ;
-    spiflash_write_with_type_check(buf, spi_flash_addl_config_start + offset, 1);
-}
-
-uint8_t spiflash_read_uint8_ranged( int offset, uint8_t cnt )
-{
-    uint8_t r = spiflash_read_uint8( offset );
-    if( r >= cnt ) {
-        // out of range, reset to default = 0
-        r = 0 ;
-    }
-    return r ;
-}
-
-uint8_t spiflash_read_uint8( int offset )
-{
-    char buf[1];
-    md380_spiflash_read(buf, spi_flash_addl_config_start + offset, 1);
-    return buf[0] - '0' ;
-}
-
 struct MENU *get_menu_stackpoi()
 {
     return ( void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
@@ -354,7 +329,8 @@ void create_menu_entry_promtg_enable_screen(void)
     mn_create_single_timed_ack(wt_promtg,wt_enable);
     
     global_addl_config.promtg = 1;
-    spiflash_write_promtg();
+    
+    cfg_save();
 }
 
 void create_menu_entry_promtg_disable_screen(void)
@@ -362,7 +338,8 @@ void create_menu_entry_promtg_disable_screen(void)
     mn_create_single_timed_ack(wt_promtg,wt_disable);
     
     global_addl_config.promtg = 0;
-    spiflash_write_promtg();
+
+    cfg_save();
 }
 
 void create_menu_entry_micbargraph_enable_screen(void)
@@ -370,7 +347,8 @@ void create_menu_entry_micbargraph_enable_screen(void)
     mn_create_single_timed_ack(wt_micbargraph,wt_enable);
 
     global_addl_config.micbargraph = 1;
-    spiflash_write_micbargraph();
+
+    cfg_save();
 }
 
 void create_menu_entry_micbargraph_disable_screen(void)
@@ -378,7 +356,8 @@ void create_menu_entry_micbargraph_disable_screen(void)
     mn_create_single_timed_ack(wt_micbargraph,wt_disable);
 
     global_addl_config.micbargraph = 0;
-    spiflash_write_micbargraph();
+
+    cfg_save();
 }
 
 void create_menu_entry_rbeep_enable_screen(void)
@@ -386,7 +365,8 @@ void create_menu_entry_rbeep_enable_screen(void)
     mn_create_single_timed_ack(wt_rbeep,wt_enable);
 
     global_addl_config.rbeep = 1;
-    spiflash_write_rbeep();
+
+    cfg_save();
 }
 
 void create_menu_entry_rbeep_disable_screen(void)
@@ -394,7 +374,8 @@ void create_menu_entry_rbeep_disable_screen(void)
     mn_create_single_timed_ack(wt_rbeep,wt_disable);
 
     global_addl_config.rbeep = 0;
-    spiflash_write_rbeep();
+
+    cfg_save();
 }
 
 void create_menu_entry_datef_original_screen(void)
@@ -402,7 +383,8 @@ void create_menu_entry_datef_original_screen(void)
     mn_create_single_timed_ack(wt_datef,wt_datef_original);
 
     global_addl_config.datef = 0;
-    spiflash_write_datef();
+
+    cfg_save();
 }
 
 void create_menu_entry_datef_germany_screen(void)
@@ -410,7 +392,8 @@ void create_menu_entry_datef_germany_screen(void)
     mn_create_single_timed_ack(wt_datef,wt_datef_germany);
 
     global_addl_config.datef = 1;
-    spiflash_write_datef();
+
+    cfg_save();
 }
 
 void create_menu_entry_datef_italy_screen(void)
@@ -418,7 +401,8 @@ void create_menu_entry_datef_italy_screen(void)
     mn_create_single_timed_ack(wt_datef,wt_datef_italy);
 
     global_addl_config.datef = 2;
-    spiflash_write_datef();
+
+    cfg_save();
 }
 
 void create_menu_entry_datef_american_screen(void)
@@ -426,7 +410,8 @@ void create_menu_entry_datef_american_screen(void)
     mn_create_single_timed_ack(wt_datef,wt_datef_american);
 
     global_addl_config.datef = 3;
-    spiflash_write_datef();
+
+    cfg_save();
 }
 
 void create_menu_entry_datef_iso_screen(void)
@@ -434,7 +419,8 @@ void create_menu_entry_datef_iso_screen(void)
     mn_create_single_timed_ack(wt_datef,wt_datef_iso);
     
     global_addl_config.datef = 4;
-    spiflash_write_datef();
+
+    cfg_save();
 }
 
 void create_menu_entry_datef_alt_screen(void)
@@ -442,7 +428,8 @@ void create_menu_entry_datef_alt_screen(void)
     mn_create_single_timed_ack(wt_datef,wt_datef_alt);
     
     global_addl_config.datef = 5;
-    spiflash_write_datef();
+
+    cfg_save();
 }
 
 void create_menu_entry_userscsv_enable_screen(void)
@@ -450,7 +437,8 @@ void create_menu_entry_userscsv_enable_screen(void)
     mn_create_single_timed_ack(wt_userscsv,wt_enable);
     
     global_addl_config.userscsv = 1;
-    spiflash_write_userscsv();
+
+    cfg_save();
 }
 
 void create_menu_entry_userscsv_disable_screen(void)
@@ -458,7 +446,8 @@ void create_menu_entry_userscsv_disable_screen(void)
     mn_create_single_timed_ack(wt_userscsv,wt_disable);
     
     global_addl_config.userscsv = 0;
-    spiflash_write_userscsv();
+
+    cfg_save();
 }
 
 void create_menu_entry_experimental_enable_screen(void)
@@ -480,7 +469,8 @@ void create_menu_entry_debug_enable_screen(void)
     mn_create_single_timed_ack(wt_debug,wt_enable);
     
     global_addl_config.debug = 1;
-    spiflash_write_debug();
+
+    cfg_save();
 }
 
 void create_menu_entry_debug_disable_screen(void)
@@ -488,13 +478,12 @@ void create_menu_entry_debug_disable_screen(void)
     mn_create_single_timed_ack(wt_debug,wt_disable);
     
     global_addl_config.debug = 0;
-    spiflash_write_debug();
+
+    cfg_save();
 }
 
 void create_menu_entry_promtg_screen(void)
 {
-    spiflash_read_promtg();
-
     mn_submenu_init(wt_promtg);
 
 //    struct MENU *menu_mem;
@@ -526,8 +515,6 @@ void create_menu_entry_promtg_screen(void)
 
 void create_menu_entry_micbargraph_screen(void)
 {
-    spiflash_read_micbargraph();
-
     mn_submenu_init(wt_micbargraph);
 
 //    struct MENU *menu_mem;
@@ -559,8 +546,6 @@ void create_menu_entry_micbargraph_screen(void)
 
 void create_menu_entry_rbeep_screen(void)
 {
-    spiflash_read_rbeep();
-
     mn_submenu_init(wt_rbeep);
 
 //    struct MENU *menu_mem;
@@ -592,8 +577,6 @@ void create_menu_entry_rbeep_screen(void)
 
 void create_menu_entry_datef_screen(void)
 {
-    spiflash_read_datef();
-
     mn_submenu_init(wt_datef);
 
 //    struct MENU *menu_mem;
@@ -629,8 +612,6 @@ void create_menu_entry_datef_screen(void)
 
 void create_menu_entry_userscsv_screen(void)
 {
-    spiflash_read_userscsv();
-
     mn_submenu_init(wt_userscsv);
 
 //    struct MENU *menu_mem;
@@ -678,8 +659,6 @@ void create_menu_entry_userscsv_screen(void)
 
 void create_menu_entry_debug_screen(void)
 {
-    spiflash_read_debug();
-    
     mn_submenu_init(wt_debug);
 
 //    struct MENU *menu_mem;
@@ -714,7 +693,8 @@ void create_menu_entry_netmon1_screen(void)
     mn_create_single_timed_ack(wt_netmon,wt_netmon_1);
     
     global_addl_config.console = 1;
-    spiflash_write_console();
+
+    cfg_save();
 }
 
 
@@ -723,7 +703,8 @@ void create_menu_entry_netmon2_screen(void)
     mn_create_single_timed_ack(wt_netmon,wt_netmon_2);
     
     global_addl_config.console = 2;
-    spiflash_write_console();
+
+    cfg_save();
 }
 
 void create_menu_entry_netmon3_screen(void)
@@ -731,7 +712,8 @@ void create_menu_entry_netmon3_screen(void)
     mn_create_single_timed_ack(wt_netmon,wt_netmon_3);
     
     global_addl_config.console = 3;
-    spiflash_write_console();
+
+    cfg_save();
 }
 
 void create_menu_entry_netmon_disable_screen(void)
@@ -739,7 +721,8 @@ void create_menu_entry_netmon_disable_screen(void)
     mn_create_single_timed_ack(wt_netmon,wt_disable);
     
     global_addl_config.console = 0;
-    spiflash_write_console();
+
+    cfg_save();
 }
 
 #if defined(FW_D13_020)    
