@@ -18,7 +18,13 @@ inline int is_syslog_enabled()
 
 void syslog_printf(const char *fmt, ...);
 
+// radio
 #define LOGR(...) syslog_printf(__VA_ARGS__)
+
+// gui
+#define LOGG(...) //syslog_printf(__VA_ARGS__)
+
+// template for others
 #define LOGx(...) syslog_printf(__VA_ARGS__)
 
 void syslog_dump_dmesg();

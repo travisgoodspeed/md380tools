@@ -34,7 +34,7 @@ void con_redraw();
 
 inline int is_menu_visible()
 {
-    return gui_opmode2 == 10 ;
+    return gui_opmode2 == OPM2_MENU ;
 //#ifdef FW_D13_020
 //    if( gui_opmode2 == 10 ) {
 //        return 1 ;
