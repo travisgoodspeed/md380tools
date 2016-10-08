@@ -94,7 +94,9 @@ void* gfx_select_font(void *p);
 void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen);
 
 // if larger than maxstrlen end in ".."
-void gfx_drawtext4(wchar_t *str, int x, int y, int xlen, int maxstrlen);
+void gfx_drawtext4(const wchar_t *str, int x, int y, int xlen, int maxstrlen);
+
+void gfx_drawtext7(const wchar_t *str, int x, int y); // firmware
 
 extern uint32_t gfx_font_small[];
 extern uint32_t gfx_font_norm[];

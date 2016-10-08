@@ -103,7 +103,7 @@ void syslog_draw_poll()
         return ;
     }
     
-    int con_height = 9 ;
+    int con_height = 10 ;
     
     syslog_redraw_flag = 0 ;
     
@@ -125,10 +125,11 @@ void syslog_draw_poll()
             break ;
         }
         char c = syslog_buf[i];
-        con_printc(c);
         if( c == '\n' ) {
             linecnt++ ;
             con_nl();
+        } else {
+            con_printc(c);            
         }
         i++ ;
     }
