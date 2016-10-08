@@ -11,6 +11,7 @@
 #include "dmr.h"
 #include "radiostate.h"
 #include "syslog.h"
+#include "console.h"
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -164,13 +165,13 @@ void netmon1_update()
     }
     print_smeter();
     {
-        uint8_t *p = 0x2001e5f0 ;
+        uint8_t *p = (void*)0x2001e5f0 ;
         con_printf("st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
     }
 #ifdef FW_D13_020
     {
         // only valid when transmitting or receiving.
-        uint32_t *recv = 0x2001e5e4 ;
+        uint32_t *recv = (void*)0x2001e5e4 ;
         con_printf("%d\n", *recv); 
     }
 #endif    
@@ -182,8 +183,9 @@ void print_bcd( uint8_t bcd )
     con_printf("%d%d", (bcd>>4)&0xf, bcd&0xf );
 }
 
-void printfreq( uint8_t p[] )
+void printfreq( void *p2 )
 {
+    uint8_t *p = p2 ;
     print_bcd( p[3] );
     print_bcd( p[2] );
     print_bcd( p[1] );
@@ -205,7 +207,7 @@ typedef struct {
 
 void netmon2_update()
 {
-    ci_t *ci = 0x2001deb8 ;
+    ci_t *ci = (void*)0x2001deb8 ;
     
     con_clrscr();
     {

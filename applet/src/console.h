@@ -30,6 +30,8 @@ void con_print_pos(int x, int y, const char *s);
 void con_print(const char *s);
 void con_printc(char c);
 
+void con_printf(const char* fmt, ...);
+
 void con_redraw();
 
 #include "addl_config.h"

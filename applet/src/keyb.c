@@ -16,8 +16,8 @@
 
 #include <stdint.h>
 
-uint8_t *keypressed_p = 0x2001e5f8 ;
-uint8_t *keycode_p = 0x2001e890 ;
+uint8_t *keypressed_p = (void*)0x2001e5f8 ;
+uint8_t *keycode_p = (void*)0x2001e890 ;
     
 inline int get_main_mode()
 {

@@ -99,7 +99,7 @@ void draw_micbargraph()
 
 #ifdef FW_D13_020
     {
-        uint8_t *rs = 0x2001e5f0 ;
+        uint8_t *rs = (void*)0x2001e5f0 ;
         is_tx = rs[1] & 1 ;
         is_rx = rs[1] & 2 ;
     }
