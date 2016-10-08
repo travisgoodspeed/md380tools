@@ -41,6 +41,8 @@ void handle_hotkey( int keycode )
             break ;
         case 7 :
             global_addl_config.console = 0 ;
+            gui_opmode2 = OPM2_TERM ;
+            md380_f_4225_operatingmode = SCR_MODE_21 & 0x80 ;
             break ;
         case 8 :
             global_addl_config.console = 1 ;
