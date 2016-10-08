@@ -7,8 +7,8 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 .PHONY: dist
 
-all: applets
-	
+all: image_D13
+		
 clean: mostlyclean
 	$(MAKE) -C firmware clean
 	
@@ -23,15 +23,15 @@ mostlyclean:
 	rm -f data data.csv	
 	
 
-patches: firmwares
-	$(MAKE) -C patches/2.032 all
-	$(MAKE) -C patches/d13.020 all
+#patches: firmwares
+#	$(MAKE) -C patches/2.032 all
+#	$(MAKE) -C patches/d13.020 all
 
-applets: patches
-	$(MAKE) -C applet all
+#applets: patches
+#	$(MAKE) -C applet all
 
-firmwares:
-	$(MAKE) -C firmware all
+#firmwares:
+#	$(MAKE) -C firmware all
 
 flash:
 	$(MAKE) -C applet clean flash
@@ -87,8 +87,8 @@ doflash: applets
 
 
 # or else make will fail.
-download:
-	$(MAKE) -C firmware download
+#download:
+#	$(MAKE) -C firmware download
 
 all_images: 
 	$(MAKE) -C applet ci
