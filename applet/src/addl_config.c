@@ -13,6 +13,7 @@
 #include "printf.h"
 #include "spiflash.h"
 #include "addl_config.h"
+#include "radio_config.h"
 
 addl_config_t global_addl_config;
 
@@ -157,6 +158,14 @@ void cfg_load()
     if( version == '0' || version == '1' ) {
         // old style
         read_compat();
+    } else {
+        
+        // restore dmrid
+        int dmrid = global_addl_config.dmrid ;
+        if( dmrid != 0 ) {
+            md380_spiflash_write(&dmrid, 0x2084, 4);            
+            md380_radio_config.dmrid = dmrid;
+        }
     }
     
     // global_addl_config.experimental is intentionally not permanent
