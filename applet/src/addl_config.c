@@ -158,6 +158,7 @@ void cfg_load()
     if( version == '0' || version == '1' ) {
         // old style
         read_compat();
+        global_addl_config.dmrid = 0 ;
     } else {
         
         // restore dmrid
