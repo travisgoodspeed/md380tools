@@ -242,7 +242,7 @@ void f_4225_hook()
         static int old = -1 ;
         int new = md380_f_4225_operatingmode & 0x7F ;
         if( old != new ) {
-            if( gui_opmode2 == 10 ) {
+            if( gui_opmode2 == OPM2_MENU ) {
                 // menu displayed.
                 if( new == SCR_MODE_IDLE || new == SCR_MODE_RX_VOICE || new == SCR_MODE_RX_TERMINATOR ) {
                     // from menu to popup transition.
@@ -267,8 +267,8 @@ void f_4225_hook()
     md380_f_4225();
     
     if( is_console_visible() ) {
-        if( gui_opmode2 == 2 ) {
-            gui_opmode2 = 1;
+        if( gui_opmode2 == OPM2_VOICE ) {
+            gui_opmode2 = OPM2_IDLE;
         }
     }
 }
