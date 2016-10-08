@@ -433,7 +433,7 @@ void *dmr_handle_data_hook(char *pkt, int len)
     printf("\n");
 
     {
-        data_blk_t *data = (pkt + 2);
+        data_blk_t *data = (void*)(pkt + 2);
         rst_data_block(data);
     }
 
