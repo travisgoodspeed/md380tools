@@ -25,19 +25,23 @@ void con_goto(int x, int y)
     con_ypos = y ;
 }
 
-void con_print(int x, int y, const char *s)
+void con_print_pos(int x, int y, const char *s)
 {
     con_goto(x,y);
-    con_puts(s);
+    con_print(s);
+}
+
+void con_print( const char *s )
+{
+    while( *s ) {
+        con_printc( *s++ );
+    }    
 }
 
 void con_puts( const char *s )
 {
     while( *s ) {
         con_putc( *s++ );
-        if( con_xpos >= MAX_XPOS ) {
-            con_nl();
-        }
     }    
 }
 
@@ -45,9 +49,6 @@ void con_putsw( const wchar_t *s )
 {
     while( *s ) {
         con_putc( *s++ );
-        if( con_xpos >= MAX_XPOS ) {
-            con_nl();
-        }
     }        
 }
 
@@ -92,6 +93,11 @@ void con_putc( char c )
             return ;
     }
     con_addchar(c);    
+}
+
+void con_printc( char c )
+{
+    con_addchar(c);
 }
 
 static void con_putch(void* p, char c)

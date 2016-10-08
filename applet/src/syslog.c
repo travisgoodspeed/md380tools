@@ -108,7 +108,11 @@ void syslog_dump_console()
         if( i == end ) {
             break ;
         }
-        con_putc(syslog_buf[i]);
+        char c = syslog_buf[i];
+        con_printc(c);
+        if( c == '\n' ) {
+            con_nl();
+        }
         i++ ;
     }
 }
