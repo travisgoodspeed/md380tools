@@ -215,6 +215,7 @@ void gfx_blockfill_hook(int x_from, int y_from, int x_to, int y_to)
     }
     
     gfx_blockfill(x_from,y_from,x_to,y_to);
+    
     if( y_from == 0 && x_from == 61 ) {
         // if we have stat var for detecting first draw....
         // we could clear by blockfill only once.

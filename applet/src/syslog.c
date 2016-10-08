@@ -11,9 +11,9 @@
 #include "dmesg.h"
 #include "console.h"
 
-#define SYSLOG_SIZE 200 
+#define SYSLOG_SIZE 500 
 
-#define MAXLINES 10 
+#define MAXLINES 20 
 int lines[MAXLINES];
 int line_poi = 0 ;
 int first_char = 1 ;
@@ -95,6 +95,10 @@ void syslog_dump_console()
     con_clrscr();
     
     int idx = line_poi ;
+    idx += MAXLINES ;
+    idx -= 10 ;
+    idx %= MAXLINES ;
+    
     int pos = lines[idx];
     
     int i = pos ;

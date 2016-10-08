@@ -38,7 +38,14 @@ extern void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen);
 void gfx_set_bg_color(int color);
 void gfx_set_fg_color(int color);
 
-void gfx_blockfill(int xmin, int ymin, int xmax, int ymax);
+/**
+ * 
+ * @param x_from 0...159
+ * @param y_from 0...127
+ * @param x_to   0...159
+ * @param y_to   0...127
+ */
+void gfx_blockfill(int x_from, int y_from, int x_to, int y_to);
 
 // md380 dmr
 
