@@ -57,6 +57,7 @@ void handle_hotkey( int keycode )
             mb_send_beep(beep_event_probe);
             break ;
         case 15 :
+            syslog_redraw();
             global_addl_config.console = 3 ;
             break ;
     }    

@@ -28,8 +28,10 @@ void syslog_printf(const char *fmt, ...);
 #define LOGx(...) syslog_printf(__VA_ARGS__)
 
 void syslog_dump_dmesg();
-void syslog_dump_console();
 void syslog_clear();
+
+void syslog_redraw();
+void syslog_draw_poll();
 
 #ifdef __cplusplus
 }
