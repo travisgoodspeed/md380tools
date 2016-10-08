@@ -35,8 +35,6 @@ void con_puts( const char *s )
 {
     while( *s ) {
         con_putc( *s++ );
-        if( con_xpos >= MAX_XPOS ) {
-            con_nl();
         }
     }    
 }
@@ -45,8 +43,6 @@ void con_putsw( const wchar_t *s )
 {
     while( *s ) {
         con_putc( *s++ );
-        if( con_xpos >= MAX_XPOS ) {
-            con_nl();
         }
     }        
 }
@@ -70,7 +66,7 @@ static void con_addchar( char c )
 {
     // intentional non-wrap.
     if( con_xpos >= MAX_XPOS ) {
-        return ;
+        con_nl();
     }
     if( con_ypos >= MAX_YPOS ) {
         return ;        
