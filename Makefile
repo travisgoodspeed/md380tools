@@ -93,7 +93,7 @@ download:
 all_images: 
 	$(MAKE) -C applet ci
 	
-ci: mostlyclean download
+ci: mostlyclean 
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
 	$(MAKE) data
