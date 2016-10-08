@@ -18,8 +18,8 @@ enum spi_flash_addl_config {
   offset_console,
 };
 
-extern struct addl_config {
-    uint8_t rbeep;
+typedef struct addl_config {
+    uint8_t version;
     uint8_t datef;
     uint8_t userscsv;
     uint8_t debug;
@@ -27,7 +27,11 @@ extern struct addl_config {
     uint8_t experimental;
     uint8_t micbargraph;
     uint8_t console;
-} global_addl_config;
+    uint8_t rbeep;
+    uint8_t reserve[20];
+} addl_config_t ;
+
+extern addl_config_t global_addl_config;
 
 extern void init_global_addl_config_hook(void);
 
@@ -35,78 +39,6 @@ extern void spiflash_write_uint8( int offset, uint8_t val );
 extern uint8_t spiflash_read_uint8( int offset );
 extern uint8_t spiflash_read_uint8_ranged( int offset, uint8_t cnt );
 
-inline void spiflash_write_datef()
-{
-    spiflash_write_uint8( offset_datef, global_addl_config.datef );    
-}
-
-inline void spiflash_read_datef()
-{
-    global_addl_config.datef = spiflash_read_uint8_ranged( offset_datef, 6 );    
-}
-
-inline void spiflash_write_console()
-{
-    spiflash_write_uint8( offset_console, global_addl_config.console );    
-}
-
-inline void spiflash_read_console()
-{
-#if defined(FW_D13_020)    
-    global_addl_config.console = spiflash_read_uint8_ranged( offset_console, 4 );    
-#else
-    global_addl_config.console = 0 ;
-#endif    
-}
-
-inline void spiflash_write_promtg()
-{
-    spiflash_write_uint8( offset_promtg, global_addl_config.promtg );    
-}
-
-inline void spiflash_read_promtg()
-{
-    global_addl_config.promtg = spiflash_read_uint8_ranged( offset_promtg, 2 );    
-}
-
-inline void spiflash_write_micbargraph()
-{
-    spiflash_write_uint8( offset_micbargraph, global_addl_config.micbargraph );    
-}
-
-inline void spiflash_write_rbeep()
-{
-    spiflash_write_uint8( offset_rbeep, global_addl_config.rbeep );    
-}
-
-inline void spiflash_read_rbeep()
-{
-    global_addl_config.rbeep = spiflash_read_uint8_ranged( offset_rbeep, 2 );    
-}
-
-inline void spiflash_write_debug()
-{
-    spiflash_write_uint8( offset_debug, global_addl_config.debug );    
-}
-
-inline void spiflash_read_debug()
-{
-    global_addl_config.debug = spiflash_read_uint8_ranged( offset_debug, 2 );    
-}
-
-inline void spiflash_read_micbargraph()
-{
-    global_addl_config.micbargraph = spiflash_read_uint8_ranged( offset_micbargraph, 2 );    
-}
-
-inline void spiflash_write_userscsv()
-{
-    spiflash_write_uint8( offset_userscsv, global_addl_config.userscsv );    
-}
-
-inline void spiflash_read_userscsv()
-{
-    global_addl_config.userscsv = spiflash_read_uint8_ranged( offset_userscsv, 2 );    
-}
+void cfg_save();
 
 #endif
