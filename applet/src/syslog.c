@@ -23,6 +23,8 @@ char syslog_buf[SYSLOG_SIZE];
 static int end = 0 ;
 static int begin = 0 ;
 
+static int syslog_redraw_flag = 0 ;
+
 int inline wrap( int idx )
 {
     if( idx >= SYSLOG_SIZE ) {
@@ -57,7 +59,7 @@ void syslog_putch( char c )
         // full.
         begin = wrap(begin+1);
     }
-    
+    syslog_redraw_flag = 1 ;
 }
 
 static void syslog_prch(void* p, char c)
@@ -90,8 +92,19 @@ void syslog_dump_dmesg()
     }
 }
 
-void syslog_dump_console()
+void syslog_redraw()
 {
+    syslog_redraw_flag = 1 ;
+}
+
+void syslog_draw_poll()
+{
+    if( !syslog_redraw_flag ) {
+        return ;
+    }
+    
+    syslog_redraw_flag = 0 ;
+    
     con_clrscr();
     
     int idx = line_poi ;

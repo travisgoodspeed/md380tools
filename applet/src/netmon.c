@@ -231,7 +231,7 @@ void netmon2_update()
 
 void netmon3_update()
 {
-    syslog_dump_console();
+    syslog_draw_poll();
 }
 
 void netmon_update()
