@@ -206,15 +206,12 @@ void *dmr_call_end_hook(uint8_t *pkt)
      */
 
     {
-        lc_t *data = (pkt + 2);
+        lc_t *data = (void*)(pkt + 2);
         rst_term_with_lc( data );
     }
 
-//    PRINT("ce " );
-//    dumpraw_lc(pkt);
-
     //Forward to the original function.
-    return dmr_call_end((void*) pkt);
+    return dmr_call_end(pkt);
 }
 
 void *dmr_call_start_hook(uint8_t *pkt)
@@ -251,7 +248,7 @@ void *dmr_call_start_hook(uint8_t *pkt)
     int groupcall = (pkt[2] & 0x3F) == 0;
 
     {
-        lc_t *data = (pkt + 2);
+        lc_t *data = (void*)(pkt + 2);
         rst_voice_lc_header( data );
     }
 
@@ -272,9 +269,6 @@ void *dmr_call_start_hook(uint8_t *pkt)
     g_src = src;
     OS_EXIT_CRITICAL(primask);
 
-//    PRINT("cs " );
-//    dumpraw_lc(pkt);
-    
     //Forward to the original function.
     return dmr_call_start(pkt);
 }

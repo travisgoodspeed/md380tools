@@ -106,6 +106,8 @@ typedef struct lc {
     adr_t src ;    
 } lc_t ;
 
+void dump_full_lc( lc_t *lc );
+
 inline uint8_t get_flco( lc_t *lc )
 {
     return lc->pf_flco & 0x3f ;
