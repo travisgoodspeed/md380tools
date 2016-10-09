@@ -102,21 +102,6 @@ typedef struct lc_hdr {
     uint8_t fid ;
 } lc_hdr_t ;
 
-// TODO: LC Start/Stop (LCSS)
-typedef struct lc {
-    //TODO lc_hdr include.
-    uint8_t pf_flco ;    
-    uint8_t fid ;
-    uint8_t svc_opts ;
-    adr_t dst ;
-    adr_t src ;    
-} lc_t ;
-
-inline uint8_t get_flco( lc_t *lc )
-{
-    return lc->pf_flco & 0x3f ;
-}
-
 inline const char* get_flco_str( lc_t *lc )
 {
     switch( get_flco(lc) ) {
