@@ -239,29 +239,10 @@ void *dmr_call_end_hook(uint8_t *pkt)
        of the packet.
      */
 
-//    //Destination adr as Big Endian.
-//    int dst = (pkt[7] |
-//            (pkt[6] << 8) |
-//            (pkt[5] << 16));
-//    //Source comes next.
-//    int src = (pkt[10] |
-//            (pkt[9] << 8) |
-//            (pkt[8] << 16));
-//    
-//    int groupcall = (pkt[2] & 0x3F) == 0;
-
     {
         lc_t *data = (pkt + 2);
         rst_term_with_lc( data );
     }
-
-    //printf("\n");
-    //printhex((char*)pkt,14);
-
-//    if( incall ) {
-//        printf("\nCall from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
-//    }
-//    incall = 0;
 
     PRINT("ce " );
     dumpraw_lc(pkt);
@@ -291,8 +272,6 @@ void *dmr_call_start_hook(uint8_t *pkt)
        08 1a 00 00 00 00 00 63 30 05 54 73 e3 ae
        10 00 00 00 00 00 00 63 30 05 54 73 2c 36
      */
-
-    //    dump_pkt( "cs", (pkt_t*) pkt );
 
     //Destination adr as Big Endian.
     int dst = (pkt[7] |
@@ -326,18 +305,6 @@ void *dmr_call_start_hook(uint8_t *pkt)
     g_dst_is_group = groupcall;
     g_src = src;
     OS_EXIT_CRITICAL(primask);
-
-
-
-    //This prints a dot at every resynchronization frame.
-    //It can distract AMBE2+ logging.
-    //printf(".");
-
-//    if( incall == 0 ) {
-//        printf("\nCall from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
-//    }
-//    //Record that we are in a call, for later logging.
-//    incall = 1;
 
     PRINT("cs " );
     dumpraw_lc(pkt);
