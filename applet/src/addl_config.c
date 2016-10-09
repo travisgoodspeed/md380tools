@@ -14,6 +14,7 @@
 #include "spiflash.h"
 #include "addl_config.h"
 #include "radio_config.h"
+#include "syslog.h"
 
 addl_config_t global_addl_config;
 
@@ -185,8 +186,11 @@ void init_global_addl_config_hook(void)
 {
     cfg_load();
 
+    LOGR("booting\n");
+    
 #ifdef CONFIG_MENU
     md380_create_main_meny_entry();
 #endif
+    
 }
 
