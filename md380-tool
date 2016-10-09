@@ -206,6 +206,15 @@ class Tool(DFU):
                                    cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
+
+    def custom(self, cmd):
+        """Returns the 1024 byte DMESG buffer."""
+        print cmd;
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
+        self.get_status(); #this changes state
+        #time.sleep(0.1);
+        status=self.get_status(); #this gets the status
+
     def getdmesg(self):
         """Returns the 1024 byte DMESG buffer."""
         cmd=0x00; #DMESG
@@ -635,6 +644,10 @@ if __name__ == '__main__':
             elif sys.argv[1] == 'readword':
                 dfu=init_dfu();
                 readword(dfu, sys.argv[2]);
+            elif sys.argv[1] == 'custom':
+                dfu=init_dfu();
+                dfu.custom(int(sys.argv[2], 16));
+                dmesg(dfu);
 
         elif len(sys.argv) == 4:
             if sys.argv[1] == 'spiflashwrite':
