@@ -36,6 +36,7 @@ import dfu_suffix
 
 
 from DFU import DFU, State
+import usb.core
 
 # The tricky thing is that *THREE* different applications all show up
 # as this same VID/PID pair.
