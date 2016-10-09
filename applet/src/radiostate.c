@@ -21,23 +21,24 @@ int rst_hdr_dst ;
 
 // TODO locking. because 1 writer locking no prio. readers only visualize.
 
-void rst_voice_lc_header(int src, int dst)
+void rst_voice_lc_header(int src, int dst, int groupcall)
 {
-    //TODO: also signal takeover due to missed packets.
-    rst_src = src ;
-    rst_dst = dst ;
-    if( !rst_voice_active ) {
-        PRINT("\n* Call from %d to %d started.\n", src, dst);
-        LOGR("cs %d->%d\n", src, dst );
+    if( !rst_voice_active || rst_src != src || rst_dst != dst) {
+        rst_src = src ;
+        rst_dst = dst ;
+        PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
+        LOGR("cs %d->%s%d\n", src, groupcall ? "group ":"", dst );
     }
     rst_voice_active = 1 ;    
 }
 
-void rst_term_with_lc( int src, int dst )
+void rst_term_with_lc( int src, int dst, int groupcall )
 {
-    if( rst_voice_active ) {
-        PRINT("\n* Call from %d to %d ended.\n", src, dst);
-        LOGR("ce %d->%d\n", src, dst );
+    if( rst_voice_active || rst_src != src || rst_dst != dst) {
+        rst_src = src ;
+        rst_dst = dst ;
+        PRINT("\n* Call from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
+        LOGR("ce %d->%s%d\n", src, groupcall ? "group ":"", dst );
     }
     rst_voice_active = 0 ;
 }

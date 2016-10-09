@@ -13,8 +13,8 @@ extern "C" {
 #endif
 
 extern int g_dst;  // transferbuffer users.csv
+extern int g_dst_is_group;
 extern int g_src;
-  
 
 void dmr_CSBK_handler(uint8_t *pkt);
 

@@ -38,8 +38,9 @@ int incall=0;
 //char DebugLine2[160];  // only for debug normal is 80
 
 int g_dst;  // transferbuffer users.csv
+int g_dst_is_group;
 int g_src;
-    
+
 // Table 6.1: Data Type information element definitions
 
 // unused?
@@ -151,7 +152,7 @@ typedef struct mbc {
             adr_t dst ;
             adr_t src ;                
         } sms ;
-    } ;
+    } ;	
 } mbc_t ;
 
 inline uint8_t get_csbko( mbc_t *mbc )
@@ -262,13 +263,15 @@ void *dmr_call_end_hook(uint8_t *pkt)
             (pkt[9] << 8) |
             (pkt[8] << 16));
     
-    rst_term_with_lc( src, dst );
+    int groupcall = (pkt[2] & 0x3F) == 0;
+
+    rst_term_with_lc( src, dst, groupcall );
 
     //printf("\n");
     //printhex((char*)pkt,14);
 
     if( incall ) {
-        printf("\nCall from %d to %d ended.\n", src, dst);
+        printf("\nCall from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
     }
     incall = 0;
 
@@ -311,8 +314,10 @@ void *dmr_call_start_hook(uint8_t *pkt)
     int src = (pkt[10] |
             (pkt[9] << 8) |
             (pkt[8] << 16));
+            
+    int groupcall = (pkt[2] & 0x3F) == 0;
 
-    rst_voice_lc_header( src, dst );
+    rst_voice_lc_header( src, dst, groupcall );
 
     //  OSSemPend(debug_line_sem, 0, &err);
     //
@@ -327,6 +332,7 @@ void *dmr_call_start_hook(uint8_t *pkt)
 
     int primask = OS_ENTER_CRITICAL();
     g_dst = dst;
+    g_dst_is_group = groupcall;
     g_src = src;
     OS_EXIT_CRITICAL(primask);
 
@@ -337,7 +343,7 @@ void *dmr_call_start_hook(uint8_t *pkt)
     //printf(".");
 
     if( incall == 0 ) {
-        printf("\nCall from %d to %d started.\n", src, dst);
+        printf("\nCall from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
     }
     //Record that we are in a call, for later logging.
     incall = 1;
