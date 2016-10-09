@@ -38,8 +38,14 @@ void rst_voice_lc_header(lc_t *data)
     rst_voice_active = 1 ;    
 }
 
-void rst_term_with_lc( int src, int dst, int groupcall )
+void rst_term_with_lc(lc_t *data)
 {
+    int src = get_adr( data->src );
+    int dst = get_adr( data->dst );
+    int flco = get_flco( data );
+    
+    int groupcall = flco == 0;
+    
     if( rst_voice_active || rst_src != src || rst_dst != dst) {
         rst_src = src ;
         rst_dst = dst ;

@@ -239,18 +239,21 @@ void *dmr_call_end_hook(uint8_t *pkt)
        of the packet.
      */
 
-    //Destination adr as Big Endian.
-    int dst = (pkt[7] |
-            (pkt[6] << 8) |
-            (pkt[5] << 16));
-    //Source comes next.
-    int src = (pkt[10] |
-            (pkt[9] << 8) |
-            (pkt[8] << 16));
-    
-    int groupcall = (pkt[2] & 0x3F) == 0;
+//    //Destination adr as Big Endian.
+//    int dst = (pkt[7] |
+//            (pkt[6] << 8) |
+//            (pkt[5] << 16));
+//    //Source comes next.
+//    int src = (pkt[10] |
+//            (pkt[9] << 8) |
+//            (pkt[8] << 16));
+//    
+//    int groupcall = (pkt[2] & 0x3F) == 0;
 
-    rst_term_with_lc( src, dst, groupcall );
+    {
+        lc_t *data = (pkt + 2);
+        rst_term_with_lc( data );
+    }
 
     //printf("\n");
     //printhex((char*)pkt,14);
