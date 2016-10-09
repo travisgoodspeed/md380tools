@@ -848,19 +848,6 @@ void create_menu_entry_addl_functions_screen(void)
     PRINTRET();
     PRINT("create_menu_entry_addl_functions_screen\n");
 
-//    struct MENU *menu_mem;
-//
-//#if 0
-//    printf("create_menu_entry_addl_functions_screen %d\n", md380_menu_depth);
-//#endif
-//    menu_mem = get_menu_stackpoi();
-//
-//    menu_mem->menu_title = wt_addl_func;
-//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-//    menu_mem->numberof_menu_entries = 10;
-//    menu_mem->unknown_00 = 0;
-//    menu_mem->unknown_01 = 0;
-
 //#ifdef CONFIG_MENU
 //    md380_create_menu_entry(md380_menu_id, wt_rbeep, create_menu_entry_rbeep_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
 //    md380_create_menu_entry(md380_menu_id + 1, wt_datef, create_menu_entry_datef_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
