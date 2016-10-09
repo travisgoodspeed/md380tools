@@ -209,7 +209,6 @@ class Tool(DFU):
 
     def custom(self, cmd):
         """Returns the 1024 byte DMESG buffer."""
-        print cmd;
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
         self.get_status(); #this changes state
         #time.sleep(0.1);
