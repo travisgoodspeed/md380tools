@@ -9,6 +9,7 @@
 
 #include "debug.h"
 #include "syslog.h"
+#include "usersdb.h"
 
 int rst_voice_active = 0 ;
 int rst_src = 0 ;
@@ -23,13 +24,26 @@ int rst_hdr_dst ;
 
 void rst_voice_lc_header(int src, int dst, int groupcall)
 {
+    #define BSIZE 100
+    char src_buf[BSIZE];
+    char dst_buf[BSIZE];
+
     if( !rst_voice_active || rst_src != src || rst_dst != dst) {
         rst_src = src ;
         rst_dst = dst ;
+
         PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
         LOGR("cs %d->%s%d\n", src, groupcall ? "group ":"", dst );
+
+        if( find_dmr_user(src_buf, src, (void *) 0x100000, BSIZE) ) {
+            LOGR("src: %s\n", src_buf);
+        }
+        if( find_dmr_user(dst_buf, dst, (void *) 0x100000, BSIZE) ) {
+            LOGR("dst: %s\n", dst_buf);
+        }
+
+        rst_voice_active = 1 ;    
     }
-    rst_voice_active = 1 ;    
 }
 
 void rst_term_with_lc( int src, int dst, int groupcall )
@@ -39,8 +53,9 @@ void rst_term_with_lc( int src, int dst, int groupcall )
         rst_dst = dst ;
         PRINT("\n* Call from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
         LOGR("ce %d->%s%d\n", src, groupcall ? "group ":"", dst );
+
+        rst_voice_active = 0 ;
     }
-    rst_voice_active = 0 ;
 }
 
 void rst_signal_other_call()
