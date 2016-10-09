@@ -30,9 +30,6 @@
 #include "radiostate.h"
 
 
-/* Used to avoid duplicate call endings. */
-int incall=0;
-
 /* global Bufferspace to transfer data*/
 //char DebugLine1[30];
 //char DebugLine2[160];  // only for debug normal is 80
@@ -408,8 +405,8 @@ void *dmr_sms_arrive_hook(void *pkt)
         rst_data_header(data);
     }
     
-//    PRINT("sa ");
-//    dumpraw_data(pkt);
+    PRINT("sa ");
+    dumpraw_data(pkt);
 
     //Forward to the original function.
     return dmr_sms_arrive(pkt);
