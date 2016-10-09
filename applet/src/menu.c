@@ -2,7 +2,9 @@
   \brief Menu hooks and extensions.
 */
 
-//#define DEBUG
+#define DEBUG
+#define TRACE_MENU
+
 #define CONFIG_MENU
 
 #include <stdio.h>
@@ -150,7 +152,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
     
 //    red_key = MKTHUMB(red_key);
     
-#if 0
+#ifdef TRACE_MENU
     char lbl2[10];
     char *lp = (void*)label ;
     for(int i=0;i<10;i++) {
@@ -166,7 +168,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
     lbl2[9] = 0 ;
     
     void *gp = ((uint8_t*)green_key) - 1 ;
-    printf("f menugreen.%s.%x 0 0x%x\n", lbl2, gp, gp );
+    PRINT("f menugreen.%s.%x 0 0x%x\n", lbl2, gp, gp );
     
 #if 0    
     register uint32_t *sp asm("sp");   
