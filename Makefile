@@ -82,7 +82,7 @@ dist:
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
 
-doflash: applets
+doflash:
 	./md380-dfu upgrade applet/experiment.bin
 
 
