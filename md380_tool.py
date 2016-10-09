@@ -193,7 +193,7 @@ class Tool(DFU):
                                    cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
-        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
         return buf[0];
     def c5000poke(self,reg,val):
         """Writes a byte into a C5000 register."""
@@ -213,7 +213,7 @@ class Tool(DFU):
         self.get_status(); #this changes state
         #time.sleep(0.1);
         status=self.get_status(); #this gets the status
-        buf=dfu.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
         
         #Okay, so at this point we have the buffer, but it's a ring
         #buffer that might have already looped, so we need to reorder
