@@ -7,17 +7,6 @@
 
 #include <stdint.h>
 
-enum spi_flash_addl_config {
-  offset_rbeep,
-  offset_datef,
-  offset_userscsv,
-  offset_debug,
-  offset_promtg,
-  offset_prompriv,
-  offset_micbargraph,
-  offset_console,
-};
-
 typedef struct addl_config {
     uint8_t crc;
     uint8_t length;
@@ -35,10 +24,6 @@ typedef struct addl_config {
 extern addl_config_t global_addl_config;
 
 extern void init_global_addl_config_hook(void);
-
-extern void spiflash_write_uint8( int offset, uint8_t val );
-extern uint8_t spiflash_read_uint8( int offset );
-extern uint8_t spiflash_read_uint8_ranged( int offset, uint8_t cnt );
 
 void cfg_save();
 
