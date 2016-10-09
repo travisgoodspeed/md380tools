@@ -151,23 +151,41 @@ void write_compat()
     spiflash_write_console();    
 }
 
+uint8_t calc_crc( void *buf, int size)
+{
+    uint8_t crc = 0 ;
+    uint8_t *p = buf ;
+    for(int i=0;i<size;i++) {
+        crc ^= p[i] ;
+    }
+    return crc ;
+}
+
 void cfg_load()
 {
-    cfg_read_struct( &global_addl_config );
+    memset( &global_addl_config, 0, sizeof(addl_config_t) );
     
-    int version = global_addl_config.version ;
-    if( version == '0' || version == '1' ) {
-        // old style
-        read_compat();
-        global_addl_config.dmrid = 0 ;
-    } else {
+    addl_config_t tmp ;    
+    cfg_read_struct( &tmp );
+    
+    if( calc_crc(&tmp,tmp.length) != 0 ) {
+        // corrupted.
+        LOGB("cfg crc fail\n");
+        return ;
+    }
+    
+    if( tmp.length > sizeof(addl_config_t) ) {
+        LOGB("cfg too big\n");
+        tmp.length = sizeof(addl_config_t);
+    }
+    
+    memcpy(&global_addl_config,&tmp,tmp.length);
         
-        // restore dmrid
-        int dmrid = global_addl_config.dmrid ;
-        if( dmrid != 0 ) {
-            md380_spiflash_write(&dmrid, 0x2084, 4);            
-            md380_radio_config.dmrid = dmrid;
-        }
+    // restore dmrid
+    int dmrid = global_addl_config.dmrid ;
+    if( dmrid != 0 ) {
+        md380_spiflash_write(&dmrid, 0x2084, 4);            
+        md380_radio_config.dmrid = dmrid;
     }
     
     // global_addl_config.experimental is intentionally not permanent
@@ -176,17 +194,19 @@ void cfg_load()
 
 void cfg_save()
 {
-    global_addl_config.version = 1 ;
+    global_addl_config.crc = 0 ;
+    global_addl_config.length = sizeof(addl_config_t);
+    
+    global_addl_config.crc = calc_crc(&global_addl_config,sizeof(addl_config_t));
+    
     cfg_write_struct( &global_addl_config );
-
-    //TODO: maybe allow for an option to write back compat, for downgrades. no fun.
 }   
 
 void init_global_addl_config_hook(void)
 {
     cfg_load();
 
-    LOGR("booting\n");
+    LOGB("booting\n");
     
 #ifdef CONFIG_MENU
     md380_create_main_meny_entry();

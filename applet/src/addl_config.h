@@ -19,7 +19,8 @@ enum spi_flash_addl_config {
 };
 
 typedef struct addl_config {
-    uint8_t version;
+    uint8_t crc;
+    uint8_t length;
     uint8_t datef;
     uint8_t userscsv;
     uint8_t debug;
@@ -29,7 +30,6 @@ typedef struct addl_config {
     uint8_t console;
     uint8_t rbeep;
     uint32_t dmrid ;
-    uint8_t reserve[16];
 } addl_config_t ;
 
 extern addl_config_t global_addl_config;
