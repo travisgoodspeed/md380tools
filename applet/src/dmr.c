@@ -255,10 +255,10 @@ void *dmr_call_end_hook(uint8_t *pkt)
     //printf("\n");
     //printhex((char*)pkt,14);
 
-    if( incall ) {
-        printf("\nCall from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
-    }
-    incall = 0;
+//    if( incall ) {
+//        printf("\nCall from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
+//    }
+//    incall = 0;
 
     PRINT("ce " );
     dumpraw_lc(pkt);
@@ -302,7 +302,10 @@ void *dmr_call_start_hook(uint8_t *pkt)
             
     int groupcall = (pkt[2] & 0x3F) == 0;
 
-    rst_voice_lc_header( src, dst, groupcall );
+    {
+        lc_t *data = (pkt + 2);
+        rst_voice_lc_header( data );
+    }
 
     //  OSSemPend(debug_line_sem, 0, &err);
     //
@@ -327,11 +330,11 @@ void *dmr_call_start_hook(uint8_t *pkt)
     //It can distract AMBE2+ logging.
     //printf(".");
 
-    if( incall == 0 ) {
-        printf("\nCall from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
-    }
-    //Record that we are in a call, for later logging.
-    incall = 1;
+//    if( incall == 0 ) {
+//        printf("\nCall from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
+//    }
+//    //Record that we are in a call, for later logging.
+//    incall = 1;
 
     PRINT("cs " );
     dumpraw_lc(pkt);

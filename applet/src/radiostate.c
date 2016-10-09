@@ -21,8 +21,14 @@ int rst_hdr_dst ;
 
 // TODO locking. because 1 writer locking no prio. readers only visualize.
 
-void rst_voice_lc_header(int src, int dst, int groupcall)
+void rst_voice_lc_header(lc_t *data)
 {
+    int src = get_adr( data->src );
+    int dst = get_adr( data->dst );
+    int flco = get_flco( data );
+    
+    int groupcall = flco == 0;
+
     if( !rst_voice_active || rst_src != src || rst_dst != dst) {
         rst_src = src ;
         rst_dst = dst ;
