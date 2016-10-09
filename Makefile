@@ -85,11 +85,7 @@ dist:
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
 
-<<<<<<< HEAD
-doflash:
-=======
 doflash: image_D13
->>>>>>> upstream/master
 	./md380-dfu upgrade applet/experiment.bin
 
 

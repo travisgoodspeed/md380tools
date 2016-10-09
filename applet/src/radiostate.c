@@ -24,17 +24,15 @@ int rst_hdr_dst ;
 
 void rst_voice_lc_header(lc_t *data)
 {
-<<<<<<< HEAD
     #define BSIZE 100
     char src_buf[BSIZE];
     char dst_buf[BSIZE];
-=======
+
     int src = get_adr( data->src );
     int dst = get_adr( data->dst );
     int flco = get_flco( data );
     
     int groupcall = flco == 0;
->>>>>>> upstream/master
 
     if( !rst_voice_active || rst_src != src || rst_dst != dst) {
         rst_src = src ;
