@@ -21,9 +21,9 @@ extern int rst_hdr_sap ;
 extern int rst_hdr_src ;
 extern int rst_hdr_dst ;
 
-void rst_voice_lc_header(int src, int dst);
+void rst_voice_lc_header(int src, int dst, int groupcall);
 
-void rst_term_with_lc( int src, int dst );
+void rst_term_with_lc( int src, int dst, int groupcall );
 
 void rst_data_header(data_hdr_t *data);
         
