@@ -8,6 +8,9 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 .PHONY: dist
 
 all: image_D13
+	
+distclean: clean
+	rm -rf dist
 		
 clean: mostlyclean
 	$(MAKE) -C firmware clean
@@ -97,4 +100,6 @@ ci: mostlyclean
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
 	$(MAKE) data
-	
+
+check-ignore:
+	find -type f | git check-ignore -v --stdin | less
