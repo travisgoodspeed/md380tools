@@ -21,11 +21,11 @@ int rst_hdr_dst ;
 
 // TODO locking. because 1 writer locking no prio. readers only visualize.
 
-void rst_voice_lc_header(lc_t *data)
+void rst_voice_lc_header(lc_t *lc)
 {
-    int src = get_adr( data->src );
-    int dst = get_adr( data->dst );
-    int flco = get_flco( data );
+    int src = get_adr( lc->src );
+    int dst = get_adr( lc->dst );
+    int flco = get_flco( lc );
     
     int groupcall = flco == 0;
 
@@ -39,16 +39,19 @@ void rst_voice_lc_header(lc_t *data)
             grp_c = 'G' ;
         }
         
+        PRINT("cs " );
+        dump_full_lc(lc);
+        
         LOGR("cs %c %d->%d\n", grp_c, src, dst );
     }
     rst_voice_active = 1 ;    
 }
 
-void rst_term_with_lc(lc_t *data)
+void rst_term_with_lc(lc_t *lc)
 {
-    int src = get_adr( data->src );
-    int dst = get_adr( data->dst );
-    int flco = get_flco( data );
+    int src = get_adr( lc->src );
+    int dst = get_adr( lc->dst );
+    int flco = get_flco( lc );
     
     int groupcall = flco == 0;
     
@@ -61,6 +64,9 @@ void rst_term_with_lc(lc_t *data)
         if( flco == 0 ) {
             grp_c = 'G' ;
         }
+
+        PRINT("ce " );
+        dump_full_lc(lc);
         
         LOGR("ce %c %d->%d\n", grp_c, src, dst );
     }

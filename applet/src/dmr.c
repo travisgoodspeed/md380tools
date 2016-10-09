@@ -102,30 +102,6 @@ typedef struct lc_hdr {
     uint8_t fid ;
 } lc_hdr_t ;
 
-inline const char* get_flco_str( lc_t *lc )
-{
-    switch( get_flco(lc) ) {
-        case 0 :
-            // Group Voice Channel User
-            return "grp" ;
-        case 3 :
-            // Unit to Unit Voice Channel User
-            return "u2u" ;
-        case 4 :
-            return "talker alias hdr" ;
-        case 5 :
-            return "talker alias blk 1" ;
-        case 6 :
-            return "talker alias blk 2" ;
-        case 7 :
-            return "talker alias blk 3" ;
-        case 8 :
-            return "gpsinfo" ;
-        default: 
-            return "?" ;
-    }
-}
-
 // Control Signalling Block (CSBK) PDU
 // TODO: finish / validate
 typedef struct mbc {
@@ -145,16 +121,6 @@ inline uint8_t get_csbko( mbc_t *mbc )
     return mbc->lb_pf_csbko & 0x3f ;
 }
 
-
-// Full Link Control PDU
-void dump_full_lc( lc_t *lc )
-{
-    uint8_t flco = get_flco(lc);
-    uint8_t fid = lc->fid ;
-    uint8_t opts = lc->svc_opts ;
-    
-    PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));    
-}
 
 // unvalidated
 void dump_mbc( mbc_t *mbc )
@@ -244,8 +210,8 @@ void *dmr_call_end_hook(uint8_t *pkt)
         rst_term_with_lc( data );
     }
 
-    PRINT("ce " );
-    dumpraw_lc(pkt);
+//    PRINT("ce " );
+//    dumpraw_lc(pkt);
 
     //Forward to the original function.
     return dmr_call_end((void*) pkt);
@@ -306,8 +272,8 @@ void *dmr_call_start_hook(uint8_t *pkt)
     g_src = src;
     OS_EXIT_CRITICAL(primask);
 
-    PRINT("cs " );
-    dumpraw_lc(pkt);
+//    PRINT("cs " );
+//    dumpraw_lc(pkt);
     
     //Forward to the original function.
     return dmr_call_start(pkt);
