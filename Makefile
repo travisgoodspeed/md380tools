@@ -33,9 +33,6 @@ mostlyclean:
 #firmwares:
 #	$(MAKE) -C firmware all
 
-flash:
-	$(MAKE) -C applet clean flash
-	
 image_D02:
 	$(MAKE) -C applet FW=D02_032 all  
 
@@ -44,6 +41,9 @@ image_D13:
 	
 image_S13:
 	$(MAKE) -C applet FW=S13_020 all  
+	
+flash:
+	$(MAKE) -C applet clean flash
 	
 flash_d02.032:
 	$(MAKE) -C applet FW=D02_032 clean flash
