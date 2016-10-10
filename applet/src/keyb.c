@@ -3,7 +3,7 @@
  * 
  */
 
-//#define DEBUG
+#define DEBUG
 
 #include "keyb.h"
 
@@ -41,8 +41,9 @@ void handle_hotkey( int keycode )
             break ;
         case 7 :
             global_addl_config.console = 0 ;
-            gui_opmode2 = OPM2_TERM ;
-            md380_f_4225_operatingmode = SCR_MODE_21 & 0x80 ;
+            gui_opmode2 = OPM2_IDLE ;
+            md380_f_4225_operatingmode = SCR_MODE_IDLE | 0x80 ;
+//            md380_f_4225_operatingmode = md380_f_4225_operatingmode | 0x80 ;
             break ;
         case 8 :
             global_addl_config.console = 1 ;
@@ -65,7 +66,7 @@ void handle_hotkey( int keycode )
     }    
 }
 
-void trace_keyb()
+void intercept_keyb()
 {
     int keypressed = *keypressed_p ;
     
@@ -119,17 +120,36 @@ void trace_keyb()
     *keypressed_p = 0 ;
 }
 
+void trace_keyb()
+{
+    static uint8_t old_kp = -1 ;
+    uint8_t kp = *keypressed_p ;
+    
+    if( old_kp != kp ) {
+        PRINT("kp: %02x -> %02x\n", old_kp, kp );
+        old_kp = kp ;
+    }
+}
+
 extern void kb_handler();
 
-// kb_poller())
+uint32_t kb_handler_count = 0;
+
 void kb_handler_hook()
-{    
+{
+    kb_handler_count++;
+
 #if defined(FW_D13_020)
     kb_handler();
 #else
 #warning please consider hooking.    
 #endif    
-    if( global_addl_config.debug ) {
+    if( global_addl_config.experimental ) {
         trace_keyb();
+        return;
     }
+    if( global_addl_config.debug ) {
+        intercept_keyb();
+    }
+
 }
