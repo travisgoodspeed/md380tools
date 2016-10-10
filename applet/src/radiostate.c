@@ -40,13 +40,13 @@ void rst_voice_lc_header(lc_t *lc)
 
         PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
 
+        PRINT("cs " );
+        dump_full_lc(lc);
+        
         char grp_c = 'U' ;        
         if( flco == 0 ) {
             grp_c = 'G' ;
         }
-        
-        PRINT("cs " );
-        dump_full_lc(lc);
         
         LOGR("cs %c %d->%d\n", grp_c, src, dst );
 
@@ -78,14 +78,14 @@ void rst_term_with_lc(lc_t *lc)
         rst_dst = dst ;
         PRINT("\n* Call from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
         
+        PRINT("ce " );
+        dump_full_lc(lc);
+        
         char grp_c = 'U' ;        
         if( flco == 0 ) {
             grp_c = 'G' ;
         }
 
-        PRINT("ce " );
-        dump_full_lc(lc);
-        
         LOGR("ce %c %d->%d\n", grp_c, src, dst );
 
         rst_voice_active = 0 ;
