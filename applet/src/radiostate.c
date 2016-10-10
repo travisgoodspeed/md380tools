@@ -41,12 +41,14 @@ void rst_voice_lc_header(lc_t *data)
         PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
         LOGR("cs %d->%s%d\n", src, groupcall ? "group ":"", dst );
 
+#if 0
         if( find_dmr_user(src_buf, src, (void *) 0x100000, BSIZE) ) {
             LOGR("src: %s\n", src_buf);
         }
         if( find_dmr_user(dst_buf, dst, (void *) 0x100000, BSIZE) ) {
             LOGR("dst: %s\n", dst_buf);
         }
+#endif
 
         rst_voice_active = 1 ;    
     }
