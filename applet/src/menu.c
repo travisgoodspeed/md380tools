@@ -47,12 +47,13 @@ const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
 
 struct MENU {
-  const wchar_t  *menu_title;
-  void    *unknownp;
-  uint8_t numberof_menu_entries;
+  const wchar_t  *menu_title; // [0]
+  void    *unknownp; // [4]
+  uint8_t numberof_menu_entries; // [8]
   uint8_t unknown_00;
   uint8_t unknown_01;
-};
+}; // should be: sizeof == 0xc = 12
+//TODO: determine if this works due to word alignment.
 
 
 /* This hooks a function that is called a lot during menu processing.
