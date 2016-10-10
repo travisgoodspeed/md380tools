@@ -3307,6 +3307,22 @@ f menugreen.backlight.15S.801a154 0 0x801a154
 f menugreen.Repeater_Slot.80153dc 0 0x80153dc
 f menugreen.Repeater_Slot_1_2.80154a4 0 0x80154a4
 
+f menugreen.msg.Inbox.80264fc 0 0x80264fc
+f menugreen.msg.Write.8023cfe 0 0x8023cfe
+f menugreen.msg.Quick_Tex.80239ec 0 0x80239ec
+f menugreen.msg.Sent_Item.803a024 0 0x803a024
+f menugreen.msg.Drafts.8024a80 0 0x8024a80
+f menugreen.msg.unk.8023c34 0 0x8023c34
+f menugreen.msg.quicktext.8023de2 0 0x8023de2
+f menugreen.msg.Send.802409c 0 0x802409c
+f menugreen.msg.Save.80249a8 0 0x80249a8
+f menugreen.msg.Clear.8023e24 0 0x8023e24
+f menugreen.msg.Contacts.802417e 0 0x802417e
+f menugreen.msg.Manual_Di.8024220 0 0x8024220
+f menugreen.msg.enter_id.802430c 0 0x802430c
+f menugreen.msg.enter_id_ok.8024740 0 0x8024740
+
+
 af+ 0x80154a4 152 menu_timeslot
 
 f menucall.Contacts 0 0x800c278

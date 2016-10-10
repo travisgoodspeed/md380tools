@@ -98,6 +98,19 @@ typedef struct {
 } data_blk_t ;
 
 
+typedef struct lc {
+    uint8_t pf_flco ;    
+    uint8_t fid ;
+    uint8_t svc_opts ;
+    adr_t dst ;
+    adr_t src ;    
+} lc_t ;
+
+inline uint8_t get_flco( lc_t *lc )
+{
+    return lc->pf_flco & 0x3f ;
+}
+
 #ifdef __cplusplus
 }
 #endif

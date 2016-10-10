@@ -21,7 +21,7 @@ fetching the raw buffer.
 #define TDFU_SPIFLASHWRITE_NEW       0x04 //u32 address, u32 size, u8 val[]
 #define TDFU_SPIFLASHGETID           0x05 // (void) -> 4 Byte ID
 #define TDFU_SPIFLASHSECURITYREGREAD 0x08 // (void)
-
+#define TDFU_SYSLOG                  0x09 //syslog_dump_dmesg()
 
 //Radio Commands
 #define TDFU_C5000_WRITEREG 0x10 //u8 reg, u8 val

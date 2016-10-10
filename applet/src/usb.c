@@ -236,8 +236,13 @@ int usb_dnld_hook(){
       break;
       
     case TDFU_BOX:
+      break;
 #endif //CONFIG_GRAPHICS
 
+    case TDFU_SYSLOG:
+      syslog_dump_dmesg();
+      break;
+    
     default:
       printf("Unhandled DFU packet type 0x%02x.\n",md380_packet[0]);
     }

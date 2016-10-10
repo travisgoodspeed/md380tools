@@ -8,6 +8,9 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 .PHONY: dist
 
 all: image_D13
+	
+distclean: clean
+	rm -rf dist
 		
 clean: mostlyclean
 	$(MAKE) -C firmware clean
@@ -33,9 +36,6 @@ mostlyclean:
 #firmwares:
 #	$(MAKE) -C firmware all
 
-flash:
-	$(MAKE) -C applet clean flash
-	
 image_D02:
 	$(MAKE) -C applet FW=D02_032 all  
 
@@ -44,6 +44,9 @@ image_D13:
 	
 image_S13:
 	$(MAKE) -C applet FW=S13_020 all  
+	
+flash:
+	$(MAKE) -C applet clean flash
 	
 flash_d02.032:
 	$(MAKE) -C applet FW=D02_032 clean flash
@@ -82,7 +85,7 @@ dist:
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
 
-doflash: applets
+doflash: image_D13
 	./md380-dfu upgrade applet/experiment.bin
 
 
@@ -97,4 +100,6 @@ ci: mostlyclean
 	$(MAKE) -C applet ci
 	$(MAKE) -C db ci
 	$(MAKE) data
-	
+
+check-ignore:
+	find -type f | git check-ignore -v --stdin | less

@@ -38,8 +38,9 @@ int incall=0;
 //char DebugLine2[160];  // only for debug normal is 80
 
 int g_dst;  // transferbuffer users.csv
+int g_dst_is_group;
 int g_src;
-    
+
 // Table 6.1: Data Type information element definitions
 
 // unused?
@@ -101,21 +102,6 @@ typedef struct lc_hdr {
     uint8_t fid ;
 } lc_hdr_t ;
 
-// TODO: LC Start/Stop (LCSS)
-typedef struct lc {
-    //TODO lc_hdr include.
-    uint8_t pf_flco ;    
-    uint8_t fid ;
-    uint8_t svc_opts ;
-    adr_t dst ;
-    adr_t src ;    
-} lc_t ;
-
-inline uint8_t get_flco( lc_t *lc )
-{
-    return lc->pf_flco & 0x3f ;
-}
-
 inline const char* get_flco_str( lc_t *lc )
 {
     switch( get_flco(lc) ) {
@@ -151,7 +137,7 @@ typedef struct mbc {
             adr_t dst ;
             adr_t src ;                
         } sms ;
-    } ;
+    } ;	
 } mbc_t ;
 
 inline uint8_t get_csbko( mbc_t *mbc )
@@ -253,24 +239,29 @@ void *dmr_call_end_hook(uint8_t *pkt)
        of the packet.
      */
 
-    //Destination adr as Big Endian.
-    int dst = (pkt[7] |
-            (pkt[6] << 8) |
-            (pkt[5] << 16));
-    //Source comes next.
-    int src = (pkt[10] |
-            (pkt[9] << 8) |
-            (pkt[8] << 16));
-    
-    rst_term_with_lc( src, dst );
+//    //Destination adr as Big Endian.
+//    int dst = (pkt[7] |
+//            (pkt[6] << 8) |
+//            (pkt[5] << 16));
+//    //Source comes next.
+//    int src = (pkt[10] |
+//            (pkt[9] << 8) |
+//            (pkt[8] << 16));
+//    
+//    int groupcall = (pkt[2] & 0x3F) == 0;
+
+    {
+        lc_t *data = (pkt + 2);
+        rst_term_with_lc( data );
+    }
 
     //printf("\n");
     //printhex((char*)pkt,14);
 
-    if( incall ) {
-        printf("\nCall from %d to %d ended.\n", src, dst);
-    }
-    incall = 0;
+//    if( incall ) {
+//        printf("\nCall from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
+//    }
+//    incall = 0;
 
     PRINT("ce " );
     dumpraw_lc(pkt);
@@ -311,8 +302,13 @@ void *dmr_call_start_hook(uint8_t *pkt)
     int src = (pkt[10] |
             (pkt[9] << 8) |
             (pkt[8] << 16));
+            
+    int groupcall = (pkt[2] & 0x3F) == 0;
 
-    rst_voice_lc_header( src, dst );
+    {
+        lc_t *data = (pkt + 2);
+        rst_voice_lc_header( data );
+    }
 
     //  OSSemPend(debug_line_sem, 0, &err);
     //
@@ -327,6 +323,7 @@ void *dmr_call_start_hook(uint8_t *pkt)
 
     int primask = OS_ENTER_CRITICAL();
     g_dst = dst;
+    g_dst_is_group = groupcall;
     g_src = src;
     OS_EXIT_CRITICAL(primask);
 
@@ -336,11 +333,11 @@ void *dmr_call_start_hook(uint8_t *pkt)
     //It can distract AMBE2+ logging.
     //printf(".");
 
-    if( incall == 0 ) {
-        printf("\nCall from %d to %d started.\n", src, dst);
-    }
-    //Record that we are in a call, for later logging.
-    incall = 1;
+//    if( incall == 0 ) {
+//        printf("\nCall from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
+//    }
+//    //Record that we are in a call, for later logging.
+//    incall = 1;
 
     PRINT("cs " );
     dumpraw_lc(pkt);
