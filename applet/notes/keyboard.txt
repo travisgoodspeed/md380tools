@@ -1,4 +1,21 @@
 
+= key pressed =
+
+press key:
+kp: 00 -> 01
+release key:
+kp: 01 -> 02
+kp: 02 -> 00
+
+press key:
+kp: 00 -> 01
+keep pressing key:
+kp: 01 -> 05
+kp: 05 -> 01
+release key:
+kp: 01 -> 08
+kp: 08 -> 00
+
 = keycodes =
 
 @ 0x2001e890

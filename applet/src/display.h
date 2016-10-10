@@ -68,6 +68,8 @@ void draw_datetime_row(); // in md380
 #define OPM2_VOICE 2
 #define OPM2_TERM 4
 #define OPM2_MSG_POPUP 5
+#define OPM2_ALARM_RECV 7
+
 #define OPM2_MENU 10
 
 extern uint8_t gui_opmode2 ;
