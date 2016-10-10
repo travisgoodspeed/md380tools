@@ -3716,3 +3716,21 @@ f some_state_var @ 0x2001e8b8
 f some_state_var2 @ 0x2001e534
 f convert_freq_to_str @ 0x800e398
 
+#
+
+f c5000_set_local_addr @ 0x0803cae0
+af+ 0x0803cae0 84 c5000_set_local_addr
+f msg_wait_until_send @ 0x080248f2
+
+f msg_send_maybe @ 0x08024fb0
+af+ 0x08024fb0 212 msg_send_maybe
+
+f msg_send_maybe2 @ 0x08024dbc
+af+ 0x08024dbc 166 msg_send_maybe2
+
+f flash_write_50_at_40000 @ 0x08022e76
+af+ 0x08022e76 18 flash_write_50_at_40000
+
+f flash_read_50_at_40000 @ 0x08022e64
+af+ 0x08022e64 18 flash_read_50_at_40000
+
