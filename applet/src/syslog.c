@@ -11,7 +11,7 @@
 #include "dmesg.h"
 #include "console.h"
 
-#define SYSLOG_SIZE 500 
+#define SYSLOG_SIZE 1500 
 
 #define MAXLINES 20 
 int lines[MAXLINES];

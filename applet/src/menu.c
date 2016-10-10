@@ -3,7 +3,7 @@
 */
 
 #define DEBUG
-#define TRACE_MENU
+//#define TRACE_MENU
 
 #define CONFIG_MENU
 
@@ -47,12 +47,13 @@ const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
 
 struct MENU {
-  const wchar_t  *menu_title;
-  void    *unknownp;
-  uint8_t numberof_menu_entries;
+  const wchar_t  *menu_title; // [0]
+  void    *unknownp; // [4]
+  uint8_t numberof_menu_entries; // [8]
   uint8_t unknown_00;
   uint8_t unknown_01;
-};
+}; // should be: sizeof == 0xc = 12
+//TODO: determine if this works due to word alignment.
 
 
 /* This hooks a function that is called a lot during menu processing.
@@ -847,19 +848,6 @@ void create_menu_entry_addl_functions_screen(void)
 #endif    
     PRINTRET();
     PRINT("create_menu_entry_addl_functions_screen\n");
-
-//    struct MENU *menu_mem;
-//
-//#if 0
-//    printf("create_menu_entry_addl_functions_screen %d\n", md380_menu_depth);
-//#endif
-//    menu_mem = get_menu_stackpoi();
-//
-//    menu_mem->menu_title = wt_addl_func;
-//    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
-//    menu_mem->numberof_menu_entries = 10;
-//    menu_mem->unknown_00 = 0;
-//    menu_mem->unknown_01 = 0;
 
 //#ifdef CONFIG_MENU
 //    md380_create_menu_entry(md380_menu_id, wt_rbeep, create_menu_entry_rbeep_screen + 1, md380_menu_entry_back + 1, 0x98, 0, 1);
