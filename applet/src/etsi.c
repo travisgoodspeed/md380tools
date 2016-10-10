@@ -1,8 +1,6 @@
 /*
  *  etsi.c
  * 
- *  Created on Oct 9, 2016 3:49:45 PM by Simon IJskes
- * 
  */
 
 #define DEBUG
