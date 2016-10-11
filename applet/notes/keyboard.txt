@@ -1,20 +1,39 @@
 
 = key pressed =
 
-press key:
+short press key in idle:
 kp: 00 -> 01
 release key:
 kp: 01 -> 02
+triggered
 kp: 02 -> 00
 
-press key:
+long press key in idle
 kp: 00 -> 01
-keep pressing key:
-kp: 01 -> 05
+keep pressing key
+kp: 01 -> 05  (4+1)
+triggered
 kp: 05 -> 01
 release key:
 kp: 01 -> 08
 kp: 08 -> 00
+
+menu activation is triggered on b1(2).
+or on b3+b0 (b3 alone?) is longpress case
+
+short press key in menu 
+kp: 00 -> 03
+kp: 03 -> 01
+triggered
+release
+kp: 01 -> 08
+kp: 08 -> 00
+
+long press key in menu
+kp: 00 -> 03
+kp: 03 -> 01
+triggered
+
 
 = keycodes =
 
