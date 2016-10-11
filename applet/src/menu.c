@@ -756,13 +756,11 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
 #if 0
     printf("\n%d\n", new_dmr_id);
 #endif
-    // store new dmr_id to ram and spi flash (codeplug)
-    md380_radio_config.dmrid = new_dmr_id;
     
     global_addl_config.dmrid = new_dmr_id ;
+    
     cfg_save();
-
-    md380_spiflash_write(&new_dmr_id, 0x2084, 4);
+    cfg_fix_dmrid();
 
     md380_menu_id = md380_menu_id - 1;
     md380_menu_depth = md380_menu_depth - 1;

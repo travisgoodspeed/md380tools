@@ -18,6 +18,16 @@
 
 addl_config_t global_addl_config;
 
+void cfg_fix_dmrid()
+{
+    int dmrid = global_addl_config.dmrid ;
+    if( dmrid != 0 ) {
+        // store new dmr_id to ram and spi flash (codeplug)
+        md380_spiflash_write(&dmrid, 0x2084, 4);            
+        md380_radio_config.dmrid = dmrid;
+    }
+}
+
 void cfg_read_struct( addl_config_t *cfg )
 {
     md380_spiflash_read(cfg, spi_flash_addl_config_start, sizeof(addl_config_t));
@@ -49,7 +59,7 @@ void cfg_load()
     
     // the config in flash is bigger than mine.
     if( tmp.length > sizeof(addl_config_t) ) {
-        // we cannot crc what we have not read.
+        // we cannot crc what we have not read. (for now).
         LOGB("cfg oversized\n");
         return ;        
     }
@@ -74,12 +84,8 @@ void cfg_load()
     R(global_addl_config.datef,5);
     
     // restore dmrid
-    int dmrid = global_addl_config.dmrid ;
-    if( dmrid != 0 ) {
-        md380_spiflash_write(&dmrid, 0x2084, 4);            
-        md380_radio_config.dmrid = dmrid;
-    }
-    
+    cfg_fix_dmrid();
+            
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
 

@@ -25,6 +25,8 @@ extern addl_config_t global_addl_config;
 
 extern void init_global_addl_config_hook(void);
 
+void cfg_fix_dmrid();
+
 void cfg_save();
 
 #endif
