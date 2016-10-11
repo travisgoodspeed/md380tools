@@ -313,7 +313,7 @@ void mn_submenu_finalize()
     
     for (int i = 0; i < menu_mem->numberof_menu_entries; i++) { 
         // conflicts with 'selected' icon.
-        //md380_menu_mem_base[md380_menu_id + i].off16 = 2; // numbered icons
+        // no icons.
         md380_menu_mem_base[md380_menu_id + i].off16 = 0;
     }    
 }
