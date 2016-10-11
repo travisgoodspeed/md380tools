@@ -83,8 +83,8 @@ b 0x2001e5f9 locked(b1=2)
 
 b 0x2001e7b0 time upper button pressed 
 b 0x2001e7b2 time lower button pressed 
-h 0x2001e7ba internal keycode
-h 0x2001e7bc last internal keycode
+//h 0x2001e7ba internal keycode
+//h 0x2001e7bc last internal keycode
 b 0x2001e7be time key pressed (in main screen)
 ? 0x2001e7c0 internal keycode2 (related to)
 
@@ -93,4 +93,10 @@ b 0x2001e890 last key pressed
 
 
 b 0x2001e7b8 keypress_max_time
+
+=0x2001e88b
+=0x2001e88c
+=0x2001e88d
+=0x2001e88e
+=0x2001e88f
 

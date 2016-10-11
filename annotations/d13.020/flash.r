@@ -3522,6 +3522,7 @@ f keypressed_struct @ 0x2001e5f8
 f keylocked_flags @ 0x2001e5f9
 
 f kb_row_col_pressed @ 0x2001e7ba
+f kb_row_col_pressed_last @ 0x2001e7bc
 f kb_keydown_debounce @ 0x2001e889
 f kb_keycode @ 0x2001e890
 

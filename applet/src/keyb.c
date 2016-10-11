@@ -139,6 +139,16 @@ uint32_t kb_handler_count = 0;
 void kb_handler_hook()
 {
     kb_handler_count++;
+    
+    if( global_addl_config.experimental ) {
+        static uint16_t old = 0 ;
+        uint16_t new = *kb_row_col_pressed ;
+        if( old != new ) {
+            LOGR("rc: %04x -> %04x \n", old, new );
+            old = new ;
+        }
+        *kb_row_col_pressed = 0 ;
+    }
 
 #if defined(FW_D13_020)
     kb_handler();
@@ -146,7 +156,7 @@ void kb_handler_hook()
 #warning please consider hooking.    
 #endif    
     if( global_addl_config.experimental ) {
-        trace_keyb();
+        //trace_keyb();
         return;
     }
     if( global_addl_config.debug ) {
