@@ -17,7 +17,8 @@
 #include <stdint.h>
 
 uint8_t *keypressed_p = (void*)0x2001e5f8 ;
-uint8_t *keycode_p = (void*)0x2001e890 ;
+uint8_t *kb_keycode = (void*)0x2001e890 ;
+uint16_t *kb_row_col_pressed = (void*)0x2001e7ba ;
     
 inline int get_main_mode()
 {
@@ -89,7 +90,7 @@ void intercept_keyb()
     
     //PRINT("%d %d\n", get_main_mode(), *mode2 );
     
-    int keycode = *keycode_p ;
+    int keycode = *kb_keycode ;
     switch( keycode ) {
         case 5 :            
         case 6 :
@@ -126,7 +127,7 @@ void trace_keyb()
     uint8_t kp = *keypressed_p ;
     
     if( old_kp != kp ) {
-        PRINT("kp: %02x -> %02x\n", old_kp, kp );
+        LOGR("kp: %02x -> %02x (%04x) (%d)\n", old_kp, kp, *kb_row_col_pressed, *kb_keycode );
         old_kp = kp ;
     }
 }

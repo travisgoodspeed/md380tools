@@ -3521,8 +3521,11 @@ af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 f keypressed_struct @ 0x2001e5f8
 f keylocked_flags @ 0x2001e5f9
 
+f kb_row_col_pressed @ 0x2001e7ba
+f kb_keydown_debounce @ 0x2001e889
+f kb_keycode @ 0x2001e890
+
 f keyup_keydown @ 0x2001e889
-f keycode @ 0x2001e890
 f keycode_old @ 0x2001e891
 f keypressed_duringmenu @ 0x2001e5f3
 f keypress_max_time @ 0x2001e7b8
@@ -3548,8 +3551,6 @@ f kb_enter_alpha @ 0x0802e0b8
 
 f get_keycode_from_table @ 0x804f8e4
 f get_keycode_from_table_2 @ 0x804f8ea
-f kb_internal_code @ 0x2001e7ba
-f kb_keydown_debounce @ 0x2001e889
 
 f big_switch @ 0x0802d1b2
 
