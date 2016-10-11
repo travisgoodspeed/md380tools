@@ -8,7 +8,7 @@ all: symgrate run
 clean:
 	rm -f symgrate symbols_*
 images:
-	cd ../firmware && $(MAKE) all
+	cd ../firmware && "${MAKE}" all
 
 symgrate: symgrate.c
 	cc -std=c99 symgrate.c -o symgrate

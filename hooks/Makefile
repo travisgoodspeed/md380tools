@@ -12,7 +12,7 @@ blhook:	blhook.c
 	cc -std=c99 blhook.c -o blhook
 
 images:
-	cd ../firmware && $(MAKE)
+	cd ../firmware && "${MAKE}"
 test: all images
 	./blhook ../firmware/unwrapped/S013.020.img foo < testhooks
 
