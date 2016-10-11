@@ -69,60 +69,6 @@ void handle_hotkey( int keycode )
     }    
 }
 
-void intercept_keyb()
-{
-    int keypressed = *keypressed_p ;
-    
-//    if( is_netmon_visible() ) {
-//        NMPRINT("%02x  ", keypressed );    
-//    }
-    
-    switch( get_main_mode() ) {
-        case 28 :
-        case 19 :
-        case 17 :
-            break ;
-        default:
-            return ;
-    }
-    
-    if( is_menu_visible() ) {
-        return ;
-    }
-    
-    //PRINT("%d %d\n", get_main_mode(), *mode2 );
-    
-    int keycode = *kb_keycode ;
-    switch( keycode ) {
-        case 5 :            
-        case 6 :
-        case 7 :
-        case 8 :
-        case 9 :
-        case 11 :
-        case 12 :
-        case 15 :
-            break ;
-        default:
-            // don't process
-            return ;
-    }
-
-    // detect transition
-    static int oldstate = -1 ;
-    
-    int key_is_pressed = keypressed != 0 ;
-    
-    if( oldstate != key_is_pressed && key_is_pressed ) {
-        handle_hotkey(keycode);
-    }
-    
-    oldstate = key_is_pressed ;
-    
-    // eat key event.
-    *keypressed_p = 0 ;
-}
-
 void trace_keyb(int sw)
 {
     static uint8_t old_kp = -1 ;
