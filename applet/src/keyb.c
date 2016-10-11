@@ -150,13 +150,4 @@ void kb_handler_hook()
 //        *kb_row_col_pressed = 0 ;
 //    }
 
-//    if( global_addl_config.experimental ) {
-//        trace_keyb();
-//        return;
-//    }
-    
-//    if( global_addl_config.debug ) {
-//        intercept_keyb();
-//    }
-
 }
