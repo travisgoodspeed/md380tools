@@ -3731,6 +3731,10 @@ af+ 0x08024fb0 212 msg_send_maybe
 f msg_send_maybe2 @ 0x08024dbc
 af+ 0x08024dbc 166 msg_send_maybe2
 
+f msg_create_menu_item_something @ 0x08024448
+af+ 0x08024448 2 msg_create_menu_item_something
+
+af+ 0x08024658 2 msg_copy_post 
 
 f msg_f1 @ 0x08024ec4
 af+ 0x08024ec4 162 msg_f1
