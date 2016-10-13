@@ -3769,7 +3769,6 @@ f convert_freq_to_str @ 0x800e398
 
 f c5000_set_local_addr @ 0x0803cae0
 af+ 0x0803cae0 84 c5000_set_local_addr
-f msg_wait_until_send @ 0x080248f2
 
 f c5000_set_local_addr2 @ 0x0803cb34
 af+ 0x0803cb34 96 c5000_set_local_addr2
