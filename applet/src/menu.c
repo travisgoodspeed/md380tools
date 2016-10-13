@@ -7,6 +7,8 @@
 
 #define CONFIG_MENU
 
+#include "menu.h"
+
 #include <stdio.h>
 #include <string.h>
 
@@ -690,7 +692,7 @@ void create_menu_entry_edit_screen(void)
     uint8_t *p;
 
     md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
-    md380_menu_0x20001114 = (uint32_t) md380_menu_edit_buf;
+    mn_editbuffer_poi = (uint32_t) md380_menu_edit_buf;
 
 
     /*
@@ -712,7 +714,7 @@ void create_menu_entry_edit_screen(void)
 
     // clear retrun buffer //  see 0x08012a98
     for (i = 0; i < 0x11; i++) {
-        p = (uint8_t *) md380_menu_0x20001114;
+        p = (uint8_t *) mn_editbuffer_poi;
         p = p + i;
         *p = 0;
     }
@@ -796,13 +798,13 @@ void create_menu_entry_edit_dmr_id_screen(void)
     uint32_t nchars;
 
     md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
-    md380_menu_0x20001114 = (uint32_t) md380_menu_edit_buf;
+    mn_editbuffer_poi = (uint32_t) md380_menu_edit_buf;
 
 
 
     // clear retrun buffer //  see 0x08012a98
     for (i = 0; i < 0x11; i++) {
-        p = (uint8_t *) md380_menu_0x20001114;
+        p = (uint8_t *) mn_editbuffer_poi;
         p = p + i;
         *p = 0;
     }
