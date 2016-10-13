@@ -3734,8 +3734,14 @@ af+ 0x08024dbc 166 msg_send_maybe2
 f msg_create_menu_item_something @ 0x08024448
 af+ 0x08024448 2 msg_create_menu_item_something
 
-af+ 0x08024658 190 msg_copy_post_crmenu 
-f msg_copy_post_crmenu @ 0x08024658
+af+ 0x08024658 190 msg_sms_post_showack 
+f msg_sms_post_showack @ 0x08024658
+
+f msg_sms_hdr @ 0x2001e1d0
+f msg_sms_bdy @ 0x2001cefc
+
+f msg_sms_hdr_prep @ 0x2001cb54
+f msg_sms_bdy_prep @ 0x2001ccbc
 
 f msg_f1 @ 0x08024ec4
 af+ 0x08024ec4 162 msg_f1
