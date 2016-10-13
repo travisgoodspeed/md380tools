@@ -3604,6 +3604,23 @@ f event5_mbox_poi @ 0x2001e658
 
 f event1_buffer @ 0x2001e8aa
 
+# event5 events
+f ev5_1 @ 0x803b958
+f ev5_2 @ 0x803b980
+f ev5_3 @ 0x803b986
+f ev5_4_8 @ 0x803b9a4
+f ev5_12 @ 0x803ba14
+f ev5_14 @ 0x803bf2a
+f ev5_15 @ 0x803ba5e
+f ev5_16 @ 0x803bad8
+f ev5_17 @ 0x803baec
+f ev5_18 @ 0x803bc86
+f ev5_19 @ 0x803bd46
+f ev5_20 @ 0x803be8e
+f ev5_21 @ 0x803b9c2
+f ev5_22 @ 0x803b9fa
+f ev5_rest @ 0x803bf5a
+
 # radioevents
 
 f handle_inter_request_deny @ 0x08040690

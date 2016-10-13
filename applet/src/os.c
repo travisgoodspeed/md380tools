@@ -3,7 +3,7 @@
   
 */
 
-//#define DEBUG
+#define DEBUG
 #define NETMON
 
 #include <stdio.h>
@@ -109,6 +109,9 @@ uint8_t OSMboxPost_hook(OS_EVENT *pevent, void *pmsg)
     return (md380_OSMboxPost(pevent, pmsg));
 }
 
+#define BEEP_ROGER 0x24
+#define BEEP_DENY_TX 0xe
+
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {
     void * ret;
@@ -148,10 +151,10 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
         PRINT("OMp 0x%x, 0x%x ", pevent, *(uint8_t*) ret);
         if( pevent == mbox_beep ) {
             switch (* (uint8_t*) ret) {
-                case 0x24:
+                case BEEP_ROGER:
                     PRINT("roger beep ");
                     break;
-                case 0xe:
+                case BEEP_DENY_TX:
                     PRINT("no dmr sync ");
                 case 0x11:
                     PRINT("dmr sync ");
