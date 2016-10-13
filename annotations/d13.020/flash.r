@@ -3322,6 +3322,7 @@ f menugreen.msg.Manual_Di.8024220 0 0x8024220
 f menugreen.msg.enter_id.802430c 0 0x802430c
 f menugreen.msg.enter_id_ok.8024740 0 0x8024740
 
+af+ 0x08024740 608 menugreen.msg.enter_id_ok
 
 af+ 0x80154a4 152 menu_timeslot
 
@@ -3690,6 +3691,25 @@ f c5000_handle_DataRate1 @ 0x0804098a
 f c5000_handle_PI @ 0x080408a4
 f c5000_handle_idle @ 0x0804095c
 
+f c5000_init_lowregs @ 0x0803fed4
+f c5000_enable_audio @ 0x08040226
+
+f c5000_wr_60_1 @ 0x0803ff16
+f c5000_wr_60_2 @ 0x08040230
+f c5000_wr_60_3 @ 0x08040382
+f c5000_wr_60_4 @ 0x08046b32
+f c5000_wr_60_5 @ 0x0805055a
+
+af+ 0x0803ffaa 38 some_io_config2
+
+af+ 0x0804dd36 24 some_func_pend
+af+ 0x0804dd4e 20 some_func_post
+af+ 0x0804dc84 2 some_bitband_io
+af+ 0x0804dcf6 28 some_bitband_io_2
+
+af+ 0x080402f8 218 c5000_some2
+af+ 0x08040290 86 c5000_some3
+
 af+ 0x803ff84 38 c5000_spi0_writereg
 af+ 0x803ffd0 42 c5000_spi0_readreg
 
@@ -3705,12 +3725,35 @@ f dmr_pi_dummy @ 0x8040a00
 
 f is_this_the_check_for_group_rx_list @ 0x08040b94
 
+f msg_send_maybe @ 0x08024fb0
+af+ 0x08024fb0 212 msg_send_maybe
+
+f msg_send_maybe2 @ 0x08024dbc
+af+ 0x08024dbc 166 msg_send_maybe2
+
+
+f msg_f1 @ 0x08024ec4
+af+ 0x08024ec4 162 msg_f1
+f msg_f2 @ 0x08024f66
+af+ 0x08024f66 64 msg_f2
+f msg_f3_spi_wr @ 0x08022ea2
+af+ 0x08022ea2 26 msg_f3_spi_wr
+f msg_f4_spi_rd @ 0x08022ebc
+af+ 0x08022ebc 18 msg_f3_spi_rd
+
+f msg_buffer @ 0x2001db2c
+f msg_buff_complete @ 0x20018490
+
+f c5000_master_handler @ 0x08041cfc
+
+f sema1_poi @ 0x2001e650
+f sema2_poi @ 0x2001e670 
+
 #
 f simplex_or_repeater_flagword @ 0x2001e898
 
 f some_io_config @ 0x0803fffa
 af+ 0x0803fffa 2 some_io_config
-af+ 0x0803ffaa 2 some_io_config2
 
 #
 
@@ -3726,12 +3769,6 @@ f msg_wait_until_send @ 0x080248f2
 
 f c5000_set_local_addr2 @ 0x0803cb34
 af+ 0x0803cb34 96 c5000_set_local_addr2
-
-f msg_send_maybe @ 0x08024fb0
-af+ 0x08024fb0 212 msg_send_maybe
-
-f msg_send_maybe2 @ 0x08024dbc
-af+ 0x08024dbc 166 msg_send_maybe2
 
 f flash_write_50_at_40000 @ 0x08022e76
 af+ 0x08022e76 18 flash_write_50_at_40000

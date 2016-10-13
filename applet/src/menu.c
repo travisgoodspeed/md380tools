@@ -3,7 +3,7 @@
 */
 
 #define DEBUG
-//#define TRACE_MENU
+#define TRACE_MENU
 
 #define CONFIG_MENU
 
