@@ -3717,7 +3717,6 @@ f c5000_wr_60_3 @ 0x08040382
 f c5000_wr_60_4 @ 0x08046b32
 f c5000_wr_60_5 @ 0x0805055a
 
-af+ 0x0803ffaa 38 some_io_config2
 
 af+ 0x0804dd36 24 some_func_pend
 af+ 0x0804dd4e 20 some_func_post
@@ -3727,8 +3726,9 @@ af+ 0x0804dcf6 28 some_bitband_io_range
 af+ 0x080402f8 218 c5000_some2
 af+ 0x08040290 86 c5000_some3
 
-af+ 0x803ff84 38 c5000_spi0_writereg
-af+ 0x803ffd0 42 c5000_spi0_readreg
+af+ 0x0803ff84 38 c5000_spi0_writereg
+af+ 0x0803ffd0 42 c5000_spi0_readreg
+af+ 0x0803ffaa 38 c5000_spi0_writereg_1
 
 f c5000_read_inter @ 0x08040680
 f c5000_read_dll_cc @ 0x080406ec
