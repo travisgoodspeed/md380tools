@@ -3722,7 +3722,7 @@ af+ 0x0803ffaa 38 some_io_config2
 af+ 0x0804dd36 24 some_func_pend
 af+ 0x0804dd4e 20 some_func_post
 af+ 0x0804dc84 2 some_bitband_io
-af+ 0x0804dcf6 28 some_bitband_io_2
+af+ 0x0804dcf6 28 some_bitband_io_range
 
 af+ 0x080402f8 218 c5000_some2
 af+ 0x08040290 86 c5000_some3
@@ -3768,6 +3768,8 @@ f dispatch_event5_mbox @ 0x0803b8f4
 f msg_flash_write @ 0x08022fe8
 f msg_process_sms2 @ 0x0803dd8c
 f msg_process_sms @ 0x0803dd0c
+af+ 0x0803dd0c 260 msg_process_sms
+f msg_status_flag1 @ 0x2001e8f5
 
 f msg_f1 @ 0x08024ec4
 af+ 0x08024ec4 162 msg_f1
