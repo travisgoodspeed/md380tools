@@ -3765,6 +3765,10 @@ f msg_editbuf_to_hdr_prep @ 0x080243d6
 f msg_stack_to_hdr_prep_options @ 0x080243b0
 f dispatch_event5_mbox @ 0x0803b8f4
 
+f msg_flash_write @ 0x08022fe8
+f msg_process_sms2 @ 0x0803dd8c
+f msg_process_sms @ 0x0803dd0c
+
 f msg_f1 @ 0x08024ec4
 af+ 0x08024ec4 162 msg_f1
 f msg_f2 @ 0x08024f66
