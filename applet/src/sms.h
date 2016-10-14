@@ -13,9 +13,7 @@ extern "C" {
 #endif
 
 typedef struct {
-    uint8_t unk0 ;
-    uint8_t unk1 ;
-    uint8_t unk2 ;
+    uint8_t dstadr[3] ; // address in reverse (L-M-H)
     uint8_t unk3 ; // flags. 0x2=?
     wchar_t adr[32]; // zeroterm adress string..
     // sizeof = 0x24 = 36
