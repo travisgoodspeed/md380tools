@@ -3760,6 +3760,9 @@ f msg_sms_bdy @ 0x2001cefc
 f msg_sms_hdr_prep @ 0x2001cb54
 f msg_sms_bdy_prep @ 0x2001ccbc
 
+f msg_bdy_prep_to_editbuf @ 0x08024402
+f msg_editbuf_to_hdr_prep @ 0x080243d6 
+f msg_stack_to_hdr_prep_options @ 0x080243b0
 f dispatch_event5_mbox @ 0x0803b8f4
 
 f msg_f1 @ 0x08024ec4
