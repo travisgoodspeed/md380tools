@@ -3634,9 +3634,6 @@ f handle_inter_phy @ 0x080409d0
 
 f jump_if_b7_0 @ 0x080406ce
 
-f maybe_read_packet @ 0x08040028
-af+ 0x08040028 2 maybe_read_packet
-
 f some_radio_state @ 0x2001e8b0 
 f some_radio_state_prev @ 0x2001e8af
 
@@ -3730,6 +3727,12 @@ af+ 0x0803ff84 38 c5000_spi0_writereg
 af+ 0x0803ffd0 42 c5000_spi0_readreg
 af+ 0x0803ffaa 38 c5000_spi0_writereg_1
 
+f c5000_spi0_readreg_maybe @ 0x0803fffa
+af+ 0x0803fffa 46 c5000_spi0_readreg_maybe
+
+f c5000_maybe_read_packet @ 0x08040028
+af+ 0x08040028 52 c5000_maybe_read_packet
+
 f c5000_read_inter @ 0x08040680
 f c5000_read_dll_cc @ 0x080406ec
 f c5000_read_dll_datatype @ 0x080407a8
@@ -3795,8 +3798,6 @@ f sema2_poi @ 0x2001e670
 #
 f simplex_or_repeater_flagword @ 0x2001e898
 
-f some_io_config @ 0x0803fffa
-af+ 0x0803fffa 2 some_io_config
 
 #
 
