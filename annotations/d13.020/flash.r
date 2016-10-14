@@ -3754,6 +3754,9 @@ af+ 0x08024dbc 166 msg_send_maybe2
 f msg_create_menu_item_something @ 0x08024448
 af+ 0x08024448 2 msg_create_menu_item_something
 
+f msg_convert @ 0x08027656
+af+ 0x08027656 112 msg_convert
+
 af+ 0x08024658 190 msg_sms_post_showack 
 f msg_sms_post_showack @ 0x08024658
 
