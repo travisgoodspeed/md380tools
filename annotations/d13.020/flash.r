@@ -367,14 +367,14 @@ CCa 0x8025228 md380_menu_0x2001d3f1
 CCa 0x8025230 md380_menu_0x2001d3f0
 CCa 0x80256f2 md380_menu_0x2001d3ef
 CCa 0x8025728 md380_menu_0x2001d3ef
-CCa 0x8025736 md380_menu_edit_buf
 CCa 0x802573e md380_menu_0x2001d3f4
-CCa 0x8025746 mn_editbuffer_poi
 CCa 0x802575a md380_menu_0x2001d3ee
 CCa 0x8025760 md380_menu_0x2001d3ef
 CCa 0x8025768 md380_menu_0x2001d3ed
 CCa 0x8025770 md380_menu_0x2001d3f1
+
 af+ 0x8025ae4 888 F_4315
+
 CCa 0x8025e9e md380_menu_0x2001d3f4
 CCa 0x8025ef2 md380_menu_0x2001d3ee
 CCa 0x8025ef6 md380_menu_0x2001d3ef
@@ -451,6 +451,7 @@ CCa 0x802e4a2 md380_menu_0x2001d3ef
 CCa 0x802e5be md380_menu_0x2001d3ee
 
 af+ 0x802f9dc 4056 Beep_Process
+
 CCa 0x802fa36 re issue 227
 CCa 0x802fc1e beep 9
 CCa 0x802fa54 no dmr sync tone

@@ -2775,3 +2775,5 @@ CCa 0x803ab1a md380_menu_0x200011e4
 CCa 0x803ab20 md380_menu_0x200011e4
 CCa 0x803ab24 md380_menu_0x200011e4
 CCa 0x803ab2c md380_menu_id
+CCa 0x8025736 md380_menu_edit_buf
+CCa 0x8025746 mn_editbuffer_poi
