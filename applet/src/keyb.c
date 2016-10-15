@@ -32,6 +32,9 @@ void handle_hotkey( int keycode )
     PRINT("handle hotkey: %d\n", keycode );
     
     switch( keycode ) {
+        case 4 :
+            sms_test();
+            break ;
         case 5 :
             syslog_clear();
             break ;
@@ -56,11 +59,13 @@ void handle_hotkey( int keycode )
             break ;
         case 11 :
             beep_event_probe++ ;
-            mb_send_beep(beep_event_probe);
+            sms_test2(beep_event_probe);
+            //mb_send_beep(beep_event_probe);
             break ;
         case 12 :
             beep_event_probe-- ;
-            mb_send_beep(beep_event_probe);
+            sms_test2(beep_event_probe);
+            //mb_send_beep(beep_event_probe);
             break ;
         case 15 :
             syslog_redraw();
@@ -99,6 +104,7 @@ inline int is_intercept_allowed()
 inline int is_intercepted_keycode( int kc )
 {
     switch( kc ) {
+        case 4 :            
         case 5 :            
         case 6 :
         case 7 :
