@@ -33,7 +33,7 @@ void handle_hotkey( int keycode )
     
     switch( keycode ) {
         case 4 :
-            sms_test();
+            //sms_test();
             break ;
         case 5 :
             syslog_clear();
@@ -59,12 +59,12 @@ void handle_hotkey( int keycode )
             break ;
         case 11 :
             beep_event_probe++ ;
-            sms_test2(beep_event_probe);
+            //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
         case 12 :
             beep_event_probe-- ;
-            sms_test2(beep_event_probe);
+            //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
         case 15 :
