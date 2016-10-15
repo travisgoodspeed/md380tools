@@ -88,16 +88,16 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped	
 
 experiment.img: 
-	$(MAKE) -C ../patches/$(PATCHDIR) patched.bin
+	"${MAKE}" -C ../patches/$(PATCHDIR) patched.bin
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 
 
 lib: src/version.h config.h
-	$(MAKE) -C lib
+	"${MAKE}" -C lib
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
-	$(MAKE) -C ../patches/$(PATCHDIR) clean all
+	"${MAKE}" -C ../patches/$(PATCHDIR) clean all
 	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
 	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img $(MERGEBASE)
 
@@ -121,20 +121,20 @@ src/version.h: src/*.c
 	echo "#define GIT_VERSION \"$(GIT_VERSION)\"" >>src/version.h
 
 clean:
-	$(MAKE) -C ../patches/$(PATCHDIR) clean
-	$(MAKE) -C lib clean
+	"${MAKE}" -C ../patches/$(PATCHDIR) clean
+	"${MAKE}" -C lib clean
 	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h *.map
 
 image_D02:
-	$(MAKE) FW=D02_032 all  
+	"${MAKE}" FW=D02_032 all  
 
 image_D13:
-	$(MAKE) FW=D13_020 all  
+	"${MAKE}" FW=D13_020 all  
 	
 image_S13:
-	$(MAKE) FW=S13_020 all  
+	"${MAKE}" FW=S13_020 all  
 
 ci:
-	$(MAKE) clean image_D02
-	$(MAKE) clean image_S13
-	$(MAKE) clean image_D13
+	"${MAKE}" clean image_D02
+	"${MAKE}" clean image_S13
+	"${MAKE}" clean image_D13
