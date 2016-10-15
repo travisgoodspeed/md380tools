@@ -13,6 +13,7 @@
 #include "debug.h"
 #include "console.h"
 #include "syslog.h"
+#include "radio_config.h"
 
 #include <stdint.h>
 
@@ -30,7 +31,7 @@ void reset_backlight()
     uint16_t *timer = 0x2001e7f8 ;
     
     // struct @ 0x2001dadc
-    *timer = 10 * 500 ;
+    *timer = md380_radio_config.backlight_time * 500 ;
     
     void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 );
     
