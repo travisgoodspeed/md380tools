@@ -77,8 +77,7 @@ Make für Windows lässt sich unter http://gnuwin32.sourceforge.net/packages/mak
 Zunächst lädt man Python 2.7 von  https://www.python.org/downloads/ runter und installiert dies in das Verzeichnis `C:\Python27`. Dort macht man eine Kopie von `python.exe` benennt diese um in `python2.exe`.
 
 Anschließend sind folgende Pfadangaben zu den Umgebungsvariablen hinzuzufügen durch Rechts-Klick auf den Start-Button -> System -> Erweiterte Systemeinstellungen -> Umgebungsvariablen. Hier die Variable "Path" auswählen und bearbeiten. Folgende Pfade hinzufügen:
- C:\Program Files\GnuWin32\bin
- C:\Python27
+ C:\Program Files\GnuWin32\bin;C:\Python27
 
 ###Installation von gcc-arm-none-eabi
 Unter https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update den Cross-Compiler tunerladen und am Ende der Installatin die Option 'add path to environment variable' anwählen, bevor man die Installation abschließt.
