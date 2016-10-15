@@ -48,7 +48,7 @@ void handle_hotkey( int keycode )
     
     switch( keycode ) {
         case 4 :
-            //sms_test();
+            sms_test();
             break ;
         case 5 :
             syslog_clear();
