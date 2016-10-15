@@ -11,10 +11,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+    
+// flags
 
+#define SMS_TYPE_MULTICAST 1        // dst=225.x.x.x    
+#define SMS_TYPE_SINGLECAST 2       // dst=12.x.x.x
+
+// 3 9 11 17 19 25 26 27 33 
+    
 typedef struct {
     uint8_t dstadr[3] ; // address in reverse (L-M-H)
-    uint8_t unk3 ; // flags. 0x2=?
+    uint8_t flags ; // 0x2=?
     wchar_t adr[16]; // zeroterm adress string..
     // sizeof = 0x24 = 36
 } sms_hdr_t ;
