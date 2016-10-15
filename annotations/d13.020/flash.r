@@ -3786,10 +3786,14 @@ f msg_timer_500 @ 0x2001e5d0
 f msg_sms_flags_shifted @ 0x2001e895
 f msg_dest_addr @ 0x2001e5dc
 
+f msg_handle_types @ 0x0804c858
+af+ 0x0804c858 2 msg_handle_types
 f msg_handle_type_11 @ 0x804ca3c
 f msg_handle_type_21 @ 0x804c888
 f msg_handle_type_31 @ 0x804ca3c
 f msg_handle_type_other @ 0x804cb00
+
+f msg_handle_types @ 0x0804c858
 
 
 # msg )))

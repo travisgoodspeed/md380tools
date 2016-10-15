@@ -21,8 +21,8 @@ extern "C" {
     
 typedef struct {
     uint8_t dstadr[3] ; // address in reverse (L-M-H)
-    uint8_t flags ; // 0x2=?
-    wchar_t adr[16]; // zeroterm adress string..
+    uint8_t flags ; // SMS_TYPE
+    wchar_t adr[16]; // zeroterm adress string.. (ignored, scratch buffer)
     // sizeof = 0x24 = 36
 } sms_hdr_t ;
 
