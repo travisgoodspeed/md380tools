@@ -3231,8 +3231,7 @@ f poi.to.0x20001704 4 0x0800c7c4
 f poi.0x0800c7d4 4 0x0800c7d4
 f poi.0x0800c7d8 4 0x0800c7d8
 
-f cfg.0x0801ae4c.md380_radio_config 4 0x0801ae4c
-f cfg.0x08018d98.md380_radio_config 4 0x08018d98
+f md380_radio_config @ 0x2001dadc
 
 Cd 4 @ 0x0800c784
 Cd 4 @ 0x0800c788

@@ -59,3 +59,7 @@ CCa 0x08035bc4 keycode
 CCa 0x0803be76 keycode
 
 f poi.to.md380_menu_id 4 0x0x0800c788
+
+f cfg.0x0801ae4c.md380_radio_config 4 0x0801ae4c
+f cfg.0x08018d98.md380_radio_config 4 0x08018d98
+

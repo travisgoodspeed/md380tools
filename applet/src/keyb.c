@@ -25,11 +25,25 @@ inline int get_main_mode()
     return md380_f_4225_operatingmode & 0x7F ;
 }
 
+void reset_backlight()
+{
+    uint16_t *timer = 0x2001e7f8 ;
+    
+    // struct @ 0x2001dadc
+    *timer = 10 * 500 ;
+    
+    void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 );
+    
+    f(0x40020800,0x40);
+}
+
 int beep_event_probe = 0 ;
 
 void handle_hotkey( int keycode )
 {
     PRINT("handle hotkey: %d\n", keycode );
+    
+    reset_backlight();
     
     switch( keycode ) {
         case 4 :
