@@ -19,19 +19,7 @@ void sms_test()
     sms_hdr_t hdr ;    
     sms_bdy_t bdy ;
   
-#if 0    
-    // pd0mr
-    hdr.dstadr[0] = 0x98 ;
-    hdr.dstadr[1] = 0x38 ;
-    hdr.dstadr[2] = 0x1f ;
-#endif    
-#if 0    
-    // pa3met
-    hdr.dstadr[0] = 0xBF ;
-    hdr.dstadr[1] = 0x2C ;
-    hdr.dstadr[2] = 0x1f ;
-#endif    
-#if 0    
+#if 1    
     // 204
     hdr.dstadr[0] = 0xCC ;
     hdr.dstadr[1] = 0x00 ;
@@ -43,9 +31,16 @@ void sms_test()
     hdr.dstadr[1] = 0xFF ;
     hdr.dstadr[2] = 0xFF ;
 #endif    
+#if 0      
+    // Null
+    hdr.dstadr[0] = 0x0 ;
+    hdr.dstadr[1] = 0x0 ;
+    hdr.dstadr[2] = 0x0 ;
+#endif    
     
-    hdr.unk3 = 0x2 ;
-//    wide_sprintf(hdr.adr,"2046104");
+    hdr.flags = SMS_TYPE_SINGLECAST ;
+//    hdr.flags = SMS_TYPE_MULTICAST ;
+    
 //    wide_sprintf(hdr.adr,"");
             
     wide_sprintf(bdy.txt,"md380tools rulez");
@@ -59,39 +54,27 @@ void sms_test2(int m)
     sms_hdr_t hdr ;    
     sms_bdy_t bdy ;
   
-#if 1
-    // pd0mr
-    hdr.dstadr[0] = 0x98 ;
-    hdr.dstadr[1] = 0x38 ;
-    hdr.dstadr[2] = 0x1f ;
-#endif    
-#if 0    
-    // pa3met
-    hdr.dstadr[0] = 0xBF ;
-    hdr.dstadr[1] = 0x2C ;
-    hdr.dstadr[2] = 0x1f ;
-#endif    
 #if 0    
     // 204
     hdr.dstadr[0] = 0xCC ;
     hdr.dstadr[1] = 0x00 ;
     hdr.dstadr[2] = 0x00 ;
 #endif    
-#if 0      
+#if 1      
     // all
     hdr.dstadr[0] = 0xFF ;
     hdr.dstadr[1] = 0xFF ;
     hdr.dstadr[2] = 0xFF ;
 #endif    
     
-    hdr.unk3 = m ; 
+    hdr.flags = m ; 
     
     wide_sprintf(bdy.txt,"md380tools rulez");
     
     sms_send( &hdr, &bdy );
 }
 
-int msg_event ;
+int msg_event ; // must be global.
 
 void sms_send( sms_hdr_t *hdr, sms_bdy_t *body )
 {
