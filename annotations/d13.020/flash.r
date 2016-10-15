@@ -1,295 +1,16 @@
-af+ 0x800c188 1446 Create_MainMenyEntry
-CCa 0x800c18a md380_menu_0x200011e4
-CCa 0x800c192 md380_menu_id
-CCa 0x800c1ce md380_menu_0x200011e4
-CCa 0x800c1d6 md380_menu_memory
-CCa 0x800c272 md380_menu_id
-CCa 0x800c2b6 md380_menu_id
-CCa 0x800c2ea md380_menu_id
-CCa 0x800c31c md380_menu_id
-CCa 0x800c34e md380_menu_id
-CCa 0x800c380 md380_menu_id
-CCa 0x800c3b2 md380_menu_id
-CCa 0x800c3c0 md380_menu_0x200011e4
-CCa 0x800c3ca md380_menu_id
-CCa 0x800c3ec md380_menu_0x200011e4
-CCa 0x800c464 md380_menu_id
-CCa 0x800c4a0 md380_menu_id
-CCa 0x800c4ca md380_menu_id
-CCa 0x800c4f2 md380_menu_id
-CCa 0x800c51a md380_menu_id
-CCa 0x800c542 md380_menu_id
-CCa 0x800c576 md380_menu_0x200011e4
-CCa 0x800c598 md380_menu_0x200011e4
-CCa 0x800c5e8 md380_menu_id
-CCa 0x800c60c md380_menu_id
-CCa 0x800c640 md380_menu_id
-CCa 0x800c6ee md380_menu_0x200011e4
-CCa 0x800c710 md380_menu_0x200011e4
 
+f md380_menu_id @ 0x2001e915
+f md380_menu_mem_base @ 0x2001b274
+f md380_menu_0x200011e4 @ 0x20004acc
+f md380_menu_memory @ 0x2001d5cc
+f md380_menu_0x2001d3f0 @ 0x2001e946
+
+af+ 0x800c188 1446 Create_MainMenyEntry
 af+ 0x800c72e 86 md380_create_menu_entry
 
-CCa 0x800d982 md380_menu_0x200011e4
-CCa 0x800dbce md380_menu_0x200011e4
-CCa 0x800dbda md380_menu_0x200011e4
-CCa 0x800dbee md380_menu_0x200011e4
-CCa 0x800ddc4 md380_menu_id
-CCa 0x800ddce md380_menu_mem_base
-CCa 0x800e142 md380_menu_0x2001d3f0
 CCa 0x800e1fe md380_menu_0x2001d3ee
-CCa 0x800e748 md380_menu_0x200011e4
-CCa 0x800e752 md380_menu_0x200011e4
-CCa 0x800e75a md380_menu_0x200011e4
-CCa 0x800e762 md380_menu_memory
-CCa 0x800e780 md380_menu_id
-CCa 0x800e788 md380_menu_mem_base
-CCa 0x800e79e md380_menu_0x200011e4
-CCa 0x800e7c0 md380_menu_id
-CCa 0x800e7e4 md380_menu_id
-CCa 0x800e7ee md380_menu_0x200011e4
-CCa 0x800e7f6 md380_menu_0x200011e4
-CCa 0x800e7fc md380_menu_0x200011e4
-CCa 0x800e806 md380_menu_id
-CCa 0x800e80c md380_menu_0x200011e4
-CCa 0x800e814 md380_menu_memory
-CCa 0x800ebe0 md380_menu_0x200011e4
-CCa 0x800ebec md380_menu_0x200011e4
-CCa 0x800ec00 md380_menu_0x200011e4
-CCa 0x800ed3c md380_menu_0x200011e4
-CCa 0x800ed44 md380_menu_0x200011e4
-CCa 0x800ed4a md380_menu_0x200011e4
-CCa 0x800ed54 md380_menu_id
-CCa 0x800ed5a md380_menu_0x200011e4
-CCa 0x800ed62 md380_menu_memory
-CCa 0x800ee04 md380_menu_0x200011e4
-CCa 0x800ee2e md380_menu_0x200011e4
-CCa 0x800ee42 md380_menu_0x200011e4
-CCa 0x800ee48 md380_menu_0x200011e4
-CCa 0x800ee52 md380_menu_id
-CCa 0x800ee58 md380_menu_0x200011e4
-CCa 0x800ee60 md380_menu_memory
-CCa 0x800f0b8 md380_menu_0x200011e4
-CCa 0x800f342 md380_menu_0x200011e4
-CCa 0x800f4fa md380_menu_0x200011e4
-CCa 0x800f70e md380_menu_0x200011e4
-CCa 0x800f71a md380_menu_0x200011e4
-CCa 0x800f774 md380_menu_0x200011e4
-CCa 0x800f77c md380_menu_0x200011e4
-CCa 0x800f782 md380_menu_0x200011e4
-CCa 0x800f78c md380_menu_id
-CCa 0x800f792 md380_menu_0x200011e4
-CCa 0x800f79a md380_menu_memory
-CCa 0x800f836 md380_menu_0x200011e4
-CCa 0x800f83e md380_menu_0x200011e4
-CCa 0x800f844 md380_menu_0x200011e4
-CCa 0x800f866 md380_menu_0x200011e4
-CCa 0x800f86e md380_menu_0x200011e4
-CCa 0x800f874 md380_menu_0x200011e4
-CCa 0x800f87e md380_menu_id
-CCa 0x800f884 md380_menu_0x200011e4
-CCa 0x800f88c md380_menu_memory
-CCa 0x800fc66 md380_menu_memory
 af+ 0x800fc84 18 md380_menu_entry_back
-CCa 0x800fcc2 md380_menu_0x200011e4
-CCa 0x800fcc8 md380_menu_memory
-CCa 0x800fce4 md380_menu_id
-CCa 0x800fcec md380_menu_mem_base
-CCa 0x800fd3a md380_menu_id
-CCa 0x800fd68 md380_menu_id
-CCa 0x800fdb2 md380_menu_id
-CCa 0x800fdc4 md380_menu_id
-CCa 0x800fdce md380_menu_mem_base
-CCa 0x800fdea md380_menu_0x200011e4
-CCa 0x800fdf0 md380_menu_memory
-CCa 0x800fe00 md380_menu_id
-CCa 0x800fe08 md380_menu_mem_base
-CCa 0x800fe3a md380_menu_id
-CCa 0x800fe46 md380_menu_id
-CCa 0x800fe4e md380_menu_mem_base
-CCa 0x800fe78 md380_menu_0x200011e4
-CCa 0x800fe80 md380_menu_memory
-CCa 0x800feae md380_menu_id
-CCa 0x800feb4 md380_menu_mem_base
-CCa 0x800fef0 md380_menu_id
-CCa 0x800ff00 md380_menu_id
-CCa 0x800ff06 md380_menu_mem_base
-CCa 0x800ff38 md380_menu_id
-CCa 0x800ff44 md380_menu_id
-CCa 0x800ff4c md380_menu_mem_base
-CCa 0x8010030 md380_menu_0x200011e4
-CCa 0x8010038 md380_menu_memory
-CCa 0x801006c md380_menu_id
-CCa 0x8010072 md380_menu_mem_base
-CCa 0x80100ae md380_menu_id
-CCa 0x80100be md380_menu_id
-CCa 0x80100c4 md380_menu_mem_base
-CCa 0x80100f6 md380_menu_id
-CCa 0x8010102 md380_menu_id
-CCa 0x801010a md380_menu_mem_base
-CCa 0x80101bc md380_menu_0x200011e4
-CCa 0x80101c4 md380_menu_memory
-CCa 0x80101f6 md380_menu_id
-CCa 0x80101fe md380_menu_mem_base
-CCa 0x801023a md380_menu_id
-CCa 0x801026a md380_menu_id
-CCa 0x801029e md380_menu_id
-CCa 0x80102d2 md380_menu_id
-CCa 0x8010302 md380_menu_id
-CCa 0x8010332 md380_menu_id
-CCa 0x8010362 md380_menu_id
-CCa 0x8010374 md380_menu_id
-CCa 0x801037e md380_menu_mem_base
-CCa 0x80103e4 md380_menu_0x200011e4
-CCa 0x80103ec md380_menu_memory
-CCa 0x8010410 md380_menu_id
-CCa 0x8010418 md380_menu_mem_base
-CCa 0x8010442 md380_menu_id
-CCa 0x8010482 md380_menu_0x200011e4
-CCa 0x801048a md380_menu_memory
-CCa 0x80104a2 md380_menu_id
-CCa 0x80104aa md380_menu_mem_base
-CCa 0x80104d4 md380_menu_id
-CCa 0x8010556 md380_menu_0x200011e4
-CCa 0x801055c md380_menu_memory
-CCa 0x8010574 md380_menu_id
-CCa 0x801057c md380_menu_mem_base
-CCa 0x80105a6 md380_menu_id
-CCa 0x8010608 md380_menu_0x200011e4
-CCa 0x801060e md380_menu_memory
-CCa 0x8010626 md380_menu_id
-CCa 0x801062e md380_menu_mem_base
-CCa 0x8010658 md380_menu_id
-CCa 0x801072e md380_menu_0x200011e4
-CCa 0x8010734 md380_menu_memory
-CCa 0x8010752 md380_menu_id
-CCa 0x801075a md380_menu_mem_base
-CCa 0x8010784 md380_menu_id
-CCa 0x8010846 md380_menu_0x200011e4
-CCa 0x801084e md380_menu_memory
-CCa 0x801086c md380_menu_id
-CCa 0x8010874 md380_menu_mem_base
-CCa 0x80108b8 md380_menu_id
-CCa 0x80108ea md380_menu_id
-CCa 0x801091e md380_menu_0x200011e4
-CCa 0x8010926 md380_menu_memory
-CCa 0x8010944 md380_menu_id
-CCa 0x801094a md380_menu_mem_base
-CCa 0x8010982 md380_menu_id
-CCa 0x80109ae md380_menu_id
-CCa 0x8010c0e md380_menu_0x200011e4
-CCa 0x8010c16 md380_menu_memory
-CCa 0x8010c26 md380_menu_id
-CCa 0x8010c2e md380_menu_mem_base
-CCa 0x8010cae md380_menu_id
-CCa 0x8010cdc md380_menu_id
-CCa 0x8010d26 md380_menu_id
-CCa 0x8010d5a md380_menu_id
-CCa 0x8010d88 md380_menu_id
-CCa 0x8010dca md380_menu_id
-CCa 0x8010e10 md380_menu_id
-CCa 0x8010e40 md380_menu_id
-CCa 0x8010e86 md380_menu_id
-CCa 0x8010ecc md380_menu_id
-CCa 0x8010f12 md380_menu_id
-CCa 0x8010f54 md380_menu_id
-CCa 0x8010f84 md380_menu_id
-CCa 0x8010f9a md380_menu_id
-CCa 0x8010fa4 md380_menu_mem_base
-CCa 0x8010ff4 md380_menu_id
-CCa 0x8011004 md380_menu_id
-CCa 0x801100e md380_menu_mem_base
-CCa 0x8011042 md380_menu_id
-CCa 0x801106c md380_menu_id
-CCa 0x80110c0 md380_menu_id
-CCa 0x80110d2 md380_menu_id
-CCa 0x80110dc md380_menu_mem_base
-CCa 0x8011144 md380_menu_0x200011e4
-CCa 0x801114a md380_menu_memory
-CCa 0x8011168 md380_menu_id
-CCa 0x8011170 md380_menu_mem_base
-CCa 0x801119e md380_menu_id
-CCa 0x80111f0 md380_menu_0x200011e4
-CCa 0x80111f8 md380_menu_memory
-CCa 0x8011216 md380_menu_id
-CCa 0x801121e md380_menu_mem_base
 CCa 0x8011248 mn_editbuffer_poi
-CCa 0x801124e md380_menu_id
-CCa 0x8011268 md380_menu_0x200011e4
-CCa 0x8011270 md380_menu_0x200011e4
-CCa 0x8011276 md380_menu_0x200011e4
-CCa 0x8011280 md380_menu_id
-CCa 0x8011286 md380_menu_0x200011e4
-CCa 0x801128e md380_menu_memory
-CCa 0x801129e md380_menu_id
-CCa 0x80112a6 md380_menu_mem_base
-CCa 0x80112d4 md380_menu_id
-CCa 0x80112e8 md380_menu_0x200011e4
-CCa 0x80112f0 md380_menu_0x200011e4
-CCa 0x80112f6 md380_menu_0x200011e4
-CCa 0x8011300 md380_menu_id
-CCa 0x8011306 md380_menu_0x200011e4
-CCa 0x801130e md380_menu_memory
-CCa 0x801132c md380_menu_id
-CCa 0x8011334 md380_menu_mem_base
-CCa 0x8011370 md380_menu_id
-CCa 0x80118c2 md380_menu_0x200011e4
-CCa 0x80118c8 md380_menu_memory
-CCa 0x80118d6 md380_menu_id
-CCa 0x80118de md380_menu_mem_base
-CCa 0x8011904 md380_menu_id
-CCa 0x80119a2 md380_menu_0x200011e4
-CCa 0x80119a8 md380_menu_memory
-CCa 0x80119be md380_menu_id
-CCa 0x80119c6 md380_menu_mem_base
-CCa 0x80119ee md380_menu_id
-CCa 0x8011b6c md380_menu_0x200011e4
-CCa 0x8011b72 md380_menu_memory
-CCa 0x8011b90 md380_menu_id
-CCa 0x8011b98 md380_menu_mem_base
-CCa 0x8011bc4 md380_menu_id
-CCa 0x8011bd2 md380_menu_id
-CCa 0x8011bdc md380_menu_mem_base
-CCa 0x8011dc0 md380_menu_0x200011e4
-CCa 0x8011dc8 md380_menu_memory
-CCa 0x8011e18 md380_menu_id
-CCa 0x8011e20 md380_menu_mem_base
-CCa 0x8011e5a md380_menu_id
-CCa 0x8011e8e md380_menu_id
-CCa 0x8011e96 md380_menu_mem_base
-CCa 0x8011ed0 md380_menu_id
-CCa 0x8011f28 md380_menu_id
-CCa 0x8011f30 md380_menu_mem_base
-CCa 0x8011f6a md380_menu_id
-CCa 0x8011f98 md380_menu_id
-CCa 0x8011fa8 md380_menu_id
-CCa 0x8011fb0 md380_menu_mem_base
-CCa 0x8011fd6 md380_menu_id
-CCa 0x8011fdc md380_menu_mem_base
-CCa 0x8012016 md380_menu_id
-CCa 0x8012022 md380_menu_0x200011e4
-CCa 0x801202a md380_menu_memory
-CCa 0x8012046 md380_menu_id
-CCa 0x801204c md380_menu_mem_base
-CCa 0x8012086 md380_menu_id
-CCa 0x80120da md380_menu_0x200011e4
-CCa 0x80120e2 md380_menu_0x200011e4
-CCa 0x80120e8 md380_menu_0x200011e4
-CCa 0x80120f2 md380_menu_id
-CCa 0x80120f6 md380_menu_0x200011e4
-CCa 0x80120fe md380_menu_memory
-CCa 0x801211a md380_menu_id
-CCa 0x8012120 md380_menu_mem_base
-CCa 0x801215a md380_menu_id
-CCa 0x8012186 md380_menu_id
-CCa 0x8012196 md380_menu_id
-CCa 0x801219e md380_menu_mem_base
-CCa 0x80121c6 md380_menu_0x200011e4
-CCa 0x80121ce md380_menu_memory
-CCa 0x80121ea md380_menu_id
-CCa 0x80121f0 md380_menu_mem_base
-CCa 0x801222a md380_menu_id
-CCa 0x8012232 md380_menu_0x200011e4
-CCa 0x801223a md380_menu_memory
 CCa 0x8012260 md380_menu_0x2001d3f4
 CCa 0x8012268 mn_editbuffer_poi
 CCa 0x801226c md380_menu_edit_buf
@@ -354,13 +75,6 @@ CCa 0x8012774 mn_editbuffer_poi
 CCa 0x80127ac mn_editbuffer_poi
 CCa 0x80127bc mn_editbuffer_poi
 CCa 0x80127cc mn_editbuffer_poi
-CCa 0x8012818 md380_menu_id
-CCa 0x8012820 md380_menu_mem_base
-CCa 0x8012860 md380_menu_id
-CCa 0x801288e md380_menu_id
-CCa 0x80128ac md380_menu_id
-CCa 0x80128b4 md380_menu_mem_base
-CCa 0x80128ec md380_menu_id
 CCa 0x8012916 mn_editbuffer_poi
 CCa 0x8012998 md380_menu_0x200011e4
 CCa 0x80129a0 md380_menu_memory
@@ -393,10 +107,6 @@ CCa 0x8012bc4 md380_menu_mem_base
 CCa 0x8012c0a md380_menu_id
 CCa 0x8012c3c md380_menu_id
 CCa 0x8012c7e md380_menu_0x200011e4
-CCa 0x8012c86 md380_menu_memory
-CCa 0x8012ca2 md380_menu_id
-CCa 0x8012caa md380_menu_mem_base
-CCa 0x8012cd6 md380_menu_id
 CCa 0x8012d0a md380_menu_0x200011e4
 CCa 0x8012d12 md380_menu_0x200011e4
 CCa 0x8012d18 md380_menu_0x200011e4
@@ -3224,19 +2934,14 @@ af+ 0x8090370 80 usb_dfu_write
 af+ 0x80903c0 54 usb_dfu_read
 af+ 0x809662e 34 usb_serialnumber
 
-f poi.to.md380_menu_mem_base 4 0x0800c7ac     
+
 f menu_entry_back_1 @ 0x800fc85
-f poi.to.0x2001e6ec 4 0x0800c7c0
-f poi.to.0x20001704 4 0x0800c7c4
-f poi.0x0800c7d4 4 0x0800c7d4
-f poi.0x0800c7d8 4 0x0800c7d8
 
 f md380_radio_config @ 0x2001dadc
 
 Cd 4 @ 0x0800c784
 Cd 4 @ 0x0800c788
 Cd 4 @ 0x0800c7ac
-f _ 0 0x0800c800
 
 f menugreen.Contacts.800fcbc 0 0x800fcbc
 f menugreen.Scan.8037e34 0 0x8037e34
