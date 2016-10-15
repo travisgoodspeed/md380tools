@@ -3769,13 +3769,31 @@ f msg_sms_bdy_prep @ 0x2001ccbc
 f msg_bdy_prep_to_editbuf @ 0x08024402
 f msg_editbuf_to_hdr_prep @ 0x080243d6 
 f msg_stack_to_hdr_prep_options @ 0x080243b0
-f dispatch_event5_mbox @ 0x0803b8f4
 
 f msg_flash_write @ 0x08022fe8
 f msg_process_sms2 @ 0x0803dd8c
 f msg_process_sms @ 0x0803dd0c
 af+ 0x0803dd0c 260 msg_process_sms
+
+# ((( mag
+
+f dispatch_event5_mbox @ 0x0803b8f4
+
+f msg_last_event @ 0x2001e8f4
+f msg_0x2001e8f3 @ 0x2001e8f3
 f msg_status_flag1 @ 0x2001e8f5
+f msg_timer_500 @ 0x2001e5d0
+f msg_sms_flags_shifted @ 0x2001e895
+f msg_dest_addr @ 0x2001e5dc
+
+f msg_handle_type_11 @ 0x804ca3c
+f msg_handle_type_21 @ 0x804c888
+f msg_handle_type_31 @ 0x804ca3c
+f msg_handle_type_other @ 0x804cb00
+
+
+# msg )))
+
 
 f msg_f1 @ 0x08024ec4
 af+ 0x08024ec4 162 msg_f1
