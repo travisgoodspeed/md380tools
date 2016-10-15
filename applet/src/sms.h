@@ -16,7 +16,7 @@ extern "C" {
 
 #define SMS_TYPE_MULTICAST 1        // dst=225.x.x.x    
 #define SMS_TYPE_SINGLECAST 2       // dst=12.x.x.x
-
+#define SMS_TYPE_BROADCAST 3        // dst=255.x.x.x
 // 3 9 11 17 19 25 26 27 33 
     
 typedef struct {
