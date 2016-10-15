@@ -1,7 +1,6 @@
 /*
  *  sms.c
  * 
- *  Created on Oct 14, 2016 8:41:57 PM by Simon IJskes
  */
 
 #include <string.h>
