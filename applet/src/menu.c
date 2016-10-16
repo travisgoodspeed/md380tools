@@ -2,7 +2,7 @@
   \brief Menu hooks and extensions.
 */
 
-#define DEBUG
+//#define DEBUG
 #define TRACE_MENU
 
 #define CONFIG_MENU

@@ -178,6 +178,7 @@ void dumpraw_data(uint8_t *pkt)
 void dmr_CSBK_handler_hook(uint8_t *pkt)
 {
     PRINTRET();
+    PRINT("CSBK: ");
     PRINTHEX(pkt,14);
     PRINT("\n");
 
