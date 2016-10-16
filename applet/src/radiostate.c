@@ -122,6 +122,11 @@ uint8_t get_blocks_to_follow( uint8_t *data )
     return data[8] & 0x7F ;
 }
 
+uint8_t get_appended_blocks( uint8_t *data )
+{
+    return (data[1] & 0xF) + (data[0] & 0x30 );
+}
+
 uint8_t get_pad_octets( uint8_t *data )
 {
     int r = data[1] & 0xF ; 
@@ -153,6 +158,9 @@ void rst_data_header(void *data)
             btf = get_blocks_to_follow(data);
             // not for resp_pkt, but it is defined as 0 there.
             poc = get_pad_octets(data);
+            break ;
+        case DPF_DEFINED_SHORT :
+            btf = get_appended_blocks(data);
             break ;
     }
     switch( dpf ) {
