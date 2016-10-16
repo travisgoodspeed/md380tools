@@ -179,7 +179,7 @@ void kb_handler_hook()
             int kp = *keypressed_p ;
             
             if( kp & 2 == 2 ) {
-                *keypressed_p = 0 ;
+                *keypressed_p = 8 ;
                 handle_hotkey(kc);
                 return ;
             }
