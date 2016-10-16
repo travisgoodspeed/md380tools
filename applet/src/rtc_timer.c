@@ -43,7 +43,7 @@ extern void f_4315_hook()
 {
     netmon_update();
     con_redraw();
-    if( is_netmon_enabled() ) {
+    if( is_netmon_visible() ) {
         return ;
     }
     F_4315();
@@ -262,7 +262,7 @@ void f_4225_hook()
 //#ifdef CONFIG_GRAPHICS
 
     if ( global_addl_config.micbargraph == 1 ) {
-        if( !is_netmon_enabled() ) {
+        if( !is_netmon_visible() ) {
             draw_micbargraph();
         }
     }
@@ -273,7 +273,7 @@ void f_4225_hook()
     
     md380_f_4225();
     
-    if( is_console_visible() ) {
+    if( is_netmon_visible() ) {
         if( gui_opmode2 == OPM2_VOICE ) {
             gui_opmode2 = OPM2_IDLE;
         }
