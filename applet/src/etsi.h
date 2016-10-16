@@ -43,52 +43,47 @@ typedef struct data {
     uint16_t crc ;    
 } data_hdr_t ;
 
-inline uint8_t get_sap( data_hdr_t *data )
-{
-    return ( data->sap_poc >> 4 ) & 0xF ;
-}
-
-inline uint8_t get_dpf( data_hdr_t *data )
-{
-    return data->g_a_hc_poc_dpf & 0xF ;
-}
+//inline uint8_t get_dpf( data_hdr_t *data )
+//{
+//    return data->g_a_hc_poc_dpf & 0xF ;
+//}
 
 #define DPF_UDT 0
 
-#define DPF_RESP_PKT 1
-#define DPF_DATA_PKT_UNCONF 2
-#define DPF_DATA_PKT_CONFIRM 3
+#define DPF_RESPONSE 1
+#define DPF_UNCONFIRMED 2
+#define DPF_CONFIRMED 3
 
-#define DPF_SHRT_DATA_DEF 13
-#define DPF_SHRT_RAW 14
-#define DPF_PROP_DATA 15
+#define DPF_DEFINED_SHORT 13
+#define DPF_RAW_STATUS_SHORT 14 
+#define DPF_PROPRIETARY 15
 
 inline const char* dpf_to_str( uint8_t dpf ) 
 {
     switch( dpf ) {
         case DPF_UDT : 
             return "udt" ;
-        case DPF_RESP_PKT :
+        case DPF_RESPONSE :
             return "response_pkt" ;
-        case DPF_DATA_PKT_UNCONF :
+        case DPF_UNCONFIRMED :
             return "datapkt_unconf" ;
-        case DPF_DATA_PKT_CONFIRM :
+        case DPF_CONFIRMED :
             return "datapkt_conf" ;
-        case DPF_SHRT_DATA_DEF :
+        case DPF_DEFINED_SHORT :
             return "shrtdata_defined" ;
-        case DPF_SHRT_RAW :
+        case DPF_RAW_STATUS_SHORT :
             return "shrtdata_raw" ;
-        case DPF_PROP_DATA :
+        case DPF_PROPRIETARY :
             return "prop_dpkt" ;
         default:
             return "?" ;
     }
 }
 
-inline uint8_t get_blocks( data_hdr_t *data )
-{
-    return data->f_blocks & 0x7F ;
-}
+//inline uint8_t get_blocks( data_hdr_t *data )
+//{
+//    return data->f_blocks & 0x7F ;
+//}
 
 inline const char* sap_to_str( uint8_t sap ) 
 {

@@ -106,36 +106,89 @@ void rst_signal_my_call()
 
 int blocks_outstanding ;
 int current_dpf ;
+int pad_octets ;
 
 #define DATABUF_SZ 1024 
 uint8_t databuffer[DATABUF_SZ];
 int dataidx ;
 
-
-void rst_data_header(data_hdr_t *data)
+int get_dpf( uint8_t *data )
 {
-    int sap = get_sap(data);
-    int blocks = get_blocks(data);
+    return data[0] & 0xF ;
+}
+
+uint8_t get_blocks_to_follow( uint8_t *data )
+{
+    return data[8] & 0x7F ;
+}
+
+uint8_t get_pad_octets( uint8_t *data )
+{
+    int r = data[1] & 0xF ; 
+    r += (data[0] & 0x10) ;
+    return r ;
+}
+
+uint8_t get_sap( uint8_t *data )
+{
+    return ( data[1] >> 4 ) & 0xF ;
+}
+
+uint8_t get_sap_prop( uint8_t *data )
+{
+    return ( data[0] >> 4 ) & 0xF ;
+}
+
+void rst_data_header(void *data)
+{
     int dpf = get_dpf(data);
-    
+    int btf = 0 ;
+    int poc = 0 ;
+    int sap = -1 ;
+
+    switch( dpf ) {
+        case DPF_UNCONFIRMED :
+        case DPF_CONFIRMED :
+        case DPF_RESPONSE :
+            btf = get_blocks_to_follow(data);
+            // not for resp_pkt, but it is defined as 0 there.
+            poc = get_pad_octets(data);
+            break ;
+    }
+    switch( dpf ) {
+        case DPF_UNCONFIRMED :
+        case DPF_CONFIRMED :
+        case DPF_RESPONSE :
+        case DPF_RAW_STATUS_SHORT :
+        case DPF_DEFINED_SHORT :
+        case DPF_UDT :
+            sap = get_sap(data);
+            break ;
+        case DPF_PROPRIETARY :
+            sap = get_sap_prop(data);
+            break ;
+    }
+    blocks_outstanding = btf ;
+    pad_octets = poc ;
     current_dpf = dpf ;
-    blocks_outstanding = blocks + 2 ;
     dataidx = 0 ;
     
+    data_hdr_t *datahdr = data ;
+
     rst_hdr_sap = sap ;
-    rst_hdr_src = get_adr(data->src);
-    rst_hdr_dst = get_adr(data->dst);
+    rst_hdr_src = get_adr(datahdr->src);
+    rst_hdr_dst = get_adr(datahdr->dst);
 
     LOGR("dh %d:%d->%d\n", rst_hdr_sap, rst_hdr_src, rst_hdr_dst );
 
-    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
+    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(datahdr->src),get_adr(datahdr->dst), btf);
 
     PRINT("data: ");
-    PRINTHEX(data,sizeof(data_hdr_t));
+    PRINTHEX(datahdr,12);
     PRINT("\n");    
 }
 
-void rst_unconf_data_packet(void *data, int len)
+void rst_add_packet(void *data, int len)
 {
     if( dataidx + len > DATABUF_SZ ) {
         // skip for now.
@@ -146,7 +199,12 @@ void rst_unconf_data_packet(void *data, int len)
     
     memcpy(p,data,len);
     
-    dataidx += len ;
+    dataidx += len ;    
+}
+
+void rst_unconf_data_packet(void *data, int len)
+{
+    rst_add_packet(data,len);
 }
 
 void rst_conf_data_packet(void *data, int len)
@@ -161,21 +219,7 @@ void rst_conf_data_packet(void *data, int len)
     len -= 2 ;
     data += 2 ;
     
-    if( dataidx + len > DATABUF_SZ ) {
-        // skip for now.
-        return ;
-    }
-    
-    uint8_t *p = &databuffer[dataidx];
-    
-    memcpy(p,data,len);
-    
-    dataidx += len ;
-}
-
-void rst_short_data_defined(void *data, int len)
-{
-    
+    rst_add_packet(data,len);
 }
 
 void rst_data_block(void *data, int len)
@@ -194,18 +238,19 @@ void rst_data_block(void *data, int len)
     blocks_outstanding-- ;
     
     switch( current_dpf ) {
-        case DPF_SHRT_DATA_DEF :
+        case DPF_DEFINED_SHORT :
             // guess.
             rst_conf_data_packet(data,len);
             break ;
     }
     
     if( blocks_outstanding == 0 ) {
+        int idx = dataidx - pad_octets ;
         PRINT("buffer: ");
-        PRINTHEX(databuffer,dataidx);
+        PRINTHEX(databuffer,idx);
         PRINT("\n");    
         PRINT("buffer: ");
-        PRINTASC(databuffer,dataidx);
+        PRINTASC(databuffer,idx);
         PRINT("\n");          
     }
 }
