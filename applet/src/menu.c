@@ -593,39 +593,48 @@ void create_menu_entry_debug_screen(void)
     mn_submenu_finalize();
 }
 
-void create_menu_entry_netmon1_screen(void)
-{
-    mn_create_single_timed_ack(wt_netmon,wt_netmon_1);
-    
-    global_addl_config.console = 1;
-
-    cfg_save();
-}
-
-
-void create_menu_entry_netmon2_screen(void)
-{
-    mn_create_single_timed_ack(wt_netmon,wt_netmon_2);
-    
-    global_addl_config.console = 2;
-
-    cfg_save();
-}
-
-void create_menu_entry_netmon3_screen(void)
-{
-    mn_create_single_timed_ack(wt_netmon,wt_netmon_3);
-    
-    global_addl_config.console = 3;
-
-    cfg_save();
-}
+//void create_menu_entry_netmon1_screen(void)
+//{
+//    mn_create_single_timed_ack(wt_netmon,wt_netmon_1);
+//    
+//    global_addl_config.console = 1;
+//
+//    cfg_save();
+//}
+//
+//
+//void create_menu_entry_netmon2_screen(void)
+//{
+//    mn_create_single_timed_ack(wt_netmon,wt_netmon_2);
+//    
+//    global_addl_config.console = 2;
+//
+//    cfg_save();
+//}
+//
+//void create_menu_entry_netmon3_screen(void)
+//{
+//    mn_create_single_timed_ack(wt_netmon,wt_netmon_3);
+//    
+//    global_addl_config.console = 3;
+//
+//    cfg_save();
+//}
 
 void create_menu_entry_netmon_disable_screen(void)
 {
     mn_create_single_timed_ack(wt_netmon,wt_disable);
     
-    global_addl_config.console = 0;
+    global_addl_config.netmon = 0;
+
+    cfg_save();
+}
+
+void create_menu_entry_netmon_enable_screen(void)
+{
+    mn_create_single_timed_ack(wt_netmon,wt_disable);
+    
+    global_addl_config.netmon = 1;
 
     cfg_save();
 }
@@ -644,12 +653,13 @@ void create_menu_entry_netmon_screen(void)
 
     mn_submenu_init(wt_netmon);
 
-    md380_menu_entry_selected = global_addl_config.console;
+    md380_menu_entry_selected = global_addl_config.netmon;
 
     mn_submenu_add(wt_disable, create_menu_entry_netmon_disable_screen);
-    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen);
-    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen);
-    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_netmon_enable_screen);
+//    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen);
+//    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen);
+//    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen);
 
     mn_submenu_finalize();
 }

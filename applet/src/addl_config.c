@@ -80,7 +80,7 @@ void cfg_load()
     R(global_addl_config.debug,1);
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
-    R(global_addl_config.console,3);
+    R(global_addl_config.netmon,1);
     R(global_addl_config.datef,5);
     
     // restore dmrid
@@ -91,7 +91,7 @@ void cfg_load()
 
 #if defined(FW_D13_020)    
 #else
-    global_addl_config.console = 0 ;
+    global_addl_config.netmon = 0 ;
 #endif    
 }
 

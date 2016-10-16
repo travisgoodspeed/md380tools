@@ -61,16 +61,16 @@ void handle_hotkey( int keycode )
             syslog_dump_dmesg();
             break ;
         case 7 :
-            global_addl_config.console = 0 ;
+            nm_screen = 0 ;
             // cause transient.
             gui_opmode2 = OPM2_MENU ;
             md380_f_4225_operatingmode = SCR_MODE_IDLE | 0x80 ;
             break ;
         case 8 :
-            global_addl_config.console = 1 ;
+            nm_screen = 1 ;
             break ;
         case 9 :
-            global_addl_config.console = 2 ;
+            nm_screen = 2 ;
             break ;
         case 11 :
             beep_event_probe++ ;
@@ -84,7 +84,7 @@ void handle_hotkey( int keycode )
             break ;
         case 15 :
             syslog_redraw();
-            global_addl_config.console = 3 ;
+            nm_screen = 3 ;
             break ;
     }    
 }
@@ -102,12 +102,17 @@ void trace_keyb(int sw)
 
 inline int is_intercept_allowed()
 {
+    if( !is_netmon_enabled() ) {
+        return 0 ;
+    }
+    
 //    switch( get_main_mode() ) {
 //        case 28 :
 //            return 1 ;
 //        default:
 //            return 0 ;
 //    }
+    
     switch( gui_opmode2 ) {
         case OPM2_MENU :
             return 0 ;
