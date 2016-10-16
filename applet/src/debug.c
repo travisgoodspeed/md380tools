@@ -40,3 +40,22 @@ void debug_printhex(void *buf, int len)
         debug_printf2(" %02x", ((uint8_t*)buf)[i]);
     }
 }
+
+void debug_printasc(void *buf, int len)
+{
+    if( !global_addl_config.debug ) {
+        return ;
+    }
+    
+    char *p = buf ;
+    
+    for (int i = 0; i < len; i++,p++) {
+        char c = *p ;
+        if( c < ' ' ) {
+            c = '.' ;
+        } else if( c > 126 ) {
+            c = '.' ;            
+        }
+        md380_putc(0,c);
+    }
+}

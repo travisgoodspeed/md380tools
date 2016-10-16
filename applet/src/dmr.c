@@ -350,13 +350,13 @@ void *dmr_handle_data_hook(char *pkt, int len)
 //    //Turn on the red LED to know that we're here.
 //    red_led(1);
 
-    printf("Data:       ");
-    printhex(pkt, len + 2);
-    printf("\n");
+//    printf("Data:       ");
+//    printhex(pkt, len + 2);
+//    printf("\n");
 
     {
         data_blk_t *data = (void*)(pkt + 2);
-        rst_data_block(data);
+        rst_data_block(data,len);
     }
 
     //Forward to the original function.

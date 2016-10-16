@@ -36,7 +36,10 @@ typedef struct data {
     adr_t dst ;
     adr_t src ;                
     uint8_t f_blocks ;
-    uint8_t fsn ;    
+    union {
+        uint8_t s_ns_fsn ;    
+        uint8_t cls_type_status ;
+    } ;
     uint16_t crc ;    
 } data_hdr_t ;
 
@@ -50,22 +53,32 @@ inline uint8_t get_dpf( data_hdr_t *data )
     return data->g_a_hc_poc_dpf & 0xF ;
 }
 
+#define DPF_UDT 0
+
+#define DPF_RESP_PKT 1
+#define DPF_DATA_PKT_UNCONF 2
+#define DPF_DATA_PKT_CONFIRM 3
+
+#define DPF_SHRT_DATA_DEF 13
+#define DPF_SHRT_RAW 14
+#define DPF_PROP_DATA 15
+
 inline const char* dpf_to_str( uint8_t dpf ) 
 {
     switch( dpf ) {
-        case 0 : 
+        case DPF_UDT : 
             return "udt" ;
-        case 1 :
+        case DPF_RESP_PKT :
             return "response_pkt" ;
-        case 2 :
+        case DPF_DATA_PKT_UNCONF :
             return "datapkt_unconf" ;
-        case 3 :
+        case DPF_DATA_PKT_CONFIRM :
             return "datapkt_conf" ;
-        case 13 :
+        case DPF_SHRT_DATA_DEF :
             return "shrtdata_defined" ;
-        case 14 :
+        case DPF_SHRT_RAW :
             return "shrtdata_raw" ;
-        case 15 :
+        case DPF_PROP_DATA :
             return "prop_dpkt" ;
         default:
             return "?" ;

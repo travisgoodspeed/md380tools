@@ -5,6 +5,8 @@
 
 #define DEBUG
 
+#include <string.h>
+
 #include "radiostate.h"
 
 #include "debug.h"
@@ -102,11 +104,23 @@ void rst_signal_my_call()
     rst_mycall = 1 ;
 }
 
+int blocks_outstanding ;
+int current_dpf ;
+
+#define DATABUF_SZ 1024 
+uint8_t databuffer[DATABUF_SZ];
+int dataidx ;
+
+
 void rst_data_header(data_hdr_t *data)
 {
     int sap = get_sap(data);
     int blocks = get_blocks(data);
     int dpf = get_dpf(data);
+    
+    current_dpf = dpf ;
+    blocks_outstanding = blocks + 2 ;
+    dataidx = 0 ;
     
     rst_hdr_sap = sap ;
     rst_hdr_src = get_adr(data->src);
@@ -114,11 +128,84 @@ void rst_data_header(data_hdr_t *data)
 
     LOGR("dh %d:%d->%d\n", rst_hdr_sap, rst_hdr_src, rst_hdr_dst );
 
-    //TODO: print DPF (6.1.1))
-    // 9.3.17 from part 1
     PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
+
+    PRINT("data: ");
+    PRINTHEX(data,sizeof(data_hdr_t));
+    PRINT("\n");    
 }
 
-void rst_data_block(data_blk_t *data)
+void rst_unconf_data_packet(void *data, int len)
 {
+    if( dataidx + len > DATABUF_SZ ) {
+        // skip for now.
+        return ;
+    }
+    
+    uint8_t *p = &databuffer[dataidx];
+    
+    memcpy(p,data,len);
+    
+    dataidx += len ;
+}
+
+void rst_conf_data_packet(void *data, int len)
+{
+    uint8_t *datap = data ;
+    
+    uint8_t oct0 = datap[0];
+    uint8_t oct1 = datap[1];
+    
+    // TODO implement CRD checking, and sequence checking.
+            
+    len -= 2 ;
+    data += 2 ;
+    
+    if( dataidx + len > DATABUF_SZ ) {
+        // skip for now.
+        return ;
+    }
+    
+    uint8_t *p = &databuffer[dataidx];
+    
+    memcpy(p,data,len);
+    
+    dataidx += len ;
+}
+
+void rst_short_data_defined(void *data, int len)
+{
+    
+}
+
+void rst_data_block(void *data, int len)
+{
+    PRINT("data: ");
+    PRINTHEX(data,len);
+    PRINT("\n");    
+    PRINT("data: ");
+    PRINTASC(data,len);
+    PRINT("\n");  
+    
+    if( blocks_outstanding < 1 ) {
+        PRINT("spurious data block?\n");
+        return ;
+    }
+    blocks_outstanding-- ;
+    
+    switch( current_dpf ) {
+        case DPF_SHRT_DATA_DEF :
+            // guess.
+            rst_conf_data_packet(data,len);
+            break ;
+    }
+    
+    if( blocks_outstanding == 0 ) {
+        PRINT("buffer: ");
+        PRINTHEX(databuffer,dataidx);
+        PRINT("\n");    
+        PRINT("buffer: ");
+        PRINTASC(databuffer,dataidx);
+        PRINT("\n");          
+    }
 }
