@@ -105,6 +105,8 @@ void rst_signal_my_call()
 void rst_data_header(data_hdr_t *data)
 {
     int sap = get_sap(data);
+    int blocks = get_blocks(data);
+    int dpf = get_dpf(data);
     
     rst_hdr_sap = sap ;
     rst_hdr_src = get_adr(data->src);
@@ -114,8 +116,6 @@ void rst_data_header(data_hdr_t *data)
 
     //TODO: print DPF (6.1.1))
     // 9.3.17 from part 1
-    int blocks = get_blocks(data);
-    int dpf = get_dpf(data);
     PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
 }
 
