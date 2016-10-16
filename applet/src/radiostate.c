@@ -24,9 +24,9 @@ int rst_hdr_dst ;
 
 void rst_voice_lc_header(lc_t *lc)
 {
-    #define BSIZE 100
-    char src_buf[BSIZE];
-    char dst_buf[BSIZE];
+//    #define BSIZE 100
+//    char src_buf[BSIZE];
+//    char dst_buf[BSIZE];
 
     int src = get_adr( lc->src );
     int dst = get_adr( lc->dst );

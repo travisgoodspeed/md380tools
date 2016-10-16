@@ -18,7 +18,7 @@ void sms_test()
     sms_hdr_t hdr ;    
     sms_bdy_t bdy ;
   
-#if 1    
+#if 0
     // 204
     hdr.dstadr[0] = 0xCC ;
     hdr.dstadr[1] = 0x00 ;
@@ -30,15 +30,15 @@ void sms_test()
     hdr.dstadr[1] = 0xFF ;
     hdr.dstadr[2] = 0xFF ;
 #endif    
-#if 0      
+#if 1      
     // Null
     hdr.dstadr[0] = 0x0 ;
     hdr.dstadr[1] = 0x0 ;
     hdr.dstadr[2] = 0x0 ;
 #endif    
     
-    hdr.flags = SMS_TYPE_SINGLECAST ;
-//    hdr.flags = SMS_TYPE_MULTICAST ;
+//    hdr.flags = SMS_TYPE_SINGLECAST ;
+    hdr.flags = SMS_TYPE_MULTICAST ;
     
 //    wide_sprintf(hdr.adr,"");
             

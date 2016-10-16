@@ -50,7 +50,7 @@ inline int is_menu_visible()
 inline int is_console_visible()
 {
 #if defined(FW_D13_020)    
-    if( global_addl_config.console == 0 ) {
+    if( global_addl_config.netmon == 0 ) {
         return 0 ;
     }
     return !is_menu_visible();
