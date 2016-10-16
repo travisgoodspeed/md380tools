@@ -110,7 +110,7 @@ void dump_ram_to_spi_flash() {
 void print_date_hook(void) 
 {  // copy from the md380 code
     
-    if( is_console_visible() ) {
+    if( is_netmon_visible() ) {
         return ;
     }
     
@@ -209,7 +209,7 @@ void gfx_blockfill_hook(int x_from, int y_from, int x_to, int y_to)
     if( y_from == 0 && x_from == 61 ) {
         con_redraw();
     }
-    if( is_console_visible() ) {
+    if( is_netmon_visible() ) {
         // no blockfills
         return ;
     }
@@ -231,7 +231,7 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
 //    PRINT( "db: %d %d\n", x, y );
     
     // supress bmp drawing in console mode.
-    if( is_console_visible() ) {
+    if( is_netmon_visible() ) {
         if( x == 0 && y == 0 ) {
             // antenne icon draw.
             con_redraw();
@@ -250,7 +250,7 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
 //        PRINT("ctd: %d %d %d %S\n", x, y, xlen, str);
     }
     
-    if( is_console_visible() ) {
+    if( is_netmon_visible() ) {
         return ;
     }
     
@@ -262,7 +262,7 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 //    PRINTRET();
 //    PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
     
-    if( is_netmon_enabled() ) {
+    if( is_netmon_visible() ) {
         if( x == 45 && y == 34 ) {
             return ;
         }

@@ -22,6 +22,13 @@ uint8_t *keypressed_p = (void*)0x2001e5f8 ;
 uint8_t *kb_keycode = (void*)0x2001e890 ;
 uint16_t *kb_row_col_pressed = (void*)0x2001e7ba ;
     
+// 1 = pressed
+// 2 = release within timeout
+// 1+2 = pressed during rx
+// 4+1 = pressed timeout
+// 8 = rearm
+// 0 = none pressed
+
 inline int get_main_mode()
 {
     return md380_f_4225_operatingmode & 0x7F ;
@@ -40,6 +47,15 @@ void reset_backlight()
 }
 
 int beep_event_probe = 0 ;
+
+void switch_to_screen( int scr )
+{
+    // cause transient -> switch back to idle screen.
+    gui_opmode2 = OPM2_MENU ;
+    md380_f_4225_operatingmode = SCR_MODE_IDLE | 0x80 ;
+    
+    nm_screen = scr ;
+}
 
 void handle_hotkey( int keycode )
 {
@@ -68,10 +84,10 @@ void handle_hotkey( int keycode )
             md380_f_4225_operatingmode = SCR_MODE_IDLE | 0x80 ;
             break ;
         case 8 :
-            nm_screen = 1 ;
+            switch_to_screen(1);
             break ;
         case 9 :
-            nm_screen = 2 ;
+            switch_to_screen(2);
             break ;
         case 11 :
             beep_event_probe++ ;
@@ -85,7 +101,7 @@ void handle_hotkey( int keycode )
             break ;
         case 15 :
             syslog_redraw();
-            nm_screen = 3 ;
+            switch_to_screen(3);
             break ;
     }    
 }
@@ -117,6 +133,9 @@ inline int is_intercept_allowed()
     switch( gui_opmode2 ) {
         case OPM2_MENU :
             return 0 ;
+        //case 2 : // voice
+        //case 4 : // terminate voice
+        //    return 1 ;
         default:
             return 1 ;
     }
@@ -159,7 +178,7 @@ void kb_handler_hook()
         if( is_intercepted_keycode(kc) ) {
             int kp = *keypressed_p ;
             
-            if( kp == 2 ) {
+            if( kp & 2 == 2 ) {
                 *keypressed_p = 0 ;
                 handle_hotkey(kc);
                 return ;
@@ -167,14 +186,4 @@ void kb_handler_hook()
         }        
     }
     
-//    if( global_addl_config.experimental ) {
-//        static uint16_t old = 0 ;
-//        uint16_t new = *kb_row_col_pressed ;
-//        if( old != new ) {
-//            LOGR("rc: %04x -> %04x \n", old, new );
-//            old = new ;
-//        }
-//        *kb_row_col_pressed = 0 ;
-//    }
-
 }

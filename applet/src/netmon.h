@@ -35,7 +35,8 @@ inline int is_netmon_visible()
     if( !is_netmon_enabled() ) {
         return 0 ;
     }
-    return !is_menu_visible();
+    return nm_screen != 0 ;
+    //return !is_menu_visible();
 }
 
 inline int is_statusline_visible()

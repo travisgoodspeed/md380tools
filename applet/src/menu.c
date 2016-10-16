@@ -656,7 +656,7 @@ void create_menu_entry_netmon_screen(void)
     md380_menu_entry_selected = global_addl_config.netmon;
 
     mn_submenu_add(wt_disable, create_menu_entry_netmon_disable_screen);
-    mn_submenu_add(wt_disable, create_menu_entry_netmon_enable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_netmon_enable_screen);
 //    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen);
 //    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen);
 //    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen);
