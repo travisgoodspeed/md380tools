@@ -632,7 +632,7 @@ void create_menu_entry_netmon_disable_screen(void)
 
 void create_menu_entry_netmon_enable_screen(void)
 {
-    mn_create_single_timed_ack(wt_netmon,wt_disable);
+    mn_create_single_timed_ack(wt_netmon,wt_enable);
     
     global_addl_config.netmon = 1;
 
