@@ -56,9 +56,17 @@ inline const char* dpf_to_str( uint8_t dpf )
         case 0 : 
             return "udt" ;
         case 1 :
-            return "response packet" ;
+            return "response_pkt" ;
         case 2 :
-            return "dpkt-unc" ;
+            return "datapkt_unconf" ;
+        case 3 :
+            return "datapkt_conf" ;
+        case 13 :
+            return "shrtdata_defined" ;
+        case 14 :
+            return "shrtdata_raw" ;
+        case 15 :
+            return "prop_dpkt" ;
         default:
             return "?" ;
     }
