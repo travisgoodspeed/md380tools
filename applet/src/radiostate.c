@@ -249,11 +249,7 @@ void rst_conf_data_packet(void *data, int len)
     }
     expected_serial++ ;
     
-    
-    uint8_t oct0 = datap[0];
-    uint8_t oct1 = datap[1];
-    
-    // TODO implement CRD checking, and sequence checking.
+    // TODO implement CRD checking
             
     len -= 2 ;
     data += 2 ;
