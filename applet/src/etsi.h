@@ -36,38 +36,54 @@ typedef struct data {
     adr_t dst ;
     adr_t src ;                
     uint8_t f_blocks ;
-    uint8_t fsn ;    
+    union {
+        uint8_t s_ns_fsn ;    
+        uint8_t cls_type_status ;
+    } ;
     uint16_t crc ;    
 } data_hdr_t ;
 
-inline uint8_t get_sap( data_hdr_t *data )
-{
-    return ( data->sap_poc >> 4 ) & 0xF ;
-}
+//inline uint8_t get_dpf( data_hdr_t *data )
+//{
+//    return data->g_a_hc_poc_dpf & 0xF ;
+//}
 
-inline uint8_t get_dpf( data_hdr_t *data )
-{
-    return data->g_a_hc_poc_dpf & 0xF ;
-}
+#define DPF_UDT 0
+
+#define DPF_RESPONSE 1
+#define DPF_UNCONFIRMED 2
+#define DPF_CONFIRMED 3
+
+#define DPF_DEFINED_SHORT 13
+#define DPF_RAW_STATUS_SHORT 14 
+#define DPF_PROPRIETARY 15
 
 inline const char* dpf_to_str( uint8_t dpf ) 
 {
     switch( dpf ) {
-        case 0 : 
+        case DPF_UDT : 
             return "udt" ;
-        case 1 :
-            return "response packet" ;
-        case 2 :
-            return "dpkt-unc" ;
+        case DPF_RESPONSE :
+            return "response_pkt" ;
+        case DPF_UNCONFIRMED :
+            return "datapkt_unconf" ;
+        case DPF_CONFIRMED :
+            return "datapkt_conf" ;
+        case DPF_DEFINED_SHORT :
+            return "shrtdata_defined" ;
+        case DPF_RAW_STATUS_SHORT :
+            return "shrtdata_raw" ;
+        case DPF_PROPRIETARY :
+            return "prop_dpkt" ;
         default:
             return "?" ;
     }
 }
 
-inline uint8_t get_blocks( data_hdr_t *data )
-{
-    return data->f_blocks & 0x7F ;
-}
+//inline uint8_t get_blocks( data_hdr_t *data )
+//{
+//    return data->f_blocks & 0x7F ;
+//}
 
 inline const char* sap_to_str( uint8_t sap ) 
 {

@@ -178,8 +178,8 @@ void kb_handler_hook()
         if( is_intercepted_keycode(kc) ) {
             int kp = *keypressed_p ;
             
-            if( kp & 2 == 2 ) {
-                *keypressed_p = 0 ;
+            if( (kp & 2) == 2 ) {
+                *keypressed_p = 8 ;
                 handle_hotkey(kc);
                 return ;
             }
