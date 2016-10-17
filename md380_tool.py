@@ -26,13 +26,16 @@ class UsersDB():
     def __init__(self, filename=None):
         """Loads the database."""
         import csv;
-        if filename==None:
-            filename=sys.path[0]+'/db/users.csv';
-        with open(filename,'rb') as csvfile:
-            reader=csv.reader(csvfile);
-            for row in reader:
-                if len(row)>0:
-                    self.users[int(row[0])]=row;
+        try:
+            if filename==None:
+                filename=sys.path[0]+'/db/users.csv';
+            with open(filename,'rb') as csvfile:
+                reader=csv.reader(csvfile);
+                for row in reader:
+                    if len(row)>0:
+                        self.users[int(row[0])]=row;
+        except:
+            print "WARNING: Unable to load users.csv."
     def getuser(self,id):
         """Returns a user from the ID."""
         try:
