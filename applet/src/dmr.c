@@ -177,10 +177,10 @@ void dumpraw_mbc(uint8_t *pkt)
 #ifdef FW_D13_020
 void dmr_CSBK_handler_hook(uint8_t *pkt)
 {
-    PRINTRET();
-    PRINT("CSBK: ");
-    PRINTHEX(pkt,14);
-    PRINT("\n");
+//    PRINTRET();
+//    PRINT("CSBK: ");
+//    PRINTHEX(pkt,14);
+//    PRINT("\n");
 
     dmr_CSBK_handler(pkt);
 }

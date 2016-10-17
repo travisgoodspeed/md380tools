@@ -107,6 +107,7 @@ void rst_signal_my_call()
 int blocks_outstanding ;
 int current_dpf ;
 int pad_octets ;
+int expected_serial ;
 
 #define DATABUF_SZ 1024 
 uint8_t databuffer[DATABUF_SZ];
@@ -134,9 +135,19 @@ uint8_t get_pad_octets( uint8_t *data )
     return r ;
 }
 
-uint8_t get_sap( uint8_t *data )
+inline uint8_t get_sap( uint8_t *data )
 {
     return ( data[1] >> 4 ) & 0xF ;
+}
+
+inline uint8_t get_grp( uint8_t *data )
+{
+    return ( data[0] & 0x80 ) != 0 ;
+}
+
+inline uint8_t get_answer( uint8_t *data )
+{
+    return ( data[0] & 0x40 ) != 0 ;
 }
 
 uint8_t get_sap_prop( uint8_t *data )
@@ -147,6 +158,7 @@ uint8_t get_sap_prop( uint8_t *data )
 void rst_data_header(void *data)
 {
     int dpf = get_dpf(data);
+    int grp = get_grp(data); // ignore for proprietary
     int btf = 0 ;
     int poc = 0 ;
     int sap = -1 ;
@@ -180,20 +192,26 @@ void rst_data_header(void *data)
     pad_octets = poc ;
     current_dpf = dpf ;
     dataidx = 0 ;
+    expected_serial = 0 ;
     
     data_hdr_t *datahdr = data ;
 
     rst_hdr_sap = sap ;
     rst_hdr_src = get_adr(datahdr->src);
     rst_hdr_dst = get_adr(datahdr->dst);
+    
+    char ug = 'U' ;
+    if( grp ) {
+        ug = 'G' ;
+    }
 
-    LOGR("dh %d:%d->%d\n", rst_hdr_sap, rst_hdr_src, rst_hdr_dst );
+    LOGR("dh %c (%d) %d->%d %d\n", ug, rst_hdr_sap, rst_hdr_src, rst_hdr_dst, get_answer(data) );
 
-    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(datahdr->src),get_adr(datahdr->dst), btf);
+    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d btf=%d grp=%d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(datahdr->src),get_adr(datahdr->dst), btf, grp );
 
-    PRINT("data: ");
-    PRINTHEX(datahdr,12);
-    PRINT("\n");    
+//    PRINT("data: ");
+//    PRINTHEX(datahdr,12);
+//    PRINT("\n");    
 }
 
 void rst_add_packet(void *data, int len)
@@ -218,6 +236,19 @@ void rst_unconf_data_packet(void *data, int len)
 void rst_conf_data_packet(void *data, int len)
 {
     uint8_t *datap = data ;
+    
+    uint8_t serial = datap[0] >> 1 ;
+    PRINT("serial %d\n",serial);  
+    
+    if( serial != expected_serial ) {
+        PRINT("out of order\n");
+        // TODO signal damaged buffer.
+        // fix for now:
+        blocks_outstanding++ ;
+        return ;
+    }
+    expected_serial++ ;
+    
     
     uint8_t oct0 = datap[0];
     uint8_t oct1 = datap[1];
@@ -246,9 +277,19 @@ void rst_data_block(void *data, int len)
     blocks_outstanding-- ;
     
     switch( current_dpf ) {
+        default:
+            // guess.
+            rst_conf_data_packet(data,len);
+            break ;
         case DPF_DEFINED_SHORT :
             // guess.
             rst_conf_data_packet(data,len);
+            break ;
+        case DPF_UNCONFIRMED :
+            rst_unconf_data_packet(data,len);
+            break ;
+        case DPF_UDT :
+            // TODO
             break ;
     }
     
