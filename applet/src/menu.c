@@ -680,6 +680,18 @@ void create_menu_entry_experimental_screen(void)
     mn_submenu_finalize();
 }
 
+void mn_backlight(void)
+{
+    mn_submenu_init(L"Backlight");
+    
+    md380_radio_config.backlight_time = 60 ; // 30 sec.
+
+//    mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen);
+//    mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen);
+
+    mn_submenu_finalize();
+}
+
 void create_menu_entry_edit_screen_store(void)
 {
 #if 0
@@ -883,6 +895,11 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
+    
+    if( addl_config.experimental ) {
+        mn_submenu_add(L"Backlight", mn_backlight);
+    }
+    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
     mn_submenu_finalize2();

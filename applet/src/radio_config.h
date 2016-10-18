@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-struct radio_config {
+typedef struct {
     uint8_t unk1[4];        // [0]
     uint32_t dmrid;         // [4]
     uint8_t unk2[11-4-4];   // [8] 
@@ -19,9 +19,7 @@ struct radio_config {
     uint8_t off22 ;         // [22]
     uint8_t mode_ch_mr ;    // [23] 255 = CH / 0 = MR
     // [156] led ind?
-};
-
-typedef struct radio_config radio_config_t ;
+} radio_config_t ;
 
 extern radio_config_t md380_radio_config;
     
