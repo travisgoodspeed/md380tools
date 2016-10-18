@@ -896,7 +896,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     
-    if( addl_config.experimental ) {
+    if( global_addl_config.experimental ) {
         mn_submenu_add(L"Backlight", mn_backlight);
     }
     
