@@ -680,14 +680,35 @@ void create_menu_entry_experimental_screen(void)
     mn_submenu_finalize();
 }
 
+const static wchar_t wt_backlight[]       = L"Backlight";
+const static wchar_t wt_bl30[]       = L"30 sec";
+const static wchar_t wt_bl60[]       = L"60 sec";
+
+void mn_backlight_set(int sec5)
+{
+    mn_create_single_timed_ack(wt_backlight,wt_disable);
+    
+    md380_radio_config.backlight_time = sec5 ; // in 5 sec incr.
+
+    rc_write_radio_config_to_flash();    
+}
+
+void mn_backlight_30sec()
+{
+    mn_backlight_set(6);     
+}
+
+void mn_backlight_60sec()
+{
+    mn_backlight_set(12);     
+}
+
 void mn_backlight(void)
 {
-    mn_submenu_init(L"Backlight");
+    mn_submenu_init(wt_backlight);
     
-    md380_radio_config.backlight_time = 60 ; // 30 sec.
-
-//    mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen);
-//    mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen);
+    mn_submenu_add(wt_bl30, mn_backlight_30sec);
+    mn_submenu_add(wt_bl60, mn_backlight_60sec);
 
     mn_submenu_finalize();
 }
@@ -896,9 +917,9 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     
-    if( global_addl_config.experimental ) {
-        mn_submenu_add(L"Backlight", mn_backlight);
-    }
+//    if( global_addl_config.experimental ) {
+        mn_submenu_add(wt_backlight, mn_backlight);
+//    }
     
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     

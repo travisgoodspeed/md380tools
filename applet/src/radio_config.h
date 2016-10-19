@@ -32,6 +32,10 @@ struct radio_config2 {
     // [0x11] long press time in 4 msec units
 };
 
+#if defined(FW_D13_020)
+void rc_write_radio_config_to_flash();
+#endif
+
 // 
 struct long_press_struct {
     // unk0: b1=ptt key

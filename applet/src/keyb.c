@@ -36,14 +36,19 @@ inline int get_main_mode()
 
 void reset_backlight()
 {
+#if defined(FW_D13_020)
     uint16_t *timer = (void*)0x2001e7f8 ;
     
     // struct @ 0x2001dadc
     *timer = md380_radio_config.backlight_time * 500 ;
     
-    void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 );
-    
+    // enabling backlight again.
+    void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 );    
     f(0x40020800,0x40);
+    
+#else
+#warning please consider adding symbols.    
+#endif    
 }
 
 int beep_event_probe = 0 ;

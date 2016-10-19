@@ -35,7 +35,7 @@ md380_RTC_GetDate    = 0x0802b50d;
 md380_RTC_GetTime    = 0x0802b3f7;
 md380_radio_config   = 0x2001dadc;
 
-
+rc_write_radio_config_to_flash = 0x080226f7 ;
 
 /* Upload and download handlers. */
 usb_upld_handle      = 0x0808f309; /* 232 byte match */

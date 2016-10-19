@@ -492,6 +492,9 @@ f menu_entry_back_1 @ 0x800fc85
 
 f md380_radio_config @ 0x2001dadc
 
+f rc_write_radio_config_to_flash @ 0x080226f6 
+af+ 0x080226f6 18 rc_write_radio_config_to_flash
+
 Cd 4 @ 0x0800c784
 Cd 4 @ 0x0800c788
 Cd 4 @ 0x0800c7ac
