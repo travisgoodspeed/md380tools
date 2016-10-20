@@ -127,7 +127,6 @@ sudo make all flash
 ##### turn radio normally on to begin database loading with USB cable #####
 
 sudo make flashdb
-```
 
 
 ##Convenient Usage:##
