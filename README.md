@@ -89,7 +89,8 @@ is under development for Android.
 
 * [Debian](docs/debian.md)
 * [Ubuntu](docs/ubuntu.md)
-* [Fedora/SUSE](docs/fedora.md)
+* [Fedora](docs/fedora.md)
+* [SUSE](docs/suse.md)
 * [Raspberry Pi](docs/raspi.md)
 * [Windows](docs/windows.md)
 
