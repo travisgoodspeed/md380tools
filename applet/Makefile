@@ -1,4 +1,5 @@
 
+#MKLISTING=1
 
 FW ?= D13_020
 
@@ -36,6 +37,7 @@ SRCS += radiostate.o
 SRCS += mbox.o
 SRCS += syslog.o
 SRCS += etsi.o
+SRCS += sms.o
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020
 endif

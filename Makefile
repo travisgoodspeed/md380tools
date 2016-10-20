@@ -103,3 +103,4 @@ ci: mostlyclean
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less
+

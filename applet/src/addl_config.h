@@ -16,7 +16,7 @@ typedef struct addl_config {
     uint8_t promtg;
     uint8_t experimental;
     uint8_t micbargraph;
-    uint8_t console;
+    uint8_t netmon;
     uint8_t rbeep;
     uint32_t dmrid ;
 } addl_config_t ;
@@ -24,6 +24,8 @@ typedef struct addl_config {
 extern addl_config_t global_addl_config;
 
 extern void init_global_addl_config_hook(void);
+
+void cfg_fix_dmrid();
 
 void cfg_save();
 

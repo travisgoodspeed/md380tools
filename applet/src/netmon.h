@@ -23,9 +23,11 @@ extern uint8_t last_event3 ;
 extern uint8_t last_event4 ;
 extern uint8_t last_event5 ;
 
+extern uint8_t nm_screen ;
+
 inline int is_netmon_enabled()
 {
-    return global_addl_config.console != 0 ;
+    return global_addl_config.netmon != 0 ;
 }
 
 inline int is_netmon_visible()
@@ -33,7 +35,8 @@ inline int is_netmon_visible()
     if( !is_netmon_enabled() ) {
         return 0 ;
     }
-    return !is_menu_visible();
+    return nm_screen != 0 ;
+    //return !is_menu_visible();
 }
 
 inline int is_statusline_visible()

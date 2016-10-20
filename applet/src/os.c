@@ -95,19 +95,22 @@ uint8_t OSMboxPost_hook(OS_EVENT *pevent, void *pmsg)
     __asm__("mov %0,r14" : "=r" (return_addr));
     __asm__("mov %0,r13" : "=r" (sp));
 
-    if( pevent == mbox_radio ) {
-        uint8_t event = *(uint8_t*)pmsg ;
-        if( event == 0x4 ) {
-//            NMPRINTRET();
-//            NMPRINT("%02x\n", event );
-        }
-    }
+//    if( pevent == mbox_radio ) {
+//        uint8_t event = *(uint8_t*)pmsg ;
+//        if( event == 0x4 ) {
+////            NMPRINTRET();
+////            NMPRINT("%02x\n", event );
+//        }
+//    }
     
     //  printf("OSMboxPost_hook r: 0x%x s: 0x%x p: 0x%x m: 0x%x ", return_addr, sp, pevent, pmsg);
     //  pevent_to_name(pevent, pmsg);
 
-    return (md380_OSMboxPost(pevent, pmsg));
+    return md380_OSMboxPost(pevent, pmsg);
 }
+
+#define BEEP_ROGER 0x24
+#define BEEP_DENY_TX 0xe
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {
@@ -146,21 +149,21 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     if( ret != NULL && global_addl_config.debug == 1 ) {
         PRINTRET();
         PRINT("OMp 0x%x, 0x%x ", pevent, *(uint8_t*) ret);
-        if( pevent == mbox_beep ) {
-            switch (* (uint8_t*) ret) {
-                case 0x24:
-                    PRINT("roger beep ");
-                    break;
-                case 0xe:
-                    PRINT("no dmr sync ");
-                case 0x11:
-                    PRINT("dmr sync ");
-                    break;
-                default:
-                    PRINT("not known ");
-                    break;
-            }
-        }
+//        if( pevent == mbox_beep ) {
+//            switch (* (uint8_t*) ret) {
+//                case BEEP_ROGER:
+//                    PRINT("roger beep ");
+//                    break;
+//                case BEEP_DENY_TX:
+//                    PRINT("no dmr sync ");
+//                case 0x11:
+//                    PRINT("dmr sync ");
+//                    break;
+//                default:
+//                    PRINT("not known ");
+//                    break;
+//            }
+//        }
         PRINT("\n");
     }
     return (ret);

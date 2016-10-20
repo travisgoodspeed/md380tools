@@ -1,20 +1,39 @@
 
 = key pressed =
 
-press key:
+short press key in idle:
 kp: 00 -> 01
 release key:
 kp: 01 -> 02
+triggered
 kp: 02 -> 00
 
-press key:
+long press key in idle
 kp: 00 -> 01
-keep pressing key:
-kp: 01 -> 05
+keep pressing key
+kp: 01 -> 05  (4+1)
+triggered
 kp: 05 -> 01
 release key:
 kp: 01 -> 08
 kp: 08 -> 00
+
+menu activation is triggered on b1(2).
+or on b3+b0 (b3 alone?) is longpress case
+
+short press key in menu 
+kp: 00 -> 03
+kp: 03 -> 01
+triggered
+release
+kp: 01 -> 08
+kp: 08 -> 00
+
+long press key in menu
+kp: 00 -> 03
+kp: 03 -> 01
+triggered
+
 
 = keycodes =
 
@@ -64,8 +83,8 @@ b 0x2001e5f9 locked(b1=2)
 
 b 0x2001e7b0 time upper button pressed 
 b 0x2001e7b2 time lower button pressed 
-h 0x2001e7ba internal keycode
-h 0x2001e7bc last internal keycode
+//h 0x2001e7ba internal keycode
+//h 0x2001e7bc last internal keycode
 b 0x2001e7be time key pressed (in main screen)
 ? 0x2001e7c0 internal keycode2 (related to)
 
@@ -74,4 +93,10 @@ b 0x2001e890 last key pressed
 
 
 b 0x2001e7b8 keypress_max_time
+
+=0x2001e88b
+=0x2001e88c
+=0x2001e88d
+=0x2001e88e
+=0x2001e88f
 

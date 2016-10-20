@@ -8,6 +8,7 @@
 #include "md380.h"
 #include "gfx.h"
 #include "printf.h"
+#include "netmon.h"
 
 #include <stdarg.h>
 
@@ -212,7 +213,7 @@ static void con_draw1()
 
 void con_redraw()
 {
-    if( !is_console_visible() ) {
+    if( !is_netmon_visible() ) {
         return ;
     }
     

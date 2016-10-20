@@ -263,7 +263,7 @@ int main(void)
 
 void draw_statusline_hook( uint32_t r0 )
 {
-    if( is_console_visible() ) {
+    if( is_netmon_visible() ) {
         con_redraw();
         return ;
     }
