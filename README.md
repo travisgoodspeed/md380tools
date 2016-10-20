@@ -92,7 +92,7 @@ is under development for Android.
 * [Fedora/SUSE](docs/fedora.md)
 * [Windows](docs/windows.md)
 
-####Ubuntu ####
+####Most linux based ####
 
 Quick recipe for building new firmware:
 
@@ -110,16 +110,6 @@ Quick recipe for uploading the just build firmware:
 ```
 ./md380-dfu upgrade applet/experiment.bin
 ```
-
-
-####Raspberry Pi Debian Jessie: #####
-
-git clone https://github.com/travisgoodspeed/md380tools.git
-
-cd md380tools
-
-sudo make clean
-
 ##### turn on radio in DFU mode to begin firmware update with USB cable ######
 
 sudo make all flash
