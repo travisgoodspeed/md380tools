@@ -48,12 +48,12 @@ OBJS = $(SRCS:.c=.o)
 all: lib proj wrapped
 
 experiment.img: 
-	cd ../patches/2.032 && $(MAKE) all
+	cd ../patches/2.032 && "${MAKE}" all
 	cp ../patches/2.032/patched.img ./experiment.img
 
 
 lib: src/version.h config.h
-	$(MAKE) -C lib
+	"${MAKE}" -C lib
 
 proj: 	$(PROJ_NAME).elf experiment.img
 	# use a fresh experiment.img
@@ -80,7 +80,7 @@ src/version.h: src/*.c
 	echo "#define GIT_VERSION \"$(GIT_VERSION)\"" >>src/version.h
 
 clean:
-	$(MAKE) -C lib clean
+	"${MAKE}" -C lib clean
 	rm -f *.img *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h
 
 

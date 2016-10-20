@@ -4,7 +4,7 @@ clean:
 	rm -f *~ *.bin *.img *.pyc
 
 unwrapped.img:
-	cd ../../firmware && $(MAKE) unwrapped/D013.020.img
+	cd ../../firmware && "${MAKE}" unwrapped/D013.020.img
 	cp ../../firmware/unwrapped/D013.020.img $@
 
 patched.img: unwrapped.img

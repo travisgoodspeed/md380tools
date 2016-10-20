@@ -13,49 +13,49 @@ distclean: clean
 	rm -rf dist
 		
 clean: mostlyclean
-	$(MAKE) -C firmware clean
+	"${MAKE}" -C firmware clean
 	
 mostlyclean:
-	$(MAKE) -C patches/2.032 clean
-	$(MAKE) -C patches/3.020 clean
-	$(MAKE) -C patches/s13.020 clean
-	$(MAKE) -C patches/d13.020 clean
-	$(MAKE) -C applet clean
-	$(MAKE) -C db clean
+	"${MAKE}" -C patches/2.032 clean
+	"${MAKE}" -C patches/3.020 clean
+	"${MAKE}" -C patches/s13.020 clean
+	"${MAKE}" -C patches/d13.020 clean
+	"${MAKE}" -C applet clean
+	"${MAKE}" -C db clean
 	rm -f *~ *.pyc
 	rm -f data data.csv	
 	
 
 #patches: firmwares
-#	$(MAKE) -C patches/2.032 all
-#	$(MAKE) -C patches/d13.020 all
+#	"${MAKE}" -C patches/2.032 all
+#	"${MAKE}" -C patches/d13.020 all
 
 #applets: patches
-#	$(MAKE) -C applet all
+#	"${MAKE}" -C applet all
 
 #firmwares:
-#	$(MAKE) -C firmware all
+#	"${MAKE}" -C firmware all
 
 image_D02:
-	$(MAKE) -C applet FW=D02_032 all  
+	"${MAKE}" -C applet FW=D02_032 all  
 
 image_D13:
-	$(MAKE) -C applet FW=D13_020 all  
+	"${MAKE}" -C applet FW=D13_020 all  
 	
 image_S13:
-	$(MAKE) -C applet FW=S13_020 all  
+	"${MAKE}" -C applet FW=S13_020 all  
 	
 flash:
-	$(MAKE) -C applet clean flash
+	"${MAKE}" -C applet clean flash
 	
 flash_d02.032:
-	$(MAKE) -C applet FW=D02_032 clean flash
+	"${MAKE}" -C applet FW=D02_032 clean flash
 	
 flash_s13.020:
-	$(MAKE) -C applet FW=S13_020 clean flash
+	"${MAKE}" -C applet FW=S13_020 clean flash
 	
 data:
-	$(MAKE) -C db 
+	"${MAKE}" -C db 
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
@@ -67,13 +67,13 @@ dist:
 	rm -rf $(RELEASE) $(RELEASE).zip
 	mkdir -p $(RELEASE)/python
 #Main release.
-	$(MAKE) mostlyclean image_D13
+	"${MAKE}" mostlyclean image_D13
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-NoGPS"`.bin
 #For GPS radios.
-	$(MAKE) mostlyclean image_S13
+	"${MAKE}" mostlyclean image_S13
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-GPS"`.bin
 #Older
-	$(MAKE) mostlyclean image_D02
+	"${MAKE}" mostlyclean image_D02
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-OLD"`.bin
 #Include the Official Installer
 	cd $(RELEASE) && unzip ../../firmware/dl/D002.032.zip
@@ -91,15 +91,15 @@ doflash: image_D13
 
 # or else make will fail.
 #download:
-#	$(MAKE) -C firmware download
+#	"${MAKE}" -C firmware download
 
 all_images: 
-	$(MAKE) -C applet ci
+	"${MAKE}" -C applet ci
 	
 ci: mostlyclean 
-	$(MAKE) -C applet ci
-	$(MAKE) -C db ci
-	$(MAKE) data
+	"${MAKE}" -C applet ci
+	"${MAKE}" -C db ci
+	"${MAKE}" data
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less

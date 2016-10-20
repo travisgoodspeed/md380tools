@@ -17,6 +17,11 @@ Development Tools:
 * `md380-fw` wraps and unwraps devices firmware.
 * `md380-gfx` modifies firmware graphics.
 
+## Build Status
+
+[![Build Status](https://travis-ci.org/travisgoodspeed/md380tools.svg?branch=master)](https://travis-ci.org/travisgoodspeed/md380tools)
+
+
 ###The md380tools have D13.020 as basic now.###
 
 to build the "old" d02.32 version
