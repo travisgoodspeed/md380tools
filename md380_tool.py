@@ -152,34 +152,39 @@ class Tool(DFU):
         status=self.get_status(); #this gets the status
 #        print status
         return self.upload(1,size,0);
-    def getsms(self,index):
-        """Returns an inbound SMS from SPI Flash."""
-        buf=self.spiflashpeek(0x41674+index*0x124,
-                              0x124);
-        srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
-        flags=buf[3];
-        message="";
-        for i in range(4,0x124,2):
-            c=chr(buf[i]);
-            if c!='\0':
-                message=message+c;
+    
+    def getinbox(self,address):
+        """return non-deleted messages from inbox"""
+        buf = self.spiflashpeek(address, 50 * 4 )
+        messages = []
+        for i in range(0,50*4,4):
+            message = {}
+            header = buf[i:i+4]
+            message["deleted"] = (header[0]) != 0x01
+            if header[1] == 0x1 :
+                message["read"] = True
+            elif header[1] == 0x2:
+                message["read"] = False
             else:
-                return [srcadr,flags,message];
-        return [None,None,None];
-    def getsentsms(self,index):
-        """Returns an outbound SMS from SPI Flash."""
-        buf=self.spiflashpeek(0x450a4+index*0x124,
-                              0x124);
-        srcadr=buf[0]+(buf[1]<<8)+(buf[2]<<16);
-        flags=buf[3];
-        message="";
-        for i in range(4,0x124,2):
-            c=chr(buf[i]&0x7F);
-            if c!='\0':
-                message=message+c;
-            else:
-                return [srcadr,flags,message];
-        return [None,None,None];
+                message["read"] = "N/A"   
+            message["order"] = (header[2])
+            message["index"] = (header[3])
+            if not message["deleted"]:
+                messages.append(message)
+        for message in messages:
+            message_bytes = self.spiflashpeek(address+50*4+message["index"]*0x124,50*4+message["index"]*0x124+0x124)
+            message["srcaddr"] = message_bytes[0]+(message_bytes[1]<<8)+(message_bytes[2]<<16)
+            message["flags"] = message_bytes[4]
+            message_text = ""
+            for i in range(4,0x124,2):
+                c = chr(message_bytes[i])
+                if c!= '\0':
+                    message_text = message_text + c
+                else:
+                    break
+            message["text"] = message_text
+        return messages
+
     def getkey(self,index):
         """Returns an Enhanced Privacy key from SPI Flash.  1-indexed"""
         buf=self.spiflashpeek(0x59c0+16*index-16,
@@ -430,14 +435,14 @@ def rssi(dfu):
         time.sleep(0.25);
 def messages(dfu):
     """Prints all the SMS messages."""
-    for i in range(1,0xff):
-        [src,flags,message]=dfu.getsms(i);
-        if src!=None and flags&0xF==0x2:
-            print "From %s: %s"%(users.getusername(src),message);
-    for i in range(1,0xff):
-        [src,flags,message]=dfu.getsentsms(i);
-        if src!=None and flags&0xF==0x2:
-            print "To   %s: %s"%(users.getusername(src),message);
+    print "Inbox:"
+    messages = dfu.getinbox(0x416d0)[::-1]
+    for msg in messages:
+        print "From: %s Text: %s"%(msg["srcaddr"],msg["text"])
+    print "Sent:"
+    messages = dfu.getinbox(0x45100)[::-1]
+    for msg in messages:
+        print "To  : %s Text: %s"%(msg["srcaddr"],msg["text"])
 
 def keys(dfu):
     """Prints all the Enhanced Privacy keys."""
