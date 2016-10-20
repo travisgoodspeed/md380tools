@@ -85,6 +85,7 @@ is under development for Android.
 * [Debian](docs/debian.md)
 * [Ubuntu](docs/ubuntu.md)
 * [Fedora/SUSE](docs/fedora.md)
+* [Windows](docs/windows.md)
 
 ####Ubuntu ####
 
@@ -108,14 +109,6 @@ Quick recipe for uploading the just build firmware:
 
 ####Raspberry Pi Debian Jessie: #####
 
-```
-Tested on 2016-05-10-raspbian-jessie by IZ2XBZ
-
-sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
-             libnewlib-arm-none-eabi python-usb make curl
-
-sudo pip install pyusb -U
-
 git clone https://github.com/travisgoodspeed/md380tools.git
 
 cd md380tools
@@ -131,27 +124,6 @@ sudo make all flash
 sudo make flashdb
 ```
 
-####Windows (using MSYS2):####
-
-Direct USB access has not yet been tested on Windows, and will not work with these instructions. Stay tuned for updates here.
-Manipulating the firmware and compiling the patches is supported, and instructions follow.
-
-Install MSYS2 from https://msys2.github.io, and update it by following the instructions on the homepage.
-Install needed MSYS2 dependencies:
-
-    pacman -S make unzip perl python2
-
-Restart the MSYS2 shell to ensure default paths are updated.
-Download the latest [GNU ARM Embedded Toolchain](https://launchpad.net/gcc-arm-embedded) and unpack to a desired location, ideally without spaces in the path.
-Clone the repo to a desired location.
-In MSYS2, the C drive is located at ```/c/```. Add the ARM toolchain bin directory to the MSYS2 path:
-
-    export PATH=$PATH:/c/path/to/gcc-arm-embedded/bin
-
-If you are interested in using radare2 on Windows, [download it](http://www.radare.org/) and unpack to a desired location. As radare2 does not currently work in the MSYS2 shell, it is suggested to run the commands in the Makefile directly from the CMD shell:
-
-    cd \path\to\md380tools\annotations\2.032
-	\path\to\radare2.exe -a arm -m 0x0800C000 -b 16 -i flash.r flash.img
 
 ##Convenient Usage:##
 
