@@ -34,6 +34,9 @@ struct radio_config2 {
 
 #if defined(FW_D13_020)
 void rc_write_radio_config_to_flash();
+#else
+#warning please consider adding symbols.    
+#define rc_write_radio_config_to_flash() /*nop*/
 #endif
 
 // 
