@@ -84,6 +84,7 @@ is under development for Android.
 
 * [Debian](docs/debian.md)
 * [Ubuntu](docs/ubuntu.md)
+* [Fedora/SUSE](docs/fedora.md)
 
 ####Ubuntu ####
 
