@@ -129,15 +129,15 @@ void dump_mbc( mbc_t *mbc )
     PRINT("src=%d dst=%d\n",get_adr(mbc->sms.src),get_adr(mbc->sms.dst));
 }
 
-void dump_data( data_hdr_t *data )
-{
-    //TODO: print DPF (6.1.1))
-    // 9.3.17 from part 1
-    int sap = get_sap(data);
-    int blocks = get_blocks(data);
-    int dpf = get_dpf(data);
-    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
-}
+//void dump_data( data_hdr_t *data )
+//{
+//    //TODO: print DPF (6.1.1))
+//    // 9.3.17 from part 1
+//    int sap = get_sap(data);
+//    int blocks = get_blocks(data);
+//    int dpf = get_dpf(data);
+//    PRINT("sap=%d %s dpf=%d %s src=%d dst=%d %d\n", sap, sap_to_str(sap), dpf, dpf_to_str(dpf), get_adr(data->src),get_adr(data->dst), blocks);
+//}
 
 void dumpraw_lc(uint8_t *pkt)
 {
@@ -165,21 +165,22 @@ void dumpraw_mbc(uint8_t *pkt)
     dump_mbc(mbc);
 }
 
-void dumpraw_data(uint8_t *pkt)
-{
-    uint8_t tp = (pkt[1] >> 4) ;
-    PRINT("type=%d ", tp );
-
-    data_hdr_t *data = (data_hdr_t*)(pkt + 2);
-    dump_data(data);
-}
+//void dumpraw_data(uint8_t *pkt)
+//{
+//    uint8_t tp = (pkt[1] >> 4) ;
+//    PRINT("type=%d ", tp );
+//
+//    data_hdr_t *data = (data_hdr_t*)(pkt + 2);
+//    dump_data(data);
+//}
 
 #ifdef FW_D13_020
 void dmr_CSBK_handler_hook(uint8_t *pkt)
 {
-    PRINTRET();
-    PRINTHEX(pkt,14);
-    PRINT("\n");
+//    PRINTRET();
+//    PRINT("CSBK: ");
+//    PRINTHEX(pkt,14);
+//    PRINT("\n");
 
     dmr_CSBK_handler(pkt);
 }
@@ -349,13 +350,13 @@ void *dmr_handle_data_hook(char *pkt, int len)
 //    //Turn on the red LED to know that we're here.
 //    red_led(1);
 
-    printf("Data:       ");
-    printhex(pkt, len + 2);
-    printf("\n");
+//    printf("Data:       ");
+//    printhex(pkt, len + 2);
+//    printf("\n");
 
     {
         data_blk_t *data = (void*)(pkt + 2);
-        rst_data_block(data);
+        rst_data_block(data,len);
     }
 
     //Forward to the original function.
@@ -405,8 +406,8 @@ void *dmr_sms_arrive_hook(void *pkt)
         rst_data_header(data);
     }
     
-    PRINT("sa ");
-    dumpraw_data(pkt);
+//    PRINT("sa ");
+//    dumpraw_data(pkt);
 
     //Forward to the original function.
     return dmr_sms_arrive(pkt);
