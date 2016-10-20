@@ -11,3 +11,4 @@ sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
              libnewlib-arm-none-eabi python-usb make curl
 
 sudo pip install pyusb -U
+```
