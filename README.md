@@ -93,7 +93,7 @@ is under development for Android.
 * [Raspberry Pi](docs/raspi.md)
 * [Windows](docs/windows.md)
 
-####Most linux based ####
+####For most linux based distros####
 
 Quick recipe for building new firmware:
 
