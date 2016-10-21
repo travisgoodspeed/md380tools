@@ -21,7 +21,6 @@
 #include "spiflash.h"
 #include "addl_config.h"
 #include "radio_config.h"
-#include "usersdb.h"
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -34,10 +33,6 @@ const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a 
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
-const static wchar_t wt_bootscr[]           = L"Boot Screen";
-const static wchar_t wt_bootscr_enable[]    = L"Enable";
-const static wchar_t wt_bootscr_quick[]     = L"Quick";
-const static wchar_t wt_bootscr_disable[]   = L"Disable";
 const static wchar_t wt_userscsv[]          = L"UsersCSV";
 const static wchar_t wt_datef_original[]    = L"YYYY/MM/DD";
 const static wchar_t wt_datef_germany[]     = L"DD.MM.YYYY";
@@ -388,33 +383,6 @@ void create_menu_entry_rbeep_disable_screen(void)
     cfg_save();
 }
 
-void create_menu_entry_bootscr_enable_screen(void)
-{
-    mn_create_single_timed_ack(wt_bootscr, wt_bootscr_enable);
-
-    global_addl_config.bootscr = 0;
-
-    cfg_save();
-}
-
-void create_menu_entry_bootscr_quick_screen(void)
-{
-    mn_create_single_timed_ack(wt_bootscr, wt_bootscr_quick);
-
-    global_addl_config.bootscr = 1;
-
-    cfg_save();
-}
-
-void create_menu_entry_bootscr_disable_screen(void)
-{
-    mn_create_single_timed_ack(wt_bootscr, wt_bootscr_disable);
-
-    global_addl_config.bootscr = 2;
-
-    cfg_save();
-}
-
 void create_menu_entry_datef_original_screen(void)
 {
     mn_create_single_timed_ack(wt_datef,wt_datef_original);
@@ -563,19 +531,6 @@ void create_menu_entry_rbeep_screen(void)
 
     mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen);
-
-    mn_submenu_finalize();
-}
-
-void create_menu_entry_bootscr_screen(void)
-{
-    mn_submenu_init(wt_bootscr);
-
-    md380_menu_entry_selected = global_addl_config.bootscr;
-
-    mn_submenu_add(wt_bootscr_enable, create_menu_entry_bootscr_enable_screen);
-    mn_submenu_add(wt_bootscr_quick, create_menu_entry_bootscr_quick_screen);
-    mn_submenu_add(wt_bootscr_disable, create_menu_entry_bootscr_disable_screen);
 
     mn_submenu_finalize();
 }
@@ -828,57 +783,6 @@ void create_menu_entry_edit_screen(void)
 #endif
 }
 
-void set_radio_name()
-{
-    uint8_t found = 0;
-    uint8_t pos = 0;
-    uint8_t b_size = 25;
-    char callsign[10];
-    char buf[b_size];
-    // Set the top line to the call sign found in the userdb
-    if ( find_dmr_user(buf, global_addl_config.dmrid, (void *) 0x100000, b_size) ) {
-        for (uint8_t i = 0; i < b_size; i++) {
-          if (buf[i] == 0) {
-              break;
-          }
-          if (buf[i] == ',') {
-              found++;
-          }
-          if (found > 0 && buf[i] != ',' && buf[i] != ' ') {
-              callsign[pos] = buf[i];
-              pos++;
-          }
-          if (found == 2 || pos >= 10) {
-              break;
-          }
-        }
-    }
-
-    if (pos == 0) {
-        strncpy(callsign, "UNKNOWNID", 10);
-    }
-
-    for (uint8_t ii = 0 ; ii < 20; ii++) {
-        toplinetext[ii] = 0x00;
-        if (ii%2 == 0) {
-            toplinetext[ii] = callsign[ii/2];
-        }
-    }
-
-    for (uint8_t ii = 0 ; ii < 32; ii++) {
-        if (ii%2 == 0 && ii < 20) {
-            md380_radio_config.radioname[ii] = callsign[ii/2];
-            global_addl_config.rname[ii] = callsign[ii/2];
-        } else {
-            md380_radio_config.radioname[ii] = 0x00;
-            global_addl_config.rname[ii] = 0x00;
-        }
-    }
-
-    cfg_save();
-    md380_spiflash_write(&md380_radio_config.radioname, FLASH_OFFSET_RNAME, 4);
-}
-
 void create_menu_entry_edit_dmr_id_screen_store(void)
 {
     uint32_t new_dmr_id = 0;
@@ -900,15 +804,12 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
 #endif
     
     global_addl_config.dmrid = new_dmr_id ;
+    
     cfg_save();
-
     cfg_fix_dmrid();
 
     md380_menu_id = md380_menu_id - 1;
     md380_menu_depth = md380_menu_depth - 1;
-    
-    set_radio_name();
-
 #ifdef CONFIG_MENU
     md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
 #endif
@@ -1007,7 +908,6 @@ void create_menu_entry_addl_functions_screen(void)
 //#endif
 
     mn_submenu_add_98(wt_rbeep, create_menu_entry_rbeep_screen);
-    mn_submenu_add_98(wt_bootscr, create_menu_entry_bootscr_screen);
     mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
     mn_submenu_add_98(wt_userscsv, create_menu_entry_userscsv_screen);
     mn_submenu_add_98(wt_debug, create_menu_entry_debug_screen);
