@@ -158,6 +158,7 @@ char small[MAX_BUF];
 #define bgcolor 0x00000000
 #define fgcolor 0x00ffffff
 
+#define LEFT_POS 3
 
 static void con_draw1()
 {
@@ -180,6 +181,9 @@ static void con_draw1()
     // erase bottom stripe.
     gfx_set_fg_color(bgcolor); 
     gfx_blockfill(0, MAX_Y-10, MAX_X, MAX_Y); 
+    // erase left 1 pixels
+    gfx_blockfill(0, 0, LEFT_POS-1, MAX_Y); 
+    
     
     gfx_set_fg_color(fgcolor);
     gfx_set_bg_color(bgcolor); 
@@ -205,7 +209,7 @@ static void con_draw1()
         }
         *w = 0 ;
         *sp2 = 0;
-        gfx_drawtext7(small, 0, y * LINE_HEIGHT);
+        gfx_drawtext7(small, LEFT_POS, y * LINE_HEIGHT);
     }
 
     gfx_select_font(old);    
