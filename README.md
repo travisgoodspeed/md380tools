@@ -94,27 +94,24 @@ is under development for Android.
 * [Raspberry Pi](docs/raspi.md)
 * [Windows](docs/windows.md)
 
-###First time checkout for linux based installations###
+###Additional steps for linux based installations###
 
-````
+```
 git clone https://github.com/travisgoodspeed/md380tools.git
 cd md380tools
 sudo cp 99-md380.rules /etc/udev/rules.d/ 
-make
-````
+```
 
-Quick recipe for uploading the just build firmware:
+###Flash updated firmware for linux based installations###
 
+Turn on radio in DFU mode to begin firmware update with USB cable:
 * insert cable into USB.
 * connect cable to MD380.
-* power-on MD380 while holding PTT button and button above PTT.
+* power-on MD380 by turning volume knob, while holding PTT button and button above PTT.
 
 ```
-./md380-dfu upgrade applet/experiment.bin
+make doflash
 ```
-##### turn on radio in DFU mode to begin firmware update with USB cable ######
-
-sudo make all flash
 
 ##### turn radio normally on to begin database loading with USB cable #####
 
