@@ -833,7 +833,7 @@ void set_radio_name()
     uint8_t found = 0;
     uint8_t pos = 0;
     uint8_t b_size = 25;
-    char callsign[10];
+    char callsign[10] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     char buf[b_size];
     // Set the top line to the call sign found in the userdb
     if ( find_dmr_user(buf, global_addl_config.dmrid, (void *) 0x100000, b_size) ) {
