@@ -277,3 +277,12 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 #warning should find symbol gfx_drawtext4        
 #endif    
 }
+
+uint32_t gfx_get_fg_color(void)
+{
+#if defined(FW_D02_032)
+    return 0x0000ff; // Default fg color
+#else
+	return gfx_info.fg_color;
+#endif
+}
