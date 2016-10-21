@@ -16,6 +16,8 @@
 #include "version.h"
 #include "tooldfu.h"
 #include "config.h"
+#include "addl_config.h"
+#include "radio_config.h"
 #include "gfx.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
@@ -118,8 +120,7 @@ void wstrhex(wchar_t *string, long value){
 
 /* Displays a startup demo on the device's screen, including some of
    the setting information and a picture or two. */
-void demo(){
-#ifdef CONFIG_GRAPHICS
+void demo_show_info(uint8_t quick) {
   drawtext(L"MD380Tools ",
 	   160,20);
   drawtext(L"by KK4VCZ  ",
@@ -129,7 +130,7 @@ void demo(){
 #ifdef MD380_d13_020
   drawtext(L"@ d13.020",
 	   160,140);
-#endif  
+#endif
 #ifdef MD380_d02_032
   drawtext(L"@ d02.032",
 	   160,140);
@@ -144,17 +145,67 @@ void demo(){
 
   drawtext(VERSIONDATE,
            160,220);
-  sleep(1000);
-  
-  //Make the welcome image scroll across the screen.
+  if (quick) {
+    sleep(500);
+  } else {
+    sleep(1000);
+  }
+}
+
+//Make the welcome image scroll across the screen.
+void demo_show_animation(void) {
   for(int i=0;i<0x60;i+=3){
     gfx_drawbmp(welcomebmp,0,i);
     sleep(30);
   }
+}
+
+void demo_clear(void) {
+  // Clear screen
+  unsigned int oldfg = gfx_info.fg_color;
+  gfx_set_fg_color(0xffffff);
+  gfx_blockfill(0, 0, 160, 128);
+  gfx_set_fg_color(oldfg);
+}
+
+#define BSIZE 100
+void dyn_bootscreen(void) {
+  //Restore the bottom line of text before we return.
+  //md380_spiflash_read(botlinetext, 0x2054, 20);
+  // Set the bottom line to the config's dmr id
+  char dmridstr[10];
+  sprintf(dmridstr, "%u\0", (uint32_t)global_addl_config.dmrid);
+  // We need to pad for wchar, someone will probably rip out their eyeballs reading this
+  //mbstowcs(&botlinetext, dmridstr, 10);
+  for (uint8_t ii = 0; ii < 20; ii++) {
+    botlinetext[ii] = 0x00;
+    if (ii%2 == 0) {
+        botlinetext[ii] = dmridstr[ii/2];
+    }
+  }
+
+  for (uint8_t ii = 0 ; ii < 20; ii++) {
+      toplinetext[ii] = global_addl_config.rname[ii];
+  }
+}
+
+void demo(void) {
+#ifdef CONFIG_GRAPHICS
+  switch (global_addl_config.bootscr) {
+    case 2:
+      break;
+    case 1:
+      demo_show_info(1);
+      demo_clear();
+      break;
+    default:
+      demo_show_info(0);
+      demo_show_animation();
+  }
 #endif //CONFIG_GRAPHICS
 
-  //Restore the bottom line of text before we return.
-  md380_spiflash_read(botlinetext, 0x2054, 20);
+  // Setup dynamic bootscreen
+  dyn_bootscreen();
 }
 
 
