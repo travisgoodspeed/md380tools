@@ -2,6 +2,16 @@
 
 by Travis Goodspeed, KK4VCZ
 
+# Support #
+
+To support users by using the md380tools or the resulting patched firmware 
+a Google Group is public opened and reachable via 
+https://groups.google.com/forum/#!forum/md380tools. No extra registration 
+should be necessary. You could also feed it via e-mail at 
+md380tools@googlegroups.com. So feel free to put in your questions into it!
+
+# Introduction #
+
 This repository contains tools for working with codeplugs and firmware
 of the Tytera MD380, which is also sold under a variety of different
 brand names.  The codeplug format is sufficiently similar to the
@@ -101,6 +111,7 @@ git clone https://github.com/travisgoodspeed/md380tools.git
 cd md380tools
 sudo cp 99-md380.rules /etc/udev/rules.d/ 
 ```
+(The99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.)
 
 ###Flash updated firmware for linux based installations###
 
@@ -110,13 +121,18 @@ Turn on radio in DFU mode to begin firmware update with USB cable:
 * power-on MD380 by turning volume knob, while holding PTT button and button above PTT.
 
 ```
+git pull
 make doflash
 ```
+###Flash updated users.csv database for linux based installations###
 
-##### turn radio normally on to begin database loading with USB cable #####
+Turn radio normally on to begin database loading with USB cable
 
-sudo make flashdb
-
+```
+git pull
+make clean flashdb
+```
+(The users.csv file located in the db directory must be manually refreshed otherwise it will continue using any already-existing users.csv file when running "make flashdb" from the main md380tools directory.)
 
 ##Convenient Usage:##
 
@@ -188,11 +204,6 @@ with 16MByte SPI-Flash.**
 After successfully flashing, the radio will be restarted.
 
 ##Flashing on Linux Notes##
-
-* Please ensure the 99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.
-
-Special note on the users.csv flashdb process:
-* The users.csv file located in the db directory must be manually refreshed by running "make clean" while inside the db directory otherwise it will continue using any already-existing users.csv file when running "make flashdb" from the main md380tools directory. 
 
 To check the type / size of SPI-Flash
 
@@ -280,10 +291,3 @@ as a direct replacement, as seen in the Makefile.
 An image with more than two colors requires the "relocate" argument to
 md380-gfx. There are examples of this in the Makefile as well.
 </strike>
-## Support ##
-
-To support users by using the md380tools or the resulting patched firmware 
-a Google Group is public opened and reachable via 
-https://groups.google.com/forum/#!forum/md380tools. No extra registration 
-should be necessary. You could also feed it via e-mail at 
-md380tools@googlegroups.com. So feel free to put in your questions into it!
