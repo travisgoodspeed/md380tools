@@ -111,7 +111,7 @@ git clone https://github.com/travisgoodspeed/md380tools.git
 cd md380tools
 sudo cp 99-md380.rules /etc/udev/rules.d/ 
 ```
-(The99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.)
+(The 99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.)
 
 ###Flash updated firmware for linux based installations###
 
@@ -132,7 +132,7 @@ Turn radio normally on to begin database loading with USB cable
 git pull
 make clean flashdb
 ```
-(The users.csv file located in the db directory must be manually refreshed otherwise it will continue using any already-existing users.csv file when running "make flashdb" from the main md380tools directory.)
+(The users.csv file located in the db directory must be refreshed this way otherwise it will continue using any already-existing users.csv file when running "make flashdb" from the main md380tools directory.)
 
 ##Convenient Usage:##
 
