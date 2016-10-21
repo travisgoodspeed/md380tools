@@ -85,7 +85,7 @@ This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
 
-###Installation of required packages###
+###Preparation of build environment###
 
 * [Debian](docs/debian.md)
 * [Ubuntu](docs/ubuntu.md)
@@ -94,14 +94,14 @@ is under development for Android.
 * [Raspberry Pi](docs/raspi.md)
 * [Windows](docs/windows.md)
 
-####For most linux based distros####
+###First time checkout for linux based installations###
 
-Quick recipe for building new firmware:
-
-    git clone https://github.com/travisgoodspeed/md380tools.git
-    cd md380tools
-    sudo cp 99-md380.rules /etc/udev/rules.d/ 
-    make
+````
+git clone https://github.com/travisgoodspeed/md380tools.git
+cd md380tools
+sudo cp 99-md380.rules /etc/udev/rules.d/ 
+make
+````
 
 Quick recipe for uploading the just build firmware:
 
