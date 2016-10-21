@@ -7,6 +7,9 @@
 
 #include <stdint.h>
 
+#define FLASH_OFFSET_DMRID 0x2084
+#define FLASH_OFFSET_RNAME 0x20B0
+
 typedef struct addl_config {
     uint8_t crc;
     uint8_t length;
@@ -18,7 +21,9 @@ typedef struct addl_config {
     uint8_t micbargraph;
     uint8_t netmon;
     uint8_t rbeep;
-    uint32_t dmrid ;
+    uint8_t bootscr;
+    uint32_t dmrid;
+    char rname[32];
 } addl_config_t ;
 
 extern addl_config_t global_addl_config;
@@ -26,6 +31,7 @@ extern addl_config_t global_addl_config;
 extern void init_global_addl_config_hook(void);
 
 void cfg_fix_dmrid();
+void cfg_fix_radioname();
 
 void cfg_save();
 
