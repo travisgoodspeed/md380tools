@@ -162,13 +162,12 @@ void demo_show_animation(void) {
 
 void demo_clear(void) {
   // Clear screen
-  unsigned int oldfg = gfx_info.fg_color;
+  uint32_t oldfg = gfx_get_fg_color();
   gfx_set_fg_color(0xffffff);
   gfx_blockfill(0, 0, 160, 128);
   gfx_set_fg_color(oldfg);
 }
 
-#define BSIZE 100
 void dyn_bootscreen(void) {
   //Restore the bottom line of text before we return.
   //md380_spiflash_read(botlinetext, 0x2054, 20);

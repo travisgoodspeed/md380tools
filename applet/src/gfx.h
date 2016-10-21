@@ -106,3 +106,4 @@ void gfx_drawtext7(const char *str, int x, int y); // firmware
 extern uint32_t gfx_font_small[];
 extern uint32_t gfx_font_norm[];
 
+uint32_t gfx_get_fg_color(void);
