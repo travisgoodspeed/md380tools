@@ -4,8 +4,8 @@
 /* port to other versions.  Good candidates have long prologues. */
 
 /* Startup routines, very handy for hooking our startup. */
-toplinetext = 0x08021883;
-botlinetext = 0x08021895;
+startup_topline = 0x08021883;
+startup_botline = 0x08021895;
 
 /* Graphics functions. */
 gfx_drawtext                           = 0x800D88B;

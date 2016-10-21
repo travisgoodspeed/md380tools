@@ -23,20 +23,8 @@ void cfg_fix_dmrid()
     int dmrid = global_addl_config.dmrid ;
     if( dmrid != 0 ) {
         // store new dmr_id to ram and spi flash (codeplug)
-        md380_spiflash_write(&dmrid, FLASH_OFFSET_DMRID, 4);
+        md380_spiflash_write(&dmrid, 0x2084, 4);            
         md380_radio_config.dmrid = dmrid;
-    }
-}
-
-
-void cfg_fix_radioname()
-{
-    char *rname = global_addl_config.rname;
-    if( rname[0] != 0x00 ) {
-        md380_spiflash_write(&rname, FLASH_OFFSET_RNAME, 32);
-        for (uint8_t ii = 0; ii < 32; ii++) {
-            md380_radio_config.radioname[ii] = rname[ii];
-        }
     }
 }
 
@@ -92,15 +80,11 @@ void cfg_load()
     R(global_addl_config.debug,1);
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
-    R(global_addl_config.bootscr,2);
-    R(global_addl_config.netmon,3);
+    R(global_addl_config.netmon,1);
     R(global_addl_config.datef,5);
-
+    
     // restore dmrid
     cfg_fix_dmrid();
-    
-    // restore radio name
-    cfg_fix_radioname();
             
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
