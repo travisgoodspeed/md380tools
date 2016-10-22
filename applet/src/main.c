@@ -168,24 +168,30 @@ void demo_clear(void) {
   gfx_set_fg_color(oldfg);
 }
 
-void dyn_bootscreen(void) {
-  //Restore the bottom line of text before we return.
-  //md380_spiflash_read(botlinetext, 0x2054, 20);
-  // Set the bottom line to the config's dmr id
-  char dmridstr[10];
-  sprintf(dmridstr, "%u\0", (uint32_t)global_addl_config.dmrid);
-  // We need to pad for wchar, someone will probably rip out their eyeballs reading this
-  //mbstowcs(&botlinetext, dmridstr, 10);
-  for (uint8_t ii = 0; ii < 20; ii++) {
-    botlinetext[ii] = 0x00;
-    if (ii%2 == 0) {
-        botlinetext[ii] = dmridstr[ii/2];
+void dyn_bootscreen(void)
+{
+    if( global_addl_config.boot_custom_str == 0 ) {
+        //Restore the bottom line of text before we return.
+        md380_spiflash_read(botlinetext, 0x2054, 20);
+        return ;
     }
-  }
+    
+    // Set the bottom line to the config's dmr id
+    char dmridstr[10];
+    sprintf(dmridstr, "%u\0", (uint32_t) global_addl_config.dmrid);
+    
+    // We need to pad for wchar, someone will probably rip out their eyeballs reading this
+    //mbstowcs(&botlinetext, dmridstr, 10);
+    for (uint8_t ii = 0; ii < 20; ii++) {
+        botlinetext[ii] = 0x00;
+        if( ii % 2 == 0 ) {
+            botlinetext[ii] = dmridstr[ii / 2];
+        }
+    }
 
-  for (uint8_t ii = 0 ; ii < 20; ii++) {
-      toplinetext[ii] = global_addl_config.rname[ii];
-  }
+    for (uint8_t ii = 0; ii < 20; ii++) {
+        toplinetext[ii] = global_addl_config.rname[ii];
+    }
 }
 
 void demo(void) {
