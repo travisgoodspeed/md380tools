@@ -28,9 +28,6 @@ const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"USB logging";
 //const static wchar_t wt_netmon[]            = L"NetMon";
 const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
-//const static wchar_t wt_netmon_1[]          = L"NetMon 1";
-//const static wchar_t wt_netmon_2[]          = L"NetMon 2";
-//const static wchar_t wt_netmon_3[]          = L"NetMon 3";
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
@@ -702,9 +699,6 @@ void create_menu_entry_netmon_screen(void)
 
     mn_submenu_add(wt_disable, create_menu_entry_netmon_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_netmon_enable_screen);
-//    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen);
-//    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen);
-//    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen);
 
     mn_submenu_finalize();
 }
