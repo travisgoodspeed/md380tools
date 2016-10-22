@@ -456,11 +456,17 @@ void create_menu_entry_splash_screen(void)
 {
     mn_submenu_init(wt_splash);
 
-    md380_menu_entry_selected = global_addl_config.boot_splash;
+    if (global_addl_config.userscsv == 0) {
+        md380_menu_entry_selected = 0;
+    } else {
+        md380_menu_entry_selected = global_addl_config.boot_splash;
+    }
 
     mn_submenu_add(wt_splash_manual, create_menu_entry_splash_manual_screen);
-    mn_submenu_add(wt_splash_callid, create_menu_entry_splash_callid_screen);
-    mn_submenu_add(wt_splash_callname, create_menu_entry_splash_callname_screen);
+    if (global_addl_config.userscsv == 1) {
+        mn_submenu_add(wt_splash_callid, create_menu_entry_splash_callid_screen);
+        mn_submenu_add(wt_splash_callname, create_menu_entry_splash_callname_screen);
+    }
 
     mn_submenu_finalize();
 }
