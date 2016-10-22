@@ -74,6 +74,8 @@ void draw_datetime_row(); // in md380
 
 extern uint8_t gui_opmode2 ;
 
+void display_credits();
+
 #ifdef __cplusplus
 }
 #endif
