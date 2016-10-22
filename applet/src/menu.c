@@ -723,9 +723,9 @@ const static wchar_t wt_backlight[]       = L"Backlight";
 const static wchar_t wt_bl30[]       = L"30 sec";
 const static wchar_t wt_bl60[]       = L"60 sec";
 
-void mn_backlight_set(int sec5)
+void mn_backlight_set(int sec5, const wchar_t *label)
 {
-    mn_create_single_timed_ack(wt_backlight,wt_disable);
+    mn_create_single_timed_ack(wt_backlight,label);
     
     md380_radio_config.backlight_time = sec5 ; // in 5 sec incr.
 
@@ -734,12 +734,12 @@ void mn_backlight_set(int sec5)
 
 void mn_backlight_30sec()
 {
-    mn_backlight_set(6);     
+    mn_backlight_set(6,wt_bl30);     
 }
 
 void mn_backlight_60sec()
 {
-    mn_backlight_set(12);     
+    mn_backlight_set(12,wt_bl60);     
 }
 
 void mn_backlight(void)
