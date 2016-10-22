@@ -71,6 +71,7 @@ db/users.csv
 db/users.json
 db/repeaters.csv
 db/repeaters.json
+db/custom.csv
 data
 data.csv
 
