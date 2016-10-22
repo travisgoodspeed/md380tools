@@ -136,6 +136,7 @@ void demo(void) {
   display_credits();
   sleep(1000);
   demo_show_animation();
+  demo_clear();
 }
 
 void boot_splash_set_bottomline_dmrid(void) {
