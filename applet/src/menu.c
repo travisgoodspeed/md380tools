@@ -28,9 +28,6 @@ const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"USB logging";
 //const static wchar_t wt_netmon[]            = L"NetMon";
 const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
-//const static wchar_t wt_netmon_1[]          = L"NetMon 1";
-//const static wchar_t wt_netmon_2[]          = L"NetMon 2";
-//const static wchar_t wt_netmon_3[]          = L"NetMon 3";
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
@@ -702,9 +699,6 @@ void create_menu_entry_netmon_screen(void)
 
     mn_submenu_add(wt_disable, create_menu_entry_netmon_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_netmon_enable_screen);
-//    mn_submenu_add(wt_netmon_1, create_menu_entry_netmon1_screen);
-//    mn_submenu_add(wt_netmon_2, create_menu_entry_netmon2_screen);
-//    mn_submenu_add(wt_netmon_3, create_menu_entry_netmon3_screen);
 
     mn_submenu_finalize();
 }
@@ -729,9 +723,9 @@ const static wchar_t wt_backlight[]       = L"Backlight";
 const static wchar_t wt_bl30[]       = L"30 sec";
 const static wchar_t wt_bl60[]       = L"60 sec";
 
-void mn_backlight_set(int sec5)
+void mn_backlight_set(int sec5, const wchar_t *label)
 {
-    mn_create_single_timed_ack(wt_backlight,wt_disable);
+    mn_create_single_timed_ack(wt_backlight,label);
     
     md380_radio_config.backlight_time = sec5 ; // in 5 sec incr.
 
@@ -740,12 +734,12 @@ void mn_backlight_set(int sec5)
 
 void mn_backlight_30sec()
 {
-    mn_backlight_set(6);     
+    mn_backlight_set(6,wt_bl30);     
 }
 
 void mn_backlight_60sec()
 {
-    mn_backlight_set(12);     
+    mn_backlight_set(12,wt_bl60);     
 }
 
 void mn_backlight(void)
@@ -1016,10 +1010,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
-    
-//    if( global_addl_config.experimental ) {
-        mn_submenu_add(wt_backlight, mn_backlight);
-//    }
+    mn_submenu_add(wt_backlight, mn_backlight);
     
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
@@ -1036,20 +1027,6 @@ void create_menu_utilies_hook(void)
     } else {
         enabled = 1;
     }
-
-#ifdef DEBUG
-//    printf("create_menu_utilies_hook %d\n", md380_menu_depth);
-
-#if 0
-// TODO: move to somewhere else    
-    radio_config_t *rc = &md380_radio_config;
-    printf("backlight %x\n", rc->backlight_time);
-    printf("dmr %d\n", rc->dmrid);
-    printf("mode_ch %d\n", rc->mode_ch_mr);
-#endif
-    
-    //   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
-#endif
 
     menu_mem = get_menu_stackpoi();
     menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
