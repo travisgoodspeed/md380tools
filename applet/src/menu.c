@@ -31,10 +31,12 @@ const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a 
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
+
 const static wchar_t wt_bootscr[]           = L"Boot Screen";
 const static wchar_t wt_bootscr_enable[]    = L"Enable";
 const static wchar_t wt_bootscr_quick[]     = L"Quick";
 const static wchar_t wt_bootscr_disable[]   = L"Disable";
+
 const static wchar_t wt_userscsv[]          = L"UsersCSV";
 const static wchar_t wt_datef_original[]    = L"YYYY/MM/DD";
 const static wchar_t wt_datef_germany[]     = L"DD.MM.YYYY";
@@ -48,6 +50,10 @@ const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
+
+const static wchar_t wt_backlight[]       = L"Backlight";
+const static wchar_t wt_bl30[]       = L"30 sec";
+const static wchar_t wt_bl60[]       = L"60 sec";
 
 
 struct MENU {
@@ -718,10 +724,6 @@ void create_menu_entry_experimental_screen(void)
 
     mn_submenu_finalize();
 }
-
-const static wchar_t wt_backlight[]       = L"Backlight";
-const static wchar_t wt_bl30[]       = L"30 sec";
-const static wchar_t wt_bl60[]       = L"60 sec";
 
 void mn_backlight_set(int sec5, const wchar_t *label)
 {
