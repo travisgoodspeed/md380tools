@@ -19,6 +19,7 @@
 #include "addl_config.h"
 #include "radio_config.h"
 #include "gfx.h"
+#include "display.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -114,44 +115,6 @@ void wstrhex(wchar_t *string, long value){
   }
 }
 
-
-
-
-
-/* Displays a startup demo on the device's screen, including some of
-   the setting information and a picture or two. */
-void demo_show_info(uint8_t quick) {
-  drawtext(L"MD380Tools ",
-	   160,20);
-  drawtext(L"by KK4VCZ  ",
-	   160,60);
-  drawtext(L"and Friends",
-	   160,100);
-#ifdef MD380_d13_020
-  drawtext(L"@ d13.020",
-	   160,140);
-#endif
-#ifdef MD380_d02_032
-  drawtext(L"@ d02.032",
-	   160,140);
-#endif
-#ifdef MD380_s13_020
-  drawtext(L"@ s13.020",
-           160,140);
-#endif
-
-  drawascii(GIT_VERSION,
-            160,180);
-
-  drawtext(VERSIONDATE,
-           160,220);
-  if (quick) {
-    sleep(500);
-  } else {
-    sleep(1000);
-  }
-}
-
 //Make the welcome image scroll across the screen.
 void demo_show_animation(void) {
   for(int i=0;i<0x60;i+=3){
@@ -200,11 +163,13 @@ void demo(void) {
     case 2:
       break;
     case 1:
-      demo_show_info(1);
+      display_credits();
+      sleep(500);
       demo_clear();
       break;
     default:
-      demo_show_info(0);
+      display_credits();
+      sleep(1000);
       demo_show_animation();
   }
 #endif //CONFIG_GRAPHICS

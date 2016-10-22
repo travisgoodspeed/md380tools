@@ -320,3 +320,25 @@ void draw_datetime_row_hook()
 #warning please consider hooking.    
 #endif    
 }
+
+/* Displays a startup demo on the device's screen, including some of
+   the setting information and a picture or two. */
+void display_credits()
+{
+    drawtext(L"MD380Tools ", 160, 20);
+    drawtext(L"by KK4VCZ  ", 160, 60);
+    drawtext(L"and Friends", 160, 100);
+#ifdef MD380_d13_020
+    drawtext(L"@ d13.020", 160, 140);
+#endif
+#ifdef MD380_d02_032
+    drawtext(L"@ d02.032", 160, 140);
+#endif
+#ifdef MD380_s13_020
+    drawtext(L"@ s13.020", 160, 140);
+#endif
+
+    drawascii(GIT_VERSION, 160, 180);
+
+    drawtext(VERSIONDATE, 160, 220);
+}
