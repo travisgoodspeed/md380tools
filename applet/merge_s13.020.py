@@ -295,6 +295,9 @@ if __name__== '__main__':
 
 #    merger.hookstub2(0x0800c72e, sapplet.getadr("create_menu_entry_rev"));
 
+    # keyboard
+    merger.hookbl(0x0804fa12, sapplet.getadr("kb_handler_hook"));
+
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
           sys.argv[1],

@@ -47,8 +47,8 @@ void reset_backlight()
     f(0x40020800,0x40);
     
 #else
-#warning please consider adding symbols.    
-#endif    
+#warning please consider adding symbols.
+#endif
 }
 
 int beep_event_probe = 0 ;
@@ -168,14 +168,16 @@ extern void kb_handler();
 
 void kb_handler_hook()
 {
+#ifdef FW_D13_020
     trace_keyb(0);
-    
-#if defined(FW_D13_020)
+#endif
+#ifndef FW_D02_032
     kb_handler();
 #else
-#warning please consider hooking.    
-#endif    
-    
+#warning please consider hooking.
+#endif
+
+#ifdef FW_D13_020
     trace_keyb(1);
 
     if( is_intercept_allowed() ) {
@@ -188,7 +190,9 @@ void kb_handler_hook()
                 handle_hotkey(kc);
                 return ;
             }
-        }        
+        }
     }
-    
+#else
+#warning please consider adding symbols.
+#endif
 }

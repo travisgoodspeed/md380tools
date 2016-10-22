@@ -283,6 +283,6 @@ uint32_t gfx_get_fg_color(void)
 #if defined(FW_D02_032)
     return 0x0000ff; // Default fg color
 #else
-	return gfx_info.fg_color;
+    return gfx_info.fg_color;
 #endif
 }

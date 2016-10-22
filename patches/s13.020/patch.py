@@ -41,12 +41,16 @@ if __name__ == '__main__':
     patcher.setwstring(0x080d0b6c,
                        "MD380Tools Ver.");
 
-#     #Change the manufacturer string.
-#     patcher.setstring(0x080f86c8,
-#                       "Travis Goodspeed KK4VCZ");
-#     #Change the device name.
-#     patcher.setstring(0x080cfff4,
-#                       "Patched MD380");
+    #Fix some bad grammar
+    patcher.setwstring(0x080f9a94,
+                       "No Fix");
+
+    #Change the manufacturer string. *Never Worked...*
+#    patcher.setstring(0x080f9588,
+#                      "Travis Goodspeed KK4VCZ");
+    #Change the device name.
+    patcher.setstring(0x080d0eb4,
+                      "Patched MD-380/390G");
 
     # freeing ~200k for code patches
     patcher.ffrange(0x0809bda8,0x80d0614);
