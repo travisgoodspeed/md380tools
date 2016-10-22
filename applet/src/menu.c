@@ -1016,10 +1016,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
-    
-//    if( global_addl_config.experimental ) {
-        mn_submenu_add(wt_backlight, mn_backlight);
-//    }
+    mn_submenu_add(wt_backlight, mn_backlight);
     
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
@@ -1036,20 +1033,6 @@ void create_menu_utilies_hook(void)
     } else {
         enabled = 1;
     }
-
-#ifdef DEBUG
-//    printf("create_menu_utilies_hook %d\n", md380_menu_depth);
-
-#if 0
-// TODO: move to somewhere else    
-    radio_config_t *rc = &md380_radio_config;
-    printf("backlight %x\n", rc->backlight_time);
-    printf("dmr %d\n", rc->dmrid);
-    printf("mode_ch %d\n", rc->mode_ch_mr);
-#endif
-    
-    //   printf("menu_mem->numberof_menu_entries %d\n",menu_mem->numberof_menu_entries);
-#endif
 
     menu_mem = get_menu_stackpoi();
     menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
