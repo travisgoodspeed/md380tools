@@ -24,6 +24,7 @@ typedef struct addl_config {
     uint8_t bootscr;
     uint32_t dmrid;
     char rname[32];
+    uint8_t boot_custom_str;
 } addl_config_t ;
 
 extern addl_config_t global_addl_config;
