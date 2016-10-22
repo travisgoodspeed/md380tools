@@ -21,10 +21,10 @@ typedef struct addl_config {
     uint8_t micbargraph;
     uint8_t netmon;
     uint8_t rbeep;
-    uint8_t bootscr;
+    uint8_t boot_demo;
+    uint8_t boot_splash;
     uint32_t dmrid;
     char rname[32];
-    uint8_t boot_custom_str;
 } addl_config_t ;
 
 extern addl_config_t global_addl_config;
