@@ -25,6 +25,7 @@
 // 8 = rearm
 // 0 = none pressed
 
+#ifndef FW_D02_032
 inline int get_main_mode()
 {
     return md380_f_4225_operatingmode & 0x7F ;
@@ -34,12 +35,11 @@ void reset_backlight()
 {
     // struct @ 0x2001dadc
     backlight_timer = md380_radio_config.backlight_time * 500 ;
-    
+
 #if defined(FW_D13_020)
     // enabling backlight again.
     void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 ); // S: ??? 0x0802BAE6
     f(0x40020800,0x40);
-    
 #else
 #warning please consider adding symbols.
 #endif
@@ -157,6 +157,7 @@ inline int is_intercepted_keycode( int kc )
             return 0 ;
     }    
 }
+#endif //ndef FW_D02_032
 
 extern void kb_handler();
 
@@ -173,7 +174,7 @@ void kb_handler_hook()
         int kc = kb_keycode ;
         if( is_intercepted_keycode(kc) ) {
             int kp = kb_keypressed ;
-            
+
             if( (kp & 2) == 2 ) {
                 kb_keypressed = 8 ;
                 handle_hotkey(kc);
