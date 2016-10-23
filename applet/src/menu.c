@@ -921,6 +921,11 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
         new_dmr_id *= 10;
         new_dmr_id += (*bf++) - '0';
     }
+    
+    if ( new_dmr_id > 0xffffff ) {
+        return;
+    }
+    
 #if 0
     printf("\n%d\n", new_dmr_id);
 #endif
