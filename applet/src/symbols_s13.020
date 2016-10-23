@@ -162,11 +162,19 @@ dmr_sms_arrive       = 0x080418f9; /* 376 byte match */
 
 ambe_encode_thing    = 0x08054019; /* 1024 byte match */
 
-/* dont hook before fixing this */
-draw_statusline = 0x0 ;
+draw_statusline = 0x080348c5;
+draw_datetime_row = 0x0800df1b;
 
 /* keyb */
-/*f_4101 = 0x0;*/ /* 0x0804ec67 */
+f_4101 = 0x0804f991; /* 0x0804ec67 */
 kb_handler = 0x0805078d;
+kb_keycode = 0x2001E964;
+kb_keypressed = 0x2001E6C8;
+kb_key_row_col = 0x2001E88E;
+kb_key_press_time = 0x2001E892;
+
+backlight_timer = 0x2001E8CC;
 
 gui_opmode2 = 0x2001ea22 ;
+
+selected_channel = 0x2001E924;

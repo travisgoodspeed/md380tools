@@ -109,7 +109,7 @@ md380_menu_mem_base                    = 0x2001b274; /* */
 md380_menu_memory                      = 0x2001d5cc; /* */
 md380_menu_edit_buf                    = 0x2001cb9a; /* */
 
-md380_radio_fm_dmr                     = 0x2001deb8;                                                                                                      
+md380_radio_fm_dmr                     = 0x2001deb8;
 
 Create_Menu_Utilies                    = 0x080134a1;
 Create_Menu_Entry_RX_QRG_shown         = 0x080156a5;
@@ -180,5 +180,13 @@ gfx_drawtext7 = 0x080277c3 ;
 /* keyb */
 f_4101 = 0x0804ec67 ;
 kb_handler = 0x0804f94d ;
+kb_keycode = 0x2001e890;
+kb_keypressed = 0x2001e5f8;
+kb_key_row_col = 0x2001e7ba;
+kb_key_press_time = 0x2001e7be; /* UNVERIFIED */
+
+backlight_timer = 0x2001e7f8;
 
 gui_opmode2 = 0x2001e94b ;
+
+selected_channel = 0x2001e850; /* ??? */
