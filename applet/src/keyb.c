@@ -18,10 +18,6 @@
 
 #include <stdint.h>
 
-uint8_t *keypressed_p = (void*)0x2001e5f8 ;
-uint8_t *kb_keycode = (void*)0x2001e890 ;
-uint16_t *kb_row_col_pressed = (void*)0x2001e7ba ;
-    
 // 1 = pressed
 // 2 = release within timeout
 // 1+2 = pressed during rx
@@ -29,6 +25,7 @@ uint16_t *kb_row_col_pressed = (void*)0x2001e7ba ;
 // 8 = rearm
 // 0 = none pressed
 
+#ifndef FW_D02_032
 inline int get_main_mode()
 {
     return md380_f_4225_operatingmode & 0x7F ;
@@ -36,16 +33,13 @@ inline int get_main_mode()
 
 void reset_backlight()
 {
-#if defined(FW_D13_020)
-    uint16_t *timer = (void*)0x2001e7f8 ;
-    
     // struct @ 0x2001dadc
-    *timer = md380_radio_config.backlight_time * 500 ;
-    
+    backlight_timer = md380_radio_config.backlight_time * 500 ;
+
+#if defined(FW_D13_020)
     // enabling backlight again.
-    void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 );    
+    void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 ); // S: ??? 0x0802BAE6
     f(0x40020800,0x40);
-    
 #else
 #warning please consider adding symbols.
 #endif
@@ -114,10 +108,10 @@ void handle_hotkey( int keycode )
 void trace_keyb(int sw)
 {
     static uint8_t old_kp = -1 ;
-    uint8_t kp = *keypressed_p ;
+    uint8_t kp = kb_keypressed ;
     
-    if( old_kp != kp ) {        
-        PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, *kb_row_col_pressed, *kb_keycode );
+    if( old_kp != kp ) {
+        PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_key_row_col, kb_keycode );
         old_kp = kp ;
     }
 }
@@ -163,36 +157,33 @@ inline int is_intercepted_keycode( int kc )
             return 0 ;
     }    
 }
+#endif //ndef FW_D02_032
 
 extern void kb_handler();
 
 void kb_handler_hook()
 {
-#ifdef FW_D13_020
-    trace_keyb(0);
-#endif
 #ifndef FW_D02_032
-    kb_handler();
-#else
-#warning please consider hooking.
-#endif
+    trace_keyb(0);
 
-#ifdef FW_D13_020
+    kb_handler();
+
     trace_keyb(1);
 
     if( is_intercept_allowed() ) {
-        int kc = *kb_keycode ;
+        int kc = kb_keycode ;
         if( is_intercepted_keycode(kc) ) {
-            int kp = *keypressed_p ;
-            
+            int kp = kb_keypressed ;
+
             if( (kp & 2) == 2 ) {
-                *keypressed_p = 8 ;
+                kb_keypressed = 8 ;
                 handle_hotkey(kc);
                 return ;
             }
         }
     }
 #else
-#warning please consider adding symbols.
+#warning please consider hooking.
+    return;
 #endif
 }

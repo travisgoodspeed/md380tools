@@ -37,7 +37,7 @@ triggered
 
 = keycodes =
 
-@ 0x2001e890
+@ 0x2001e890 /* S:0x2001E964 */
 
 0   digit 0
 .
@@ -57,7 +57,7 @@ f,15   #
 241 some special key, maybe 'menu is active' so normal keyboard handling disabled.
 255    ?
 
-./md380-tool hexwatch 0x2001e890
+./md380-tool hexwatch 0x2001e890 /* S:0x2001E964 */
 
 = structure mods @ 0x0800f0ca =
 
@@ -78,18 +78,18 @@ idx[10,11] = value from idx[44] above.
 
 b 0x2001e5f0 key press status: b7=long press,  (incorrect?)
 b 0x2001e5f3 key press status: b5=not long press, 
-b 0x2001e5f8 key pressed long press(b2=4). pressed(b0=1)  ???(b1=2)
-b 0x2001e5f9 locked(b1=2) 
+b 0x2001e5f8 key pressed long press(b2=4). pressed(b0=1)  ???(b1=2) /* S: 0x2001E6C8 */
+b 0x2001e5f9 locked(b1=2) /* S: 0x2001E6C9 */
 
 b 0x2001e7b0 time upper button pressed 
 b 0x2001e7b2 time lower button pressed 
-//h 0x2001e7ba internal keycode
+//h 0x2001e7ba internal keycode /* S: 0x2001E88E */
 //h 0x2001e7bc last internal keycode
-b 0x2001e7be time key pressed (in main screen)
+b 0x2001e7be time key pressed (in main screen) /* S: 0x2001E892 */
 ? 0x2001e7c0 internal keycode2 (related to)
 
-b 0x2001e889 key debounce counter (0...3)
-b 0x2001e890 last key pressed
+b 0x2001e889 key debounce counter (0...3)  /* S: ???0x2001E963 */
+b 0x2001e890 last key pressed /* S: 0x2001E964 */
 
 
 b 0x2001e7b8 keypress_max_time

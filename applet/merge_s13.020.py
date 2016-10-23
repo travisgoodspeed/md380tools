@@ -298,6 +298,9 @@ if __name__== '__main__':
     # keyboard
     merger.hookbl(0x0804fa12, sapplet.getadr("kb_handler_hook"));
 
+    # Draw/GFX
+    merger.hookbl(0x08021a5e, sapplet.getadr("draw_statusline_hook"));
+
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
           sys.argv[1],
