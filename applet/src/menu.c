@@ -891,6 +891,12 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
         new_dmr_id *= 10;
         new_dmr_id += (*bf++) - '0';
     }
+    
+    if ( new_dmr_id > 0xffffff ) {
+        md380_create_menu_entry(md380_menu_id, wt_edit_dmr_id, MKTHUMB(create_menu_entry_edit_dmr_id_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
+        return;
+    }
+    
 #if 0
     printf("\n%d\n", new_dmr_id);
 #endif
