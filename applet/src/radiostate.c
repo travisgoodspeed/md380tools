@@ -13,6 +13,8 @@
 #include "syslog.h"
 #include "usersdb.h"
 
+//#include <arpa/inet.h>
+
 int rst_voice_active = 0 ;
 int rst_src = 0 ;
 int rst_dst = 0 ;
@@ -257,6 +259,26 @@ void rst_conf_data_packet(void *data, int len)
     rst_add_packet(data,len);
 }
 
+void rst_packet_complete(void *data, int len)
+{        
+    PRINT("buffer: ");
+    PRINTHEX(databuffer,len);
+    PRINT("\n");    
+    PRINT("buffer: ");
+    PRINTASC(databuffer,len);
+    PRINT("\n");          
+    
+    uint8_t *b = data ;
+
+//    uint32_t saddr = ntohl( *(uint32_t*)(b+12) );
+//    uint32_t daddr = ntohl( *(uint32_t*)(b+16) ); 
+    uint16_t sport = ( b[20] << 8 ) + b[21] ;
+    uint16_t dport = ( b[22] << 8 ) + b[23] ;
+    
+    LOGR("%d.%d.%d.%d:%d %d.%d.%d.%d:%d\n", b[12], b[13],b[14], b[15], sport, b[16], b[17],b[18], b[19], dport );
+    PRINT("%d.%d.%d.%d:%d %d.%d.%d.%d:%d\n", b[12], b[13],b[14], b[15], sport, b[16], b[17],b[18], b[19], dport );
+}
+
 void rst_data_block(void *data, int len)
 {
 #if 0
@@ -294,11 +316,7 @@ void rst_data_block(void *data, int len)
     if( blocks_outstanding == 0 ) {
         // packet complete
         int idx = dataidx - pad_octets ;
-        PRINT("buffer: ");
-        PRINTHEX(databuffer,idx);
-        PRINT("\n");    
-        PRINT("buffer: ");
-        PRINTASC(databuffer,idx);
-        PRINT("\n");          
+        
+        rst_packet_complete(databuffer,idx);
     }
 }
