@@ -36,6 +36,7 @@ extern void init_global_addl_config_hook(void);
 
 void cfg_fix_dmrid();
 void cfg_fix_radioname();
+void cfg_set_radio_name();
 
 void cfg_save();
 

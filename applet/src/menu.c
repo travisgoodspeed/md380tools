@@ -543,7 +543,7 @@ void create_menu_entry_userscsv_enable_screen(void)
 
     cfg_save();
 
-    set_radio_name();
+    cfg_set_radio_name();
 }
 
 void create_menu_entry_userscsv_disable_screen(void)
@@ -876,35 +876,6 @@ void create_menu_entry_edit_screen(void)
 #endif
 }
 
-void set_radio_name()
-{
-    char callsign[10] = {0x00};
-
-    if (get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) == 0) {
-        strncpy(callsign, "UNKNOWNID", 10);
-    }
-
-    for (uint8_t ii = 0 ; ii < 20; ii++) {
-        toplinetext[ii] = 0x00;
-        if (ii%2 == 0) {
-            toplinetext[ii] = callsign[ii/2];
-        }
-    }
-
-    for (uint8_t ii = 0 ; ii < 32; ii++) {
-        if (ii%2 == 0 && ii < 20) {
-            md380_radio_config.radioname[ii] = callsign[ii/2];
-            global_addl_config.rname[ii] = callsign[ii/2];
-        } else {
-            md380_radio_config.radioname[ii] = 0x00;
-            global_addl_config.rname[ii] = 0x00;
-        }
-    }
-
-    cfg_save();
-    md380_spiflash_write(&md380_radio_config.radioname, FLASH_OFFSET_RNAME, 4);
-}
-
 void create_menu_entry_edit_dmr_id_screen_store(void)
 {
     uint32_t new_dmr_id = 0;
@@ -939,7 +910,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
     md380_menu_depth = md380_menu_depth - 1;
 
     if (global_addl_config.userscsv == 1) {
-        set_radio_name();
+        cfg_set_radio_name();
     }
 
 #ifdef CONFIG_MENU
