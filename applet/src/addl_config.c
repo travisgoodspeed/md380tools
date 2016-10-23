@@ -92,20 +92,21 @@ void cfg_load()
     R(global_addl_config.debug,1);
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
-    R(global_addl_config.bootscr,2);
+    R(global_addl_config.boot_demo,1);
+    R(global_addl_config.boot_splash,2);
     R(global_addl_config.netmon,3);
     R(global_addl_config.datef,5);
 
     // restore dmrid
     cfg_fix_dmrid();
-    
+
     // restore radio name
-    cfg_fix_radioname();
-            
+    if (global_addl_config.userscsv == 1) {
+        cfg_fix_radioname();
+    }
+
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
-    
-    global_addl_config.boot_custom_str = 0 ;
 
 #if defined(FW_D13_020)    
 #else

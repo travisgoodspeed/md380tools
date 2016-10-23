@@ -22,6 +22,7 @@ static char * getdata(char * dest, const char *  src, int count) {
 #else /* user DB is in flash memory */
 
 #include "md380.h"
+#include "usersdb.h"
 
 /* All user database data is accessed through this function.
  * This makes it easier to adapt to different kinds of sources.
@@ -129,3 +130,29 @@ int find_dmr_user(char *outstr, int dmr_search,
     return find_dmr(outstr, dmr_search, data_start, data_end, outsize);
 }
 
+#define _IS_TRAIL(buf, i, l) ((i > 0 && buf[i-1] == ',' && buf[i] == ' ') || (i < l && buf[i+1] == ',' && buf[i] == ' '))
+
+uint8_t get_dmr_user_field(uint8_t field, char *outstr, int dmr_search, int outsize)
+{
+    char buf[BSIZE];
+    uint8_t pos = 0;
+    uint8_t found = 0;
+    if ( find_dmr_user(buf, dmr_search, (void *) 0x100000, BSIZE) ) {
+        for (uint8_t i = 0; i < BSIZE; i++) {
+          if (buf[i] == 0 || pos >= outsize) {
+              break;
+          }
+          if (buf[i] == ',') {
+              found++;
+          }
+          if (found >= (field - 1) && buf[i] != ',' && !_IS_TRAIL(buf, i, BSIZE)) {
+              outstr[pos] = buf[i];
+              pos++;
+          }
+          if (found == field) {
+              break;
+          }
+        }
+    }
+    return pos;
+}

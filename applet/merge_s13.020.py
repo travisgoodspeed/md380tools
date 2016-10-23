@@ -178,7 +178,7 @@ if __name__== '__main__':
     merger.hookstub(0x080974de,   #0x0809661e,    #USB manufacturer string handler function.
                     sapplet.getadr("getmfgstr"));
     merger.hookstub(0x080229ae,  #0x080226d2, #startup_botline
-                    sapplet.getadr("demo"));
+                    sapplet.getadr("splash_hook_handler"));
     merger.hookstub(0x08016b7e,  #0x08016a96,
                     sapplet.getadr("loadfirmwareversion_hook"));
     merger.hookbl(  0x0808f9a6,   #0x0808eb66, #Call to usb_dfu_upload().

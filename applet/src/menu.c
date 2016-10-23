@@ -32,10 +32,14 @@ const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
 
-const static wchar_t wt_bootscr[]           = L"Boot Screen";
-const static wchar_t wt_bootscr_enable[]    = L"Enable";
-const static wchar_t wt_bootscr_quick[]     = L"Quick";
-const static wchar_t wt_bootscr_disable[]   = L"Disable";
+const static wchar_t wt_bootopts[]          = L"Boot Options";
+const static wchar_t wt_demoscr[]           = L"Demo Screen";
+const static wchar_t wt_demoscr_enable[]    = L"Enable";
+const static wchar_t wt_demoscr_disable[]   = L"Disable";
+const static wchar_t wt_splash[]            = L"Splash Mode";
+const static wchar_t wt_splash_manual[]     = L"Manual";
+const static wchar_t wt_splash_callid[]     = L"Callsign+DMRID";
+const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 const static wchar_t wt_userscsv[]          = L"UsersCSV";
 const static wchar_t wt_datef_original[]    = L"YYYY/MM/DD";
@@ -51,9 +55,9 @@ const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
-const static wchar_t wt_backlight[]       = L"Backlight";
-const static wchar_t wt_bl30[]       = L"30 sec";
-const static wchar_t wt_bl60[]       = L"60 sec";
+const static wchar_t wt_backlight[]         = L"Backlight";
+const static wchar_t wt_bl30[]              = L"30 sec";
+const static wchar_t wt_bl60[]              = L"60 sec";
 
 
 struct MENU {
@@ -391,31 +395,90 @@ void create_menu_entry_rbeep_disable_screen(void)
     cfg_save();
 }
 
-void create_menu_entry_bootscr_enable_screen(void)
+void create_menu_entry_demo_enable_screen(void)
 {
-    mn_create_single_timed_ack(wt_bootscr, wt_bootscr_enable);
+    mn_create_single_timed_ack(wt_demoscr, wt_demoscr_enable);
 
-    global_addl_config.bootscr = 0;
+    global_addl_config.boot_demo = 0;
 
     cfg_save();
 }
 
-void create_menu_entry_bootscr_quick_screen(void)
+void create_menu_entry_demo_disable_screen(void)
 {
-    mn_create_single_timed_ack(wt_bootscr, wt_bootscr_quick);
+    mn_create_single_timed_ack(wt_demoscr, wt_demoscr_disable);
 
-    global_addl_config.bootscr = 1;
+    global_addl_config.boot_demo = 1;
 
     cfg_save();
 }
 
-void create_menu_entry_bootscr_disable_screen(void)
+void create_menu_entry_demo_screen(void)
 {
-    mn_create_single_timed_ack(wt_bootscr, wt_bootscr_disable);
+    mn_submenu_init(wt_demoscr);
 
-    global_addl_config.bootscr = 2;
+    md380_menu_entry_selected = global_addl_config.boot_demo;
+
+    mn_submenu_add(wt_demoscr_enable, create_menu_entry_demo_enable_screen);
+    mn_submenu_add(wt_demoscr_disable, create_menu_entry_demo_disable_screen);
+
+    mn_submenu_finalize();
+}
+
+void create_menu_entry_splash_manual_screen(void)
+{
+    mn_create_single_timed_ack(wt_splash, wt_splash_manual);
+
+    global_addl_config.boot_splash = 0;
 
     cfg_save();
+}
+
+void create_menu_entry_splash_callid_screen(void)
+{
+    mn_create_single_timed_ack(wt_splash, wt_splash_callid);
+
+    global_addl_config.boot_splash = 1;
+
+    cfg_save();
+}
+
+void create_menu_entry_splash_callname_screen(void)
+{
+    mn_create_single_timed_ack(wt_splash, wt_splash_callname);
+
+    global_addl_config.boot_splash = 2;
+
+    cfg_save();
+}
+
+void create_menu_entry_splash_screen(void)
+{
+    mn_submenu_init(wt_splash);
+
+    if (global_addl_config.userscsv == 0) {
+        md380_menu_entry_selected = 0;
+    } else {
+        md380_menu_entry_selected = global_addl_config.boot_splash;
+    }
+
+    mn_submenu_add(wt_splash_manual, create_menu_entry_splash_manual_screen);
+    if (global_addl_config.userscsv == 1) {
+        mn_submenu_add(wt_splash_callid, create_menu_entry_splash_callid_screen);
+        mn_submenu_add(wt_splash_callname, create_menu_entry_splash_callname_screen);
+    }
+
+    mn_submenu_finalize();
+}
+
+void create_menu_entry_bootopts_screen(void)
+{
+    mn_submenu_init(wt_bootopts);
+
+    mn_submenu_add_98(wt_demoscr, create_menu_entry_demo_screen);
+    mn_submenu_add_98(wt_splash, create_menu_entry_splash_screen);
+
+    mn_submenu_finalize2();
 }
 
 void create_menu_entry_datef_original_screen(void)
@@ -479,6 +542,8 @@ void create_menu_entry_userscsv_enable_screen(void)
     global_addl_config.userscsv = 1;
 
     cfg_save();
+
+    set_radio_name();
 }
 
 void create_menu_entry_userscsv_disable_screen(void)
@@ -566,19 +631,6 @@ void create_menu_entry_rbeep_screen(void)
 
     mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen);
-
-    mn_submenu_finalize();
-}
-
-void create_menu_entry_bootscr_screen(void)
-{
-    mn_submenu_init(wt_bootscr);
-
-    md380_menu_entry_selected = global_addl_config.bootscr;
-
-    mn_submenu_add(wt_bootscr_enable, create_menu_entry_bootscr_enable_screen);
-    mn_submenu_add(wt_bootscr_quick, create_menu_entry_bootscr_quick_screen);
-    mn_submenu_add(wt_bootscr_disable, create_menu_entry_bootscr_disable_screen);
 
     mn_submenu_finalize();
 }
@@ -826,31 +878,9 @@ void create_menu_entry_edit_screen(void)
 
 void set_radio_name()
 {
-    uint8_t found = 0;
-    uint8_t pos = 0;
-    uint8_t b_size = 25;
-    char callsign[10] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    char buf[b_size];
-    // Set the top line to the call sign found in the userdb
-    if ( find_dmr_user(buf, global_addl_config.dmrid, (void *) 0x100000, b_size) ) {
-        for (uint8_t i = 0; i < b_size; i++) {
-          if (buf[i] == 0) {
-              break;
-          }
-          if (buf[i] == ',') {
-              found++;
-          }
-          if (found > 0 && buf[i] != ',' && buf[i] != ' ') {
-              callsign[pos] = buf[i];
-              pos++;
-          }
-          if (found == 2 || pos >= 10) {
-              break;
-          }
-        }
-    }
+    char callsign[10] = {0x00};
 
-    if (pos == 0) {
+    if (get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) == 0) {
         strncpy(callsign, "UNKNOWNID", 10);
     }
 
@@ -902,8 +932,10 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
 
     md380_menu_id = md380_menu_id - 1;
     md380_menu_depth = md380_menu_depth - 1;
-    
-    set_radio_name();
+
+    if (global_addl_config.userscsv == 1) {
+        set_radio_name();
+    }
 
 #ifdef CONFIG_MENU
     md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
@@ -1003,7 +1035,7 @@ void create_menu_entry_addl_functions_screen(void)
 //#endif
 
     mn_submenu_add_98(wt_rbeep, create_menu_entry_rbeep_screen);
-    mn_submenu_add_98(wt_bootscr, create_menu_entry_bootscr_screen);
+    mn_submenu_add(wt_bootopts, create_menu_entry_bootopts_screen);
     mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
     mn_submenu_add_98(wt_userscsv, create_menu_entry_userscsv_screen);
     mn_submenu_add_98(wt_debug, create_menu_entry_debug_screen);
