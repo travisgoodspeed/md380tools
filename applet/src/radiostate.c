@@ -259,12 +259,14 @@ void rst_conf_data_packet(void *data, int len)
 
 void rst_data_block(void *data, int len)
 {
+#if 0
     PRINT("data: ");
     PRINTHEX(data,len);
     PRINT("\n");    
     PRINT("data: ");
     PRINTASC(data,len);
     PRINT("\n");  
+#endif
     
     if( blocks_outstanding < 1 ) {
         PRINT("spurious data block?\n");
@@ -290,6 +292,7 @@ void rst_data_block(void *data, int len)
     }
     
     if( blocks_outstanding == 0 ) {
+        // packet complete
         int idx = dataidx - pad_octets ;
         PRINT("buffer: ");
         PRINTHEX(databuffer,idx);
