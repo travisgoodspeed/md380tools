@@ -7,8 +7,9 @@
 
 #include <stdint.h>
 
-#define FLASH_OFFSET_DMRID 0x2084
-#define FLASH_OFFSET_RNAME 0x20B0
+#define FLASH_OFFSET_DMRID           0x2084
+#define FLASH_OFFSET_RNAME           0x20B0
+#define FLASH_OFFSET_BOOT_BOTTONLINE 0x2054
 
 // Obvious note to newbies... these live in SPI...
 // This means they should never be reordered 

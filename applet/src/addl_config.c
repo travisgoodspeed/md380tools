@@ -15,6 +15,7 @@
 #include "addl_config.h"
 #include "radio_config.h"
 #include "syslog.h"
+#include "usersdb.h"
 
 addl_config_t global_addl_config;
 
@@ -31,11 +32,10 @@ void cfg_fix_dmrid()
 
 void cfg_fix_radioname()
 {
-    char *rname = global_addl_config.rname;
-    if( rname[0] != 0x00 ) {
-        md380_spiflash_write(&rname, FLASH_OFFSET_RNAME, 32);
+    if( global_addl_config.rname[0] != 0x00 ) {
+        md380_spiflash_write((wchar_t *)&global_addl_config.rname[0], FLASH_OFFSET_RNAME, 32);
         for (uint8_t ii = 0; ii < 32; ii++) {
-            md380_radio_config.radioname[ii] = rname[ii];
+            md380_radio_config.radioname[ii] = global_addl_config.rname[ii];
         }
     }
 }
@@ -108,10 +108,10 @@ void cfg_load()
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
 
-#if defined(FW_D13_020)    
+#if defined(FW_D13_020)
 #else
     global_addl_config.netmon = 0 ;
-#endif    
+#endif
 }
 
 void cfg_save()
@@ -122,7 +122,7 @@ void cfg_save()
     global_addl_config.crc = calc_crc(&global_addl_config,sizeof(addl_config_t));
     
     cfg_write_struct( &global_addl_config );
-}   
+}
 
 void cfg_set_radio_name()
 {
@@ -131,26 +131,13 @@ void cfg_set_radio_name()
     if (get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) == 0) {
         strncpy(callsign, "UNKNOWNID", 10);
     }
-
-    for (uint8_t ii = 0 ; ii < 20; ii++) {
-        toplinetext[ii] = 0x00;
-        if (ii%2 == 0) {
-            toplinetext[ii] = callsign[ii/2];
-        }
-    }
-
     for (uint8_t ii = 0 ; ii < 32; ii++) {
-        if (ii%2 == 0 && ii < 20) {
-            md380_radio_config.radioname[ii] = callsign[ii/2];
-            global_addl_config.rname[ii] = callsign[ii/2];
-        } else {
-            md380_radio_config.radioname[ii] = 0x00;
-            global_addl_config.rname[ii] = 0x00;
-        }
+        global_addl_config.rname[ii] = 0x00;
     }
+    wide_sprintf((wchar_t *)&global_addl_config.rname[0], "%s", callsign);
 
     cfg_save();
-    md380_spiflash_write(&md380_radio_config.radioname, FLASH_OFFSET_RNAME, 4);
+    cfg_fix_radioname();
 }
 
 void init_global_addl_config_hook(void)

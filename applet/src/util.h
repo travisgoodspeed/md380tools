@@ -10,10 +10,11 @@
 extern "C" {
 #endif
 
-#include <stddef.h>    
-    
+#include <stddef.h>
+
 void mkascii( char *dst, int dstlen, wchar_t *src );
 
+uint32_t uli2w(uint32_t num, wchar_t *bf);
 
 #ifdef __cplusplus
 }
