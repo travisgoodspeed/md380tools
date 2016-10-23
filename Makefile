@@ -55,7 +55,8 @@ flash_s13.020:
 	"${MAKE}" -C applet FW=S13_020 clean flash
 	
 data:
-	"${MAKE}" -C db 
+	"${MAKE}" -C db
+	if [ -e db/custom.csv ]; then cat db/custom.csv >> db/users.csv; sort -n -t , -k 1 db/users.csv > db/sorted.csv; mv db/sorted.csv db/users.csv; fi
 	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
 	wc -c < data.csv > data
 	cat data.csv >> data
