@@ -124,6 +124,35 @@ void cfg_save()
     cfg_write_struct( &global_addl_config );
 }   
 
+void cfg_set_radio_name()
+{
+    char callsign[10] = {0x00};
+
+    if (get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) == 0) {
+        strncpy(callsign, "UNKNOWNID", 10);
+    }
+
+    for (uint8_t ii = 0 ; ii < 20; ii++) {
+        toplinetext[ii] = 0x00;
+        if (ii%2 == 0) {
+            toplinetext[ii] = callsign[ii/2];
+        }
+    }
+
+    for (uint8_t ii = 0 ; ii < 32; ii++) {
+        if (ii%2 == 0 && ii < 20) {
+            md380_radio_config.radioname[ii] = callsign[ii/2];
+            global_addl_config.rname[ii] = callsign[ii/2];
+        } else {
+            md380_radio_config.radioname[ii] = 0x00;
+            global_addl_config.rname[ii] = 0x00;
+        }
+    }
+
+    cfg_save();
+    md380_spiflash_write(&md380_radio_config.radioname, FLASH_OFFSET_RNAME, 4);
+}
+
 void init_global_addl_config_hook(void)
 {
     LOGB("booting\n");
