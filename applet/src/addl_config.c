@@ -33,7 +33,7 @@ void cfg_fix_dmrid()
 void cfg_fix_radioname()
 {
     if( global_addl_config.rname[0] != 0x00 ) {
-        md380_spiflash_write((wchar_t *)&global_addl_config.rname[0], FLASH_OFFSET_RNAME, 32);
+        md380_spiflash_write(&global_addl_config.rname[0], FLASH_OFFSET_RNAME, 32);
         for (uint8_t ii = 0; ii < 32; ii++) {
             md380_radio_config.radioname[ii] = global_addl_config.rname[ii];
         }
