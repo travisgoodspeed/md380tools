@@ -26,6 +26,11 @@ int rst_hdr_dst ;
 
 // TODO locking. because 1 writer locking no prio. readers only visualize.
 
+inline int is_tracing()
+{
+    return (global_addl_config.debug != 0) || (global_addl_config.netmon != 0) ;
+}
+
 void rst_voice_lc_header(lc_t *lc)
 {
 //    #define BSIZE 100
