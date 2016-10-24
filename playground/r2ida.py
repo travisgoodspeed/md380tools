@@ -15,8 +15,9 @@ static main(void)
 {
 """
 ida_end_boilerplate = "}"
-
+marks = 0
 def parse_line(line):
+    global marks
     toks = line.split()
     if len(toks) == 0: # blank lines
         return ''
@@ -27,6 +28,11 @@ def parse_line(line):
     if toks[0] == 'af+': # define func with start and length
         s = "MakeName (" + toks[1] + ',' + json.dumps(' '.join(toks[3:]).replace('/', '_').replace('-', '_')) + ');'
         s += "\nMakeFunction (" + toks[1] + ',' + "0x{0:x}".format(int(toks[1],16)+int(toks[2])) + ");"
+        return s
+    if toks[0] == 'f':
+        s = 'MakeComm(' + toks[3] + ',"' + toks[1] + '");' #add it as a comment, and also as a bookmark
+        s += '\nMarkPosition(' + toks[3] + ',0,0,0,' + str(marks) + ',"' + toks[1] + '");'
+        marks +=1 # we need an index for idc marks
         return s
     else: # f and fC are UNHANDLED and appear in script
         print("Unhandled command: {}".format(toks[0]), file=sys.stderr)
