@@ -21,6 +21,7 @@
 #include "gfx.h"
 #include "display.h"
 #include "usersdb.h"
+#include "util.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 
@@ -141,16 +142,8 @@ void demo(void) {
 
 void boot_splash_set_bottomline_dmrid(void) {
   // Set the bottom line to the config's dmr id
-  char dmridstr[10] = {0x00};
-  sprintf(dmridstr, "%u\0", (uint32_t)global_addl_config.dmrid);
-  // We need to pad for wchar, someone will probably rip out their eyeballs reading this
-  //mbstowcs(&botlinetext, dmridstr, 10);
-  for (uint8_t ii = 0; ii < 20; ii++) {
-    botlinetext[ii] = 0x00;
-    if (ii%2 == 0) {
-        botlinetext[ii] = dmridstr[ii/2];
-    }
-  }
+  for (uint8_t ii = 0 ; ii < 20; ii++) { botlinetext[ii] = 0x00; }
+  uli2w((uint32_t)global_addl_config.dmrid, (wchar_t *)&botlinetext[0]);
 }
 
 void boot_splash_set_topline_radioname(void) {
@@ -162,12 +155,8 @@ void boot_splash_set_topline_radioname(void) {
 void boot_splash_set_bottomline_fullname(void) {
   char fullname[10] = {0x00};
   if ( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
-    for (uint8_t ii = 0 ; ii < 20; ii++) {
-      botlinetext[ii] = 0x00;
-      if (ii%2 == 0) {
-          botlinetext[ii] = fullname[ii/2];
-      }
-    }
+    for (uint8_t ii = 0 ; ii < 20; ii++) { botlinetext[ii] = 0x00; }
+    wide_sprintf((wchar_t *)&botlinetext[0], fullname, 10);
   }
 }
 
@@ -183,7 +172,7 @@ void boot_splash(void) {
       boot_splash_set_bottomline_fullname();
       break;
     default:
-      md380_spiflash_read(botlinetext, 0x2054, 20);
+      md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
       break;
   }
 }

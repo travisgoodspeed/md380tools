@@ -22,6 +22,7 @@
 #include "addl_config.h"
 #include "radio_config.h"
 #include "usersdb.h"
+#include "util.h"
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -916,25 +917,6 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
 #ifdef CONFIG_MENU
     md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
 #endif
-}
-
-uint32_t uli2w(uint32_t num, wchar_t *bf)
-{
-    int n = 0;
-    unsigned int d = 1;
-    while (num / d >= 10)
-        d *= 10;
-    while (d != 0) {
-        int dgt = num / d;
-        num %= d;
-        d /= 10;
-        if( n || dgt > 0 || d == 0 ) {
-            *bf++ = dgt + '0';
-            ++n;
-        }
-    }
-    *bf = 0;
-    return (n); // number of char
 }
 
 void create_menu_entry_edit_dmr_id_screen(void)
