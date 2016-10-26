@@ -666,16 +666,6 @@ void create_menu_entry_userscsv_screen(void)
     mn_submenu_add(wt_disable, create_menu_entry_userscsv_disable_screen);
 
     mn_submenu_finalize();
-    
-//  } else {
-//    menu_mem = (md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU);
-//    menu_mem->menu_title = wt_userscsv;
-//    menu_mem->unknownp = 0x14 * md380_menu_id + md380_menu_mem_base;
-//    menu_mem->numberof_menu_entries=1;
-//    menu_mem->unknown_00 = 0;
-//    menu_mem->unknown_01 = 0;
-//    create_menu_entry_hook( md380_menu_id, wt_no_w25q128, md380_menu_entry_back+1, md380_menu_entry_back+1, 6, 2 , 1);
-//  }
 }
 
 void create_menu_entry_debug_screen(void)
@@ -693,34 +683,6 @@ void create_menu_entry_debug_screen(void)
 
     mn_submenu_finalize();
 }
-
-//void create_menu_entry_netmon1_screen(void)
-//{
-//    mn_create_single_timed_ack(wt_netmon,wt_netmon_1);
-//    
-//    global_addl_config.console = 1;
-//
-//    cfg_save();
-//}
-//
-//
-//void create_menu_entry_netmon2_screen(void)
-//{
-//    mn_create_single_timed_ack(wt_netmon,wt_netmon_2);
-//    
-//    global_addl_config.console = 2;
-//
-//    cfg_save();
-//}
-//
-//void create_menu_entry_netmon3_screen(void)
-//{
-//    mn_create_single_timed_ack(wt_netmon,wt_netmon_3);
-//    
-//    global_addl_config.console = 3;
-//
-//    cfg_save();
-//}
 
 void create_menu_entry_netmon_disable_screen(void)
 {
