@@ -4,17 +4,19 @@ von Travis Goodspeed, KK4VCZ
 
 
 ##Vorwort
-Diese Seite versucht die experimentelle Firmware für das Tytera MD-380/Retevis RT-3 zu dokumentieren, die Features zu erläutern und die Installation zu erklären.
+Diese Seite versucht die experimentelle Firmware für das Tytera MD-380/MD-390/G/Retevis RT-3/RT-8 zu dokumentieren, die Features zu erläutern und die Installation zu erklären.
 
-Übersetzung durch Kim - DG9VH
+Übersetzung durch Kim - DG9VH - Ergänzungen: DL2MF / 20161025
 
 ###Unterstützte Geräte
-Die experimentelle Firmware unterstütz die folgenden Geräte:
+Die experimentelle Firmware unterstützt die folgenden Geräte:
 
     Tytera/TYT MD380 (old vocoder)
     Tytera/TYT MD380 (new vocoder)
     Tytera/TYT MD390 (new vocoder, no gps)
+    Tytera/TYT MD390/G (new vocoder / GPS) - derzeit noch ohne NetMonitor!
     Retevis RT3
+    Retevis RT8 (new vocoder / GPS) - derzeit noch ohne NetMonitor!
 
 ##Installation
 Nachfolgende Schritte beziehen sich ausschließlich auf die Vorgehensweise unter Linux. Auf anderen Betriebssystemen kann entsprechend eine andere Vorgehensweise notwendig werden.
@@ -35,7 +37,7 @@ Debian Stretch:
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi \
             libnewlib-arm-none-eabi libusb-1.0 python-usb
 
-Debian Jessie:
+Debian Jessie / Ubuntu 16.04 LTS:
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git \
                     libnewlib-arm-none-eabi make curl python-pip unzip
@@ -59,8 +61,12 @@ Um die Firmware zu übersetzen, führt man im obersten Verzeichnis des geklonten
 
 aus.
 
-Möchte man nach der Übersetzung gleich die neue Firmware in das Funkgerät flashen, so schaltet man das Funkgerät mit gedrückter PTT-Taste und der oberen Funktionstaste in den Flash-Modus, schließt es mit dem Programmierkabel am Computer an und ruft den Befehl
- `make flash`
+Möchte man nach der Übersetzung gleich die neue Firmware in das Funkgerät flashen, so bringt man das Funkgerät zunächst in den Flashmodus (Einschalten mit gedrückter PTT-Taste und der oberen Funktionstaste), schließt es mit dem USB-Programmierkabel an den Computer an und führt einen der folgenden Befehle aus:
+ `make flash`         
+ `make flash_d02.032` - für das MD-380 (flashen der älteren Firmware-Version)
+ 
+ `make flash_d13.020` - für das MD-380  
+ `make flash_s13.020` - für das MD-390/G
 auf.
 
 <note tip>**Firmware mit dem Tytera Updater einspielen:**
@@ -116,8 +122,8 @@ Im Anschluss wird die Nutzerdatenbank aus dem Internet heruntergeladen, entsprec
 ###Freischaltung des Empfangs aller Talkgroups und Private Calls
 Die Firmware bietet seit Anfang an die Möglichkeit, sämtliche Talkgroups eines Repeaters, also nicht nur diejenigen, die in einer RX-Grouplist aufgeführt werden, sowie alle Private Calls, egal an welche ID, zu empfangen. Diese Funktion bietet die Möglichkeit, neben der Orientierung auf fremden Repeatern auch einen Bug der original Firmware ein wenig zu umgehen: Das Ignorieren des Admit Kriteriums. Durch die Tatsache, dass nun jede Talkgroup gehört werden kann, können Kollisionen mit anderen Signalen händisch vermieden werden.
 
-###Verbesserter Zeichensatz
-Ebenfalls wurde der verwendete Zeichensatz der originalen Firmware durch einen wesentlich besser lesbaren Zeichensatz ersetzt. Hierdurch erfährt das recht billig wirkende Gerät einen echten Akzeptanz-Schub (durch die Optik der Darstellung).
+###Verbesserte Anzeigeschriftart
+Die Anzeigeschriftart in der Firmware verwendet eine serifenlose Schrift, diese verbessert die Lesbarkeit und ersetzt die für chinesische Geräte typische Serifenschriftart der originalen Firmware. Hierdurch erfährt das im Originalzustand etwas billig wirkende Gerät einen weiteren Akzeptanz-Schub (durch die Optik der Darstellung).
 
 ###Einbindung eines eigenen Einschaltlogos
 Um ein eigenes Einschaltlogo (Welcome-Screen) zu aktivieren, muss man zunächst auf einem Linux-Rechner das Repository clonen. Ist dies geschehen, beginnt zunächst der kreative Part: Man öffnet ein Bildbearbeitungsprogramm, welches Grafiken im PPM-Format speichern kann - zum Beispiel (https://www.gimp.org) Gimp. Mit diesem Programm erzeugt man sich eine Grafik im 16-Farben-Modus und der Auflösung 160x40 Pixel. Hier kann man sich uns seiner Kreativität dann freien Lauf lassen.
@@ -198,6 +204,7 @@ Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Mo
 Mic bargraph | Aktiviert die Modulations-Aussteuerungs-Anzeige
 Edit DMR-ID | Ändern der DMR-ID des Funkgerätes
 Experimental | Dieses Einstellung aktiviert experimentelle Funktionen welche nicht unbedingt funktionieren müssen. Zur Sicherheit ist diese Einstellung nicht Rebootfest.
+DevOnly!! / NetMon | Dieses Feature bietet 3 zusätzliche Monitor-Anzeigen, mit denen wie über die USB-Schnittstelle Paketdaten der Verbindung im Rohdatenformat dargestellt werden können (Anzeige im Empfangsmodus mit 8 / 9 / # - Deaktivierung mit 7). Derzeit nur für das MD-380, da die Daten beim MD-390/G an anderen Speicheradressen zu finden sind.
 
 ###Aktivierung der User-Datenbank
 **Wichtiger Hinweis:** Diese Funktion sollte nur auf Funkgeräten mit 16 MB SPI-Flashspeicher (nach aktuellen Erkenntnissen in der Regel UHF-Geräte) ausgeführt werden, da auf 1 MB-Geräten (in der Regel VHF-Geräte) der Codeplug bei älteren Versionen des Quellcodes (vor dem 28.04.2016) überschrieben wird und ggf. das Funkgerät hierdurch zunächst nicht mehr nutzbar wird.</note>
@@ -241,7 +248,7 @@ Nach dem Flash-Vorgang muss im Menü des Funkgerätes die Userdatenbank wie unte
 ## Support
 Es wurde eine neue Google-Group ins Leben gerufen, die die Tools
 supporten soll. Ebenso werden Fragen zur experimentellen / gepatchten 
-Firmware für Tytera MD-380 / Retevis-RT-3 und kompatible Geräte beantwortet.
+Firmware für Tytera MD-380 / MD-390 / Retevis-RT-3, RT-8 und kompatible Geräte beantwortet.
 
 Zögert also nicht, eure Fragen dort zu stellen bzw. eure Probleme zu 
 schildern.
