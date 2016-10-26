@@ -27,7 +27,7 @@ matrix:
 before_install:
   - "if [ ${TRAVIS_OS_NAME:-'linux'} = 'osx' ]; then brew tap px4/px4; brew update; fi"
   - "if [ ${TRAVIS_OS_NAME:-'linux'} = 'osx' ]; then brew install gcc-arm-none-eabi; fi"  
-  - "if [ ${TRAVIS_OS_NAME:-'linux'} = 'osx' ]; then sudo ln -s /usr/bin/python /usr/bin/python2; fi"
+#  - "if [ ${TRAVIS_OS_NAME:-'linux'} = 'osx' ]; then sudo ln -s /usr/bin/python /usr/bin/python2; fi"
 
 script:
 # Please don't change anything here. Instead, add any extra build commands to ci-script.sh
