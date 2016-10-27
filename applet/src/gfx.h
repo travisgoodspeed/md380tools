@@ -3,14 +3,15 @@
 */
 
 //! Draws wide text at an address by calling back to the MD380 function.
-void drawtext(wchar_t *text,
-	      int x, int y);
-//! Draws ASCII on the screen.
-void drawascii(char *ascii,
-	       int x, int y);
+void drawtext(wchar_t *text, int x, int y);
 
-void drawascii2(char *ascii,
-                int x, int y);
+//! Draws ASCII on the screen.
+void drawascii(char *ascii, int x, int y);
+
+// TODO: how does this differ from drawascii?
+void drawascii2(char *ascii, int x, int y);
+
+void gfx_printf_pos(int x, int y, const char*fmt, ... );
 
 void green_led(int on);
 void red_led(int on);
@@ -107,3 +108,6 @@ extern uint32_t gfx_font_small[];
 extern uint32_t gfx_font_norm[];
 
 uint32_t gfx_get_fg_color(void);
+
+#define GFX_FONT_SMALL_HEIGHT 12 
+#define GFX_FONT_NORML_HEIGHT 16

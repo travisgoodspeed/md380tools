@@ -22,46 +22,43 @@
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
 //! Draws text at an address by calling back to the MD380 function.
-void drawtext(wchar_t *text,
-	      int x, int y){
-#ifdef CONFIG_GRAPHICS
-  gfx_drawtext(text,
-	       0,0,
-	       x,y,
-	       15); //strlen(text));
-#endif
+
+void drawtext(wchar_t *text, int x, int y)
+{
+    //#ifdef CONFIG_GRAPHICS
+    gfx_drawtext(text, 0, 0, x, y, 15); //strlen(text));
+    //#endif
 }
+
 //! Draws text at an address by calling back to the MD380 function.
-void drawascii(char *ascii,
-	       int x, int y){
-  //Widen the string.  We really ought to do proper lengths.
-  wchar_t wide[15];
-  for(int i=0;i<15;i++)
-    wide[i]=ascii[i];
 
-#ifdef CONFIG_GRAPHICS
-  //Draw the wide string, not the original.
-  gfx_drawtext(wide,
-	       0,0,
-	       x,y,
-	       15); //strlen(text));
-#endif
+void drawascii(char *ascii, int x, int y)
+{
+    //Widen the string.  We really ought to do proper lengths.
+    wchar_t wide[15];
+    for (int i = 0; i < 15; i++)
+        wide[i] = ascii[i];
+
+    //#ifdef CONFIG_GRAPHICS
+    //Draw the wide string, not the original.
+    gfx_drawtext(wide, 0, 0, x, y, 15); //strlen(text));
+    //#endif
 }
 
-void drawascii2(char *ascii,
-                int x, int y){
-  wchar_t wide[40];
+// TODO: how does this differ from drawascii?
 
-  for(int i=0;i<25;i++)
-        {
-        wide[i]=ascii[i];
-        if (ascii[i]=='\0')
-           break;
-        }
-#ifdef CONFIG_GRAPHICS
-  gfx_drawtext2(wide, x, y, 0);
-  //con_redraw();
-#endif
+void drawascii2(char *ascii, int x, int y)
+{
+    wchar_t wide[40];
+
+    for (int i = 0; i < 25; i++) {
+        wide[i] = ascii[i];
+        if( ascii[i] == '\0' )
+            break;
+    }
+    //#ifdef CONFIG_GRAPHICS
+    gfx_drawtext2(wide, x, y, 0);
+    //#endif
 }
 
 void green_led(int on) {
@@ -285,4 +282,17 @@ uint32_t gfx_get_fg_color(void)
 #else
     return gfx_info.fg_color;
 #endif
+}
+
+// the intention is a string _without_ .. if it is too long.
+void gfx_printf_pos(int x, int y, const char *fmt, ...)
+{
+    char buf[20];
+    
+    va_list va;
+    va_start(va, fmt);
+    
+    va_snprintf(buf, sizeof(buf), fmt, va );
+    drawascii2(buf,x,y);
+    va_end(va);        
 }
