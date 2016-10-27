@@ -14,7 +14,7 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 
 .PHONY: stripped.csv
-stripped.csv:	
+stripped.csv:: users.csv 
 	cat users.csv >tmp.csv
 	if [ -e db/custom.csv ]; then cat custom.csv >> tmp.csv; fi
 	$(ICONV) tmp.csv | sort | awk -F, -f strip.awk >stripped.csv
