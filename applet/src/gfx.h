@@ -107,3 +107,6 @@ extern uint32_t gfx_font_small[];
 extern uint32_t gfx_font_norm[];
 
 uint32_t gfx_get_fg_color(void);
+
+#define GFX_FONT_SMALL_HEIGHT 12 
+#define GFX_FONT_NORML_HEIGHT 16
