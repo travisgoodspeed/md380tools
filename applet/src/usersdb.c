@@ -117,8 +117,7 @@ static int find_dmr(char *outstr, long dmr_search,
     return 0;
 }
 
-int find_dmr_user(char *outstr, int dmr_search,
-                  const char *data, int outsize)
+int find_dmr_user(char *outstr, int dmr_search, const char *data, int outsize)
 {
     const long datasize = getfirstnumber(data);
 
@@ -155,4 +154,63 @@ uint8_t get_dmr_user_field(uint8_t field, char *outstr, int dmr_search, int outs
         }
     }
     return pos;
+}
+
+void usr_splitbuffer(user_t *up)
+{
+    char *cp = up->buffer ;
+    char *start = up->buffer ;
+
+    for(int fld=0;fld<6;fld++) {
+
+        while(1) {
+            if( *cp == 0 ) {
+                break ;
+            }
+            if( *cp == ',' ) {
+                *cp = 0 ;
+                cp++ ;
+                break ;
+            }
+            cp++ ;
+        }
+        
+        switch(fld) {
+            case 0 :
+                up->id = start ;
+                break ;
+            case 1 :
+                up->callsign = start ;
+                break ;
+            case 2 :
+                up->name = start ;
+                break ;
+            case 3 :
+                up->place = start ;
+                break ;
+            case 4 :
+                up->state = start ;
+                break ;
+        }
+        
+        start = cp ;
+    }
+}
+
+int find_dmr_user2( user_t *up, int dmrid )
+{
+    if( !find_dmr_user(up->buffer, dmrid, (void *) 0x100000, BSIZE) ) {
+        // safeguard
+        up->buffer[0] = '?' ;
+        up->buffer[1] = 0 ;
+        usr_splitbuffer(up);
+    
+        return 0 ;
+    }
+    
+    // safeguard
+    up->buffer[BSIZE-1] = 0 ;
+    
+    usr_splitbuffer(up);
+    return 1 ;
 }
