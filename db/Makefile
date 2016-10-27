@@ -1,6 +1,6 @@
 .PHONY: all update clean
 
-update: users.csv
+#update: users.csv
 	
 all: users.csv repeaters.csv users.json repeaters.json
 
