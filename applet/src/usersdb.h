@@ -13,6 +13,7 @@ typedef struct {
     char buffer[BSIZE];
     char *id ;
     char *callsign ;
+    char *firstname ;
     char *name ;
     char *place ;
     char *state ;

@@ -161,7 +161,7 @@ void usr_splitbuffer(user_t *up)
     char *cp = up->buffer ;
     char *start = up->buffer ;
 
-    for(int fld=0;fld<6;fld++) {
+    for(int fld=0;fld<7;fld++) {
 
         while(1) {
             if( *cp == 0 ) {
@@ -190,6 +190,9 @@ void usr_splitbuffer(user_t *up)
                 break ;
             case 4 :
                 up->state = start ;
+                break ;
+            case 5 :
+                up->firstname = start ;
                 break ;
         }
         

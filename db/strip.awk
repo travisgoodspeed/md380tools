@@ -8,6 +8,6 @@ BEGIN {
     T = ","
 }
 { 
-print trim($1) T trim($2) T trim($3) T trim($5) T trim($6)
+print trim($1) T trim($2) T trim($3) T trim($5) T trim($6) T trim($4) 
 }
 
