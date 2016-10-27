@@ -64,15 +64,19 @@ flash_s13.020:
 #	wc -c < data.csv > data
 #	cat data.csv >> data
 
-.PHONY: updatedb flashdb
+.PHONY: updatedb 
 updatedb:
 	"${MAKE}" -C db update
 	
-user.bin: db/stripped.csv db/users.csv
+.PHONY: db/stripped.csv
+db/stripped.csv:
 	"${MAKE}" -C db stripped.csv
+	
+user.bin: db/stripped.csv
 	wc -c < db/stripped.csv > user.bin
 	cat db/stripped.csv >> user.bin
 	
+.PHONY: flashdb
 flashdb: user.bin
 	./md380-tool spiflashwrite user.bin 0x100000
 
