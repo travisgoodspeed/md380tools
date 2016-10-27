@@ -15,6 +15,7 @@ distclean: clean
 clean: mostlyclean
 	"${MAKE}" -C firmware clean
 	
+# mostlyclean does not cause re-download firmware
 mostlyclean:
 	"${MAKE}" -C patches/2.032 clean
 	"${MAKE}" -C patches/3.020 clean
@@ -24,6 +25,7 @@ mostlyclean:
 	"${MAKE}" -C db clean
 	rm -f *~ *.pyc
 	rm -f data data.csv	
+	-rm *.bin
 	
 
 #patches: firmwares
@@ -62,15 +64,21 @@ flash_s13.020:
 #	wc -c < data.csv > data
 #	cat data.csv >> data
 
-.PHONY: db/stripped.csv
-
-data: db/stripped.csv
-	"${MAKE}" -C db stripped.csv
-	wc -c < db/stripped.csv > data
-	cat db/stripped.csv >> data
+.PHONY: updatedb 
+updatedb:
+	"${MAKE}" -C db update
 	
-flashdb: data
-	./md380-tool spiflashwrite data 0x100000
+.PHONY: db/stripped.csv
+db/stripped.csv:
+	"${MAKE}" -C db stripped.csv
+	
+user.bin: db/stripped.csv
+	wc -c < db/stripped.csv > user.bin
+	cat db/stripped.csv >> user.bin
+	
+.PHONY: flashdb
+flashdb: user.bin
+	./md380-tool spiflashwrite user.bin 0x100000
 
 dist: 
 	rm -rf $(RELEASE) $(RELEASE).zip
@@ -108,7 +116,7 @@ all_images:
 ci: mostlyclean 
 	"${MAKE}" -C applet ci
 	"${MAKE}" -C db ci
-	"${MAKE}" data
+	"${MAKE}" user.bin
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less
