@@ -441,6 +441,11 @@ void create_menu_entry_splash_manual_screen(void)
     cfg_save();
 }
 
+int get_effective_dmrid()
+{
+    return global_addl_config.dmrid ;
+}
+
 void create_menu_entry_splash_callid_screen(void)
 {
     mn_create_single_timed_ack(wt_splash, wt_splash_callid);
@@ -450,8 +455,14 @@ void create_menu_entry_splash_callid_screen(void)
     global_addl_config.cp_override |= CPO_BL1 ;
     global_addl_config.cp_override |= CPO_BL2 ;
     
-    snprintf( global_addl_config.bootline1, 10, "rn" );
-    snprintf( global_addl_config.bootline2, 10, "%d", global_addl_config.dmrid );
+    char callsign[10] = {0};
+    if( get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) ) {
+        snprintf(global_addl_config.bootline1, 10, "%s", callsign);
+    } else {
+        snprintf(global_addl_config.bootline1, 10, "%s", "unkown");
+    }
+
+    snprintf( global_addl_config.bootline2, 10, "%d", get_effective_dmrid() );
     
     cfg_save();
 }
@@ -464,15 +475,21 @@ void create_menu_entry_splash_callname_screen(void)
 
     global_addl_config.cp_override |= CPO_BL1 ;
     global_addl_config.cp_override |= CPO_BL2 ;
-    
-    snprintf( global_addl_config.bootline1, 10, "rn" );
-    
-    char fullname[10] = { 0 };
-    if ( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
-        snprintf( global_addl_config.bootline2, 10, "%s", fullname );        
+
+    char callsign[10] = {0};
+    if( get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) ) {
+        snprintf(global_addl_config.bootline1, 10, "%s", callsign);
     } else {
-        snprintf( global_addl_config.bootline2, 10, "%s", "unkown" );                
+        snprintf(global_addl_config.bootline1, 10, "%s", "unkown");
     }
+
+    char fullname[10] = {0};
+    if( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
+        snprintf(global_addl_config.bootline2, 10, "%s", fullname);
+    } else {
+        snprintf(global_addl_config.bootline2, 10, "%s", "unkown");
+    }
+    
     cfg_save();
 }
 

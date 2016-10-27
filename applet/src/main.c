@@ -141,36 +141,18 @@ void demo(void)
     demo_clear();
 }
 
-//void boot_splash_set_bottomline_dmrid(void)
-//{
-//    // Set the bottom line to the config's dmr id
-//    for (uint8_t ii = 0; ii < 20; ii++) {
-//        botlinetext[ii] = 0x00;
-//    }
-//    uli2w((uint32_t) global_addl_config.dmrid, (wchar_t *) & botlinetext[0]);
-//}
-
 void boot_splash_set_topline(void)
 {
 //    for (uint8_t ii = 0; ii < 20; ii++) {
 //        toplinetext[ii] = global_addl_config.rname[ii];
 //    }
     if( (global_addl_config.cp_override & CPO_BL1) == CPO_BL1 ) {
-        snprintfw(botlinetext, 10, "%s", global_addl_config.bootline1);
+        snprintfw(toplinetext, 10, "%s", global_addl_config.bootline1);
     } 
 }
 
 void boot_splash_set_bottomline(void)
 {
-//    char fullname[10] = {0x00};
-//    if( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
-//        for (uint8_t ii = 0; ii < 20; ii++) {
-//            botlinetext[ii] = 0x00;
-//        }
-//        // TODO: FIX! what about a fullname = '%s' ?
-//        wide_sprintf((wchar_t *) & botlinetext[0], fullname, 10);
-//    }
-
     if( (global_addl_config.cp_override & CPO_BL2) == CPO_BL2 ) {
         snprintfw(botlinetext, 10, "%s", global_addl_config.bootline2);
     } 
