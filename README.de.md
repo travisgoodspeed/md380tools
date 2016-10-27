@@ -214,25 +214,19 @@ Zuerst wechselt man dann in das Verzeichnis ''db'' und führt dort ein
 
 und ein 
 
- `make`
+ `make update`
 
 aus, um die User-Datenbank relativ tagesaktuell zu halten (Datenquelle ist hier die DMR-MARC-DB).
 
 Im Verzeichnis ''md380tools'' führt man dann wieder den Befehl:
 
- `wc -c < db/users.csv > data ; cat db/users.csv >> data`
+  `make flashdb`
 
-und danach
+im Hauptverzeichnis des Repositories aus. 
 
- `./md380-tool spiflashwrite data 0x100000`
+Alternativ hierzu funktioniert auch ein
 
-aus, was die User-Datenbank in das im Normalbetrieb befindliche und mit dem Programmierkabel am PC angeschlossene Funkgerät flasht.
-
-Alternativ kann auch der Befehl
-
- `make flashdb`
-
-im Hauptverzeichnis des Repositories genutzt werden, der all diese Befehle komfortabel am Stück erledigt. Dies ist der empfohlene Weg.
+  `make updatedb flashdb`
 
 Besitzt man ein Gerät mit zu kleinem SPI-Flashspeicher (siehe Hinweis oben), erhält man seit dem 28.04.2016 folgende Meldung:
 > SPI Flash ID: ef 40 14
