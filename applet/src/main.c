@@ -134,22 +134,6 @@ void boot_splash_set_bottomline(void)
     } 
 }
 
-//void boot_splash(void)
-//{
-//    switch (global_addl_config.boot_splash) {
-//        case 1:
-//        case 2:
-//            boot_splash_set_topline();
-//            boot_splash_set_bottomline();
-//            break;
-//        default:
-//            // FIX: explain?
-//            //Restore the bottom line of text before we return.
-//            md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
-//            break;
-//    }
-//}
-
 void splash_hook_handler(void)
 {
     if( global_addl_config.boot_demo == 0 ) {
@@ -160,9 +144,6 @@ void splash_hook_handler(void)
     
     boot_splash_set_topline();
     boot_splash_set_bottomline();
-    
-//    // Setup dynamic bootscreen
-//    boot_splash();
 }
 
 

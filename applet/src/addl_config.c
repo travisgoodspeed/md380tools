@@ -135,7 +135,8 @@ void cfg_set_radio_name()
         global_addl_config.rname[ii] = 0x00;
     }
     // TODO: fix type in addl_config, or convert during boot.
-    wide_sprintf((wchar_t *)&global_addl_config.rname[0], "%s", callsign);
+//    wide_sprintf((wchar_t *)&global_addl_config.rname[0], "%s", callsign);
+    snprintfw((wchar_t *)&global_addl_config.rname[0], 10, "%s", callsign);
 
     cfg_save();
     cfg_fix_radioname();

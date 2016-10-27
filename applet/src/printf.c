@@ -271,15 +271,6 @@ static void wide_putch(void* p, char c)
     *(*((wchar_t**) p))++ = c;
 }
 
-void wide_sprintf(wchar_t* ws, const char* fmt, ...)
-{
-    va_list va;
-    va_start(va, fmt);
-    tfp_format(&ws, wide_putch, fmt, va);
-    wide_putch(&ws,0);
-    va_end(va);    
-}
-
 typedef struct {
     void *buffer ;
     int space ;
