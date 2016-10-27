@@ -8,16 +8,20 @@ clean:
 	rm -f users.csv repeaters.csv users.json repeaters.json special_IDs.csv	
 	-rm tmp.csv stripped.csv
 
+update:
+	-rm users.csv
+	"${MAKE}" users.csv
+	
+
 #This strips out all unicode characters.
 #We'd rather just drop the accents.
 ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
+custom.csv:
+	touch custom.csv
 
-.PHONY: stripped.csv
-stripped.csv:: users.csv 
-	cat users.csv >tmp.csv
-	if [ -e db/custom.csv ]; then cat custom.csv >> tmp.csv; fi
-	$(ICONV) tmp.csv | sort | awk -F, -f strip.awk >stripped.csv
+stripped.csv: users.csv custom.csv
+	cat users.csv custom.csv | $(ICONV)| sort | awk -F, -f strip.awk >stripped.csv
 
 users.csv:
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
