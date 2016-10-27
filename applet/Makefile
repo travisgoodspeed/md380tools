@@ -1,5 +1,5 @@
 
-#MKLISTING=1
+MKLISTING=1
 
 FW ?= D13_020
 
@@ -105,6 +105,7 @@ proj: 	$(PROJ_NAME).elf experiment.img
 #The wrapped file is the one that works with the Windows updater.
 wrapped: lib proj
 	../md380-fw --wrap experiment.img experiment.bin
+
 #This flashes from unix.
 flash: wrapped
 	../md380-dfu upgrade experiment.bin

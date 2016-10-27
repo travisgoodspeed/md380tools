@@ -45,21 +45,21 @@ void drawascii(char *ascii, int x, int y)
     //#endif
 }
 
-// TODO: how does this differ from drawascii?
-
-void drawascii2(char *ascii, int x, int y)
-{
-    wchar_t wide[40];
-
-    for (int i = 0; i < 25; i++) {
-        wide[i] = ascii[i];
-        if( ascii[i] == '\0' )
-            break;
-    }
-    //#ifdef CONFIG_GRAPHICS
-    gfx_drawtext2(wide, x, y, 0);
-    //#endif
-}
+//// TODO: how does this differ from drawascii?
+//
+//void drawascii2(char *ascii, int x, int y)
+//{
+//    wchar_t wide[40];
+//
+//    for (int i = 0; i < 25; i++) {
+//        wide[i] = ascii[i];
+//        if( ascii[i] == '\0' )
+//            break;
+//    }
+//    //#ifdef CONFIG_GRAPHICS
+//    gfx_drawtext2(wide, x, y, 0);
+//    //#endif
+//}
 
 void green_led(int on) {
   if (on) {
@@ -286,15 +286,25 @@ uint32_t gfx_get_fg_color(void)
 
 // the intention is a string _without_ .. if it is too long.
 // and that it only fills background when a char or space is printed.
+void gfx_puts_pos(int x, int y, const char *str)
+{
+    // TODO: optimize, it is not very bad, comparing this with a char to wide expansion.
+    gfx_printf_pos(x,y,"%s",str);
+}
+
+// the intention is a string _without_ .. if it is too long.
+// and that it only fills background when a char or space is printed.
 void gfx_printf_pos(int x, int y, const char *fmt, ...)
 {
-    char buf[MAX_SCR_STR_LEN];
+    wchar_t buf[MAX_SCR_STR_LEN];
     
     va_list va;
     va_start(va, fmt);
     
-    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
-    drawascii2(buf,x,y);
+//    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
+//    drawascii2(buf,x,y);
+    va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
+    gfx_drawtext2(buf, x, y, 0);
     
     va_end(va);        
 }

@@ -12,11 +12,12 @@ void drawtext(wchar_t *text, int x, int y);
 //! Draws ASCII on the screen.
 void drawascii(char *ascii, int x, int y);
 
-// TODO: how does this differ from drawascii?
-void drawascii2(char *ascii, int x, int y);
+//// TODO: how does this differ from drawascii?
+//void drawascii2(char *ascii, int x, int y);
 
-void gfx_printf_pos(int x, int y, const char*fmt, ... );
+void gfx_printf_pos(int x, int y, const char *fmt, ... );
 void gfx_printf_pos2(int x, int y, int ylen, const char*fmt, ... );
+void gfx_puts_pos(int x, int y, const char *str);
 
 void green_led(int on);
 void red_led(int on);
