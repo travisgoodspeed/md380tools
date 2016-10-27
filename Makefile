@@ -112,7 +112,7 @@ all_images:
 ci: mostlyclean 
 	"${MAKE}" -C applet ci
 	"${MAKE}" -C db ci
-	"${MAKE}" data
+	"${MAKE}" user.bin
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less
