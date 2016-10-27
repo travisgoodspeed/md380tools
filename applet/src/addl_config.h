@@ -29,7 +29,14 @@ typedef struct addl_config {
     uint8_t boot_demo;
     uint8_t boot_splash;
     char rname[32];
+    uint8_t cp_override ;
+    char bootline1[10];
+    char bootline2[10];
 } addl_config_t ;
+
+#define CPO_BL1 0x1
+#define CPO_BL2 0x2
+#define CPO_DMR 0x4
 
 extern addl_config_t global_addl_config;
 

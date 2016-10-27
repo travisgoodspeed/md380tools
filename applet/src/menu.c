@@ -9,7 +9,7 @@
 
 #include "menu.h"
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 
 #include "debug.h"
@@ -23,6 +23,7 @@
 #include "radio_config.h"
 #include "usersdb.h"
 #include "util.h"
+#include "printf.h"
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -434,6 +435,9 @@ void create_menu_entry_splash_manual_screen(void)
 
     global_addl_config.boot_splash = 0;
 
+    global_addl_config.cp_override &= ~CPO_BL1 ;
+    global_addl_config.cp_override &= ~CPO_BL2 ;
+    
     cfg_save();
 }
 
@@ -442,7 +446,13 @@ void create_menu_entry_splash_callid_screen(void)
     mn_create_single_timed_ack(wt_splash, wt_splash_callid);
 
     global_addl_config.boot_splash = 1;
-
+    
+    global_addl_config.cp_override |= CPO_BL1 ;
+    global_addl_config.cp_override |= CPO_BL2 ;
+    
+    snprintf( global_addl_config.bootline1, 10, "rn" );
+    snprintf( global_addl_config.bootline2, 10, "dmrid" );
+    
     cfg_save();
 }
 
@@ -452,6 +462,17 @@ void create_menu_entry_splash_callname_screen(void)
 
     global_addl_config.boot_splash = 2;
 
+    global_addl_config.cp_override |= CPO_BL1 ;
+    global_addl_config.cp_override |= CPO_BL2 ;
+    
+    snprintf( global_addl_config.bootline1, 10, "rn" );
+    
+    char fullname[10] = { 0 };
+    if ( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
+        snprintf( global_addl_config.bootline2, 10, "%s", fullname );        
+    } else {
+        snprintf( global_addl_config.bootline2, 10, "%s", "unkown" );                
+    }
     cfg_save();
 }
 

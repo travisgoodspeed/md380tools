@@ -7,7 +7,7 @@
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 
 #include "md380.h"
@@ -133,61 +133,73 @@ void demo_clear(void) {
   gfx_set_fg_color(oldfg);
 }
 
-void demo(void) {
-  display_credits();
-  sleep(1000);
-  demo_show_animation();
-  demo_clear();
+void demo(void)
+{
+    display_credits();
+    sleep(1000);
+    demo_show_animation();
+    demo_clear();
 }
 
-void boot_splash_set_bottomline_dmrid(void) {
-  // Set the bottom line to the config's dmr id
-  for (uint8_t ii = 0 ; ii < 20; ii++) { botlinetext[ii] = 0x00; }
-  uli2w((uint32_t)global_addl_config.dmrid, (wchar_t *)&botlinetext[0]);
+//void boot_splash_set_bottomline_dmrid(void)
+//{
+//    // Set the bottom line to the config's dmr id
+//    for (uint8_t ii = 0; ii < 20; ii++) {
+//        botlinetext[ii] = 0x00;
+//    }
+//    uli2w((uint32_t) global_addl_config.dmrid, (wchar_t *) & botlinetext[0]);
+//}
+
+void boot_splash_set_topline(void)
+{
+//    for (uint8_t ii = 0; ii < 20; ii++) {
+//        toplinetext[ii] = global_addl_config.rname[ii];
+//    }
+    if( (global_addl_config.cp_override & CPO_BL1) == CPO_BL1 ) {
+        snprintfw(botlinetext, 10, "%s", global_addl_config.bootline1);
+    } 
 }
 
-void boot_splash_set_topline_radioname(void) {
-  for (uint8_t ii = 0 ; ii < 20; ii++) {
-      toplinetext[ii] = global_addl_config.rname[ii];
-  }
+void boot_splash_set_bottomline(void)
+{
+//    char fullname[10] = {0x00};
+//    if( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
+//        for (uint8_t ii = 0; ii < 20; ii++) {
+//            botlinetext[ii] = 0x00;
+//        }
+//        // TODO: FIX! what about a fullname = '%s' ?
+//        wide_sprintf((wchar_t *) & botlinetext[0], fullname, 10);
+//    }
+
+    if( (global_addl_config.cp_override & CPO_BL2) == CPO_BL2 ) {
+        snprintfw(botlinetext, 10, "%s", global_addl_config.bootline2);
+    } 
 }
 
-void boot_splash_set_bottomline_fullname(void) {
-  char fullname[10] = {0x00};
-  if ( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
-    for (uint8_t ii = 0 ; ii < 20; ii++) { botlinetext[ii] = 0x00; }
-    // TODO: FIX! what about a fullname = '%s' ?
-    wide_sprintf((wchar_t *)&botlinetext[0], fullname, 10);
-  }
+void boot_splash(void)
+{
+    switch (global_addl_config.boot_splash) {
+        case 1:
+        case 2:
+            boot_splash_set_topline();
+            boot_splash_set_bottomline();
+            break;
+        default:
+            // FIX: explain?
+            //Restore the bottom line of text before we return.
+            md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
+            break;
+    }
 }
 
-void boot_splash(void) {
-  //Restore the bottom line of text before we return.
-  switch (global_addl_config.boot_splash) {
-    case 1:
-      boot_splash_set_topline_radioname();
-      boot_splash_set_bottomline_dmrid();
-      break;
-    case 2:
-      boot_splash_set_topline_radioname();
-      boot_splash_set_bottomline_fullname();
-      break;
-    default:
-      md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
-      break;
-  }
-}
+void splash_hook_handler(void)
+{
+    if( global_addl_config.boot_demo == 0 ) {
+        demo();
+    }
 
-
-void splash_hook_handler(void) {
-#ifdef CONFIG_GRAPHICS
-  if (global_addl_config.boot_demo == 0) {
-    demo();
-  }
-#endif //CONFIG_GRAPHICS
-
-  // Setup dynamic bootscreen
-  boot_splash();
+    // Setup dynamic bootscreen
+    boot_splash();
 }
 
 

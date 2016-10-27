@@ -230,7 +230,7 @@ void draw_rx_screen(unsigned int bg_color)
 }
 
 /*
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 
 int main(void)

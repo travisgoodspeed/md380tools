@@ -351,10 +351,22 @@ void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
 //    wide_putch(&buf, 0);    
 //}
 
-void snprintfw(wchar_t* buf, int sz, const char* fmt, ...)
+int snprintfw(wchar_t* buf, int sz, const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
     va_snprintfw(buf, sz, fmt, va );    
-    va_end(va);        
+    va_end(va);      
+    
+    return 0 ; // TODO if we want to be compatible.
+}
+
+int snprintf(char* buf, int sz, const char* fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    va_snprintf(buf, sz, fmt, va );    
+    va_end(va);      
+    
+    return 0 ; // TODO if we want to be compatible.
 }
