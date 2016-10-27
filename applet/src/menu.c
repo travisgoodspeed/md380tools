@@ -451,7 +451,7 @@ void create_menu_entry_splash_callid_screen(void)
     global_addl_config.cp_override |= CPO_BL2 ;
     
     snprintf( global_addl_config.bootline1, 10, "rn" );
-    snprintf( global_addl_config.bootline2, 10, "dmrid" );
+    snprintf( global_addl_config.bootline2, 10, "%d", global_addl_config.dmrid );
     
     cfg_save();
 }
