@@ -26,8 +26,8 @@ typedef struct addl_config {
     uint8_t netmon;
     uint8_t rbeep;
     uint32_t dmrid;
-    uint8_t boot_demo;
-    uint8_t boot_splash;
+    uint8_t boot_demo; 
+    uint8_t boot_splash; // unused
     char rname[32];
     uint8_t cp_override ;
     char bootline1[10];

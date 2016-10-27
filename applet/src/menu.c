@@ -9,7 +9,6 @@
 
 #include "menu.h"
 
-//#include <stdio.h>
 #include <string.h>
 
 #include "debug.h"
@@ -39,9 +38,6 @@ const static wchar_t wt_demoscr[]           = L"Demo Screen";
 const static wchar_t wt_demoscr_enable[]    = L"Enable";
 const static wchar_t wt_demoscr_disable[]   = L"Disable";
 const static wchar_t wt_splash[]            = L"Splash Mode";
-const static wchar_t wt_splash_manual[]     = L"Manual";
-const static wchar_t wt_splash_callid[]     = L"Callsign+DMRID";
-const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 const static wchar_t wt_userscsv[]          = L"UsersCSV";
 const static wchar_t wt_datef_original[]    = L"YYYY/MM/DD";
@@ -61,6 +57,10 @@ const static wchar_t wt_backlight[]         = L"Backlight";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
+const static wchar_t wt_cp_override[]       = L"CoPl overide";
+const static wchar_t wt_splash_manual[]     = L"Disabled";
+const static wchar_t wt_splash_callid[]     = L"Callsign+DMRID";
+const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 struct MENU {
   const wchar_t  *menu_title; // [0]
@@ -431,9 +431,9 @@ void create_menu_entry_demo_screen(void)
 
 void create_menu_entry_splash_manual_screen(void)
 {
-    mn_create_single_timed_ack(wt_splash, wt_splash_manual);
+    mn_create_single_timed_ack(wt_cp_override, wt_splash_manual);
 
-    global_addl_config.boot_splash = 0;
+    //global_addl_config.boot_splash = 0;
 
     global_addl_config.cp_override &= ~CPO_BL1 ;
     global_addl_config.cp_override &= ~CPO_BL2 ;
@@ -448,9 +448,9 @@ uint32_t get_effective_dmrid()
 
 void create_menu_entry_splash_callid_screen(void)
 {
-    mn_create_single_timed_ack(wt_splash, wt_splash_callid);
+    mn_create_single_timed_ack(wt_cp_override, wt_splash_callid);
 
-    global_addl_config.boot_splash = 1;
+    //global_addl_config.boot_splash = 1;
     
     global_addl_config.cp_override |= CPO_BL1 ;
     global_addl_config.cp_override |= CPO_BL2 ;
@@ -472,9 +472,9 @@ void create_menu_entry_splash_callid_screen(void)
 
 void create_menu_entry_splash_callname_screen(void)
 {
-    mn_create_single_timed_ack(wt_splash, wt_splash_callname);
+    mn_create_single_timed_ack(wt_cp_override, wt_splash_callname);
 
-    global_addl_config.boot_splash = 2;
+    //global_addl_config.boot_splash = 2;
 
     global_addl_config.cp_override |= CPO_BL1 ;
     global_addl_config.cp_override |= CPO_BL2 ;
@@ -498,16 +498,23 @@ void create_menu_entry_splash_callname_screen(void)
     cfg_save();
 }
 
-void create_menu_entry_splash_screen(void)
+//void create_menu_entry_splash_screen(void)
+//{
+//    mn_submenu_init(wt_splash);
+//
+////    if (global_addl_config.userscsv == 0) {
+////        md380_menu_entry_selected = 0;
+////    } else {
+////        md380_menu_entry_selected = global_addl_config.boot_splash;
+////    }
+//
+//    mn_submenu_finalize();
+//}
+
+void mn_cp_override(void)
 {
-    mn_submenu_init(wt_splash);
-
-    if (global_addl_config.userscsv == 0) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = global_addl_config.boot_splash;
-    }
-
+    mn_submenu_init(wt_cp_override);
+    
     mn_submenu_add(wt_splash_manual, create_menu_entry_splash_manual_screen);
     if (global_addl_config.userscsv == 1) {
         mn_submenu_add(wt_splash_callid, create_menu_entry_splash_callid_screen);
@@ -522,7 +529,7 @@ void create_menu_entry_bootopts_screen(void)
     mn_submenu_init(wt_bootopts);
 
     mn_submenu_add_98(wt_demoscr, create_menu_entry_demo_screen);
-    mn_submenu_add_98(wt_splash, create_menu_entry_splash_screen);
+//    mn_submenu_add_98(wt_splash, create_menu_entry_splash_screen);
 
     mn_submenu_finalize2();
 }
@@ -996,8 +1003,9 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
-    mn_submenu_add(wt_backlight, mn_backlight);
     
+    mn_submenu_add_98(wt_backlight, mn_backlight);
+    mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
     mn_submenu_finalize2();

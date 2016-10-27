@@ -266,10 +266,10 @@ void tfp_sprintf(char* s, char *fmt, ...)
 }
 
 
-static void wide_putch(void* p, char c)
-{
-    *(*((wchar_t**) p))++ = c;
-}
+//static void wide_putch(void* p, char c)
+//{
+//    *(*((wchar_t**) p))++ = c;
+//}
 
 typedef struct {
     void *buffer ;
