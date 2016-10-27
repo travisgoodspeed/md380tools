@@ -2,6 +2,10 @@
   \brief Graphics function wrappers.
 */
 
+// xlen: if curpos > xlen print ".." instead.
+void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen); // firmware
+
+
 //! Draws wide text at an address by calling back to the MD380 function.
 void drawtext(wchar_t *text, int x, int y);
 
@@ -12,6 +16,7 @@ void drawascii(char *ascii, int x, int y);
 void drawascii2(char *ascii, int x, int y);
 
 void gfx_printf_pos(int x, int y, const char*fmt, ... );
+void gfx_printf_pos2(int x, int y, int ylen, const char*fmt, ... );
 
 void green_led(int on);
 void red_led(int on);

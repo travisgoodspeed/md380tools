@@ -190,6 +190,7 @@ void draw_rx_screen(unsigned int bg_color)
     
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
         usr.callsign = "ID not found" ;
+        usr.firstname = "" ;
         usr.name = "in users.csv" ;
         usr.place = "see README.md" ;
         usr.state = "on Github" ;
@@ -198,14 +199,12 @@ void draw_rx_screen(unsigned int bg_color)
     int y_index = RX_POPUP_Y_START;
     
     gfx_select_font(gfx_font_small);
-//    char buf[50];
-//    sprintf(buf, "%d -> %d", src, dst); // overwrite DMR id with source -> destination
-//    drawascii2(buf, RX_POPUP_X_START, y_index);
     gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
     y_index += GFX_FONT_SMALL_HEIGHT ;
 
     gfx_select_font(gfx_font_norm);
-    drawascii2(usr.callsign, RX_POPUP_X_START, y_index);
+    //drawascii2(usr.callsign, RX_POPUP_X_START, y_index);
+    gfx_printf_pos(RX_POPUP_X_START, y_index, "%s, %s", usr.callsign, usr.firstname );
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
     gfx_select_font(gfx_font_small);
@@ -216,6 +215,9 @@ void draw_rx_screen(unsigned int bg_color)
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
     drawascii2(usr.state, RX_POPUP_X_START, y_index);
+    y_index += GFX_FONT_SMALL_HEIGHT ;
+    
+    drawascii2(usr.country, RX_POPUP_X_START, y_index);
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
     gfx_select_font(gfx_font_norm);
@@ -272,16 +274,12 @@ void draw_alt_statusline()
         }
     }
 //    wide_sprintf(buf,"d:%d %c %d", g_dst, mode, cnt );
-    wide_sprintf(buf,"d:%d %c", rst_dst, mode );
+//    wide_sprintf(buf,"d:%d %c", rst_dst, mode );
 //    wide_sprintf(buf,"d:%d %c %d:%d:%d", rst_dst, mode, rst_hdr_src, rst_hdr_dst, rst_hdr_sap );
-//    gfx_chars_to_display(buf,10,96,94);
-    gfx_chars_to_display(buf,10,96,157);
+//    gfx_chars_to_display(buf,10,96,157);
 
-//    wide_sprintf(buf,"" );
-//    wide_sprintf(buf,"%d", md380_f_4225_operatingmode & 0x7F );
-//    wide_sprintf(buf,"%d", cnt );    
-//    gfx_chars_to_display(buf,95,96,157);
-
+    gfx_printf_pos(10,96, "d:%d %c", rst_dst, mode );
+    
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff000000);
     gfx_select_font(gfx_font_norm);

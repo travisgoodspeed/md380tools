@@ -13,9 +13,11 @@ typedef struct {
     char buffer[BSIZE];
     char *id ;
     char *callsign ;
+    char *firstname ;
     char *name ;
     char *place ;
     char *state ;
+    char *country ;
 } user_t ;
 
 int usr_find_by_dmrid( user_t *up, int dmrid );

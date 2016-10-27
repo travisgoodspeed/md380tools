@@ -285,6 +285,7 @@ uint32_t gfx_get_fg_color(void)
 }
 
 // the intention is a string _without_ .. if it is too long.
+// and that it only fills background when a char or space is printed.
 void gfx_printf_pos(int x, int y, const char *fmt, ...)
 {
     char buf[20];
@@ -296,3 +297,19 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
     drawascii2(buf,x,y);
     va_end(va);        
 }
+
+// the intention is a string shortened with .. if it is too long.
+// and that it fills all background
+void gfx_printf_pos2(int x, int y, int ylen, const char *fmt, ...)
+{
+    char buf[20];
+    
+    va_list va;
+    va_start(va, fmt);
+
+//TODO    
+//    va_snprintf(buf, sizeof(buf), fmt, va );
+//    drawascii2(buf,x,y);
+    va_end(va);        
+}
+
