@@ -256,16 +256,14 @@ static void putcp(void* p, char c)
     *(*((char**) p))++ = c;
 }
 
-
-
-void tfp_sprintf(char* s,char *fmt, ...)
-	{
-	va_list va;
-	va_start(va,fmt);
-	tfp_format(&s,putcp,fmt,va);
-	putcp(&s,0);
-	va_end(va);
-	}
+void tfp_sprintf(char* s, char *fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    tfp_format(&s, putcp, fmt, va);
+    putcp(&s, 0);
+    va_end(va);
+}
 
 
 static void wide_putch(void* p, char c)
@@ -282,3 +280,9 @@ void wide_sprintf(wchar_t* ws, const char* fmt, ...)
     va_end(va);    
 }
 
+void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
+{
+    // TODO: handle size!!!!
+    tfp_format(&buf, putcp, fmt, va);
+    putcp(&buf, 0);    
+}

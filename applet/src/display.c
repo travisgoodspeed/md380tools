@@ -198,9 +198,10 @@ void draw_rx_screen(unsigned int bg_color)
     int y_index = RX_POPUP_Y_START;
     
     gfx_select_font(gfx_font_small);
-    char buf[50];
-    sprintf(buf, "%d -> %d", src, dst); // overwrite DMR id with source -> destination
-    drawascii2(buf, RX_POPUP_X_START, y_index);
+//    char buf[50];
+//    sprintf(buf, "%d -> %d", src, dst); // overwrite DMR id with source -> destination
+//    drawascii2(buf, RX_POPUP_X_START, y_index);
+    gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
     y_index += GFX_FONT_SMALL_HEIGHT ;
 
     gfx_select_font(gfx_font_norm);
