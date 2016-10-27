@@ -93,7 +93,7 @@ void cfg_load()
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
     R(global_addl_config.boot_demo,1);
-    R(global_addl_config.boot_splash,2);
+    R(global_addl_config.boot_splash,0); // unused
     R(global_addl_config.netmon,3);
     R(global_addl_config.datef,5);
 

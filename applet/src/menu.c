@@ -433,7 +433,7 @@ void create_menu_entry_splash_manual_screen(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_manual);
 
-    global_addl_config.boot_splash = 0;
+    //global_addl_config.boot_splash = 0;
 
     global_addl_config.cp_override &= ~CPO_BL1 ;
     global_addl_config.cp_override &= ~CPO_BL2 ;
@@ -450,7 +450,7 @@ void create_menu_entry_splash_callid_screen(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_callid);
 
-    global_addl_config.boot_splash = 1;
+    //global_addl_config.boot_splash = 1;
     
     global_addl_config.cp_override |= CPO_BL1 ;
     global_addl_config.cp_override |= CPO_BL2 ;
@@ -474,7 +474,7 @@ void create_menu_entry_splash_callname_screen(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_callname);
 
-    global_addl_config.boot_splash = 2;
+    //global_addl_config.boot_splash = 2;
 
     global_addl_config.cp_override |= CPO_BL1 ;
     global_addl_config.cp_override |= CPO_BL2 ;
@@ -498,18 +498,18 @@ void create_menu_entry_splash_callname_screen(void)
     cfg_save();
 }
 
-void create_menu_entry_splash_screen(void)
-{
-    mn_submenu_init(wt_splash);
-
-    if (global_addl_config.userscsv == 0) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = global_addl_config.boot_splash;
-    }
-
-    mn_submenu_finalize();
-}
+//void create_menu_entry_splash_screen(void)
+//{
+//    mn_submenu_init(wt_splash);
+//
+////    if (global_addl_config.userscsv == 0) {
+////        md380_menu_entry_selected = 0;
+////    } else {
+////        md380_menu_entry_selected = global_addl_config.boot_splash;
+////    }
+//
+//    mn_submenu_finalize();
+//}
 
 void mn_cp_override(void)
 {
@@ -529,7 +529,7 @@ void create_menu_entry_bootopts_screen(void)
     mn_submenu_init(wt_bootopts);
 
     mn_submenu_add_98(wt_demoscr, create_menu_entry_demo_screen);
-    mn_submenu_add_98(wt_splash, create_menu_entry_splash_screen);
+//    mn_submenu_add_98(wt_splash, create_menu_entry_splash_screen);
 
     mn_submenu_finalize2();
 }
