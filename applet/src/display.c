@@ -165,21 +165,16 @@ void draw_micbargraph()
     }
 }
 
-#define RX_POPUP_Y_START 12
+#define RX_POPUP_Y_START 24
+#define RX_POPUP_X_START 10
 
 void draw_rx_screen(unsigned int bg_color)
 {
-//#ifdef CONFIG_GRAPHICS
-
-#define BSIZE 100    
-    char buf[BSIZE];
-    int n, i;
     int dst;
     int src;
 
     // clear screen
     gfx_set_fg_color(bg_color);
-//    gfx_blockfill(2, 16, 157, 130); // if we go any lower, we wrap around to the top
     gfx_blockfill(0, 16, MAX_X, MAX_Y); 
 
     gfx_set_bg_color(bg_color);
@@ -191,54 +186,40 @@ void draw_rx_screen(unsigned int bg_color)
     src = g_src;
     OS_EXIT_CRITICAL(primask);
     
-    if( find_dmr_user(buf, src, (void *) 0x100000, BSIZE) == 0 ) {
-        sprintf(buf, ",ID not found,in users.csv,see README.md,on Github"); // , is line seperator ;)
-    }
-    buf[BSIZE-1] = 0 ;
+    user_t usr ;
     
-    n = 0;
+    if( usr_find_by_dmrid(&usr,src) == 0 ) {
+        usr.callsign = "ID not found" ;
+        usr.name = "in users.csv" ;
+        usr.place = "see README.md" ;
+        usr.state = "on Github" ;
+    }
+    
     int y_index = RX_POPUP_Y_START;
     
-    char *oldpoi = buf ;
-    int end = 0 ;
-
-    for (i = 0; i < BSIZE || n < 6; i++) {
-        if( buf[i] == 0 ) {
-            end = 1 ;
-        }
-        if( buf[i] == ',' || buf[i] == 0 ) {
-            
-            buf[i] = '\0';
-            
-            if( n == 1 ) { // This line holds the call sign
-                gfx_select_font(gfx_font_norm);
-            } else {
-                gfx_select_font(gfx_font_small);
-            }
-
-            if( n == 2 ) {
-                y_index = y_index + 16; // previous line was in big font
-            } else {
-                y_index = y_index + 12; // previous line was in small font
-            }
-
-            drawascii2(oldpoi, 10, y_index);
-            n++;
-            
-            oldpoi = buf + i + 1 ;
-        }
-        if( end ) {
-            break ;
-        }
-    }
-
+    gfx_select_font(gfx_font_small);
+    char buf[50];
     sprintf(buf, "%d -> %d", src, dst); // overwrite DMR id with source -> destination
-    drawascii2(buf, 10, RX_POPUP_Y_START + 12);
+    drawascii2(buf, RX_POPUP_X_START, y_index);
+    y_index += 12 ;
 
+    gfx_select_font(gfx_font_norm);
+    drawascii2(usr.callsign, RX_POPUP_X_START, y_index);
+    y_index += 16; // previous line was in big font
+    
+    gfx_select_font(gfx_font_small);
+    drawascii2(usr.name, RX_POPUP_X_START, y_index);
+    y_index += 12 ; // previous line was in small font
+
+    drawascii2(usr.place, RX_POPUP_X_START, y_index);
+    y_index += 12 ;
+    
+    drawascii2(usr.state, RX_POPUP_X_START, y_index);
+    y_index += 12 ;
+    
     gfx_select_font(gfx_font_norm);
     gfx_set_fg_color(0xff8032);
     gfx_set_bg_color(0xff000000);
-//#endif //CONFIG_GRAPHICS
 }
 
 /*
