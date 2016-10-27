@@ -1,9 +1,9 @@
 
 RELEASE=dist/md380tools-`date "+%Y-%m-%d"`
 
-#This strips out all unicode characters.
-#We'd rather just drop the accents.
-ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
+##This strips out all unicode characters.
+##We'd rather just drop the accents.
+#ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 
 .PHONY: dist
 
@@ -54,12 +54,19 @@ flash_d02.032:
 flash_s13.020:
 	"${MAKE}" -C applet FW=S13_020 clean flash
 	
+#.PHONY: data
+#data:
+#	"${MAKE}" -C db
+#	if [ -e db/custom.csv ]; then cat db/custom.csv >> db/users.csv; sort -n -t , -k 1 db/users.csv > db/sorted.csv; mv db/sorted.csv db/users.csv; fi
+#	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
+#	wc -c < data.csv > data
+#	cat data.csv >> data
+
+.PHONY: data
 data:
-	"${MAKE}" -C db
-	if [ -e db/custom.csv ]; then cat db/custom.csv >> db/users.csv; sort -n -t , -k 1 db/users.csv > db/sorted.csv; mv db/sorted.csv db/users.csv; fi
-	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
-	wc -c < data.csv > data
-	cat data.csv >> data
+	"${MAKE}" -C db stripped.csv
+	wc -c < db/stripped.csv > data
+	cat db/stripped.csv >> data
 	
 flashdb: data
 	./md380-tool spiflashwrite data 0x100000
