@@ -194,6 +194,7 @@ void draw_rx_screen(unsigned int bg_color)
         usr.name = "in users.csv" ;
         usr.place = "see README.md" ;
         usr.state = "on Github" ;
+        usr.country = "" ;
     }
     
     int y_index = RX_POPUP_Y_START;
@@ -203,21 +204,24 @@ void draw_rx_screen(unsigned int bg_color)
     y_index += GFX_FONT_SMALL_HEIGHT ;
 
     gfx_select_font(gfx_font_norm);
-    //drawascii2(usr.callsign, RX_POPUP_X_START, y_index);
     gfx_printf_pos(RX_POPUP_X_START, y_index, "%s %s", usr.callsign, usr.firstname );
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
     gfx_select_font(gfx_font_small);
-    drawascii2(usr.name, RX_POPUP_X_START, y_index);
+//    drawascii2(usr.name, RX_POPUP_X_START, y_index);
+    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.name );
     y_index += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
 
-    drawascii2(usr.place, RX_POPUP_X_START, y_index);
+//    drawascii2(usr.place, RX_POPUP_X_START, y_index);
+    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.place );
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
-    drawascii2(usr.state, RX_POPUP_X_START, y_index);
+//    drawascii2(usr.state, RX_POPUP_X_START, y_index);
+    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.state );
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
-    drawascii2(usr.country, RX_POPUP_X_START, y_index);
+//    drawascii2(usr.country, RX_POPUP_X_START, y_index);
+    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.country );
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
     gfx_select_font(gfx_font_norm);
