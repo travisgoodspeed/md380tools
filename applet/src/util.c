@@ -37,3 +37,30 @@ uint32_t uli2w(uint32_t num, wchar_t *bf)
     return (n); // number of char
 }
 
+//const 
+char hexes[] = "0123456789abcdef"; //Needs to be const for problems.
+
+/* This writes a 32-bit hexadecimal value into a human-readable
+   string.  We do it manually to avoid heap operations. */
+void strhex(char *string, long value)
+{
+    char b;
+    for (int i = 0; i < 4; i++) {
+        b = value >> (24 - i * 8);
+        string[2 * i] = hexes[(b >> 4)&0xF];
+        string[2 * i + 1] = hexes[b & 0xF];
+    }
+}
+
+/* This writes a 32-bit hexadecimal value into a human-readable
+   string.  We do it manually to avoid heap operations. */
+void wstrhex(wchar_t *string, long value)
+{
+    char b;
+    for (int i = 0; i < 4; i++) {
+        b = value >> (24 - i * 8);
+        string[2 * i] = hexes[(b >> 4)&0xF];
+        string[2 * i + 1] = hexes[b & 0xF];
+    }
+}
+
