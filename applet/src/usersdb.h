@@ -17,6 +17,7 @@ typedef struct {
     char *name ;
     char *place ;
     char *state ;
+    char *country ;
 } user_t ;
 
 int usr_find_by_dmrid( user_t *up, int dmrid );

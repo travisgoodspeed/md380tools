@@ -217,6 +217,9 @@ void draw_rx_screen(unsigned int bg_color)
     drawascii2(usr.state, RX_POPUP_X_START, y_index);
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
+    drawascii2(usr.country, RX_POPUP_X_START, y_index);
+    y_index += GFX_FONT_SMALL_HEIGHT ;
+    
     gfx_select_font(gfx_font_norm);
     gfx_set_fg_color(0xff8032);
     gfx_set_bg_color(0xff000000);
