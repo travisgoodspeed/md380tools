@@ -62,8 +62,7 @@ flash_s13.020:
 #	wc -c < data.csv > data
 #	cat data.csv >> data
 
-.PHONY: data
-data:
+data: db/stripped.csv
 	"${MAKE}" -C db stripped.csv
 	wc -c < db/stripped.csv > data
 	cat db/stripped.csv >> data
