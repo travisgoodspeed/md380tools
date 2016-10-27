@@ -156,6 +156,7 @@ void boot_splash_set_bottomline_fullname(void) {
   char fullname[10] = {0x00};
   if ( get_dmr_user_field(3, fullname, global_addl_config.dmrid, 10) ) {
     for (uint8_t ii = 0 ; ii < 20; ii++) { botlinetext[ii] = 0x00; }
+    // TODO: FIX! what about a fullname = '%s' ?
     wide_sprintf((wchar_t *)&botlinetext[0], fullname, 10);
   }
 }

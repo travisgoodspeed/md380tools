@@ -40,9 +40,7 @@ void sms_test()
 //    hdr.flags = SMS_TYPE_SINGLECAST ;
     hdr.flags = SMS_TYPE_MULTICAST ;
     
-//    wide_sprintf(hdr.adr,"");
-            
-    wide_sprintf(bdy.txt,"md380tools rulez");
+    snprintfw(bdy.txt,144,"md380tools rulez");
     
     sms_send( &hdr, &bdy );
 }
@@ -68,8 +66,8 @@ void sms_test2(int m)
     
     hdr.flags = m ; 
     
-    wide_sprintf(bdy.txt,"md380tools rulez");
-    
+    snprintfw(bdy.txt,144,"md380tools rulez");
+        
     sms_send( &hdr, &bdy );
 }
 

@@ -260,15 +260,10 @@ void draw_statusline_hook( uint32_t r0 )
 
 void draw_alt_statusline()
 {
-    wchar_t buf[40];
-    
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);
     gfx_select_font(gfx_font_small);
 
-//    static int cnt = 0 ;
-//    cnt++ ;
-    
     char mode = ' ' ;
     if( rst_voice_active ) {
         if( rst_mycall ) {
@@ -277,10 +272,6 @@ void draw_alt_statusline()
             mode = '!' ; // on other tg
         }
     }
-//    wide_sprintf(buf,"d:%d %c %d", g_dst, mode, cnt );
-//    wide_sprintf(buf,"d:%d %c", rst_dst, mode );
-//    wide_sprintf(buf,"d:%d %c %d:%d:%d", rst_dst, mode, rst_hdr_src, rst_hdr_dst, rst_hdr_sap );
-//    gfx_chars_to_display(buf,10,96,157);
 
     gfx_printf_pos2(10,96,157, "d:%d %c", rst_dst, mode );
     
