@@ -169,6 +169,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //    red_key = MKTHUMB(red_key);
     
 #ifdef TRACE_MENU
+#ifdef DEBUG    
     char lbl2[10];
     char *lp = (void*)label ;
     for(int i=0;i<10;i++) {
@@ -182,9 +183,10 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
         }
     }
     lbl2[9] = 0 ;
-    
+
     void *gp = ((uint8_t*)green_key) - 1 ;
     PRINT("f menugreen.%s.%x 0 0x%x\n", lbl2, gp, gp );
+#endif
     
 #if 0    
     register uint32_t *sp asm("sp");   
