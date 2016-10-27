@@ -116,3 +116,7 @@ uint32_t gfx_get_fg_color(void);
 
 #define GFX_FONT_SMALL_HEIGHT 12 
 #define GFX_FONT_NORML_HEIGHT 16
+
+// max string that spans from left to right one single line.
+#define MAX_SCR_STR_LEN 30 
+

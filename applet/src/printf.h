@@ -124,6 +124,7 @@ void wide_sprintf(wchar_t* ws, const char* fmt, ...);
 //void wide_snprintf(wchar_t* ws, const char* fmt, ...);
 
 void va_snprintf(char *buf, int sz, const char* fmt, va_list va );
+void va_snprintfw(wchar_t *buf, int sz, const char* fmt, va_list va );
 
 #endif
 
