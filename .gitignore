@@ -82,3 +82,5 @@ firmware/dl
 applet/*.lst
 applet/*.map
 annotations/d13.020/*.lst
+/db/tmp.csv
+/db/stripped.csv
