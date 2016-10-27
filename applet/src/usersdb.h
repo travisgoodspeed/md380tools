@@ -18,7 +18,7 @@ typedef struct {
     char *state ;
 } user_t ;
 
-int find_dmr_user2( user_t *up, int dmrid );
+int usr_find_by_dmrid( user_t *up, int dmrid );
 
 extern int find_dmr_user(char *outstr, int dmr_search,
                          const char *data, int outsize);

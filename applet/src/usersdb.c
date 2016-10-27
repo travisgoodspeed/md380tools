@@ -197,7 +197,7 @@ void usr_splitbuffer(user_t *up)
     }
 }
 
-int find_dmr_user2( user_t *up, int dmrid )
+int usr_find_by_dmrid( user_t *up, int dmrid )
 {
     if( !find_dmr_user(up->buffer, dmrid, (void *) 0x100000, BSIZE) ) {
         // safeguard
