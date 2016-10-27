@@ -30,9 +30,6 @@ void gfx_drawtext2(wchar_t *str,    //16-bit, little endian.
                    int x, int y,   //X and Y position
                    int maxlen);
 
-// xlen: if curpos > xlen print ".." instead.
-extern void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen);
-
 
 
 void gfx_set_bg_color(int color);
