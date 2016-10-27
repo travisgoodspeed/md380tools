@@ -431,7 +431,7 @@ void create_menu_entry_demo_screen(void)
 
 void create_menu_entry_splash_manual_screen(void)
 {
-    mn_create_single_timed_ack(wt_splash, wt_splash_manual);
+    mn_create_single_timed_ack(wt_cp_override, wt_splash_manual);
 
     global_addl_config.boot_splash = 0;
 
@@ -448,7 +448,7 @@ uint32_t get_effective_dmrid()
 
 void create_menu_entry_splash_callid_screen(void)
 {
-    mn_create_single_timed_ack(wt_splash, wt_splash_callid);
+    mn_create_single_timed_ack(wt_cp_override, wt_splash_callid);
 
     global_addl_config.boot_splash = 1;
     
@@ -472,7 +472,7 @@ void create_menu_entry_splash_callid_screen(void)
 
 void create_menu_entry_splash_callname_screen(void)
 {
-    mn_create_single_timed_ack(wt_splash, wt_splash_callname);
+    mn_create_single_timed_ack(wt_cp_override, wt_splash_callname);
 
     global_addl_config.boot_splash = 2;
 
