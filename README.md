@@ -129,10 +129,11 @@ make doflash
 Turn radio normally on to begin database loading with USB cable
 
 ```
-git pull
-make clean flashdb
+make updatedb flashdb
 ```
-(The users.csv file located in the db directory must be refreshed this way otherwise it will continue using any already-existing users.csv file when running "make flashdb" from the main md380tools directory.)
+(The users.csv file located in the db directory must be refreshed this way, 
+with "make updatedb",
+otherwise it will continue using any already-existing users.csv file when running "make flashdb" )
 
 ##Convenient Usage:##
 
