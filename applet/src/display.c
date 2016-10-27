@@ -169,7 +169,7 @@ void draw_micbargraph()
 
 void draw_rx_screen(unsigned int bg_color)
 {
-#ifdef CONFIG_GRAPHICS
+//#ifdef CONFIG_GRAPHICS
 
 #define BSIZE 100    
     char buf[BSIZE];
@@ -238,7 +238,7 @@ void draw_rx_screen(unsigned int bg_color)
     gfx_select_font(gfx_font_norm);
     gfx_set_fg_color(0xff8032);
     gfx_set_bg_color(0xff000000);
-#endif //CONFIG_GRAPHICS
+//#endif //CONFIG_GRAPHICS
 }
 
 /*

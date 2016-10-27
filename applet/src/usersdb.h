@@ -9,6 +9,17 @@
 
 #define BSIZE 100
 
+typedef struct {
+    char buffer[BSIZE];
+    char *id ;
+    char *callsign ;
+    char *name ;
+    char *place ;
+    char *state ;
+} user_t ;
+
+int find_dmr_user2( user_t *up, int dmrid );
+
 extern int find_dmr_user(char *outstr, int dmr_search,
                          const char *data, int outsize);
 
