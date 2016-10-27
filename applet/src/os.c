@@ -6,7 +6,7 @@
 //#define DEBUG
 #define NETMON
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 
 #include "printf.h"

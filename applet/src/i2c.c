@@ -2,7 +2,7 @@
   \brief i2c Hooks and diagnostic functions.
 */
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <string.h>
 
 #include "printf.h"

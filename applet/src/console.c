@@ -162,7 +162,7 @@ char small[MAX_BUF];
 
 static void con_draw1()
 {
-    // TODO: save old values first.
+    // save old values first.
     void *old = gfx_select_font(gfx_font_small);
     
 //#if defined(FW_D13_020) || defined(FW_S13_020)
