@@ -350,3 +350,11 @@ void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
 //    tfp_format(&buf, wide_putch, fmt, va);
 //    wide_putch(&buf, 0);    
 //}
+
+void snprintfw(wchar_t* ws, int sz, const char* fmt, ...)
+{
+    va_list va;
+    va_start(va, fmt);
+    va_snprintfw(buf, sz, fmt, va );    
+    va_end(va);        
+}
