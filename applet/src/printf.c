@@ -351,7 +351,7 @@ void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
 //    wide_putch(&buf, 0);    
 //}
 
-void snprintfw(wchar_t* ws, int sz, const char* fmt, ...)
+void snprintfw(wchar_t* buf, int sz, const char* fmt, ...)
 {
     va_list va;
     va_start(va, fmt);
