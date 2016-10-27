@@ -286,3 +286,10 @@ void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
     tfp_format(&buf, putcp, fmt, va);
     putcp(&buf, 0);    
 }
+
+void va_snprintfw(wchar_t *buf, int sz, const char* fmt, va_list va )
+{
+    // TODO: handle size!!!!
+    tfp_format(&buf, wide_putch, fmt, va);
+    wide_putch(&buf, 0);    
+}

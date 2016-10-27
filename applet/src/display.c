@@ -204,7 +204,7 @@ void draw_rx_screen(unsigned int bg_color)
 
     gfx_select_font(gfx_font_norm);
     //drawascii2(usr.callsign, RX_POPUP_X_START, y_index);
-    gfx_printf_pos(RX_POPUP_X_START, y_index, "%s, %s", usr.callsign, usr.firstname );
+    gfx_printf_pos(RX_POPUP_X_START, y_index, "%s %s", usr.callsign, usr.firstname );
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
     gfx_select_font(gfx_font_small);
@@ -262,8 +262,8 @@ void draw_alt_statusline()
     gfx_set_bg_color(0xff8032);
     gfx_select_font(gfx_font_small);
 
-    static int cnt = 0 ;
-    cnt++ ;
+//    static int cnt = 0 ;
+//    cnt++ ;
     
     char mode = ' ' ;
     if( rst_voice_active ) {
@@ -278,7 +278,7 @@ void draw_alt_statusline()
 //    wide_sprintf(buf,"d:%d %c %d:%d:%d", rst_dst, mode, rst_hdr_src, rst_hdr_dst, rst_hdr_sap );
 //    gfx_chars_to_display(buf,10,96,157);
 
-    gfx_printf_pos(10,96, "d:%d %c", rst_dst, mode );
+    gfx_printf_pos2(10,96,157, "d:%d %c", rst_dst, mode );
     
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff000000);

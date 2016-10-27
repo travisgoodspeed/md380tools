@@ -288,13 +288,14 @@ uint32_t gfx_get_fg_color(void)
 // and that it only fills background when a char or space is printed.
 void gfx_printf_pos(int x, int y, const char *fmt, ...)
 {
-    char buf[20];
+    char buf[MAX_SCR_STR_LEN];
     
     va_list va;
     va_start(va, fmt);
     
-    va_snprintf(buf, sizeof(buf), fmt, va );
+    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
     drawascii2(buf,x,y);
+    
     va_end(va);        
 }
 
@@ -302,14 +303,13 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
 // and that it fills all background
 void gfx_printf_pos2(int x, int y, int ylen, const char *fmt, ...)
 {
-    char buf[20];
+    wchar_t buf[MAX_SCR_STR_LEN];
     
     va_list va;
     va_start(va, fmt);
 
-//TODO    
-//    va_snprintf(buf, sizeof(buf), fmt, va );
-//    drawascii2(buf,x,y);
+    va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
+    gfx_chars_to_display(buf,x,y,ylen);
+    
     va_end(va);        
 }
-
