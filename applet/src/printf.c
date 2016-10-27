@@ -280,16 +280,73 @@ void wide_sprintf(wchar_t* ws, const char* fmt, ...)
     va_end(va);    
 }
 
-void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
+typedef struct {
+    void *buffer ;
+    int space ;
+} printf_t ;
+
+static void safe_putbuf_w(void* vpoi, char c)
 {
-    // TODO: handle size!!!!
-    tfp_format(&buf, putcp, fmt, va);
-    putcp(&buf, 0);    
+    printf_t *ps = vpoi ;
+    
+    if( ps->space <= 0 ) {
+        return ;
+    }
+
+    wchar_t **p = (wchar_t**)&ps->buffer ;
+    
+    **p = c ;
+    (*p)++ ;
+    
+    ps->space-- ;
+}
+
+static void safe_putbuf(void* vpoi, char c)
+{
+    printf_t *ps = vpoi ;
+    
+    if( ps->space <= 0 ) {
+        return ;
+    }
+
+    char **p = (char**)&ps->buffer ;
+    
+    **p = c ;
+    (*p)++ ;
+    
+    ps->space-- ;
 }
 
 void va_snprintfw(wchar_t *buf, int sz, const char* fmt, va_list va )
 {
-    // TODO: handle size!!!!
-    tfp_format(&buf, wide_putch, fmt, va);
-    wide_putch(&buf, 0);    
+    printf_t ps ;
+    ps.buffer = buf ;
+    ps.space = sz ;
+    
+    tfp_format(&ps, safe_putbuf_w, fmt, va);
+    safe_putbuf_w(&ps, 0);
 }
+
+void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
+{
+    printf_t ps ;
+    ps.buffer = buf ;
+    ps.space = sz ;
+    
+    tfp_format(&ps, safe_putbuf, fmt, va);
+    safe_putbuf(&ps, 0);
+}
+
+//void va_snprintf_old(char *buf, int sz, const char* fmt, va_list va )
+//{
+//    // TODO: handle size!!!!
+//    tfp_format(&buf, putcp, fmt, va);
+//    putcp(&buf, 0);    
+//}
+//
+//void va_snprintfw_old(wchar_t *buf, int sz, const char* fmt, va_list va )
+//{
+//    // TODO: handle size!!!!
+//    tfp_format(&buf, wide_putch, fmt, va);
+//    wide_putch(&buf, 0);    
+//}
