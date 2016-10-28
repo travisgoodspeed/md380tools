@@ -124,6 +124,8 @@ void boot_splash_set_topline(void)
 {
     if( (global_addl_config.cp_override & CPO_BL1) == CPO_BL1 ) {
         snprintfw(toplinetext, 10, "%s", global_addl_config.bootline1);
+        // possibly toplinetext does not need to be zero-terminated, but we dont know yet
+        toplinetext[9] = 0 ; // safety
     } 
 }
 
@@ -131,6 +133,8 @@ void boot_splash_set_bottomline(void)
 {
     if( (global_addl_config.cp_override & CPO_BL2) == CPO_BL2 ) {
         snprintfw(botlinetext, 10, "%s", global_addl_config.bootline2);
+        // possibly botlinetext does not need to be zero-terminated, but we dont know yet
+        botlinetext[9] = 0 ; // safety
     } 
 }
 
@@ -141,6 +145,8 @@ void splash_hook_handler(void)
     }
 
     md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
+    // possibly botlinetext does not need to be zero-terminated, but we dont know yet
+    botlinetext[9] = 0 ; // safety
     
     boot_splash_set_topline();
     boot_splash_set_bottomline();
