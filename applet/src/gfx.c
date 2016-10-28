@@ -301,8 +301,6 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
     va_list va;
     va_start(va, fmt);
     
-//    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
-//    drawascii2(buf,x,y);
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
     gfx_drawtext2(buf, x, y, 0);
     
