@@ -933,11 +933,14 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
     printf("\n%d\n", new_dmr_id);
 #endif
     
+    // save in addl cfg.
     global_addl_config.dmrid = new_dmr_id ;
     cfg_save();
 
-    cfg_fix_dmrid();
-
+    // save in codeplug.
+    md380_radio_config.dmrid = new_dmr_id ;
+    md380_spiflash_write(&new_dmr_id, FLASH_OFFSET_DMRID, 4);
+    
     md380_menu_id = md380_menu_id - 1;
     md380_menu_depth = md380_menu_depth - 1;
 

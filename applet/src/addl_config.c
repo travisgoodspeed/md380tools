@@ -19,17 +19,6 @@
 
 addl_config_t global_addl_config;
 
-void cfg_fix_dmrid()
-{
-    int dmrid = global_addl_config.dmrid ;
-    if( dmrid != 0 ) {
-        // store new dmr_id to ram and spi flash (codeplug)
-        md380_spiflash_write(&dmrid, FLASH_OFFSET_DMRID, 4);
-        md380_radio_config.dmrid = dmrid;
-    }
-}
-
-
 void cfg_fix_radioname()
 {
     if( global_addl_config.rname[0] != 0x00 ) {
@@ -98,7 +87,9 @@ void cfg_load()
     R(global_addl_config.datef,5);
 
     // restore dmrid
-    cfg_fix_dmrid();
+    if( ( global_addl_config.cp_override & CPO_DMR ) == CPO_DMR ) {
+        md380_radio_config.dmrid = global_addl_config.dmrid ;
+    }
 
     // restore radio name
     if (global_addl_config.userscsv == 1) {
