@@ -2,6 +2,9 @@
 
 by Travis Goodspeed, KK4VCZ
 
+#Documentation#
+* [Make targets](docs/make.md)
+
 # Support #
 
 To support users by using the md380tools or the resulting patched firmware 
