@@ -7,7 +7,7 @@ Our release master, [PA3MET](https://www.qrz.com/db/PA3MET), ensures field-tests
 
 ### Workflow diagram
 
-![Workflow diagram](https://github.com/travisgoodspeed/md380tools/raw/master/JenkinsBuilder.png)
+![Workflow diagram](JenkinsBuilder.png)
 
 ### Our challenge
 Creating lots of updates and features to [Travis'](https://www.qrz.com/db/KK4VCZ) code on [Github](https://github.com/travisgoodspeed/md380tools), amongst many others, [DF8AV](https://www.qrz.com/db/DF8AV), [PH7WIM](https://www.qrz.com/db/PH7WIM) & [PA9TV](https://www.qrz.com/db/PA9TV) produced 'wannahave' features for HAMs owning a MD380. There were however two distinct challenges. 
