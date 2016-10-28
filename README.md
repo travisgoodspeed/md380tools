@@ -5,7 +5,7 @@ by Travis Goodspeed, KK4VCZ
 #More documentation#
 * [Make targets](docs/make.md)
 * [md380-tool/md380-dfu](docs/md380tool.md)
-* [Jenkins](docs/JenkingsBuilder.md)
+* [Jenkins](docs/JenkinsBuilder.md)
 * [CI](docs/ContinuousIntegration.md)
 
 
