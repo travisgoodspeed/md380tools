@@ -1,5 +1,14 @@
 
-# md380-tool reference
+# md380-tool / md380-dfu reference
+
+To actively watch incoming calls, printing a call log with name and
+callsign:
+
+    md380-tool calllog
+
+To dump the recent dmesg log:
+
+    md380-tool dmesg
 
 To download a raw (headerless) codeplug into the MD380.
 
