@@ -26,3 +26,6 @@ unwrapped/S013.020.img: $(OPT)
 unwrapped/D013.020.img: $(OPT) 	
 	"${MAKE}" -f Makefile_orig unwrapped/D013.020.img
 	
+unwrapped/D003.020.img: $(OPT) 	
+	"${MAKE}" -f Makefile_orig unwrapped/D003.020.img
+	

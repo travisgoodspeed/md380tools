@@ -42,11 +42,17 @@ original_D13:
 original_D02: 
 	"${MAKE}" -C firmware unwrapped/D002.032.img
 	
+original_D03: 
+	"${MAKE}" -C firmware unwrapped/D003.020.img
+	
 flash_original_D13: original_D13
 	./md380-dfu upgrade firmware/bin/D013.020.bin
 	
 flash_original_D02: original_D02
 	./md380-dfu upgrade firmware/bin/D002.032.bin
+	
+flash_original_D03: original_D03
+	./md380-dfu upgrade firmware/bin/D003.020.bin
 	
 #flash:
 #	"${MAKE}" -C applet clean flash
