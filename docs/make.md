@@ -13,7 +13,7 @@ Flash original oldest FW for MD380.
 
     make flash_original_D02
 
-Flash new FW for MD30
+Flash experimental FW for MD30
 
     make doflash
 
