@@ -62,6 +62,8 @@ const static wchar_t wt_splash_manual[]     = L"Disabled";
 const static wchar_t wt_splash_callid[]     = L"Callsign+DMRID";
 const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
+const static wchar_t wt_cp_override_dmrid[] = L"id override";
+
 struct MENU {
   const wchar_t  *menu_title; // [0]
   void    *unknownp; // [4]
@@ -401,7 +403,7 @@ void create_menu_entry_rbeep_disable_screen(void)
 
 void create_menu_entry_demo_enable_screen(void)
 {
-    mn_create_single_timed_ack(wt_demoscr, wt_demoscr_enable);
+    mn_create_single_timed_ack(wt_demoscr, wt_enable);
 
     global_addl_config.boot_demo = 0;
 
@@ -410,7 +412,7 @@ void create_menu_entry_demo_enable_screen(void)
 
 void create_menu_entry_demo_disable_screen(void)
 {
-    mn_create_single_timed_ack(wt_demoscr, wt_demoscr_disable);
+    mn_create_single_timed_ack(wt_demoscr, wt_disable);
 
     global_addl_config.boot_demo = 1;
 
@@ -429,7 +431,7 @@ void create_menu_entry_demo_screen(void)
     mn_submenu_finalize();
 }
 
-void create_menu_entry_splash_manual_screen(void)
+void mn_cp_override_off(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_manual);
 
@@ -446,7 +448,7 @@ uint32_t get_effective_dmrid()
     return global_addl_config.dmrid ;
 }
 
-void create_menu_entry_splash_callid_screen(void)
+void mn_cp_override_call_dmrid(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_callid);
 
@@ -470,7 +472,7 @@ void create_menu_entry_splash_callid_screen(void)
     cfg_save();
 }
 
-void create_menu_entry_splash_callname_screen(void)
+void mn_cp_override_call_name(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_callname);
 
@@ -498,29 +500,44 @@ void create_menu_entry_splash_callname_screen(void)
     cfg_save();
 }
 
-//void create_menu_entry_splash_screen(void)
-//{
-//    mn_submenu_init(wt_splash);
-//
-////    if (global_addl_config.userscsv == 0) {
-////        md380_menu_entry_selected = 0;
-////    } else {
-////        md380_menu_entry_selected = global_addl_config.boot_splash;
-////    }
-//
-//    mn_submenu_finalize();
-//}
+void mn_cp_override_dmrid_on(void)
+{
+    mn_create_single_timed_ack(wt_cp_override_dmrid, wt_enable);
+
+    global_addl_config.cp_override |= CPO_DMR ;
+    
+    md380_radio_config.dmrid = global_addl_config.dmrid ;
+
+    cfg_save();
+}
+
+void mn_cp_override_dmrid_off(void)
+{
+    mn_create_single_timed_ack(wt_cp_override_dmrid, wt_disable);
+
+    global_addl_config.cp_override &= ~CPO_DMR ;
+
+    cfg_save();
+}
+
+void mn_cp_override_dmrid(void)
+{
+    mn_submenu_init(wt_cp_override_dmrid);
+    mn_submenu_add(wt_demoscr_enable, mn_cp_override_dmrid_on);
+    mn_submenu_add(wt_demoscr_disable, mn_cp_override_dmrid_off);
+    mn_submenu_finalize();
+}
 
 void mn_cp_override(void)
 {
     mn_submenu_init(wt_cp_override);
     
-    mn_submenu_add(wt_splash_manual, create_menu_entry_splash_manual_screen);
-    if (global_addl_config.userscsv == 1) {
-        mn_submenu_add(wt_splash_callid, create_menu_entry_splash_callid_screen);
-        mn_submenu_add(wt_splash_callname, create_menu_entry_splash_callname_screen);
-    }
+    mn_submenu_add(wt_splash_manual, mn_cp_override_off);
+    mn_submenu_add(wt_splash_callid, mn_cp_override_call_dmrid);
+    mn_submenu_add(wt_splash_callname, mn_cp_override_call_name);
 
+    mn_submenu_add(wt_cp_override_dmrid, mn_cp_override_dmrid);
+    
     mn_submenu_finalize();
 }
 
