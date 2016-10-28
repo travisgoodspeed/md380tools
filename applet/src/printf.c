@@ -321,6 +321,8 @@ void va_snprintfw(wchar_t *buf, int sz, const char* fmt, va_list va )
     ps.space = sz ;
     
     tfp_format(&ps, safe_putbuf_w, fmt, va);
+    safe_putbuf_w(&ps, 0);
+    
     buf[sz] = 0 ;
 }
 
@@ -337,6 +339,8 @@ void va_snprintf(char *buf, int sz, const char* fmt, va_list va )
     ps.space = sz ;
     
     tfp_format(&ps, safe_putbuf, fmt, va);
+    safe_putbuf(&ps, 0);
+    
     buf[sz] = 0 ;
 }
 
