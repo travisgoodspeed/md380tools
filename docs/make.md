@@ -17,4 +17,12 @@ Flash experimental FW for MD30
 
     make doflash
 
+Update userdb
+
+    make updatedb
+
+Flash userdb
+
+    make flashdb
+
 
