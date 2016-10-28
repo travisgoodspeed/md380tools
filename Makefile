@@ -27,17 +27,6 @@ mostlyclean:
 	rm -f data data.csv	
 	-rm *.bin
 	
-
-#patches: firmwares
-#	"${MAKE}" -C patches/2.032 all
-#	"${MAKE}" -C patches/d13.020 all
-
-#applets: patches
-#	"${MAKE}" -C applet all
-
-#firmwares:
-#	"${MAKE}" -C firmware all
-
 image_D02:
 	"${MAKE}" -C applet FW=D02_032 all  
 
@@ -47,14 +36,26 @@ image_D13:
 image_S13:
 	"${MAKE}" -C applet FW=S13_020 all  
 	
-flash:
-	"${MAKE}" -C applet clean flash
+original_D13: 
+	"${MAKE}" -C firmware unwrapped/D013.020.img
 	
-flash_d02.032:
-	"${MAKE}" -C applet FW=D02_032 clean flash
+original_D02: 
+	"${MAKE}" -C firmware unwrapped/D002.032.img
 	
-flash_s13.020:
-	"${MAKE}" -C applet FW=S13_020 clean flash
+flash_original_D13: original_D13
+	./md380-dfu upgrade firmware/bin/D013.020.bin
+	
+flash_original_D02: original_D02
+	./md380-dfu upgrade firmware/bin/D002.032.bin
+	
+#flash:
+#	"${MAKE}" -C applet clean flash
+#	
+#flash_d02.032:
+#	"${MAKE}" -C applet FW=D02_032 clean flash
+#	
+#flash_s13.020:
+#	"${MAKE}" -C applet FW=S13_020 clean flash
 	
 #.PHONY: data
 #data:
