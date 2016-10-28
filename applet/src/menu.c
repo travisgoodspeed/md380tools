@@ -505,7 +505,8 @@ void mn_cp_override_dmrid_on(void)
     mn_create_single_timed_ack(wt_cp_override_dmrid, wt_enable);
 
     global_addl_config.cp_override |= CPO_DMR ;
-    
+
+    // set to override dmrid.
     md380_radio_config.dmrid = global_addl_config.dmrid ;
 
     cfg_save();
@@ -517,6 +518,9 @@ void mn_cp_override_dmrid_off(void)
 
     global_addl_config.cp_override &= ~CPO_DMR ;
 
+    // restore codeplug dmrid.
+    md380_spiflash_read(&md380_radio_config.dmrid, FLASH_OFFSET_DMRID, 4);
+    
     cfg_save();
 }
 
