@@ -25,11 +25,11 @@ Flash userdb
 
     make flashdb
 
-Check if all version compile, and processing functions OK
+Check if all version compile, and processing functions OK (mainly for automatic tests)
 
     make ci
 
-Create a windows installation packages
+Create a windows installation package
 
     make dist
 
