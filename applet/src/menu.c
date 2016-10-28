@@ -64,6 +64,9 @@ const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 const static wchar_t wt_cp_override_dmrid[] = L"id override";
 
+const static wchar_t wt_config_reset[] = L"config reset";
+const static wchar_t wt_config_reset_doit[] = L"config reset2";
+
 struct MENU {
   const wchar_t  *menu_title; // [0]
   void    *unknownp; // [4]
@@ -468,6 +471,9 @@ void mn_cp_override_call_dmrid(void)
     }
 
     snprintf( global_addl_config.bootline2, 10, "%d", (int)dmrid );
+
+    global_addl_config.bootline1[9] = 0 ; // safety
+    global_addl_config.bootline2[9] = 0 ; // safety
     
     cfg_save();
 }
@@ -496,6 +502,9 @@ void mn_cp_override_call_name(void)
     } else {
         snprintf(global_addl_config.bootline2, 10, "%s", "unkown");
     }
+    
+    global_addl_config.bootline1[9] = 0 ; // safety
+    global_addl_config.bootline2[9] = 0 ; // safety
     
     cfg_save();
 }
@@ -842,6 +851,24 @@ void mn_backlight(void)
     mn_submenu_finalize();
 }
 
+void mn_config_reset2()
+{
+    mn_create_single_timed_ack(wt_backlight,wt_config_reset_doit);
+
+    memset( &global_addl_config, 0, sizeof(global_addl_config) );
+    
+    cfg_save();
+}
+
+void mn_config_reset(void)
+{
+    mn_submenu_init(wt_config_reset);
+    
+    mn_submenu_add(wt_config_reset_doit, mn_config_reset2);
+
+    mn_submenu_finalize();
+}
+
 void create_menu_entry_edit_screen_store(void)
 {
 #if 0
@@ -1028,6 +1055,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     
+    mn_submenu_add_98(wt_config_reset, mn_config_reset);
     mn_submenu_add_98(wt_backlight, mn_backlight);
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);

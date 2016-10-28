@@ -19,15 +19,15 @@
 
 addl_config_t global_addl_config;
 
-void cfg_fix_radioname()
-{
-    if( global_addl_config.rname[0] != 0x00 ) {
-        md380_spiflash_write(&global_addl_config.rname[0], FLASH_OFFSET_RNAME, 32);
-        for (uint8_t ii = 0; ii < 32; ii++) {
-            md380_radio_config.radioname[ii] = global_addl_config.rname[ii];
-        }
-    }
-}
+//void cfg_fix_radioname()
+//{
+//    if( global_addl_config.rname[0] != 0x00 ) {
+//        md380_spiflash_write(&global_addl_config.rname[0], FLASH_OFFSET_RNAME, 32);
+//        for (uint8_t ii = 0; ii < 32; ii++) {
+//            md380_radio_config.radioname[ii] = global_addl_config.rname[ii];
+//        }
+//    }
+//}
 
 void cfg_read_struct( addl_config_t *cfg )
 {
@@ -82,7 +82,7 @@ void cfg_load()
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
     R(global_addl_config.boot_demo,1);
-    R(global_addl_config.boot_splash,0); // unused
+//    R(global_addl_config.boot_splash,0); // unused
     R(global_addl_config.netmon,3);
     R(global_addl_config.datef,5);
 
@@ -91,10 +91,10 @@ void cfg_load()
         md380_radio_config.dmrid = global_addl_config.dmrid ;
     }
 
-    // restore radio name
-    if (global_addl_config.userscsv == 1) {
-        cfg_fix_radioname();
-    }
+//    // restore radio name
+//    if (global_addl_config.userscsv == 1) {
+//        cfg_fix_radioname();
+//    }
 
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
@@ -117,20 +117,19 @@ void cfg_save()
 
 void cfg_set_radio_name()
 {
-    char callsign[10] = {0x00};
-
-    if (get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) == 0) {
-        strncpy(callsign, "UNKNOWNID", 10);
-    }
-    for (uint8_t ii = 0 ; ii < 32; ii++) {
-        global_addl_config.rname[ii] = 0x00;
-    }
-    // TODO: fix type in addl_config, or convert during boot.
-//    wide_sprintf((wchar_t *)&global_addl_config.rname[0], "%s", callsign);
-    snprintfw((wchar_t *)&global_addl_config.rname[0], 10, "%s", callsign);
-
-    cfg_save();
-    cfg_fix_radioname();
+//    char callsign[10] = {0x00};
+//
+//    if (get_dmr_user_field(2, callsign, global_addl_config.dmrid, 10) == 0) {
+//        strncpy(callsign, "UNKNOWNID", 10);
+//    }
+//    
+//    // TODO: fix type in addl_config, or convert during boot.
+////    wide_sprintf((wchar_t *)&global_addl_config.rname[0], "%s", callsign);
+//    snprintfw(global_addl_config.rname, 10, "%s", callsign);
+//    global_addl_config.rname[9] = 0x00;
+//
+//    cfg_save();
+//    cfg_fix_radioname();
 }
 
 void init_global_addl_config_hook(void)
@@ -143,4 +142,3 @@ void init_global_addl_config_hook(void)
     md380_create_main_meny_entry();
 //#endif    
 }
-
