@@ -472,9 +472,6 @@ void mn_cp_override_call_dmrid(void)
 
     snprintf( global_addl_config.bootline2, 10, "%d", (int)dmrid );
 
-    global_addl_config.bootline1[9] = 0 ; // safety
-    global_addl_config.bootline2[9] = 0 ; // safety
-    
     cfg_save();
 }
 
@@ -502,9 +499,6 @@ void mn_cp_override_call_name(void)
     } else {
         snprintf(global_addl_config.bootline2, 10, "%s", "unkown");
     }
-    
-    global_addl_config.bootline1[9] = 0 ; // safety
-    global_addl_config.bootline2[9] = 0 ; // safety
     
     cfg_save();
 }
