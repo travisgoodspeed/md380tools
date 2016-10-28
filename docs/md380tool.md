@@ -60,3 +60,10 @@ with 16MByte SPI-Flash.**
        make flashdb  
 
 After successfully flashing, the radio will be restarted.
+
+##Flashing on Linux Notes##
+
+To check the type / size of SPI-Flash
+
+    md380-tool spiflashid    
+

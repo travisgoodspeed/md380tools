@@ -155,11 +155,6 @@ To dump the recent dmesg log:
 
     md380-tool dmesg
 
-##Flashing on Linux Notes##
-
-To check the type / size of SPI-Flash
-
-    md380-tool spiflashid    
 
 ##Firmware Compilation##
 
