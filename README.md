@@ -155,7 +155,6 @@ To dump the recent dmesg log:
 
     md380-tool dmesg
 
-
 ##Firmware Compilation##
 
 This archive does not ship with firmware.  Instead it grabs firmware
@@ -165,7 +164,7 @@ You can reproduce the patched firmware with `make clean dist` after
 installing an arm-none-eabi cross compiler toolchain.  The firmware
 and a Windows flashing tool will then appear in
 `md380tools-yyyy-mm-dd`.  Alternately, you can flash them from Linux
-with `make clean flash`, after starting the recovery bootloader by
+with `make clean doflash`, after starting the recovery bootloader by
 holding PTT and the button above it during a radio reboot.
 
 ##Windows Firmware Installation##
