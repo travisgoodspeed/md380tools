@@ -25,4 +25,11 @@ Flash userdb
 
     make flashdb
 
+Check if all version compile, and processing functions OK
+
+    make ci
+
+Create a windows installation packages
+
+    make dist
 
