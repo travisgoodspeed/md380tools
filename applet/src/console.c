@@ -23,12 +23,6 @@ int con_ypos = 0 ;
 
 static int con_dirty_flag = 0 ;
 
-#undef VARIANT
-
-//#if defined(FW_D13_020) || defined(FW_S13_020)
-//#define VARIANT
-//#endif
-
 void con_goto(int x, int y)
 {
     con_xpos = x ;
@@ -143,11 +137,8 @@ void con_printf(const char* fmt, ...)
 
 int within_update = 0 ;
 
-#if VARIANT
-#else 
 wchar_t wide[MAX_BUF];
 char small[MAX_BUF];
-#endif
 
 #define LINE_HEIGHT 12 
 

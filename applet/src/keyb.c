@@ -25,7 +25,7 @@
 // 8 = rearm
 // 0 = none pressed
 
-#ifndef FW_D02_032
+#if defined(FW_D13_020) || defined(FW_S13_020)
 inline int get_main_mode()
 {
     return md380_f_4225_operatingmode & 0x7F ;
@@ -163,7 +163,7 @@ extern void kb_handler();
 
 void kb_handler_hook()
 {
-#ifndef FW_D02_032
+#if defined(FW_D13_020) || defined(FW_S13_020)
     trace_keyb(0);
 
     kb_handler();
