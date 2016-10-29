@@ -103,7 +103,7 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen);
 // if larger than maxstrlen end in ".."
 void gfx_drawtext4(const wchar_t *str, int x, int y, int xlen, int maxstrlen);
 
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
 void gfx_drawtext7(const char *str, int x, int y); // firmware
 #else
 #define gfx_drawtext7(p1,p2,p3) /* nop */

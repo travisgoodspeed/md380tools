@@ -213,3 +213,5 @@ f gfx_get_ypos @ 0x08021b6c
 f gfx_info @ 0x2001daec
 
 f gfx_drawchar @ 0x08021b78
+
+f gfx_drawtext7 @ 0x08027a9e
