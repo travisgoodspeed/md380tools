@@ -1,6 +1,14 @@
 
 # Make reference
 
+Clean everything
+
+    make clean
+
+Clean everything except downloads
+
+    make mostlyclean
+
 Flash original FW for MD380 with old vocoder.
 
     make flash_original_D03
