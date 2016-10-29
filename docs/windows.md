@@ -1,5 +1,8 @@
 # Windows specifics #
 
+[Alternative documentation  Windows](windows-instructions.txt)
+
+
 ## Preparing build environment ##
 
 ####Windows (using MSYS2):####
