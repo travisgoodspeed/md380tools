@@ -1,6 +1,6 @@
 # Windows specifics #
 
-[GNUwin32 instructions](windows-instructions.txt)
+[GNUwin32 instructions](gnuwin32.md)
 
 
 ## Preparing build environment ##
