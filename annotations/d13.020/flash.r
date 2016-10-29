@@ -17,12 +17,10 @@ af+ 0x800c188 1446 Create_MainMenyEntry
 af+ 0x800c72e 86 md380_create_menu_entry
 af+ 0x800fc84 18 md380_menu_entry_back
 
-CCa 0x8012260 md380_menu_0x2001d3f4
 CCa 0x801228c md380_menu_0x2001d3ed
 CCa 0x801229c md380_menu_0x2001d3ef
 
 CCa 0x80122ac md380_menu_0x2001d3f0
-CCa 0x8012592 md380_menu_0x2001d3f4
 CCa 0x80125be md380_menu_0x2001d3ed
 CCa 0x80125ce md380_menu_0x2001d3ef
 CCa 0x80125de md380_menu_0x2001d3f0
@@ -47,7 +45,6 @@ CCa 0x801391a G.r.o.u.p.L.i.s
 CCa 0x801394a C.o.l.o.r...C.o
 CCa 0x8013978 R.e.p.e.a.t.e.r
 
-CCa 0x80139b0 md380_menu_0x2001d3f4
 CCa 0x80139dc md380_menu_0x2001d3ed
 CCa 0x80139ec md380_menu_0x2001d3ef
 CCa 0x80139fc md380_menu_0x2001d3f0
@@ -66,7 +63,6 @@ CCa 0x80157e6 Create_Menu_Entry_RX_QRG_3
 
 af+ 0x80157fc 126 Create_Menu_Entry_RX_QRG_2
 
-CCa 0x801580c md380_menu_0x2001d3f4
 CCa 0x801581e md380_menu_0x2001d3ed
 CCa 0x8015832 md380_menu_0x2001d3ef
 CCa 0x8015846 md380_menu_0x2001d3f0
@@ -77,33 +73,26 @@ af+ 0x8015900 628 Create_Menu_Entry_RX_QRG_4
 f Create_Menu_Entry_RX_QRG_4 @ 0x8015900
 
 CCa 0x801592a md380_menu_0x2001d3ef
-CCa 0x8015bf8 md380_menu_0x2001d3f4
 CCa 0x8015c38 md380_menu_0x2001d3ed
 CCa 0x8015c48 md380_menu_0x2001d3ef
 CCa 0x8015c58 md380_menu_0x2001d3f0
-CCa 0x8015cdc md380_menu_0x2001d3f4
 CCa 0x8015cee md380_menu_0x2001d3ed
 CCa 0x8015d02 md380_menu_0x2001d3ef
 CCa 0x8015d16 md380_menu_0x2001d3f0
 CCa 0x8015dfc md380_menu_0x2001d3ef
-CCa 0x801602a md380_menu_0x2001d3f4
 CCa 0x8016074 md380_menu_0x2001d3ed
 CCa 0x801607e md380_menu_0x2001d3ef
 CCa 0x8016088 md380_menu_0x2001d3f0
 CCa 0x8016b6a md380_menu_0x2001d3ed
 CCa 0x8016b7a md380_menu_0x2001d3ef
 CCa 0x8016b8a md380_menu_0x2001d3f0
-CCa 0x8016c10 md380_menu_0x2001d3f4
 CCa 0x8016c22 md380_menu_0x2001d3ed
 CCa 0x8016c36 md380_menu_0x2001d3ef
 CCa 0x8016c4a md380_menu_0x2001d3f0
-CCa 0x8016ee2 md380_menu_0x2001d3f4
 CCa 0x8016f26 md380_menu_0x2001d3ef
 CCa 0x8016f50 md380_menu_0x2001d3ed
 CCa 0x8016f60 md380_menu_0x2001d3ef
 CCa 0x8016f70 md380_menu_0x2001d3f0
-CCa 0x8016ff6 md380_menu_0x2001d3f4
-CCa 0x801748c md380_menu_0x2001d3f4
 CCa 0x80174b0 md380_menu_0x2001d3ed
 CCa 0x80174bc md380_menu_0x2001d3ef
 CCa 0x80174c8 md380_menu_0x2001d3f0
@@ -129,22 +118,16 @@ CCa 0x801afd6 md380_menu_0x2001d3f0
 
 af+ 0x801b042 26 md380_menu_numerical_input
 
-CCa 0x801b052 md380_menu_0x2001d3f4
-CCa 0x801b628 md380_menu_0x2001d3f4
 CCa 0x801b64e md380_menu_0x2001d3ed
 CCa 0x801b65a md380_menu_0x2001d3ef
 CCa 0x801b666 md380_menu_0x2001d3f0
-CCa 0x801b8a8 md380_menu_0x2001d3f4
 CCa 0x801b8d0 md380_menu_0x2001d3ed
 CCa 0x801b8e0 md380_menu_0x2001d3ef
 CCa 0x801b8e8 md380_menu_0x2001d3f1
 CCa 0x801b8f0 md380_menu_0x2001d3f0
-CCa 0x801bbba md380_menu_0x2001d3f4
 CCa 0x801bbe6 md380_menu_0x2001d3ed
 CCa 0x801bbf6 md380_menu_0x2001d3ef
 CCa 0x801bc06 md380_menu_0x2001d3f0
-CCa 0x801c194 md380_menu_0x2001d3f4
-CCa 0x801c1b4 md380_menu_0x2001d3f4
 
 f gfx_blockfill 30 0x801d88c
 af+ 0x801d88c 30 gfx_blockfill
@@ -208,11 +191,9 @@ CCa 0x8022fde md380_menu_edit_buf
 af+ 0x80237fe 86 gfx_drawbmp
 f gfx_drawbmp 0 0x80237fe
 
-CCa 0x8023c4c md380_menu_0x2001d3f4
 CCa 0x8023c72 md380_menu_0x2001d3ef
 CCa 0x8023c78 md380_menu_0x2001d3ed
 CCa 0x8023c88 md380_menu_0x2001d3f0
-CCa 0x8023d0c md380_menu_0x2001d3f4
 CCa 0x8023d38 md380_menu_0x2001d3ed
 CCa 0x8023d48 md380_menu_0x2001d3ef
 CCa 0x8023d58 md380_menu_0x2001d3f0
@@ -220,16 +201,12 @@ CCa 0x8023e16 md380_menu_0x2001d3ef
 
 af+ 0x8023ee4 394 Edit_Message_Menu_Entry
 
-CCa 0x802407e md380_menu_0x2001d3f4
-CCa 0x8024222 md380_menu_0x2001d3f4
 CCa 0x8024248 md380_menu_0x2001d3ed
 CCa 0x8024258 md380_menu_0x2001d3ef
 CCa 0x8024268 md380_menu_0x2001d3f0
 CCa 0x8024428 md380_menu_0x2001d3ef
 CCa 0x8024430 md380_menu_0x2001d3ed
 CCa 0x8024436 md380_menu_0x2001d3f0
-CCa 0x80244c8 md380_menu_0x2001d3f4
-CCa 0x80246a8 md380_menu_0x2001d3f4
 CCa 0x8024818 md380_menu_0x2001d3ef
 CCa 0x8024824 md380_menu_0x2001d3ed
 CCa 0x802482c md380_menu_0x2001d3f0
@@ -239,38 +216,30 @@ CCa 0x8024868 md380_menu_0x2001d3f0
 CCa 0x8024890 md380_menu_0x2001d3ef
 CCa 0x802489c md380_menu_0x2001d3ed
 CCa 0x80248a4 md380_menu_0x2001d3f0
-CCa 0x80249c8 md380_menu_0x2001d3f4
-CCa 0x80251f8 md380_menu_0x2001d3f4
 CCa 0x802521c md380_menu_0x2001d3ef
 CCa 0x8025222 md380_menu_0x2001d3ed
 CCa 0x8025230 md380_menu_0x2001d3f0
 CCa 0x80256f2 md380_menu_0x2001d3ef
 CCa 0x8025728 md380_menu_0x2001d3ef
-CCa 0x802573e md380_menu_0x2001d3f4
 CCa 0x8025760 md380_menu_0x2001d3ef
 CCa 0x8025768 md380_menu_0x2001d3ed
 
 af+ 0x8025ae4 888 F_4315
 
-CCa 0x8025e9e md380_menu_0x2001d3f4
 CCa 0x8025ef6 md380_menu_0x2001d3ef
 CCa 0x8025efc md380_menu_0x2001d3ed
 CCa 0x8025f0c md380_menu_0x2001d3f0
 CCa 0x8025fa2 md380_menu_0x2001d3ef
 CCa 0x8025fca md380_menu_0x2001d3ef
-CCa 0x8025fd0 md380_menu_0x2001d3f4
 CCa 0x8025fd8 md380_menu_0x2001d3ef
 CCa 0x8025fde md380_menu_0x2001d3ed
-CCa 0x8026a6a md380_menu_0x2001d3f4
 CCa 0x8026ac0 md380_menu_0x2001d3ef
 CCa 0x8026ac8 md380_menu_0x2001d3ed
 CCa 0x8026ad8 md380_menu_0x2001d3f0
 CCa 0x8026dde md380_menu_0x2001d3ef
 CCa 0x8026e14 md380_menu_0x2001d3ef
-CCa 0x8026e30 md380_menu_0x2001d3f4
 CCa 0x8026e56 md380_menu_0x2001d3ef
 CCa 0x8026e5e md380_menu_0x2001d3ed
-CCa 0x802727e md380_menu_0x2001d3f4
 CCa 0x8027290 md380_menu_0x2001d3f0
 
 af+ 0x802b3f6 80 md380_RTC_GetTime
@@ -336,27 +305,21 @@ af+ 0x8031830 52 spiflash_Erase_Security_Registers_44h
 af+ 0x8031864 76 spiflash_Program_Security_Registers_42h
 af+ 0x80318b0 78 md380_spiflash_security_registers_read
 af+ 0x8033eb4 104 OSTimeDly
-CCa 0x8034c48 md380_menu_0x2001d3f4
 CCa 0x8034c74 md380_menu_0x2001d3ed
 CCa 0x8034c84 md380_menu_0x2001d3ef
 CCa 0x8034c94 md380_menu_0x2001d3f0
-CCa 0x8034d2c md380_menu_0x2001d3f4
 CCa 0x8034d58 md380_menu_0x2001d3ed
 CCa 0x8034d68 md380_menu_0x2001d3ef
 CCa 0x8034d78 md380_menu_0x2001d3f0
-CCa 0x8035bd0 md380_menu_0x2001d3f4
-CCa 0x80363c2 md380_menu_0x2001d3f4
 CCa 0x80363ee md380_menu_0x2001d3ed
 CCa 0x80363fe md380_menu_0x2001d3ef
 CCa 0x803640e md380_menu_0x2001d3f0
-CCa 0x803a578 md380_menu_0x2001d3f4
 CCa 0x803a59e md380_menu_0x2001d3ef
 CCa 0x803a5a6 md380_menu_0x2001d3ed
 CCa 0x803a5b6 md380_menu_0x2001d3f0
 CCa 0x803a654 md380_menu_0x2001d3ef
 CCa 0x803a8f8 md380_menu_0x2001d3ef
 CCa 0x803a920 md380_menu_0x2001d3ef
-CCa 0x803a936 md380_menu_0x2001d3f4
 CCa 0x803a956 md380_menu_0x2001d3ef
 CCa 0x803a95c md380_menu_0x2001d3ed
 
