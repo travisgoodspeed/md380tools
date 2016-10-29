@@ -28,7 +28,7 @@
 #if defined(FW_D13_020) || defined(FW_S13_020)
 inline int get_main_mode()
 {
-    return md380_f_4225_operatingmode & 0x7F ;
+    return gui_opmode1 & 0x7F ;
 }
 
 void reset_backlight()
@@ -51,7 +51,7 @@ void switch_to_screen( int scr )
 {
     // cause transient -> switch back to idle screen.
     gui_opmode2 = OPM2_MENU ;
-    md380_f_4225_operatingmode = SCR_MODE_IDLE | 0x80 ;
+    gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
     
     nm_screen = scr ;
 }
@@ -80,7 +80,7 @@ void handle_hotkey( int keycode )
             nm_screen = 0 ;
             // cause transient.
             gui_opmode2 = OPM2_MENU ;
-            md380_f_4225_operatingmode = SCR_MODE_IDLE | 0x80 ;
+            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
             break ;
         case 8 :
             switch_to_screen(1);

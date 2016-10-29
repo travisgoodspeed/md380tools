@@ -57,22 +57,22 @@ void * f_4225_internel_hook()
 {
 //    if( new_anti || global_addl_config.experimental == 1 ) {
     if( new_anti ) {
-        return &md380_f_4225_operatingmode;
+        return &gui_opmode1;
     }
 
 #ifdef DEBUG
-    //    printf("<%d> \n", md380_f_4225_operatingmode);
+    //    printf("<%d> \n", gui_opmode1);
 #endif
-    if( md380_f_4225_operatingmode == SCR_MODE_MENU ) {
+    if( gui_opmode1 == SCR_MODE_MENU ) {
         flag = 1;
     }
-    if( md380_f_4225_operatingmode == SCR_MODE_CHAN_IDLE_INIT ) {
+    if( gui_opmode1 == SCR_MODE_CHAN_IDLE_INIT ) {
         flag = 0;
     }
     if( flag == 1 ) {
-        md380_f_4225_operatingmode = SCR_MODE_MENU;
+        gui_opmode1 = SCR_MODE_MENU;
     }
-    return &md380_f_4225_operatingmode;
+    return &gui_opmode1;
 }
 
 // 0x2001e895 != 32
@@ -209,8 +209,8 @@ void OSTimeDly(uint32_t delay);
 void trace_scr_mode()
 {
     static int old = -1 ;
-    int new = md380_f_4225_operatingmode & 0x7F ;
-    int upd = md380_f_4225_operatingmode > 0x7F ;
+    int new = gui_opmode1 & 0x7F ;
+    int upd = gui_opmode1 > 0x7F ;
     if( upd == 0 ) {
         // to prevent flooding. 
         // still interesting flooding. it keeps on setting mode 19. when rx in other timeslot.
@@ -245,13 +245,13 @@ void f_4225_hook()
 #endif   
     if( new_anti ) {
         static int old = -1 ;
-        int new = md380_f_4225_operatingmode & 0x7F ;
+        int new = gui_opmode1 & 0x7F ;
         if( old != new ) {
             if( gui_opmode2 == OPM2_MENU ) {
                 // menu displayed.
                 if( new == SCR_MODE_IDLE || new == SCR_MODE_RX_VOICE || new == SCR_MODE_RX_TERMINATOR ) {
                     // from menu to popup transition.
-                    md380_f_4225_operatingmode = SCR_MODE_MENU ;
+                    gui_opmode1 = SCR_MODE_MENU ;
                 }
             } else {
                 old = new ;

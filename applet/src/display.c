@@ -94,8 +94,8 @@ void draw_micbargraph()
     int is_tx = 0 ;
     int is_rx = 0 ;
 
-    is_tx = md380_f_4225_operatingmode == SCR_MODE_RX_VOICE && max_level > 10 ;
-    is_rx = md380_f_4225_operatingmode == SCR_MODE_RX_TERMINATOR ;
+    is_tx = gui_opmode1 == SCR_MODE_RX_VOICE && max_level > 10 ;
+    is_rx = gui_opmode1 == SCR_MODE_RX_TERMINATOR ;
 
 #ifdef FW_D13_020
     {

@@ -101,7 +101,7 @@ void netmon1_update()
         
     con_clrscr();
     
-    con_printf("%c|%02d|%2d|%2d|%4d\n", c, md380_f_4225_operatingmode & 0x7F, gui_opmode2, *mode3, *cntr2 ); 
+    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, *mode3, *cntr2 ); 
     
 #ifdef FW_D13_020
     {

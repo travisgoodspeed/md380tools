@@ -200,7 +200,7 @@ welcomebmp		=	0x080f9ca8;
 beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 */
 
 /* Variabes regarding rtc_timer process. */
-md380_f_4225_operatingmode =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
+gui_opmode1 =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */
 
 
 /* AMBE Buffer variables */

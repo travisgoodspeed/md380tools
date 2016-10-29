@@ -125,7 +125,7 @@ F_4315                                 = 0x8025ae5;
 
 
 /* Variabes regarding rtc_timer process. */
-md380_f_4225_operatingmode            = 0x2001e94d; /* 0x0803bef0 */
+gui_opmode1            = 0x2001e94d; /* 0x0803bef0 */
 
 /* hook 0x0801fe7c (alt: 0x0801f064) */
 md380_f_4225                          = 0x0801fe5d;
