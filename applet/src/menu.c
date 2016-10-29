@@ -778,7 +778,7 @@ void create_menu_entry_netmon_enable_screen(void)
     cfg_save();
 }
 
-#if defined(FW_D13_020)    
+#if defined(FW_D13_020) || defined(FW_S13_020)
 int enabled = 1;
 #else
 int enabled = 0;
