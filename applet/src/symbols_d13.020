@@ -182,7 +182,7 @@ f_4101 = 0x0804ec67 ;
 kb_handler = 0x0804f94d ;
 kb_keycode = 0x2001e890;
 kb_keypressed = 0x2001e5f8;
-kb_key_row_col = 0x2001e7ba;
+kb_row_col_pressed = 0x2001e7ba;
 kb_key_press_time = 0x2001e7be; /* UNVERIFIED */
 
 backlight_timer = 0x2001e7f8;

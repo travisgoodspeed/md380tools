@@ -111,7 +111,7 @@ void trace_keyb(int sw)
     uint8_t kp = kb_keypressed ;
     
     if( old_kp != kp ) {
-        PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_key_row_col, kb_keycode );
+        PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_row_col_pressed, kb_keycode );
         old_kp = kp ;
     }
 }

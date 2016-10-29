@@ -19,7 +19,7 @@ void f_4101();
 extern uint8_t kb_keycode;
 extern uint8_t kb_keypressed;
 extern uint8_t kb_key_press_time;
-extern uint16_t kb_key_row_col;
+extern uint16_t kb_row_col_pressed;
 extern uint16_t backlight_timer;
 #endif
 
