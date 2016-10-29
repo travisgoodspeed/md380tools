@@ -54,6 +54,15 @@ flash_original_D02: original_D02
 flash_original_D03: original_D03
 	./md380-dfu upgrade firmware/bin/D003.020.bin
 	
+flash: image_D13
+	./md380-dfu upgrade applet/experiment.bin
+
+flash_D02: image_D02
+	./md380-dfu upgrade applet/experiment.bin
+	
+flash_D13: image_D13
+	./md380-dfu upgrade applet/experiment.bin
+	
 #flash:
 #	"${MAKE}" -C applet clean flash
 #	
@@ -63,14 +72,6 @@ flash_original_D03: original_D03
 #flash_s13.020:
 #	"${MAKE}" -C applet FW=S13_020 clean flash
 	
-#.PHONY: data
-#data:
-#	"${MAKE}" -C db
-#	if [ -e db/custom.csv ]; then cat db/custom.csv >> db/users.csv; sort -n -t , -k 1 db/users.csv > db/sorted.csv; mv db/sorted.csv db/users.csv; fi
-#	$(ICONV) db/users.csv | cut -d',' -f1-3,5-6 | sed 's/,\s+/,/g' > data.csv
-#	wc -c < data.csv > data
-#	cat data.csv >> data
-
 .PHONY: updatedb 
 updatedb:
 	"${MAKE}" -C db update
@@ -108,9 +109,6 @@ dist:
 	rm -rf $(RELEASE)/__MACOSX
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
-
-doflash: image_D13
-	./md380-dfu upgrade applet/experiment.bin
 
 
 # or else make will fail.
