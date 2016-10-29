@@ -15,7 +15,7 @@ extern "C" {
 
 void f_4101();
 
-#ifndef FW_D02_032
+#if defined(FW_D13_020) || defined(FW_S13_020)
 extern uint8_t kb_keycode;
 extern uint8_t kb_keypressed;
 extern uint8_t kb_key_press_time;

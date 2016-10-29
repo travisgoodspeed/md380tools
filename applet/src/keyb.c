@@ -157,7 +157,7 @@ inline int is_intercepted_keycode( int kc )
             return 0 ;
     }    
 }
-#endif //ndef FW_D02_032
+#endif
 
 extern void kb_handler();
 
