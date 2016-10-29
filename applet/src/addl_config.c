@@ -99,7 +99,7 @@ void cfg_load()
     // global_addl_config.experimental is intentionally not permanent
     global_addl_config.experimental = 0;
 
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
 #else
     global_addl_config.netmon = 0 ;
 #endif
