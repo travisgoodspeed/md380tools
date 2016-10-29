@@ -161,25 +161,25 @@ void dummy()
 //    //gfx_drawtext(str, sx, sy, x, y, maxlen);
 //}
 
-#if defined(FW_D13_020)
-void gfx_drawtext8_hook(uint8_t *r0)
-{
-    gfx_info_t *g = &gfx_info ;
-    
-//    if( g->xpos == 10 && g->ypos == 55 ) {
-//        // filter out status.
-//        return ;
-//    }
-    
-    PRINT("%s \n",r0);
-    PRINT("Dt8: %d %d %08x %08x %x\n", g->xpos, g->ypos, g->fg_color, g->bg_color, g->off44 );
-    
-//    PRINT("%s\n",r0);
-//    printhex(g,72);
-//    PRINT("\n");
-    //gfx_drawtext(str, sx, sy, x, y, maxlen);
-}
-#endif
+//#if defined(FW_D13_020)
+//void gfx_drawtext8_hook(uint8_t *r0)
+//{
+//    gfx_info_t *g = &gfx_info ;
+//    
+////    if( g->xpos == 10 && g->ypos == 55 ) {
+////        // filter out status.
+////        return ;
+////    }
+//    
+//    PRINT("%s \n",r0);
+//    PRINT("Dt8: %d %d %08x %08x %x\n", g->xpos, g->ypos, g->fg_color, g->bg_color, g->off44 );
+//    
+////    PRINT("%s\n",r0);
+////    printhex(g,72);
+////    PRINT("\n");
+//    //gfx_drawtext(str, sx, sy, x, y, maxlen);
+//}
+//#endif
 
 void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
