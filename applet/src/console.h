@@ -39,26 +39,7 @@ void con_redraw();
 inline int is_menu_visible()
 {
     return gui_opmode2 == OPM2_MENU ;
-//#ifdef FW_D13_020
-//    if( gui_opmode2 == 10 ) {
-//        return 1 ;
-//    }
-//#endif    
-//    return (md380_f_4225_operatingmode & 0x7F) == SCR_MODE_MENU ;
 }
-
-//inline int is_console_visible()
-//{
-//#if defined(FW_D13_020)    
-//    if( global_addl_config.netmon == 0 ) {
-//        return 0 ;
-//    }
-//    return !is_menu_visible();
-//#else
-//    return 0 ;
-//#endif    
-//}
-
 
 #ifdef __cplusplus
 }
