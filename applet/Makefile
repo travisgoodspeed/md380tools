@@ -106,7 +106,7 @@ proj: 	$(PROJ_NAME).elf experiment.img
 wrapped: lib proj
 	../md380-fw --wrap experiment.img experiment.bin
 
-#This flashes from unix.
+#This flashes from unix. (deprecated)
 flash: wrapped
 	../md380-dfu upgrade experiment.bin
 
