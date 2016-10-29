@@ -542,9 +542,9 @@ af+ 0x0804fc2a 2 dummy_0x0804fc2a
 af+ 0x0804fc2c 2 dummy_0x0804fc2c
 
 # modes
-f op_mode1 @ 0x2001e94d
-f op_mode2 @ 0x2001e94b
-f op_mode3 @ 0x2001e892
+f gui_opmode1 @ 0x2001e94d
+f gui_opmode2 @ 0x2001e94b
+f gui_opmode3 @ 0x2001e892
 
 af+ 0x801eb00 1436 handle_keycode_F_4171
 
