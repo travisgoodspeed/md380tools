@@ -363,6 +363,8 @@ af+ 0x08036fbc 2 do_nothing_2
 
 # gfx_
 
+f gfx_info @ 0x2001da1c
+
 f gfx_rc @ 0x080249be
 
 f gfx_newline @ 0x08033c04
