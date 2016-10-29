@@ -63,10 +63,10 @@ aus.
 
 Möchte man nach der Übersetzung gleich die neue Firmware in das Funkgerät flashen, so bringt man das Funkgerät zunächst in den Flashmodus (Einschalten mit gedrückter PTT-Taste und der oberen Funktionstaste), schließt es mit dem USB-Programmierkabel an den Computer an und führt einen der folgenden Befehle aus:
  `make flash`         
- `make flash_d02.032` - für das MD-380 (flashen der älteren Firmware-Version)
+ `make flash_D02` - für das MD-380 (flashen der älteren Firmware-Version)
  
- `make flash_d13.020` - für das MD-380  
- `make flash_s13.020` - für das MD-390/G
+ `make flash_D13` - für das MD-380  
+ `make flash_S13` - für das MD-390/G
 auf.
 
 <note tip>**Firmware mit dem Tytera Updater einspielen:**

@@ -13,9 +13,17 @@ Flash original oldest FW for MD380.
 
     make flash_original_D02
 
-Flash experimental FW for MD30
+Flash experimental FW for MD380 (based on D13)
 
-    make doflash
+    make flash
+
+Flash experimental FW for MD380 (based on D02)
+
+    make flash_D02
+
+Flash experimental FW for MD390 (based on S13)
+
+    make flash_D13
 
 Update userdb
 

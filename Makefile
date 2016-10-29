@@ -63,6 +63,9 @@ flash_D02: image_D02
 flash_D13: image_D13
 	./md380-dfu upgrade applet/experiment.bin
 	
+flash_S13: image_S13
+	./md380-dfu upgrade applet/experiment.bin
+	
 #flash:
 #	"${MAKE}" -C applet clean flash
 #	
