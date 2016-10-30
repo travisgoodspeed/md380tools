@@ -125,7 +125,7 @@ ci: mostlyclean
 	"${MAKE}" -C applet ci
 	"${MAKE}" -C db ci
 	"${MAKE}" user.bin
-	"${MAKE}" -C annotations/d13.020 ci
+#	"${MAKE}" -C annotations/d13.020 ci
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less
