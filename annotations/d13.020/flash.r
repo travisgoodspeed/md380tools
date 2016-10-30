@@ -126,7 +126,7 @@ af+ 0x8030ad8 16 F_294
 f md380_OSMboxPend @ 0x8031084
 af+ 0x8031084 258 md380_OSMboxPend
 
-af+ 0x803119c 86 OSMboxPost
+af+ 0x803119c 86 md380_OSMboxPost
 
 af+ 0x8031276 52 md380_spiflash_sektor_erase4k
 af+ 0x80312aa 52 md380_spiflash_block_erase64k
