@@ -120,7 +120,12 @@ dist:
 all_images: 
 	"${MAKE}" -C applet ci
 	
-ci: mostlyclean 
+dbg:
+	@echo SHELL: \"${SHELL}\"
+	@echo MAKE: \"${MAKE}\"
+	awk -V
+    
+ci: dbg mostlyclean 
 	"${MAKE}" -C applet ci
 	"${MAKE}" -C db ci
 	"${MAKE}" user.bin
