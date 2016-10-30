@@ -121,7 +121,7 @@ all_images:
 	"${MAKE}" -C applet ci
 	
 dbg:
-	#@echo PATH: \"${PATH}\"  # borked on gnuwin2
+	@echo PATH: ${PATH}
 	@echo SHELL: \"${SHELL}\"
 	@echo MAKE: \"${MAKE}\"
 	@echo ________
