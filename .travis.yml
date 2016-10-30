@@ -9,7 +9,8 @@ addons:
     packages:
       - gcc-arm-none-eabi
       - libnewlib-arm-none-eabi
-      - libstdc++-arm-none-eabi-newlib
+#      - libstdc++-arm-none-eabi-newlib
+#	- gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi
 
 compiler:
   - gcc
