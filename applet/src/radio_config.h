@@ -63,7 +63,7 @@ struct keyboard_data2 {
 };
 
 // lucky guess, written as documentation.
-// lives around md380_radio_fm_dmr = 0x2001deb8;  
+// lives around current_channel_info = 0x2001deb8;  
 // from pc = 0x080134dc 
 // it would be nice if this correlates with chirp md380.py struct memory.
 struct channel_mode_unknown {

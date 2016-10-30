@@ -207,11 +207,16 @@ typedef struct {
     wchar_t name[16];
 } ci_t ;
 
+#ifdef FW_D13_020
+extern ci_t current_channel_info ;
+#endif
+
 void netmon2_update()
 {
-    ci_t *ci = (void*)0x2001deb8 ;
-    
     con_clrscr();
+#ifdef FW_D13_020
+    ci_t *ci = &current_channel_info ;
+    
     {
         con_puts("rx:");
         printfreq(&ci->rxf);
@@ -228,6 +233,9 @@ void netmon2_update()
 
         con_printf("cn:%S\n", ci->name ); // assume zero terminated.
     }
+#else
+    con_puts("D13 has more\n");
+#endif    
     print_hdr();
     print_vce();
     
