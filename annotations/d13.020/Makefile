@@ -3,7 +3,8 @@ radare:
 	radare2 -a arm -m 0x0800C000  -b 16 -i flash.r ../../firmware/unwrapped/D013.020.img
 	
 tmp:
-	radare2 -a arm -m 0x0800C000  -b 16 -i r2.tmp ../../firmware/unwrapped/D013.020.img
+	./conv.sh
+	radare2 -a arm -m 0x0800C000  -b 16 -i flash.r -i ra.tmp ../../firmware/unwrapped/D013.020.img
 	
 experiment:
 	radare2 -a arm -m 0x0800C000  -b 16 -i flash.r ../../applet/experiment.img
@@ -14,3 +15,6 @@ asm.lst: flash.r Makefile disasm.r
 	
 clean:
 	-rm *.tmp
+	
+ci:
+	./conv.sh
