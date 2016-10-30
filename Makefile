@@ -127,7 +127,7 @@ dbg:
 	@echo MAKE: '${MAKE}'
 	@echo ________
 	@echo AWK version
-	awk -V
+	-awk -V
 	@echo ________
 	@echo Make version
 	make -v
