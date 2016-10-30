@@ -11,7 +11,6 @@ botlinetext = 0x08021895;
 gfx_drawtext                           = 0x800D88B;
 gfx_drawbmp                            = 0x8022887;
 gfx_drawtext2                          = 0x801cf1d;
-gfx_chars_to_display                   = 0x801cf1d;
 
 gfx_select_font                        = 0x8020975;
 gfx_font_small                         = 0x809bcec;

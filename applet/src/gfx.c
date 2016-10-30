@@ -167,7 +167,7 @@ void print_date_hook(void)
   }
 
   wide[10]='\0';
-  gfx_chars_to_display( wide, 0xa, 0x60, 0x5e);
+  gfx_drawtext2( wide, 0xa, 0x60, 0x5e);
 
 //  dump_ram_to_spi_flash();
 
@@ -239,7 +239,7 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
 }
 
 // r0 = str, r1 = x, r2 = y, r3 = xlen
-void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
+void gfx_drawtext2_hook(wchar_t *str, int x, int y, int xlen)
 {
     // filter datetime (y=96)
     if( y != 96 ) {
@@ -251,7 +251,7 @@ void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen)
         return ;
     }
     
-    gfx_chars_to_display(str, x, y, xlen);
+    gfx_drawtext2(str, x, y, xlen);
 }
 
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
@@ -317,7 +317,7 @@ void gfx_printf_pos2(int x, int y, int ylen, const char *fmt, ...)
     va_start(va, fmt);
 
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
-    gfx_chars_to_display(buf,x,y,ylen);
+    gfx_drawtext2(buf,x,y,ylen);
     
     va_end(va);        
 }

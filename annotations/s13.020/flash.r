@@ -19,7 +19,6 @@ af+ 0x801b172 26 md380_menu_numerical_input
 af+ 0x801d49c 8 gfx_set_bg_color **
 
 af+ 0x801d9c0 30 gfx_blockfill **
-af+ 0x801de3c 18 gfx_chars_to_display **
 af+ 0x801de3c 18 gfx_drawtext2 **
 af+ 0x8021b50 16 gfx_select_font **
 af+ 0x8022846 324 aes_startup_check

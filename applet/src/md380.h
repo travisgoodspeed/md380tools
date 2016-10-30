@@ -26,12 +26,6 @@ void gfx_drawbmp(char *bmp,
 		 int x,
 		 int y);
 
-void gfx_drawtext2(wchar_t *str,    //16-bit, little endian.
-                   int x, int y,   //X and Y position
-                   int maxlen);
-
-
-
 void gfx_set_bg_color(int color);
 void gfx_set_fg_color(int color);
 

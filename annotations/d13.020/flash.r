@@ -400,18 +400,18 @@ af+ 0x0802189c 154 gfx_drawchar
 af+ 0x800def6 36 gfx_drawtext
 f gfx_drawtext 0 0x800def6
 
-af+ 0x801dd08 18 gfx_chars_to_display
-f gfx_chars_to_display 0 0x801dd08
+af+ 0x801dd08 18 gfx_drawtext2
+f gfx_drawtext2 0 0x801dd08
 
-f call_gfx_chars_to_display_1 0 0x0801ea2e
-f call_gfx_chars_to_display_2 0 0x0801f02c
-f call_gfx_chars_to_display_3 0 0x0801f044
-f call_gfx_chars_to_display_4 0 0x0801f07a
-f call_gfx_chars_to_display_5 0 0x0801f092
-f call_gfx_chars_to_display_6 0 0x0802d660
-f call_gfx_chars_to_display_7 0 0x0802d70e
-f call_gfx_chars_to_display_8 0 0x0802d8e2
-f call_gfx_chars_to_display_9 0 0x0802d9e4
+f call_gfx_drawtext2_1 0 0x0801ea2e
+f call_gfx_drawtext2_2 0 0x0801f02c
+f call_gfx_drawtext2_3 0 0x0801f044
+f call_gfx_drawtext2_4 0 0x0801f07a
+f call_gfx_drawtext2_5 0 0x0801f092
+f call_gfx_drawtext2_6 0 0x0802d660
+f call_gfx_drawtext2_7 0 0x0802d70e
+f call_gfx_drawtext2_8 0 0x0802d8e2
+f call_gfx_drawtext2_9 0 0x0802d9e4
 
 f gfx_drawtext3 0 0x0802b142
 af+ 0x0802b142 148 gfx_drawtext3

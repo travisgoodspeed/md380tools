@@ -35,7 +35,7 @@ gfx_drawtext8( char *r0 )
 }
 
 // r0 = str, r1 = x, r2 = y, r3 = xlen
-void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen)
+void gfx_drawtext2(wchar_t *str, int x, int y, int xlen)
 {
     gfx_drawtext6( str, x, y, 18);
     gfx_clear3( xlen );

@@ -3,7 +3,7 @@
 */
 
 // xlen: if curpos > xlen print ".." instead.
-void gfx_chars_to_display(wchar_t *str, int x, int y, int xlen); // firmware
+void gfx_drawtext2(wchar_t *str, int x, int y, int xlen); // firmware
 
 
 //! Draws wide text at an address by calling back to the MD380 function.
@@ -98,7 +98,7 @@ void gfx_drawchar( uint8_t c );
 void* gfx_select_font(void *p);
 
 // max strlen = 18, if larger end in ".."
-void gfx_chars_to_display_hook(wchar_t *str, int x, int y, int xlen);
+void gfx_drawtext2_hook(wchar_t *str, int x, int y, int xlen);
 
 // if larger than maxstrlen end in ".."
 void gfx_drawtext4(const wchar_t *str, int x, int y, int xlen, int maxstrlen);

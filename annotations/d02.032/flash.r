@@ -2412,7 +2412,7 @@ CCa 0x801cc46 md380_menu_0x2001d3ef
 CCa 0x801ce56 md380_menu_0x2001d3ef
 CCa 0x801ce64 md380_menu_0x2001d3ef
 af+ 0x801ced2 40 F_993
-af+ 0x801cf1c 18 gfx_chars_to_display
+af+ 0x801cf1c 18 gfx_drawtext2
 af+ 0x801cf2e 18 F_799
 af+ 0x801cf40 16 F_4169
 af+ 0x801cf50 30 F_4291
