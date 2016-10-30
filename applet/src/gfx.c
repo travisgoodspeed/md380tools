@@ -309,7 +309,7 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
 
 // the intention is a string shortened with .. if it is too long.
 // and that it fills all background
-void gfx_printf_pos2(int x, int y, int ylen, const char *fmt, ...)
+void gfx_printf_pos2(int x, int y, int xlen, const char *fmt, ...)
 {
     wchar_t buf[MAX_SCR_STR_LEN];
     
@@ -317,7 +317,7 @@ void gfx_printf_pos2(int x, int y, int ylen, const char *fmt, ...)
     va_start(va, fmt);
 
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
-    gfx_drawtext2(buf,x,y,ylen);
+    gfx_drawtext2(buf,x,y,xlen);
     
     va_end(va);        
 }
