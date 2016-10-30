@@ -1,5 +1,5 @@
 
-SYM=sym.tmp
+SYM=flash_sym.tmp
 
 #link_2_ra()
 #{
@@ -11,7 +11,26 @@ sym2ra()
 awk -f sym2ra.awk
 }
 
-awk -f ra2sym.awk flash.r | sort >$SYM
+ra2sym()
+{
+awk -f ra2sym.awk | sort
+}
+
+sym_strip()
+{
+awk '{ print $1 OFS $2 }'
+}
+
+lnk2sym()
+{
+sed 's/;/ ; /' | awk -f lnk2sym.awk | sort
+}
+
+ra2sym <flash.r | sym_strip >o1.tmp
+lnk2sym <../../applet/src/symbols_d13.020 | sym_strip >o2.tmp
+
+ra2sym <flash.r  >$SYM
+
 
 awk -f sym2ra.awk $SYM >r2.tmp
 awk -f sym2lnk.awk $SYM >lnk.tmp
