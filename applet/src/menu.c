@@ -24,7 +24,11 @@
 #include "util.h"
 #include "printf.h"
 
+#ifdef FW_S13_020
+const static wchar_t wt_addl_func[]         = L"MD390Tools";
+#else
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
+#endif
 const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"USB logging";
 //const static wchar_t wt_netmon[]            = L"NetMon";
