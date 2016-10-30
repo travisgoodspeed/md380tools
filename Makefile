@@ -24,7 +24,6 @@ mostlyclean:
 	"${MAKE}" -C applet clean
 	"${MAKE}" -C db clean
 	rm -f *~ *.pyc
-	rm -f data data.csv	
 	-rm *.bin
 	
 image_D02:
