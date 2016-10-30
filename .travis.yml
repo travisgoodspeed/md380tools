@@ -2,8 +2,8 @@ language: cpp
 sudo: false
 addons:
   apt:
-    sources:
-      - debian-sid
+#    sources:
+#      - debian-sid
     packages:
       - gcc-arm-none-eabi
       - libnewlib-arm-none-eabi
@@ -33,13 +33,6 @@ script:
 # Please don't change anything here. Instead, add any extra build commands to ci-script.sh
 # This saves having to edit commands in three places for GnuWin32, CygWin & Linux
   - bash -x ci-script.sh
-#  - make all
-#  - make clean
-#  - cd applet
-#  - make -f Makefile.d02.032
-#  - cd ..
-#  - cd db
-#  - make all
 
 notifications:
   email: false
