@@ -3,6 +3,17 @@
 
 FW ?= D13_020
 
+ifeq (,$(wildcard mark.tmp))
+	# not exists
+  PROBLEM=0	
+else
+  old_build := $(shell cat mark.tmp)
+
+  ifneq "$(old_build)" "$(FW)"
+    PROBLEM=1
+  endif	
+endif
+
 ifeq ($(FW),D02_032)
     INC_DISPFLIP=1
     INC_I2C=1
@@ -88,9 +99,16 @@ OBJS = $(SRCS:.c=.o)
 
 all: mark lib proj wrapped	
 	
+.PHONY: mark
 mark:
-	touch $(FW).tmp
+ifeq "$(PROBLEM)" "1"
+	@echo "=================="
+	@echo "problem, make mostlyclean first"
+	@echo "=================="
+	@exit 1
+else	
 	echo $(FW) >mark.tmp
+endif	
 
 experiment.img: 
 	"${MAKE}" -C ../patches/$(PATCHDIR) patched.bin
@@ -129,7 +147,7 @@ src/version.h: src/*.c
 clean:
 	"${MAKE}" -C ../patches/$(PATCHDIR) clean
 	"${MAKE}" -C lib clean
-	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h *.map
+	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h *.map *.tmp
 
 image_D02:
 	"${MAKE}" FW=D02_032 all  
