@@ -39,9 +39,18 @@ const gfx_bitmap bmp_eye = {12, 12, 6, 4, eye_pix, &eye_pal, 0};
 
 void draw_eye_opt()
 {
+#ifdef FW_S13_020
+    // on MD390 draw promiscous mode eye closed to S-Meter due to GPS-symbol an standard position
+    if( global_addl_config.promtg == 1 ) {
+        gfx_drawbmp((char *) &bmp_eye, 20, 1);
+    }
+#else
+    // draw promiscous mode eye symbol 
     if( global_addl_config.promtg == 1 ) {
         gfx_drawbmp((char *) &bmp_eye, 65, 1);
     }
+
+#endif
 }
 
 // Takes a positive(!) integer amplitude and computes 200*log10(amp),
@@ -189,12 +198,12 @@ void draw_rx_screen(unsigned int bg_color)
     user_t usr ;
     
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
-        usr.callsign = "ID not found" ;
-        usr.firstname = "" ;
-        usr.name = "in users.csv" ;
-        usr.place = "see README.md" ;
-        usr.state = "on Github" ;
-        usr.country = "" ;
+        usr.callsign = "ID unknown" ;
+        usr.firstname = "No entry in" ;
+        usr.name = "your users.csv" ;
+        usr.place = "" ;
+        usr.state = "see README.md" ;
+        usr.country = "on Github" ;
     }
     
     int y_index = RX_POPUP_Y_START;
@@ -300,17 +309,21 @@ void draw_datetime_row_hook()
    the setting information and a picture or two. */
 void display_credits()
 {
+#ifdef FW_S13_020
+    drawtext(L"MD390Tools ", 160, 20);
+#else
     drawtext(L"MD380Tools ", 160, 20);
+#endif
     drawtext(L"by KK4VCZ  ", 160, 60);
     drawtext(L"and Friends", 160, 100);
 #ifdef MD380_d13_020
-    drawtext(L"@ d13.020", 160, 140);
+    drawtext(L"@ D13.020", 160, 140);
 #endif
 #ifdef MD380_d02_032
-    drawtext(L"@ d02.032", 160, 140);
+    drawtext(L"@ D02.032", 160, 140);
 #endif
 #ifdef MD380_s13_020
-    drawtext(L"@ s13.020", 160, 140);
+    drawtext(L"@ S13.020", 160, 140);
 #endif
 
     drawascii(GIT_VERSION, 160, 180);
