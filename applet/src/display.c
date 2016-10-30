@@ -309,11 +309,7 @@ void draw_datetime_row_hook()
    the setting information and a picture or two. */
 void display_credits()
 {
-#ifdef FW_S13_020
-    drawtext(L"MD390Tools ", 160, 20);
-#else
     drawtext(L"MD380Tools ", 160, 20);
-#endif
     drawtext(L"by KK4VCZ  ", 160, 60);
     drawtext(L"and Friends", 160, 100);
 #ifdef MD380_d13_020
