@@ -26,13 +26,13 @@ $1 == "af+" {
 }
 
 $1 == "f" {  
+    a = strtonum($4);
+    if( a in sym ) {
+        $2 = sym[a];
+#print "hit" OFS $4 OFS a       
+    }
     print $0 ;
     next ;
-#    a = cnv($4);
-#    if( a in addr ) {
-#        next ;
-#    }
-#    addr[a] = $2 ;
 }
 
 {

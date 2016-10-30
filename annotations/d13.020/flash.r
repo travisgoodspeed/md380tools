@@ -5,7 +5,7 @@ f md380_menu_memory @ 0x2001d5cc
 f mn_editbuffer_poi @ 0x200049fc
 f md380_menu_edit_buf @ 0x2001cb9a
 f md380_menu_0x2001d3f0 @ 0x2001e946
-f md380_menu_0x200011e4 @ 0x20004acc
+f md380_menu_depth @ 0x20004acc
 f md380_menu_0x2001d3ef @ 0x2001e945
 f md380_menu_0x2001d3f1 @ 0x2001e947
 
@@ -13,7 +13,7 @@ f md380_menu_0x2001d3ee @ 0x2001e944
 f md380_menu_0x2001d3f4 @ 0x2001e94a
 f md380_menu_0x2001d3ed @ 0x2001e943
 
-af+ 0x800c188 1446 Create_MainMenyEntry
+af+ 0x800c188 1446 md380_create_main_meny_entry
 af+ 0x800c72e 86 md380_create_menu_entry
 af+ 0x800fc84 18 md380_menu_entry_back
 
@@ -26,7 +26,7 @@ CCa 0x801354e R.a.d.i.o...I.n.
 CCa 0x801359a P.r.o.g.r.a.m..
 CCa 0x80135ce G.P.S./.B.e.i.D
 CCa 0x8013602 R.X...G.P.S.I.n.
-af+ 0x80136c0 930 Create_Menu_Entry_ProgramRadio
+af+ 0x80136c0 930 md380_menu_entry_programradio
 CCa 0x8013710 E.d.i.t...C.h.a.
 CCa 0x8013762 R.x...F.r.e.q.u
 CCa 0x80137ba C.h.a.n.n.e.l.
@@ -84,7 +84,7 @@ f menu_6_15_1 0 0x0800e7a8
 f menu_6_1_1 0 0x0800e7cc
 
 
-af+ 0x801fe5c 5454 F_4225
+af+ 0x801fe5c 5454 md380_f_4225
 af+ 0x802256a 324 aes_startup_check
 af+ 0x80226c0 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
@@ -108,7 +108,7 @@ af+ 0x802b3f6 80 md380_RTC_GetTime
 af+ 0x802b50c 76 md380_RTC_GetDate
 
 
-af+ 0x802dfbc 1908 F_4137
+af+ 0x802dfbc 1908 md380_f_4137
 
 
 af+ 0x802f9dc 4056 Beep_Process
@@ -151,7 +151,7 @@ af+ 0x803f844 92 OSSemPost
 
 f F_414 @ 0x8040670
 af+ 0x8040670 880 F_414
-af+ 0x8040a02 740 dmr_audio_start
+af+ 0x8040a02 740 dmr_call_start
 af+ 0x8040ce6 92 dmr_before_squelch
 af+ 0x8040d44 94 F_858
 
@@ -159,8 +159,8 @@ af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
 
 
-f CSBK_handler @ 0x080417e0
-af+ 0x080417e0 0 CSBK_handler
+f dmr_CSBK_handler @ 0x080417e0
+af+ 0x080417e0 0 dmr_CSBK_handler
 
 af+ 0x8043de4 8 OS_ENTER_CRITICAL
 af+ 0x8043dec 6 OS_EXIT_CRITICAL
@@ -172,8 +172,8 @@ CCa 0x804c76e md380_menu_edit_buf
 af+ 0x804dd70 430 dmr_handle_data
 af+ 0x804e580 204 OSTaskCreateExt
 af+ 0x804e64c 90 OSTaskNameSet
-af+ 0x804eb64 152  F_4098
-af+ 0x804ec66 298 F_4102
+af+ 0x804eb64 152 md380_f_4098
+af+ 0x804ec66 298 md380_f_4102
 CCa 0x804ee2c md380_menu_0x200011e4
 af+ 0x80531d8 124 ambe_encode_thing__size_not_correct
 af+ 0x8053680 140 ambe_decode_wav
@@ -307,7 +307,7 @@ af+ 0x0800eb98 1810 menu_dispatcher
 
 f draw_datetime_row 0 0x0800df1a
 af+ 0x0800df1a 250 draw_datetime_row
-f F_4225 0 0x0801fe5c
+f md380_f_4225 0 0x0801fe5c
 
 f call_F_4225_1 0 0x0802db42
 f call_F_4225_2 0 0x080468e6
@@ -341,8 +341,8 @@ f draw_topline_text_maybe 0 0x080467fa
 
 f mainloop_entry 0 0x080468ae
 f jmp_to_mainloop 0 0x080468f6
-f F_4520 0 0x802c83c
-af+ 0x802c83c 2370 F_4520
+f md380_f_4520 0 0x802c83c
+af+ 0x802c83c 2370 md380_f_4520
 
 af+ 0x0804fdf4 10 set_AAAA
 af+ 0x0804fdfe 10 set_CCCC
@@ -518,8 +518,8 @@ f get_keycode_from_table_2 @ 0x804f8ea
 f big_switch @ 0x0802d1b2
 
 f store_keycode @ 0x0804fb24
-f kb_poller @ 0x0804f94c
-af+ 0x0804f94c 384 kb_poller
+f kb_handler @ 0x0804f94c
+af+ 0x0804f94c 384 kb_handler
 CCa 0x0804fa32 definite keydown
 CCa 0x0804fa1e jump if b0 not set, reset debounce
 CCa 0x0804fa30 not debounced yet, jump
