@@ -17,26 +17,6 @@ void wstrhex(wchar_t *, long);
 
 
 
-// md380 gfx
-void gfx_drawtext(wchar_t *str,          //16-bit, little endian.
-		  short sx, short sy, //Source coords, maybe?
-		  short x, short y,   //X and Y position
-		  int maxlen);
-void gfx_drawbmp(char *bmp,
-		 int x,
-		 int y);
-
-void gfx_set_bg_color(int color);
-void gfx_set_fg_color(int color);
-
-/**
- * 
- * @param x_from 0...159
- * @param y_from 0...127
- * @param x_to   0...159
- * @param y_to   0...127
- */
-void gfx_blockfill(int x_from, int y_from, int x_to, int y_to);
 
 // md380 dmr
 

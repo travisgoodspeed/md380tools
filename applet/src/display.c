@@ -213,7 +213,8 @@ void draw_rx_screen(unsigned int bg_color)
     y_index += GFX_FONT_SMALL_HEIGHT ;
 
     gfx_select_font(gfx_font_norm);
-    gfx_printf_pos(RX_POPUP_X_START, y_index, "%s %s", usr.callsign, usr.firstname );
+    gfx_printf_pos2(RX_POPUP_X_START, y_index, 10, "%s %s", usr.callsign, usr.firstname );
+//    gfx_printf_pos2(RX_POPUP_X_START, y_index, MAX_X, "%s %s", usr.callsign, usr.firstname );
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
     gfx_select_font(gfx_font_small);

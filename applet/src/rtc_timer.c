@@ -181,10 +181,10 @@ void dummy()
 //}
 //#endif
 
-void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
+void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short ex, short ey, int maxlen)
 {
-    //PRINT("dt: %d %d %S %x\n", sx, sy, str, str);
-    gfx_drawtext(str, sx, sy, x, y, maxlen);
+    PRINT("dt: %d %d %d %d %d %S %x\n", sx, sy, ex, ey, maxlen, str, str);
+    gfx_drawtext(str, sx, sy, ex, ey, maxlen);
 }
 
 //void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;

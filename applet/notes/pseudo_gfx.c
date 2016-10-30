@@ -5,8 +5,21 @@
 // r0 = str, r1 = sx, r2 = sy, r3 = x, r4/sp[28] = y, r5/sp[24] = maxlen
 gfx_drawtext(wchar_t *str, short sx, short sy, short x, short y, int maxlen)
 {
-    void p1 ;
-    f1(str,&p1,14,y,maxlen,...?);
+    typedef struct {
+        uint16_t p0 ;
+        uint16_t p1 ;
+        uint16_t p2 ;
+        uint16_t p3 ;
+    } p_t ;
+    
+    p_t a ;
+    
+    a.p0 = sx ;
+    a.p1 = x ;
+    a.p2 = sy ;
+    a.p3 = y ;
+        
+    gfx_drawtext3(str,&a,14,y,maxlen);
 }
 
         
@@ -49,7 +62,7 @@ void gfx_drawtext4(wchar_t *str, int x, int y, int xlen, int ylen)
 
 void gfx_drawtext5( char *r0, int r1, int r2, int r3 )
 {
-    gfx_drawtext7( *r0, r1, r2 );
+    gfx_drawtext7( *r0, r1, r2 [,r3?] );
     gfx_clear3( r3 );
 }
 
