@@ -106,11 +106,11 @@ proj: 	$(PROJ_NAME).elf experiment.img
 wrapped: lib proj
 	../md380-fw --wrap experiment.img experiment.bin
 
-#This flashes from unix. (deprecated)
-flash: wrapped
-	../md380-dfu upgrade experiment.bin
+##This flashes from unix. (deprecated)
+#flash: wrapped
+#	../md380-dfu upgrade experiment.bin
 
-$(SRCS): config.h src/*.h | lib
+$(SRCS): config.h src/*.h | lib	
 $(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) -Wl,--no-wchar-size-warning -Wl,-Map,$(basename $@).map $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_$(SRCVERSION)
 	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
