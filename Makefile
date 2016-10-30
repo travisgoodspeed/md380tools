@@ -121,9 +121,16 @@ all_images:
 	"${MAKE}" -C applet ci
 	
 dbg:
+	@echo PATH: \"${PATH}\"
 	@echo SHELL: \"${SHELL}\"
 	@echo MAKE: \"${MAKE}\"
+	@echo ________
+	@echo AWK version
 	awk -V
+	@echo ________
+	@echo Make version
+	make -v
+	@echo ________
     
 ci: dbg mostlyclean 
 	"${MAKE}" -C applet ci
