@@ -86,7 +86,11 @@ OBJS = $(SRCS:.c=.o)
 
 .PHONY: lib proj pre
 
-all: lib proj wrapped	
+all: mark lib proj wrapped	
+	
+mark:
+	touch $(FW).tmp
+	echo $(FW) >mark.tmp
 
 experiment.img: 
 	"${MAKE}" -C ../patches/$(PATCHDIR) patched.bin
