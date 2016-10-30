@@ -1,7 +1,7 @@
 language: cpp
 #sudo: false
 sudo: required
-dist: precise
+dist: trusty
 addons:
   apt:
 #    sources:
