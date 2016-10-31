@@ -131,7 +131,7 @@ Turn on radio in DFU mode to begin firmware update with USB cable:
 
 ```
 git pull
-make doflash
+make flash
 ```
 ###Flash updated users.csv database for linux based installations###
 
@@ -169,7 +169,7 @@ You can reproduce the patched firmware with `make clean dist` after
 installing an arm-none-eabi cross compiler toolchain.  The firmware
 and a Windows flashing tool will then appear in
 `md380tools-yyyy-mm-dd`.  Alternately, you can flash them from Linux
-with `make clean doflash`, after starting the recovery bootloader by
+with `make clean flash`, after starting the recovery bootloader by
 holding PTT and the button above it during a radio reboot.
 
 ##Windows Firmware Installation##
