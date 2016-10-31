@@ -17,6 +17,7 @@ https://groups.google.com/forum/#!forum/md380tools. No extra registration
 should be necessary. You could also feed it via e-mail at 
 md380tools@googlegroups.com. So feel free to put in your questions into it!
 
+
 # Introduction #
 
 This repository contains tools for working with codeplugs and firmware
@@ -37,6 +38,25 @@ Development Tools:
 ## Build Status
 
 [![Build Status](https://travis-ci.org/travisgoodspeed/md380tools.svg?branch=master)](https://travis-ci.org/travisgoodspeed/md380tools)
+
+
+##Supported Hardware##
+
+The patched firmware is known to work on the following devices:
+
+* The "D"-Version (NoGPS) for radios **without GPS**
+  * Tytera/TYT MD380
+  * Tytera/TYT MD390
+  * Retevis RT3
+
+* The "S"-Version (GPS) for radios **with GPS**
+  * Tytera/TYT MD380
+  * Tytera/TYT MD390
+
+Both types of vocoder (old and new vocoder radios) are supported.
+
+The DMR MARC user's database required a 16 MByte SPI Flash memory chip.
+In some VHF Radios is only an 1 MByte SPI Flash installed.
 
 
 ###The md380tools have D13.020 as basic now.###
@@ -67,24 +87,6 @@ folks over some beer.
 
 Tytera's firmware is of unknown license and is not included in this
 repository.  We use a heap-less printf library under the BSD license.
-
-##Supported Hardware##
-
-The patched firmware is known to work on the following devices: 
-
-* The "D"-Version (NoGPS) for radios **without GPS**
-  * Tytera/TYT MD380
-  * Tytera/TYT MD390
-  * Retevis RT3
-
-* The "S"-Version (GPS) for radios **with GPS**
-  * Tytera/TYT MD380 
-  * Tytera/TYT MD390
-
-Both types of vocoder (old and new vocoder radios) are supported.
-
-The DMR MARC user's database required a 16 MByte SPI Flash memory chip. 
-In some VHF Radios is only an 1 MByte SPI Flash installed.
 
 
 ##Specifications:##
