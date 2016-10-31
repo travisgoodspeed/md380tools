@@ -618,7 +618,7 @@ if __name__== '__main__':
     merger.hookbl(0x08046326,sapplet.getadr("init_global_addl_config_hook"),0);
 
     # no menu exit on RX hook 
-    merger.hookbl(0x0801fe7c,sapplet.getadr("f_4225_internel_hook"),0);
+#    merger.hookbl(0x0801fe7c,sapplet.getadr("f_4225_internel_hook"),0);
 
     # OSMboxPend Hook to diag Beep_Process
     merger.hookbl(0x0802fa00, sapplet.getadr("OSMboxPend_hook"));
@@ -928,8 +928,6 @@ if __name__== '__main__':
 ####    merger.hookbl(0x8044642,sapplet.getadr("f_4098_hook"),0);
 ####    merger.hookbl(0x804c1e8,sapplet.getadr("f_4102_hook"),0);
 ###
-###    merger.hookbl(0x8044662, sapplet.getadr("f_4225_hook"),0);
-###    
 ###    # display hooks is in d13.020 included
 ###    ## display flip workaround see issue #178 not necessary on 0X3.020
 ###    merger.hookbl(0x08031fde,sapplet.getadr("display_init_hook_1"),0);

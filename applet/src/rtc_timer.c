@@ -49,31 +49,31 @@ extern void f_4315_hook()
     F_4315();
 }
 
-// this hook switcht of the exit from the menu in case of RX
-
-static int new_anti = 1 ;
-
-void * f_4225_internel_hook()
-{
-//    if( new_anti || global_addl_config.experimental == 1 ) {
-    if( new_anti ) {
-        return &gui_opmode1;
-    }
-
-#ifdef DEBUG
-    //    printf("<%d> \n", gui_opmode1);
-#endif
-    if( gui_opmode1 == SCR_MODE_MENU ) {
-        flag = 1;
-    }
-    if( gui_opmode1 == SCR_MODE_CHAN_IDLE_INIT ) {
-        flag = 0;
-    }
-    if( flag == 1 ) {
-        gui_opmode1 = SCR_MODE_MENU;
-    }
-    return &gui_opmode1;
-}
+//// this hook switcht of the exit from the menu in case of RX
+//
+//static int new_anti = 1 ;
+//
+//void * f_4225_internel_hook()
+//{
+////    if( new_anti || global_addl_config.experimental == 1 ) {
+//    if( new_anti ) {
+//        return &gui_opmode1;
+//    }
+//
+//#ifdef DEBUG
+//    //    printf("<%d> \n", gui_opmode1);
+//#endif
+//    if( gui_opmode1 == SCR_MODE_MENU ) {
+//        flag = 1;
+//    }
+//    if( gui_opmode1 == SCR_MODE_CHAN_IDLE_INIT ) {
+//        flag = 0;
+//    }
+//    if( flag == 1 ) {
+//        gui_opmode1 = SCR_MODE_MENU;
+//    }
+//    return &gui_opmode1;
+//}
 
 // 0x2001e895 != 32
 // 0x2001e895 == 64 -> rx_screen_blue_hook
@@ -243,24 +243,21 @@ void f_4225_hook()
     trace_scr_mode();
     trace_scr_mode2();
 #endif   
-    if( new_anti ) {
-        static int old = -1 ;
-        int new = gui_opmode1 & 0x7F ;
-        if( old != new ) {
-            if( gui_opmode2 == OPM2_MENU ) {
-                // menu displayed.
-                if( new == SCR_MODE_IDLE || new == SCR_MODE_RX_VOICE || new == SCR_MODE_RX_TERMINATOR ) {
-                    // from menu to popup transition.
-                    gui_opmode1 = SCR_MODE_MENU ;
-                }
-            } else {
-                old = new ;
+    
+    static int old = -1 ;
+    int new = gui_opmode1 & 0x7F ;
+    if( old != new ) {
+        if( gui_opmode2 == OPM2_MENU ) {
+            // menu displayed.
+            if( new == SCR_MODE_IDLE || new == SCR_MODE_RX_VOICE || new == SCR_MODE_RX_TERMINATOR ) {
+                // from menu to popup transition.
+                gui_opmode1 = SCR_MODE_MENU ;
             }
+        } else {
+            old = new ;
         }
     }
     
-//#ifdef CONFIG_GRAPHICS
-
     if ( global_addl_config.micbargraph == 1 ) {
         if( !is_netmon_visible() ) {
             draw_micbargraph();
@@ -278,4 +275,5 @@ void f_4225_hook()
             gui_opmode2 = OPM2_IDLE;
         }
     }
+    
 }

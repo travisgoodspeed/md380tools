@@ -272,7 +272,7 @@ if __name__== '__main__':
     merger.hookbl(0x08047026 ,sapplet.getadr("init_global_addl_config_hook"),0); # 0x08046326
 
     # no menu exit on RX hook 
-    merger.hookbl(0x0801ffb0,sapplet.getadr("f_4225_internel_hook"),0);#0x0801fe7c
+#    merger.hookbl(0x0801ffb0,sapplet.getadr("f_4225_internel_hook"),0);#0x0801fe7c
 
     # OSMboxPend Hook to diag Beep_Process
     merger.hookbl(0x0802fe54, sapplet.getadr("OSMboxPend_hook"));#0x0802fa00
@@ -290,8 +290,8 @@ if __name__== '__main__':
       merger.hookbl(adr,sapplet.getadr("F_294_replacement"),0);
 
 
-    merger.hookbl(0x802ded6, sapplet.getadr("f_4225_hook"),0); # 0x080468e6
-    merger.hookbl(0x8047640, sapplet.getadr("f_4225_hook"),0); # 0x0802db42
+    merger.hookbl(0x0802ded6, sapplet.getadr("f_4225_hook"),0); # 0x080468e6
+    merger.hookbl(0x08047640, sapplet.getadr("f_4225_hook"),0); # 0x0802db42
 
 #    merger.hookstub2(0x0800c72e, sapplet.getadr("create_menu_entry_rev"));
 

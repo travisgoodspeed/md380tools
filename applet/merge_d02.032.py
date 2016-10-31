@@ -292,7 +292,7 @@ if __name__== '__main__':
                    sapplet.getadr("main_menu_hook")+1);
 
     # no menu exit on RX hook 
-    merger.hookbl(0x0801f064,sapplet.getadr("f_4225_internel_hook"),0);
+#    merger.hookbl(0x0801f064,sapplet.getadr("f_4225_internel_hook"),0);
 
     # hooks regarding the beep_process
     beep_process_list=[
