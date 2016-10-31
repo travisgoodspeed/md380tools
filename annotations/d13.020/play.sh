@@ -9,7 +9,7 @@ SYM=flash_sym.tmp
 #}
 
 
-ra2sym <flash.r | sym_strip >o1.tmp
+#ra2sym <flash.r | sym_strip >o1.tmp
 lnk2sym <../../applet/src/symbols_d13.020 | sym_strip >o2.tmp
 
 ra2sym <flash.r  >$SYM
