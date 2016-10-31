@@ -67,84 +67,6 @@ const static wchar_t wt_cp_override_dmrid[] = L"id override";
 const static wchar_t wt_config_reset[] = L"Config Reset";
 const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
 
-typedef struct {
-  const wchar_t  *menu_title; // [0]
-  void    *unknownp; // [4]
-  uint8_t numberof_menu_entries; // [8]
-  uint8_t unknown_00;
-  uint8_t unknown_01;
-  uint8_t filler ;
-} menu_t ; // sizeof == 12
-
-extern menu_t md380_menu_memory[];
-
-/* This hooks a function that is called a lot during menu processing.
-   Its exact purpose is unknown, but I'm working on that.
- */
-void *main_menu_hook(void *menu){
-#if 0
-  void *menustruct;
-
-//  printf("main_menu() ");
-//  printhex(menu,32);
-//  printf("\n");
-
-
-  switch(* ((int*)menu)){
-  case 0x0b:
-    //printf("Exiting menu.\n");
-    break;
-  case 0x24:
-    //Third word of the parameter is a structure with
-    //more entries.
-    menustruct=(void*) *((int*)menu + 2);
-
-    printf("Menu struct: @0x%08x\n",
-	   menustruct);
-    printf("Item %5d/%5d selected. %s\n",
-	   (int) *((unsigned short*) (menustruct+0x42)),
-	   (int) *((unsigned short*)menustruct),
-	   "test");
-
-
-    //printhex(*((int*) menu+2),128);
-    //printf("\n");
-
-    /*
-
-Main menu:
-Menu struct: @0x20001398
-06000000 Total Entries
-02000000 Selected Page Index
-04000000 4a000000 00000000 91000000 8c0f0d08 00000000 3280ff00
-1414ff00 c0c0c000 c0c0c000 00000000 ffffff00 ffffff00 80808000 00000500
-                                                                   \--/
-                                                                Selected item
-00000000 4a001600 00436f6e 74616374 73006361 27001600 00536361 6e001600
-                    \--Contacts begins here.
-0a000c00 27001600 005a6f6e 65006c20 0a000c00 0b006573 49001600
-
-Contacts Menu, last Entry:
-Menu struct: @0x20001390
-e4020000 Total Entries
-e0020000 Selected Page Index
-         04000000 9c000000 00000000 91000000 8c0f0d08 00000000 3280ff00
-1414ff00 c0c0c000 c0c0c000 00000000 ffffff00 ffffff00 80808000 0000e302
-                                                                   \--/
-                                                                Selected item
-00000000 7d001600 00547269 2d537461 74652028 4c322900 41001600 004c6f63
-                    \--First contact entry starts here.
-616c2039 00436f6e 09000b00 3b001600 00444d52 204e4100 09000b00
-     */
-    break;
-  default:
-    //do nothing
-    break;
-  }
-#endif
-  return main_menu(menu);
-}
-
 
 typedef struct {
     const wchar_t* label ;  // [0]
@@ -158,6 +80,18 @@ typedef struct {
     uint16_t unknown2 ;     // [18]
     // sizeof() == 20 (0x14)
 } menu_mem_base_t ;
+
+
+typedef struct {
+  const wchar_t  *menu_title; // [0]
+  menu_mem_base_t *entries; // [4]
+  uint8_t numberof_menu_entries; // [8]
+  uint8_t unknown_00;
+  uint8_t unknown_01;
+  uint8_t filler ;
+} menu_t ; // sizeof() == 12
+
+extern menu_t md380_menu_memory[];
 
 extern menu_mem_base_t md380_menu_mem_base[];
 
@@ -277,7 +211,7 @@ void mn_create_single_timed_ack( const wchar_t *title, const wchar_t *label )
     menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = title;
 
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
 
     menu_mem->numberof_menu_entries = 1;
     menu_mem->unknown_00 = 0;
@@ -291,7 +225,7 @@ void mn_submenu_init(const wchar_t *title)
     menu_t *menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = title;
 
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
     menu_mem->numberof_menu_entries = 0;
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;    
@@ -923,7 +857,7 @@ void create_menu_entry_edit_screen(void)
 
     menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = wt_edit;
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
     menu_mem->numberof_menu_entries = 1;
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
@@ -1014,7 +948,7 @@ void create_menu_entry_edit_dmr_id_screen(void)
     md380_menu_0x2001d3f4 = 0;
     menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = wt_edit_dmr_id;
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
     menu_mem->numberof_menu_entries = 1;
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
@@ -1069,7 +1003,7 @@ void create_menu_utilies_hook(void)
     }
 
     menu_mem = get_menu_stackpoi();
-    menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
     //  menu_mem->numberof_menu_entries++;
     menu_mem->numberof_menu_entries = 6;
 
@@ -1090,3 +1024,71 @@ void create_menu_utilies_hook(void)
 #endif
 
 }
+
+/* This hooks a function that is called a lot during menu processing.
+   Its exact purpose is unknown, but I'm working on that.
+ */
+void *main_menu_hook(void *menu){
+#if 0
+  void *menustruct;
+
+//  printf("main_menu() ");
+//  printhex(menu,32);
+//  printf("\n");
+
+
+  switch(* ((int*)menu)){
+  case 0x0b:
+    //printf("Exiting menu.\n");
+    break;
+  case 0x24:
+    //Third word of the parameter is a structure with
+    //more entries.
+    menustruct=(void*) *((int*)menu + 2);
+
+    printf("Menu struct: @0x%08x\n",
+	   menustruct);
+    printf("Item %5d/%5d selected. %s\n",
+	   (int) *((unsigned short*) (menustruct+0x42)),
+	   (int) *((unsigned short*)menustruct),
+	   "test");
+
+
+    //printhex(*((int*) menu+2),128);
+    //printf("\n");
+
+    /*
+
+Main menu:
+Menu struct: @0x20001398
+06000000 Total Entries
+02000000 Selected Page Index
+04000000 4a000000 00000000 91000000 8c0f0d08 00000000 3280ff00
+1414ff00 c0c0c000 c0c0c000 00000000 ffffff00 ffffff00 80808000 00000500
+                                                                   \--/
+                                                                Selected item
+00000000 4a001600 00436f6e 74616374 73006361 27001600 00536361 6e001600
+                    \--Contacts begins here.
+0a000c00 27001600 005a6f6e 65006c20 0a000c00 0b006573 49001600
+
+Contacts Menu, last Entry:
+Menu struct: @0x20001390
+e4020000 Total Entries
+e0020000 Selected Page Index
+         04000000 9c000000 00000000 91000000 8c0f0d08 00000000 3280ff00
+1414ff00 c0c0c000 c0c0c000 00000000 ffffff00 ffffff00 80808000 0000e302
+                                                                   \--/
+                                                                Selected item
+00000000 7d001600 00547269 2d537461 74652028 4c322900 41001600 004c6f63
+                    \--First contact entry starts here.
+616c2039 00436f6e 09000b00 3b001600 00444d52 204e4100 09000b00
+     */
+    break;
+  default:
+    //do nothing
+    break;
+  }
+#endif
+  return main_menu(menu);
+}
+
