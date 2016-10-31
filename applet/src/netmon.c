@@ -122,7 +122,27 @@ void netmon1_update()
         con_putsw(p);
         con_nl();    
     }
-#endif    
+#endif
+#ifdef FW_S13_020
+    {
+        uint8_t *chan = (uint8_t *)0x2001e995 ;		// confirmed 20161031 - DL2MF
+        con_printf("ch: %d ", *chan ); 
+    }
+    {
+        // current zone name.
+        wchar_t *p = (void*)0x2001cddc ;
+        con_puts("zn:");
+        con_putsw(p);
+        con_nl();    
+    }
+    {        
+        // current channel name.
+        wchar_t *p = (void*)0x2001e2c4 ;		// confirmed 20161031 - DL2MF
+        con_puts("cn:");
+        con_putsw(p);
+        con_nl();    
+    }
+#endif   
     {
         char *str = "?" ;
         switch( last_radio_event ) {
@@ -177,7 +197,13 @@ void netmon1_update()
         con_printf("%d\n", *recv); 
     }
 #endif    
-    
+#ifdef FW_S13_020
+    {
+        // only valid when transmitting or receiving.
+        uint32_t *recv = (void*)0x2001e6b4 ;			// needs to be confirmed!
+        con_printf("%d\n", *recv); 
+    }
+#endif     
 }
 
 void print_bcd( uint8_t bcd )
