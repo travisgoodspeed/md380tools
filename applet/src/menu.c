@@ -67,15 +67,14 @@ const static wchar_t wt_cp_override_dmrid[] = L"id override";
 const static wchar_t wt_config_reset[] = L"Config Reset";
 const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
 
-struct MENU {
+typedef struct {
   const wchar_t  *menu_title; // [0]
   void    *unknownp; // [4]
   uint8_t numberof_menu_entries; // [8]
   uint8_t unknown_00;
   uint8_t unknown_01;
-}; // should be: sizeof == 0xc = 12
-//TODO: determine if this works due to word alignment.
-
+  uint8_t filler ;
+} menu_t ; // sizeof == 12
 
 /* This hooks a function that is called a lot during menu processing.
    Its exact purpose is unknown, but I'm working on that.
@@ -145,7 +144,7 @@ e0020000 Selected Page Index
 }
 
 
-struct menu_mem_base_type {
+typedef struct {
     const wchar_t* label ;  // [0]
     void* green ;           // [4]
     void* red ;             // [8]
@@ -156,9 +155,7 @@ struct menu_mem_base_type {
     uint8_t off17 ;         // [17]
     uint16_t unknown2 ;     // [18]
     // sizeof() == 20 (0x14)
-};
-
-typedef struct menu_mem_base_type menu_mem_base_t ;
+} menu_mem_base_t ;
 
 extern menu_mem_base_t md380_menu_mem_base[];
 
@@ -234,7 +231,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //        }
 //    }
     
-    struct menu_mem_base_type *poi = &md380_menu_mem_base[menuid];    
+    menu_mem_base_t *poi = &md380_menu_mem_base[menuid];    
     
     poi->label = label ;
     poi->green = green_key ;
@@ -265,14 +262,22 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //  md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
 //}
 
-struct MENU *get_menu_stackpoi()
+menu_t *get_menu_stackpoi()
 {
-    return ( void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(struct MENU))) + sizeof(struct MENU));
+    return ( void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(menu_t))) + sizeof(menu_t));
+}
+
+menu_t *p2 ;
+
+void testit()
+{
+    menu_t *p = (void*)1000 ;
+    p2 = p + 1 ;
 }
 
 void mn_create_single_timed_ack( const wchar_t *title, const wchar_t *label )
 {
-    struct MENU *menu_mem;
+    menu_t *menu_mem;
 
     menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = title;
@@ -288,7 +293,7 @@ void mn_create_single_timed_ack( const wchar_t *title, const wchar_t *label )
 
 void mn_submenu_init(const wchar_t *title)
 {
-    struct MENU *menu_mem = get_menu_stackpoi();
+    menu_t *menu_mem = get_menu_stackpoi();
     menu_mem->menu_title = title;
 
     menu_mem->unknownp = &md380_menu_mem_base[md380_menu_id];
@@ -299,7 +304,7 @@ void mn_submenu_init(const wchar_t *title)
 
 void mn_submenu_add(const wchar_t * label, void (*func)())
 {
-    struct MENU *menu_mem = get_menu_stackpoi();
+    menu_t *menu_mem = get_menu_stackpoi();
     
     func = MKTHUMB(func);
     
@@ -310,7 +315,7 @@ void mn_submenu_add(const wchar_t * label, void (*func)())
 
 void mn_submenu_add_98(const wchar_t * label, void (*func)())
 {
-    struct MENU *menu_mem = get_menu_stackpoi();
+    menu_t *menu_mem = get_menu_stackpoi();
     
     func = MKTHUMB(func);
     
@@ -321,7 +326,7 @@ void mn_submenu_add_98(const wchar_t * label, void (*func)())
 
 void mn_submenu_add_8a(const wchar_t * label, void (*func)(), int enabled)
 {
-    struct MENU *menu_mem = get_menu_stackpoi();
+    menu_t *menu_mem = get_menu_stackpoi();
     
     func = MKTHUMB(func);
     
@@ -332,7 +337,7 @@ void mn_submenu_add_8a(const wchar_t * label, void (*func)(), int enabled)
 
 void mn_submenu_finalize()
 {
-    struct MENU *menu_mem = get_menu_stackpoi();
+    menu_t *menu_mem = get_menu_stackpoi();
     
     for (int i = 0; i < menu_mem->numberof_menu_entries; i++) { 
         // conflicts with 'selected' icon.
@@ -343,7 +348,7 @@ void mn_submenu_finalize()
 
 void mn_submenu_finalize2()
 {
-    struct MENU *menu_mem = get_menu_stackpoi();
+    menu_t *menu_mem = get_menu_stackpoi();
     
     for (int i = 0; i < menu_mem->numberof_menu_entries; i++) { 
         md380_menu_mem_base[md380_menu_id + i].off16 = 2; // numbered icons
@@ -880,7 +885,7 @@ void create_menu_entry_edit_screen_store(void)
 
 void create_menu_entry_edit_screen(void)
 {
-    struct MENU *menu_mem;
+    menu_t *menu_mem;
     uint8_t i;
     uint8_t *p;
 
@@ -980,7 +985,7 @@ void create_menu_entry_edit_dmr_id_screen_store(void)
 
 void create_menu_entry_edit_dmr_id_screen(void)
 {
-    struct MENU *menu_mem;
+    menu_t *menu_mem;
     uint8_t i;
     uint8_t *p;
     uint32_t nchars;
@@ -1059,7 +1064,7 @@ void create_menu_entry_addl_functions_screen(void)
 
 void create_menu_utilies_hook(void)
 {
-    struct MENU *menu_mem;
+    menu_t *menu_mem;
     int enabled;
 
     if( (md380_program_radio_unprohibited[4] & 0x4) == 0x4 ) {
