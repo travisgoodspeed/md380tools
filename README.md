@@ -70,12 +70,22 @@ repository.  We use a heap-less printf library under the BSD license.
 
 ##Supported Hardware##
 
-The patched firmware is known to work on the following devices:
+The patched firmware is known to work on the following devices: 
 
-* Tytera/TYT MD380 (old vocoder)
-* Tytera/TYT MD380 (new vocoder)
-* Tytera/TYT MD390 (new vocoder, no gps)
-* Retevis RT3
+* The "D"-Version (NoGPS) for radios **without GPS**
+  * Tytera/TYT MD380
+  * Tytera/TYT MD390
+  * Retevis RT3
+
+* The "S"-Version (GPS) for radios **with GPS**
+  * Tytera/TYT MD380 
+  * Tytera/TYT MD390
+
+Both types of vocoder (old and new vocoder radios) are supported.
+
+The DMR MARC user's database required a 16 MByte SPI Flash memory chip. 
+In some VHF Radios is only an 1 MByte SPI Flash installed.
+
 
 ##Specifications:##
 
