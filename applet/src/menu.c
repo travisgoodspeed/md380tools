@@ -64,8 +64,8 @@ const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 const static wchar_t wt_cp_override_dmrid[] = L"id override";
 
-const static wchar_t wt_config_reset[] = L"config reset";
-const static wchar_t wt_config_reset_doit[] = L"config reset2";
+const static wchar_t wt_config_reset[] = L"Config Reset";
+const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
 
 struct MENU {
   const wchar_t  *menu_title; // [0]
