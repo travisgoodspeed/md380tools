@@ -178,9 +178,9 @@ void print_date_hook(void)
 // deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
 {
-      if( is_netmon_visible() ) {
+    if( is_netmon_visible() ) {
         return ;
-}
+    }
 #ifdef CONFIG_GRAPHICS
     gfx_drawbmp(bmp, x, y);
     draw_eye_opt();

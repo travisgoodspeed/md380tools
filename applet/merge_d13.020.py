@@ -604,13 +604,13 @@ if __name__== '__main__':
     # additional menu hook
     merger.hookbl(0x080135a8, sapplet.getadr("create_menu_utilies_hook"),0);
 
-    # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
-    print_ant_sym_hook_list=[
-        0x0802136a, 
-        0x08021378, 
-        0x080217a8,
-        0x08033e1e, 
-    ]; # bad hooks, not work well
+#    # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
+#    print_ant_sym_hook_list=[
+#        0x0802136a, 
+#        0x08021378, 
+#        0x080217a8,
+#        0x08033e1e, 
+#    ]; # bad hooks, not work well
 #    for adr in print_ant_sym_hook_list:
 #        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
 
