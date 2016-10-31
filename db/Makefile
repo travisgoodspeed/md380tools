@@ -21,7 +21,7 @@ custom.csv:
 	touch custom.csv
 
 stripped.csv: users.csv custom.csv
-	cat users.csv custom.csv | $(ICONV)| sort | awk -F, -f strip.awk >stripped.csv
+	cat users.csv custom.csv | $(ICONV)| sort -n | awk -F, -f strip.awk >stripped.csv	
 
 users.csv:
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
