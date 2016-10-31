@@ -133,8 +133,6 @@ uint8_t   md380_menu_id;
 
 extern wchar_t	  	md380_wt_programradio[];  // menutext <- menu_entry_programradio
 
-extern uint8_t     	md380_menu_memory[];
-
 //! program_radio_unprohibited (menu entry) ... bulding site is an struct
 extern uint8_t md380_program_radio_unprohibited[];
 

@@ -76,6 +76,8 @@ typedef struct {
   uint8_t filler ;
 } menu_t ; // sizeof == 12
 
+extern menu_t md380_menu_memory[];
+
 /* This hooks a function that is called a lot during menu processing.
    Its exact purpose is unknown, but I'm working on that.
  */
@@ -262,10 +264,10 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //  md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
 //}
 
+
 menu_t *get_menu_stackpoi()
 {
-    menu_t *p = (void*)md380_menu_memory ;
-    return &p[md380_menu_depth+1];
+    return &md380_menu_memory[md380_menu_depth+1];
 }
 
 void mn_create_single_timed_ack( const wchar_t *title, const wchar_t *label )
