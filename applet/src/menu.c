@@ -262,30 +262,11 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //  md380_create_menu_entry(menuid,label,green_key,red_key,e,f,enabled);
 //}
 
-//menu_t *get_menu_stackpoi()
-//{
-//    return ( void *) ((md380_menu_memory + ((md380_menu_depth) * sizeof(menu_t))) + sizeof(menu_t));
-//}
-
 menu_t *get_menu_stackpoi()
 {
     menu_t *p = (void*)md380_menu_memory ;
     return &p[md380_menu_depth+1];
 }
-
-//menu_t *p2 ;
-//
-//void testit()
-//{
-//    menu_t *p = get_menu_stackpoi();
-//    p2 = p + 1 ;
-//}
-//
-//void testit2()
-//{
-//    menu_t *p = get_menu_stackpoi2();
-//    p2 = p + 1 ;
-//}
 
 void mn_create_single_timed_ack( const wchar_t *title, const wchar_t *label )
 {
