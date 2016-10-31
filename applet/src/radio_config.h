@@ -62,51 +62,6 @@ struct keyboard_data2 {
     uint8_t flags0 ;  // config from radio_config2 0xe,0xf
 };
 
-// lucky guess, written as documentation.
-// from pc = 0x080134dc 
-// it would be nice if this correlates with chirp md380.py struct memory.
-// saved @ 0x1edc0 
-typedef struct {
-    uint8_t fm_dmr_mode ; // if( fm_dmr_mode & 3 ) == 2 { is_dmr(); }
-    uint8_t off1 ; // [1] 
-    uint8_t unk2 ; // [2] 
-    uint8_t off3 ; // [3]
-    
-    uint8_t off4 ; // [4]
-    uint8_t unk5 ; // [5]
-    uint16_t off6 ; // [6][7]
-
-    uint8_t unk8 ; // [8]
-    uint8_t unk9 ; // [9]
-    uint8_t unk10 ; // [10]
-    uint8_t unk11 ; // [11]
-    
-    uint8_t off12 ; // [12] 0xc
-    uint8_t off13 ; // [13] 0xd
-    
-    uint8_t unk14 ; 
-    uint8_t unk15 ; 
-    
-    uint32_t off16 ; // [16] 0x10
-    uint32_t off20 ; // [20] 0x14
-} channel_info2_t ; // sizeof() = 0x40 
-
-// chirp memory struct?
-typedef struct {
-    uint8_t off0 ;
-    uint8_t cc_slot_flags ; // [0x01] cccc....
-    uint8_t off4[12]; // [0x05] = power&flags? // [0x0A] ?
-    uint32_t rxf ; // [0x10]
-    uint32_t txf ; // [0x14]
-    uint16_t rxtone ; // [0x18]
-    uint16_t txtone ; // [0x16]
-    uint32_t unk1 ;
-    wchar_t name[16];
-} channel_info_t ; // sizeof() = 0x40 
-
-#ifdef FW_D13_020
-extern channel_info_t current_channel_info ;
-#endif
 
 #ifdef __cplusplus
 }

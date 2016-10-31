@@ -13,6 +13,7 @@
 #include "syslog.h"
 #include "console.h"
 #include "radio_config.h"
+#include "codeplug.h"
 
 uint8_t nm_screen = 0 ;
 
@@ -228,6 +229,8 @@ void netmon2_update()
     channel_info_t *ci = &current_channel_info ;
     
     {
+        con_printf("mde:%02x prv:%02x pow:%02x\n", ci->mode, ci->priv, ci->power );
+        
         con_puts("rx:");
         printfreq(&ci->rxf);
         con_nl();
