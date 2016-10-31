@@ -169,6 +169,18 @@ void kb_handler_hook()
     kb_handler();
 
     trace_keyb(1);
+    
+    // allow calling of menu during qso.
+    // not working correctly.
+    if( global_addl_config.experimental ) {
+        int kp = kb_keypressed ;
+        if( (kp & 2) == 2 ) {
+            if( gui_opmode2 != OPM2_MENU ) {
+                gui_opmode2 = OPM2_MENU ;
+                gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
+            }
+        }
+    }
 
     if( is_intercept_allowed() ) {
         int kc = kb_keycode ;
