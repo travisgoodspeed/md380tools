@@ -233,11 +233,8 @@ void trace_scr_mode2()
     }
 }
 
-uint32_t f4225_count = 0;
-    
 void f_4225_hook()
 {
-    // this probably runs on other thread than the display task.
     
 #ifdef DEBUG    
     trace_scr_mode();
@@ -248,9 +245,11 @@ void f_4225_hook()
     int new = gui_opmode1 & 0x7F ;
     if( old != new ) {
         if( gui_opmode2 == OPM2_MENU ) {
-            // menu displayed.
+            // menu is showing.
             if( new == SCR_MODE_IDLE || new == SCR_MODE_RX_VOICE || new == SCR_MODE_RX_TERMINATOR ) {
-                // from menu to popup transition.
+                // new mode tries to deviate from menu to popup.
+                
+                // reset.
                 gui_opmode1 = SCR_MODE_MENU ;
             }
         } else {
@@ -266,11 +265,24 @@ void f_4225_hook()
     
     netmon_update();
 
-    f4225_count++ ;
-    
-    md380_f_4225();
+#if 0
+    int upd = gui_opmode1 > 0x7F ;
+    if( upd == 0 ) {
+        if( is_netmon_visible() ) {
+            con_redraw();            
+        } else {
+            md380_f_4225();
+        }
+    } else {
+        md380_f_4225();        
+    }
+#else     
+    md380_f_4225();        
+#endif    
     
     if( is_netmon_visible() ) {
+        
+        // steer back to idle screen, because thata the most intercepted.
         if( gui_opmode2 == OPM2_VOICE ) {
             gui_opmode2 = OPM2_IDLE;
         }
