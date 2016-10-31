@@ -12,6 +12,7 @@
 #include "radiostate.h"
 #include "syslog.h"
 #include "console.h"
+#include "radio_config.h"
 
 uint8_t nm_screen = 0 ;
 
@@ -220,28 +221,11 @@ void printfreq( void *p2 )
     print_bcd( p[0] );
 }
 
-// chirp memory struct?
-typedef struct {
-    uint8_t off0 ;
-    uint8_t cc_slot_flags ; // [0x01] cccc....
-    uint8_t off4[12]; // [0x05] = power&flags? // [0x0A] ?
-    uint32_t rxf ; // [0x10]
-    uint32_t txf ; // [0x14]
-    uint16_t rxtone ; // [0x18]
-    uint16_t txtone ; // [0x16]
-    uint32_t unk1 ;
-    wchar_t name[16];
-} ci_t ;
-
-#ifdef FW_D13_020
-extern ci_t current_channel_info ;
-#endif
-
 void netmon2_update()
 {
     con_clrscr();
 #ifdef FW_D13_020
-    ci_t *ci = &current_channel_info ;
+    channel_info_t *ci = &current_channel_info ;
     
     {
         con_puts("rx:");

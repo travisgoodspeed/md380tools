@@ -808,3 +808,4 @@ af+ 0x08022e64 18 flash_read_50_at_40000
 f menu_add_number_of_menuentries_counts @ 0x0800fc54
 af+ 0x0800fc54 48 menu_add_number_of_menuentries_counts
 
+f menu_memory_poi @ 0x2001e700
