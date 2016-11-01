@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LIB=$(LIBname $0)
+LIB=$(dirname $0)
 
 . ${LIB}/convlib.sh
 
