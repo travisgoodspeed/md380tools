@@ -153,6 +153,13 @@ void gfx_drawtext7(const char *str, int x, int y); // firmware
 #warning please consider finding symbol.
 #endif    
 
+#if defined(FW_D13_020) 
+void gfx_drawtext10(wchar_t *str, int x1, int y1, int x2, int y2); // firmware
+#else
+#define gfx_drawtext10(p1,p2,p3,p4,p5) /* nop */
+#warning please consider finding symbol.
+#endif    
+
 extern uint32_t gfx_font_small[];
 extern uint32_t gfx_font_norm[];
 

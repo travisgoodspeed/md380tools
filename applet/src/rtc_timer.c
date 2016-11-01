@@ -190,17 +190,16 @@ void gfx_drawtext_hook(wchar_t *str, short sx, short sy, short ex, short ey, int
 //void (*f)(wchar_t *str, int x, int y, int xlen, int ylen) = 0x0801dd1a + 1 ;
 
 
-#if 0
+#ifdef FW_D13_020
 /**
  * write centered horizontally / vertically
  */
-void something_write_to_screen_hook(wchar_t *str, int x1, int y1, int x2, int y2)
+void gfx_drawtext10_hook(wchar_t *str, int x1, int y1, int x2, int y2)
 {
     PRINT("swts: %S %d %d %d %d\n", str, x1, y1, x2, y2);
-//    f(str,x,y,xlen,ylen);
-    something_write_to_screen(status_line,x1,y1,x2,y2);
+    gfx_drawtext10(str,x1,y1,x2,y2);
 }
-#endif
+#endif  
 
 #ifdef FW_D13_020
 void OSTimeDly(uint32_t delay);
@@ -271,13 +270,13 @@ void f_4225_hook()
         if( is_netmon_visible() ) {
             con_redraw();            
         } else {
-            md380_f_4225();
+            f_4225();
         }
     } else {
-        md380_f_4225();        
+        f_4225();        
     }
 #else     
-    md380_f_4225();        
+    f_4225();        
 #endif    
     
     if( is_netmon_visible() ) {

@@ -73,12 +73,6 @@ af+ 0x801b042 26 md380_menu_numerical_input
 
 CCa 0x801b8e8 md380_menu_0x2001d3f1
 
-f gfx_blockfill 30 0x801d88c
-af+ 0x801d88c 30 gfx_blockfill
-
-f gfx_linefill 0 0x0801d81a
-af+ 0x0801d81a 104 gfx_linefill
-
 f screen_unknown1 0 0x0800e728
 f menu_6_15_1 0 0x0800e7a8
 f menu_6_1_1 0 0x0800e7cc
@@ -90,9 +84,6 @@ af+ 0x80226c0 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
 
 
-
-af+ 0x80237fe 86 gfx_drawbmp
-f gfx_drawbmp 0 0x80237fe
 
 
 af+ 0x8023ee4 394 Edit_Message_Menu_Entry
@@ -360,6 +351,15 @@ af+ 0x08036fbc 2 do_nothing_2
 
 # gfx_
 
+f gfx_drawbmp @ 0x80237fe
+af+ 0x80237fe 86 gfx_drawbmp
+
+f gfx_blockfill @ 0x801d88c
+af+ 0x801d88c 30 gfx_blockfill
+
+f gfx_linefill @ 0x0801d81a
+af+ 0x0801d81a 104 gfx_linefill
+
 f gfx_info @ 0x2001da1c
 
 f gfx_rc @ 0x080249be
@@ -394,12 +394,6 @@ af+ 0x08021940 18 gfx_drawchar_pos
 f gfx_drawchar @ 0x0802189c
 af+ 0x0802189c 154 gfx_drawchar
 
-af+ 0x800def6 36 gfx_drawtext
-f gfx_drawtext 0 0x800def6
-
-af+ 0x801dd08 18 gfx_drawtext2
-f gfx_drawtext2 0 0x801dd08
-
 f call_gfx_drawtext2_1 0 0x0801ea2e
 f call_gfx_drawtext2_2 0 0x0801f02c
 f call_gfx_drawtext2_3 0 0x0801f044
@@ -410,26 +404,35 @@ f call_gfx_drawtext2_7 0 0x0802d70e
 f call_gfx_drawtext2_8 0 0x0802d8e2
 f call_gfx_drawtext2_9 0 0x0802d9e4
 
-f gfx_drawtext3 0 0x0802b142
-af+ 0x0802b142 148 gfx_drawtext3
-
 f gfx_clear3 0 0x0801dcc0
 af+ 0x0801dcc0 40 gfx_clear3
 
-f gfx_drawtext4 0 0x0801dd1a
+f gfx_drawtext @ 0x800def6
+af+ 0x800def6 36 gfx_drawtext
+
+f gfx_drawtext2 @ 0x801dd08
+af+ 0x801dd08 18 gfx_drawtext2
+
+f gfx_drawtext3 @ 0x0802b142
+af+ 0x0802b142 148 gfx_drawtext3
+
+f gfx_drawtext4 @ 0x0801dd1a
 af+ 0x0801dd1a 18 gfx_drawtext4
 
-f gfx_drawtext5 0 0x0801dd2c
+f gfx_drawtext5 @ 0x0801dd2c
 af+ 0x0801dd2c 16 gfx_drawtext5
 
-f gfx_drawtext6 0 0x08027728
+f gfx_drawtext6 @ 0x08027728
 af+ 0x08027728 154 gfx_drawtext6
 
-f gfx_drawtext7 0 0x080277c2
+f gfx_drawtext7 @ 0x080277c2
 af+ 0x080277c2 16 gfx_drawtext7
 
-f gfx_drawtext8 0 0x08036fc0
+f gfx_drawtext8 @ 0x08036fc0
 af+ 0x08036fc0 378 gfx_drawtext8
+
+f gfx_drawtext9 0 0x0802b0d4
+af+ 0x0802b0d4 110 gfx_drawtext9
 
 f gfx_drawchar_unk @ 0x0801d960
 
@@ -438,11 +441,8 @@ CCa 0x08037118 check_for_0_term_and_loop
 
 CCa 0x08033c96 mult_off21_off23_font
 
-f gfx_drawtext9 0 0x0802b0d4
-af+ 0x0802b0d4 110 gfx_drawtext9
-
-f F_4039_something_write_to_screen 0 0x0800ded8
-af+ 0x0800ded8 30 F_4039_something_write_to_screen
+f gfx_drawtext10 @ 0x0800ded8
+af+ 0x0800ded8 30 gfx_drawtext10
 
 
 f draw_channel_label 0 0x0800e5a6

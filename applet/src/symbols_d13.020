@@ -127,7 +127,7 @@ F_4315                                 = 0x8025ae5;
 gui_opmode1            = 0x2001e94d; /* 0x0803bef0 */
 
 /* hook 0x0801fe7c (alt: 0x0801f064) */
-md380_f_4225                          = 0x0801fe5d;
+f_4225                          = 0x0801fe5d;
 
 md380_f_4137 = 0x0802dfbd;
 md380_f_4520 = 0x0802c83d;
@@ -191,3 +191,6 @@ gui_opmode2 = 0x2001e94b ;
 selected_channel = 0x2001e850; /* ??? */
 zone_name = 0x2001cddc ;
 contact = 0x2001e1ac ;
+
+gfx_drawtext10 = 0x0800ded9 ;
+

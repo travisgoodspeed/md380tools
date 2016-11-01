@@ -530,9 +530,48 @@ if __name__== '__main__':
     # gfx_drawtext9 (used to print call popups, poweroff)
 #    merger.hookstub2(0x0802b0d4, sapplet.getadr("dummy"));
 
-    # something_write_to_screen (used to print call popups, poweroff)
-#    merger.hookstub2(0x0800ded8, sapplet.getadr("something_write_to_screen_hook"));
-#    merger.hookstub2(0x0800ded8, sapplet.getadr("dummy"));
+    gfxdt10=[
+        0x0800c956,
+        0x0800c976,
+        0x0800ca96,
+        0x0800cc58,
+        0x0800cc78,
+        0x0800cd4c,
+        0x0800cd94,
+        0x0800ce46,
+        0x0800ce8e,
+        0x0800cf16,
+        0x0800cf62,
+        0x0800cffa,
+        0x0800d48e,
+        0x0800e254,
+        0x0800e272,
+        0x0800e962,
+        0x0800e9f0,
+        0x08020010,
+        0x080200f4,
+        0x0802077c,
+        0x0802079a,
+        0x080209c8,
+        0x08020a1e,
+        0x0802154a,
+        0x08021588,
+        0x080215b4,
+        0x080215ee,
+        0x08021628,
+        0x08021638,
+        0x08021672,
+        0x08025c90,
+        0x08025d28,
+        0x08025d82,
+        0x08025dde,
+        0x0802c908,
+        0x0802d046,
+        0x0802d064,
+        0x080461d2,
+    ];
+    for adr in gfxdt10:
+        merger.hookbl(adr,sapplet.getadr("gfx_drawtext10_hook"));
 
 # keyboard polling
 #    merger.hookstub2(0x0804eb64, sapplet.getadr("dummy"));

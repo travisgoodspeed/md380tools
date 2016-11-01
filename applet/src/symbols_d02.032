@@ -170,7 +170,7 @@ md380_f_4137 = 0x080290c9;
 md380_f_4520 = 0x08027ae9;
 md380_f_4098 = 0x0804c1d1;
 md380_f_4102 = 0x0804c2ab;
-md380_f_4225 = 0x0801f045;
+f_4225 = 0x0801f045;
 
 /* relevant display functions */
 Write_Command_2display = 0x08031f75;
