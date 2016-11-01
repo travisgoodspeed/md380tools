@@ -195,8 +195,11 @@ void bp_send_beep( uint8_t beep )
     md380_OSMboxPost(event2_mbox_poi_beep, &beep_msg);    
 }
 #else
+
 void bp_send_beep( uint8_t beep )
 {
+    // find: event2_mbox_poi_beep symbol
+
     // dummy. no implementation.
 }
 #endif
