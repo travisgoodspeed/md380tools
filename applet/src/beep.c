@@ -51,27 +51,59 @@ void F_294_replacement(uint16_t value) {
 
 void F_294(uint16_t value);
 
+#if 0
+|      ||   0x0802fc1e      fff7b9fe       bl 0x802f994                ;[1] ; beep 9    
+        
+|      ||   0x0802fc22      dff8900d       ldr.w r0, [pc, 0xd90]       ; [0x80309b4:4]=0x2001e8a7                                                                              
+|      ||   0x0802fc26      0321           movs r1, 3                  ; 3                                                                                                     
+|      ||   0x0802fc28      0170           strb r1, [r0]                                                                                                                       
+
+|      ||   0x0802fc2a      40f2ad30       movw r0, 0x3ad              ; 941                                                                                                   
+|      ||   0x0802fc2e      00f053ff       bl F_294                    ;[2]   
+        
+|      ||   0x0802fc32      00f069ff       bl 0x8030b08                ;[3]   
+        
+|      ||   0x0802fc36      6420           movs r0, 0x64               ; 'd' ; 100                                                                                             
+|      ||   0x0802fc38      04f03cf9       bl OSTimeDly                ;[4]   
+        
+|      ||   0x0802fc3c      40f2b920       movw r0, 0x2b9              ; 697                                                                                                   
+|      ||   0x0802fc40      00f04aff       bl F_294                    ;[2] 
+        
+|      ||   0x0802fc44      3220           movs r0, 0x32               ; '2' ; 50                                                                                              
+|      ||   0x0802fc46      04f035f9       bl OSTimeDly                ;[4]   
+        
+|      ||   0x0802fc4a      00f085ff       bl 0x8030b58                ;[5]  
+        
+|      ||   0x0802fc4e      fff7b3fe       bl 0x802f9b8                ;[6]                                                                                                    
+|      ||   0x0802fc52      0024           movs r4, 0                                                                                                                          
+|      ||   0x0802fc54      0125           movs r5, 1                  ; 1                                                                                                     
+#endif
+
 
 static void start()
 {
-#if 0    
-|       |   0x0802fd54      4021           movs r1, 0x40               ; '@' ; 64 ; beginn dmr sync                                                                            
-|       |   0x0802fd56      0e20           movs r0, 0xe                ; 14                                                                                                    
-|       |   0x0802fd58      10f014f9       bl c5000_spi0_writereg      ;[1]                                                                                                    
-|       |   0x0802fd5c      fff71afe       bl 0x802f994                ;[2]                                                                                                    
-|       |   0x0802fd60      dff8500c       ldr.w r0, [pc, 0xc50]       ; [0x80309b4:4]=0x2001e8a7                                                                              
-|       |   0x0802fd64      0321           movs r1, 3                  ; 3                                                                                                     
-|       |   0x0802fd66      0170           strb r1, [r0]                                                            
-#endif
+//#if 0    
+//|       |   0x0802fd54      4021           movs r1, 0x40               ; '@' ; 64 ; beginn dmr sync                                                                            
+//|       |   0x0802fd56      0e20           movs r0, 0xe                ; 14                                                                                                    
+//|       |   0x0802fd58      10f014f9       bl c5000_spi0_writereg      ;[1]                                                                                                    
+//#endif
+//    c5000_spi0_writereg( 0xe, 0x40 );
+//#if 0    
+//|       |   0x0802fd5c      fff71afe       bl 0x802f994                ;[2]                                                                                                    
+//|       |   0x0802fd60      dff8500c       ldr.w r0, [pc, 0xc50]       ; [0x80309b4:4]=0x2001e8a7                                                                              
+//|       |   0x0802fd64      0321           movs r1, 3                  ; 3                                                                                                     
+//|       |   0x0802fd66      0170           strb r1, [r0]                                                            
+//#endif
 }
 
 static void stop()
 {
-#if 0    
-|       |   0x0802fdb6      4421           movs r1, 0x44               ; 'D' ; 68                                                                                              
-|       |   0x0802fdb8      0e20           movs r0, 0xe                ; 14                                                                                                    
-|       |   0x0802fdba      10f0e3f8       bl c5000_spi0_writereg      ;[1]                   
-#endif
+//#if 0    
+//|       |   0x0802fdb6      4421           movs r1, 0x44               ; 'D' ; 68                                                                                              
+//|       |   0x0802fdb8      0e20           movs r0, 0xe                ; 14                                                                                                    
+//|       |   0x0802fdba      10f0e3f8       bl c5000_spi0_writereg      ;[1]                   
+//#endif
+//    c5000_spi0_writereg( 0xe, 0x44 );
 }
 
 static void tone()
