@@ -8,6 +8,8 @@ __pycache__/
 *.a
 
 *.tmp
+*.lst
+*.map
 
 # Distribution / packaging
 .Python
@@ -79,8 +81,5 @@ db/custom.csv
 firmware/dl
 
 # applet intermeds
-applet/*.lst
-applet/*.map
-annotations/d13.020/*.lst
 /db/tmp.csv
 /db/stripped.csv
