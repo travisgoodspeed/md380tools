@@ -6,7 +6,7 @@ all: users.csv repeaters.csv users.json repeaters.json
 
 clean:
 	rm -f users.csv repeaters.csv users.json repeaters.json special_IDs.csv	
-	-rm tmp.csv stripped.csv
+	-rm stripped.csv
 
 update:
 	-rm users.csv

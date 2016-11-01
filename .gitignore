@@ -76,10 +76,7 @@ db/users.json
 db/repeaters.csv
 db/repeaters.json
 db/custom.csv
+/db/stripped.csv
 
 # firmware downloads
 firmware/dl
-
-# applet intermeds
-/db/tmp.csv
-/db/stripped.csv
