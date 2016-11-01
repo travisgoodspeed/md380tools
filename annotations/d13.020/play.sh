@@ -1,7 +1,7 @@
 
-DIR=$(dirname $0)
+LIB=$(LIBname $0)
 
-. ${DIR}/convlib.sh
+. ${LIB}/convlib.sh
 
 SYM=flash_sym.tmp
 

@@ -10,7 +10,6 @@ $0 ~ /MARKER/ {
 init == 1 {
     a = strtonum("0x"$1);
     sym[a] = $2 ;
-#print "hit" OFS $1 OFS a OFS $2
     next ;
 }
 
