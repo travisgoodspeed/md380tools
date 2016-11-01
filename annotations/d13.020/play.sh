@@ -1,5 +1,9 @@
 
-. convlib.sh
+echo $(dirname $0)
+
+. $(dirname $0)/convlib.sh
+
+exit 0
 
 SYM=flash_sym.tmp
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. convlib.sh
+. $(dirname $0)/convlib.sh
 
 inp()
 {
