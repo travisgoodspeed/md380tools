@@ -49,9 +49,79 @@ void F_294_replacement(uint16_t value) {
  *beep_process_unkown=(uint32_t) value * multiplicand;
 }
 
+void F_294(uint16_t value);
+
+
+static void start()
+{
+#if 0    
+|       |   0x0802fd54      4021           movs r1, 0x40               ; '@' ; 64 ; beginn dmr sync                                                                            
+|       |   0x0802fd56      0e20           movs r0, 0xe                ; 14                                                                                                    
+|       |   0x0802fd58      10f014f9       bl c5000_spi0_writereg      ;[1]                                                                                                    
+|       |   0x0802fd5c      fff71afe       bl 0x802f994                ;[2]                                                                                                    
+|       |   0x0802fd60      dff8500c       ldr.w r0, [pc, 0xc50]       ; [0x80309b4:4]=0x2001e8a7                                                                              
+|       |   0x0802fd64      0321           movs r1, 3                  ; 3                                                                                                     
+|       |   0x0802fd66      0170           strb r1, [r0]                                                            
+#endif
+}
+
+static void stop()
+{
+#if 0    
+|       |   0x0802fdb6      4421           movs r1, 0x44               ; 'D' ; 68                                                                                              
+|       |   0x0802fdb8      0e20           movs r0, 0xe                ; 14                                                                                                    
+|       |   0x0802fdba      10f0e3f8       bl c5000_spi0_writereg      ;[1]                   
+#endif
+}
+
+static void tone()
+{
+    F_294(0x64e);
+#if 0    
+|       |   0x0802fd88      40f24e60       movw r0, 0x64e              ; 1614                                                                                                  
+|       |   0x0802fd8c      00f0a4fe       bl F_294                    ;[3]                               
+#endif
+}
+
+static void silence()
+{
+}
+
+static void duration(int len)
+{
+    int time = len * 0x28 ;
+    OSTimeDly(time);
+}
+
+static void dit_space()
+{
+    duration(1);
+}
+
+static void letter_space()
+{
+    duration(3);
+}
+
+static void word_space()
+{
+    duration(9);
+}
+
 void bp_beep(uint8_t code)
 {
     PRINT("bp_beep: %d\n", code);
+    
+    start();
+    
+    for(int i=0;i<code;i++) {
+        tone();
+        dit_space();
+        silence();
+        dit_space();
+    }
+    
+    stop();
 }
 
 void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
