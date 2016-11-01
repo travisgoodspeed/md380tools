@@ -3,7 +3,7 @@ BEGIN {
     S = " " ;
 }
 END {
-    print
+    print ""
     print "#"
     for( a in symbols ) {
         addr = sprintf("0x%08x",a);

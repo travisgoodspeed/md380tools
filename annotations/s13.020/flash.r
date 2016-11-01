@@ -3,7 +3,7 @@ af+ 0x800c72e 86 md380_create_menu_entry **
 af+ 0x800def6 36 gfx_drawtext **
 af+ 0x800fc84 18 md380_menu_entry_back **
 af+ 0x801353c 488 Create_Menu_Utilies **
-af+ 0x80137b0 932 Create_Menu_Entry_ProgramRadio **
+af+ 0x80137b0 932 md380_menu_entry_programradio **
 af+ 0x8015c60 108 Create_Menu_Entry_RX_QRG_shown **
 CCa 0x8015cb2 Create_Menu_Entry_RX_QRG_1 **
 af+ 0x8015cd4 226 Create_Menu_Entry_RX_QRG_1
