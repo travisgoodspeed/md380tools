@@ -14,7 +14,7 @@ inp()
     cat ${R2IN}
 }
 
-inp | awk -f ${LIB}/conv.awk 
+inp | awk -f ${LIB}/upd_r2.awk 
 
 
 
