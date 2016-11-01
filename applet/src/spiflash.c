@@ -12,15 +12,12 @@
 #include "config.h"
 #include "printf.h"
 
-
-
-int (spiflash_read_hook)(void *dst, long adr, long len) {
-#ifdef CONFIG_SPIFLASH
-  printf("%x %x %d\n", dst, adr, len);
-  return md380_spiflash_read(dst, adr, len);
-#else
-  return 0xdeadbeef;
-#endif
+void spiflash_read_hook(void *dst, long adr, long len)
+{
+    uint8_t *p = dst ;
+    p += 0x40 ;
+    printf("0x%06x:%d 0x%08x (0x%06x)\n", adr, len, dst, p);
+    return md380_spiflash_read(dst, adr, len);
 }
 
 uint32_t get_spi_flash_type(uint8_t *data) {
