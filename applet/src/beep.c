@@ -172,13 +172,13 @@ void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
         PRINT("beep: %d\n", beep);
         switch( beep ) {
             case BEEP_TEST_1 :
-                bp_beep(0);
-                break ;
-            case BEEP_TEST_2 :
                 bp_beep(1);
                 break ;
-            case BEEP_TEST_3 :
+            case BEEP_TEST_2 :
                 bp_beep(2);
+                break ;
+            case BEEP_TEST_3 :
+                bp_beep(3);
                 break ;
             default:
                 return ret ; 
