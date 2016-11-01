@@ -1,17 +1,20 @@
 #!/bin/bash
 
-DIR=$(dirname $0)
+LIB=$(LIBname $0)
 
-. ${DIR}/convlib.sh
+. ${LIB}/convlib.sh
+
+LNK=$1
+R2IN=$2
 
 inp()
 {
-    lnk2sym <../../applet/src/symbols_d13.020 
+    lnk2sym <${LNK} 
     echo "MARKER"
-    cat flash.r
+    cat ${R2IN}
 }
 
-inp | awk -f ${DIR}/conv.awk >flash2.r
+inp | awk -f ${LIB}/conv.awk 
 
 
 

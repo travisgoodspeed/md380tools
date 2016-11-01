@@ -16,6 +16,6 @@ awk '{ print $1 OFS $2 }'
 
 lnk2sym()
 {
-sed 's/;/ ; /' | awk -f lnk2sym.awk | sort
+sed 's/;/ ; /' | awk -f ${LIB}/lnk2sym.awk | sort
 }
 
