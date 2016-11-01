@@ -8,13 +8,14 @@
 #ifndef MBOX_H
 #define MBOX_H
 
+#include <stdint.h>
 #include "os.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void mb_send_beep( int beep );
+void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr);
 
 typedef OS_EVENT ** osev_t ;
 

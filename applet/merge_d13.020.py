@@ -734,10 +734,11 @@ if __name__== '__main__':
     # no menu exit on RX hook 
 #    merger.hookbl(0x0801fe7c,sapplet.getadr("f_4225_internel_hook"),0);
 
-    # OSMboxPend Hook to diag Beep_Process
-    merger.hookbl(0x0802fa00, sapplet.getadr("OSMboxPend_hook"));
+
+    # OSMboxPend Hook to intercept Beep_Process
+    merger.hookbl(0x0802fa00, sapplet.getadr("beep_OSMboxPend_hook"));
     
-    # others
+    # other OSMboxPend hooks
     mbx_pend_list=[
         0x0803b8fa, 0x0803c398, 0x0803c806, 0x08046be2, 0x08046bfa
       ];

@@ -20,6 +20,7 @@
 #include "console.h"
 #include "netmon.h"
 #include "mbox.h"
+#include "beep.h"
 
 OS_EVENT* debug_line_sem;  // not yet used 
 
@@ -109,9 +110,6 @@ uint8_t OSMboxPost_hook(OS_EVENT *pevent, void *pmsg)
 
     return md380_OSMboxPost(pevent, pmsg);
 }
-
-#define BEEP_ROGER 0x24
-#define BEEP_DENY_TX 0xe
 
 void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 {

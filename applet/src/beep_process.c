@@ -5,6 +5,8 @@
 
 */
 
+#define DEBUG
+
 //#include <stdio.h>
 #include <string.h>
 
@@ -12,6 +14,9 @@
 #include "printf.h"
 #include "dmesg.h"
 #include "addl_config.h"
+#include "beep.h"
+#include "debug.h"
+#include "mbox.h"
 
 
 
@@ -43,3 +48,48 @@ void F_294_replacement(uint16_t value) {
 
  *beep_process_unkown=(uint32_t) value * multiplicand;
 }
+
+void bp_beep(uint8_t code)
+{
+    PRINT("beep: %d\n", code);
+}
+
+void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
+{
+    while(1) {
+        void *ret = OSMboxPend_hook(pevent,timeout,perr);
+        if( ret == 0 ) {
+            return 0 ;
+        }
+        uint8_t beep = *(uint8_t*)ret ;
+        PRINT("beep: %d\n", beep);
+        switch( beep ) {
+            case BEEP_TEST_1 :
+                bp_beep(0);
+                break ;
+            case BEEP_TEST_2 :
+                bp_beep(1);
+                break ;
+            case BEEP_TEST_3 :
+                bp_beep(2);
+                break ;
+            default:
+                return ret ; 
+        }
+    }
+}
+
+static uint8_t beep_msg ; // it cannot live on the stack.
+
+#if defined(FW_D13_020)
+void bp_send_beep( uint8_t beep )
+{
+    beep_msg = beep ;
+    md380_OSMboxPost(event2_mbox_poi_beep, &beep_msg);    
+}
+#else
+void mb_send_beep( uint8_t beep )
+{
+    // dummy. no implementation.
+}
+#endif

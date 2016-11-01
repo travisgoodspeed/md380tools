@@ -21,20 +21,20 @@ void test_mbox()
 }
 
 
-uint8_t beep_msg ; // it cannot live on the stack.
-
-void mb_send_beep( int beep )
-{
-    beep_msg = beep ;
-    md380_OSMboxPost(*event2_mbox_poi_beep, &beep_msg);    
-}
+//uint8_t beep_msg ; // it cannot live on the stack.
+//
+//void mb_send_beep( int beep )
+//{
+//    beep_msg = beep ;
+//    md380_OSMboxPost(*event2_mbox_poi_beep, &beep_msg);    
+//}
 #else
 void test_mbox()
 {
     
 }
-void mb_send_beep( int beep )
-{
-    // dummy. no implementation.
-}
+//void mb_send_beep( int beep )
+//{
+//    // dummy. no implementation.
+//}
 #endif
