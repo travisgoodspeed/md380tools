@@ -1,6 +1,8 @@
 #!/bin/bash
 
-. $(dirname $0)/convlib.sh
+DIR=$(dirname $0)
+
+. ${DIR}/convlib.sh
 
 inp()
 {
@@ -9,7 +11,7 @@ inp()
     cat flash.r
 }
 
-inp | awk -f conv.awk >flash2.r
+inp | awk -f ${DIR}/conv.awk >flash2.r
 
 
 
