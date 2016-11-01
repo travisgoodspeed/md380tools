@@ -23,6 +23,7 @@ static char * getdata(char * dest, const char *  src, int count) {
 
 #include "md380.h"
 #include "usersdb.h"
+#include "spiflash.h"
 
 /* All user database data is accessed through this function.
  * This makes it easier to adapt to different kinds of sources.

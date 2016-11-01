@@ -40,8 +40,8 @@ extern char* const dmr_squelch_firstthing[];
 
 
 //Pointer to the buffer that stores the top and bottom line of the boot screen text.
-extern wchar_t toplinetext[10]; // should be wchar_t[10]
-extern wchar_t botlinetext[10]; // should be wchar_t[10]
+extern wchar_t toplinetext[10]; // 0-term
+extern wchar_t botlinetext[10]; // 0-term
 
 //ROM copy of the welcome bitmap.
 extern char welcomebmp[];

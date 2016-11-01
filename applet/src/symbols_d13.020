@@ -189,3 +189,5 @@ backlight_timer = 0x2001e7f8;
 gui_opmode2 = 0x2001e94b ;
 
 selected_channel = 0x2001e850; /* ??? */
+zone_name = 0x2001cddc ;
+contact = 0x2001e1ac ;

@@ -22,6 +22,7 @@
 #include "display.h"
 #include "usersdb.h"
 #include "util.h"
+#include "spiflash.h"
 
 GPIO_InitTypeDef  GPIO_InitStructure;
 

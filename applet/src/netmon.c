@@ -112,10 +112,9 @@ void netmon1_update()
     }
     {
         // current zone name.
-        wchar_t *p = (void*)0x2001cddc ;
-        con_puts("zn:");
-        con_putsw(p);
-        con_nl();    
+        //wchar_t *p = (void*)0x2001cddc ;
+        con_printf("zn:%S\n",zone_name);
+        con_printf("con:%S\n",contact.name);
     }
     {        
         // current channel name.

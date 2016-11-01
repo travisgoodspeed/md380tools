@@ -1,0 +1,4 @@
+
+grep md380_spiflash_read asm.lst | cut -c 13-22 | awk '{ print $0 "," }' >q
+
+

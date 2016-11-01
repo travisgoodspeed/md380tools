@@ -2,7 +2,10 @@
   \brief spiflash Hook functions.
 */
 
-//#include <stdio.h>
+#define DEBUG
+
+#include "spiflash.h"
+
 #include <string.h>
 
 #include "printf.h"
@@ -11,13 +14,26 @@
 #include "version.h"
 #include "config.h"
 #include "printf.h"
+#include "debug.h"
+#include "codeplug.h"
 
 void spiflash_read_hook(void *dst, long adr, long len)
 {
-    uint8_t *p = dst ;
-    p += 0x40 ;
-    printf("0x%06x:%d 0x%08x (0x%06x)\n", adr, len, dst, p);
-    return md380_spiflash_read(dst, adr, len);
+    char *hint = "" ;
+#ifdef FW_D13_020    
+    if( dst == zone_name ) {
+        hint = "zn" ;
+    } else 
+    if( dst == &contact ) {
+        hint = "cont" ;
+    } else 
+#endif        
+    {
+        hint = "?" ;
+    }
+    PRINTRET();    
+    PRINT("0x%06x:%4d 0x%08x (%s)\n", adr, len, dst, hint);
+    md380_spiflash_read(dst, adr, len);
 }
 
 uint32_t get_spi_flash_type(uint8_t *data) {

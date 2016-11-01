@@ -2,6 +2,8 @@
   \brief spiflash defines
 */
 
+#include <stdint.h>
+
 //Only writes if the adr is in range.
 extern void spiflash_write_with_type_check(void *dst, long adr, long len);
 

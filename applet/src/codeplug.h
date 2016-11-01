@@ -10,6 +10,17 @@
 extern "C" {
 #endif
     
+typedef struct {    
+    uint32_t unk1 ;
+    wchar_t name[16];
+} contact_t ; // sizeof ?
+
+#ifdef FW_D13_020
+extern wchar_t zone_name[16];
+
+extern contact_t contact ; 
+#endif
+
 // from pc = 0x080134dc 
 // saved @ 0x1edc0 
 
