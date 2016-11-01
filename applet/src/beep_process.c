@@ -51,7 +51,7 @@ void F_294_replacement(uint16_t value) {
 
 void bp_beep(uint8_t code)
 {
-    PRINT("beep: %d\n", code);
+    PRINT("bp_beep: %d\n", code);
 }
 
 void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
@@ -88,7 +88,7 @@ void bp_send_beep( uint8_t beep )
     md380_OSMboxPost(event2_mbox_poi_beep, &beep_msg);    
 }
 #else
-void mb_send_beep( uint8_t beep )
+void bp_send_beep( uint8_t beep )
 {
     // dummy. no implementation.
 }
