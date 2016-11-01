@@ -1,9 +1,14 @@
 
-LIB=$(LIBname $0)
+LIB=$(dirname $0)/../conv
 
 . ${LIB}/convlib.sh
 
 SYM=flash_sym.tmp
+
+ra2sym <flash.r  >$SYM
+awk -f sym2lnk.awk $SYM | sort >lnk.tmp
+
+exit
 
 #link_2_ra()
 #{
@@ -12,7 +17,8 @@ SYM=flash_sym.tmp
 
 
 #ra2sym <flash.r | sym_strip >o1.tmp
-lnk2sym <../../applet/src/symbols_d13.020 | sym_strip >o2.tmp
+
+#lnk2sym <../../applet/src/symbols_d13.020 | sym_strip >o2.tmp
 
 ra2sym <flash.r  >$SYM
 

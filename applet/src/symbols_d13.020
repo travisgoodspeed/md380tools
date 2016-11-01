@@ -194,3 +194,8 @@ contact = 0x2001e1ac ;
 
 gfx_drawtext10 = 0x0800ded9 ;
 
+event1_mbox_poi_radio = 0x2001e65c ;
+event2_mbox_poi_beep = 0x2001e67c ;
+event3_mbox_poi = 0x2001e664 ;
+event4_mbox_poi = 0x2001e660 ;
+event5_mbox_poi = 0x2001e658 ;

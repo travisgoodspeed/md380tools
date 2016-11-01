@@ -19,6 +19,7 @@
 #include "debug.h"
 #include "console.h"
 #include "netmon.h"
+#include "mbox.h"
 
 OS_EVENT* debug_line_sem;  // not yet used 
 
@@ -50,43 +51,43 @@ OS_EVENT * OSSemCreate_hook(uint16_t cnt)
     return (sem);
 }
 
-#if defined(FW_D13_020)
-OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ;
-OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ;
-#elif defined(FW_D02_032)
-OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
-OS_EVENT *mbox_beep = (OS_EVENT *)0x20015f0c ;
-#warning please consider finding mbox pointers for this firmware version                
-#else
-OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
-OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ; // wrong
-#warning please consider finding mbox pointers for this firmware version                
-#endif
+//#if defined(FW_D13_020)
+//OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ;
+//OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ;
+//#elif defined(FW_D02_032)
+//OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
+//OS_EVENT *mbox_beep = (OS_EVENT *)0x20015f0c ;
+//#warning please consider finding mbox pointers for this firmware version                
+//#else
+//OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
+//OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ; // wrong
+//#warning please consider finding mbox pointers for this firmware version                
+//#endif
 
 
-void pevent_to_name(OS_EVENT *pevent, void *pmsg)
-{
-    if( pevent == mbox_beep ) { 
-        printf("to Beep_Process: %x ..", * (uint8_t*) pmsg);
-        switch (* (uint8_t*) pmsg) {
-            case 0x24:
-                printf("roger beep ");
-                break;
-            case 0x27:
-                printf("keypad tone ");
-                break;
-            case 0xe:
-                printf("fail to sync with relay ");
-                break;
-            default:
-                printf("not known ");
-                break;
-        }
-    }
-    printf("Data:       ");
-    printhex(pmsg, 10);
-    printf("\n");
-}
+//void pevent_to_name(OS_EVENT *pevent, void *pmsg)
+//{
+//    if( pevent == mbox_beep ) { 
+//        printf("to Beep_Process: %x ..", * (uint8_t*) pmsg);
+//        switch (* (uint8_t*) pmsg) {
+//            case 0x24:
+//                printf("roger beep ");
+//                break;
+//            case 0x27:
+//                printf("keypad tone ");
+//                break;
+//            case 0xe:
+//                printf("fail to sync with relay ");
+//                break;
+//            default:
+//                printf("not known ");
+//                break;
+//        }
+//    }
+//    printf("Data:       ");
+//    printhex(pmsg, 10);
+//    printf("\n");
+//}
 
 uint8_t OSMboxPost_hook(OS_EVENT *pevent, void *pmsg)
 {
@@ -124,10 +125,10 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     
     if( is_netmon_enabled() ) {
         if( ret != NULL ) {
-            if( pevent == mbox_radio ) {
+#if defined(FW_D13_020)
+            if( pevent == event1_mbox_poi_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
-//                NMPRINT("%02x ", last_radio_event );
-            } else if( pevent == mbox_beep ) {
+            } else if( pevent == event2_mbox_poi_beep ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;
             } else if( ((uint32_t)pevent) == 0x20017348 ) {
@@ -137,12 +138,11 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
             } else if( ((uint32_t)pevent) == 0x20017438 ) {
                 last_event5 = *(uint8_t*)ret ;
             } else {
-#if defined(FW_D13_020)
                 PRINT( "unknown mbox 0x%x\n", pevent );
+            }            
 #else
 #warning please consider finding mbox pointers for this firmware version                
 #endif                
-            }            
         }
     }
 
