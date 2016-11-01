@@ -17,6 +17,7 @@
 #include "beep.h"
 #include "debug.h"
 #include "mbox.h"
+#include "os.h"
 
 
 
@@ -49,7 +50,11 @@ void F_294_replacement(uint16_t value) {
  *beep_process_unkown=(uint32_t) value * multiplicand;
 }
 
+#if defined(FW_D13_020)
 void F_294(uint16_t value);
+#else
+#define F_294(x) /*nop*/
+#endif
 
 #if 0
 |      ||   0x0802fc1e      fff7b9fe       bl 0x802f994                ;[1] ; beep 9    

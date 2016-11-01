@@ -36,4 +36,11 @@ typedef struct os_event {
 // Sem. to sync access of global DebugLineX between display and dmr task
 extern OS_EVENT* debug_line_sem;
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
+void OSTimeDly(uint32_t delay);
+#else 
+#define OSTimeDly(p) /*nop*/    
+#endif  
+
+
 #endif

@@ -201,10 +201,6 @@ void gfx_drawtext10_hook(wchar_t *str, int x1, int y1, int x2, int y2)
 }
 #endif  
 
-#ifdef FW_D13_020
-void OSTimeDly(uint32_t delay);
-#endif  
-
 void trace_scr_mode()
 {
     static int old = -1 ;
