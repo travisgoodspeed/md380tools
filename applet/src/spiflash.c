@@ -2,7 +2,7 @@
   \brief spiflash Hook functions.
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include "spiflash.h"
 

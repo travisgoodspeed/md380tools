@@ -78,7 +78,7 @@ f menu_6_15_1 0 0x0800e7a8
 f menu_6_1_1 0 0x0800e7cc
 
 
-af+ 0x801fe5c 5454 md380_f_4225
+af+ 0x801fe5c 5454 f_4225
 af+ 0x802256a 324 aes_startup_check
 af+ 0x80226c0 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
@@ -295,7 +295,7 @@ af+ 0x0800eb98 1810 menu_dispatcher
 
 f draw_datetime_row 0 0x0800df1a
 af+ 0x0800df1a 250 draw_datetime_row
-f md380_f_4225 0 0x0801fe5c
+f f_4225 0 0x0801fe5c
 
 f call_F_4225_1 0 0x0802db42
 f call_F_4225_2 0 0x080468e6
