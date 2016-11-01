@@ -67,15 +67,6 @@ extern char   	md380_thingy2[];
 extern char   	md380_usbstring[];
 extern wchar_t 	md380_usbbuf[];
 
-// md380_spiflash
-int     md380_spiflash_read(void *dst, long adr, long len);
-void    md380_spiflash_write(void *dst, long adr, long len);
-int     md380_spiflash_security_registers_read(void *dst, long adr, long len);
-void    md380_spiflash_block_erase64k(uint32_t);
-void    md380_spiflash_sektor_erase4k(uint32_t);
-void    md380_spiflash_enable();
-void    md380_spiflash_disable();
-void    md380_spiflash_wait();
 uint8_t md380_spi_sendrecv(INT8U data); // SPI1
 
 // md380_i2c // stolen from ../../lib/src/peripherals/stm32f4xx_i2c.c
