@@ -3,7 +3,7 @@ radare:
 	radare2 -a arm -m 0x0800C000  -b 16 -i flash.r ../../firmware/unwrapped/D013.020.img
 	
 tmp:
-	../conv/conv.sh
+	../conv/conv.sh ../../applet/src/symbols_d13.020 flash.r >flash2.r
 #	radare2 -a arm -m 0x0800C000  -b 16 -i flash2.r ../../firmware/unwrapped/D013.020.img
 	
 experiment:
