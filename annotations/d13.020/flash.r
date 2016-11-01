@@ -889,3 +889,7 @@ f md380_create_menu_entry @ 0x0800c72e
 f Create_Menu_Entry_RX_QRG_2 @ 0x080157fc 
 f md380_itow @ 0x08018b28 
 f md380_menu_numerical_input @ 0x0801b042 
+
+#
+f zone_name @ 0x2001cddc 
+f contact @ 0x2001e1ac 
