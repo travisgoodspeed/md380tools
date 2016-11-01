@@ -3178,3 +3178,7 @@ CCa 0x8034c94 md380_menu_0x2001d3f0
 CCa 0x8034d78 md380_menu_0x2001d3f0
 CCa 0x803640e md380_menu_0x2001d3f0
 CCa 0x803a5b6 md380_menu_0x2001d3f0
+
+CCa 0x8022f1a md380_menu_edit_buf
+CCa 0x8022f46 md380_menu_edit_buf
+CCa 0x8022fde md380_menu_edit_buf

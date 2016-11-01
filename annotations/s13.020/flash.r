@@ -331,3 +331,7 @@ f md380_itow @ 0x08018c5c
 f Create_Menu_Entry_LEDIndicator @ 0x0801ae7e 
 f md380_menu_numerical_input @ 0x0801b172 
 f gfx_set_bg_color @ 0x0801d49c 
+
+#
+f write_current_channel_info_to_spi @ 0x08022f88 
+f current_channel_info @ 0x2001df88 

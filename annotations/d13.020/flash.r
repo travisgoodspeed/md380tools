@@ -89,9 +89,6 @@ af+ 0x802256a 324 aes_startup_check
 af+ 0x80226c0 18 Get_Welcome_Line1_from_spi_flash
 af+ 0x80226d2 18 Get_Welcome_Line2_from_spi_flash
 
-CCa 0x8022f1a md380_menu_edit_buf
-CCa 0x8022f46 md380_menu_edit_buf
-CCa 0x8022fde md380_menu_edit_buf
 
 
 af+ 0x80237fe 86 gfx_drawbmp
@@ -468,8 +465,6 @@ f event_36 @ 0x08041616
 f event_4 @ 0x08041e44
 
 
-f struct_channel_info2 @ 0x2001de78
-
 
 af+ 0x0804edd0 2 dummy_0x0804edd0
 af+ 0x0804f688 2 dummy_0x0804f688
@@ -636,7 +631,10 @@ af+ 0x080231a8 26 write_current_channel_info_to_spi_long
 f selected_channel @ 0x2001e850
 #CCa 0x2001e850 selected_channel
 
+f struct_channel_info2 @ 0x2001de78
 f current_channel_info @ 0x2001deb8
+f channel_info_read_spi_init @ 0x08022aa6
+af+ 0x08022aa6 156 channel_info_read_spi_init
 
 # c5000
 f c5000_pll_init @ 0x0803f95c

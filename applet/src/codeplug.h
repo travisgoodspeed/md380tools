@@ -48,7 +48,7 @@ typedef struct {
 
 } channel_info_t ; // sizeof() = 0x40 
 
-#ifdef FW_D13_020
+#if defined(FW_D13_020) || defined(FW_S13_020)
 extern channel_info_t current_channel_info ;
 #endif
 

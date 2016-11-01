@@ -225,7 +225,7 @@ void printfreq( void *p2 )
 void netmon2_update()
 {
     con_clrscr();
-#ifdef FW_D13_020
+#if defined(FW_D13_020) || defined(FW_S13_020)
     channel_info_t *ci = &current_channel_info ;
     
     {

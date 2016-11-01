@@ -180,3 +180,6 @@ backlight_timer = 0x2001E8CC;
 gui_opmode2 = 0x2001ea22 ;
 
 selected_channel = 0x2001E924;
+
+current_channel_info = 0x2001df88 ;
+write_current_channel_info_to_spi = 0x08022f89 ;
