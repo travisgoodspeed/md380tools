@@ -27,6 +27,15 @@ void spiflash_read_hook(void *dst, long adr, long len)
     if( dst == &contact ) {
         hint = "cont" ;
     } else 
+    if( dst == &current_channel_info ) {
+        hint = "cci" ;
+    } else 
+    if( dst == (void*)0x2001de78 ) {
+        hint = "ci2" ;
+    } else 
+    if( dst == (void*)0x2001da7c ) {
+        hint = "rxg" ;
+    } else 
 #endif        
     {
         hint = "?" ;
