@@ -79,7 +79,7 @@ af+ 0x80974ee 34 usb_serialnumber
 CCa 0x80d0df0 md380_wt_programradio
 CCa 0x80f93d0 welcomebmp
 af+ 0x0801ae7e 246 Create_Menu_Entry_LEDIndicator **
-af+ 0x0801ff90 5832 md380_f_4225 **
+af+ 0x0801ff90 5832 f_4225 **
 af+ 0x0802e3f4 1902 md380_f_4137 **
 af+ 0x0802cb18 2462 md380_f_4520 **
 af+ 0x0804f990 172 md380_f_4098 **
@@ -302,7 +302,7 @@ f md380_f_4137 @ 0x0802e3f4
 f md380_blockadr @ 0x2001e828 
 f usb_send_packet @ 0x0805a942 
 f md380_usbstring @ 0x2001d504 
-f md380_f_4225 @ 0x0801ff90 
+f f_4225 @ 0x0801ff90
 f usb_dfu_write @ 0x080911b0 
 f md380_usbbuf @ 0x2001e1a0 
 f Start_multiple_tasks @ 0x08046f80 
