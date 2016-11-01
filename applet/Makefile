@@ -36,7 +36,7 @@ $(error select firmware version)
 endif
 
 SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_config.o 
-SRCS += spiflash.o usb.o menu.o rtc_timer.o beep_process.o usersdb.o os.o aes.o
+SRCS += spiflash.o usb.o menu.o rtc_timer.o usersdb.o os.o aes.o
 SRCS += ambe.o  dmr.o 
 SRCS += display.o
 SRCS += console.o
@@ -49,6 +49,7 @@ SRCS += mbox.o
 SRCS += syslog.o
 SRCS += etsi.o
 SRCS += sms.o
+SRCS += beep.o
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020
 endif
