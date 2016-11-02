@@ -19,7 +19,7 @@ print "Fetching list of special IDs from BM master servers.\n"
 
 file = open('users.csv', 'a')
 # Add ID 5000 manually as this is not listed anywhere
-file.write('5000,Status,,,,,,\n')
+#file.write('5000,Status,,,,,,\n')
 
 for idx, item in enumerate(data):
     print str(idx) + ": ID->" + item['ID'] + " Country->" + item['Country'] + " Address->" + item['Address']
