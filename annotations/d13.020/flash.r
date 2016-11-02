@@ -171,7 +171,7 @@ af+ 0x804e64c 90 OSTaskNameSet
 af+ 0x804eb64 152 md380_f_4098
 af+ 0x804ec66 298 md380_f_4102
 CCa 0x804ee2c md380_menu_0x200011e4
-af+ 0x80531d8 124 ambe_encode_thing
+af+ 0x80531d8 124 ambe_encode_thing__size_not_correct
 af+ 0x8053680 140 ambe_decode_wav
 af+ 0x8055100 68 usb_setcallbacks
 af+ 0x8059b02 40 usb_send_packet
