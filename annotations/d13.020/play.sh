@@ -10,11 +10,6 @@ awk -f sym2lnk.awk $SYM | sort >lnk.tmp
 
 exit
 
-#link_2_ra()
-#{
-#
-#}
-
 
 #ra2sym <flash.r | sym_strip >o1.tmp
 

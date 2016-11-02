@@ -1,12 +1,17 @@
 
 sym2ra()
 {
-awk -f sym2ra.awk
+awk -f ${LIB}/sym2ra.awk
 }
 
 ra2sym()
 {
-awk -f ra2sym.awk | sort
+awk -f ${LIB}/ra2sym.awk
+}
+
+sym2lnk()
+{
+awk -f ${LIB}/sym2lnk.awk
 }
 
 sym_strip()

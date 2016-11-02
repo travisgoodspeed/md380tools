@@ -2,8 +2,9 @@
 radare:
 	radare2 -a arm -m 0x0800C000  -b 16 -i flash.r ../../firmware/unwrapped/D013.020.img
 	
-tmp:
+sync:
 	../conv/upd_r2.sh ../../applet/src/symbols_d13.020 flash.r >flash2.tmp
+	../conv/mklink.sh flash.r >link.tmp
 #	radare2 -a arm -m 0x0800C000  -b 16 -i flash2.r ../../firmware/unwrapped/D013.020.img
 	
 experiment:
