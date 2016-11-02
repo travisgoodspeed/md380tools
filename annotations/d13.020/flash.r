@@ -162,7 +162,7 @@ af+ 0x8043de4 8 OS_ENTER_CRITICAL
 af+ 0x8043dec 6 OS_EXIT_CRITICAL
 af+ 0x80462bc 314 Start
 af+ 0x8046520 684 Start_multiple_tasks
-af+ 0x8049e14 798 Start_2_more_tasks__init_vocoder_tasks
+af+ 0x8049e14 798 Start_2_more_tasks__init_vocoder_tasks__Q
 CCa 0x804c74c md380_menu_edit_buf
 CCa 0x804c76e md380_menu_edit_buf
 af+ 0x804dd70 430 dmr_handle_data
@@ -199,7 +199,7 @@ f menugreen.Scan.8037e34 0 0x8037e34
 f menugreen.Zone.80131ac 0 0x80131ac
 f menugreen.Messages.8023858 0 0x8023858
 f menugreen.Call_Log.8034274 0 0x8034274
-f Create_Menu_Utilies 0 0x80134a0
+f menugreen.Utilities.80134a0 0 0x80134a0
 f menugreen.Radio_Set.8017cbc 0 0x8017cbc
 f menugreen.Radio_Inf.80165b8 0 0x80165b8
 f menugreen.MD380Tool.809c3b0 0 0x809c3b0
@@ -212,19 +212,19 @@ f menugreen.Squelch.801a1e0 0 0x801a1e0
 f menugreen.Intro_Scr.801a4c6 0 0x801a4c6
 f menugreen.Keypad_Lo.801a6c8 0 0x801a6c8
 f menugreen.Language.801ab84 0 0x801ab84
-f Create_Menu_Entry_LEDIndicator 0 0x801ad56
+f menugreen.LED_Indic.801ad56 0 0x801ad56
 f menugreen.VOX.80185d8 0 0x80185d8
 f menugreen.SiteRoam1.801ae5c 0 0x801ae5c
 f menugreen.Passwd_Lo.801af7c 0 0x801af7c
-f md380_menu_entry_back 0 0x800fc84
+f menugreen.SiteRoam2.800fc84 0 0x800fc84
 f menugreen.Record.8018f04 0 0x8018f04
 f menugreen.Clock.8018868 0 0x8018868
 f menugreen.GPS.8018248 0 0x8018248
 
-f md380_menu_entry_programradio 0 0x80136c0
-f Create_Menu_Entry_RX_QRG_shown 0 0x80156a4
-f Create_Menu_Entry_RX_QRG_1 0 0x8015720
-f Create_Menu_Entry_RX_QRG_3 0 0x801587a
+f menugreen.prog.80136c0 0 0x80136c0
+f menugreen.prog.rxf.80156a4 0 0x80156a4
+f menugreen.prog.rxf.show.8015720 0 0x8015720
+f menugreen.prog.rxf.edit.801587a 0 0x801587a
 
 f menugreen.prog.txf.8015b74 0 0x8015b74
 f menugreen.prog.txf.show.8015be8 0 0x8015be8
@@ -483,7 +483,7 @@ af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 # keyborked
 
 # struct keyboard_data
-f kb_keypressed @ 0x2001e5f8
+f keypressed_struct @ 0x2001e5f8
 f keylocked_flags @ 0x2001e5f9
 
 f kb_row_col_pressed @ 0x2001e7ba
@@ -498,9 +498,9 @@ f keypress_max_time @ 0x2001e7b8
 f keypress_time_some_button @ 0x2001e7ac
 f keypress_time_lower_button @ 0x2001e7b0
 f keypress_time_upper_button @ 0x2001e7b2
-f kb_key_press_time @ 0x2001e7be
+f keypress_time_all @ 0x2001e7be
 
-f kb_keypressed @ 0x2001e5f8
+f keypress_flag @ 0x2001e5f8
 
 f keypress_max_time_reached @ 0x0804face
 
@@ -530,12 +530,12 @@ CCa 0x0804fa4e jump if long keypress count is reached
 
 f some_radio_status @ 0x2001e5f0
 
-f md380_f_4520 @ 0x0802c83c
+f dispatch_keyboard_2 @ 0x0802c83c
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
 
-f md380_f_4098 @ 0x0804eb64
-af+ 0x0804eb64 152 md380_f_4098
+f biglist_pollsubsys_maybe @ 0x0804eb64
+af+ 0x0804eb64 152 biglist_pollsubsys_maybe
 af+ 0x0804fc32 2 dummy_0x0804fc32
 af+ 0x0804fc2e 2 dummy_0x0804fc2e
 af+ 0x0804fc2e 2 dummy_0x0804fc2e

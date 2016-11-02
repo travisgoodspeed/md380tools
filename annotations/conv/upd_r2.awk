@@ -10,7 +10,7 @@ END {
         sym = symbols[a];
         if( a < 536870912 ) {
             # func
-            if( a in found_f ) {
+            if( a in found_af ) {
             } else {
                 print "af+" S addr S 4 S sym
             }                
