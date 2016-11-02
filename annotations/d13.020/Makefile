@@ -8,8 +8,8 @@ sync:
 #	radare2 -a arm -m 0x0800C000  -b 16 -i flash2.r ../../firmware/unwrapped/D013.020.img
 	
 tmp:
-	../conv/lnk2sym.sh <../../applet/src/symbols_d13.020 >sym.tmp
-	../conv/ra2sym.sh <flash.r >sym2.tmp
+	../conv/lnk2sym.sh <../../applet/src/symbols_d13.020 >lsym.tmp
+	../conv/ra2sym_strip.sh <flash.r >rsym.tmp
 	
 	
 experiment:
