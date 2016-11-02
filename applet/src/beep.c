@@ -118,26 +118,6 @@ static void stop()
     bp_sempost2();
 }
 
-//static void tone()
-//{
-//    bp_set_freq(0x64e);
-//}
-//
-//static void duration(int len)
-//{
-//    int time = len * 0x28 ;
-//    OSTimeDly(time);
-//}
-//
-//static void silence()
-//{
-//}
-//
-//static void dit_time()
-//{
-//    duration(1);
-//}
-
 void bp_beep(uint8_t code)
 {
     PRINT("bp_beep: %d\n", code);
