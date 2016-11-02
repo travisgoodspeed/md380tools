@@ -174,7 +174,7 @@ void draw_micbargraph()
     }
 }
 
-#define RX_POPUP_Y_START 24
+#define RX_POPUP_Y_START 20
 #define RX_POPUP_X_START 10
 
 void draw_rx_screen(unsigned int bg_color)
@@ -199,32 +199,40 @@ void draw_rx_screen(unsigned int bg_color)
     
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
         usr.callsign = "ID unknown" ;
-        usr.firstname = "No entry in" ;
-        usr.name = "your users.csv" ;
-        usr.place = "" ;
+        usr.firstname = "No entry" ;
+        usr.name = "" ;
+        usr.place = "Update users.csv" ;
         usr.state = "see README.md" ;
         usr.country = "on Github" ;
     }
     
     int y_index = RX_POPUP_Y_START;
     
-    gfx_select_font(gfx_font_small);
-    gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
-    y_index += GFX_FONT_SMALL_HEIGHT ;
+    gfx_select_font(gfx_font_norm);
+    if ( dst > 999999) {
+    	gfx_printf_pos( RX_POPUP_X_START, y_index, "%d > %d", src, dst );
+    }
+    else
+    {
+    	gfx_printf_pos( RX_POPUP_X_START, y_index, "%d > TG%d", src, dst );
+    }
+    y_index += GFX_FONT_NORML_HEIGHT ;
 
     gfx_select_font(gfx_font_norm);
-    gfx_printf_pos2(RX_POPUP_X_START, y_index, 10, "%s %s", usr.callsign, usr.firstname );
+    gfx_printf_pos2(RX_POPUP_X_START, y_index, 10, "%s", usr.callsign );
+//    gfx_printf_pos2(RX_POPUP_X_START, y_index, 10, "%s %s", usr.callsign, usr.firstname );
 //    gfx_printf_pos2(RX_POPUP_X_START, y_index, MAX_X, "%s %s", usr.callsign, usr.firstname );
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
-    gfx_select_font(gfx_font_small);
+    gfx_select_font(gfx_font_norm);
 //    drawascii2(usr.name, RX_POPUP_X_START, y_index);
-    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.name );
-    y_index += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
+    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.firstname );
+    y_index += GFX_FONT_NORML_HEIGHT ; // previous line was in big font
 
+    gfx_select_font(gfx_font_small);
 //    drawascii2(usr.place, RX_POPUP_X_START, y_index);
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.place );
-    y_index += GFX_FONT_SMALL_HEIGHT ;
+    y_index += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
     
 //    drawascii2(usr.state, RX_POPUP_X_START, y_index);
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.state );
