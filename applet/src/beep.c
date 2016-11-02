@@ -54,8 +54,8 @@ void F_294(uint16_t value);
 
 void bp_sempost();
 void bp_sempost2();
-void bp_io();
-void bp_io_2();
+void bp_tone_on();
+void bp_tone_off();
 
 extern uint8_t bp_2001e8a7 ;
 
@@ -64,8 +64,8 @@ extern uint8_t bp_2001e8a7 ;
 #define F_294(x) /*nop*/
 #define bp_sempost()
 #define bp_sempost2()
-#define bp_io()
-#define bp_io_2()
+#define bp_tone_on()
+#define bp_tone_off()
 
 uint8_t bp_2001e8a7 ;
 
@@ -76,11 +76,11 @@ static void beep9()
     bp_sempost();
     bp_2001e8a7 = 3 ;
     F_294(0x3ad);
-    bp_io();
+    bp_tone_on();
     OSTimeDly(0x64);
     F_294(0x2b9);
     OSTimeDly(0x32);
-    bp_io_2();    
+    bp_tone_off();    
     bp_sempost2();
 }
 
@@ -93,11 +93,11 @@ static void start()
 static void doit()
 {
     F_294(0x3ad);
-    bp_io();
+    bp_tone_on();
     OSTimeDly(0x64);
     F_294(0x2b9);
     OSTimeDly(0x32);
-    bp_io_2();        
+    bp_tone_off();        
 
     OSTimeDly(0x100);
 }

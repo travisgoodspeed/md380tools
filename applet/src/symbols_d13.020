@@ -202,8 +202,8 @@ event5_mbox_poi = 0x2001e658 ;
 
 F_294 = 0x08030ad8 ;
 
-bp_io                = 0x08030b08 ;
-bp_io_2              = 0x08030b58 ;
+bp_tone_on                = 0x08030b08 ;
+bp_tone_off              = 0x08030b58 ;
 bp_sempost           = 0x0802f994 ;
 bp_sempost2          = 0x0802f9b8 ;
 

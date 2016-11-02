@@ -113,8 +113,8 @@ af+ 0x8030ad8 16 F_294
 
 f bp_2001e8a7 @ 0x2001e8a7
 
-af+ 0x8030b58 72 bp_io_2 
-af+ 0x8030b08 80 bp_io
+af+ 0x8030b58 72 bp_tone_off 
+af+ 0x8030b08 80 bp_tone_on
 af+ 0x8030ae8 4 func_8030ae8 
 af+ 0x802f994 36 bp_sempost
 af+ 0x802f9b8 24 bp_sempost2
