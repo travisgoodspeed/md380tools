@@ -11,3 +11,5 @@ sync:
 	../conv/mklink.sh flash.r >link.tmp
 #	radare2 -a arm -m 0x0800C000  -b 16 -i flash2.r ../../firmware/unwrapped/D013.020.img
 	
+clean:
+	-rm *.tmp
