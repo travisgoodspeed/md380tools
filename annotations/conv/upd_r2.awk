@@ -4,13 +4,22 @@ BEGIN {
 }
 END {
     print ""
-    print "#"
+    print "# from link file"
     for( a in symbols ) {
         addr = sprintf("0x%08x",a);
         sym = symbols[a];
-        if( a in found_f ) {
+        if( a < 536870912 ) {
+            # func
+            if( a in found_f ) {
+            } else {
+                print "af+" S addr S 4 S sym
+            }                
         } else {
-            print "f" S sym S "@" S addr S             
+            # data
+            if( a in found_f ) {
+            } else {
+                print "f" S sym S "@" S addr
+            }
         }
     }
 }
@@ -31,6 +40,7 @@ $1 == "af+" {
     a = strtonum($2);
     if( a in symbols ) {
         $4 = symbols[a];
+        found_af[a] = 1 ;
 #print "hit" OFS $4 OFS a       
     }
     print $0 ;
