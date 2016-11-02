@@ -46,7 +46,7 @@ void F_294_replacement(uint16_t value) {
 #endif
   }
 
- *beep_process_unkown=(uint32_t) value * multiplicand;
+ *bp_freq=(uint32_t) value * multiplicand;
 }
 
 #if defined(FW_D13_020)

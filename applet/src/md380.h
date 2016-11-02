@@ -164,7 +164,7 @@ void Write_Data_2display(uint8_t data);
 
 //! Functions and Variabes regarding the beep_
 // not yet known ;)
-extern uint32_t  beep_process_unkown[];
+extern uint32_t  bp_freq[];
 
 //! useful firmware functions
 wchar_t * md380_itow(wchar_t *, int value);

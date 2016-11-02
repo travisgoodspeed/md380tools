@@ -135,7 +135,7 @@ md380_f_4098 = 0x0804eb65;
 md380_f_4102 = 0x0804ec67;
 
 Beep_Process            = 0x802f9dd;
-beep_process_unkown     = 0x2001e6c0;
+bp_freq     = 0x2001e6c0;
 
 Start_multiple_tasks    = 0x8046521;
 Start                   = 0x80462bd;

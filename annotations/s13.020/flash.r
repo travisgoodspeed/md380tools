@@ -226,7 +226,7 @@ f gui_opmode1 @ 0x2001ea24
 f usb_do_setup @ 0x0808f970
 f md380_spiflash_wait @ 0x08031944
 f botlinetext @ 0x2001e4e0
-f beep_process_unkown @ 0x2001e794
+f bp_freq @ 0x2001e794
 f md380_menu_edit_buf @ 0x2001cb9a
 f md380_radio_config @ 0x2001dbac
 f md380_menu_entry_selected @ 0x2001e9da

@@ -137,7 +137,7 @@ md380_f_294                      = 0x08030f2d; /*  */
 
 
 Beep_Process                     = 0x0802fe31; /*  328 byte match */
-beep_process_unkown              = 0x2001e794; /* 0x08030f34 */
+bp_freq              = 0x2001e794; /* 0x08030f34 */
 Start_multiple_tasks             = 0x08046f81; /*  18 byte match */
 Start                            = 0x08046fbd; /*  */
 

@@ -196,7 +196,7 @@ botlinetext		=	0x2001cee0; /* from D002.032 @ 0x0802189c func 0x8021894 */
 welcomebmp		=	0x080f9ca8;
 
 /* Variabes regarding the beep_process. */
-beep_process_unkown	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 */
+bp_freq	=	0x2001d178; /* from D002.032 @ 0x0802ba58 func 0x802ba44 */
 
 /* Variabes regarding rtc_timer process. */
 gui_opmode1 =	0x2001d3f7;  /* from D002.032 @ 0x0803ba0e func 0x803b524 */

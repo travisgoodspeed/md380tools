@@ -111,6 +111,8 @@ CCa 0x802fd54 beginn dmr sync
 af+ 0x8030aa4 52 F_293
 
 f bp_2001e8a7 @ 0x2001e8a7
+f bp_freq2 @ 0x2001e6c4
+f bp_freq @ 0x2001e6c0
 
 af+ 0x8030ad8 16 bp_set_freq
 af+ 0x8030b58 72 bp_tone_off
@@ -832,7 +834,6 @@ f botlinetext @ 0x2001e410
 f md380_dfu_state @ 0x2001e962
 f ambe_decode_wav @ 0x08053680
 f ambe_encode_thing @ 0x080531d8
-f beep_process_unkown @ 0x2001e6c0
 f md380_RTC_GetDate @ 0x0802b50c
 f md380_blockadr @ 0x2001e754
 f md380_f_4137 @ 0x0802dfbc
