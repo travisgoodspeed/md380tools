@@ -14,7 +14,6 @@ extern "C" {
     
 #define BEEP_4 4 
 #define BEEP_9 9
-#define BEEP_14 14
 #define BEEP_DENY_TX 14
 #define BEEP_ROGER 36 // 9 on D13?
     

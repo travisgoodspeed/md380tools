@@ -201,3 +201,10 @@ event4_mbox_poi = 0x2001e660 ;
 event5_mbox_poi = 0x2001e658 ;
 
 F_294 = 0x08030ad8 ;
+
+bp_io                = 0x08030b08 ;
+bp_io_2              = 0x08030b58 ;
+bp_sempost           = 0x0802f994 ;
+bp_sempost2          = 0x0802f9b8 ;
+
+bp_2001e8a7          = 0x2001e8a7 ;

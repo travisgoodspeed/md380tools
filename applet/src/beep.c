@@ -7,7 +7,6 @@
 
 #define DEBUG
 
-//#include <stdio.h>
 #include <string.h>
 
 #include "md380.h"
@@ -52,47 +51,71 @@ void F_294_replacement(uint16_t value) {
 
 #if defined(FW_D13_020)
 void F_294(uint16_t value);
+
+void bp_sempost();
+void bp_sempost2();
+void bp_io();
+void bp_io_2();
+
+extern uint8_t bp_2001e8a7 ;
+
 #else
 #define F_294(x) /*nop*/
 #endif
 
+static void beep9()
+{
+#if defined(FW_D13_020)
+    bp_sempost();
+    bp_2001e8a7 = 3 ;
+    F_294(0x3ad);
+    bp_io();
+    OSTimeDly(0x64);
+    F_294(0x2b9);
+    OSTimeDly(0x32);
+    bp_io_2();    
+    bp_sempost2();
+#endif
+}
+
 static void start()
 {
+#if defined(FW_D13_020)
+    bp_sempost();
+    bp_2001e8a7 = 3 ;
+    F_294(0x3ad);
+    bp_io();
+    OSTimeDly(0x64);
+    F_294(0x2b9);
+    OSTimeDly(0x32);
+    bp_io_2();    
+    bp_sempost2();
+#endif
 }
 
-static void stop()
-{
-}
-
-static void tone()
-{
-    F_294(0x64e);
-}
-
-static void duration(int len)
-{
-    int time = len * 0x28 ;
-    OSTimeDly(time);
-}
-
-static void silence()
-{
-}
-
-static void dit_space()
-{
-    duration(1);
-}
-
-static void letter_space()
-{
-    duration(3);
-}
-
-static void word_space()
-{
-    duration(9);
-}
+//static void stop()
+//{
+//}
+//
+//static void tone()
+//{
+//    F_294(0x64e);
+//}
+//
+//static void duration(int len)
+//{
+//    int time = len * 0x28 ;
+//    OSTimeDly(time);
+//}
+//
+//static void silence()
+//{
+//}
+//
+//static void dit_time()
+//{
+//    duration(1);
+//}
 
 void bp_beep(uint8_t code)
 {
@@ -100,14 +123,14 @@ void bp_beep(uint8_t code)
     
     start();
     
-    for(int i=0;i<code;i++) {
-        tone();
-        dit_space();
-        silence();
-        dit_space();
-    }
-    
-    stop();
+//    for(int i=0;i<code;i++) {
+//        tone();
+//        dit_time();
+//        silence();
+//        dit_time();
+//    }
+//    
+//    stop();
 }
 
 void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
