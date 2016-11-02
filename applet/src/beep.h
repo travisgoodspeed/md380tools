@@ -10,10 +10,15 @@
 extern "C" {
 #endif
 
-
-#define BEEP_ROGER 0x24
-#define BEEP_DENY_TX 0xe
-
+// list @ 0x0802fa2e    
+    
+#define BEEP_4 4 
+#define BEEP_9 9
+#define BEEP_14 14
+#define BEEP_DENY_TX 14
+#define BEEP_ROGER 36 // 9 on D13?
+    
+// 10...41    
     
 #define BEEP_TEST_1 0x40
 #define BEEP_TEST_2 0x41
@@ -21,7 +26,7 @@ extern "C" {
     
 #if 0    
     
-04: 3 tone
+04: 3 tone  
 09: 2 tone long-short high-low
 0a:
 0b: single short-short high-med
