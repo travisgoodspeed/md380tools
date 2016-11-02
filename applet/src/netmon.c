@@ -84,8 +84,12 @@ void print_smeter()
 {
 #ifdef FW_D13_020
     uint8_t *smeter = (uint8_t *) 0x2001e534;
-    con_printf("sm:%d\n", *smeter);
-#endif    
+    con_printf("rssi:%d\n", *smeter);				// rssi seems better to read than sm:?? 
+#endif   
+#ifdef FW_S13_020
+    uint8_t *smeter = (uint8_t *) 0x2001e604;			// 20161102 - DL2MF, corresponding to s-meter on MD390/G
+    con_printf("rssi:%d\n", *smeter);
+#endif  
 }
 
 void netmon1_update()
@@ -262,6 +266,8 @@ void netmon2_update()
 void netmon3_update()
 {
     syslog_draw_poll();
+    con_nl();
+
 }
 
 void netmon_update()
