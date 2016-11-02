@@ -114,12 +114,17 @@ f bp_2001e8a7 @ 0x2001e8a7
 f bp_freq2 @ 0x2001e6c4
 f bp_freq @ 0x2001e6c0
 
+
+f bp_set_freq @ 0x08030ad8
 af+ 0x8030ad8 16 bp_set_freq
 af+ 0x8030b58 72 bp_tone_off
+f bp_tone_on @ 0x08030b08
 af+ 0x8030b08 80 bp_tone_on
-af+ 0x8030ae8 32 bp_glisando
 f bp_glisando @ 0x8030ae8
+af+ 0x8030ae8 32 bp_glisando
+f bp_sempost @ 0x0802f994
 af+ 0x802f994 36 bp_sempost
+f bp_sempost2 @ 0x0802f9b8
 af+ 0x802f9b8 24 bp_sempost2
 
 f md380_OSMboxPend @ 0x8031084
@@ -852,7 +857,6 @@ af+ 0x080f8510 4 welcomebmp
 f welcomebmp @ 0x080f8510
 f Start_2_more_tasks__init_vocoder_tasks @ 0x08049e14
 f ambe_outbuffer1 @ 0x20013fc8
-f bp_sempost2 @ 0x0802f9b8
 f OSTaskNameSet @ 0x0804e64c
 f usb_send_packet @ 0x08059b02
 f OSSemPend @ 0x0803f754
@@ -887,7 +891,6 @@ f md380_program_radio_unprohibited @ 0x2001e574
 f c5000_spi0_writereg @ 0x0803ff84
 f usb_dfu_write @ 0x08090370
 f Beep_Process @ 0x0802f9dc
-f bp_sempost @ 0x0802f994
 f md380_thingy2 @ 0x2001e963
 f md380_spiflash_enable @ 0x0803152a
 f Edit_Message_Menu_Entry @ 0x08023ee4
@@ -898,7 +901,6 @@ af+ 0x0809a4c0 4 gfx_font_small
 f gfx_font_small @ 0x0809a4c0
 f Get_Welcome_Line2_from_spi_flash @ 0x080226d2
 f md380_spiflash_wait @ 0x08031508
-f bp_set_freq @ 0x08030ad8
 f md380_usbstring @ 0x2001d504
 f md380_spiflash_sektor_erase4k @ 0x08031276
 f OSSemPost @ 0x0803f844
@@ -910,7 +912,6 @@ f md380_spiflash_write @ 0x0803155e
 f md380_spiflash_security_registers_read @ 0x080318b0
 f toplinetext @ 0x2001e3fc
 f md380_menu_0x2001d3f0 @ 0x2001b246
-f bp_tone_on @ 0x08030b08
 f md380_create_main_meny_entry @ 0x0800c188
 f md380_create_menu_entry @ 0x0800c72e
 f Create_Menu_Entry_RX_QRG_2 @ 0x080157fc
