@@ -60,12 +60,19 @@ void bp_io_2();
 extern uint8_t bp_2001e8a7 ;
 
 #else
+
 #define F_294(x) /*nop*/
+#define bp_sempost()
+#define bp_sempost2()
+#define bp_io()
+#define bp_io_2()
+
+uint8_t bp_2001e8a7 ;
+
 #endif
 
 static void beep9()
 {
-#if defined(FW_D13_020)
     bp_sempost();
     bp_2001e8a7 = 3 ;
     F_294(0x3ad);
@@ -75,28 +82,31 @@ static void beep9()
     OSTimeDly(0x32);
     bp_io_2();    
     bp_sempost2();
-#endif
 }
 
 static void start()
 {
-#if defined(FW_D13_020)
     bp_sempost();
     bp_2001e8a7 = 3 ;
+}
+
+static void doit()
+{
     F_294(0x3ad);
     bp_io();
     OSTimeDly(0x64);
     F_294(0x2b9);
     OSTimeDly(0x32);
-    bp_io_2();    
-    bp_sempost2();
-#endif
+    bp_io_2();        
+
+    OSTimeDly(0x100);
 }
 
-//static void stop()
-//{
-//}
-//
+static void stop()
+{
+    bp_sempost2();
+}
+
 //static void tone()
 //{
 //    F_294(0x64e);
@@ -123,14 +133,14 @@ void bp_beep(uint8_t code)
     
     start();
     
-//    for(int i=0;i<code;i++) {
-//        tone();
+    for(int i=0;i<code;i++) {
+        doit();
 //        dit_time();
 //        silence();
 //        dit_time();
-//    }
-//    
-//    stop();
+    }
+    
+    stop();
 }
 
 void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
