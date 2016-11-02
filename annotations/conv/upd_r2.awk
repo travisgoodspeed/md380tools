@@ -4,7 +4,7 @@ BEGIN {
 }
 END {
     print ""
-    print "# from link file"
+    print "# from link file >>>"
     for( a in symbols ) {
         addr = sprintf("0x%08x",a);
         sym = symbols[a];
@@ -14,14 +14,14 @@ END {
             } else {
                 print "af+" S addr S 4 S sym
             }                
+        } 
+          
+        if( a in found_f ) {
         } else {
-            # data
-            if( a in found_f ) {
-            } else {
-                print "f" S sym S "@" S addr
-            }
+            print "f" S sym S "@" S addr
         }
     }
+    print "# from link file <<<"
 }
 
 $0 ~ /MARKER/ {

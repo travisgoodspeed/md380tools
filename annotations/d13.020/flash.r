@@ -113,7 +113,7 @@ af+ 0x8030aa4 52 F_293
 f bp_2001e8a7 @ 0x2001e8a7
 
 af+ 0x8030ad8 16 bp_set_freq
-af+ 0x8030b58 72 bp_tone_off 
+af+ 0x8030b58 72 bp_tone_off
 af+ 0x8030b08 80 bp_tone_on
 af+ 0x8030ae8 4 func_8030ae8 
 af+ 0x802f994 36 bp_sempost
@@ -132,7 +132,7 @@ af+ 0x8031476 70 md380_spiflash_read
 af+ 0x80314bc 58 md380_spi_sendrecv
 af+ 0x80314f6 18 spiflash_write_enable
 af+ 0x8031508 34 md380_spiflash_wait
-af+ 0x803152a 28 md380_spiflash_enable   
+af+ 0x803152a 28 md380_spiflash_enable
 af+ 0x8031546 24 md380_spiflash_disable
 af+ 0x803155e 704 md380_spiflash_write
 af+ 0x8031830 52 spiflash_Erase_Security_Registers_44h
@@ -162,7 +162,7 @@ af+ 0x8043de4 8 OS_ENTER_CRITICAL
 af+ 0x8043dec 6 OS_EXIT_CRITICAL
 af+ 0x80462bc 314 Start
 af+ 0x8046520 684 Start_multiple_tasks
-af+ 0x8049e14 798 Start_2_more_tasks__init_vocoder_tasks__Q
+af+ 0x8049e14 798 Start_2_more_tasks__init_vocoder_tasks
 CCa 0x804c74c md380_menu_edit_buf
 CCa 0x804c76e md380_menu_edit_buf
 af+ 0x804dd70 430 dmr_handle_data
@@ -171,7 +171,7 @@ af+ 0x804e64c 90 OSTaskNameSet
 af+ 0x804eb64 152 md380_f_4098
 af+ 0x804ec66 298 md380_f_4102
 CCa 0x804ee2c md380_menu_0x200011e4
-af+ 0x80531d8 124 ambe_encode_thing__size_not_correct
+af+ 0x80531d8 124 ambe_encode_thing
 af+ 0x8053680 140 ambe_decode_wav
 af+ 0x8055100 68 usb_setcallbacks
 af+ 0x8059b02 40 usb_send_packet
@@ -187,7 +187,7 @@ f menu_entry_back_1 @ 0x800fc85
 
 f md380_radio_config @ 0x2001dadc
 
-f rc_write_radio_config_to_flash @ 0x080226f6 
+f rc_write_radio_config_to_flash @ 0x080226f6
 af+ 0x080226f6 18 rc_write_radio_config_to_flash
 
 Cd 4 @ 0x0800c784
@@ -199,7 +199,7 @@ f menugreen.Scan.8037e34 0 0x8037e34
 f menugreen.Zone.80131ac 0 0x80131ac
 f menugreen.Messages.8023858 0 0x8023858
 f menugreen.Call_Log.8034274 0 0x8034274
-f menugreen.Utilities.80134a0 0 0x80134a0
+f Create_Menu_Utilies 0 0x80134a0
 f menugreen.Radio_Set.8017cbc 0 0x8017cbc
 f menugreen.Radio_Inf.80165b8 0 0x80165b8
 f menugreen.MD380Tool.809c3b0 0 0x809c3b0
@@ -212,19 +212,19 @@ f menugreen.Squelch.801a1e0 0 0x801a1e0
 f menugreen.Intro_Scr.801a4c6 0 0x801a4c6
 f menugreen.Keypad_Lo.801a6c8 0 0x801a6c8
 f menugreen.Language.801ab84 0 0x801ab84
-f menugreen.LED_Indic.801ad56 0 0x801ad56
+f Create_Menu_Entry_LEDIndicator 0 0x801ad56
 f menugreen.VOX.80185d8 0 0x80185d8
 f menugreen.SiteRoam1.801ae5c 0 0x801ae5c
 f menugreen.Passwd_Lo.801af7c 0 0x801af7c
-f menugreen.SiteRoam2.800fc84 0 0x800fc84
+f md380_menu_entry_back 0 0x800fc84
 f menugreen.Record.8018f04 0 0x8018f04
 f menugreen.Clock.8018868 0 0x8018868
 f menugreen.GPS.8018248 0 0x8018248
 
-f menugreen.prog.80136c0 0 0x80136c0
-f menugreen.prog.rxf.80156a4 0 0x80156a4
-f menugreen.prog.rxf.show.8015720 0 0x8015720
-f menugreen.prog.rxf.edit.801587a 0 0x801587a
+f md380_menu_entry_programradio 0 0x80136c0
+f Create_Menu_Entry_RX_QRG_shown 0 0x80156a4
+f Create_Menu_Entry_RX_QRG_1 0 0x8015720
+f Create_Menu_Entry_RX_QRG_3 0 0x801587a
 
 f menugreen.prog.txf.8015b74 0 0x8015b74
 f menugreen.prog.txf.show.8015be8 0 0x8015be8
@@ -233,7 +233,7 @@ f menugreen.prog.txf.edit.8015d58 0 0x8015d58
 
 f menugreen.prog.Channel_N.8016024 0 0x8016024
 f menugreen.prog.Time_Out_.8016320 0 0x8016320
-f menugreen.prog.CTC_DCS.800fc84 0 0x800fc84
+f md380_menu_entry_back 0 0x800fc84
 f menugreen.prog.Color_Cod.8015540 0 0x8015540
 f menugreen.prog.Repeater_.80153dc 0 0x80153dc
 f menugreen.prog.TxContact.8013e78 0 0x8013e78
@@ -483,7 +483,7 @@ af+ 0x0804fd04 136 This_function_called_Read_Channel_Switch
 # keyborked
 
 # struct keyboard_data
-f keypressed_struct @ 0x2001e5f8
+f kb_keypressed @ 0x2001e5f8
 f keylocked_flags @ 0x2001e5f9
 
 f kb_row_col_pressed @ 0x2001e7ba
@@ -498,9 +498,9 @@ f keypress_max_time @ 0x2001e7b8
 f keypress_time_some_button @ 0x2001e7ac
 f keypress_time_lower_button @ 0x2001e7b0
 f keypress_time_upper_button @ 0x2001e7b2
-f keypress_time_all @ 0x2001e7be
+f kb_key_press_time @ 0x2001e7be
 
-f keypress_flag @ 0x2001e5f8
+f kb_keypressed @ 0x2001e5f8
 
 f keypress_max_time_reached @ 0x0804face
 
@@ -530,12 +530,12 @@ CCa 0x0804fa4e jump if long keypress count is reached
 
 f some_radio_status @ 0x2001e5f0
 
-f dispatch_keyboard_2 @ 0x0802c83c
+f md380_f_4520 @ 0x0802c83c
 
 af+ 0x0801dd5c 2182 often_called_something_keycode_menu
 
-f biglist_pollsubsys_maybe @ 0x0804eb64
-af+ 0x0804eb64 152 biglist_pollsubsys_maybe
+f md380_f_4098 @ 0x0804eb64
+af+ 0x0804eb64 152 md380_f_4098
 af+ 0x0804fc32 2 dummy_0x0804fc32
 af+ 0x0804fc2e 2 dummy_0x0804fc2e
 af+ 0x0804fc2e 2 dummy_0x0804fc2e
@@ -560,7 +560,7 @@ f dispatch_event @ 0x0803c39c
 f event4_mbox_poi @ 0x2001e660
 f event2_mbox_poi_beep @ 0x2001e67c
 # 0x20017468
-f event1_mbox_poi_radio @ 0x2001e65c 
+f event1_mbox_poi_radio @ 0x2001e65c
 # 0x20017348
 f event3_mbox_poi @ 0x2001e664
 # 20017438
@@ -817,87 +817,159 @@ af+ 0x0800fc54 48 menu_add_number_of_menuentries_counts
 f menu_memory_poi @ 0x2001e700
 
 #
-f zone_name @ 0x2001cddc 
-f contact @ 0x2001e1ac 
+f zone_name @ 0x2001cddc
+f contact @ 0x2001e1ac
 
-# from link file
+
+# from link file >>>
 f backlight_timer @ 0x2001e7f8
 f md380_menu_0x2001d3c1 @ 0x2001e914
 af+ 0x0804e580 4 OSTaskCreateExt
+f OSTaskCreateExt @ 0x0804e580
 f ambe_outbuffer0 @ 0x20013f28
 af+ 0x0803b39a 4 main_menu
+f main_menu @ 0x0803b39a
 af+ 0x08046520 4 Start_multiple_tasks
+f Start_multiple_tasks @ 0x08046520
 f botlinetext @ 0x2001e410
 f md380_dfu_state @ 0x2001e962
 af+ 0x08053680 4 ambe_decode_wav
+f ambe_decode_wav @ 0x08053680
 af+ 0x080531d8 4 ambe_encode_thing
+f ambe_encode_thing @ 0x080531d8
 f beep_process_unkown @ 0x2001e6c0
 af+ 0x0802b50c 4 md380_RTC_GetDate
+f md380_RTC_GetDate @ 0x0802b50c
 f md380_blockadr @ 0x2001e754
 af+ 0x0802dfbc 4 md380_f_4137
+f md380_f_4137 @ 0x0802dfbc
 af+ 0x08036cc0 4 aes_loadkey
+f aes_loadkey @ 0x08036cc0
+af+ 0x08030b58 4 bp_tone_off
+f bp_tone_off @ 0x08030b58
 af+ 0x08043dec 4 OS_EXIT_CRITICAL
+f OS_EXIT_CRITICAL @ 0x08043dec
 af+ 0x0808ebee 4 usb_dnld_handle
+f usb_dnld_handle @ 0x0808ebee
 af+ 0x08040ce6 4 dmr_before_squelch
+f dmr_before_squelch @ 0x08040ce6
 f md380_dfu_target_adr @ 0x20004a14
 af+ 0x0808eb30 4 usb_do_setup
+f usb_do_setup @ 0x0808eb30
 af+ 0x0802256a 4 aes_startup_check
+f aes_startup_check @ 0x0802256a
 f md380_usbbuf @ 0x2001e0d0
 af+ 0x080f8510 4 welcomebmp
+f welcomebmp @ 0x080f8510
 af+ 0x08049e14 4 Start_2_more_tasks__init_vocoder_tasks
-af+ 0x0804e64c 4 OSTaskNameSet
+f Start_2_more_tasks__init_vocoder_tasks @ 0x08049e14
 f ambe_outbuffer1 @ 0x20013fc8
+af+ 0x0802f9b8 4 bp_sempost2
+f bp_sempost2 @ 0x0802f9b8
+af+ 0x0804e64c 4 OSTaskNameSet
+f OSTaskNameSet @ 0x0804e64c
 af+ 0x08059b02 4 usb_send_packet
+f usb_send_packet @ 0x08059b02
 af+ 0x0803f754 4 OSSemPend
+f OSSemPend @ 0x0803f754
 af+ 0x0804ec66 4 md380_f_4102
+f md380_f_4102 @ 0x0804ec66
 af+ 0x08043de4 4 OS_ENTER_CRITICAL
+f OS_ENTER_CRITICAL @ 0x08043de4
 af+ 0x0809662e 4 usb_serialnumber
+f usb_serialnumber @ 0x0809662e
 af+ 0x0803f708 4 OSSemCreate
+f OSSemCreate @ 0x0803f708
 af+ 0x080cff30 4 md380_wt_programradio
+f md380_wt_programradio @ 0x080cff30
 af+ 0x08041430 4 dmr_call_end
+f dmr_call_end @ 0x08041430
 af+ 0x08040de0 4 dmr_sms_arrive
+f dmr_sms_arrive @ 0x08040de0
 af+ 0x080226c0 4 Get_Welcome_Line1_from_spi_flash
+f Get_Welcome_Line1_from_spi_flash @ 0x080226c0
 af+ 0x08036c38 4 aes_cipher
+f aes_cipher @ 0x08036c38
 af+ 0x0803ffd0 4 c5000_spi0_readreg
+f c5000_spi0_readreg @ 0x0803ffd0
 f md380_packet @ 0x2001ae74
 af+ 0x080cf780 4 gfx_font_norm
+f gfx_font_norm @ 0x080cf780
 af+ 0x080462bc 4 Start
+f Start @ 0x080462bc
 af+ 0x08033eb4 4 OSTimeDly
+f OSTimeDly @ 0x08033eb4
 af+ 0x0808f308 4 usb_upld_handle
+f usb_upld_handle @ 0x0808f308
 af+ 0x08040a02 4 dmr_call_start
+f dmr_call_start @ 0x08040a02
 af+ 0x08031476 4 md380_spiflash_read
+f md380_spiflash_read @ 0x08031476
 f ambe_inbuffer @ 0x2001410e
 f md380_packetlen @ 0x2001e758
 af+ 0x08031546 4 md380_spiflash_disable
+f md380_spiflash_disable @ 0x08031546
 af+ 0x0802b3f6 4 md380_RTC_GetTime
+f md380_RTC_GetTime @ 0x0802b3f6
 af+ 0x0804b234 4 ambe_unpack
+f ambe_unpack @ 0x0804b234
 af+ 0x080312aa 4 md380_spiflash_block_erase64k
+f md380_spiflash_block_erase64k @ 0x080312aa
 f md380_program_radio_unprohibited @ 0x2001e574
 af+ 0x0803ff84 4 c5000_spi0_writereg
+f c5000_spi0_writereg @ 0x0803ff84
 af+ 0x08090370 4 usb_dfu_write
+f usb_dfu_write @ 0x08090370
 af+ 0x0802f9dc 4 Beep_Process
+f Beep_Process @ 0x0802f9dc
+af+ 0x0802f994 4 bp_sempost
+f bp_sempost @ 0x0802f994
 f md380_thingy2 @ 0x2001e963
 af+ 0x0803152a 4 md380_spiflash_enable
+f md380_spiflash_enable @ 0x0803152a
 af+ 0x08023ee4 4 Edit_Message_Menu_Entry
+f Edit_Message_Menu_Entry @ 0x08023ee4
 af+ 0x080314bc 4 md380_spi_sendrecv
+f md380_spi_sendrecv @ 0x080314bc
 f md380_menu_entry_selected @ 0x2001e903
 af+ 0x08055100 4 usb_setcallbacks
+f usb_setcallbacks @ 0x08055100
 af+ 0x0809a4c0 4 gfx_font_small
+f gfx_font_small @ 0x0809a4c0
 af+ 0x080226d2 4 Get_Welcome_Line2_from_spi_flash
+f Get_Welcome_Line2_from_spi_flash @ 0x080226d2
 af+ 0x08031508 4 md380_spiflash_wait
+f md380_spiflash_wait @ 0x08031508
+af+ 0x08030ad8 4 bp_set_freq
+f bp_set_freq @ 0x08030ad8
 f md380_usbstring @ 0x2001d504
 af+ 0x08031276 4 md380_spiflash_sektor_erase4k
+f md380_spiflash_sektor_erase4k @ 0x08031276
 af+ 0x0803f844 4 OSSemPost
+f OSSemPost @ 0x0803f844
 af+ 0x0803119c 4 md380_OSMboxPost
+f md380_OSMboxPost @ 0x0803119c
 af+ 0x080903c0 4 usb_dfu_read
+f usb_dfu_read @ 0x080903c0
 af+ 0x0804dd70 4 dmr_handle_data
+f dmr_handle_data @ 0x0804dd70
 f ambe_mystery @ 0x20013594
 af+ 0x0803155e 4 md380_spiflash_write
+f md380_spiflash_write @ 0x0803155e
 af+ 0x080318b0 4 md380_spiflash_security_registers_read
+f md380_spiflash_security_registers_read @ 0x080318b0
 f toplinetext @ 0x2001e3fc
 f md380_menu_0x2001d3f0 @ 0x2001b246
+af+ 0x08030b08 4 bp_tone_on
+f bp_tone_on @ 0x08030b08
 af+ 0x0800c188 4 md380_create_main_meny_entry
+f md380_create_main_meny_entry @ 0x0800c188
 af+ 0x0800c72e 4 md380_create_menu_entry
+f md380_create_menu_entry @ 0x0800c72e
 af+ 0x080157fc 4 Create_Menu_Entry_RX_QRG_2
+f Create_Menu_Entry_RX_QRG_2 @ 0x080157fc
 af+ 0x08018b28 4 md380_itow
+f md380_itow @ 0x08018b28
 af+ 0x0801b042 4 md380_menu_numerical_input
+f md380_menu_numerical_input @ 0x0801b042
+# from link file <<<
