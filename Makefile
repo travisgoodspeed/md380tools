@@ -138,6 +138,7 @@ ci: dbg mostlyclean
 	"${MAKE}" -C db ci
 	"${MAKE}" user.bin
 #	"${MAKE}" -C annotations/d13.020 ci
+	"${MAKE}" mostlyclean
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less

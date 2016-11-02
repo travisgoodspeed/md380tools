@@ -15,6 +15,7 @@ extern "C" {
 #define BEEP_4 4 
 #define BEEP_9 9
 #define BEEP_DENY_TX 14
+#define BEEP_25 0x19
 #define BEEP_ROGER 36 // 9 on D13?
     
 // 10...41    
@@ -39,7 +40,7 @@ extern "C" {
 16: single tingeling
 17: keeps ringing.
 18: increased urgency beeps high
-19: increased urgency beeps low
+19: increased urgency beeps low 
 1a: ringing
 1b: ringing
 1c: ringing

@@ -99,7 +99,7 @@ void handle_hotkey( int keycode )
             //mb_send_beep(beep_event_probe);
             break ;
         case 12 :
-            bp_send_beep(0xe);
+            bp_send_beep(BEEP_25);
             beep_event_probe-- ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
