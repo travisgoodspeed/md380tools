@@ -109,10 +109,10 @@ CCa 0x802fad8 roger beep
 CCa 0x802fbe4 beginn roger beep
 CCa 0x802fd54 beginn dmr sync
 af+ 0x8030aa4 52 F_293
-af+ 0x8030ad8 16 F_294
 
 f bp_2001e8a7 @ 0x2001e8a7
 
+af+ 0x8030ad8 16 bp_set_freq
 af+ 0x8030b58 72 bp_tone_off 
 af+ 0x8030b08 80 bp_tone_on
 af+ 0x8030ae8 4 func_8030ae8 
@@ -885,7 +885,6 @@ af+ 0x08055100 4 usb_setcallbacks
 af+ 0x0809a4c0 4 gfx_font_small
 af+ 0x080226d2 4 Get_Welcome_Line2_from_spi_flash
 af+ 0x08031508 4 md380_spiflash_wait
-af+ 0x08030ad8 4 F_294
 f md380_usbstring @ 0x2001d504
 af+ 0x08031276 4 md380_spiflash_sektor_erase4k
 af+ 0x0803f844 4 OSSemPost

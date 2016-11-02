@@ -200,7 +200,7 @@ event3_mbox_poi = 0x2001e664 ;
 event4_mbox_poi = 0x2001e660 ;
 event5_mbox_poi = 0x2001e658 ;
 
-F_294 = 0x08030ad8 ;
+bp_set_freq = 0x08030ad8 ;
 
 bp_tone_on                = 0x08030b08 ;
 bp_tone_off              = 0x08030b58 ;

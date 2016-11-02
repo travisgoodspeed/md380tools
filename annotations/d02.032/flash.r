@@ -3406,7 +3406,7 @@ CCa 0x802af98 SystemConfig
 CCa 0x802af9c ConfigData + 0xf  (byte) Beep_Process
 af+ 0x802b958 236 F_5027
 af+ 0x802ba44 52 F_293
-af+ 0x802ba78 16 F_294
+af+ 0x802ba78 16 bp_set_freq
 af+ 0x802ba88 32 F_295
 af+ 0x802baa8 80 F_296
 af+ 0x802baf8 72 F_297

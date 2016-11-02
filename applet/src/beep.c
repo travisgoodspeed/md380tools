@@ -50,7 +50,7 @@ void F_294_replacement(uint16_t value) {
 }
 
 #if defined(FW_D13_020)
-void F_294(uint16_t value);
+void bp_set_freq(uint16_t value);
 
 void bp_sempost();
 void bp_sempost2();
@@ -61,7 +61,7 @@ extern uint8_t bp_2001e8a7 ;
 
 #else
 
-#define F_294(x) /*nop*/
+#define bp_set_freq(x) /*nop*/
 #define bp_sempost()
 #define bp_sempost2()
 #define bp_tone_on()
@@ -75,10 +75,10 @@ static void beep9()
 {
     bp_sempost();
     bp_2001e8a7 = 3 ;
-    F_294(0x3ad);
+    bp_set_freq(0x3ad);
     bp_tone_on();
     OSTimeDly(0x64);
-    F_294(0x2b9);
+    bp_set_freq(0x2b9);
     OSTimeDly(0x32);
     bp_tone_off();    
     bp_sempost2();
@@ -90,16 +90,27 @@ static void start()
     bp_2001e8a7 = 3 ;
 }
 
-static void doit()
-{
-    F_294(0x3ad);
-    bp_tone_on();
-    OSTimeDly(0x64);
-    F_294(0x2b9);
-    OSTimeDly(0x32);
-    bp_tone_off();        
+#define DITFREQ 0x3ad
+#define DITLEN 0x32
 
-    OSTimeDly(0x100);
+static void dit()
+{
+    bp_set_freq(DITFREQ);
+    bp_tone_on();
+    OSTimeDly(DITLEN);
+//    bp_tone_off();        
+    
+//    bp_set_freq(0x2b9);
+//    OSTimeDly(0x32);
+//    bp_tone_off();        
+//
+//    OSTimeDly(0x100);
+}
+
+static void dit_space()
+{
+    bp_tone_off();        
+    OSTimeDly(DITLEN);
 }
 
 static void stop()
@@ -109,7 +120,7 @@ static void stop()
 
 //static void tone()
 //{
-//    F_294(0x64e);
+//    bp_set_freq(0x64e);
 //}
 //
 //static void duration(int len)
@@ -134,10 +145,8 @@ void bp_beep(uint8_t code)
     start();
     
     for(int i=0;i<code;i++) {
-        doit();
-//        dit_time();
-//        silence();
-//        dit_time();
+        dit();
+        dit_space();
     }
     
     stop();
