@@ -222,8 +222,8 @@ foo.img`.
 ##More Info##
 
 Some articles:
-* Jailbreaking the MD380, PoC||GTFO 10:8 (`pocorgtfo10.pdf` page 76.) by Travis Goodspeed
-* Running AMBE Firmware in Linux, PcC||GTFO 13:5 (`pocorgtfo13.pdf` page 38.) by Travis Goodspeed  
+* Jailbreaking the MD380, PoC||GTFO 10:8 ([pocorgtfo10.pdf](https://archive.org/details/pocorgtfo10) page 76.) by Travis Goodspeed
+* Running AMBE Firmware in Linux, PcC||GTFO 13:5 ([pocorgtfo13.pdf](https://archive.org/details/pocorgtfo13) page 38.) by Travis Goodspeed  
 
 Pat Hickey has some notes and tools up in his own repository,
 https://github.com/pchickey/md380-re
