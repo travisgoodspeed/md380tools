@@ -117,7 +117,7 @@ static int find_dmr(char *outstr, long dmr_search,
     return 0;
 }
 
-int find_dmr_user(char *outstr, int dmr_search, const char *data, int outsize)
+static int find_dmr_user(char *outstr, int dmr_search, const char *data, int outsize)
 {
     const long datasize = getfirstnumber(data);
 
