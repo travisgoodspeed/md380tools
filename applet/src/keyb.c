@@ -78,6 +78,7 @@ void copy_dst_to_contact()
         contact.type = CONTACT_USER ;        
     }    
     
+    draw_zone_channel();
 #endif
 }
 
