@@ -25,6 +25,6 @@ int usr_find_by_dmrid( user_t *up, int dmrid );
 extern int find_dmr_user(char *outstr, int dmr_search,
                          const char *data, int outsize);
 
-extern uint8_t get_dmr_user_field(uint8_t field, char *outstr, int dmr_search, int outsize);
+//extern uint8_t get_dmr_user_field(uint8_t field, char *outstr, int dmr_search, int outsize);
 
 #endif
