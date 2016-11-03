@@ -9,6 +9,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// contact_t.type
+#define CONTACT_GROUP 0xC1
+#define CONTACT_USER 0xC2
     
 typedef struct {    
     uint8_t id_l ;

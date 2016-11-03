@@ -66,6 +66,14 @@ void copy_dst_to_contact()
     contact.id_l = dst & 0xFF ;
     contact.id_m = (dst>>8) & 0xFF ;
     contact.id_h = (dst>>16) & 0xFF ;
+    
+    if( rst_grp ) {
+        contact.type = CONTACT_GROUP ;        
+        snprintfw( contact.name, 16, "TG %d", dst );
+    } else {
+        snprintfw( contact.name, 16, "U %d", dst );
+        contact.type = CONTACT_USER ;        
+    }    
 }
 
 void handle_hotkey( int keycode )
