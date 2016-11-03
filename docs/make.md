@@ -31,7 +31,7 @@ Flash experimental FW for MD380 (based on D02)
 
 Flash experimental FW for MD390 (based on S13)
 
-    make flash_D13
+    make flash_S13
 
 Update userdb
 
