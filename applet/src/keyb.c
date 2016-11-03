@@ -68,13 +68,16 @@ void copy_dst_to_contact()
     contact.id_m = (dst>>8) & 0xFF ;
     contact.id_h = (dst>>16) & 0xFF ;
     
+    wchar_t *p = (void*)0x2001e1f4 ;
+    
     if( rst_grp ) {
         contact.type = CONTACT_GROUP ;        
-        snprintfw( contact.name, 16, "TG %d", dst );
+        snprintfw( p, 16, "TG %d", dst );
     } else {
-        snprintfw( contact.name, 16, "U %d", dst );
+        snprintfw( p, 16, "U %d", dst );
         contact.type = CONTACT_USER ;        
     }    
+    
 #endif
 }
 

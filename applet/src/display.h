@@ -17,8 +17,28 @@ extern "C" {
 // status text coordinates    
 #define STATUS_X 10
 #define STATUS_Y 55    
+
+#if 0    
+= draw channel =
+        
+gfx_drawtext4( cn, 45, 34, 157 );        
     
+= idle screen =
     
+gfx_drawbmp( x, 2, 57 );
+gfx_drawtext2( x, 10, 110, 157 );
+
+// line 75
+gfx_drawtext4( zonename, 34, 75, 157 );
+gfx_drawtext2( x, 105, 75, 157 );
+
+// @ 0x0802d712  
+gfx_drawchar_pos( '1', 139, 75 );
+gfx_drawchar_pos( 'n,  146, 75 );
+
+//        
+gfx_drawtex6( sp+4, 25, 32, 18 );        
+#endif    
     
 /*  see 0x0801f06a there are a lot of modes */
 

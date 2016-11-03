@@ -410,16 +410,6 @@ af+ 0x08021940 18 gfx_drawchar_pos
 f gfx_drawchar @ 0x0802189c
 af+ 0x0802189c 154 gfx_drawchar
 
-f call_gfx_drawtext2_1 0 0x0801ea2e
-f call_gfx_drawtext2_2 0 0x0801f02c
-f call_gfx_drawtext2_3 0 0x0801f044
-f call_gfx_drawtext2_4 0 0x0801f07a
-f call_gfx_drawtext2_5 0 0x0801f092
-f call_gfx_drawtext2_6 0 0x0802d660
-f call_gfx_drawtext2_7 0 0x0802d70e
-f call_gfx_drawtext2_8 0 0x0802d8e2
-f call_gfx_drawtext2_9 0 0x0802d9e4
-
 f gfx_clear3 0 0x0801dcc0
 af+ 0x0801dcc0 40 gfx_clear3
 
@@ -832,6 +822,11 @@ f load_contact_call @ 0x08022bda
 f load_contact @ 0x08022992
 af+ 0x08022992 36 load_contact
 f load_contact_spiflash @ 0x0802297c
+
+f unprogrammed_str @ 0x80cfb78
+
+f display_idle_screen @ 0x0802d57c
+af+ 0x0802d57c 608 display_idle_screen
 
 # from link file >>>
 f backlight_timer @ 0x2001e7f8

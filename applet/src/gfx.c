@@ -263,9 +263,11 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 //    PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
     
     if( is_netmon_visible() ) {
+        // channel name
         if( x == 45 && y == 34 ) {
             return ;
         }
+        // zonename
         if( x == 34 && y == 75 ) {
             return ;
         }
