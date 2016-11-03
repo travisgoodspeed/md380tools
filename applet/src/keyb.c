@@ -61,6 +61,7 @@ void switch_to_screen( int scr )
 
 void copy_dst_to_contact()
 {
+#ifdef FW_D13_020
     int dst = rst_dst ;
     
     contact.id_l = dst & 0xFF ;
@@ -74,6 +75,7 @@ void copy_dst_to_contact()
         snprintfw( contact.name, 16, "U %d", dst );
         contact.type = CONTACT_USER ;        
     }    
+#endif
 }
 
 void handle_hotkey( int keycode )

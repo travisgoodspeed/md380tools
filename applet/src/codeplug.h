@@ -14,6 +14,7 @@ extern "C" {
 #define CONTACT_GROUP 0xC1
 #define CONTACT_USER 0xC2
     
+// 0xfc000000 @ 0x0805031e    
 typedef struct {    
     uint8_t id_l ;
     uint8_t id_m ;
