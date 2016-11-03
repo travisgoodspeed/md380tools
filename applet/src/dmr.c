@@ -5,6 +5,8 @@
   in order to extend the functionality of the radio.  Ideally,
   we'd like to use just the hooks, but for the time-being some
   direct patches and callbacks are still necessary.
+ 
+ * glue layer 
 */
 
 #define CONFIG_DMR
@@ -34,9 +36,9 @@
 //char DebugLine1[30];
 //char DebugLine2[160];  // only for debug normal is 80
 
-int g_dst;  // transferbuffer users.csv
-int g_dst_is_group;
-int g_src;
+//int g_dst;  // transferbuffer users.csv
+//int g_dst_is_group;
+//int g_src;
 
 // Table 6.1: Data Type information element definitions
 
@@ -234,16 +236,16 @@ void *dmr_call_start_hook(uint8_t *pkt)
        10 00 00 00 00 00 00 63 30 05 54 73 2c 36
      */
 
-    //Destination adr as Big Endian.
-    int dst = (pkt[7] |
-            (pkt[6] << 8) |
-            (pkt[5] << 16));
-
-    int src = (pkt[10] |
-            (pkt[9] << 8) |
-            (pkt[8] << 16));
-            
-    int groupcall = (pkt[2] & 0x3F) == 0;
+//    //Destination adr as Big Endian.
+//    int dst = (pkt[7] |
+//            (pkt[6] << 8) |
+//            (pkt[5] << 16));
+//
+//    int src = (pkt[10] |
+//            (pkt[9] << 8) |
+//            (pkt[8] << 16));
+//            
+//    int groupcall = (pkt[2] & 0x3F) == 0;
 
     {
         lc_t *data = (void*)(pkt + 2);
@@ -261,11 +263,11 @@ void *dmr_call_start_hook(uint8_t *pkt)
 
     //  OSSemPost(debug_line_sem);
 
-    int primask = OS_ENTER_CRITICAL();
-    g_dst = dst;
-    g_dst_is_group = groupcall;
-    g_src = src;
-    OS_EXIT_CRITICAL(primask);
+//    int primask = OS_ENTER_CRITICAL();
+//    g_dst = dst;
+//    g_dst_is_group = groupcall;
+//    g_src = src;
+//    OS_EXIT_CRITICAL(primask);
 
     //Forward to the original function.
     return dmr_call_start(pkt);
@@ -406,9 +408,6 @@ void *dmr_sms_arrive_hook(void *pkt)
         rst_data_header(data);
     }
     
-//    PRINT("sa ");
-//    dumpraw_data(pkt);
-
     //Forward to the original function.
     return dmr_sms_arrive(pkt);
 #else

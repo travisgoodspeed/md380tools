@@ -77,7 +77,7 @@ void print_hdr()
 
 void print_vce()
 {
-    con_printf("vce: %d:%d\n", g_src, g_dst);
+    con_printf("vce: %d:%d %d\n", rst_src, rst_dst, rst_grp);
 }
 
 void print_smeter()
