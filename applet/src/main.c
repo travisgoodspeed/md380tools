@@ -7,7 +7,6 @@
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
-//#include <stdio.h>
 #include <string.h>
 
 #include "md380.h"

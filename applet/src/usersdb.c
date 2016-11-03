@@ -4,7 +4,6 @@
        the first line is the size im byte
 */
 
-//#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 

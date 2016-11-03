@@ -6,7 +6,6 @@
 #include "syslog.h"
 
 #include <stdarg.h>
-//#include <stdio.h>
 #include "printf.h"
 #include "dmesg.h"
 #include "console.h"
