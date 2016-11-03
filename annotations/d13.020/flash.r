@@ -828,6 +828,10 @@ f menu_memory_poi @ 0x2001e700
 f zone_name @ 0x2001cddc
 f contact @ 0x2001e1ac
 
+f load_contact_call @ 0x08022bda
+f load_contact @ 0x08022992
+af+ 0x08022992 36 load_contact
+f load_contact_spiflash @ 0x0802297c
 
 # from link file >>>
 f backlight_timer @ 0x2001e7f8

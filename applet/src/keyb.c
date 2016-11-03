@@ -16,6 +16,8 @@
 #include "radio_config.h"
 #include "sms.h"
 #include "beep.h"
+#include "codeplug.h"
+#include "radiostate.h"
 
 #include <stdint.h>
 
@@ -57,6 +59,15 @@ void switch_to_screen( int scr )
     nm_screen = scr ;
 }
 
+void copy_dst_to_contact()
+{
+    int dst = rst_dst ;
+    
+    contact.id_l = dst & 0xFF ;
+    contact.id_m = (dst>>8) & 0xFF ;
+    contact.id_h = (dst>>16) & 0xFF ;
+}
+
 void handle_hotkey( int keycode )
 {
     PRINT("handle hotkey: %d\n", keycode );
@@ -64,6 +75,9 @@ void handle_hotkey( int keycode )
     reset_backlight();
     
     switch( keycode ) {
+        case 3 :
+            copy_dst_to_contact();
+            break ;
         case 4 :
             sms_test();
             break ;
@@ -149,8 +163,9 @@ inline int is_intercept_allowed()
 inline int is_intercepted_keycode( int kc )
 {
     switch( kc ) {
-        case 4 :            
-        case 5 :            
+        case 3 :
+        case 4 :
+        case 5 :
         case 6 :
         case 7 :
         case 8 :

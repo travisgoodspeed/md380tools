@@ -11,9 +11,12 @@ extern "C" {
 #endif
     
 typedef struct {    
-    uint32_t unk1 ;
+    uint8_t id_l ;
+    uint8_t id_m ;
+    uint8_t id_h ;
+    uint8_t type ;
     wchar_t name[16];
-} contact_t ; // sizeof ?
+} contact_t ; // sizeof() = 36 (0x24)
 
 #ifdef FW_D13_020
 extern wchar_t zone_name[16];
@@ -33,25 +36,25 @@ typedef struct {
 
     uint8_t off3 ; // [3]
     
-    uint8_t power ; // [4]
+    uint8_t power ; // [4] (type verified)
     uint8_t unk5 ; // [5] wasc3
     uint16_t contact ; // [6][7]
 
     uint8_t unk8 ; // [8]
     uint8_t unk9 ; // [9]
-    uint8_t unk10 ; // [10]
-    uint8_t unk11 ; // [11]
+    uint8_t unk10 ; // [10] 0xa (type verified) 1...32
+    uint8_t unk11 ; // [11] 0xb (type verified) 1...250
 
-    uint8_t off12 ; // [12] 0xc
-    uint8_t off13 ; // [13] 0xd
+    uint8_t off12 ; // [12] 0xc (type verified)
+    uint8_t off13 ; // [13] 0xd (type verified) 0...17
     
-    uint8_t unk14 ; 
-    uint8_t unk15 ; 
+    uint8_t unk14 ; // [14] 0xe
+    uint8_t unk15 ; // [15] 0xf
     
-    uint32_t rxf ; // [0x10/16]
-    uint32_t txf ; // [0x14/20]
-    uint16_t rxtone ; // [0x18/24]
-    uint16_t txtone ; // [0x1A/26]
+    uint32_t rxf ;  // [16] 0x10
+    uint32_t txf ;  // [20] 0x14
+    uint16_t rxtone ; // [24] 0x18
+    uint16_t txtone ; // [26] 0x1A
 
     uint32_t unk28 ;
     wchar_t name[16];
