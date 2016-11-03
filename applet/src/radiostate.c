@@ -18,6 +18,7 @@
 int rst_voice_active = 0 ;
 int rst_src = 0 ;
 int rst_dst = 0 ;
+int rst_grp = 0 ;
 int rst_mycall = 0 ;
 
 int rst_hdr_sap ;
@@ -55,6 +56,9 @@ void rst_voice_lc_header(lc_t *lc)
         char grp_c = 'U' ;        
         if( flco == 0 ) {
             grp_c = 'G' ;
+            rst_grp = 1 ;
+        } else {
+            rst_grp = 0 ;            
         }
         
         LOGR("cs %c %d->%d\n", grp_c, src, dst );

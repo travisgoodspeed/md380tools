@@ -181,6 +181,17 @@ void draw_rx_screen(unsigned int bg_color)
 {
     int dst;
     int src;
+    int grp ;
+    
+    int primask = OS_ENTER_CRITICAL(); // for form sake
+//    dst = g_dst;
+//    src = g_src;
+    
+    dst = rst_dst ;
+    src = rst_src ;
+    grp = rst_grp ;
+    
+    OS_EXIT_CRITICAL(primask);
 
     // clear screen
     gfx_set_fg_color(bg_color);
@@ -190,11 +201,6 @@ void draw_rx_screen(unsigned int bg_color)
     gfx_set_fg_color(0x000000);
     gfx_select_font(gfx_font_small);
 
-    int primask = OS_ENTER_CRITICAL(); // for form sake
-    dst = g_dst;
-    src = g_src;
-    OS_EXIT_CRITICAL(primask);
-    
     user_t usr ;
     
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
@@ -209,28 +215,27 @@ void draw_rx_screen(unsigned int bg_color)
     int y_index = RX_POPUP_Y_START;
     
     gfx_select_font(gfx_font_small);
-    gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
+    if( grp ) {
+        gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> TG %d", src, dst );        
+    } else {
+        gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
+    }
     y_index += GFX_FONT_SMALL_HEIGHT ;
 
     gfx_select_font(gfx_font_norm);
     gfx_printf_pos2(RX_POPUP_X_START, y_index, 10, "%s %s", usr.callsign, usr.firstname );
-//    gfx_printf_pos2(RX_POPUP_X_START, y_index, MAX_X, "%s %s", usr.callsign, usr.firstname );
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
     gfx_select_font(gfx_font_small);
-//    drawascii2(usr.name, RX_POPUP_X_START, y_index);
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.name );
     y_index += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
 
-//    drawascii2(usr.place, RX_POPUP_X_START, y_index);
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.place );
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
-//    drawascii2(usr.state, RX_POPUP_X_START, y_index);
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.state );
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
-//    drawascii2(usr.country, RX_POPUP_X_START, y_index);
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.country );
     y_index += GFX_FONT_SMALL_HEIGHT ;
     
