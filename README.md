@@ -63,7 +63,7 @@ In some VHF Radios is only an 1 MByte SPI Flash installed.
 
 | Name | vocoder | GPS | exp FW | original FW |
 |---------|-----|---|-----|-|
-| MD-380  | old | N | D13 | D02,D03 | 
+| MD-380  | old | N | D13 | D02,D03 |
 | MD-380  | new | N | D13 | D02,D13 |
 | MD-380G | new | Y | S13 | S13 |
 | MD-390  | new | N | D13 | D13 |
