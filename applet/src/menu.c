@@ -79,12 +79,12 @@ typedef struct {
     uint8_t off17 ;         // [17]
     uint16_t unknown2 ;     // [18]
     // sizeof() == 20 (0x14)
-} menu_mem_base_t ;
+} menu_entry_t ;
 
 
 typedef struct {
   const wchar_t  *menu_title; // [0]
-  menu_mem_base_t *entries; // [4]
+  menu_entry_t *entries; // [4]
   uint8_t numberof_menu_entries; // [8]
   uint8_t unknown_00;
   uint8_t unknown_01;
@@ -93,7 +93,7 @@ typedef struct {
 
 extern menu_t md380_menu_memory[];
 
-extern menu_mem_base_t md380_menu_mem_base[];
+extern menu_entry_t md380_menu_mem_base[];
 
 #define MKTHUMB(adr) ((void(*))(((uint32_t)adr) | 0x1))
 
@@ -167,7 +167,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 //        }
 //    }
     
-    menu_mem_base_t *poi = &md380_menu_mem_base[menuid];    
+    menu_entry_t *poi = &md380_menu_mem_base[menuid];    
     
     poi->label = label ;
     poi->green = green_key ;

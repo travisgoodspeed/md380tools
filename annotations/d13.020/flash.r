@@ -17,6 +17,28 @@ af+ 0x800c188 1446 md380_create_main_meny_entry
 af+ 0x800c72e 86 md380_create_menu_entry
 af+ 0x800fc84 18 md380_menu_entry_back
 
+f menu_draw_something @ 0x0802872c
+af+ 0x0802872c 4 menu_draw_something
+
+f menu_draw_something2 @ 0x08028be8
+af+ 0x08028be8 4 menu_draw_something2
+
+f menu_draw_something3 @ 0x08027fcc
+af+ 0x08027fcc 36 menu_draw_something3
+
+f menu_draw_something4 @ 0x0802802a
+af+ 0x0802802a 84 menu_draw_something4
+
+f menu_draw_something5 @ 0x080280d2
+af+ 0x080280d2 62 menu_draw_something5
+
+
+f menu_set_something @ 0x08027f90
+af+ 0x08027f90 54 menu_set_something
+
+f menu_flag_something @ 0x2001e87f
+
+
 
 
 af+ 0x80134a0 408 Create_Menu_Utilies
