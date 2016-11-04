@@ -71,12 +71,13 @@ target/
 version.h
 
 # user/repeater lists
-db/users.csv
-db/users.json
-db/repeaters.csv
-db/repeaters.json
-db/custom.csv
+/db/users.csv
+/db/repeaters.csv
+/db/custom.csv
 /db/stripped.csv
+/db/users.json
+/db/bmgroups.json
+/db/repeaters.json
 
 # firmware downloads
 firmware/dl

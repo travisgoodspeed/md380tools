@@ -38,5 +38,10 @@ repeaters.json:
 repeaters.csv:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=csv&header=0' | perl -pe 's,<BR/>,,' >$@
 
+# not used
+bmgroups.json:
+	curl -L -f 'https://brandmeister.network/dist/js/bm/groups.js' >$@
+	
+
 ci: clean all
 	
