@@ -58,6 +58,18 @@ Both types of vocoder (old and new vocoder radios) are supported.
 The DMR MARC user's database required a 16 MByte SPI Flash memory chip.
 In some VHF Radios is only an 1 MByte SPI Flash installed.
 
+##Known models##
+
+| Name | vocoder | GPS |
+|------|------------|------|
+| md380 | old | N |
+| md380 | new | N |
+| md380 | new | Y |
+| md390 | new | N |
+| md390 | new | Y |
+
+RT3 = MD380
+RT8 = MD390+gps
 
 ###The md380tools have D13.020 as basic now.###
 
