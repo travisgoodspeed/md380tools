@@ -52,6 +52,7 @@ The patched firmware is known to work on the following devices:
 * The "S"-Version (GPS) for radios **with GPS**
   * Tytera/TYT MD380
   * Tytera/TYT MD390
+  * Retevis RT8
 
 Both types of vocoder (old and new vocoder radios) are supported.
 
@@ -60,16 +61,16 @@ In some VHF Radios is only an 1 MByte SPI Flash installed.
 
 ##Known models##
 
-| Name | vocoder | GPS | 
-|------|------------|------|
-| MD380 | old | N |
-| MD380 | new | N |
-| MD380 | new | Y |
-| MD390 | new | N |
-| MD390 | new | Y |
+| Name | vocoder | GPS | exp FW | original FW |
+|---------|-----|---|-----|-|-|
+| MD-380  | old | N | D13 | D02,D03 | 
+| MD-380  | new | N | D13 | D02,D13 |
+| MD-380G | new | Y | S13 | S13 |
+| MD-390  | new | N | D13 | D13 |
+| MD-390G | new | Y | S13 | S13 |
 
-  * RT3 = MD380
-  * RT8 = MD390+gps
+  * RT3 = MD-380
+  * RT8 = MD-390G
 
 ###The md380tools have D13.020 as basic now.###
 
