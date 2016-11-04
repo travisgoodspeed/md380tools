@@ -35,7 +35,7 @@ extern contact_t contact ;
 // the names are partially from chirp md380.py    
 typedef struct {
     // mode: xxxx xxMM 
-    // MM: 2=DMR 1=FM 0=? 
+    // MM: 0=? 1=FM 2=DMR 3=unprog
     uint8_t mode ; // [0] 0x0
     uint8_t cc_slot_flags ; // [0x01] cccc....
     uint8_t priv ; // [2]

@@ -825,8 +825,11 @@ f load_contact_spiflash @ 0x0802297c
 
 f unprogrammed_str @ 0x80cfb78
 
-f display_idle_screen @ 0x0802d57c
-af+ 0x0802d57c 608 display_idle_screen
+f display_unprog_screen @ 0x0802d57c
+af+ 0x0802d57c 608 display_unprog_screen
+
+f display_idle_screen @ 0x802d7f8
+af+ 0x802d7f8 740 display_idle_screen
 
 # from link file >>>
 f backlight_timer @ 0x2001e7f8
