@@ -69,7 +69,7 @@ In some VHF Radios is only an 1 MByte SPI Flash installed.
 | MD-390  | new | N | D02,D13 | D13     |
 | MD-390G | new | Y | D02,S13 | S13     |
 
-  * RT3 = MD-380
+  * RT3 = MD-380 (old)
   * RT8 = MD-390G
 
 ###The md380tools have D13.020 as basic now.###
