@@ -60,16 +60,16 @@ In some VHF Radios is only an 1 MByte SPI Flash installed.
 
 ##Known models##
 
-| Name | vocoder | GPS |
+| Name | vocoder | GPS | 
 |------|------------|------|
-| md380 | old | N |
-| md380 | new | N |
-| md380 | new | Y |
-| md390 | new | N |
-| md390 | new | Y |
+| MD380 | old | N |
+| MD380 | new | N |
+| MD380 | new | Y |
+| MD390 | new | N |
+| MD390 | new | Y |
 
-RT3 = MD380
-RT8 = MD390+gps
+  * RT3 = MD380
+  * RT8 = MD390+gps
 
 ###The md380tools have D13.020 as basic now.###
 
