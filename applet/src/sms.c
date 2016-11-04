@@ -10,8 +10,23 @@
 #include "md380.h"
 #include "syslog.h"
 #include "printf.h"
+#include "codeplug.h"
 
 OS_EVENT *mbox_msg = (OS_EVENT *)0x20017438 ;
+
+inline int is_fm()
+{
+#if defined(FW_D13_020)        
+    int m = current_channel_info.mode & 0x3 ;
+    if( m == 1 ) {
+        return 1 ;
+    } else {
+        return 0 ;
+    }
+#else
+    return 0 ;
+#endif    
+}
 
 void sms_test()
 {
@@ -75,6 +90,12 @@ int msg_event ; // must be global.
 
 void sms_send( sms_hdr_t *hdr, sms_bdy_t *body )
 {
+#if defined(FW_D13_020)        
+    if( is_fm() ) {
+        // TODO: beep
+        return ;
+    }
+    
     sms_hdr_t *hp = (void*)0x2001e1d0 ;
     sms_bdy_t *bp = (void*)0x2001cefc ;
     
@@ -83,4 +104,5 @@ void sms_send( sms_hdr_t *hdr, sms_bdy_t *body )
     
     msg_event = 3 ;
     md380_OSMboxPost(mbox_msg, &msg_event);    
+#endif    
 }

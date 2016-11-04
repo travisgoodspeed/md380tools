@@ -227,8 +227,8 @@ void gfx_blockfill_hook(int x_from, int y_from, int x_to, int y_to)
 
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
-//    PRINTRET();
-//    PRINT( "db: %d %d\n", x, y );
+    PRINTRET();
+    PRINT( "db: %d %d\n", x, y );
     
     // supress bmp drawing in console mode.
     if( is_netmon_visible() ) {
@@ -264,11 +264,11 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     
     if( is_netmon_visible() ) {
         // channel name
-        if( x == 45 && y == 34 ) {
+        if( x == D_LINE1_CHANNAME_X && y == D_LINE1_BASE_Y ) {
             return ;
         }
         // zonename
-        if( x == 34 && y == 75 ) {
+        if( x == D_LINE2_ZONENAME_X && y == D_LINE2_BASE_Y ) {
             return ;
         }
     }

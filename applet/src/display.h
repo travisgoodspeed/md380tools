@@ -18,6 +18,21 @@ extern "C" {
 #define STATUS_X 10
 #define STATUS_Y 55    
 
+// second line in idle screen
+    
+#define D_ICON1_X 2
+#define D_ICON1_Y 16
+    
+#define D_ICON2_X 2
+#define D_ICON2_Y 57
+    
+
+#define D_LINE1_BASE_Y 34
+#define D_LINE1_CHANNAME_X 45    
+    
+#define D_LINE2_BASE_Y 75
+#define D_LINE2_ZONENAME_X 34    
+    
 #if 0    
 = draw channel =
         
