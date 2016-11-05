@@ -22,12 +22,16 @@ custom.csv:
 
 stripped.csv: users.csv custom.csv
 	cat users.csv fixed.csv custom.csv | $(ICONV)| sort -t ',' -k1g,1 | awk -F, -f strip.awk >stripped.csv	
+	
+dmrmarc.tmp:
+	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
+	
 
 users.csv:
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 	perl -e 'print "\n"' >>$@
 	python2 get_special_IDs.py
-	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >>$@
+	cat dmrmarc.tmp >>$@
 	
 users.json:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
