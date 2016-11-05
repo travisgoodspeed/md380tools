@@ -38,6 +38,9 @@ image_S13:
 original_D13: 
 	"${MAKE}" -C firmware unwrapped/D013.020.img
 	
+original_S13: 
+	"${MAKE}" -C firmware unwrapped/S013.020.img
+	
 original_D02: 
 	"${MAKE}" -C firmware unwrapped/D002.032.img
 	
@@ -90,17 +93,26 @@ user.bin: db/stripped.csv
 flashdb: user.bin
 	./md380-tool spiflashwrite user.bin 0x100000
 	
+.PHONY: release
 release:
-	"${MAKE}" clean
-	mkdir release
+	-mkdir release
+#	"${MAKE}" clean
 	"${MAKE}" mostlyclean image_D13
-	cp applet/experiment.bin release/exp_D13.bin
+	cp applet/experiment.bin release/D13.exp.bin
 	"${MAKE}" mostlyclean image_S13
-	cp applet/experiment.bin release/exp_S13.bin
+	cp applet/experiment.bin release/S13.exp.bin
 	"${MAKE}" mostlyclean image_D02
-	cp applet/experiment.bin release/exp_S02.bin
+	cp applet/experiment.bin release/S02.exp.bin
 	"${MAKE}" mostlyclean user.bin
 	cp user.bin release/
+	"${MAKE}" mostlyclean original_D13
+	cp firmware/bin/D013.020.bin release/
+	"${MAKE}" mostlyclean original_S13
+	cp firmware/bin/S013.020.bin release/
+	"${MAKE}" mostlyclean original_D02
+	cp firmware/bin/D002.032.bin release/
+	"${MAKE}" mostlyclean original_D03
+	cp firmware/bin/D003.020.bin release/
 
 dist: 
 	rm -rf $(RELEASE) $(RELEASE).zip
