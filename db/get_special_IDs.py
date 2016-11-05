@@ -3,6 +3,7 @@
 import urllib2
 import json
 import sys
+import socket
 
 url=urllib2
 
@@ -32,13 +33,21 @@ for idx, item in enumerate(data):
     except url.URLError as e:
         print "Could not talk to master server in " + item['Country'] + "!\n"
     else:
-        content = response.read()
-        # Handle servers which answer with HTTP 200 but give file not found
-        if "DOCTYPE" in content:
-            print "List with special IDs not found!\n"
+        # Improved error handling for socket errors - MW0MWZ
+        try:
+            content = response.read()
+        except socket.timeout:
+            print "Socket Timeout...\n"
+        except socket.error:
+            print "Socket Error...\n"
         else:
-            print content
-            file.write(content)
+            # Handle servers which answer with HTTP 200 but give file not found
+            if "DOCTYPE" in content:
+                print "List with special IDs not found!\n"
+            else:
+                print content
+                file.write(content)
+
 
 file.close()
 sys.exit(0)
