@@ -205,7 +205,12 @@ if __name__== '__main__':
     # gfx hooks
     #########
 
-    # 
+    #########
+    # status line
+
+    # date format  hook, this hook can modify the date format on the status line
+    merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
+
     merger.hookbl(0x08021a5e, sapplet.getadr("draw_statusline_hook"));
 
     draw_datetime_row_list=[

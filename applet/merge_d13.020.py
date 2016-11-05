@@ -203,9 +203,6 @@ if __name__== '__main__':
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x804647a,sapplet.getadr("OSSemCreate_hook"),0);
 
-    # date format  hook, this hook can modify the date format on the status line
-    merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
-
     #########
     # gfx_ primitives hooks, to be overriden later in this file.
 
@@ -455,7 +452,12 @@ if __name__== '__main__':
     # gfx_ primitives hooks, to be overriden later in this file.
     #########
 
-    # 
+    #########
+    # status line
+
+    # date format  hook, this hook can modify the date format on the status line
+    merger.hookbl(0x0800df92, sapplet.getadr("print_date_hook"),0);
+
     merger.hookbl(0x08021782, sapplet.getadr("draw_statusline_hook"));
 
     draw_datetime_row_list=[
