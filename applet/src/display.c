@@ -296,7 +296,7 @@ void draw_alt_statusline()
 
 void draw_datetime_row_hook()
 {
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
     if( is_netmon_visible() ) {
         return ;
     }
