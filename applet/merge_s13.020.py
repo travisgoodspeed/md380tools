@@ -203,6 +203,23 @@ if __name__== '__main__':
     merger.hookbl(0x0804717a ,sapplet.getadr("OSSemCreate_hook"),0); #0x804647a
         
     # gfx hooks
+    #########
+
+    # 
+    merger.hookbl(0x08021a5e, sapplet.getadr("draw_statusline_hook"));
+
+    draw_datetime_row_list=[
+        0x08020f0a,
+        0x08020f56,
+        0x08021442,
+        0x08021576,
+        0x0802db00,
+        0x0802dde6,
+    ];
+    for adr in draw_datetime_row_list:
+        merger.hookbl(adr, sapplet.getadr("draw_datetime_row_hook"));
+
+    # rx popup overrides of gfx_drawbmp
     merger.hookbl(0x08026024,sapplet.getadr("rx_screen_blue_hook"),0); #0x08025d54
     merger.hookbl(0x08026102,sapplet.getadr("rx_screen_blue_hook"),0); #0x08025e26
     merger.hookbl(0x0802058a,sapplet.getadr("rx_screen_gray_hook"),0);  #0x08020428

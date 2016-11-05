@@ -458,6 +458,17 @@ if __name__== '__main__':
     # 
     merger.hookbl(0x08021782, sapplet.getadr("draw_statusline_hook"));
 
+    draw_datetime_row_list=[
+        0x08020c26,
+        0x08020c6e,
+        0x08021196,
+        0x080212c6,
+        0x0802d76c,
+        0x0802da42,
+    ];
+    for adr in draw_datetime_row_list:
+        merger.hookbl(adr, sapplet.getadr("draw_datetime_row_hook"));
+
     # rx popup overrides of gfx_drawbmp
     merger.hookbl(0x08025d54,sapplet.getadr("rx_screen_blue_hook"),0);
     merger.hookbl(0x08025e26,sapplet.getadr("rx_screen_blue_hook"),0);
@@ -587,17 +598,6 @@ if __name__== '__main__':
 
 #    merger.hookbl(0x08020314, sapplet.getadr("mode17_hook"),0);
 #    merger.hookbl(0x0802032a, sapplet.getadr("mode17_hook"),0);
-
-    draw_datetime_row_list=[
-        0x08020c26,
-        0x08020c6e,
-        0x08021196,
-        0x080212c6,
-        0x0802d76c,
-        0x0802da42,
-    ];
-    for adr in draw_datetime_row_list:
-        merger.hookbl(adr, sapplet.getadr("draw_datetime_row_hook"));
 
 
     # Hook the startup AES check.
