@@ -25,7 +25,7 @@ for idx, item in enumerate(data):
     print str(idx) + ": ID->" + item['ID'] + " Country->" + item['Country'] + " Address->" + item['Address']
     req = urllib2.Request("http://"+item['Address']+"/md380tools/special_IDs.csv")
     try:
-        response = urllib2.urlopen(req, timeout=5)
+        response = urllib2.urlopen(req, timeout=50)
     except url.HTTPError as e:
         #if e.code == 404:
         print "List with special IDs not found!\n"
