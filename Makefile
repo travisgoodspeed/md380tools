@@ -89,6 +89,18 @@ user.bin: db/stripped.csv
 .PHONY: flashdb
 flashdb: user.bin
 	./md380-tool spiflashwrite user.bin 0x100000
+	
+release:
+	"${MAKE}" clean
+	mkdir release
+	"${MAKE}" mostlyclean image_D13
+	cp applet/experiment.bin release/exp_D13.bin
+	"${MAKE}" mostlyclean image_S13
+	cp applet/experiment.bin release/exp_S13.bin
+	"${MAKE}" mostlyclean image_D02
+	cp applet/experiment.bin release/exp_S02.bin
+	"${MAKE}" mostlyclean user.bin
+	cp user.bin release/
 
 dist: 
 	rm -rf $(RELEASE) $(RELEASE).zip
@@ -117,8 +129,8 @@ dist:
 #download:
 #	"${MAKE}" -C firmware download
 
-all_images: 
-	"${MAKE}" -C applet ci
+#all_images: 
+#	"${MAKE}" -C applet ci
 	
 dbg:
 	@echo ________
