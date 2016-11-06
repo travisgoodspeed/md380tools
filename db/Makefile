@@ -27,7 +27,7 @@ dmrmarc.tmp:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
 	
 
-users.csv:
+users.csv: dmrmarc.tmp
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 	perl -e 'print "\n"' >>$@
 	python2 get_special_IDs.py
