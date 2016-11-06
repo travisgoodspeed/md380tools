@@ -1,4 +1,7 @@
 
+draw_datetime_row = 0x0800df1b;
+draw_zone_channel = 0x0800e538 ;
+
 gfx_info = 0x2001daec ;
 gfx_drawchar = 0x08021b79 ;
 
@@ -87,7 +90,6 @@ main_menu                     = 0x0803beb3; /*  138 byte match */
 md380_create_menu_entry       = 0x0800c72f; /*  88 byte match */
 md380_create_main_meny_entry  = 0x0800c189; /*  1024 byte match */
 md380_menu_numerical_input    = 0x0801b172; /*  */
-md380_create_menu_entry       = 0x0800c72f; /*  88 byte match */
 md380_menu_entry_back         = 0x0800fc84; /*  38 byte match */
 md380_menu_entry_programradio = 0x80137b0;  /*  :(  offset  no +1 fixit on menu.c */ 
 
@@ -166,7 +168,6 @@ dmr_sms_arrive       = 0x080418f9; /* 376 byte match */
 ambe_encode_thing    = 0x08054019; /* 1024 byte match */
 
 draw_statusline = 0x080348c5;
-draw_datetime_row = 0x0800df1b;
 
 /* keyb */
 f_4101 = 0x0804f991; /* 0x0804ec67 */

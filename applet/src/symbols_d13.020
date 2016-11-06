@@ -1,4 +1,7 @@
 
+draw_datetime_row = 0x0800df1b ;
+draw_zone_channel = 0x0800e538 ;
+
 gfx_info = 0x2001da1c ;
 gfx_drawchar = 0x0802189d ;
 
@@ -171,8 +174,6 @@ ambe_outbuffer1 = 0x20013fc8;
 ambe_mystery = 0x20013594;
 
 draw_statusline = 0x08033dad ;
-draw_datetime_row = 0x0800df1b ;
-draw_zone_channel = 0x0800e538 ;
 
 gfx_drawtext4 = 0x0801dd1b ;
 gfx_drawtext7 = 0x080277c3 ;
