@@ -285,7 +285,11 @@ void gfx_drawchar_pos_hook( int r0, int r1, int r2 )
     if( is_netmon_visible() ) {
         return ;
     }
+#if defined(FW_D13_020) || defined(FW_S13_020)
     gfx_drawchar_pos(r0,r1,r2);
+#else
+#warning should find symbol gfx_drawchar_pos        
+#endif    
 }
 
 uint32_t gfx_get_fg_color(void)
