@@ -140,7 +140,7 @@ void splash_hook_handler(void)
         demo();
     }
     
-    test_mbox();
+//    test_mbox();
 
     md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
     // possibly botlinetext does not need to be zero-terminated, but we dont know yet

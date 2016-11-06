@@ -25,7 +25,7 @@
 #include "netmon.h"
 #include "syslog.h"
  
-static int flag=0;
+//static int flag=0;
 
 /* @ 0x2001e600 */
 /*

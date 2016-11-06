@@ -71,7 +71,8 @@ uint8_t bp_2001e8a7 ;
 
 #endif
 
-static void beep9()
+// unsused for now.
+void beep9()
 {
     bp_sempost();
     bp_2001e8a7 = 3 ;
@@ -164,7 +165,7 @@ static uint8_t beep_msg ; // it cannot live on the stack.
 void bp_send_beep( uint8_t beep )
 {
     beep_msg = beep ;
-    md380_OSMboxPost(event2_mbox_poi_beep, &beep_msg);    
+    md380_OSMboxPost((OS_EVENT*)event2_mbox_poi_beep, &beep_msg);
 }
 
 #else

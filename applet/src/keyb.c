@@ -18,6 +18,7 @@
 #include "beep.h"
 #include "codeplug.h"
 #include "radiostate.h"
+#include "printf.h"
 
 #include <stdint.h>
 
@@ -77,6 +78,8 @@ void copy_dst_to_contact()
         snprintfw( p, 16, "U %d", dst );
         contact.type = CONTACT_USER ;        
     }    
+    
+    extern void draw_zone_channel(); // TODO.
     
     draw_zone_channel();
 #endif

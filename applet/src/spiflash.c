@@ -19,6 +19,7 @@
 
 void spiflash_read_hook(void *dst, long adr, long len)
 {
+#ifdef DEBUG    
     char *hint = "" ;
 #ifdef FW_D13_020    
     if( dst == zone_name ) {
@@ -42,6 +43,7 @@ void spiflash_read_hook(void *dst, long adr, long len)
     }
     PRINTRET();    
     PRINT("0x%06x:%4d 0x%08x (%s)\n", adr, len, dst, hint);
+#endif    
     md380_spiflash_read(dst, adr, len);
 }
 

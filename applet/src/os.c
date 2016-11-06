@@ -123,9 +123,9 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     if( is_netmon_enabled() ) {
         if( ret != NULL ) {
 #if defined(FW_D13_020)
-            if( pevent == event1_mbox_poi_radio ) {
+            if( pevent == (OS_EVENT *)event1_mbox_poi_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
-            } else if( pevent == event2_mbox_poi_beep ) {
+            } else if( pevent == (OS_EVENT *)event2_mbox_poi_beep ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;
             } else if( ((uint32_t)pevent) == 0x20017348 ) {
