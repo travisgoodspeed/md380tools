@@ -201,6 +201,68 @@ if __name__== '__main__':
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x0804717a ,sapplet.getadr("OSSemCreate_hook"),0); #0x804647a
         
+    #########
+    # gfx_ primitives hooks, to be overriden later in this file.
+
+    drwbmplist=[
+        0x0800cdd0,
+        0x0802058a,
+        0x0802161a,
+        0x08021628,
+        0x08021a84,
+        0x08021a90,
+        0x08025fd6,
+        0x08026024,
+        0x08026030,
+        0x0802609a,
+        0x080260ea,
+        0x08026102,
+        0x08028a5e,
+        0x08028a88,
+        0x08028ab2,
+        0x08028ad0,
+        0x08028b9a,
+        0x08028bdc,
+        0x08028c00,
+        0x08028c4c,
+        0x08028c60,
+        0x08028cc0,
+        0x08028cd4,
+        0x08028d0c,
+        0x08028d4a,
+        0x08028d9a,
+        0x08028dda,
+        0x08028e34,
+        0x0802bbdc,
+        0x0802bc7a,
+        0x0802bd5e,
+        0x0802bec2,
+        0x0802bf56,
+        0x0802c06e,
+        0x0802c150,
+        0x0802c1d8,
+        0x0802c32c,
+        0x0802c338,
+        0x0802c45a,
+        0x0802c4e6,
+        0x0802c5d6,
+        0x0802c63a,
+        0x0802c6b6,
+        0x0802cde4,
+        0x0802da0e,
+        0x0802dcdc,
+        0x0802dcf8,
+        0x0802de0c,
+        0x08031eb4,
+        0x08031ee6,
+        0x08034936,
+        0x08034986,
+        0x080474fc,
+        0x0804cd46,
+    ];
+    for adr in drwbmplist:
+        merger.hookbl(adr, sapplet.getadr("gfx_drawbmp_hook"));
+
     gfxblockfill=[
         0x0800c85e,
         0x0800c86a,

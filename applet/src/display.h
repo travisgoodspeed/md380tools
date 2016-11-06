@@ -13,6 +13,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+    
+#define D_ICON_ANT_X 0     
+#define D_ICON_ANT_Y 0     
 
 // status text coordinates    
 #define STATUS_X 10

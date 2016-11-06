@@ -230,7 +230,7 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
     
     // supress bmp drawing in console mode.
     if( is_netmon_visible() ) {
-        if( x == 0 && y == 0 ) {
+        if( x == D_ICON_ANT_X && y == D_ICON_ANT_Y ) {
             // antenne icon draw.
             con_redraw();
         }
