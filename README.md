@@ -154,10 +154,17 @@ Turn on radio in DFU mode to begin firmware update with USB cable:
 * connect cable to MD380.
 * power-on MD380 by turning volume knob, while holding PTT button and button above PTT.
 
+For non-GPS-models do:
 ```
 git pull
 make flash
 ```
+For GPS-models do:
+```
+git pull
+make flash_S13
+```
+
 ###Flash updated users.csv database for linux based installations###
 
 Turn radio normally on to begin database loading with USB cable
