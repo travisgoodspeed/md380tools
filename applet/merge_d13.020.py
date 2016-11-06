@@ -447,6 +447,18 @@ if __name__== '__main__':
     for adr in gfxblockfill:
         merger.hookbl(adr, sapplet.getadr("gfx_blockfill_hook"));
 
+    dt4list=[
+        0x0800e5ba,
+        0x0800e604,
+        0x0800e618,
+        0x0800e634,
+        0x0800e696,
+        0x0802d6f2,
+        0x0802d9c8,
+    ];
+    for adr in dt4list:
+        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
+
     # gfx_ primitives hooks, to be overriden later in this file.
     #########
 
@@ -495,18 +507,6 @@ if __name__== '__main__':
 
     merger.hookbl(0x08046804, sapplet.getadr("gfx_drawtext_hook"),0);
     merger.hookbl(0x0804681a, sapplet.getadr("gfx_drawtext_hook"),0);
-
-    dt4list=[
-        0x0800e5ba,
-        0x0800e604,
-        0x0800e618,
-        0x0800e634,
-        0x0800e696,
-        0x0802d6f2,
-        0x0802d9c8,
-    ];
-    for adr in dt4list:
-        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
 
     # f_4315
     merger.hookbl(0x080202d0, sapplet.getadr("f_4315_hook"));

@@ -386,6 +386,18 @@ if __name__== '__main__':
     for adr in gfxblockfill:
         merger.hookbl(adr, sapplet.getadr("gfx_blockfill_hook"));
 
+    dt4list=[
+        0x0800e5ba,
+        0x0800e604,
+        0x0800e618,
+        0x0800e634,
+        0x0800e696,
+        0x0802da86,
+        0x0802dd6c,
+    ];
+    for adr in dt4list:
+        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
+
     # gfx_ primitives hooks, to be overriden later in this file.
     #########
 
@@ -414,18 +426,6 @@ if __name__== '__main__':
     merger.hookbl(0x0802058a,sapplet.getadr("rx_screen_gray_hook"),0);  #0x08020428
 
     # drawtext hooks
-
-    dt4list=[
-        0x0800e5ba,
-        0x0800e604,
-        0x0800e618,
-        0x0800e634,
-        0x0800e696,
-        0x0802da86,
-        0x0802dd6c,
-    ];
-    for adr in dt4list:
-        merger.hookbl(adr,sapplet.getadr("gfx_drawtext4_hook"));
 
                        
     # Hook the startup AES check.
