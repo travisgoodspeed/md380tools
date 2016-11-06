@@ -67,15 +67,10 @@ flash_D13: image_D13
 	
 flash_S13: image_S13
 	./md380-dfu upgrade applet/experiment.bin
-	
-#flash:
-#	"${MAKE}" -C applet clean flash
-#	
-#flash_d02.032:
-#	"${MAKE}" -C applet FW=D02_032 clean flash
-#	
-#flash_s13.020:
-#	"${MAKE}" -C applet FW=S13_020 clean flash
+
+sync:
+	"${MAKE}" -C annotations sync
+    
 	
 .PHONY: updatedb 
 updatedb:
