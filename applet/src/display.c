@@ -209,9 +209,9 @@ void draw_rx_screen(unsigned int bg_color)
     
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
         usr.callsign = "ID unknown" ;
-        usr.firstname = "No entry in" ;
-        usr.name = "your users.csv" ;
-        usr.place = "" ;
+        usr.firstname = "" ;
+        usr.name = "No entry in" ;
+        usr.place = "your users.csv" ;
         usr.state = "see README.md" ;
         usr.country = "on Github" ;
     }
