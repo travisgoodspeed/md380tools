@@ -278,6 +278,16 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 #endif    
 }
 
+extern void gfx_drawchar_pos( int r0, int r1, int r2 );
+
+void gfx_drawchar_pos_hook( int r0, int r1, int r2 )
+{
+    if( is_netmon_visible() ) {
+        return ;
+    }
+    gfx_drawchar_pos(r0,r1,r2);
+}
+
 uint32_t gfx_get_fg_color(void)
 {
 #if defined(FW_D02_032)

@@ -4,6 +4,7 @@ draw_zone_channel = 0x0800e538 ;
 
 gfx_info = 0x2001da1c ;
 gfx_drawchar = 0x0802189d ;
+gfx_drawchar_pos = 0x08021941 ;
 
 gfx_drawbmp          = 0x80237ff;
 gfx_drawtext         = 0x800def7;

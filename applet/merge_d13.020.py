@@ -206,6 +206,27 @@ if __name__== '__main__':
     #########
     # gfx_ primitives hooks, to be overriden later in this file.
 
+    gfxdrawcharpos=[
+        0x0800cd36,
+        0x0800cd7e,
+        0x0800ce30,
+        0x0800ce78,
+        0x0800cefc,
+        0x0800cf48,
+        0x0800d03e,
+        0x0800d0bc,
+        0x0800d120,
+        0x0800d8a6,
+        0x0802d72a,
+        0x0802d736,
+        0x0802d748,
+        0x0802da00,
+        0x0802da0c,
+        0x0802da1e,
+    ];
+    for adr in gfxdrawcharpos:
+        merger.hookbl(adr, sapplet.getadr("gfx_drawchar_pos_hook"));
+
     drwbmplist=[
         0x0800cdd0, 
         0x08020428, 

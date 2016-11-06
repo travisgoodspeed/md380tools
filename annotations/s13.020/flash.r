@@ -222,6 +222,10 @@ f current_channel_info @ 0x2001df88
 f gfx_drawtext4 @ 0x0801de4e
 af+ 0x0801de4e 18 gfx_drawtext4 
 
+f zone_name @ 0x2001cddc
+f gfx_drawchar_pos @ 0x8021c1c
+af+ 0x8021c1c 4 gfx_drawchar_pos
+
 # from link file >>>
 f md380_menu_mem_base @ 0x2001b274
 f gui_opmode1 @ 0x2001ea24
