@@ -225,8 +225,8 @@ void gfx_blockfill_hook(int x_from, int y_from, int x_to, int y_to)
 
 void gfx_drawbmp_hook( void *bmp, int x, int y )
 {
-    PRINTRET();
-    PRINT( "db: %d %d\n", x, y );
+//    PRINTRET();
+//    PRINT( "db: %d %d\n", x, y );
     
     // supress bmp drawing in console mode.
     if( is_netmon_visible() ) {
