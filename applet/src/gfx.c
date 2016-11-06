@@ -271,7 +271,7 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
         }
     }
     
-#if defined(FW_D13_020)        
+#if defined(FW_D13_020) || defined(FW_S13_020)
     gfx_drawtext4(str,x,y,xlen,ylen);
 #else
 #warning should find symbol gfx_drawtext4        

@@ -219,6 +219,8 @@ f gfx_drawtext7 @ 0x08027a9e
 f write_current_channel_info_to_spi @ 0x08022f88
 f current_channel_info @ 0x2001df88
 
+f gfx_drawtext4 @ 0x0801de4e
+af+ 0x0801de4e 18 gfx_drawtext4 
 
 # from link file >>>
 f md380_menu_mem_base @ 0x2001b274
