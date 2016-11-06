@@ -195,8 +195,7 @@ if __name__== '__main__':
     for adr in dmr_handle_data_hook_list:
         merger.hookbl(adr, sapplet.getadr("dmr_handle_data_hook"));
                                                                           
-    merger.hookbl( 0x0804143e, #0x8040926,
-                 sapplet.getadr("dmr_sms_arrive_hook"));
+    merger.hookbl( 0x0804143e, sapplet.getadr("dmr_sms_arrive_hook"));
                                                                               
                                                                                   
     # os semaphore hook .. now we can crate own semaphores
@@ -216,7 +215,7 @@ if __name__== '__main__':
         0x0800c906,
         0x0800c912,
         0x0800c926,
-        0x0800c9fe,
+        0x0800c9fe,  #?
         0x0800ca0a,
         0x0800ca16,
         0x0800ca28,
@@ -414,9 +413,6 @@ if __name__== '__main__':
     merger.hookbl(0x08026102,sapplet.getadr("rx_screen_blue_hook"),0); #0x08025e26
     merger.hookbl(0x0802058a,sapplet.getadr("rx_screen_gray_hook"),0);  #0x08020428
                        
-    # date format  hook, this hook can modify the date format on the status line
-    merger.hookbl(0x0800df92,sapplet.getadr("print_date_hook"),0);    # 0x0800df92
-
     # Hook the startup AES check.
     merger.hookbl(0x08048474,sapplet.getadr("aes_startup_check_hook"),0); # 0x0804764c
 
