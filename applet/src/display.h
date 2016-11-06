@@ -49,7 +49,7 @@ gfx_drawtext2( x, 105, 75, 157 );
 
 // @ 0x0802d712  
 gfx_drawchar_pos( '1', 139, 75 );
-gfx_drawchar_pos( 'n,  146, 75 );
+gfx_drawchar_pos( n,  146, 75 );
 
 //        
 gfx_drawtex6( sp+4, 25, 32, 18 );        
