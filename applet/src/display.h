@@ -17,6 +17,8 @@ extern "C" {
 #define D_ICON_ANT_X 0     
 #define D_ICON_ANT_Y 0     
 
+#define D_DATETIME_Y 96
+    
 // status text coordinates    
 #define STATUS_X 10
 #define STATUS_Y 55    

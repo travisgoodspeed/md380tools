@@ -243,7 +243,7 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
 void gfx_drawtext2_hook(wchar_t *str, int x, int y, int xlen)
 {
     // filter datetime (y=96)
-    if( y != 96 ) {
+    if( y != D_DATETIME_Y ) {
 //        PRINTRET();
 //        PRINT("ctd: %d %d %d %S\n", x, y, xlen, str);
     }
