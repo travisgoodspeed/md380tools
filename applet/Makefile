@@ -57,8 +57,6 @@ ifdef INC_I2C
 SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
 endif
 
-PROJ_NAME=main
-
 
 ###################################################
 
@@ -98,7 +96,7 @@ OBJS = $(SRCS:.c=.o)
 
 .PHONY: lib proj pre
 
-all: mark lib proj wrapped	
+all: mark experiment.bin
 	
 .PHONY: mark
 mark:
@@ -111,33 +109,40 @@ else
 	echo $(FW) >mark.tmp
 endif	
 
-experiment.img: 
-	"${MAKE}" -C ../patches/$(PATCHDIR) patched.bin
-	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
-
-
+# strange dependencies (migrate down to lib makefile if need be)
 lib: src/version.h config.h
-	"${MAKE}" -C lib
+	"${MAKE}" -C lib libstm32f4.a
 
-proj: 	$(PROJ_NAME).elf experiment.img
-	# use a fresh experiment.img
-	"${MAKE}" -C ../patches/$(PATCHDIR) clean all
-	cp ../patches/$(PATCHDIR)/patched.img ./experiment.img
-	python2 merge_$(SRCVERSION).py experiment.img $(PROJ_NAME).img $(MERGEBASE)
+.PHONY: base.img
+base.img:
+	"${MAKE}" -C ../patches/$(PATCHDIR) patched.img
+	
+merged.img: applet.img base.img   
+	cp ../patches/$(PATCHDIR)/patched.img ./merged.img
+	python2 merge_$(SRCVERSION).py merged.img applet.img $(MERGEBASE)
+
+#patched.bin: proj
+#	"${MAKE}" -C ../patches/$(PATCHDIR) patched.img
+#	cp ../patches/$(PATCHDIR)/patched.img ./patched.bin
 
 #The wrapped file is the one that works with the Windows updater.
-wrapped: lib proj
-	../md380-fw --wrap experiment.img experiment.bin
+wrapped.bin: merged.img
+	../md380-fw --wrap merged.img wrapped.bin
 
+experiment.bin: wrapped.bin
+	cp wrapped.bin experiment.bin
+	
 ##This flashes from unix. (deprecated)
 #flash: wrapped
 #	../md380-dfu upgrade experiment.bin
 
 $(SRCS): config.h src/*.h | lib	
-$(PROJ_NAME).elf: $(SRCS)
+applet.elf: $(SRCS)
 	$(CC) $(CFLAGS) -Wl,--no-wchar-size-warning -Wl,-Map,$(basename $@).map $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_$(SRCVERSION)
-	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).img
-	$(OBJDUMP) -t main.elf >main.img.sym
+	
+%.img: %.elf	
+	$(OBJDUMP) -t $< >$(basename $@).img.sym
+	$(OBJCOPY) -O binary $< $@
 
 #Temporary file containing the build date.
 #Might use version numbers when we're ready for releases.

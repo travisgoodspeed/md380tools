@@ -26,9 +26,9 @@ SRCS = misc.c stm32f4xx_dma.c stm32f4xx_rcc.c stm32f4xx_adc.c \
 
 OBJS = $(SRCS:.c=.o)
 
-.PHONY: libstm32f4.a
+#.PHONY: libstm32f4.a
 
-all: libstm32f4.a
+#all: libstm32f4.a
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c -o $@ $^
