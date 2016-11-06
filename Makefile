@@ -23,8 +23,7 @@ mostlyclean:
 	"${MAKE}" -C patches/d13.020 clean
 	"${MAKE}" -C applet clean
 	"${MAKE}" -C db clean
-	rm -f *~ *.pyc
-	-rm *.bin
+	rm -f *~ *.pyc *.bin
 	
 image_D02:
 	"${MAKE}" -C applet FW=D02_032 all  
