@@ -401,7 +401,7 @@ void mn_cp_override_call_dmrid(void)
     if( r ) {
         snprintf(global_addl_config.bootline1, 10, "%s", usr.callsign);
     } else {
-        snprintf(global_addl_config.bootline1, 10, "%s", "unkown");
+        snprintf(global_addl_config.bootline1, 10, "%s", "unknown");
     }
 
     snprintf( global_addl_config.bootline2, 10, "%d", (int)dmrid );
