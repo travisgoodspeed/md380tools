@@ -103,75 +103,73 @@ void dump_ram_to_spi_flash() {
 }
 
 */
+/**
+ * this hooks on a gfx_drawtext2 call.
+ */
+void print_date_hook(void)
+{ // copy from the md380 code
 
-void print_date_hook(void) 
-{  // copy from the md380 code
-    
     if( is_netmon_visible() ) {
-        return ;
+        return;
     }
-    
-#ifdef CONFIG_GRAPHICS
-  wchar_t wide[40];
-  RTC_DateTypeDef RTC_DateStruct;
-  md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
 
-    switch( global_addl_config.datef ) {
+#ifdef CONFIG_GRAPHICS
+    wchar_t wide[40];
+    RTC_DateTypeDef RTC_DateStruct;
+    md380_RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
+
+    switch (global_addl_config.datef) {
         default:
             // fallthrough
-        case 0 :
-            wide[0]='2';
-            wide[1]='0';
+        case 0:
+            wide[0] = '2';
+            wide[1] = '0';
             md380_itow(&wide[2], RTC_DateStruct.RTC_Year);
-            wide[4]='/';
+            wide[4] = '/';
             md380_itow(&wide[5], RTC_DateStruct.RTC_Month);
-            wide[7]='/';
+            wide[7] = '/';
             md380_itow(&wide[8], RTC_DateStruct.RTC_Date);
-            break ;
-        case 1 :
+            break;
+        case 1:
             md380_itow(&wide[0], RTC_DateStruct.RTC_Date);
-            wide[2]='.';
+            wide[2] = '.';
             md380_itow(&wide[3], RTC_DateStruct.RTC_Month);
-            wide[5]='.';
-            wide[6]='2';
-            wide[7]='0';
+            wide[5] = '.';
+            wide[6] = '2';
+            wide[7] = '0';
             md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
-            break ;
-        case 2 :
+            break;
+        case 2:
             md380_itow(&wide[0], RTC_DateStruct.RTC_Date);
-            wide[2]='/';
+            wide[2] = '/';
             md380_itow(&wide[3], RTC_DateStruct.RTC_Month);
-            wide[5]='/';
-            wide[6]='2';
-            wide[7]='0';
+            wide[5] = '/';
+            wide[6] = '2';
+            wide[7] = '0';
             md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
-            break ;
-        case 3 :
+            break;
+        case 3:
             md380_itow(&wide[0], RTC_DateStruct.RTC_Month);
-            wide[2]='/';
+            wide[2] = '/';
             md380_itow(&wide[3], RTC_DateStruct.RTC_Date);
-            wide[5]='/';
-            wide[6]='2';
-            wide[7]='0';
-            md380_itow(&wide[8], RTC_DateStruct.RTC_Year);    
-            break ;
-        case 4 :
-            wide[0]='2';
-            wide[1]='0';
+            wide[5] = '/';
+            wide[6] = '2';
+            wide[7] = '0';
+            md380_itow(&wide[8], RTC_DateStruct.RTC_Year);
+            break;
+        case 4:
+            wide[0] = '2';
+            wide[1] = '0';
             md380_itow(&wide[2], RTC_DateStruct.RTC_Year);
-            wide[4]='-';
+            wide[4] = '-';
             md380_itow(&wide[5], RTC_DateStruct.RTC_Month);
-            wide[7]='-';
+            wide[7] = '-';
             md380_itow(&wide[8], RTC_DateStruct.RTC_Date);
-            break ;
-  }
+            break;
+    }
 
-  wide[10]='\0';
-  gfx_drawtext2( wide, 0xa, 0x60, 0x5e);
-
-//  dump_ram_to_spi_flash();
-
-//  gfx_drawbmp((char *) &bmp_eye, 20, 2);
+    wide[10] = '\0';
+    gfx_drawtext2(wide, 0xa, 0x60, 0x5e);
 #endif //CONFIG_GRAPHICS
 }
 
