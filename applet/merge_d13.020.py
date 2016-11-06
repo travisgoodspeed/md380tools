@@ -265,8 +265,6 @@ if __name__== '__main__':
     for adr in drwbmplist:
        merger.hookbl(adr, sapplet.getadr("gfx_drawbmp_hook"));
 
-#  grep "bl gfx_blockfill" asm.lst | cut -c 13-23 | awk '{ print $0 "," }' | less
-
     gfxblockfill=[
         0x0800c85e ,
         0x0800c86a ,
@@ -644,16 +642,6 @@ if __name__== '__main__':
 
     # additional menu hook
     merger.hookbl(0x080135a8, sapplet.getadr("create_menu_utilies_hook"),0);
-
-#    # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
-#    print_ant_sym_hook_list=[
-#        0x0802136a, 
-#        0x08021378, 
-#        0x080217a8,
-#        0x08033e1e, 
-#    ]; # bad hooks, not work well
-#    for adr in print_ant_sym_hook_list:
-#        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
 
     # init the addl global config struct from spi flash
     merger.hookbl(0x08046326,sapplet.getadr("init_global_addl_config_hook"),0);

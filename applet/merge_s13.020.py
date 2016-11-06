@@ -463,14 +463,6 @@ if __name__== '__main__':
     # additional menu hook
     merger.hookbl(0x08013642, sapplet.getadr("create_menu_utilies_hook"),0); # 0x080135a8
 
-    # print_ant_sym_hook (shows eye on status line when promiscus mode is active)
-    print_ant_sym_hook_list=[
-         0x0802161a, 0x08021628, 0x0802161a, 0x08034936, 0x08021a84 
-#        0x0802136a, 0x08021378, 0x0802136a, 0x8033e1e, 0x080217a8
-        ]; # bad hooks, not work well
-    for adr in print_ant_sym_hook_list:
-        merger.hookbl(adr,sapplet.getadr("print_ant_sym_hook"));
-
     # init the addl global config struct from spi flash
     merger.hookbl(0x08047026 ,sapplet.getadr("init_global_addl_config_hook"),0); # 0x08046326
 
@@ -500,9 +492,6 @@ if __name__== '__main__':
 
     # keyboard
     merger.hookbl(0x0804fa12, sapplet.getadr("kb_handler_hook"));
-
-    # Draw/GFX
-    merger.hookbl(0x08021a5e, sapplet.getadr("draw_statusline_hook"));
 
     print "Merging %s into %s at %08x" % (
           sys.argv[2],

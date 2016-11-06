@@ -4,3 +4,5 @@ grep md380_spiflash_read asm.lst | cut -c 13-22 | awk '{ print $0 "," }' >q
 
 grep "bl F_4039_something_write_to_screen" asm.lst | cut -c 13-22 | awk '{ print $0 "," }'
 
+#  grep "bl gfx_blockfill" asm.lst | cut -c 13-23 | awk '{ print $0 "," }' | less
+
