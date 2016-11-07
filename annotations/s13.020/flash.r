@@ -163,6 +163,7 @@ af+ 0x0803233e 920 gps_parse
 f gps_something @ 0x803224c
 af+ 0x803224c 242 gps_something
 
+f check_gps_status @ 0x080219a4
 f gps_2001e4a4 @ 0x2001e4a4
 
 # gps
