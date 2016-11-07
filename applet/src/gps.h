@@ -15,7 +15,7 @@ extern "C" {
     // ringbuffer maybe?
 typedef struct {
     uint8_t buf[100];
-    uint16_t off100 ; // [100] 0x64
+    uint16_t rd_idx ; // [100] 0x64
     uint16_t inbuf ; // [102] 0x66 (0...100-1)
     uint16_t wr_idx ; // [104] 0x68 (0...100-1)
 } gps_ring_t ;
