@@ -169,6 +169,11 @@ af+ 0x803224c 242 gps_something
 f check_gps_status @ 0x080219a4
 f gps_2001e4a4 @ 0x2001e4a4
 
+f gpio_A @ 0x40020000
+f gpio_D @ 0x40020c00
+
+f gps_gpio @ 0x080475be
+
 # gps
 #####
 
