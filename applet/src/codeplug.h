@@ -39,7 +39,6 @@ typedef struct {
     uint8_t mode ; // [0] 0x0
     uint8_t cc_slot_flags ; // [0x01] cccc....
     uint8_t priv ; // [2]
-//    uint8_t off4[11]; // [0x05] = power&flags? // [0x0A] ?
 
     uint8_t off3 ; // [3]
     
