@@ -52,7 +52,7 @@ typedef struct {
     uint8_t unk11 ; // [11] 0xb (type verified) 1...250  (scanlist?)
 
     uint8_t off12 ; // [12] 0xc (type verified)          (grouplist?)
-    uint8_t gps_tx ; // [13] 0xd (type verified) 0...17  0=gps-no-tx 1=gps-tx
+    uint8_t gps_tx ; // [13] 0xd (type verified) 0...16  0=gps-no-tx 1=gps-tx
     
     uint8_t unk14 ; // [14] 0xe
     uint8_t unk15 ; // [15] 0xf
@@ -62,8 +62,8 @@ typedef struct {
     uint16_t rxtone ; // [24] 0x18
     uint16_t txtone ; // [26] 0x1A
 
-    uint32_t unk28 ;
-    wchar_t name[16];
+    uint32_t unk28 ;  // [28]
+    wchar_t name[16]; // [32]
 
 } channel_info_t ; // sizeof() = 0x40 
 
