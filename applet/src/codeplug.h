@@ -50,9 +50,9 @@ typedef struct {
     uint8_t unk8 ; // [8]
     uint8_t unk9 ; // [9]
     uint8_t unk10 ; // [10] 0xa (type verified) 1...32
-    uint8_t unk11 ; // [11] 0xb (type verified) 1...250
+    uint8_t unk11 ; // [11] 0xb (type verified) 1...250  (scanlist?)
 
-    uint8_t off12 ; // [12] 0xc (type verified)
+    uint8_t off12 ; // [12] 0xc (type verified)          (grouplist?)
     uint8_t off13 ; // [13] 0xd (type verified) 0...17
     
     uint8_t unk14 ; // [14] 0xe
