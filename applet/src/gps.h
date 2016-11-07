@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-    // ringbuffer maybe?
+// ringbuffer 
 typedef struct {
     uint8_t buf[100];
     uint16_t rd_idx ; // [100] 0x64
@@ -25,6 +25,15 @@ typedef struct {
 // S13 @ 0x2001d950    
 extern gps_ring_t gps_ringbuf ;
 #endif
+
+typedef struct {
+    uint16_t unk0 ;
+    uint8_t status ; // [3] 0x3  (0...?)
+    uint8_t unk4[10];
+    uint16_t off14 ; // [14] 0xe coord lat?
+    uint16_t off16 ; // [16] 0x10 coord lon?
+        
+} gps_t ;
 
 #ifdef __cplusplus
 }
