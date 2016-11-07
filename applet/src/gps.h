@@ -20,7 +20,8 @@ typedef struct {
     uint16_t wr_idx ; // [104] 0x68 (0...100-1)
 } gps_ring_t ;
 
-#if 0
+#if 0 
+// defined(FW_S13_020)
 // S13 @ 0x2001d950    
 extern gps_ring_t gps_ringbuf ;
 #endif
