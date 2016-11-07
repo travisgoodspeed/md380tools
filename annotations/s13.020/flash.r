@@ -120,88 +120,6 @@ f menugreen.ViewList.8038cb0 0 0x8038cb0
 f menugreen.View_Numb.8011954 0 0x8011954
 f menugreen.Zone.8013248 0 0x8013248
 CCa 0x080167e4 UnLock
-f dispgpspos 0 0x08016850
-
-CCa 0x800cf68 GPSData ..2001e4a4..
-CCa 0x800d0ca GPSData ..2001e4a4..
-CCa 0x800d130 GPSData ..2001e4a4..
-CCa 0x800d6d8 GPSData ..2001e4a4..
-CCa 0x800d798 GPSData ..2001e4a4..
-CCa 0x8016784 GPSData ..2001e4a4..
-CCa 0x8016856 GPSData ..2001e4a4..
-CCa 0x801686e GPSData ..2001e4a4..
-CCa 0x8016884 GPSData ..2001e4a4..
-CCa 0x80168a4 GPSData ..2001e4a4..
-CCa 0x80168ba GPSData ..2001e4a4..
-CCa 0x80168da GPSData ..2001e4a4..
-CCa 0x80168f2 GPSData ..2001e4a4..
-CCa 0x8016916 GPSData ..2001e4a4..
-CCa 0x8016938 GPSData ..2001e4a4..
-CCa 0x8016964 GPSData ..2001e4a4..
-CCa 0x801697c GPSData ..2001e4a4..
-CCa 0x8016992 GPSData ..2001e4a4..
-CCa 0x80169b4 GPSData ..2001e4a4..
-CCa 0x80169d4 GPSData ..2001e4a4..
-CCa 0x80169ea GPSData ..2001e4a4..
-CCa 0x8016a0a GPSData ..2001e4a4..
-CCa 0x8016a22 GPSData ..2001e4a4..
-CCa 0x8016a46 GPSData ..2001e4a4..
-CCa 0x8016a68 GPSData ..2001e4a4..
-CCa 0x80219a4 GPSData ..2001e4a4..
-CCa 0x8032396 GPSData ..2001e4a4..
-CCa 0x80323aa GPSData ..2001e4a4..
-CCa 0x80323b4 GPSData ..2001e4a4..
-CCa 0x80323c8 GPSData ..2001e4a4..
-CCa 0x80323d2 GPSData ..2001e4a4..
-CCa 0x80323da GPSData ..2001e4a4..
-CCa 0x80323f0 GPSData ..2001e4a4..
-CCa 0x8032406 GPSData ..2001e4a4..
-CCa 0x803240c GPSData ..2001e4a4..
-CCa 0x8032422 GPSData ..2001e4a4..
-CCa 0x8032428 GPSData ..2001e4a4..
-CCa 0x8032436 GPSData ..2001e4a4..
-CCa 0x803244c GPSData ..2001e4a4..
-CCa 0x8032452 GPSData ..2001e4a4..
-CCa 0x8032468 GPSData ..2001e4a4..
-CCa 0x803246e GPSData ..2001e4a4..
-CCa 0x803247c GPSData ..2001e4a4..
-CCa 0x8032484 GPSData ..2001e4a4..
-CCa 0x803248c GPSData ..2001e4a4..
-CCa 0x8032494 GPSData ..2001e4a4..
-CCa 0x803249c GPSData ..2001e4a4..
-CCa 0x80324a4 GPSData ..2001e4a4..
-CCa 0x80324ac GPSData ..2001e4a4..
-CCa 0x80324b4 GPSData ..2001e4a4..
-CCa 0x80324bc GPSData ..2001e4a4..
-CCa 0x80324c4 GPSData ..2001e4a4..
-CCa 0x80324cc GPSData ..2001e4a4..
-CCa 0x80324d4 GPSData ..2001e4a4..
-CCa 0x80324dc GPSData ..2001e4a4..
-CCa 0x80324e4 GPSData ..2001e4a4..
-CCa 0x803255e GPSData ..2001e4a4..
-CCa 0x803257e GPSData ..2001e4a4..
-CCa 0x80325c2 GPSData ..2001e4a4..
-CCa 0x8032890 GPSData ..2001e4a4..
-CCa 0x804ee46 GPSData ..2001e4a4..
-CCa 0x804ee4a GPSData ..2001e4a4..
-CCa 0x804ee58 GPSData ..2001e4a4..
-CCa 0x804ee64 GPSData ..2001e4a4..
-CCa 0x804ee70 GPSData ..2001e4a4..
-CCa 0x804ee7c GPSData ..2001e4a4..
-CCa 0x804ee84 GPSData ..2001e4a4..
-CCa 0x804ee92 GPSData ..2001e4a4..
-CCa 0x804ee96 GPSData ..2001e4a4..
-CCa 0x804eea4 GPSData ..2001e4a4..
-CCa 0x804eeae GPSData ..2001e4a4..
-CCa 0x804eeb2 GPSData ..2001e4a4..
-CCa 0x804eec0 GPSData ..2001e4a4..
-CCa 0x804eec4 GPSData ..2001e4a4..
-CCa 0x804eed2 GPSData ..2001e4a4..
-CCa 0x804eed6 GPSData ..2001e4a4..
-CCa 0x804eee6 GPSData ..2001e4a4..
-CCa 0x804eef0 GPSData ..2001e4a4..
-CCa 0x804eef8 GPSData ..2001e4a4..
-af+ 0x0803233e 920 GPS_Parse
 
 f gfx_set_fg_color @ 0x801d4a4
 af+ 0x801d4a4 8 gfx_set_fg_color **
@@ -229,8 +147,26 @@ af+ 0x8021c1c 4 gfx_drawchar_pos
 f task_rtc_timer @ 0x080474cc
 f mainloop_entry @ 0x080475e8
 
+#####
+# gps
+
+f gps_struct @ 0x2001d950
+f gps_inputbuf @ 0x2001da24
+f gps_inputbuf_indexpoi @ 0x2001e9d6
+
+f disp_gpspos @ 0x08016850
+af+ 0x08016850 4 disp_gpspos
+
+f gps_parse @ 0x0803233e
+af+ 0x0803233e 920 gps_parse
+
 f gps_something @ 0x803224c
-af+ 0x803224c 4 gps_something
+af+ 0x803224c 242 gps_something
+
+f gps_2001e4a4 @ 0x2001e4a4
+
+# gps
+#####
 
 # from link file >>>
 f md380_menu_mem_base @ 0x2001b274
