@@ -64,6 +64,8 @@ extern char   	md380_dfu_state[];
 extern char * 	md380_dfu_target_adr[];
 extern char   	md380_thingy2[];
 extern char   	md380_usbstring[];
+
+// title for menus, version in info screen
 extern wchar_t 	print_buffer[];
 
 uint8_t md380_spi_sendrecv(INT8U data); // SPI1
