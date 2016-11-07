@@ -150,7 +150,10 @@ f mainloop_entry @ 0x080475e8
 #####
 # gps
 
+f gps_read_ring @ 0x08032262
+f gps_write_ring @ 0x08095150
 f gps_ringbuf @ 0x2001d950
+
 f gps_inputbuf @ 0x2001da24
 f gps_inputbuf_indexpoi @ 0x2001e9d6
 
