@@ -351,9 +351,10 @@ const char *getmfgstr(int speed, long *len){
   return loadusbstr(md380_usbstring,buffer,len);
 }
 
-void loadfirmwareversion_hook(){
-  memcpy(md380_usbbuf,VERSIONDATE,22);
-  return;
+void loadfirmwareversion_hook()
+{
+    memcpy(print_buffer, VERSIONDATE, 22);
+    return;
 }
 
 //Must be const, because globals will be wacked.

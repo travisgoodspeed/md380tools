@@ -27,13 +27,21 @@ extern gps_ring_t gps_ringbuf ;
 #endif
 
 typedef struct {
-    uint16_t unk0 ;
+    uint8_t off0 ;  // [0] 0x0  S=0 N=1
+    uint8_t off1 ;  // [1] 0x1  
+    uint8_t off2 ;  // [2] 0x2  W=0 E=1
     uint8_t status ; // [3] 0x3  (0...?)
     uint8_t unk4[10];
     uint16_t off14 ; // [14] 0xe coord lat?
     uint16_t off16 ; // [16] 0x10 coord lon?
         
 } gps_t ;
+
+#if 0 
+// defined(FW_S13_020)
+// S13 @ 0x2001e4a4    
+extern gps_t gps_data ;
+#endif
 
 #ifdef __cplusplus
 }

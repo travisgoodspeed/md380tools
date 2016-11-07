@@ -67,7 +67,7 @@ md380_dfu_state      = 0x2001ea3a;
 md380_dfu_target_adr = 0x20004a14;
 md380_thingy2        = 0x2001ea3b; /* 0x0805a68e */
 md380_usbstring      = 0x2001d504; /* 0x080974f8 @ usb_serialnumber */
-md380_usbbuf         = 0x2001e1a0; /* 0x08016b7e @ F_4158 */
+print_buffer         = 0x2001e1a0; /* 0x08016b7e @ F_4158 */
 
 c5000_spi0_readreg   = 0x08040ae9; /*  */
 c5000_spi0_writereg  = 0x08040a9d; /*  */
