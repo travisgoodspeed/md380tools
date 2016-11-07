@@ -229,6 +229,9 @@ af+ 0x8021c1c 4 gfx_drawchar_pos
 f task_rtc_timer @ 0x080474cc
 f mainloop_entry @ 0x080475e8
 
+f gps_something @ 0x803224c
+af+ 0x803224c 4 gps_something
+
 # from link file >>>
 f md380_menu_mem_base @ 0x2001b274
 f gui_opmode1 @ 0x2001ea24
