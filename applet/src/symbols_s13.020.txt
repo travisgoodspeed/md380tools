@@ -1,0 +1,188 @@
+
+draw_datetime_row = 0x0800df1b;
+draw_zone_channel = 0x0800e538 ;
+
+gfx_info = 0x2001daec ;
+gfx_drawchar = 0x08021b79 ;
+gfx_drawchar_pos = 0x08021c1d ;
+
+gfx_drawbmp          = 0x08023adb; /*  58 byte match */ 
+gfx_drawtext         = 0x0800def7; /*  30 byte match */
+gfx_drawtext2        = 0x0801de3d; /*  0x0800df92 */
+gfx_drawtext4   = 0x0801de4e ;
+
+gfx_drawtext7 = 0x08027a9f ;
+
+gfx_select_font      = 0x08021b51; /*  14 byte match */
+gfx_font_small       = 0x809b380;
+gfx_font_norm        = 0x80d0640;
+gfx_blockfill        = 0x0801d9c1; /*  200 byte match */
+gfx_set_bg_color     = 0x0801d49d; /*  0x0800df26 */
+gfx_set_fg_color     = 0x0801d4a5; /*  0x0800df20 */
+
+toplinetext          = 0x2001e4cc; /* 0x080229b6 Get_Welcome_Line1_from_spi_flash 20 bytes (10 wchar) */
+botlinetext          = 0x2001e4e0; /* 0x080229b6 Get_Welcome_Line2_from_spi_flash 20 bytes (10 wchar) */
+welcomebmp           = 0x080f93d0; /* 0x080474f8 10 byte match */
+
+
+/* spi-flash */
+md380_spiflash_read  = 0x080318b3; /*  80 byte match */
+md380_spiflash_write = 0x0803199b; /*  712 byte match */
+md380_spiflash_security_registers_read = 0x08031ced; /*  198 byte match */
+md380_spiflash_enable = 0x08031967; /*  12 byte match */
+md380_spiflash_disable = 0x08031983; /*  */
+md380_spiflash_wait  = 0x08031945; /*  46 byte match */
+md380_spiflash_block_erase64k = 0x080316e7; /*  540 byte match */
+md380_spiflash_sektor_erase4k = 0x080316b3; /*  592 byte match */
+md380_spi_sendrecv   = 0x080318f9; /*  10 byte match */
+
+
+/* useful md380 firmware functions and variables*/
+md380_itow           = 0x08018c5d; /*  238 byte match */
+md380_RTC_GetDate    = 0x0802b7e9; /*  554 byte match */
+md380_RTC_GetTime    = 0x0802b6d3; /*  832 byte match */
+md380_radio_config   = 0x2001dbac; /* 0x080474e6 Welcome Screen ..0x08041792 @ dmr_call_start */ 
+
+
+
+/* Upload and download handlers. */
+usb_upld_handle      = 0x08090149; /*  306 byte match */
+usb_dnld_handle      = 0x0808fa2f; /*  446 byte match */
+
+/* This returns a USB packet to the host from the upload handler. */
+usb_send_packet      = 0x0805a943; /*  396 byte match */
+
+usb_serialnumber     = 0x080974ef; /* 14 byte match */
+usb_setcallbacks     = 0x08055f41; /*  518 byte match */
+usb_do_setup         = 0x0808f971; /*  636 byte match */
+usb_dfu_write        = 0x080911b1; /*  1024 byte match */
+usb_dfu_read         = 0x08091201; /*  1024 byte match */
+
+
+md380_dfutargetadr   = 0x20004a14; /* 0x0808fa8a */
+md380_packet         = 0x2001ae74;
+md380_packetlen      = 0x2001e82c;
+md380_blockadr       = 0x2001e828;
+md380_dfu_state      = 0x2001ea3a;
+md380_dfu_target_adr = 0x20004a14;
+md380_thingy2        = 0x2001ea3b; /* 0x0805a68e */
+md380_usbstring      = 0x2001d504; /* 0x080974f8 @ usb_serialnumber */
+print_buffer         = 0x2001e1a0; /* 0x08016b7e @ F_4158 */
+
+c5000_spi0_readreg   = 0x08040ae9; /*  */
+c5000_spi0_writereg  = 0x08040a9d; /*  */
+
+/* Function that handles uC/OS-II settings */
+OSTaskCreateExt      = 0x0804f3ad; /*  28 byte match */
+OSTaskNameSet        = 0x0804f479; /*  24 byte match */
+
+OS_ENTER_CRITICAL    = 0x08044925; /*  146 byte match */
+OS_EXIT_CRITICAL     = 0x0804492d; /*  138 byte match */
+OSTimeDly            = 0x080349cd; /*  26 byte match */
+OSSemCreate          = 0x08040221; /*  18 byte match */
+OSSemPend            = 0x0804026d; /*  50 byte match */
+OSSemPost            = 0x0804035d; /*  16 byte match */
+
+md380_OSMboxPost     = 0x080315f1; /*  16 byte match */
+md380_OSMboxPend     = 0x080314d9; /* 
+
+/* //! Functions and Variabes regarding the menu */
+main_menu                     = 0x0803beb3; /*  138 byte match */
+md380_create_menu_entry       = 0x0800c72f; /*  88 byte match */
+md380_create_main_meny_entry  = 0x0800c189; /*  1024 byte match */
+md380_menu_numerical_input    = 0x0801b172; /*  */
+md380_menu_entry_back         = 0x0800fc84; /*  38 byte match */
+md380_menu_entry_programradio = 0x80137b0;  /*  :(  offset  no +1 fixit on menu.c */ 
+
+
+md380_menu_0x200011e4            = 0x20004acc; 
+md380_menu_0x2001d3c1            = 0x2001e9eb; /* 0x08013a96 */
+md380_menu_0x2001d3ed            = 0x2001ea1a;
+md380_menu_0x2001d3ee            = 0x2001ea1b;
+md380_menu_0x2001d3ef            = 0x2001ea1c;
+md380_menu_0x2001d3f0            = 0x2001ea1d;
+md380_menu_0x2001d3f1            = 0x2001ea1e;
+md380_menu_0x2001d3f4            = 0x2001ea21;
+md380_menu_depth                 = 0x20004acc;
+
+md380_menu_entry_selected        = 0x2001e9da;
+md380_menu_id                    = 0x2001e9ec;
+md380_program_radio_unprohibited = 0x2001e644; /* 0x080135fa */
+md380_wt_programradio            = 0x080d0df0; /* 298 byte match */
+mn_editbuffer_poi            = 0x200049fc; /* 0x08011248 */
+md380_menu_mem_base              = 0x2001b274;
+md380_menu_memory                = 0x2001d5cc;
+md380_menu_edit_buf              = 0x2001cb9a; /* 0x08012308 */
+
+Create_Menu_Utilies              = 0x0801353d; /*  */
+Create_Menu_Entry_RX_QRG_shown   = 0x08015c61; /*  */
+Create_Menu_Entry_RX_QRG_1       = 0x08015cd5; /*  */
+Create_Menu_Entry_RX_QRG_2       = 0x08015db9; /*  */
+Create_Menu_Entry_RX_QRG_3       = 0x08015e45; /*  */
+Create_Menu_Entry_RX_QRG_4       = 0x08015ec1; /*  */
+
+Create_Menu_Entry_LEDIndicator   = 0x0801ae7f; /*  */
+Get_Welcome_Line1_from_spi_flash = 0x0802299d; /*  12 byte match */
+Get_Welcome_Line2_from_spi_flash = 0x080229af; /*  12 byte match */
+Edit_Message_Menu_Entry          = 0x080241c1; /*  106 byte match */
+F_4315                           = 0x08025dc1; /*  12 byte match */
+
+
+/* Variabes regarding rtc_timer process. */
+gui_opmode1       = 0x2001ea24; /* 0x0803ca08 */
+/* hook 0x0801ffb0 */
+
+f_4225	                 = 0x0801ff91; /*  */
+md380_f_4137	                 = 0x0802e3f5; /*  */
+md380_f_4520	                 = 0x0802cb19; /*  */
+md380_f_4098	                 = 0x0804f991; /*  */
+md380_f_4102	                 = 0x0804faa7; /*  */
+md380_f_294                      = 0x08030f2d; /*  */
+
+
+Beep_Process                     = 0x0802fe31; /*  328 byte match */
+bp_freq              = 0x2001e794; /* 0x08030f34 */
+Start_multiple_tasks             = 0x08046f81; /*  18 byte match */
+Start                            = 0x08046fbd; /*  */
+
+Start_2_more_tasks__init_vocoder_tasks = 0x0804ac41; /*  178 byte match */
+
+
+
+
+/* aes */
+aes_loadkey          = 0x080377d9; /* 634 byte match */
+aes_cipher           = 0x08037751; /* 770 byte match */
+aes_startup_check    = 0x08022847; /* 72 byte match */
+
+ambe_unpack          = 0x0804c061; /* 38 byte match */
+dmr_call_end         = 0x08041f49; /* 192 byte match */
+dmr_call_start       = 0x0804151b; /* 536 byte match */
+
+
+
+ambe_decode_wav      = 0x080544c1; /* 1024 byte match */
+dmr_before_squelch   = 0x080417ff; /* 180 byte match */
+dmr_handle_data      = 0x0804eb9d; /* 246 byte match */
+dmr_sms_arrive       = 0x080418f9; /* 376 byte match */
+
+ambe_encode_thing    = 0x08054019; /* 1024 byte match */
+
+draw_statusline = 0x080348c5;
+
+/* keyb */
+f_4101 = 0x0804f991; /* 0x0804ec67 */
+kb_handler = 0x0805078d;
+kb_keycode = 0x2001E964;
+kb_keypressed = 0x2001E6C8;
+kb_row_col_pressed = 0x2001E88E;
+kb_key_press_time = 0x2001E892;
+
+backlight_timer = 0x2001E8CC;
+
+gui_opmode2 = 0x2001ea22 ;
+
+selected_channel = 0x2001E924;
+
+current_channel_info = 0x2001df88 ;
+write_current_channel_info_to_spi = 0x08022f89 ;
