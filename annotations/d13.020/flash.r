@@ -538,8 +538,6 @@ f kb_enter_alpha @ 0x0802e0b8
 f get_keycode_from_table @ 0x804f8e4
 f get_keycode_from_table_2 @ 0x804f8ea
 
-f big_switch @ 0x0802d1b2
-
 f store_keycode @ 0x0804fb24
 f kb_handler @ 0x0804f94c
 af+ 0x0804f94c 384 kb_handler
@@ -564,10 +562,22 @@ af+ 0x0804fc28 2 dummy_0x0804fc28
 af+ 0x0804fc2a 2 dummy_0x0804fc2a
 af+ 0x0804fc2c 2 dummy_0x0804fc2c
 
-# modes
+#####
+# GUI
+
+f gui_control @ 0x0802d1b2
+af+ 0x0802d1b2 4 gui_control
+
+f gui_opmode1_prev @ 0x2001e94c
 f gui_opmode1 @ 0x2001e94d
 f gui_opmode2 @ 0x2001e94b
 f gui_opmode3 @ 0x2001e892
+
+# GUI
+#####
+
+f some_init @ 0x0802d368
+af+ 0x0802d368 4 some_init
 
 af+ 0x801eb00 1436 handle_keycode_F_4171
 

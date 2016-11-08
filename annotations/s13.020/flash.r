@@ -148,6 +148,24 @@ f task_rtc_timer @ 0x080474cc
 f mainloop_entry @ 0x080475e8
 
 #####
+# GUI
+
+f gui_control @ 0x0802d4ea
+af+ 0x0802d4ea 4 gui_control
+
+f gui_opmode1_prev @ 0x2001ea23
+f gui_opmode1 @ 0x2001ea24
+f gui_opmode2 @ 0x2001ea22
+
+# GUI
+#####
+
+af+ 0x0802db9c 4 set_to_mode_28
+f set_to_mode_28 @ 0x0802db9c
+af+ 0x0802d910 4 set_to_mode_28_1
+f set_to_mode_28_1 @ 0x0802d910
+
+#####
 # gps
 
 f gps_read_ring @ 0x08032262
@@ -178,7 +196,6 @@ af+ 0x08045550 8 read_9bits_at_off4
 
 # from link file >>>
 f md380_menu_mem_base @ 0x2001b274
-f gui_opmode1 @ 0x2001ea24
 f usb_do_setup @ 0x0808f970
 f md380_spiflash_wait @ 0x08031944
 f botlinetext @ 0x2001e4e0
@@ -258,7 +275,6 @@ f kb_handler @ 0x0805078c
 f md380_spiflash_disable @ 0x08031982
 f ambe_unpack @ 0x0804c060
 f md380_program_radio_unprohibited @ 0x2001e644
-f gui_opmode2 @ 0x2001ea22
 af+ 0x08027a9e 4 gfx_drawtext7
 f usb_dfu_read @ 0x08091200
 f md380_OSMboxPost @ 0x080315f0
