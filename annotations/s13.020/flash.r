@@ -169,13 +169,6 @@ af+ 0x803224c 242 gps_something
 f check_gps_status @ 0x080219a4
 f gps_2001e4a4 @ 0x2001e4a4
 
-f io_GPIOA @ 0x40020000
-f io_GPIOB @ 0x40020400
-f io_GPIOC @ 0x40020800
-f io_GPIOD @ 0x40020c00
-
-f io_USART3 @ 0x40004800
-
 f gps_gpio @ 0x080475be
 
 af+ 0x08045550 8 read_9bits_at_off4

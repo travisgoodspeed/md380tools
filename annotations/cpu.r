@@ -1,0 +1,9 @@
+
+f io_GPIOA @ 0x40020000
+f io_GPIOB @ 0x40020400
+f io_GPIOC @ 0x40020800
+f io_GPIOD @ 0x40020c00
+
+f io_USART3 @ 0x40004800
+
+
