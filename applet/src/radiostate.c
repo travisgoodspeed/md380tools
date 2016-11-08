@@ -34,10 +34,6 @@ inline int is_tracing()
 
 void rst_voice_lc_header(lc_t *lc)
 {
-//    #define BSIZE 100
-//    char src_buf[BSIZE];
-//    char dst_buf[BSIZE];
-
     int src = get_adr( lc->src );
     int dst = get_adr( lc->dst );
     int flco = get_flco( lc );
@@ -62,17 +58,6 @@ void rst_voice_lc_header(lc_t *lc)
         }
         
         LOGR("cs %c %d->%d\n", grp_c, src, dst );
-
-        // insert trigger here
-#if 0
-        // move this to display thread, and run on trigger.
-        if( find_dmr_user(src_buf, src, (void *) 0x100000, BSIZE) ) {
-            LOGR("src: %s\n", src_buf);
-        }
-        if( find_dmr_user(dst_buf, dst, (void *) 0x100000, BSIZE) ) {
-            LOGR("dst: %s\n", dst_buf);
-        }
-#endif
 
         rst_voice_active = 1 ;    
     }
