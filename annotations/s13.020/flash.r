@@ -328,3 +328,5 @@ f draw_zone_channel @ 0x0800e538
 # from link file >>>
 f contact @ 0x2001e27c
 # from link file <<<
+
+f status_some @ 0x2001e6bc
