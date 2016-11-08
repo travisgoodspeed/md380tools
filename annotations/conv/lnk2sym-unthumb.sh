@@ -4,8 +4,7 @@ LIB=$(dirname $0)
 
 . ${LIB}/convlib.sh
 
-exit 1
+lnk2sym-unthumb | sort 
 
-should be fixed.
 
-lnk2sym | sort 
+

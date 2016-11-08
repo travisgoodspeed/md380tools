@@ -23,3 +23,8 @@ lnk2sym()
 {
 sed 's/;/ ; /' | awk -f ${LIB}/lnk2sym.awk 
 }
+
+lnk2sym-unthumb()
+{
+sed 's/;/ ; /' | awk -f ${LIB}/lnk2sym-unthumb.awk 
+}
