@@ -262,11 +262,11 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
     
     if( is_netmon_visible() ) {
         // channel name
-        if( x == D_LINE1_CHANNAME_X && y == D_LINE1_BASE_Y ) {
+        if( x == D_TEXT_CHANNAME_X && y == D_TEXT_CHANNAME_Y ) {
             return ;
         }
         // zonename
-        if( x == D_LINE2_ZONENAME_X && y == D_LINE2_BASE_Y ) {
+        if( x == D_TEXT_ZONENAME_X && y == D_TEXT_ZONENAME_Y ) {
             return ;
         }
     }

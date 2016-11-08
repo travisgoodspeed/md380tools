@@ -31,12 +31,11 @@ extern "C" {
 #define D_ICON2_X 2
 #define D_ICON2_Y 57
     
-
-#define D_LINE1_BASE_Y 34
-#define D_LINE1_CHANNAME_X 45    
+#define D_TEXT_CHANNAME_X 45    
+#define D_TEXT_CHANNAME_Y 34
     
-#define D_LINE2_BASE_Y 75
-#define D_LINE2_ZONENAME_X 34    
+#define D_TEXT_ZONENAME_X 34    
+#define D_TEXT_ZONENAME_Y 75
     
 #if 0    
 = draw channel =
