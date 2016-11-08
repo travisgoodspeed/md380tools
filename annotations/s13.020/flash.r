@@ -290,7 +290,7 @@ f usb_send_packet @ 0x0805a942
 f md380_usbstring @ 0x2001d504
 f f_4225 @ 0x0801ff90
 f usb_dfu_write @ 0x080911b0
-f md380_usbbuf @ 0x2001e1a0
+f print_buffer @ 0x2001e1a0
 f Start_multiple_tasks @ 0x08046f80
 f gfx_drawbmp @ 0x08023ada
 f md380_menu_0x2001d3c1 @ 0x2001e9eb
@@ -318,4 +318,9 @@ f md380_itow @ 0x08018c5c
 f Create_Menu_Entry_LEDIndicator @ 0x0801ae7e
 f md380_menu_numerical_input @ 0x0801b172
 f gfx_set_bg_color @ 0x0801d49c
+# from link file <<<
+
+# from link file >>>
+af+ 0x0800e538 4 draw_zone_channel
+f draw_zone_channel @ 0x0800e538
 # from link file <<<
