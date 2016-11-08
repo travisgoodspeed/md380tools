@@ -9,7 +9,7 @@ R2IN=$2
 
 inp()
 {
-    lnk2sym <${LNK} | sort
+    lnk2sym-unthumb <${LNK} | sort
     echo "MARKER"
     cat ${R2IN}
 }
