@@ -124,13 +124,15 @@ void handle_hotkey( int keycode )
             switch_to_screen(2);
             break ;
         case 11 :
-            bp_send_beep(BEEP_9);
+            gui_control(243);
+            //bp_send_beep(BEEP_9);
             beep_event_probe++ ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
         case 12 :
-            bp_send_beep(BEEP_25);
+            gui_control(255);
+            //bp_send_beep(BEEP_25);
             beep_event_probe-- ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
