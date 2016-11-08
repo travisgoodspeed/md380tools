@@ -181,13 +181,16 @@ af+ 0x08016850 4 disp_gpspos
 f gps_parse @ 0x0803233e
 af+ 0x0803233e 920 gps_parse
 
-f gps_something @ 0x803224c
-af+ 0x803224c 242 gps_something
+f gps_process_ringbuf @ 0x803224c
+af+ 0x803224c 242 gps_process_ringbuf
 
 f check_gps_status @ 0x080219a4
 f gps_2001e4a4 @ 0x2001e4a4
 
 f gps_gpio @ 0x080475be
+
+f gps_poll_usart @ 0x08095126
+af+ 0x08095126 100 gps_poll_usart
 
 af+ 0x08045550 8 read_9bits_at_off4
 
