@@ -324,3 +324,7 @@ f gfx_set_bg_color @ 0x0801d49c
 af+ 0x0800e538 4 draw_zone_channel
 f draw_zone_channel @ 0x0800e538
 # from link file <<<
+
+# from link file >>>
+f contact @ 0x2001e27c
+# from link file <<<

@@ -886,7 +886,7 @@ f dmr_before_squelch @ 0x08040ce6
 f md380_dfu_target_adr @ 0x20004a14
 f usb_do_setup @ 0x0808eb30
 f aes_startup_check @ 0x0802256a
-f md380_usbbuf @ 0x2001e0d0
+f print_buffer @ 0x2001e0d0
 af+ 0x080f8510 4 welcomebmp
 f welcomebmp @ 0x080f8510
 f Start_2_more_tasks__init_vocoder_tasks @ 0x08049e14
