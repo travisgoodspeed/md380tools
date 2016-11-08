@@ -118,8 +118,9 @@ void f_4137_hook() {
   md380_f_4137();
 }
 
-    extern void gui_control( int r0 );
-    extern void gui_control_hook( int r0 );
+#ifdef FW_S13_020
+extern void gui_control( int r0 );
+extern void gui_control_hook( int r0 );
     
 void f_4520_hook()
 {
@@ -142,7 +143,7 @@ void f_4520_hook()
         gui_control_hook(241);
     }
 }
-
+#endif
 
 void f_4098_hook() {
   void *return_addr;
