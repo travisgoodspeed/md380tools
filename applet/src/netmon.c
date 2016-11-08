@@ -116,7 +116,9 @@ void netmon1_update()
     }
 #endif
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
     con_printf("zn:%S\n",zone_name);
+#endif
     
 #ifdef FW_D13_020
     con_printf("con:%S\n",contact.name);
