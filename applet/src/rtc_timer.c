@@ -284,3 +284,16 @@ void f_4225_hook()
     }
     
 }
+
+#ifdef FW_S13_020
+int (*gui_control)(int) = (void*)(0x0802d4ea + 1);
+
+int gui_control_hook( int r0 ) 
+{
+    PRINTRET();
+    PRINT("gc %d ", r0 );
+    r0 =  gui_control( r0 );
+    PRINT("-> %d\n", r0 );
+    return r0 ;
+}
+#endif
