@@ -27,7 +27,7 @@ typedef struct {
 extern wchar_t zone_name[16];
 #endif
 
-#ifdef FW_D13_020
+#if defined(FW_D13_020) || defined(FW_S13_020)
 extern contact_t contact ; 
 #endif
 

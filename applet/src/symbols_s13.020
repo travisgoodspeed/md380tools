@@ -104,6 +104,7 @@ gfx_info                                 = 0x2001daec ;
 md380_radio_config                       = 0x2001dbac ;
 current_channel_info                     = 0x2001df88 ;
 print_buffer                             = 0x2001e1a0 ;
+contact                                  = 0x2001e27c ;
 toplinetext                              = 0x2001e4cc ;
 botlinetext                              = 0x2001e4e0 ;
 md380_program_radio_unprohibited         = 0x2001e644 ;
