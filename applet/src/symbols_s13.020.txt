@@ -1,191 +1,216 @@
 
-draw_datetime_row = 0x0800df1b;
+draw_datetime_row = 0x0800df1b ;
 draw_zone_channel = 0x0800e538 ;
 
-gfx_info = 0x2001daec ;
-gfx_drawchar = 0x08021b79 ;
-gfx_drawchar_pos = 0x08021c1d ;
+gfx_info = 0x2001da1c ;
+gfx_drawchar = 0x0802189d ;
+gfx_drawchar_pos = 0x08021941 ;
 
-gfx_drawbmp          = 0x08023adb; /*  58 byte match */ 
-gfx_drawtext         = 0x0800def7; /*  30 byte match */
-gfx_drawtext2        = 0x0801de3d; /*  0x0800df92 */
-gfx_drawtext4   = 0x0801de4e ;
+gfx_drawbmp          = 0x80237ff;
+gfx_drawtext         = 0x800def7;
+gfx_drawtext2        = 0x801dd09;
+gfx_select_font      = 0x08021875;
+gfx_font_small       = 0x809a4c0;
+gfx_font_norm        = 0x80cf780;
+gfx_blockfill        = 0x0801d88d;
+gfx_set_bg_color     = 0x0801d369;
+gfx_set_fg_color     = 0x0801d371;
 
-gfx_drawtext7 = 0x08027a9f ;
-
-gfx_select_font      = 0x08021b51; /*  14 byte match */
-gfx_font_small       = 0x809b380;
-gfx_font_norm        = 0x80d0640;
-gfx_blockfill        = 0x0801d9c1; /*  200 byte match */
-gfx_set_bg_color     = 0x0801d49d; /*  0x0800df26 */
-gfx_set_fg_color     = 0x0801d4a5; /*  0x0800df20 */
-
-toplinetext          = 0x2001e4cc; /* 0x080229b6 Get_Welcome_Line1_from_spi_flash 20 bytes (10 wchar) */
-botlinetext          = 0x2001e4e0; /* 0x080229b6 Get_Welcome_Line2_from_spi_flash 20 bytes (10 wchar) */
-welcomebmp           = 0x080f93d0; /* 0x080474f8 10 byte match */
+toplinetext          = 0x2001e3fc;
+botlinetext          = 0x2001e410;
+welcomebmp           = 0x080f8510;
 
 
 /* spi-flash */
-md380_spiflash_read  = 0x080318b3; /*  80 byte match */
-md380_spiflash_write = 0x0803199b; /*  712 byte match */
-md380_spiflash_security_registers_read = 0x08031ced; /*  198 byte match */
-md380_spiflash_enable = 0x08031967; /*  12 byte match */
-md380_spiflash_disable = 0x08031983; /*  */
-md380_spiflash_wait  = 0x08031945; /*  46 byte match */
-md380_spiflash_block_erase64k = 0x080316e7; /*  540 byte match */
-md380_spiflash_sektor_erase4k = 0x080316b3; /*  592 byte match */
-md380_spi_sendrecv   = 0x080318f9; /*  10 byte match */
+md380_spiflash_read  = 0x08031477;
+md380_spiflash_write = 0x0803155f;
+md380_spiflash_security_registers_read = 0x080318b1;
+md380_spiflash_enable = 0x0803152b; 
+md380_spiflash_disable = 0x08031547;
+md380_spiflash_wait  = 0x08031509; 
+md380_spiflash_block_erase64k = 0x080312ab;
+md380_spiflash_sektor_erase4k = 0x08031277;
+md380_spi_sendrecv = 0x080314bd;
 
 
 /* useful md380 firmware functions and variables*/
-md380_itow           = 0x08018c5d; /*  238 byte match */
-md380_RTC_GetDate    = 0x0802b7e9; /*  554 byte match */
-md380_RTC_GetTime    = 0x0802b6d3; /*  832 byte match */
-md380_radio_config   = 0x2001dbac; /* 0x080474e6 Welcome Screen ..0x08041792 @ dmr_call_start */ 
+md380_itow           = 0x08018b29;
+md380_RTC_GetDate    = 0x0802b50d;
+md380_RTC_GetTime    = 0x0802b3f7;
+md380_radio_config   = 0x2001dadc;
 
-
+rc_write_radio_config_to_flash = 0x080226f7 ;
 
 /* Upload and download handlers. */
-usb_upld_handle      = 0x08090149; /*  306 byte match */
-usb_dnld_handle      = 0x0808fa2f; /*  446 byte match */
+usb_upld_handle      = 0x0808f309; /* 232 byte match */
+usb_dnld_handle      = 0x0808ebef; /* 432 byte match */
 
 /* This returns a USB packet to the host from the upload handler. */
-usb_send_packet      = 0x0805a943; /*  396 byte match */
+usb_send_packet      = 0x08059b03; /* 148 byte match */
 
-usb_serialnumber     = 0x080974ef; /* 14 byte match */
-usb_setcallbacks     = 0x08055f41; /*  518 byte match */
-usb_do_setup         = 0x0808f971; /*  636 byte match */
-usb_dfu_write        = 0x080911b1; /*  1024 byte match */
-usb_dfu_read         = 0x08091201; /*  1024 byte match */
+usb_serialnumber     = 0x0809662f; /* 12 byte match */
+usb_setcallbacks     = 0x08055101; /* 18 byte match */
+usb_do_setup         = 0x0808eb31; /* 90 byte match */
+usb_dfu_write        = 0x08090371; /* 274 byte match */
+usb_dfu_read         = 0x080903c1; /* 194 byte match */
 
 
-md380_dfutargetadr   = 0x20004a14; /* 0x0808fa8a */
+md380_dfutargetadr   = 0x20004a14;
 md380_packet         = 0x2001ae74;
-md380_packetlen      = 0x2001e82c;
-md380_blockadr       = 0x2001e828;
-md380_dfu_state      = 0x2001ea3a;
+md380_packetlen      = 0x2001e758;
+md380_blockadr       = 0x2001e754;
+md380_dfu_state      = 0x2001e962;
 md380_dfu_target_adr = 0x20004a14;
-md380_thingy2        = 0x2001ea3b; /* 0x0805a68e */
-md380_usbstring      = 0x2001d504; /* 0x080974f8 @ usb_serialnumber */
-print_buffer         = 0x2001e1a0; /* 0x08016b7e @ F_4158 */
+md380_thingy2        = 0x2001e963;
+md380_usbstring      = 0x2001d504; /* unshure */
+print_buffer         = 0x2001e0d0; /* also gfx_drawtext2 buffer */
 
-c5000_spi0_readreg   = 0x08040ae9; /*  */
-c5000_spi0_writereg  = 0x08040a9d; /*  */
+c5000_spi0_readreg   = 0x0803ffd1;
+c5000_spi0_writereg  = 0x0803ff85;
 
 /* Function that handles uC/OS-II settings */
-OSTaskCreateExt      = 0x0804f3ad; /*  28 byte match */
-OSTaskNameSet        = 0x0804f479; /*  24 byte match */
+OSTaskCreateExt      = 0x0804e581;
+OSTaskNameSet        = 0x0804e64d;
 
-OS_ENTER_CRITICAL    = 0x08044925; /*  146 byte match */
-OS_EXIT_CRITICAL     = 0x0804492d; /*  138 byte match */
-OSTimeDly            = 0x080349cd; /*  26 byte match */
-OSSemCreate          = 0x08040221; /*  18 byte match */
-OSSemPend            = 0x0804026d; /*  50 byte match */
-OSSemPost            = 0x0804035d; /*  16 byte match */
+OS_ENTER_CRITICAL    = 0x08043de5;
+OS_EXIT_CRITICAL     = 0x08043ded;
+OSTimeDly            = 0x08033eb5;
+OSSemCreate          = 0x0803f709;
+OSSemPend            = 0x0803f755;
+OSSemPost            = 0x0803f845;
 
-md380_OSMboxPost     = 0x080315f1; /*  16 byte match */
-md380_OSMboxPend     = 0x080314d9; /* 
+md380_OSMboxPost     = 0x0803119d;
+md380_OSMboxPend     = 0x08031085;
+
 
 /* //! Functions and Variabes regarding the menu */
-main_menu                     = 0x0803beb3; /*  138 byte match */
-md380_create_menu_entry       = 0x0800c72f; /*  88 byte match */
-md380_create_main_meny_entry  = 0x0800c189; /*  1024 byte match */
-md380_menu_numerical_input    = 0x0801b172; /*  */
-md380_menu_entry_back         = 0x0800fc84; /*  38 byte match */
-md380_menu_entry_programradio = 0x80137b0;  /*  :(  offset  no +1 fixit on menu.c */ 
+main_menu                              = 0x0803b39b;
+md380_create_menu_entry                = 0x0800c72f;
+md380_create_main_meny_entry           = 0x0800c189;
+md380_menu_numerical_input             = 0x0801b042;
+md380_menu_entry_back                  = 0x0800fc84;
+md380_menu_entry_programradio          = 0x080136c0;
 
+/* hook 0x080135a8 */
 
-md380_menu_0x200011e4            = 0x20004acc; 
-md380_menu_0x2001d3c1            = 0x2001e9eb; /* 0x08013a96 */
-md380_menu_0x2001d3ed            = 0x2001ea1a;
-md380_menu_0x2001d3ee            = 0x2001ea1b;
-md380_menu_0x2001d3ef            = 0x2001ea1c;
-md380_menu_0x2001d3f0            = 0x2001ea1d;
-md380_menu_0x2001d3f1            = 0x2001ea1e;
-zone_name                                = 0x2001cddc ;
-contact                                  = 0x2001e27c ;
+md380_menu_0x200011e4                  = 0x20004acc; /* */
+md380_menu_0x2001d3c1                  = 0x2001e914;
+md380_menu_0x2001d3ed                  = 0x2001e943; /* */ 
+md380_menu_0x2001d3ee                  = 0x2001e944; /* war falsch 43 */
+md380_menu_0x2001d3ef                  = 0x2001e945; /* */
+md380_menu_0x2001d3f0                  = 0x2001b246; /* war falsch 74; */
+md380_menu_0x2001d3f1                  = 0x2001e947; /* */
+md380_menu_0x2001d3f4                  = 0x2001e94a; /* */
+md380_menu_depth                       = 0x20004acc;
 
-md380_menu_0x2001d3f4            = 0x2001ea21;
-md380_menu_depth                 = 0x20004acc;
+md380_menu_entry_selected              = 0x2001e903;
+md380_menu_id                          = 0x2001e915; /* */
+md380_program_radio_unprohibited       = 0x2001e574;
+md380_wt_programradio                  = 0x080cff30;
+mn_editbuffer_poi                  = 0x200049fc; /* */
+md380_menu_mem_base                    = 0x2001b274; /* */
+md380_menu_memory                      = 0x2001d5cc; /* */
+md380_menu_edit_buf                    = 0x2001cb9a; /* */
 
-md380_menu_entry_selected        = 0x2001e9da;
-md380_menu_id                    = 0x2001e9ec;
-md380_program_radio_unprohibited = 0x2001e644; /* 0x080135fa */
-md380_wt_programradio            = 0x080d0df0; /* 298 byte match */
-mn_editbuffer_poi            = 0x200049fc; /* 0x08011248 */
-md380_menu_mem_base              = 0x2001b274;
-md380_menu_memory                = 0x2001d5cc;
-md380_menu_edit_buf              = 0x2001cb9a; /* 0x08012308 */
+current_channel_info                   = 0x2001deb8;
 
-Create_Menu_Utilies              = 0x0801353d; /*  */
-Create_Menu_Entry_RX_QRG_shown   = 0x08015c61; /*  */
-Create_Menu_Entry_RX_QRG_1       = 0x08015cd5; /*  */
-Create_Menu_Entry_RX_QRG_2       = 0x08015db9; /*  */
-Create_Menu_Entry_RX_QRG_3       = 0x08015e45; /*  */
-Create_Menu_Entry_RX_QRG_4       = 0x08015ec1; /*  */
-
-Create_Menu_Entry_LEDIndicator   = 0x0801ae7f; /*  */
-Get_Welcome_Line1_from_spi_flash = 0x0802299d; /*  12 byte match */
-Get_Welcome_Line2_from_spi_flash = 0x080229af; /*  12 byte match */
-Edit_Message_Menu_Entry          = 0x080241c1; /*  106 byte match */
-F_4315                           = 0x08025dc1; /*  12 byte match */
+Create_Menu_Utilies                    = 0x080134a1;
+Create_Menu_Entry_RX_QRG_shown         = 0x080156a5;
+Create_Menu_Entry_RX_QRG_1             = 0x08015721;
+Create_Menu_Entry_RX_QRG_2             = 0x080157fd;
+Create_Menu_Entry_RX_QRG_3             = 0x0801587b;
+Create_Menu_Entry_RX_QRG_4             = 0x08015901;
+Create_Menu_Entry_LEDIndicator         = 0x801ad57;
+Get_Welcome_Line1_from_spi_flash       = 0x80226c1;
+Get_Welcome_Line2_from_spi_flash       = 0x80226d3;
+Edit_Message_Menu_Entry                = 0x8023ee5;
+F_4315                                 = 0x8025ae5;
 
 
 /* Variabes regarding rtc_timer process. */
-gui_opmode1       = 0x2001ea24; /* 0x0803ca08 */
-/* hook 0x0801ffb0 */
+gui_opmode1            = 0x2001e94d; /* 0x0803bef0 */
 
-f_4225	                 = 0x0801ff91; /*  */
-md380_f_4137	                 = 0x0802e3f5; /*  */
-md380_f_4520	                 = 0x0802cb19; /*  */
-md380_f_4098	                 = 0x0804f991; /*  */
-md380_f_4102	                 = 0x0804faa7; /*  */
-md380_f_294                      = 0x08030f2d; /*  */
+/* hook 0x0801fe7c (alt: 0x0801f064) */
+f_4225                          = 0x0801fe5d;
 
+md380_f_4137 = 0x0802dfbd;
+md380_f_4520 = 0x0802c83d;
+md380_f_4098 = 0x0804eb65;
+md380_f_4102 = 0x0804ec67;
 
-Beep_Process                     = 0x0802fe31; /*  328 byte match */
-bp_freq              = 0x2001e794; /* 0x08030f34 */
-Start_multiple_tasks             = 0x08046f81; /*  18 byte match */
-Start                            = 0x08046fbd; /*  */
+Beep_Process            = 0x802f9dd;
+bp_freq     = 0x2001e6c0;
 
-Start_2_more_tasks__init_vocoder_tasks = 0x0804ac41; /*  178 byte match */
-
+Start_multiple_tasks    = 0x8046521;
+Start                   = 0x80462bd;
+Start_2_more_tasks__init_vocoder_tasks = 0x8049e15;
 
 
 
 /* aes */
-aes_loadkey          = 0x080377d9; /* 634 byte match */
-aes_cipher           = 0x08037751; /* 770 byte match */
-aes_startup_check    = 0x08022847; /* 72 byte match */
+aes_loadkey          = 0x08036cc1;
+aes_cipher           = 0x08036c39;
+aes_startup_check    = 0x0802256b;
 
-ambe_unpack          = 0x0804c061; /* 38 byte match */
-dmr_call_end         = 0x08041f49; /* 192 byte match */
-dmr_call_start       = 0x0804151b; /* 536 byte match */
+ambe_unpack          = 0x0804b235;
+dmr_call_end         = 0x08041431;
+dmr_call_start       = 0x08040a03;
 
 
 
-ambe_decode_wav      = 0x080544c1; /* 1024 byte match */
-dmr_before_squelch   = 0x080417ff; /* 180 byte match */
-dmr_handle_data      = 0x0804eb9d; /* 246 byte match */
-dmr_sms_arrive       = 0x080418f9; /* 376 byte match */
+ambe_decode_wav      = 0x08053681;
+dmr_before_squelch   = 0x08040ce7;
+dmr_handle_data      = 0x0804dd71;
+dmr_sms_arrive       = 0x08040de1;
 
-ambe_encode_thing    = 0x08054019; /* 1024 byte match */
+dmr_CSBK_handler = 0x080417e0 ;
 
-draw_statusline = 0x080348c5;
+ambe_encode_thing    = 0x080531d9;
+
+
+/* AMBE Buffer variables, printed by ambe_decode_wav_hook */
+ambe_inbuffer = 0x2001410e;
+ambe_outbuffer0 = 0x20013f28;
+ambe_outbuffer1 = 0x20013fc8;
+ambe_mystery = 0x20013594;
+
+draw_statusline = 0x08033dad ;
+
+gfx_drawtext4 = 0x0801dd1b ;
+gfx_drawtext7 = 0x080277c3 ;
 
 /* keyb */
-f_4101 = 0x0804f991; /* 0x0804ec67 */
-kb_handler = 0x0805078d;
-kb_keycode = 0x2001E964;
-kb_keypressed = 0x2001E6C8;
-kb_row_col_pressed = 0x2001E88E;
-kb_key_press_time = 0x2001E892;
+f_4101 = 0x0804ec67 ;
+kb_handler = 0x0804f94d ;
+kb_keycode = 0x2001e890;
+kb_keypressed = 0x2001e5f8;
+kb_row_col_pressed = 0x2001e7ba;
+kb_key_press_time = 0x2001e7be; /* UNVERIFIED */
 
-backlight_timer = 0x2001E8CC;
+backlight_timer = 0x2001e7f8;
 
-gui_opmode2 = 0x2001ea22 ;
+gui_opmode2 = 0x2001e94b ;
 
-selected_channel = 0x2001E924;
+selected_channel = 0x2001e850; /* ??? */
+smeter_rssi = 0x2001e534 ;
+channel_num = 0x2001e8c1 ;
+channel_name = 0x2001e1f4 ;
+zone_name = 0x2001cddc ;
+contact = 0x2001e1ac ;
 
-current_channel_info = 0x2001df88 ;
-write_current_channel_info_to_spi = 0x08022f89 ;
+gfx_drawtext10 = 0x0800ded9 ;
+
+event1_mbox_poi_radio = 0x2001e65c ;
+event2_mbox_poi_beep = 0x2001e67c ;
+event3_mbox_poi = 0x2001e664 ;
+event4_mbox_poi = 0x2001e660 ;
+event5_mbox_poi = 0x2001e658 ;
+
+bp_set_freq = 0x08030ad8 ;
+
+bp_tone_on                = 0x08030b08 ;
+bp_tone_off              = 0x08030b58 ;
+bp_sempost           = 0x0802f994 ;
+bp_sempost2          = 0x0802f9b8 ;
+
+bp_2001e8a7          = 0x2001e8a7 ;
