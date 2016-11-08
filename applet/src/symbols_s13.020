@@ -120,6 +120,7 @@ kb_key_press_time                        = 0x2001e892 ;
 backlight_timer                          = 0x2001e8cc ;
 selected_channel                         = 0x2001e924 ;
 kb_keycode                               = 0x2001e964 ;
+channel_num                              = 0x2001e995 ;
 md380_menu_entry_selected                = 0x2001e9da ;
 md380_menu_0x2001d3c1                    = 0x2001e9eb ;
 md380_menu_id                            = 0x2001e9ec ;
