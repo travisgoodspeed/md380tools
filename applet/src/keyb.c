@@ -85,6 +85,13 @@ void copy_dst_to_contact()
 #endif
 }
 
+//#if defined(FW_D13_020) || defined(FW_S13_020)
+#if defined(FW_S13_020)
+extern void gui_control( int r0 );
+#else
+#define gui_control(x)
+#endif
+
 void handle_hotkey( int keycode )
 {
     PRINT("handle hotkey: %d\n", keycode );
@@ -124,16 +131,16 @@ void handle_hotkey( int keycode )
             switch_to_screen(2);
             break ;
         case 11 :
-            gui_control(243);
+            gui_control(1);
             //bp_send_beep(BEEP_9);
-            beep_event_probe++ ;
+            //beep_event_probe++ ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
         case 12 :
-            gui_control(255);
+            gui_control(241);
             //bp_send_beep(BEEP_25);
-            beep_event_probe-- ;
+            //beep_event_probe-- ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
