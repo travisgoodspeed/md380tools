@@ -57,11 +57,11 @@ int usb_dnld_handle();
 
 // This is the target address of the Application's DFU engine.
 extern char *	md380_dfutargetadr;
+extern char * 	md380_dfu_target_adr[]; // same as md380_dfutargetadr TODO: fix
 extern char   	md380_packet[];
 extern int    	md380_packetlen[];
 extern int    	md380_blockadr[];
 extern char   	md380_dfu_state[];
-extern char * 	md380_dfu_target_adr[];
 extern char   	md380_thingy2[];
 extern char   	md380_usbstring[];
 
