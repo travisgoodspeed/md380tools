@@ -23,9 +23,11 @@ typedef struct {
     wchar_t name[16];
 } contact_t ; // sizeof() = 36 (0x24)
 
-#ifdef FW_D13_020
+#if defined(FW_D13_020) || defined(FW_S13_020)
 extern wchar_t zone_name[16];
+#endif
 
+#ifdef FW_D13_020
 extern contact_t contact ; 
 #endif
 

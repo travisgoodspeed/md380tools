@@ -114,12 +114,15 @@ void netmon1_update()
         uint8_t *chan = (uint8_t *)0x2001e8c1 ;
         con_printf("ch: %d ", *chan ); 
     }
-    {
-        // current zone name.
-        //wchar_t *p = (void*)0x2001cddc ;
-        con_printf("zn:%S\n",zone_name);
-        con_printf("con:%S\n",contact.name);
-    }
+#endif
+
+    con_printf("zn:%S\n",zone_name);
+    
+#ifdef FW_D13_020
+    con_printf("con:%S\n",contact.name);
+#endif
+
+#ifdef FW_D13_020
     {        
         // current channel name.
         wchar_t *p = (void*)0x2001e1f4 ;

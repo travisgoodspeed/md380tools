@@ -97,6 +97,7 @@ md380_menu_depth                         = 0x20004acc ;
 md380_packet                             = 0x2001ae74 ;
 md380_menu_mem_base                      = 0x2001b274 ;
 md380_menu_edit_buf                      = 0x2001cb9a ;
+zone_name                                = 0x2001cddc ;
 md380_usbstring                          = 0x2001d504 ;
 md380_menu_memory                        = 0x2001d5cc ;
 gfx_info                                 = 0x2001daec ;
