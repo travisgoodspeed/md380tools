@@ -567,9 +567,6 @@ if __name__== '__main__':
     merger.hookbl(0x08026102,sapplet.getadr("rx_screen_blue_hook"),0); #0x08025e26
     merger.hookbl(0x0802058a,sapplet.getadr("rx_screen_gray_hook"),0);  #0x08020428
 
-    # drawtext hooks
-
-                       
     # Hook the startup AES check.
     merger.hookbl(0x08048474,sapplet.getadr("aes_startup_check_hook"),0); # 0x0804764c
 
@@ -648,6 +645,12 @@ if __name__== '__main__':
 
     # keyboard
     merger.hookbl(0x0804fa12, sapplet.getadr("kb_handler_hook"));
+
+#    merger.hookbl(0x08047628,sapplet.getadr("f_4520_hook"));
+
+#    merger.hookbl(0x0802cca8,sapplet.getadr("dummy"));
+#    merger.hookbl(0x0802ccb4,sapplet.getadr("dummy"));
+
 
     print "Merging %s into %s at %08x" % (
           sys.argv[2],

@@ -118,13 +118,29 @@ void f_4137_hook() {
   md380_f_4137();
 }
 
-void f_4520_hook() {
-  void *return_addr;
-  void *sp;
-  __asm__("mov %0,r14" : "=r" (return_addr));
-  __asm__("mov %0,r13" : "=r" (sp));
-  printf("Call md380_f_4520 from r: %x s: %x\n", return_addr,sp);
-  md380_f_4520();
+    extern void gui_control( int r0 );
+    extern void gui_control_hook( int r0 );
+    
+void f_4520_hook()
+{
+        {
+            uint32_t *p = 0x2001e6bc ;
+//            *p = 0x00080001 ;
+            *p = 0x0 ;
+        }
+//    void *return_addr;
+//    void *sp;
+//    __asm__("mov %0,r14" : "=r" (return_addr));
+//    __asm__("mov %0,r13" : "=r" (sp));
+//    printf("Call md380_f_4520 from r: %x s: %x\n", return_addr, sp);
+    md380_f_4520();
+    
+    static int once = 1 ;
+    
+    if( once ) {
+        once = 0 ;
+        gui_control_hook(241);
+    }
 }
 
 
@@ -286,14 +302,13 @@ void f_4225_hook()
 }
 
 #ifdef FW_S13_020
-int (*gui_control)(int) = (void*)(0x0802d4ea + 1);
 
-int gui_control_hook( int r0 ) 
+void gui_control_hook( int r0 ) 
 {
     PRINTRET();
-    PRINT("gc %d ", r0 );
-    r0 =  gui_control( r0 );
-    PRINT("-> %d\n", r0 );
-    return r0 ;
+    PRINT("gc %d\n", r0 );
+    gui_control( r0 );
+//    PRINT("-> %d\n", r0 );
+//    return r0 ;
 }
 #endif
