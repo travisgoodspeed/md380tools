@@ -8,5 +8,5 @@ BEGIN {
     sym = $2 ;
     addr = sprintf("0x%08x",a);
 
-    printf( "%-20s = %10s ;\n", sym, addr ); 
+    printf( "%-40s = %10s ;\n", sym, addr ); 
 }
