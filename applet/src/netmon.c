@@ -82,8 +82,8 @@ void print_vce()
 
 void print_smeter()
 {
-#if defined(FW_D13_020) || defined(FW_S13_020)			// 20161102 - DL2MF, corresponding to s-meter on MD390/G
-    con_printf("rssi:%d\n", smeter_rssi );
+#if defined(FW_D13_020) || defined(FW_S13_020)			
+//    con_printf("rssi:%d\n", smeter_rssi );  TODO error: 'smeter_rssi' undeclared
 #endif
 }
 
@@ -104,11 +104,11 @@ void netmon1_update()
     
     con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, *mode3, *cntr2 ); 
     
-#if defined(FW_D13_020) || defined(FW_S13_020)			// 20161108 - DL2MF, wrapped up channel info
-    con_printf("ch:%d ", channel_num ); 
+#if defined(FW_D13_020) || defined(FW_S13_020)
+//    con_printf("ch:%d ", channel_num ); // error: 'channel_num' undeclared 
     con_printf("zn:%S\n",zone_name);
     con_printf("con:%S\n",contact.name);
-    con_printf("cn:%S\n",channel_name);
+//    con_printf("cn:%S\n",channel_name); // error: 'channel_name' undeclared
 #endif   
     {
         char *str = "?" ;
