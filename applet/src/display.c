@@ -278,6 +278,10 @@ void draw_statusline_hook( uint32_t r0 )
 
 void draw_alt_statusline()
 {
+    int dst;
+    int src;
+    int grp;
+
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);
     gfx_select_font(gfx_font_small);
@@ -285,14 +289,21 @@ void draw_alt_statusline()
     char mode = ' ' ;
     if( rst_voice_active ) {
         if( rst_mycall ) {
-            mode = '+' ; // on my tg            
+            mode = '*' ; // on my tg            
         } else {
             mode = '!' ; // on other tg
         }
     }
 
-    gfx_printf_pos2(10,96,157, "d:%d %c", rst_dst, mode );
-    
+    user_t usr;
+    src = rst_src;
+
+    if( usr_find_by_dmrid(&usr,src) == 0 ) {
+		gfx_printf_pos2(RX_POPUP_X_START,96,157, "lh: %s -> %d %c", rst_src, rst_dst, mode );
+	} else {
+		gfx_printf_pos2(RX_POPUP_X_START,96,157, "lh: %s -> %d %c", usr.callsign, rst_dst, mode );
+    }	
+   
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff000000);
     gfx_select_font(gfx_font_norm);
