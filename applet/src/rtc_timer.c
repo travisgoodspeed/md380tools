@@ -136,7 +136,7 @@ void f_4520_hook()
 //    printf("Call md380_f_4520 from r: %x s: %x\n", return_addr, sp);
     md380_f_4520();
     
-    static int once = 1 ;
+    static int once = 1 ;   
     
     if( once ) {
         once = 0 ;

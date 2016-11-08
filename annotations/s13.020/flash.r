@@ -329,4 +329,12 @@ f draw_zone_channel @ 0x0800e538
 f contact @ 0x2001e27c
 # from link file <<<
 
-f status_some @ 0x2001e6bc
+f q_status_1 @ 0x2001e6bc
+f q_status_2 @ 0x2001e966
+f q_status_3 @ 0x2001e97c
+f q_status_4 @ 0x2001e6d4
+f q_status_5 @ 0x2001df48
+
+f q_struct_1 @ 0x2001e6d0
+f q_timer_1 @ 0x2001e87e
+
