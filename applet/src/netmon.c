@@ -82,14 +82,9 @@ void print_vce()
 
 void print_smeter()
 {
-#ifdef FW_D13_020
-    uint8_t *smeter = (uint8_t *) 0x2001e534;
-    con_printf("rssi:%d\n", *smeter);				// rssi seems better to read than sm:?? 
-#endif   
-#ifdef FW_S13_020
-    uint8_t *smeter = (uint8_t *) 0x2001e604;			// 20161102 - DL2MF, corresponding to s-meter on MD390/G
-    con_printf("rssi:%d\n", *smeter);
-#endif  
+#if defined(FW_D13_020) || defined(FW_S13_020)			// 20161102 - DL2MF, corresponding to s-meter on MD390/G
+    con_printf("rssi:%d\n", smeter_rssi );
+#endif
 }
 
 void netmon1_update()
@@ -109,49 +104,11 @@ void netmon1_update()
     
     con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, *mode3, *cntr2 ); 
     
-#ifdef FW_D13_020
-    {
-        uint8_t *chan = (uint8_t *)0x2001e8c1 ;
-        con_printf("ch: %d ", *chan ); 
-    }
-#endif
-
-#if defined(FW_D13_020) || defined(FW_S13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)			// 20161108 - DL2MF, wrapped up channel info
+    con_printf("ch:%d ", channel_num ); 
     con_printf("zn:%S\n",zone_name);
-#endif
-    
-#if defined(FW_D13_020) || defined(FW_S13_020)
     con_printf("con:%S\n",contact.name);
-#endif
-
-#ifdef FW_D13_020
-    {        
-        // current channel name.
-        wchar_t *p = (void*)0x2001e1f4 ;
-        con_puts("cn:");
-        con_putsw(p);
-        con_nl();    
-    }
-#endif
-#ifdef FW_S13_020
-    {
-        uint8_t *chan = (uint8_t *)0x2001e995 ;		// confirmed 20161031 - DL2MF
-        con_printf("ch: %d ", *chan ); 
-    }
-    {
-        // current zone name.
-        wchar_t *p = (void*)0x2001cddc ;
-        con_puts("zn:");
-        con_putsw(p);
-        con_nl();    
-    }
-    {        
-        // current channel name.
-        wchar_t *p = (void*)0x2001e2c4 ;		// confirmed 20161031 - DL2MF
-        con_puts("cn:");
-        con_putsw(p);
-        con_nl();    
-    }
+    con_printf("cn:%S\n",channel_name);
 #endif   
     {
         char *str = "?" ;
