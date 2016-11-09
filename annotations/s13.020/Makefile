@@ -13,7 +13,7 @@ asm.lst: flash.r Makefile disasm.r
 
 sync:
 	../conv/upd_r2.sh $(SYMBOLS) flash.r >flash_new.tmp
-	../conv/ra2lnk.sh <flash.r >$(SYMBOLS).tmp
+	../conv/ra2lnk.sh <flash.r >$(SYMBOLS)_new.tmp
 
 sortlink:	
 	<$(SYMBOLS) ../conv/sortlink.sh >$(SYMBOLS).tmp
