@@ -111,8 +111,8 @@ void netmon1_update()
     con_printf("zn:%S\n",zone_name);
     con_printf("con:%S\n",contact.name);
     
-//    extern wchar_t *channel_name ;
-//    con_printf("cn:%S\n",channel_name); 
+    extern wchar_t channel_name[] ;
+    con_printf("cn:%S\n",channel_name); 
 #endif   
     {
         char *str = "?" ;
