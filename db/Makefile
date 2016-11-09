@@ -1,9 +1,8 @@
 
 .PHONY: all update clean
 
-#update: users.csv
-	
-all: stripped.csv repeaters.csv users.json repeaters.json
+#all: stripped.csv repeaters.csv users.json repeaters.json
+all: stripped.csv repeaters.csv 
 
 clean:
 	rm -f repeaters.csv users.json repeaters.json special_IDs.csv *.tmp stripped.csv
