@@ -120,7 +120,7 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     
     if( is_netmon_enabled() ) {
         if( ret != NULL ) {
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
             if( pevent == (OS_EVENT *)event1_mbox_poi_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
             } else 
@@ -166,5 +166,5 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 //        }
         PRINT("\n");
     }
-    return (ret);
+    return ret ;
 }

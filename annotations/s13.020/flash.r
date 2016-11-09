@@ -30,8 +30,10 @@ af+ 0x8025dc0 888 F_4315
 af+ 0x802b6d2 80 md380_RTC_GetTime **
 af+ 0x802b7e8 76 md380_RTC_GetDate **
 af+ 0x802fe30 4056 Beep_Process
-af+ 0x80314d8 258 md380_OSMboxPend **
+
+af+ 0x80314d8 258 md380_OSMboxPend 
 af+ 0x80315f0 86 md380_OSMboxPost
+
 af+ 0x80316b2 52 md380_spiflash_sektor_erase4k **
 af+ 0x80316e6 52 md380_spiflash_block_erase64k **
 af+ 0x80318b2 70 md380_spiflash_read **

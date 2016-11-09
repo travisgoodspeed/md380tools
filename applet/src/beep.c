@@ -123,6 +123,7 @@ void bp_beep(uint8_t code)
 {
     PRINT("bp_beep: %d\n", code);
     
+#if defined(FW_D13_020) 
     start();
     
     for(int i=0;i<code;i++) {
@@ -131,6 +132,7 @@ void bp_beep(uint8_t code)
     }
     
     stop();
+#endif    
 }
 
 void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
@@ -160,7 +162,7 @@ void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 
 static uint8_t beep_msg ; // it cannot live on the stack.
 
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
 
 void bp_send_beep( uint8_t beep )
 {
