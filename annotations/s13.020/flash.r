@@ -164,6 +164,10 @@ f gui_opmode3 @ 0x2001e966
 ########
 # mbox
 
+
+f event1_buffer @ 0x2001e97e
+f event1_mbox_poi_radio @ 0x2001e730
+
 f beep_code_send @ 0x2001e97c
 f event2_mbox_poi_beep @ 0x2001e750
 

@@ -591,17 +591,18 @@ f dispatch_event @ 0x0803c39c
 
 f event4_mbox_poi @ 0x2001e660
 
+# 0x20017468
+f event1_buffer @ 0x2001e8aa
+f event1_mbox_poi_radio @ 0x2001e65c
+
 f beep_code_send @ 0x2001e8a8
 f event2_mbox_poi_beep @ 0x2001e67c
 
-# 0x20017468
-f event1_mbox_poi_radio @ 0x2001e65c
 # 0x20017348
 f event3_mbox_poi @ 0x2001e664
 # 20017438
 f event5_mbox_poi @ 0x2001e658
 
-f event1_buffer @ 0x2001e8aa
 
 # mbox
 ########
