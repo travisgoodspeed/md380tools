@@ -81,8 +81,9 @@ void print_vce()
 
 void print_smeter()
 {
-#if defined(FW_D13_020) || defined(FW_S13_020)			
-//    con_printf("rssi:%d\n", smeter_rssi );  TODO error: 'smeter_rssi' undeclared
+#if defined(FW_D13_020) || defined(FW_S13_020)		
+    extern uint8_t smeter_rssi ;
+    con_printf("rssi:%d\n", smeter_rssi );
 #endif
 }
 
