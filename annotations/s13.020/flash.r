@@ -156,6 +156,7 @@ af+ 0x0802d4ea 4 gui_control
 f gui_opmode1_prev @ 0x2001ea23
 f gui_opmode1 @ 0x2001ea24
 f gui_opmode2 @ 0x2001ea22
+f gui_opmode3 @ 0x2001e966
 
 # GUI
 #####
@@ -333,7 +334,6 @@ f contact @ 0x2001e27c
 # from link file <<<
 
 f q_status_1 @ 0x2001e6bc
-f q_status_2 @ 0x2001e966
 f q_status_3 @ 0x2001e97c
 f q_status_4 @ 0x2001e6d4
 f q_status_5 @ 0x2001df48
@@ -341,3 +341,10 @@ f q_status_5 @ 0x2001df48
 f q_struct_1 @ 0x2001e6d0
 f q_timer_1 @ 0x2001e87e
 
+f msg_dest_addr @ 0x2001e6ac
+
+# from link file >>>
+f smeter_rssi @ 0x2001e604
+f channel_num @ 0x2001e995
+f channel_name @ 0x2001e2c4
+# from link file <<<

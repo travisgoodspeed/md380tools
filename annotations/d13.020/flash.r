@@ -824,7 +824,7 @@ f simplex_or_repeater_flagword @ 0x2001e898
 #
 
 f some_state_var @ 0x2001e8b8
-f some_state_var2 @ 0x2001e534
+f smeter_rssi @ 0x2001e534
 f convert_freq_to_str @ 0x800e398
 
 #
@@ -952,3 +952,11 @@ f Create_Menu_Entry_RX_QRG_2 @ 0x080157fc
 f md380_itow @ 0x08018b28
 f md380_menu_numerical_input @ 0x0801b042
 # from link file <<<
+
+# from link file >>>
+f channel_name @ 0x2001e1f4
+f channel_num @ 0x2001e8c1
+# from link file <<<
+
+f q_status_3 @ 0x2001e8a8
+f q_status_4 @ 0x2001e604
