@@ -50,6 +50,15 @@ typedef struct {
 extern gps_t gps_data ;
 #endif
 
+// q_status_2 5= 6= 1= 2= 4= 0= 7= 8= 3=  / gui_opmode3
+// q_status_3 beepcode
+// q_status_4 flags? (1000b=flag)
+// q_status_5 .... ..xx xx=?
+// q_status_5[3] flags?
+// q_struct_1[0] flags?
+
+
+
 #ifdef __cplusplus
 }
 #endif
