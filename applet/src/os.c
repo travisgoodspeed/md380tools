@@ -59,8 +59,6 @@ OS_EVENT * OSSemCreate_hook(uint16_t cnt)
 //OS_EVENT *mbox_beep = (OS_EVENT *)0x20015f0c ;
 //#warning please consider finding mbox pointers for this firmware version                
 //#else
-//OS_EVENT *mbox_radio = (OS_EVENT *)0x20017468 ; // wrong
-//OS_EVENT *mbox_beep = (OS_EVENT *)0x20017390 ; // wrong
 //#warning please consider finding mbox pointers for this firmware version                
 //#endif
 
@@ -125,21 +123,26 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
 #if defined(FW_D13_020)
             if( pevent == (OS_EVENT *)event1_mbox_poi_radio ) {
                 last_radio_event = *(uint8_t*)ret ;
-            } else if( pevent == (OS_EVENT *)event2_mbox_poi_beep ) {
+            } else 
+#endif                
+#if defined(FW_D13_020) || defined(FW_S13_020)
+            if( pevent == (OS_EVENT *)event2_mbox_poi_beep ) {
                 // beep events
                 last_event2 = *(uint8_t*)ret ;
-            } else if( ((uint32_t)pevent) == 0x20017348 ) {
+            } else 
+#endif                
+#if defined(FW_D13_020)
+            if( ((uint32_t)pevent) == 0x20017348 ) {
                 last_event3 = *(uint8_t*)ret ;
             } else if( ((uint32_t)pevent) == 0x20017450 ) {
                 last_event4 = *(uint8_t*)ret ;
             } else if( ((uint32_t)pevent) == 0x20017438 ) {
                 last_event5 = *(uint8_t*)ret ;
-            } else {
+            } else 
+#endif
+            {
                 PRINT( "unknown mbox 0x%x\n", pevent );
             }            
-#else
-#warning please consider finding mbox pointers for this firmware version                
-#endif                
         }
     }
 
