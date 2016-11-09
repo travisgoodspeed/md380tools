@@ -297,13 +297,17 @@ void draw_alt_statusline()
 
     user_t usr;
     src = rst_src;
-
-    if( usr_find_by_dmrid(&usr,src) == 0 ) {
-   		gfx_printf_pos2(RX_POPUP_X_START,96,157, "d:%d %c", rst_dst, mode );
-	} else {
-		gfx_printf_pos2(RX_POPUP_X_START,96,157, "lh:%s->%d %c", usr.callsign, rst_dst, mode );
-    }	
-   
+    
+    if( src == 0 ) {
+        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:");
+    } else {    
+        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+            gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
+        } else {
+            gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
+        }	
+    }
+    
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff000000);
     gfx_select_font(gfx_font_norm);
