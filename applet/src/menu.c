@@ -57,12 +57,12 @@ const static wchar_t wt_backlight[]         = L"Backlight";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
-const static wchar_t wt_cp_override[]       = L"CoPl overide";
+const static wchar_t wt_cp_override[]       = L"CoPl Override";
 const static wchar_t wt_splash_manual[]     = L"Disabled";
 const static wchar_t wt_splash_callid[]     = L"Callsign+DMRID";
 const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
-const static wchar_t wt_cp_override_dmrid[] = L"id override";
+const static wchar_t wt_cp_override_dmrid[] = L"ID Override";
 
 const static wchar_t wt_config_reset[] = L"Config Reset";
 const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
@@ -425,13 +425,13 @@ void mn_cp_override_call_name(void)
     if( r ) {
         snprintf(global_addl_config.bootline1, 10, "%s", usr.callsign);
     } else {
-        snprintf(global_addl_config.bootline1, 10, "%s", "unkown");
+        snprintf(global_addl_config.bootline1, 10, "%s", "unknown");
     }
 
     if( r ) {
-        snprintf(global_addl_config.bootline2, 10, "%s", usr.name);
+        snprintf(global_addl_config.bootline2, 10, "%s", usr.firstname);
     } else {
-        snprintf(global_addl_config.bootline2, 10, "%s", "unkown");
+        snprintf(global_addl_config.bootline2, 10, "%s", "unknown");
     }
     
     cfg_save();
