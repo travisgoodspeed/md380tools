@@ -161,6 +161,15 @@ f gui_opmode3 @ 0x2001e966
 # GUI
 #####
 
+########
+# mbox
+
+f beep_code_send @ 0x2001e97c
+f event2_mbox_poi_beep @ 0x2001e750
+
+# mbox
+########
+
 af+ 0x0802db9c 4 set_to_mode_28
 f set_to_mode_28 @ 0x0802db9c
 af+ 0x0802d910 4 set_to_mode_28_1
@@ -334,7 +343,6 @@ f contact @ 0x2001e27c
 # from link file <<<
 
 f q_status_1 @ 0x2001e6bc
-f q_status_3 @ 0x2001e97c
 f q_status_4 @ 0x2001e6d4
 f q_status_5 @ 0x2001df48
 

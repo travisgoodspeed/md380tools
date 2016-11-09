@@ -50,6 +50,7 @@ typedef struct {
 extern gps_t gps_data ;
 #endif
 
+// relevant in md380_f_4520
 // q_status_2 5= 6= 1= 2= 4= 0= 7= 8= 3=  / gui_opmode3
 // q_status_3 beepcode
 // q_status_4 flags? (1000b=flag)

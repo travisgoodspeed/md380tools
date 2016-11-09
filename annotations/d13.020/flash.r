@@ -583,12 +583,17 @@ af+ 0x801eb00 1436 handle_keycode_F_4171
 
 f dispatch_event @ 0x0803c39c
 
-# events
 
 # 0x20017468
 
+########
+# mbox
+
 f event4_mbox_poi @ 0x2001e660
+
+f beep_code_send @ 0x2001e8a8
 f event2_mbox_poi_beep @ 0x2001e67c
+
 # 0x20017468
 f event1_mbox_poi_radio @ 0x2001e65c
 # 0x20017348
@@ -597,6 +602,9 @@ f event3_mbox_poi @ 0x2001e664
 f event5_mbox_poi @ 0x2001e658
 
 f event1_buffer @ 0x2001e8aa
+
+# mbox
+########
 
 # event5 events
 f ev5_1 @ 0x803b958
@@ -958,5 +966,4 @@ f channel_name @ 0x2001e1f4
 f channel_num @ 0x2001e8c1
 # from link file <<<
 
-f q_status_3 @ 0x2001e8a8
 f q_status_4 @ 0x2001e604
