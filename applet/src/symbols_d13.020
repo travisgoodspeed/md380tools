@@ -142,6 +142,7 @@ kb_key_press_time                        = 0x2001e7be ;
 backlight_timer                          = 0x2001e7f8 ;
 selected_channel                         = 0x2001e850 ;
 kb_keycode                               = 0x2001e890 ;
+gui_opmode3                              = 0x2001e892 ;
 bp_2001e8a7                              = 0x2001e8a7 ;
 channel_num                              = 0x2001e8c1 ;
 md380_menu_entry_selected                = 0x2001e903 ;

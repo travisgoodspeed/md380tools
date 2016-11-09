@@ -24,7 +24,6 @@ int progress = 0 ;
 #warning should be symbols, not sure if it is worth the effort
 #endif
 uint16_t *cntr2 = (void*)0x2001e844 ;
-uint8_t *mode3 = (void*)0x2001e892 ;
     
 // mode2
 // 1 idle
@@ -87,6 +86,10 @@ void print_smeter()
 #endif
 }
 
+#if defined(FW_D02_032)
+uint8_t gui_opmode3 = 0xFF ;
+#endif
+
 void netmon1_update()
 {
     progress++ ;
@@ -97,18 +100,19 @@ void netmon1_update()
     progress2 %=  sizeof( progress_info ) - 1 ;
     char c = progress_info[progress2];
     
-    //int dst = g_dst ;
-    
-        
     con_clrscr();
     
-    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, *mode3, *cntr2 ); 
+    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, gui_opmode3, *cntr2 ); 
     
 #if defined(FW_D13_020) || defined(FW_S13_020)
-//    con_printf("ch:%d ", channel_num ); // error: 'channel_num' undeclared 
+    extern uint8_t channel_num ;
+    con_printf("ch:%d ", channel_num ); 
+    
     con_printf("zn:%S\n",zone_name);
     con_printf("con:%S\n",contact.name);
-//    con_printf("cn:%S\n",channel_name); // error: 'channel_name' undeclared
+    
+//    extern wchar_t *channel_name ;
+//    con_printf("cn:%S\n",channel_name); 
 #endif   
     {
         char *str = "?" ;

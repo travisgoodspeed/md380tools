@@ -218,7 +218,7 @@ void gfx_drawtext10_hook(wchar_t *str, int x1, int y1, int x2, int y2)
 }
 #endif  
 
-void trace_scr_mode()
+void trace_gui_opmode1()
 {
     static int old = -1 ;
     int new = gui_opmode1 & 0x7F ;
@@ -234,7 +234,7 @@ void trace_scr_mode()
     }
 }
 
-void trace_scr_mode2()
+void trace_gui_opmode2()
 {
     static int old = -1 ;
     int new = gui_opmode2 ;
@@ -245,12 +245,30 @@ void trace_scr_mode2()
     }
 }
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
+void trace_gui_opmode3()
+{
+    static int old = -1 ;
+    int new = gui_opmode3 ;
+    if( old != new ) {
+        PRINT( "mode3: %d -> %d\n", old, new );
+        LOGG( "mode3: %d -> %d\n", old, new );
+        old = new ;
+    }
+}
+#else
+void trace_gui_opmode3()
+{
+}
+#endif
+
 void f_4225_hook()
 {
     
 #ifdef DEBUG    
-    trace_scr_mode();
-    trace_scr_mode2();
+    trace_gui_opmode1();
+    trace_gui_opmode2();
+    trace_gui_opmode3();
 #endif   
     
     static int old = -1 ;
