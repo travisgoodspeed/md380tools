@@ -776,12 +776,12 @@ if __name__== '__main__':
     
     # other OSMboxPend hooks
     mbx_pend_list=[
-#        0x0802fe54,
-        0x0803c412,
-        0x0803ceb0,
-        0x0803d31e,
-        0x0804793e,
-        0x08047956,
+#       0x0802fa00,
+        0x0803b8fa, 
+        0x0803c398,
+        0x0803c806,
+        0x08046be2, 
+        0x08046bfa,
     ];
     for adr in mbx_pend_list:
         merger.hookbl(adr, sapplet.getadr("OSMboxPend_hook"));
