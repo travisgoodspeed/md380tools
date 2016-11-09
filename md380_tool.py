@@ -411,11 +411,17 @@ def spiflashwrite(dfu,filename,adr):
             f.close();
      else:
          sys.stdout.write("can't programm spi flash wrong flash type\n");
+def dmesgfasttail(dfu):
+    """Keeps printing the dmesg buffer."""
+    while True:
+        sys.stdout.write(dfu.getdmesg());
+        #time.sleep(0.1);
+        sys.stdout.flush();
 def dmesgtail(dfu):
     """Keeps printing the dmesg buffer."""
     while True:
         sys.stdout.write(dfu.getdmesg());
-        #time.sleep(0.01);
+        time.sleep(0.1);
         sys.stdout.flush();
 def c5000(dfu):
     """Prints some DMR registers."""
