@@ -136,7 +136,10 @@ void * OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
                 last_event3 = *(uint8_t*)ret ;
             } else if( ((uint32_t)pevent) == 0x20017450 ) {
                 last_event4 = *(uint8_t*)ret ;
-            } else if( ((uint32_t)pevent) == 0x20017438 ) {
+            } else 
+#endif                
+#if defined(FW_D13_020) || defined(FW_S13_020)
+            if( pevent == (OS_EVENT *)event5_mbox_poi ) {
                 last_event5 = *(uint8_t*)ret ;
             } else 
 #endif

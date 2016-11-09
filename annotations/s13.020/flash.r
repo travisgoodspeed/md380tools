@@ -173,6 +173,9 @@ f event1_mbox_poi_radio @ 0x2001e730
 f beep_code_send @ 0x2001e97c
 f event2_mbox_poi_beep @ 0x2001e750
 
+f event5_buffer @ 0x2001e97d
+f event5_mbox_poi @ 0x2001e72c
+
 # mbox
 ########
 
@@ -356,6 +359,9 @@ f q_struct_1 @ 0x2001e6d0
 f q_timer_1 @ 0x2001e87e
 
 f msg_dest_addr @ 0x2001e6ac
+
+f msg_sms_hdr @ 0x2001e2a0 
+f msg_timer_500 @ 0x2001e6a0
 
 # from link file >>>
 f smeter_rssi @ 0x2001e604
