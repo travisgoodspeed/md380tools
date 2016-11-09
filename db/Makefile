@@ -1,15 +1,16 @@
+
 .PHONY: all update clean
 
 #update: users.csv
 	
-all: users.csv repeaters.csv users.json repeaters.json
+all: stripped.csv repeaters.csv users.json repeaters.json
 
 clean:
-	rm -f users.csv repeaters.csv users.json repeaters.json special_IDs.csv	*.tmp stripped.csv
+	rm -f repeaters.csv users.json repeaters.json special_IDs.csv *.tmp stripped.csv
 
 update:
-	-rm users.csv
-	"${MAKE}" users.csv
+	"${MAKE}" clean
+	"${MAKE}" stripped.csv
 	
 
 #This strips out all unicode characters.
@@ -19,18 +20,19 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 custom.csv:
 	touch custom.csv
 
-stripped.csv: users.csv custom.csv
-	cat users.csv fixed.csv custom.csv | $(ICONV)| sort -t ',' -k1g,1 | awk -F, -f strip.awk >stripped.csv	
+stripped.csv: users.tmp fixed.csv custom.csv dmrmarc.tmp reflector.tmp
+	cat $^ | $(ICONV)| sort -t ',' -k1g,1 | awk -F, -f strip.awk >stripped.csv	
 	
 dmrmarc.tmp:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
 	
-
-users.csv: dmrmarc.tmp
+reflector.tmp:
 	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
-	perl -e 'print "\n"' >>$@
+		
+users.tmp: 
 	python2 get_special_IDs.py
-	cat dmrmarc.tmp >>$@
+	cat users.csv >>$@
+	rm users.csv
 	
 users.json:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
