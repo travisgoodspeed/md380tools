@@ -169,12 +169,21 @@ make flash_S13
 
 Turn radio normally on to begin database loading with USB cable
 
+For European users:
+```
+make updatedb_eur flashdb
+```
+Note: for European users it is probably illegal to use the other method for updating, due to privacy laws.
+(this is not legal advice, please consult your laywer to be sure).
+
+For the rest of the world:
 ```
 make updatedb flashdb
 ```
+
 (The users.csv file located in the db directory must be refreshed this way, 
-with "make updatedb",
-otherwise it will continue using any already-existing users.csv file when running "make flashdb" )
+with "make updatedb", otherwise it will continue using any already-existing 
+users.csv file when running "make flashdb" )
 
 ##Convenient Usage:##
 

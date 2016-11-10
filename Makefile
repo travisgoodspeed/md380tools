@@ -72,9 +72,13 @@ sync:
 	"${MAKE}" -C annotations sync
     
 	
-.PHONY: updatedb 
+.PHONY: updatedb updatedb_eur
+	
 updatedb:
 	"${MAKE}" -C db update
+	
+updatedb_eur:
+	"${MAKE}" -C db update_eur
 	
 .PHONY: db/stripped.csv
 db/stripped.csv:

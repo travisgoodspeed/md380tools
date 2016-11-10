@@ -11,7 +11,12 @@ update:
 	"${MAKE}" clean
 	"${MAKE}" stripped.csv
 	
-
+update_eur:
+	"${MAKE}" clean
+	"${MAKE}" stripped.csv
+	<stripped.csv awk -F, -f privacy_filter.awk >stripped2.csv
+	mv stripped2.csv stripped.csv
+	
 #This strips out all unicode characters.
 #We'd rather just drop the accents.
 ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
