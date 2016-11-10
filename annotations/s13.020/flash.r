@@ -353,18 +353,20 @@ f contact @ 0x2001e27c
 
 f q_status_1 @ 0x2001e6bc
 f q_status_4 @ 0x2001e6d4
-f q_status_5 @ 0x2001df48
+f struct_channel_info2 @ 0x2001df48
 
-f q_struct_1 @ 0x2001e6d0
+f some_radio_status @ 0x2001e6d0
 f q_timer_1 @ 0x2001e87e
 
 f msg_dest_addr @ 0x2001e6ac
-
 f msg_sms_hdr @ 0x2001e2a0 
 f msg_timer_500 @ 0x2001e6a0
+f msg_sms_flags_shifted @ 0x2001e969
 
 # from link file >>>
 f smeter_rssi @ 0x2001e604
 f channel_num @ 0x2001e995
 f channel_name @ 0x2001e2c4
 # from link file <<<
+
+f menu_memory_poi @ 0x2001e7d4

@@ -145,6 +145,7 @@ kb_keycode                               = 0x2001e890 ;
 gui_opmode3                              = 0x2001e892 ;
 bp_2001e8a7                              = 0x2001e8a7 ;
 beep_code_send                           = 0x2001e8a8 ;
+event5_buffer                            = 0x2001e8a9 ;
 event1_buffer                            = 0x2001e8aa ;
 channel_num                              = 0x2001e8c1 ;
 md380_menu_entry_selected                = 0x2001e903 ;

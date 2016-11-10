@@ -970,3 +970,5 @@ f channel_num @ 0x2001e8c1
 # from link file <<<
 
 f q_status_4 @ 0x2001e604
+
+f q_struct_1 @ 0x2001e600
