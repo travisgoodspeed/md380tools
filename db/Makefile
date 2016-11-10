@@ -2,7 +2,7 @@
 .PHONY: all update clean
 
 #all: stripped.csv repeaters.csv users.json repeaters.json
-all: stripped.csv repeaters.csv 
+all: stripped.csv 
 
 clean:
 	rm -f repeaters.csv users.json repeaters.json special_IDs.csv *.tmp stripped.csv
