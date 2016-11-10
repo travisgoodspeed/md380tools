@@ -174,7 +174,7 @@ For European users:
 make updatedb_eur flashdb
 ```
 Note: for European users it is probably illegal to use the other method for updating, due to privacy laws.
-(this is not legal advice, please consult your laywer to be sure).
+(this is not legal advice, please consult your lawyer to be sure).
 
 For the rest of the world:
 ```
