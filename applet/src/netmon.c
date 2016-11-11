@@ -161,7 +161,7 @@ void netmon1_update()
     print_smeter();
 #if defined(FW_D13_020) || defined(FW_S13_020)
     {
-//        uint8_t *p = (void*)0x2001e5f0 ;
+//        uint8_t *p = (void*)0x2001e5f0 ; // @D13
         uint8_t *p = radio_status_1 ;
         con_printf("st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
     }
