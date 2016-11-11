@@ -165,7 +165,7 @@ git pull
 make flash_S13
 ```
 
-###Flash updated users.csv database for linux based installations###
+###Flash updated users database for linux based installations###
 
 Turn radio normally on to begin database loading with USB cable
 
