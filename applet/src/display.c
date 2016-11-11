@@ -114,7 +114,7 @@ void draw_micbargraph()
 #if defined(FW_D13_020) || defined(FW_S13_020)
     {
 //        uint8_t *rs = (void*)0x2001e5f0 ;
-        uint8_t *p = radio_status_1 ;
+        uint8_t *rs = radio_status_1 ;
         is_tx = rs[1] & 1 ;
         is_rx = rs[1] & 2 ;
     }

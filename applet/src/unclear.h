@@ -18,7 +18,7 @@ typedef struct {
     uint8_t m1 ; // .... ..RT : T=tx_flag R=rx_flag
     uint8_t m2 ;
     uint8_t m3 ;
-} radio_status_1_t ; // sizeof?
+} radio_status_1_t ; // sizeof = 4
 
 #endif
 
