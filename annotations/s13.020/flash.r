@@ -353,10 +353,19 @@ f contact @ 0x2001e27c
 
 f q_status_1 @ 0x2001e6bc
 f q_status_4 @ 0x2001e6d4
+f q_status_5 @ 0x2001e6c0
+f q_status_6 @ 0x2001e955
+f q_status_7 @ 0x2001e708
+f q_status_8 @ 0x2001e967
+f q_status_9 @ 0x2001e7c0
+f q_status_10 @ 0x20001704
+f q_status_11 @ 0x2001e9ba
+
+f q_timer_1 @ 0x2001e87e
+
 f struct_channel_info2 @ 0x2001df48
 
 f some_radio_status @ 0x2001e6d0
-f q_timer_1 @ 0x2001e87e
 
 f msg_dest_addr @ 0x2001e6ac
 f msg_sms_hdr @ 0x2001e2a0 
