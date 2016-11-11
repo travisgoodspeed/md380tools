@@ -21,6 +21,7 @@
 #include "console.h"
 #include "netmon.h"
 #include "radiostate.h"
+#include "unclear.h"
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -112,7 +113,6 @@ void draw_micbargraph()
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
     {
-        extern uint8_t radio_status_1[];
 //        uint8_t *rs = (void*)0x2001e5f0 ;
         uint8_t *p = radio_status_1 ;
         is_tx = rs[1] & 1 ;

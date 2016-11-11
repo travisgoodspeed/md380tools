@@ -14,6 +14,7 @@
 #include "console.h"
 #include "radio_config.h"
 #include "codeplug.h"
+#include "unclear.h"
 
 uint8_t nm_screen = 0 ;
 
@@ -160,7 +161,6 @@ void netmon1_update()
     print_smeter();
 #if defined(FW_D13_020) || defined(FW_S13_020)
     {
-        extern uint8_t radio_status_1[];
 //        uint8_t *p = (void*)0x2001e5f0 ;
         uint8_t *p = radio_status_1 ;
         con_printf("st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
