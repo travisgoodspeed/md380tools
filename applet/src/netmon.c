@@ -238,8 +238,6 @@ void netmon2_update()
 void netmon3_update()
 {
     syslog_draw_poll();
-    con_nl();
-
 }
 
 void netmon_update()
