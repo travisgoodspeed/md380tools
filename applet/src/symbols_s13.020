@@ -118,6 +118,7 @@ md380_program_radio_unprohibited         = 0x2001e644 ;
 msg_timer_500                            = 0x2001e6a0 ;
 msg_dest_addr                            = 0x2001e6ac ;
 q_status_1                               = 0x2001e6bc ;
+radio_status_1                           = 0x2001e6c0 ;
 kb_keypressed                            = 0x2001e6c8 ;
 some_radio_status                        = 0x2001e6d0 ;
 q_status_4                               = 0x2001e6d4 ;

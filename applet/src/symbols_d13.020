@@ -127,6 +127,7 @@ toplinetext                              = 0x2001e3fc ;
 botlinetext                              = 0x2001e410 ;
 smeter_rssi                              = 0x2001e534 ;
 md380_program_radio_unprohibited         = 0x2001e574 ;
+radio_status_1                           = 0x2001e5f0 ;
 kb_keypressed                            = 0x2001e5f8 ;
 q_status_4                               = 0x2001e604 ;
 sema1_poi                                = 0x2001e650 ;

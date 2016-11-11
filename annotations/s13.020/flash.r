@@ -353,7 +353,7 @@ f contact @ 0x2001e27c
 
 f q_status_1 @ 0x2001e6bc
 f q_status_4 @ 0x2001e6d4
-f q_status_5 @ 0x2001e6c0
+f radio_status_1 @ 0x2001e6c0
 f q_status_6 @ 0x2001e955
 f q_status_7 @ 0x2001e708
 f q_status_8 @ 0x2001e967

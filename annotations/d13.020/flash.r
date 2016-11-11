@@ -546,7 +546,7 @@ CCa 0x0804fa1e jump if b0 not set, reset debounce
 CCa 0x0804fa30 not debounced yet, jump
 CCa 0x0804fa4e jump if long keypress count is reached
 
-f some_radio_status @ 0x2001e5f0
+f radio_status_1 @ 0x2001e5f0
 
 f dispatch_keyboard_2 @ 0x0802c83c
 

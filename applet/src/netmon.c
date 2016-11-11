@@ -158,10 +158,14 @@ void netmon1_update()
         con_printf("re:%02x be:%02x e3:%02x e4:%02x\ne5:%02x ", last_radio_event, last_event2, last_event3, last_event4, last_event5 );
     }
     print_smeter();
+#if defined(FW_D13_020) || defined(FW_S13_020)
     {
-        uint8_t *p = (void*)0x2001e5f0 ;
+        extern uint8_t radio_status_1[];
+//        uint8_t *p = (void*)0x2001e5f0 ;
+        uint8_t *p = radio_status_1 ;
         con_printf("st: %2x %2x %2x %2x\n", p[0], p[1], p[2], p[3]); 
     }
+#endif    
 #ifdef FW_D13_020
     {
         // only valid when transmitting or receiving.

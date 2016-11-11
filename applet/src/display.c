@@ -110,9 +110,11 @@ void draw_micbargraph()
     is_tx = gui_opmode1 == SCR_MODE_RX_VOICE && max_level > 10 ;
     is_rx = gui_opmode1 == SCR_MODE_RX_TERMINATOR ;
 
-#ifdef FW_D13_020
+#if defined(FW_D13_020) || defined(FW_S13_020)
     {
-        uint8_t *rs = (void*)0x2001e5f0 ;
+        extern uint8_t radio_status_1[];
+//        uint8_t *rs = (void*)0x2001e5f0 ;
+        uint8_t *p = radio_status_1 ;
         is_tx = rs[1] & 1 ;
         is_rx = rs[1] & 2 ;
     }
