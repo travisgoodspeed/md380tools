@@ -28,14 +28,14 @@ class UsersDB():
         import csv;
         try:
             if filename==None:
-                filename=sys.path[0]+'/db/users.csv';
+                filename=sys.path[0]+'/user.bin';
             with open(filename,'rb') as csvfile:
                 reader=csv.reader(csvfile);
                 for row in reader:
                     if len(row)>0:
                         self.users[int(row[0])]=row;
         except:
-            print "WARNING: Unable to load users.csv."
+            print "WARNING: Unable to load user.bin."
     def getuser(self,id):
         """Returns a user from the ID."""
         try:
