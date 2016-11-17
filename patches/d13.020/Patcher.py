@@ -1,14 +1,14 @@
 
 class Patcher():
     """MD380 Firmware Patching Tool"""
-    
+
     # #Includes Bootloader
     # offset=0x08000000;
-    
+
     #Just the application.
     offset=0x0800C000;
-    
-    
+
+
     def getbyte(self,adr):
         """Reads a byte from the firmware address."""
         b=self.bytes[adr-self.offset];
@@ -21,9 +21,9 @@ class Patcher():
             (self.bytes[adr-self.offset+2]<<16)+
             (self.bytes[adr-self.offset+3]<<24)
             );
-            
+
         return w;
-    
+
     def assertbyte(self, adr, val):
         """Asserts that a byte has a given value."""
         assert self.getbyte(adr)==val;
@@ -59,7 +59,7 @@ class Patcher():
         #Null terminate.
         self.bytes[adr-self.offset]=0;
         self.bytes[adr-self.offset+1]=0;
-    
+
     def sethword(self, adr, new, old=None):
         """Patches a byte pair from the old value to the new value."""
         if old!=None:
@@ -77,7 +77,7 @@ class Patcher():
             self.assertbyte(adr+1,(old>>8)&0xFF);
             self.assertbyte(adr+2,(old>>16)&0xFF);
             self.assertbyte(adr+3,(old>>24)&0xFF);
-        
+
         print "Patching word at %08x to %08x" % (adr,new)
         self.bytes[adr-self.offset]=new&0xFF;
         self.bytes[adr-self.offset+1]=(new>>8)&0xFF;
@@ -137,5 +137,3 @@ class Patcher():
             b=(b<<1);
 
         return;
-    
-    

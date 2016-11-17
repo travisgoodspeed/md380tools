@@ -80,7 +80,7 @@ def download(dfu, data, flash_address):
 def download_codeplug(dfu, data):
     """Downloads a codeplug to the MD380."""
     block_size = 1024
-    
+
     dfu.md380_custom(0x91,0x01); #Programming Mode
     dfu.md380_custom(0x91,0x01); #Programming Mode
     #dfu.md380_custom(0xa2,0x01); #Returns "DR780...", seems to crash client.
@@ -92,7 +92,7 @@ def download_codeplug(dfu, data):
     dfu.md380_custom(0xa2,0x03);
     dfu.md380_custom(0xa2,0x04);
     dfu.md380_custom(0xa2,0x07);
-    
+
 
     dfu.erase_block(0x00000000);
     dfu.erase_block(0x00010000);
@@ -100,14 +100,14 @@ def download_codeplug(dfu, data):
     dfu.erase_block(0x00030000);
 
     dfu.set_address(0x00000000); # Zero address, used by configuration tool.
-    
+
     #sys.exit();
-    
+
     status, timeout, state, discarded = dfu.get_status()
     #print status, timeout, state, discarded
-    
+
     block_number = 2
-    
+
     try:
         while len(data) > 0:
             packet, data = data[:block_size], data[block_size:]
@@ -137,24 +137,24 @@ def hexdump(string):
             buf=buf+"   "
         if i&0x1f==0:
             buf=buf+"\n"
-        
+
     print buf;
 
 
 def upload_bootloader(dfu,filename):
     """Dumps the bootloader, but only on Mac."""
     #dfu.set_address(0x00000000); # Address is ignored, so it doesn't really matter.
-    
+
     # Bootloader stretches from 0x08000000 to 0x0800C000, but our
     # address and block number are ignored, so we set the block size
     # ot 0xC000 to yank the entire thing in one go.  The application
     # comes later, I think.
     block_size=0xC000; #0xC000;
-    
+
     f=None;
     if filename!=None:
         f=open(filename,'wb');
-    
+
     print "Dumping bootloader.  This only works in radio mode, not programming mode."
     try:
         data = dfu.upload(2, block_size)
@@ -168,7 +168,7 @@ def upload_bootloader(dfu,filename):
             f.write(data)
         else:
             hexdump(data);
-        
+
     finally:
         print "Done."
 
@@ -183,9 +183,9 @@ def upload_codeplug(dfu,filename):
     dfu.md380_custom(0xa2,0x03);
     dfu.md380_custom(0xa2,0x04);
     dfu.md380_custom(0xa2,0x07);
-    
+
     dfu.set_address(0x00000000); # Zero address, used by configuration tool.
-    
+
     f = open(filename, 'wb')
     block_size=1024
     try:
@@ -296,10 +296,10 @@ radio will be radio to accept this firmware update.""");
 def upload(dfu, flash_address, length, path):
     #block_size = 1 << 8
     block_size = 1 << 14
-    
+
     print "Address: 0x%08x"%flash_address
     print "Block Size:    0x%04x"%block_size
-    
+
     if flash_address & (block_size - 1) != 0:
         raise Exception('Upload must start at block boundary')
 
@@ -307,18 +307,18 @@ def upload(dfu, flash_address, length, path):
     assert block_number * block_size == flash_address
     #block_number=0x8000;
     print "Block Number:    0x%04x"%block_number
-    
-    
+
+
     cmds=dfu.get_command();
     print "%i supported commands." % len(cmds)
     for cmd in cmds:
         print "Command %02x is supported by UPLOAD."%cmd;
-    
+
     dfu.set_address(0x08001000); #RAM
     block_number=2;
-    
+
     f = open(path, 'wb')
-   
+
     try:
         while length > 0:
             data = dfu.upload(block_number, block_size)
@@ -348,7 +348,7 @@ def detach(dfu):
 def init_dfu(alt=0):
     dev = usb.core.find(idVendor=md380_vendor,
                         idProduct=md380_product)
-    
+
     if dev is None:
         raise RuntimeError('Device not found')
 
@@ -407,7 +407,7 @@ def main():
                 upload_codeplug(dfu, sys.argv[2])
                 print('Read complete')
             elif sys.argv[1] == 'readboot':
-                print "This only wokrs from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.";
+                print "This only works from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.";
                 import usb.core
                 dfu = init_dfu()
                 upload_bootloader(dfu, sys.argv[2])
@@ -435,7 +435,7 @@ def main():
                 else:
                     dfu = init_dfu()
                     firmware = data
-                
+
 
                 download_codeplug(dfu, firmware)
                 print('Write complete')
@@ -468,7 +468,7 @@ def main():
                 import usb.core
                 dfu = init_dfu()
 		print dfu.get_time();
-                
+
             elif sys.argv[1] == 'reboot':
                 import usb.core
                 dfu = init_dfu()

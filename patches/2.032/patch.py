@@ -12,7 +12,7 @@ monitormodeprivate=False;
 if __name__ == '__main__':
     print "Creating patches from unwrapped.img.";
     patcher=Patcher("unwrapped.img");
-    
+
 
 #     #These aren't quite enough to skip the Color Code check.  Not sure why.
     patcher.nopout(0x0803ea62,0xf040);  #Main CC check.
@@ -25,7 +25,7 @@ if __name__ == '__main__':
                      0xd02d);
     patcher.nopout(0x0803eafe,0xf100); #Disable CRC check, in case CC is included.
     patcher.nopout(0x0803eb00,0x80af);
-    
+
 
     #Disable the ALPU Licence Check (vocoder version)
     patcher.nopout(0x8032a54);
@@ -50,12 +50,12 @@ if __name__ == '__main__':
     patcher.nopout(0x8047f6c+2);
     patcher.nopout(0x8048904);
     patcher.nopout(0x8048904+2);
-        
+
     # Patches after here allow for an included applet.
-    
+
     #This cuts out the Chinese font, freeing ~200k for code patches.
     patcher.ffrange(0x809c714,0x80d0f80);
-    
+
     #This mirrors the RESET vector to 0x080C020, for use in booting.
     patcher.setword(0x0800C020,
                     patcher.getword(0x0800C004),
@@ -66,9 +66,9 @@ if __name__ == '__main__':
     patcher.setword(0x0800C004,
                     0x0809cf00+1
     );
-    
 
-    
+
+
     #This stub calls the target RESET vector,
     #if it's not FFFFFFFF.
     patcher.sethword(0x0809cf00, 0x4840);
@@ -79,7 +79,7 @@ if __name__ == '__main__':
     patcher.sethword(0x0809cf0a, 0x483c);
     patcher.sethword(0x0809cf0c, 0x4700);
 
-    #### Disable power on password (to flash an virgin codeplug 
+    #### Disable power on password (to flash an virgin codeplug
     #### with no password, if you lost this)
     ### patcher.sethword(0x0801a4fe, 0xbdf7);
 
@@ -89,31 +89,30 @@ if __name__ == '__main__':
     #             0x0809cf04      0139           subs r1, 1
     #             0x0809cf06      0845           cmp r0, r1
     #         ,=< 0x0809cf08      00d1           bne 0x809cf0c
-    #         |   0x0809cf0a      3c48           ldr r0, [pc, 0xf0]          ; [0x809cffc:4]=0x80fa969 
+    #         |   0x0809cf0a      3c48           ldr r0, [pc, 0xf0]          ; [0x809cffc:4]=0x80fa969
     #         `-> 0x0809cf0c      0047           bx r0
-    # [0x0809cf00]> 
+    # [0x0809cf00]>
 
-    
+
     #Stores the RESET handler for our stub.
     patcher.setword(0x809cffc,
                     patcher.getword(0x0800C020),
                     0xFFFFFFFF);
-    
-    
+
+
     #Marks the version as "md380tools"
     patcher.setwstring(0x080d14d8,
                       "MD380Tools Ver.");
-    
+
     #Change the manufacturer string.
     patcher.setstring(0x080f9e4c,
                       "Travis Goodspeed KK4VCZ");
     #Change the device name.
     patcher.setstring(0x080d1820,
                       "Patched MD380");
-    
+
     #Fixes a typo in 2.032.  Unneeded in 2.034.
     patcher.setwstring(0x080d17e8,
                       "Repeater Slot"); #was 'Repeatar Slot'
-    
+
     patcher.export("patched.img");
-    

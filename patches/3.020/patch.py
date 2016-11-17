@@ -13,5 +13,5 @@ monitormodeprivate=False
 if __name__ == '__main__':
     print "Creating patches from unwrapped.img."
     patcher=Patcher("unwrapped.img")
-    
+
     patcher.export("patched.img")

@@ -56,7 +56,7 @@ class UsersDB():
                 user[1],
                 user[2],
                 user[0]));
-    
+
 
 #Quick to load, so might as well do it early.
 users=UsersDB();
@@ -65,7 +65,7 @@ users=UsersDB();
 class Tool(DFU):
     """Client class for extra features patched into the MD380's firmware.
     None of this will work with the official firmware, of course."""
-    
+
     def drawtext(self,str,a,b):
         """Sends a new MD380 command to draw text on the screen.."""
         cmd=0x80; #Drawtext
@@ -152,7 +152,7 @@ class Tool(DFU):
         status=self.get_status(); #this gets the status
 #        print status
         return self.upload(1,size,0);
-    
+
     def getinbox(self,address):
         """return non-deleted messages from inbox"""
         buf = self.spiflashpeek(address, 50 * 4 )
@@ -166,7 +166,7 @@ class Tool(DFU):
             elif header[1] == 0x2:
                 message["read"] = False
             else:
-                message["read"] = "N/A"   
+                message["read"] = "N/A"
             message["order"] = (header[2])
             message["index"] = (header[3])
             if not message["deleted"]:
@@ -230,7 +230,7 @@ class Tool(DFU):
         #time.sleep(0.1);
         status=self.get_status(); #this gets the status
         buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
-        
+
         #Okay, so at this point we have the buffer, but it's a ring
         #buffer that might have already looped, so we need to reorder
         #if that is the case or crop it if it isn't.
@@ -254,7 +254,7 @@ class Tool(DFU):
 def calllog(dfu):
     """Prints a call log to stdout, fetched from the MD380's memory."""
     dfu.drawtext("Hooking calls!",160,50);
-    
+
     #Set the target address to the list of DMR addresses.
     dfu.set_address(0x2001d098);
     old1=0;
@@ -358,7 +358,7 @@ def flashgetid(dfu):
     elif (buf[0] == 0x10 and buf[1] == 0xdc):
         if (buf[2] == 0x01):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
-            size=16*1024*1024;          
+            size=16*1024*1024;
     else:
             sys.stdout.write("Unkown SPI Flash - please report\n");
     return size;
@@ -390,7 +390,7 @@ def spiflashwrite(dfu,filename,adr):
             data = f.read()
             size=len(data)
             dfu.md380_custom(0x91,0x01);  # disable any radio and UI events
-                                          # while on spi flash 
+                                          # while on spi flash
             print "erase %d bytes @ 0x%x" % (size, adr);
             for n in range(adr,adr+size+1,0x1000):
 #                print "erase %x " % n
@@ -406,7 +406,7 @@ def spiflashwrite(dfu,filename,adr):
             if ( lastpartsize  > 0 ):
 #                print "%d  %x %d " % (fullparts,  adr+fullparts*1024, lastpartsize)
                 dfu.spiflashpoke(adr+fullparts*1024,lastpartsize,data[(fullparts)*1024:(fullparts)*1024+lastpartsize]);
-            sys.stdout.write("reboot radio now\n"); 
+            sys.stdout.write("reboot radio now\n");
             dfu.md380_reboot();
             f.close();
      else:
@@ -518,13 +518,13 @@ def readword(dfu, address):
 def init_dfu(alt=0):
     dev = usb.core.find(idVendor=md380_vendor,
                         idProduct=md380_product)
-    
+
     if dev is None:
         raise RuntimeError('Device not found')
 
     dfu = Tool(dev, alt)
     dev.default_timeout = 3000
-    
+
     try:
         dfu.enter_dfu_mode()
         pass;
@@ -533,7 +533,7 @@ def init_dfu(alt=0):
             raise RuntimeError('Failed to enter DFU mode. Is bootloader running?')
         else:
             raise e
-    
+
     return dfu
 
 def usage():
@@ -604,7 +604,7 @@ def main():
                 calldate(dfu);
             elif sys.argv[1] == 'adc1':
                 dfu=init_dfu();
-                calladc1(dfu);         	    	
+                calladc1(dfu);
             elif sys.argv[1] == 'channel':
                 dfu=init_dfu();
                 getchannel(dfu);
@@ -626,7 +626,7 @@ def main():
             elif sys.argv[1] == 'spiflashid':
                 dfu=init_dfu();
                 flashgetid(dfu);
-            
+
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
                 print "Dumping flash from 0x08000000 to '%s'." % sys.argv[2];

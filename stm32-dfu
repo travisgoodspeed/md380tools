@@ -74,7 +74,7 @@ class Enumeration(object):
     def create_from_map(cls):
         for id, name in cls.map.iteritems():
             cls(id, name)
-        
+
 class Request(Enumeration):
     map = {
         0: 'DETACH',
@@ -146,16 +146,16 @@ class DFU(object):
                                    data_or_wLength=[0x41]);
         # Erasure doesn't occur until we check the status.
         status=self.get_status();
-        
+
         print "The device is now erasing itself.";
         print "This will result in a USB disconnect.";
         return True;
     def go(self,address=0x08000000):
         """Branch to the address at addrptr+4."""
-        
+
         #Branches to the value stored at the word *AFTER* this address.
         self.setaddresspointer(address);
-        
+
         #Use DNLOAD, not DETACH.
         self._device.ctrl_transfer(bmRequestType=0x21,
                                    bRequest=Request.DNLOAD,
@@ -165,8 +165,8 @@ class DFU(object):
                                    data_or_wLength=[]);  #Zero length.
         # Execution.
         print self.get_status();
-        
-        
+
+
         print "The device is now executing its application.";
         print "This will result in a USB disconnect.";
         return True;
@@ -175,28 +175,28 @@ class DFU(object):
         #Option byte address.
         adr=0x1fffc000;
         self.setaddresspointer(adr);
-        
+
         # #Grab the old block.
         # data=self.upload(2,2);
         # #Second read verifies the state.
         # status, timeout, state, discarded = dfu.get_status()
         # print state;
         # assert state==State.dfuUPLOAD_IDLE
-        
-        
+
+
         # print "Grabbing old option bytes.";
         # for foo in data:
         #     print "%02x" % foo;
-        
+
         #Write the new block.
         #self._device.ctrl_transfer(0x21, Request.DNLOAD, 2, 0, [0xFF, 0xAA, 0x00, 0x55])
         self.download(2,[0xFF,0xFF]);
-        
+
         #status check causes the write
         status, timeout, state, discarded = dfu.get_status()
         assert state==State.dfuDNBUSY;
-            
-        
+
+
     def readunprotect(self):
         """Mass erase all of Flash memory.  OTP left intact."""
         self._device.ctrl_transfer(bmRequestType=0x21,
@@ -204,27 +204,27 @@ class DFU(object):
                                            wValue=0,
                                            wIndex=0,
                                            data_or_wLength=[0x92]);
-        
+
         print "Unprotecting the device.";
         print "This will cause a USB disconnection.";
         status=self.get_status();
-        
+
         return True;
-        
-        
+
+
     def upload(self, block_number, length):
         # 2 to 2048 byte size for Flash, RAM, and System memory.
         # option bytes should be equal to option byte block size.
         # Other locations defined in Important Considerations in AN2606
-        
-        #Address_Pointer is expected to have been already set by 
+
+        #Address_Pointer is expected to have been already set by
         #Address = ((wBlockNum - 2) * wTransferSize) + Address_Pointer,
-        
+
         #print "Requesting block 0x%08x size %06x" % (block_number,length);
-        
+
         if block_number>0xFFFF:
             print "WARNING: Block 0x%04x will be returned instead. (16-bit addr.)" % (block_number&0xFFFF);
-        
+
         #data = self._device.ctrl_transfer(0xA1, Request.UPLOAD, block_number, 0, length)
         data = self._device.ctrl_transfer(bmRequestType=0xA1,
                                           bRequest=Request.UPLOAD,
@@ -234,13 +234,13 @@ class DFU(object):
         return data
     def setaddresspointer(self, address=application_offset):
         """Sets the address pointer in the STM32."""
-        
+
         byte0=address&0xFF;
         byte1=(address>>8)&0xFF;
         byte2=(address>>16)&0xFF;
         byte3=(address>>24)&0xFF;
-        
-        
+
+
         data=[0x21,                     #Set pointer op-code
               byte0,byte1,byte2,byte3   #Address, little-endian.
               ];
@@ -252,11 +252,11 @@ class DFU(object):
                                            data_or_wLength=data);
         # Address isn't set until first GETSTATUS query.
         status=self.get_status();
-        
+
         # Second query is needed to check if correctly set.
         # Failures result in dfuERROR or errTARGET.
         status=self.get_status();
-        
+
         if status[2]==State.dfuDNLOAD_IDLE:
             print "Setting address pointer to 0x%08x." % address;
             #This will get us back to the entry point.
@@ -265,7 +265,7 @@ class DFU(object):
             print "Failed to set address pointer.";
             return False;
         return True;
-        
+
     def get_status(self):
         status_packed = self._device.ctrl_transfer(0xA1, Request.GETSTATUS, 0, 0, 6)
         status = struct.unpack('<BBBBBB', status_packed)
@@ -296,7 +296,7 @@ class DFU(object):
             State.dfuMANIFEST_WAIT_RESET: self._wait,
             State.dfuIDLE: self._wait
         }
-        
+
         while True:
             state = self.get_state()
             if state == State.dfuIDLE:
@@ -310,28 +310,28 @@ class DFU(object):
 def download(dfu, data, flash_address):
     #block_size = 1 << 8
     sector_size = 1 << 12
-    
+
     print "Flashing to 0x%08x" % flash_address;
-    
+
     base_address=flash_address;
-    
+
     #Rebase the address pointer.
     if not dfu.setaddresspointer(base_address):
         print "Failed to set address."
         sys.exit(1);
-    
+
     flash_address= flash_address+block_size*2-base_address  #Correct offset.
-    
-    
+
+
     if flash_address & (sector_size - 1) != 0:
         raise Exception('Download must start at flash sector boundary')
 
     block_number = flash_address / block_size
     assert block_number * block_size == flash_address
 
-    
+
     print "Based from  0x%08x" % base_address;
-    
+
     try:
         while len(data) > 0:
             packet, data = data[:block_size], data[block_size:]
@@ -340,15 +340,15 @@ def download(dfu, data, flash_address):
                 packet += '\xFF' * (block_size - len(packet))
             #print "Downloading block %i." % block_number;
             dfu.download(block_number, packet)
-            
+
             #status check causes the write
             status, timeout, state, discarded = dfu.get_status()
             assert state==State.dfuDNBUSY;
-            
+
             #Second read verifies the state.
             status, timeout, state, discarded = dfu.get_status()
             assert state==State.dfuDNLOAD_IDLE
-            
+
             sys.stdout.write('.')
             sys.stdout.flush()
             block_number += 1
@@ -358,18 +358,18 @@ def download(dfu, data, flash_address):
 
 def upload(dfu, flash_address, length, path):
     """Uploads a region from the chip to a file on the workstation."""
-    
+
     #Set the base address, then make it zero.
     base_address=flash_address;
     #flash_address=base_address;
-    
+
     #Rebase the address pointer.
     if not dfu.setaddresspointer(base_address):
         print "Failed to set address."
         sys.exit(1);
-    
+
     flash_address= flash_address+block_size*2-base_address  #Correct offset.
-    
+
     if flash_address & (block_size - 1) != 0:
         raise Exception('Upload must start at block boundary')
 
@@ -383,7 +383,7 @@ def upload(dfu, flash_address, length, path):
     print "block_size    = %08x" % block_size;
 
     f = open(path, 'wb')
-   
+
     try:
         while length > 0:
             data = dfu.upload(block_number, block_size)
@@ -487,11 +487,11 @@ if __name__ == '__main__':
                 f = open(sys.argv[2], 'rb')
                 data = f.read()
                 f.close()
-                
+
                 dfu = init_dfu()
                 firmware = data
                 application_offset=int(sys.argv[3],16);
-                
+
                 download(dfu, firmware, application_offset)
                 print('Write complete')
             elif sys.argv[1]=='writeflash':
@@ -499,10 +499,10 @@ if __name__ == '__main__':
                 f = open(sys.argv[2], 'rb')
                 data = f.read()
                 f.close()
-                
+
                 dfu = init_dfu()
                 firmware = data
-                
+
                 download(dfu, firmware, application_offset)
                 print('Write complete')
             elif sys.argv[1]=='writeram':
@@ -510,13 +510,13 @@ if __name__ == '__main__':
                 f = open(sys.argv[2], 'rb')
                 data = f.read()
                 f.close()
-                
+
                 dfu = init_dfu()
                 firmware = data
-                
+
                 download(dfu, firmware, 0x20002000)
                 print('Write complete')
-            
+
             elif sys.argv[1] == 'detach':
                 import usb.core;
                 dfu = init_dfu();

@@ -113,7 +113,7 @@ struct { //0x1F025 into rdt
                          // |1 is vox enabled
                         // low nibble: unknown, usually 0x4
                        // 0 0  0 0   0 0  0 0
-                       // CcCf HpVx            
+                       // CcCf HpVx
 
   char wasc3;          //Unknown, normally C3
   ul16 contact;        //Digital contact name.  (TX group.)  TODO
@@ -174,7 +174,7 @@ struct {
 //      0x15 is squelch toggle
 //      0x16 is privacy toggle
 //      0x17 is vox toggle
-//      0x18 is zone select 
+//      0x18 is zone select
 //      0x1e is manual dial for private
 //      0x1f is lone work toggle
 
@@ -196,16 +196,16 @@ struct {
                     //  |2 is remote monitor
                     //  |1 is radio check
                     // lower:
-                    //  |8 is 
-                    //  |4 is 
-                    //  |2 is 
+                    //  |8 is
+                    //  |4 is
+                    //  |2 is
                     //  |1 is
     char utilities1; //when all options available, 0xff
     char utilities2; //when all options available, 0xbf
         // 0x3f if vox disabled, 0xbf if vox enabled
     char utilities3; //when all options on, 0xfb
         // 0xfb if front panel programming allowed, 0xff is fpp disabled
-    
+
 } menuoptions;
 
 #seekto 0x149e0;
@@ -232,7 +232,7 @@ struct {
     u8 flags1; //FE
     u8 flags2; //6B for no beeps, 6F will all beeps.
     u8 flags3; //EE
-    u8 flags4; //FF 
+    u8 flags4; //FF
     ul32 dmrid; //0x2084
     u8 flags5[13];  //Unknown settings, seem mostly used.
     u8 screenlit; //00 for infinite delay, 01 for 5s, 02 for 10s, 03 for 15s.
@@ -305,13 +305,13 @@ def asctoutf(ascstring,size=None):
     for c in ascstring:
         toret=toret+c+"\x00";
     if size==None: return toret;
-    
+
     #Correct the size here.
     while len(toret)<size:
         toret=toret+"\x00";
 
     return toret[:size];
-    
+
 class MD380Bank(chirp_common.NamedBank):
     """A VX3 Bank"""
     def get_name(self):
@@ -372,7 +372,7 @@ class MD380BankModel(chirp_common.MTOBankModel):
 
     def get_mapping_memories(self, bank):
         memories = []
-        
+
         _members = self._radio._memobj.bank[bank.index].members
         #_bank_used = self._radio._memobj.bank_used[bank.index]
 
@@ -383,7 +383,7 @@ class MD380BankModel(chirp_common.MTOBankModel):
             #Zero items are not memories.
             if number == 0x0000:
                 continue
-            
+
             mem=self._radio.get_memory(number);
             print "Appending memory %i" % number;
             memories.append(mem)
@@ -406,7 +406,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
     MODEL = "MD-380"
     FILE_EXTENSION = "img"
     BAUD_RATE = 9600    # This is a lie.
-    
+
     _memsize=262144;
     @classmethod
     def match_model(cls, filedata, filename):
@@ -414,8 +414,8 @@ class MD380Radio(chirp_common.CloneModeRadio):
                len(filedata) == cls._memsize
             or len(filedata) == cls._memsize+565
             );
-    
-    
+
+
     # Return information about this radio's features, including
     # how many memories it has, what bands it supports, etc
     def get_features(self):
@@ -426,7 +426,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.can_odd_split = True
         rf.valid_tmodes = TMODES
         rf.memory_bounds = (1, 999)  # Maybe 1000?
-        
+
         rf.valid_bands = [(400000000, 480000000), # 70cm model is most common.
                           (136000000, 174000000)  # 2m model sold separately.
                           ]
@@ -443,7 +443,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.valid_duplexes = list(DUPLEX)
         rf.valid_name_length = 16
         return rf
-    
+
     # Processes the mmap from a file.
     def process_mmap(self):
         if(len(self._mmap)==self._memsize):
@@ -453,11 +453,11 @@ class MD380Radio(chirp_common.CloneModeRadio):
 
         #self._memobj = bitwise.parse(
         #    MEM_FORMAT, self._mmap)
-    
+
     # Do a download of the radio from the serial port
     def sync_in(self):
         pass;
-    
+
 #         try:
 #             self._mmap = do_download(self)
 #         except errors.RadioError:
@@ -465,7 +465,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
 #         except Exception, e:
 #             raise errors.RadioError("Failed to communicate with radio: %s" % e)
 #         #hexdump(self._mmap);
-        
+
 #         if(len(self._mmap)==self._memsize):
 #             self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
 #         else:
@@ -485,18 +485,18 @@ class MD380Radio(chirp_common.CloneModeRadio):
     def get_memory(self, number):
         # Get a low-level memory object mapped to the image
         _mem = self._memobj.memory[number-1]
-        
+
         # Create a high-level memory object to return to the UI
         mem = chirp_common.Memory()
 
         mem.number = number;
         mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
         mem.freq = int(_mem.rxfreq)*10;
-        
+
         ctone=int(_mem.ctone)/10.0;
         rtone=int(_mem.rtone)/10.0;
 
-        
+
         # Anything with an unset frequency is unused.
         # Maybe we should be looking at the mode instead?
         if mem.freq >500e6:
@@ -507,9 +507,9 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.duplex=""
             mem.offset=mem.freq;
             _mem.mode=0x61; #Narrow FM.
-        
 
-        
+
+
         #print "Tones for %s are %s and %s" %(
         #    mem.name, rtone, ctone);
         #mem.rtone=91.5
@@ -543,7 +543,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
             mem.offset=6e5;
         else:
             mem.duplex="split";
-        
+
         mem.mode="DIG";
         rmode=_mem.mode&0x0F;
         if rmode==0x02:
@@ -556,7 +556,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
             print "WARNING: Mode bytes 0x%02 isn't understood for %s." % (
                 _mem.mode, mem.name);
 
-        
+
         return mem
 
     # Store details about a high-level memory to the memory map
@@ -567,7 +567,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
 
         # Convert to low-level frequency representation
         _mem.rxfreq = mem.freq/10;
-        
+
         # Janky offset support.
         # TODO Emulate modes other than split.
         if mem.duplex=="split":
@@ -579,13 +579,13 @@ class MD380Radio(chirp_common.CloneModeRadio):
         else:
             _mem.txfreq = _mem.rxfreq;
         _mem.name = asctoutf(mem.name,32);
-        
+
         #print "Tones in mode %s of %s and %s for %s" % (
         #    mem.tmode, mem.ctone, mem.rtone, mem.name);
         # These need to be 16665 when unused.
         _mem.ctone=mem.ctone*10;
         _mem.rtone=mem.rtone*10;
-        
+
         if mem.tmode=="Tone":
             blankbcd(_mem.ctone); #No receiving tone.
         elif mem.tmode=="TSQL":
@@ -593,7 +593,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
         else:
             blankbcd(_mem.ctone);
             blankbcd(_mem.rtone);
-        
+
         if mem.mode=="FM":
             _mem.mode=0x69;
         elif mem.mode=="NFM":
@@ -602,7 +602,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
             _mem.mode=0x62;
         else:
             _mem.mode=0x69;
-        
+
         if _mem.slot==0xff:
             _mem.slot=0x14;  #TODO Make this 0x18 for S2.
 
@@ -610,12 +610,12 @@ class MD380Radio(chirp_common.CloneModeRadio):
     def get_settings(self):
         _general = self._memobj.general
         _info = self._memobj.info
-        
+
         basic = RadioSettingGroup("basic", "Basic")
         info = RadioSettingGroup("info", "Model Info")
         general = RadioSettingGroup("general", "General Settings");
-        
-        
+
+
         #top = RadioSettings(identity, basic)
         top = RadioSettings(general)
         general.append(RadioSetting(
@@ -641,7 +641,7 @@ class MD380Radio(chirp_common.CloneModeRadio):
                 setting = element.get_name()
                 #oldval = getattr(_settings, setting)
                 newval = element.value
-                
+
                 #LOG.debug("Setting %s(%s) <= %s" % (setting, oldval, newval))
                 if setting=="line1":
                     _general.line1=asctoutf(str(newval),20);
