@@ -1,0 +1,15 @@
+
+Ed N6YN posted the following fix in the google group:
+
+    With either patched firmware v2.032 or D13.020 installed in your radio...
+
+    run Zadig, and install libusb-win32 (v1.2.6.0) or (libusb-win32 from: https://sourceforge.net/projects/libusb-win32/ as described in MD380tools / Windows-instructions.txt)
+    Once the driver is installed you will see that if you issue a ./md380-tool spiflashid command, you will received either a # 1 or #2 from the above responses.
+
+    Now, execute the "testlibusb-win.exe" file, then click on the Refresh button at the bottom of the popup window. (Note this file is located in the libusb-win32-bin-1.2.6.0\bin\x86 folder). Once you click on the Refresh button you will find that if you again issue a ./md380-tool spiflashid command in the MINGW32 window, you will receive the proper response from the radio:
+    SPI Flash ID: EF 40 18
+    W25Q128FV 16MByte
+
+Now you can issue a make flashdb and your CSV file will be properly installed into the SPI Flash. (remember to perform a "make clean all" in your md380tools/db folder, to update the "users.csv" file)
+
+Close this issue once above fix has been confirmed and GNUWin32 instruction have been updated accordingly. Self assigning unless someone gets time to do it before me :)
