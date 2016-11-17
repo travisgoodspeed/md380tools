@@ -1,0 +1,52 @@
+
+From: Mike Leek <mike.w2swr@gmail.com>
+
+Hi Travis,
+First let me say that you have done a wonderful job with this project. I 
+use it all the time and have a group of hams that I update there radios 
+regularly. But, I am getting tired of meeting them to do these updates. I 
+know that if I build them each a programmer that they are not savvy enough 
+to enter the commands in the proper order, etc, etc. So I built an .sh file 
+and desktop shortcut that will help them and thought I would share with the 
+group.
+
+The .sh file is as follows:
+
+#!/bin/bash
+cd md380tools
+echo "Connect radio to cable and PC. Power the radio by truning the volume 
+knob, while holding the PTT and the button above the PTT. The LED should 
+start flashing RED/GREEN."
+sleep  5
+read -p "press [ENTER] to continue..."
+git pull
+sleep 3
+make flash
+echo"
+
+
+************************************************** TURN RADIO OFF THEN BACK 
+ON NOW ************************************************************
+
+
+"
+sleep  5
+read -p "press [ENTER] to continue..."
+make updatedb flashdb
+sleep 10
+
+#end of file
+
+
+
+
+
+The desktop shortcut is as follows:
+
+[Desktop entry]
+Name= MD-380 tool updater
+Exec=/home/xxxx/updater.sh
+Terminal=true
+Type=Application
+ 
+#end of file
