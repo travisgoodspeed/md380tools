@@ -187,7 +187,7 @@ users.csv file when running "make flashdb" )
 
 ##Convenient Usage:##
 
-** This will only work with D02 firmware. See https://github.com/travisgoodspeed/md380tools/issues/493 **
+**This will only work with D02 firmware. See https://github.com/travisgoodspeed/md380tools/issues/493**
 
 Anything with `md380-tool` requires a recent version of our patched
 firmware.  You can check your version in Menu/Utilities/Radio
