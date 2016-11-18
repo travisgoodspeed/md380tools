@@ -44,7 +44,10 @@ void reset_backlight()
     // enabling backlight again.
     void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 ); // S: ??? 0x0802BAE6
     f(0x40020800,0x40);
-#else
+#else if defined(FW_S13_020)
+    // enabling backlight again on MD390/G in monitor mode
+    void (*f)(uint32_t,uint32_t) = (void*)( 0x802bae6 + 1 ); // S: ??? 0x0802BAE6
+    f(0x40020800,0x40);
 #warning please consider adding symbols.
 #endif
 }
