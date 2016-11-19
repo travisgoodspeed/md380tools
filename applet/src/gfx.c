@@ -237,6 +237,10 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
         return ;
     }
     gfx_drawbmp( bmp, x, y );
+      // redraw promiscuous mode eye icon overlapped by antenna icon on MD390/G
+    if(  ( global_addl_config.promtg ) && ( y == 0 )) {
+        draw_eye_opt();
+    }
 }
 
 // r0 = str, r1 = x, r2 = y, r3 = xlen
