@@ -170,7 +170,7 @@ extern uint32_t  bp_freq[];
 //! useful firmware functions
 wchar_t * md380_itow(wchar_t *, int value);
 void      md380_RTC_GetDate(uint32_t RTC_Format, RTC_DateTypeDef *RTC_DateStruct);
-void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef* RTC_TimeStruct);
+void      md380_RTC_GetTime(uint32_t RTC_Format, RTC_TimeTypeDef *RTC_TimeStruct);
 
 // stuff to handle different display (flip (380/390) type
 extern uint8_t  const md380_radio_config_bank2[]; // from spiflash Security Registers
@@ -191,4 +191,3 @@ void f_4225();
 
 // major display driver for popup during RX/TX
 void F_4315();
-
