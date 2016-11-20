@@ -10,9 +10,9 @@
 #include "debug.h"
 #include "netmon.h"
 #include "mbox.h"
-#include "debug.h"
 #include "console.h"
 #include "syslog.h"
+#include "lastheard.h"
 #include "radio_config.h"
 #include "sms.h"
 #include "beep.h"
@@ -42,11 +42,11 @@ void reset_backlight()
 
 #if defined(FW_D13_020)
     // enabling backlight again.
-    void (*f)(uint32_t,uint32_t) = (void*)( 0x802b80a + 1 ); // S: ??? 0x0802BAE6
+    void (*f)(uint32_t,uint32_t) = (void*)( 0x0802b80a + 1 ); // S: ??? 0x0802BAE6
     f(0x40020800,0x40);
 #elif defined(FW_S13_020)
     // enabling backlight again on MD390/G in monitor mode
-    void (*f)(uint32_t,uint32_t) = (void*)( 0x802bae6 + 1 ); // S: ??? 0x0802BAE6
+    void (*f)(uint32_t,uint32_t) = (void*)( 0x0802bae6 + 1 ); // S: ??? 0x0802BAE6
     f(0x40020800,0x40);
 #warning please consider adding symbols.
 #endif
@@ -64,15 +64,17 @@ void switch_to_screen( int scr )
 }
 
 void copy_dst_to_contact()
-{
-#ifdef FW_D13_020
+{ 
+#if defined(FW_D13_020) || defined(FW_S13_020)
     int dst = rst_dst ;
+    extern wchar_t channel_name[] ;
     
     contact.id_l = dst & 0xFF ;
     contact.id_m = (dst>>8) & 0xFF ;
     contact.id_h = (dst>>16) & 0xFF ;
     
-    wchar_t *p = (void*)0x2001e1f4 ;
+    //wchar_t *p = (void*)0x2001e1f4 ;
+    wchar_t *p = (void*)channel_name ;
     
     if( rst_grp ) {
         contact.type = CONTACT_GROUP ;        
@@ -85,6 +87,7 @@ void copy_dst_to_contact()
     extern void draw_zone_channel(); // TODO.
     
     draw_zone_channel();
+#else
 #endif
 }
 
@@ -102,14 +105,20 @@ void handle_hotkey( int keycode )
     reset_backlight();
     
     switch( keycode ) {
+        case 1 :
+            sms_test();
+            break ;
         case 3 :
             copy_dst_to_contact();
             break ;
         case 4 :
-            sms_test();
+	    lastheard_redraw();
+            switch_to_screen(4);
             break ;
         case 5 :
             syslog_clear();
+	    lastheard_clear();
+	    nm_started = 0;				// reset nm_start flag used for some display handling
             break ;
         case 6 :
         {
@@ -119,19 +128,16 @@ void handle_hotkey( int keycode )
             syslog_dump_dmesg();
             break ;
         case 7 :
-            bp_send_beep(BEEP_TEST_1);
-            nm_screen = 0 ;
-            // cause transient.
-            gui_opmode2 = OPM2_MENU ;
-            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
-            break ;
-        case 8 :
             bp_send_beep(BEEP_TEST_2);
             switch_to_screen(1);
             break ;
-        case 9 :
+        case 8 :
             bp_send_beep(BEEP_TEST_3);
             switch_to_screen(2);
+            break ;
+        case 9 :
+            syslog_redraw();
+            switch_to_screen(3);
             break ;
         case 11 :
             //gui_control(1);
@@ -148,8 +154,11 @@ void handle_hotkey( int keycode )
             //mb_send_beep(beep_event_probe);
             break ;
         case 15 :
-            syslog_redraw();
-            switch_to_screen(3);
+            bp_send_beep(BEEP_TEST_1);
+            nm_screen = 0 ;
+            // cause transient.
+            gui_opmode2 = OPM2_MENU ;
+            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
             break ;
     }    
 }
@@ -192,6 +201,7 @@ inline int is_intercept_allowed()
 inline int is_intercepted_keycode( int kc )
 {
     switch( kc ) {
+        case 1 :
         case 3 :
         case 4 :
         case 5 :

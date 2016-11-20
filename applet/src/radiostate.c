@@ -59,7 +59,8 @@ void rst_voice_lc_header(lc_t *lc)
         
         LOGR("cs %c %d->%d\n", grp_c, src, dst );
 
-        rst_voice_active = 1 ;    
+        rst_voice_active = 1 ;
+	rx_voice = 1 ;				// flag for new voice call received    
     }
 }
 
@@ -87,6 +88,7 @@ void rst_term_with_lc(lc_t *lc)
         LOGR("ce %c %d->%d\n", grp_c, src, dst );
 
         rst_voice_active = 0 ;
+	rx_voice = 0 ;				// flag for voice call ended
     }
 }
 
