@@ -24,6 +24,8 @@ extern uint8_t last_event4 ;
 extern uint8_t last_event5 ;
 
 extern uint8_t nm_screen ;
+extern uint8_t nm_started ;
+extern uint8_t rx_voice ;
 
 inline int is_netmon_enabled()
 {
@@ -49,4 +51,3 @@ inline int is_statusline_visible()
 #endif
 
 #endif /* NETMON_H */
-
