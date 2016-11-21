@@ -47,6 +47,7 @@ SRCS += keyb.o
 SRCS += radiostate.o
 SRCS += mbox.o
 SRCS += syslog.o
+SRCS += lastheard.o
 SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
