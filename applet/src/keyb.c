@@ -128,16 +128,19 @@ void handle_hotkey( int keycode )
             syslog_dump_dmesg();
             break ;
         case 7 :
-            bp_send_beep(BEEP_TEST_2);
-            switch_to_screen(1);
+            bp_send_beep(BEEP_TEST_1);
+            nm_screen = 0 ;
+            // cause transient.
+            gui_opmode2 = OPM2_MENU ;
+            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
             break ;
         case 8 :
             bp_send_beep(BEEP_TEST_3);
-            switch_to_screen(2);
+            switch_to_screen(1);
             break ;
         case 9 :
             syslog_redraw();
-            switch_to_screen(3);
+            switch_to_screen(2);
             break ;
         case 11 :
             //gui_control(1);
@@ -154,11 +157,8 @@ void handle_hotkey( int keycode )
             //mb_send_beep(beep_event_probe);
             break ;
         case 15 :
-            bp_send_beep(BEEP_TEST_1);
-            nm_screen = 0 ;
-            // cause transient.
-            gui_opmode2 = OPM2_MENU ;
-            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
+            bp_send_beep(BEEP_TEST_2);
+            switch_to_screen(3);
             break ;
     }    
 }
