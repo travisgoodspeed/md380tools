@@ -407,7 +407,7 @@ def main():
                 upload_codeplug(dfu, sys.argv[2])
                 print('Read complete')
             elif sys.argv[1] == 'readboot':
-                print "This only wokrs from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.";
+                print "This only works from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.";
                 import usb.core
                 dfu = init_dfu()
                 upload_bootloader(dfu, sys.argv[2])
