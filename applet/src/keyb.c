@@ -135,11 +135,11 @@ void handle_hotkey( int keycode )
             gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
             break ;
         case 8 :
-            bp_send_beep(BEEP_TEST_3);
+            bp_send_beep(BEEP_TEST_2);
             switch_to_screen(1);
             break ;
         case 9 :
-            syslog_redraw();
+            bp_send_beep(BEEP_TEST_3);
             switch_to_screen(2);
             break ;
         case 11 :
@@ -157,7 +157,7 @@ void handle_hotkey( int keycode )
             //mb_send_beep(beep_event_probe);
             break ;
         case 15 :
-            bp_send_beep(BEEP_TEST_2);
+            syslog_redraw();
             switch_to_screen(3);
             break ;
     }    
