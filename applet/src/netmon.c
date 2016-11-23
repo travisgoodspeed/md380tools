@@ -5,18 +5,26 @@
 
 #include "netmon.h"
 
-#include "console.h"
 #include "md380.h"
+#include "version.h"
+#include "tooldfu.h"
 #include "printf.h"
+#include "string.h"
 #include "dmr.h"
+#include "gfx.h"
 #include "radiostate.h"
 #include "syslog.h"
+#include "lastheard.h"
 #include "console.h"
 #include "radio_config.h"
+#include "console.h"
 #include "codeplug.h"
 #include "unclear.h"
+#include "usersdb.h"
 
 uint8_t nm_screen = 0 ;
+uint8_t nm_started = 0 ;
+uint8_t rx_voice = 0 ;
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -123,28 +131,28 @@ void netmon1_update()
                 str = "nosig" ;
                 break ;
             case 0x2 :
-                str = "tx denied" ;
+                str = "TX denied" ;
                 break ;
             case 0x3 :
                 str = "FM" ;
                 break ;
             case 0x4 :
-                str = "Out_Of_SYNC" ; // TS 102 361-2 clause p 5.2.1.3.2
+                str = "Out_of_sync" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0x5 :
-                str = "num5" ; 
+                str = "num5 0x5" ; 
                 break ;
             case 0x7 :
-                str = "data_idle/csbk_rx" ;
+                str = "RX csbk/idle" ;
                 break ;
             case 0x8 :
-                str = "Other_Call" ; // TS 102 361-2 clause p 5.2.1.3.2
+                str = "RX other" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0x9 :
-                str = "My_Call" ; // TS 102 361-2 clause p 5.2.1.3.2
+                str = "RX myreq" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0xa :
-                str = "rx silence" ;
+                str = "RX silence" ;
                 break ;
             case 0xd :
                 str = "num13 0xd" ;
@@ -238,6 +246,56 @@ void netmon2_update()
 void netmon3_update()
 {
     syslog_draw_poll();
+    if ( nm_started == 0 ) {
+	syslog_printf("Netmon 3 - Call log =====\n");
+	nm_started = 1;				// flag for restart of LH list
+    }	
+}
+
+
+void netmon4_update()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    lastheard_draw_poll();
+    
+//    int dst;
+    int src;
+//    int last_src;				// last DMR src ID, check if new call
+//    int grp;
+    static int lh_cnt = 0 ;			// lastheard line counter 
+
+    if ( nm_started == 0 ) {
+	lastheard_printf("Netmon 4 - Lastheard ====\n");
+	nm_started = 1;				// flag for restart of LH list
+	lh_cnt = 1;				// reset lh counter 
+    }	
+
+    char mode = ' ' ;
+    if( rst_voice_active ) {
+        if( rst_mycall ) {
+            mode = '*' ; // on my tg            
+        } else {
+            mode = '!' ; // on other tg
+        }
+   src = rst_src;
+   user_t usr;
+   
+
+    if( ( src != 0 ) && ( rx_voice == 1 ) ) {
+        //lastheard_printf("%d",lh_cnt++);
+        print_time_hook() ;
+        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+            lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
+        } else {
+            lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
+        }
+	rx_voice = 0 ;				// call handled, wait until new voice call status received
+     }
+    }
+#else
+    lastheard_printf("No lastheard available\n");    
+#endif 
+
 }
 
 void netmon_update()
@@ -257,6 +315,9 @@ void netmon_update()
             return ;
         case 3 :
             netmon3_update();
+            return ;
+        case 4 :
+            netmon4_update();
             return ;
     }
 }

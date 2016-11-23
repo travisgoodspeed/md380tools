@@ -173,6 +173,27 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
+void print_time_hook(void)
+{
+    wchar_t wide_time[9];
+
+    RTC_TimeTypeDef RTC_TimeStruct;
+    md380_RTC_GetTime(RTC_Format_BCD, &RTC_TimeStruct);
+
+    md380_itow(&wide_time[0], RTC_TimeStruct.RTC_Hours);
+    wide_time[2] = ':';
+    md380_itow(&wide_time[3], RTC_TimeStruct.RTC_Minutes);
+    wide_time[5] = ':';
+    md380_itow(&wide_time[6], RTC_TimeStruct.RTC_Seconds);
+    wide_time[8] = '\0';
+ 
+    for (int i = 0; i < 9; i++) {
+        if( wide_time[i] == '\0' )
+            break;
+	lastheard_putch(wide_time[i]);
+    }
+}
+
 // deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
 {
@@ -237,7 +258,7 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
         return ;
     }
     gfx_drawbmp( bmp, x, y );
-      // redraw promiscuous mode eye icon overlapped by antenna icon on MD390/G
+    // redraw promiscous mode eye icon overlapped by antenna icon
     if(  ( global_addl_config.promtg ) && ( y == 0 )) {
         draw_eye_opt();
     }
