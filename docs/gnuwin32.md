@@ -8,9 +8,9 @@ Download and install make for windows from: http://gnuwin32.sourceforge.net/pack
 Download and install python 2.7 from: https://www.python.org/downloads/
 In the C:\Python27 folder, make a copy of python.exe and name it python2.exe
 
-Add the following to your path variable
+Add the following two lines to your path variable
 (Right-click Start button -> System -> Advanced System Settings -> Environment Varables -> Select Path -> Edit):
-C:\Progra~1\GnuWin32\bin    [use 'Progra~1' and NOT 'Program Files' otherwise make will fail]
+C:\Progra~1\GnuWin32\bin    [use 'Progra~1' ('Progra~2' if 64-bit Windows) and NOT 'Program Files' otherwise make will fail]
 C:\Python27
 
 Download and install gcc-arm-none-eabi from: https://launchpad.net/gcc-arm-embedded/4.8/4.8-2014-q1-update
@@ -45,3 +45,5 @@ make clean flash
 
 To flash user database (radio in normal mode):
 make flashdb
+
+Before running 'make flashdb', run the file "{extracted location}\libusb-win32-bin-1.2.6.0\bin\x86\testlibusb-win.exe" after plugging in and switching on the radio. This needs to be done every time you wish to flash the user database otherwise the SPI flash ID will be wrong.
