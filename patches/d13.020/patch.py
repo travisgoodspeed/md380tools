@@ -12,7 +12,7 @@ monitormodeprivate=False
 if __name__ == '__main__':
     print "Creating patches from unwrapped.img."
     patcher=Patcher("unwrapped.img")
-    
+
 # bypass vocoder copy protection on D013.020
 
     patcher.nopout((0x08033f30+0x18))
@@ -40,20 +40,20 @@ if __name__ == '__main__':
 
 
     # Color Code check
-    
+
     # freeing ~200k for code patches
     patcher.ffrange(0x0809aee8,0x080cf754);
-    
+
     #This mirrors the RESET vector to 0x080C020, for use in booting.
     patcher.setword(0x0800C020,
                     patcher.getword(0x0800C004),
                     0x00000000);
-                                                 
-                                                 
+
+
     #This makes RESET point to our stub below.
     patcher.setword(0x0800C004,
                     0x0809af00+1);
-      
+
     #This stub calls the target RESET vector,
     #if it's not FFFFFFFF.
     patcher.sethword(0x0809af00, 0x4840);
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     patcher.sethword(0x0809af08, 0xd100);
     patcher.sethword(0x0809af0a, 0x483c);
     patcher.sethword(0x0809af0c, 0x4700);
-                                          
+
     #Stores the RESET handler for our stub.
     patcher.setword(0x0809affc,
                     patcher.getword(0x0800C020),

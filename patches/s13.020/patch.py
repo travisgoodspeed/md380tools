@@ -12,7 +12,7 @@ monitormodeprivate=False
 if __name__ == '__main__':
     print "Creating patches from unwrapped.img."
     patcher=Patcher("unwrapped.img")
-    
+
     # bypass vocoder copy protection on S013.020
     patcher.nopout((0x8034a60))
     patcher.nopout((0x8034a60+0x2))
@@ -73,10 +73,10 @@ if __name__ == '__main__':
     patcher.sethword(0x0809bf08, 0xd100);
     patcher.sethword(0x0809bf0a, 0x483c);
     patcher.sethword(0x0809bf0c, 0x4700);
-                                        
+
     #Stores the RESET handler for our stub.
     patcher.setword(0x0809bffc,
                     patcher.getword(0x0800C020),
                     0xFFFFFFFF);
-                                                                                        
+
     patcher.export("patched.img")

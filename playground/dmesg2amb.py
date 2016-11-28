@@ -40,8 +40,8 @@ def writeframe(f,frame):
             b=0;
     #There's one bit left over, which takes the LSBit in its own byte.
     f.write(chr(b));
-    
-            
+
+
 outfile=open("output.amb","w");
 writeheader(outfile);
 for r in sys.stdin:
@@ -49,4 +49,4 @@ for r in sys.stdin:
         bits=r.split()[2];
         print bits;
         writeframe(outfile,bits);
-        
+

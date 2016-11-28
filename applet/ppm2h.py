@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-import sys   
+import sys
 import struct
-import os  
+import os
 import math
 import binascii
 import argparse
 import re
 
 class MD380Graphics():
-    @staticmethod    
+    @staticmethod
     def gfxprintpal(gfx,name):
-        byte_cnt=0        
+        byte_cnt=0
         palstring = ''
         for color in gfx['palette']:
              r, g, b, a = color
@@ -26,15 +26,15 @@ class MD380Graphics():
              palstring +=  ', ' + "0x" + str(hex(b)[2:].zfill(2))
              palstring +=  ', ' + "0x" + str(hex(a)[2:].zfill(2))
              byte_cnt+=1
-             
-        print ("char %s_paltab[] = {" % name )    
+
+        print ("char %s_paltab[] = {" % name )
         print (palstring)
-        print ("  };")                                                                                       
- 
+        print ("  };")
+
     @staticmethod
     def gfxprintpix(gfx,name):
         bitsperpixel = int(math.ceil(math.log(len(gfx['palette']))/math.log(2)))
-        byte_cnt=0         
+        byte_cnt=0
         pixstring = ''
         for line in gfx['pixels']:
             padding =  gfx['width'] - len(line)
@@ -44,16 +44,16 @@ class MD380Graphics():
 
             for i in xrange(0, len(linebits), 8):
                 if byte_cnt == 0:
-                    pixstring =  "  0x" + str(hex(int(linebits[i:i+8], 2))[2:].zfill(2)) 
+                    pixstring =  "  0x" + str(hex(int(linebits[i:i+8], 2))[2:].zfill(2))
                 else:
                     pixstring += ','
                     if byte_cnt % 20 == 0:
                         pixstring += '\n  '
                     pixstring += "0x" + str(hex(int(linebits[i:i+8], 2))[2:].zfill(2))
                 byte_cnt+=1
-        print ("char %s_pix[] = {" % name )    
+        print ("char %s_pix[] = {" % name )
         print (pixstring)
-        print ("  };")     
+        print ("  };")
 
 
     @staticmethod
@@ -67,10 +67,10 @@ class MD380Graphics():
               int(math.ceil(math.log(len(gfx['palette']))/math.log(2))),
               name,
               name ))
-                    
-                                
+
+
     @staticmethod
-    def ppmparse(ppm):     # stolen from md380-gfx 
+    def ppmparse(ppm):     # stolen from md380-gfx
         """Convert PPM(P6) image to sprite object"""
         ppml = ppm.split('\n')
         assert ppml[0] == 'P6'
@@ -91,7 +91,7 @@ class MD380Graphics():
         width = int(width)
         height = int(height)
         maxc = int(ppml[i+1])
-        assert maxc == 255   
+        assert maxc == 255
         data = '\n'.join(ppml[i+2:])
         paletteidx = {}
         pixels = []
@@ -111,7 +111,7 @@ class MD380Graphics():
                     palette.append([r, g, b, a])
                     paletteidx[key] = color
                 line.append(color)
-            pixels.append(line)   
+            pixels.append(line)
         img = {'address': addr, 'width': width, 'height': height,
                'palette': palette, 'pixels': pixels,
                'oldchecksum': oldchecksum, 'oldpalette': oldpalette}
@@ -136,8 +136,8 @@ def main():
         gfx = md.ppmparse(gfx)
     name=re.sub(r'\.ppm$','',args.gfx)
     md.gfxprintpal(gfx,name)
-    md.gfxprintpix(gfx,name) 
+    md.gfxprintpix(gfx,name)
     md.gfxprintstruct(gfx,name)
-    
+
 if __name__ == "__main__":
     main()

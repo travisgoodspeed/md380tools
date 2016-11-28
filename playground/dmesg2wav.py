@@ -29,9 +29,9 @@ def writeframe(frame):
     frames=[];
     frames.append(frame);
     outfile.writeframes(chr(frame&0xFF)+""+chr(frame>>8));
-    
-            
-    
+
+
+
 
 #This part is god-awful ugly.  Kill it with fire!
 
@@ -44,5 +44,5 @@ for r in sys.stdin:
             sample=(int(bits[i+1],16)<<8)|int(bits[i],16);
             #if sample&0x8000:
             #    sample= 0-(sample^0xFFFF)
-            
+
             writeframe(sample);

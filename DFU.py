@@ -27,7 +27,7 @@ class Enumeration(object):
     def create_from_map(cls):
         for id, name in cls.map.iteritems():
             cls(id, name)
-        
+
 class Request(Enumeration):
     map = {
         0: 'DETACH',
@@ -112,8 +112,8 @@ class DFU(object):
         self.md380_custom(0xA2,0x08); #Access the clock memory.
         time=self.upload(0,7);  #Read the time bytes as BCD.
         #hexdump("Time is: "+time);
-        
-        
+
+
         from datetime import datetime;
         dt=datetime(self.bcd(time[0])*100+self.bcd(time[1]),
                              self.bcd(time[2]),
@@ -173,7 +173,7 @@ class DFU(object):
             print "Failed to send custom %02x %02x." % (a,b);
             return False;
         return True;
-    
+
     def md380_reboot(self):
         """Sends the MD380's secret reboot command.""";
         a=0x91;
@@ -193,7 +193,7 @@ class DFU(object):
                                           index,            #index
                                           length)       #length
         return data
-    
+
     def get_command(self):
         data = self._device.ctrl_transfer(0xA1, #request type
                                           Request.UPLOAD, #request
@@ -202,7 +202,7 @@ class DFU(object):
                                           32) #length
         self.get_status();
         return data
-    
+
     def get_status(self):
         status_packed = self._device.ctrl_transfer(0xA1, Request.GETSTATUS, 0, 0, 6)
         status = struct.unpack('<BBBBBB', status_packed)
@@ -243,7 +243,7 @@ class DFU(object):
             State.dfuMANIFEST_WAIT_RESET: self._wait,
             State.dfuIDLE: self._wait
         }
-        
+
         while True:
             state = self.get_state()
             if state == State.dfuIDLE:
@@ -253,7 +253,7 @@ class DFU(object):
 
     def _wait(self):
         time.sleep(0.1)
-    
+
     def widestr(self,str):
         tr="";
         for c in str:

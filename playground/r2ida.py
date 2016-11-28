@@ -37,7 +37,7 @@ def parse_line(line):
     else: # f and fC are UNHANDLED and appear in script
         print("Unhandled command: {}".format(toks[0]), file=sys.stderr)
         return ''
-        
+
 
 # read input file into lines
 
@@ -46,10 +46,10 @@ def main():
     parser.add_argument('input', nargs=1, help='input file')
     parser.add_argument('output', nargs=1, help='output file')
     args = parser.parse_args()
-    
+
     f = open(args.input[0], 'r')
     g = open(args.output[0], 'w')
-    
+
     g.write(ida_front_boilerplate)
     g.write('\n')
 
@@ -60,7 +60,7 @@ def main():
 
     g.write(ida_end_boilerplate)
     g.write('\n')
-    
+
     g.close()
     f.close()
 

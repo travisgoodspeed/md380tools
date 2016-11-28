@@ -107,13 +107,13 @@ class MD380Graphics(Memory):
         """Parse sprite structure and return image"""
         s = struct.Struct('<hhhhLL')
         width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr-self.addr)
-    
+
         s = struct.Struct('<llL')
         ncol, someb, colptr = s.unpack_from(self.mem, palptr-self.addr)
 
         #bitplanes = len(bin(ncol-1))-2
         img = {'address': addr, 'width': width, 'height': height, 'palette': None, 'pixels': []}
-        
+
         img['palette'] = []
         for i in xrange(colptr, colptr+ncol*4, 4):
             r, g, b, a = self.read(i, 4)
@@ -132,18 +132,18 @@ class MD380Graphics(Memory):
         s = struct.Struct('<bbbbL')
         width, height, bytesperline, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
         # somea seems to be padding; always 0 in v2.32
-    
+
         #sys.stdout.write('glyphparse: address 0x%x wid=%d height=%d  bpl=%d  somea=%d  pixptr=0x%x\n' % (addr, width, height, bytesperline, somea, pixptr) )
         if height <= 8:
             height = height * 2  # CN characters are right height, latin are reported 1/2 height
-    
+
         img = {'address': addr, 'width': width, 'height': height, 'palette': None, 'pixels': []}
-    
+
         for y in xrange(height):
             linebits = self.readbits(pixptr+y*bytesperline, width)
             line = [int(color) for color in linebits]
             img['pixels'].append(line)
-        
+
         img['checksum'] = self.gfxchecksum(img)
         return img
 
@@ -276,13 +276,13 @@ class MD380Graphics(Memory):
                 r, g, b, a = gfx['palette'][color]
                 sys.stdout.write(MD380Graphics.bashcolor(r, g, b)+' ')
             sys.stdout.write(MD380Graphics.bashcolor()+'\n')
-    
+
     @staticmethod
     def glyphshow(gfx):
         for line in gfx['pixels']:
             sys.stdout.write(''.join(line)+'\n')
-    
-    @staticmethod    
+
+    @staticmethod
     def gfxprint(gfx):
         print("%s %d×%d" % (hex(gfx['address']), gfx['width'], gfx['height']))
         print("%s" % repr(gfx['palette']))
@@ -294,7 +294,7 @@ class MD380Graphics(Memory):
                     px = hex(color)[-1]  # ensure single char for color
                 sys.stdout.write(px)
             sys.stdout.write('\n')
-    
+
     @staticmethod
     def ppm(gfx):
         """Convert sprite object to PPM(P6) image"""
@@ -370,11 +370,11 @@ class MD380Graphics(Memory):
         out += '%d %d\n' % (gfx['width'], gfx['height'])
         for line in gfx['pixels']:
             bitline = ''.join([str(pixel) for pixel in line])
-            
+
             #ASCII output (P1)
             sys.stdout.write('bit line  %s\n' % bitline)
             out += bitline + '\n'
-            
+
             #Hex ouput (P4) - OSX doesn't render non-byte widths correctly (like all latin fonts)
             #bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
             #hexline = hex(int('1'+bitline, 2))[3:]
@@ -403,7 +403,7 @@ class MD380Graphics(Memory):
         width, height = pbml[i].split()
         width = int(width)
         height = int(height)
-        
+
         #bytewidth = int(math.ceil(width/8.0))
         #data = b''.join(pbml[i+1:])
         #pixels = []
