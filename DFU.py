@@ -112,7 +112,14 @@ class DFU(object):
         self.md380_custom(0xA2,0x08); #Access the clock memory.
         time=self.upload(0,7);  #Read the time bytes as BCD.
         #hexdump("Time is: "+time);
-        
+
+    def set_time(self):
+        from datetime import datetime
+        dt = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S').decode("hex")
+        self.md380_custom(0x91,0x02);
+        self.download(0, "\xb5"+dt)
+        self.wait_till_ready()
+        self.md380_reboot()        
         
         from datetime import datetime;
         dt=datetime(self.bcd(time[0])*100+self.bcd(time[1]),
