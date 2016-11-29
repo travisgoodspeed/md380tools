@@ -1,12 +1,16 @@
 
 SYMBOLS=../../applet/src/symbols_s13.020
 
-radare:
-	radare2 -a arm -m 0x0800C000  -b 16 -i ../cpu.r -i flash.r ../../firmware/unwrapped/S013.020.img
+radare: orig.img
+	radare2 -a arm -m 0x0800C000  -b 16 -i ../cpu.r -i flash.r orig.img
 	
 clean:
-	rm -f *.tmp
+	rm -f *.tmp *.img
 	
+orig.img: 
+	make -C ../../firmware unwrapped/S013.020.img
+	cp ../../firmware/unwrapped/S013.020.img orig.img
+    
 asm.lst: flash.r Makefile disasm.r
 	-mv asm.lst asm1.lst
 	radare2 -a arm -m 0x0800C000  -b 16 -i disasm.r -q ../../firmware/unwrapped/S013.020.img

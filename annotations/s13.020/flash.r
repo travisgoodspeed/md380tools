@@ -134,6 +134,13 @@ f gfx_info @ 0x2001daec
 f gfx_drawchar @ 0x08021b78
 
 f gfx_drawtext7 @ 0x08027a9e
+af+ 0x08027a9e 4 gfx_drawtext7
+
+f gfx_drawtext6 @ 0x08027a04
+af+ 0x08027a04 4 gfx_drawtext6
+
+f gfx_clear3 @ 0x0801ddf4
+af+ 0x0801ddf4 4 gfx_clear3
 
 #
 f write_current_channel_info_to_spi @ 0x08022f88
@@ -297,7 +304,6 @@ f kb_handler @ 0x0805078c
 f md380_spiflash_disable @ 0x08031982
 f ambe_unpack @ 0x0804c060
 f md380_program_radio_unprohibited @ 0x2001e644
-af+ 0x08027a9e 4 gfx_drawtext7
 f usb_dfu_read @ 0x08091200
 f md380_OSMboxPost @ 0x080315f0
 af+ 0x080f93d0 4 welcomebmp
