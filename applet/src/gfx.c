@@ -338,7 +338,7 @@ void gfx_puts_pos(int x, int y, const char *str)
 // and that it only fills background when a char or space is printed.
 void gfx_printf_pos(int x, int y, const char *fmt, ...)
 {
-#if defined(FW_D13_020) 
+#if defined(FW_D13_020) || defined(FW_S13_020)
     char buf[MAX_SCR_STR_LEN];
     
     va_list va;
@@ -373,7 +373,7 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
 // and that it fills all background
 void gfx_printf_pos2(int x, int y, int xlen, const char *fmt, ...)
 {
-#if defined(FW_D13_020) 
+#if defined(FW_D13_020) || defined(FW_S13_020)
     char buf[MAX_SCR_STR_LEN];
     
     va_list va;
