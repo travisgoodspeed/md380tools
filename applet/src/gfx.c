@@ -344,7 +344,14 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
     va_start(va, fmt);
     
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
+    
+#if defined(FW_D13_020) 
+    // still only displays 19 chars.
+    gfx_drawtext6( buf, x, y, 21);
+    gfx_clear3( 0 );
+#else
     gfx_drawtext2(buf, x, y, 0);
+#endif    
     
     va_end(va);        
 }
@@ -359,7 +366,13 @@ void gfx_printf_pos2(int x, int y, int xlen, const char *fmt, ...)
     va_start(va, fmt);
 
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
+#if defined(FW_D13_020) 
+    // still only displays 19 chars.
+    gfx_drawtext6( buf, x, y, 21);
+    gfx_clear3( xlen );
+#else
     gfx_drawtext2(buf,x,y,xlen);
+#endif    
     
     va_end(va);        
 }
