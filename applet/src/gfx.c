@@ -338,6 +338,17 @@ void gfx_puts_pos(int x, int y, const char *str)
 // and that it only fills background when a char or space is printed.
 void gfx_printf_pos(int x, int y, const char *fmt, ...)
 {
+#if defined(FW_D13_020) 
+    char buf[MAX_SCR_STR_LEN];
+    
+    va_list va;
+    va_start(va, fmt);
+    
+    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
+    gfx_drawtext7(buf,x,y);
+    gfx_clear3( 0 );
+    
+#else
     wchar_t buf[MAX_SCR_STR_LEN];
     
     va_list va;
@@ -345,7 +356,7 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
     
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
     
-#if defined(FW_D13_020) 
+#if 0
     // still only displays 19 chars.
     gfx_drawtext6( buf, x, y, 21);
     gfx_clear3( 0 );
@@ -354,6 +365,7 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
 #endif    
     
     va_end(va);        
+#endif    
 }
 
 // the intention is a string shortened with .. if it is too long.

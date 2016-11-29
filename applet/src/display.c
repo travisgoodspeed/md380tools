@@ -223,7 +223,7 @@ void draw_rx_screen(unsigned int bg_color)
     
     gfx_select_font(gfx_font_small);
     if( grp ) {
-        gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> TG %dnnnnnn", src, dst );        
+        gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> TG %d", src, dst );        
     } else {
         gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
     }
