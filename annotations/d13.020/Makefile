@@ -12,10 +12,6 @@ orig.img:
 	cp ../../firmware/unwrapped/D013.020.img orig.img
     
 	
-sync:
-	../conv/upd_r2.sh $(SYMBOLS) flash.r >flash_new.tmp
-	../conv/ra2lnk.sh <flash.r >$(SYMBOLS)_new.tmp
-	
 sortlink:	
 	<$(SYMBOLS) ../conv/sortlink.sh >$(SYMBOLS).tmp
 	
