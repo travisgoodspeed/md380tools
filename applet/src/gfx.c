@@ -348,6 +348,7 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
     gfx_drawtext7(buf,x,y);
     gfx_clear3( 0 );
     
+    va_end(va);        
 #else
     wchar_t buf[MAX_SCR_STR_LEN];
     
@@ -372,13 +373,25 @@ void gfx_printf_pos(int x, int y, const char *fmt, ...)
 // and that it fills all background
 void gfx_printf_pos2(int x, int y, int xlen, const char *fmt, ...)
 {
+#if defined(FW_D13_020) 
+    char buf[MAX_SCR_STR_LEN];
+    
+    va_list va;
+    va_start(va, fmt);
+    
+    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
+    gfx_drawtext7(buf,x,y);
+    gfx_clear3( xlen );
+    
+    va_end(va);        
+#else
     wchar_t buf[MAX_SCR_STR_LEN];
     
     va_list va;
     va_start(va, fmt);
 
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
-#if defined(FW_D13_020) 
+#if 0
     // still only displays 19 chars.
     gfx_drawtext6( buf, x, y, 21);
     gfx_clear3( xlen );
@@ -387,4 +400,5 @@ void gfx_printf_pos2(int x, int y, int xlen, const char *fmt, ...)
 #endif    
     
     va_end(va);        
+#endif    
 }
