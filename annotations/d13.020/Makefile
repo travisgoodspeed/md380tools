@@ -1,8 +1,8 @@
 
 SYMBOLS=../../applet/src/symbols_d13.020
 
-radare: orig.img
-	radare2 -a arm -m 0x0800C000  -b 16 -i ../cpu.r -i flash.r orig.img
+.PHONY: all
+all: radare
 	
 clean:
 	rm -f *.tmp *.img
@@ -35,3 +35,5 @@ asm.lst: flash.r Makefile disasm.r orig.img
 	
 ci:
 	./conv.sh
+
+include ../common.mk

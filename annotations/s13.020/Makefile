@@ -1,8 +1,8 @@
 
 SYMBOLS=../../applet/src/symbols_s13.020
 
-radare: orig.img
-	radare2 -a arm -m 0x0800C000  -b 16 -i ../cpu.r -i flash.r orig.img
+.PHONY: all
+all: radare
 	
 clean:
 	rm -f *.tmp *.img
@@ -30,6 +30,5 @@ experiment:
 symfiles:
 	../conv/lnk2sym-unthumb.sh <../../applet/src/symbols_s13.020 >lsym.tmp
 	../conv/ra2sym_strip.sh <flash.r >rsym.tmp
-	
 
 include ../common.mk
