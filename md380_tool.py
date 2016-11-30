@@ -10,7 +10,8 @@
 
 from DFU import DFU, State, Request
 import time, sys, struct, usb.core
-
+from collections import namedtuple
+import json
 # The tricky thing is that *THREE* different applications all show up
 # as this same VID/PID pair.
 #
@@ -251,6 +252,39 @@ class Tool(DFU):
             return tail;
         return head+tail;
 
+
+        
+    def parse_calibration_data(data):
+
+        freqs_bcd = data[432:] #last 80 bytes represent 9*2 BCD frequencies,for example 00 35 10 40 == 401.03500  
+        freqs = [] #parse into a list of frequency settings
+
+        def bcd2freq(bcd):
+            freq_whole = "%02x"%ord(bcd[3]) + ("%02x"%ord(bcd[2]))[0]
+            freq_decimal = ("%02x"%ord(bcd[2]))[1] + "%02x"%ord(bcd[1]) + "%02x"%ord(bcd[0])
+            return "%s.%s"%(freq_whole,freq_decimal)
+
+        Frequency = namedtuple("Frequency","rx_freq tx_freq vox1 vox10 rx_low_voltage rx_full_voltage RSSI1    \
+                                RSSI4 analog_mic digital_mic freq_adjust_high freq_adjust_mid freq_adjust_low1 \
+                                tx_high_power tx_low_power rx_sensitivity open_sql_9 close_sql_9 open_sql_1    \
+                                close_sql_1 max_volume ctcss_67hz ctcss_151_4hz ctcss_254_1hz dcs_mod2 dcs_mod1\
+                                mod1_partial analog_voice_adjust lock_voltage_partial send_i_partial           \
+                                send_q_partial send_i_range send_q_range rx_i_partial rx_q_partial             \
+                                analog_send_i_range analog_send_q_range")
+        rest = data[16:432] # first 16 bytes are settings which seem to be equal for all frequencies
+        rest_i = ""
+        for k in range(0,9): # invert the 2d array so it's easier to map 
+            for j in range(0,24):
+                rest_i += rest[j*16+k]
+        codes_per_freq  = []
+        for i in range(0,9): # 9 frequencies
+            rx_freq = bcd2freq(freqs_bcd[i*8:i*8+4])
+            tx_freq = bcd2freq(freqs_bcd[i*8+4:i*8+8])
+            codes = data[:11] # from vox1 till freq_adjust_low , the mutual ones
+            codes += rest_i[i*24:i*24+24] # the rest of info , each is a single 8 bit integer
+            freqs.append(Frequency._asdict(Frequency._make((rx_freq,tx_freq ) + struct.unpack("B"*35,codes))))
+        return freqs
+
 def calllog(dfu):
     """Prints a call log to stdout, fetched from the MD380's memory."""
     dfu.drawtext("Hooking calls!",160,50);
@@ -303,6 +337,9 @@ def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     #dfu.drawtext("Dumping dmesg",160,50);
     print dfu.getdmesg();
+def parse_calibration(dfu):
+    freqs = parse_calibration_data("A"*512)
+    print(json.dumps(freqs,indent=4))
 def coredump(dfu,filename):
     """Dumps a corefile of RAM."""
     with open(filename,'wb') as f:
@@ -626,6 +663,9 @@ def main():
             elif sys.argv[1] == 'spiflashid':
                 dfu=init_dfu();
                 flashgetid(dfu);
+            elif sys.argv[1] == "callibration":
+                dfu=init_dfu();
+                parse_calibration(dfu)
             
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
