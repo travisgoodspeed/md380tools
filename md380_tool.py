@@ -254,7 +254,7 @@ class Tool(DFU):
 
 
         
-    def parse_calibration_data(data):
+    def parse_calibration_data(self,data):
 
         freqs_bcd = data[432:] #last 80 bytes represent 9*2 BCD frequencies,for example 00 35 10 40 == 401.03500  
         freqs = [] #parse into a list of frequency settings
@@ -337,9 +337,13 @@ def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     #dfu.drawtext("Dumping dmesg",160,50);
     print dfu.getdmesg();
+
 def parse_calibration(dfu):
-    freqs = parse_calibration_data("A"*512)
+    dfu.md380_custom(0xA2,0x05);
+    data = str(bytearray(dfu.upload(0,512)))
+    freqs = dfu.parse_calibration_data(data)
     print(json.dumps(freqs,indent=4))
+
 def coredump(dfu,filename):
     """Dumps a corefile of RAM."""
     with open(filename,'wb') as f:
@@ -613,6 +617,8 @@ Dump one word.
     md380-tool readword <0xcafebabe>
 Dump 1kB from arbitrary address
     md380-tool dump <filename.bin> <address>
+Dump calibration data 
+    md380-tool calibration
 
 Copy File to SPI flash.
     md380-tool spiflashwrite <filename> <address>"
@@ -663,7 +669,7 @@ def main():
             elif sys.argv[1] == 'spiflashid':
                 dfu=init_dfu();
                 flashgetid(dfu);
-            elif sys.argv[1] == "callibration":
+            elif sys.argv[1] == "calibration":
                 dfu=init_dfu();
                 parse_calibration(dfu)
             
