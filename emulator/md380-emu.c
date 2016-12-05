@@ -58,6 +58,7 @@ void loadfirmwareversion();
 
 //Prints the version info from the firmware.
 void version(){
+  /*
   //Cast the buffer and read its contents.
   short *buf=&md380_usbbuf;
   loadfirmwareversion();
@@ -65,6 +66,8 @@ void version(){
   while(*buf)
     printf("%c",*buf++);
   printf("\n");
+  */
+  printf("FIXME: Version info is broken for now.");
 }
 
 //Prints usage info.
