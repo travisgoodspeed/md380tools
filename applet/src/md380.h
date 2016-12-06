@@ -160,8 +160,13 @@ int ambe_decode_wav(int *a1, signed int eighty, char *bitbuffer,
 		    int a4, short a5, short a6, int a7);
 
 
-void Write_Command_2display(uint8_t data);
-void Write_Data_2display(uint8_t data);
+void md380_Write_Command_2display(uint8_t data);
+void md380_Write_Data_2display(uint8_t data);
+
+void md380_GPIO_SetBits(int addr, uint16_t GPIO_Pin); 
+void md380_GPIO_ResetBits(int addr, uint16_t GPIO_Pin);
+
+
 
 //! Functions and Variabes regarding the beep_
 // not yet known ;)

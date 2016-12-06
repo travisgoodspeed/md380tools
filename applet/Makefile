@@ -31,6 +31,7 @@ else ifeq ($(FW),S13_020)
     SRCVERSION=s13.020
     PATCHDIR=s13.020
     MERGEBASE=0x809c000
+    INC_DISPINIT=1
 else 
 $(error select firmware version)
 endif
@@ -57,7 +58,9 @@ endif
 ifdef INC_I2C
 SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
 endif
-
+ifdef INC_DISPINIT
+SRCS +=  dispinit.o
+endif
 
 ###################################################
 

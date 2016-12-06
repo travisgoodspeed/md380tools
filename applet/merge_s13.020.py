@@ -197,6 +197,7 @@ if __name__== '__main__':
                                                                           
     merger.hookbl( 0x0804143e, sapplet.getadr("dmr_sms_arrive_hook"));
                                                                               
+    merger.hookbl( 0x0801da8a, sapplet.getadr("display_init"));
                                                                                   
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x0804717a ,sapplet.getadr("OSSemCreate_hook"),0); #0x804647a
