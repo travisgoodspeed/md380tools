@@ -55,6 +55,12 @@ md380_spiflash_enable                    = 0x0803152b ;
 md380_spiflash_disable                   = 0x08031547 ;
 md380_spiflash_write                     = 0x0803155f ;
 md380_spiflash_security_registers_read   = 0x080318b1 ;
+md380_Write_Command_2display             = 0x0803352d ;
+md380_Write_Data_2display                = 0x08033535 ;
+md380_GPIO_SetBits                       = 0x0802b80b ;
+md380_GPIO_ResetBits                     = 0x0802b80f ;
+md380_radio_config_bank2                 = 0x2001de38 ;
+ 
 draw_statusline                          = 0x08033dad ;
 OSTimeDly                                = 0x08033eb5 ;
 aes_cipher                               = 0x08036c39 ;

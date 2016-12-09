@@ -1,13 +1,12 @@
 /*! \file dispinit.c
-  \brief display init Hook functions.
+  \brief display init Hook functions, similar the display init from S13.032.
 */
 
 #include <string.h>
 
 #include "md380.h"
 
-///  if ( md380_radio_config_bank2[0x1d] & 1)  // offset 0x1d from
-
+// new display reset, old was only SetBit
 void display_reset()
 {
   md380_GPIO_SetBits(0x40020C00, 0x2000);
@@ -21,8 +20,7 @@ void display_reset()
 void display_init(void)
 {
   display_reset();
-  if ( (md380_radio_config_bank2[0x1d] & 3) != 2 && (md380_radio_config_bank2[0x1d] & 3) != 3 )
-  {
+  if ( (md380_radio_config_bank2[0x1d] & 3) != 2 && (md380_radio_config_bank2[0x1d] & 3) != 3 ) {
     md380_Write_Command_2display(0x11);
     OSTimeDly(120);
     md380_Write_Command_2display(0xB1);
@@ -104,9 +102,7 @@ void display_init(void)
       md380_Write_Data_2display(8);
     md380_Write_Command_2display(0x29);
     md380_Write_Command_2display(0x2C);
-  }
-  else
-  {
+  }else{
     md380_Write_Command_2display(0x3A);
     md380_Write_Data_2display(5);
     md380_Write_Command_2display(0x36);
