@@ -203,6 +203,9 @@ if __name__== '__main__':
     # os semaphore hook .. now we can crate own semaphores
     merger.hookbl(0x804647a,sapplet.getadr("OSSemCreate_hook"),0);
 
+    merger.hookbl(0x0801d956, sapplet.getadr("display_init"));
+ 
+
     #########
     # gfx_ primitives hooks, to be overriden later in this file.
 
