@@ -173,8 +173,8 @@ md380_f_4102 = 0x0804c2ab;
 f_4225 = 0x0801f045;
 
 /* relevant display functions */
-Write_Command_2display = 0x08031f75;
-Write_Data_2display = 0x08031f7d;
+md380_Write_Command_2display = 0x08031f75;
+md380_Write_Data_2display = 0x08031f7d;
 
 /* Chinese font region. */
 chinese_font = 0x0809D000;

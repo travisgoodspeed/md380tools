@@ -45,6 +45,13 @@ af+ 0x803199a 704 md380_spiflash_write **
 af+ 0x8031cec 78 md380_spiflash_security_registers_read **
 af+ 0x80349cc 104 OSTimeDly **
 af+ 0x8034a48 146 licence_check
+af+ 0x8034086 424 F_1075_display_init
+af+ 0x8034044 8 F_834_Write_Command_2display
+af+ 0x803404c 6 F_835_Write_Data_2display
+af+ 0x803405e 20 Display_reset
+af+ 0x802bae6 4 GPIO_SetBits
+af+ 0x802baea 4 GPIO_ResetBits
+af+ 0x8034072 20 F_1102_delay
 af+ 0x8037750 136 aes_cipher
 af+ 0x80377d8 236 aes_loadkey
 af+ 0x803beb2 144 main_menu **

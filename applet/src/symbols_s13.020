@@ -1,3 +1,11 @@
+init_display 				 = 0x08034087;
+md380_Write_Command_2display             = 0x08034045;
+md380_Write_Data_2display                = 0x0803404d;
+md380_GPIO_SetBits                       = 0x0802bae7;
+md380_GPIO_ResetBits                     = 0x0802baeb;
+
+
+
 md380_create_main_meny_entry             = 0x0800c189 ;
 md380_create_menu_entry                  = 0x0800c72f ;
 gfx_drawtext                             = 0x0800def7 ;
@@ -93,6 +101,7 @@ gfx_font_norm                            = 0x080d0640 ;
 md380_wt_programradio                    = 0x080d0df0 ;
 welcomebmp                               = 0x080f93d0 ;
 mn_editbuffer_poi                        = 0x200049fc ;
+md380_radio_config_bank2		 = 0x2001df08 ;
 md380_dfutargetadr                       = 0x20004a14 ;
 md380_dfu_target_adr                     = 0x20004a14 ;
 md380_menu_0x200011e4                    = 0x20004acc ;
