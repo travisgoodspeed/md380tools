@@ -247,7 +247,6 @@ void netmon3_update()
 {
     syslog_draw_poll();
     if ( nm_started == 0 ) {
-	syslog_printf("Netmon 3 - Call log =====\n");
 	nm_started = 1;				// flag for restart of LH list
     }	
 }
@@ -258,10 +257,7 @@ void netmon4_update()
 #if defined(FW_D13_020) || defined(FW_S13_020)
     lastheard_draw_poll();
     
-//    int dst;
     int src;
-//    int last_src;				// last DMR src ID, check if new call
-//    int grp;
     static int lh_cnt = 0 ;			// lastheard line counter 
 
     if ( nm_started == 0 ) {
@@ -301,6 +297,7 @@ void netmon4_update()
 void netmon_update()
 {
     if( !is_netmon_visible() ) {
+	netmon4_update();
         return ;
     }
     
