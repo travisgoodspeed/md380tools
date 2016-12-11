@@ -12,7 +12,7 @@ and discussion.
 https://groups.google.com/forum/#!forum/md380tools
 
 
-If you are certain that you bug is serious or a project developer has
+If you are certain that your bug is serious or a project developer has
 agreed to implement a feature, then erase this text and replace it
 with a clear explanation of exactly (1) what the problem is, (2) how
 to reproduce the problem, and (3) what the expected behavior would be.
