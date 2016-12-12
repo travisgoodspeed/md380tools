@@ -25,7 +25,7 @@ torvalds-says-linux.wav:
 demo:	torvalds-says-linux.wav
 	rm -f torvalds-says-linux.amb
 	rm -f torvalds-says-linux-dsd.wav
-	rm -r torvalds-says-linux.md380-emu.raw
+	rm -f torvalds-says-linux.md380-emu.raw
 	rm -f torvalds-says-linux.md380-emu.wav
 
 	sox torvalds-says-linux.wav --bits 16 --encoding signed-integer -c1 -r 8000 -L torvalds-says-linux.raw
