@@ -19,6 +19,27 @@ run: all
 play: run
 	mplayer out.wav
 
+torvalds-says-linux.wav:
+	wget http://suseroot.com/misc/torvalds-says-linux.wav
+
+demo:	torvalds-says-linux.wav
+	rm -f torvalds-says-linux.amb
+	rm -f torvalds-says-linux-dsd.wav
+	rm -r torvalds-says-linux.md380-emu.raw
+	rm -f torvalds-says-linux.md380-emu.wav
+
+	sox torvalds-says-linux.wav --bits 16 --encoding signed-integer -c1 -r 8000 -L torvalds-says-linux.raw
+	qemu-arm  ./md380-emu -e -i torvalds-says-linux.raw -o torvalds-says-linux.amb
+	dsd -n -w torvalds-says-linux-dsd.wav -r torvalds-says-linux.amb
+	qemu-arm ./md380-emu -d -i torvalds-says-linux.amb -o torvalds-says-linux.md380-emu.raw
+	sox -r 8000 -e signed-integer -L -b 16 -c 1 torvalds-says-linux.md380-emu.raw torvalds-says-linux.md380-emu.wav
+
+	echo -e "\n\nplaying orignal\n\n"
+	mplayer	-msglevel all=-1 torvalds-says-linux.wav 2>/dev/null
+	echo -e "\n\nplaying decoded by dsd ----- AMB -----\n\n"
+	mplayer -msglevel all=-1 torvalds-says-linux-dsd.wav 2>/dev/null
+	echo -e "\n\nplaying decoded by md380-emu ----- AMB -----\n\n"
+	mplayer -msglevel all=-1 torvalds-says-linux.md380-emu.wav 2>/dev/null
 
 dsdplay: all
 #This plays the audio in DSD, for comparison.

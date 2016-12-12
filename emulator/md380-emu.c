@@ -141,7 +141,11 @@ int main(int argc, char **argv){
 		    outfilename);
     break;
   case 'e'://ENCODE
-    printf("TODO: AMBE Encoding doesn't yet work.\n");
+    fprintf(stderr,"Encoding 8kHz Raw Mono Signed %s to AMBE %s.\n",
+	    infilename?infilename:"stdin",
+	    infilename?outfilename:"stdout");
+    encode_wav_file(infilename,
+		    outfilename);
     break;
   case 'V'://Version
     version();

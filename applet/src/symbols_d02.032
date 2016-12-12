@@ -207,7 +207,10 @@ ambe_inbuffer = 0x20011c8e;
 ambe_outbuffer0 = 0x20011aa8;
 ambe_outbuffer1 = 0x20011b48;
 ambe_mystery = 0x20011224;
-
+ambe_en_mystery = 0x2000c730;
+wav_inbuffer0 = 0x2000de82;
+wav_inbuffer1 = 0x2000df22;
+ambe_outbuffer = 0x2000dfc6;
 
 /* symgrate failed to find these non matched symbols */
 chinese_font_p_start = 0x809c714;
