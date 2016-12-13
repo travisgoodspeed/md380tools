@@ -5,6 +5,9 @@ import json
 import sys
 import socket
 
+class MyException(Exception):
+    pass
+
 url=urllib2
 
 bm_master = urllib2.Request("http://registry.dstar.su/api/node.php")
@@ -31,10 +34,15 @@ for idx, item in enumerate(data):
     except url.HTTPError as e:
         #if e.code == 404:
         print "List with special IDs not found!\n"
-    except url.URLError as e:
-        print "Could not talk to master server in " + item['Country'] + "!\n"
-    else:
-        # Improved error handling for socket errors - MW0MWZ
+#    except url.URLError as e:
+#        print "Could not talk to master server in " + item['Country'] + "!\n"
+    except url.URLError, e:
+        # For Python 2.6
+        if isinstance(e.reason, socket.timeout):
+            raise MyException("There was an error: %r" % e)
+        else:
+            raise
+    except socket.timeout, e:
         try:
             content = response.read()
         except socket.timeout:
