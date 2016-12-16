@@ -33,6 +33,8 @@ for idx, item in enumerate(data):
         print "List with special IDs not found!\n"
     except url.URLError as e:
         print "Could not talk to master server in " + item['Country'] + "!\n"
+    except socket.timeout:
+        print "Socket Timeout...\n"
     else:
         # Improved error handling for socket errors - MW0MWZ
         try:
