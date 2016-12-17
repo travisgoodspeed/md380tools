@@ -10,6 +10,6 @@ Ed N6YN posted the following fix in the google group:
     SPI Flash ID: EF 40 18
     W25Q128FV 16MByte
 
-Now you can issue a make flashdb and your CSV file will be properly installed into the SPI Flash. (remember to perform a "make clean all" in your md380tools/db folder, to update the "users.csv" file)
+Now you can issue a 'make update flashdb' and your CSV file will be properly installed into the SPI Flash.
 
 Close this issue once above fix has been confirmed and GNUWin32 instruction have been updated accordingly. Self assigning unless someone gets time to do it before me :)

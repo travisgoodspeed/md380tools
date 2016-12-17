@@ -107,7 +107,7 @@ all: mark experiment.bin
 mark:
 ifeq "$(PROBLEM)" "1"
 	@echo "=================="
-	@echo "problem, make mostlyclean first"
+	@echo "problem, make clean first"
 	@echo "=================="
 	@exit 1
 else	
