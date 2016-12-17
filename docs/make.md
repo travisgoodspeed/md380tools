@@ -3,11 +3,11 @@
 
 Clean everything
 
-    make clean
+    make distclean
 
 Clean everything except downloads
 
-    make mostlyclean
+    make clean
 
 Flash original FW for MD380 with old vocoder.
 
