@@ -5,18 +5,19 @@ RELEASE=dist/md380tools-`date "+%Y-%m-%d"`
 
 all: image_D13
 
+# cleans everything also downloaded files
 distclean: clean
 	rm -rf dist
+	"${MAKE}" -C db clean
 	"${MAKE}" -C firmware clean
 
-# formerly called mostlyclean.  Now use distclean to erase all source files.
+# does not external downloads
 clean:
 	"${MAKE}" -C patches/2.032 clean
 	"${MAKE}" -C patches/3.020 clean
 	"${MAKE}" -C patches/s13.020 clean
 	"${MAKE}" -C patches/d13.020 clean
 	"${MAKE}" -C applet clean
-	"${MAKE}" -C db clean
 	"${MAKE}" -C annotations clean
 	rm -f *~ *.pyc *.bin
 
@@ -126,14 +127,6 @@ dist:
 	rm -rf $(RELEASE)/__MACOSX
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
-
-
-# or else make will fail.
-#download:
-#	"${MAKE}" -C firmware download
-
-#all_images: 
-#	"${MAKE}" -C applet ci
 
 dbg:
 	@echo ________
