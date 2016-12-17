@@ -11,7 +11,7 @@ distclean: clean
 	"${MAKE}" -C db clean
 	"${MAKE}" -C firmware clean
 
-# does not external downloads
+# does not clean external downloads
 clean:
 	"${MAKE}" -C patches/2.032 clean
 	"${MAKE}" -C patches/3.020 clean
