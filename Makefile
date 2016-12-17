@@ -1,10 +1,6 @@
 
 RELEASE=dist/md380tools-`date "+%Y-%m-%d"`
 
-##This strips out all unicode characters.
-##We'd rather just drop the accents.
-#ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
-
 .PHONY: dist
 
 all: image_D13
@@ -92,35 +88,34 @@ flashdb: user.bin
 .PHONY: release
 release:
 	-mkdir release
-#	"${MAKE}" clean
-	"${MAKE}" mostlyclean image_D13
+	"${MAKE}" clean image_D13
 	cp applet/experiment.bin release/D13.exp.bin
-	"${MAKE}" mostlyclean image_S13
+	"${MAKE}" clean image_S13
 	cp applet/experiment.bin release/S13.exp.bin
-	"${MAKE}" mostlyclean image_D02
+	"${MAKE}" clean image_D02
 	cp applet/experiment.bin release/S02.exp.bin
-	"${MAKE}" mostlyclean user.bin
+	"${MAKE}" clean user.bin
 	cp user.bin release/
-	"${MAKE}" mostlyclean original_D13
+	"${MAKE}" clean original_D13
 	cp firmware/bin/D013.020.bin release/
-	"${MAKE}" mostlyclean original_S13
+	"${MAKE}" clean original_S13
 	cp firmware/bin/S013.020.bin release/
-	"${MAKE}" mostlyclean original_D02
+	"${MAKE}" clean original_D02
 	cp firmware/bin/D002.032.bin release/
-	"${MAKE}" mostlyclean original_D03
+	"${MAKE}" clean original_D03
 	cp firmware/bin/D003.020.bin release/
 
 dist: 
 	rm -rf $(RELEASE) $(RELEASE).zip
 	mkdir -p $(RELEASE)/python
 #Main release.
-	"${MAKE}" mostlyclean image_D13
+	"${MAKE}" clean image_D13
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-NoGPS"`.bin
 #For GPS radios.
-	"${MAKE}" mostlyclean image_S13
+	"${MAKE}" clean image_S13
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-GPS"`.bin
 #Older
-	"${MAKE}" mostlyclean image_D02
+	"${MAKE}" clean image_D02
 	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-OLD"`.bin
 #Include the Official Installer
 	cd $(RELEASE) && unzip ../../firmware/dl/D002.032.zip
@@ -153,12 +148,12 @@ dbg:
 	make -v
 	@echo ________
 
-ci: dbg mostlyclean 
+ci: dbg clean 
 	"${MAKE}" -C applet ci
 	"${MAKE}" -C db ci
 	"${MAKE}" user.bin
 #	"${MAKE}" -C annotations/d13.020 ci
-	"${MAKE}" mostlyclean
+	"${MAKE}" clean
 
 check-ignore:
 	find -type f | git check-ignore -v --stdin | less
