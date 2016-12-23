@@ -19,6 +19,7 @@ clean:
 	"${MAKE}" -C patches/d13.020 clean
 	"${MAKE}" -C applet clean
 	"${MAKE}" -C annotations clean
+	"${MAKE}" -C emulator clean
 	rm -f *~ *.pyc *.bin
 
 image_D02:

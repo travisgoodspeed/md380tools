@@ -1,6 +1,6 @@
 
 OBJS = md380-emu.o ambe.o
-CC=arm-linux-gnueabi-gcc-6 -static -g
+CC=arm-linux-gnueabi-gcc -static -g
 
 all: md380-emu
 clean:
@@ -47,6 +47,8 @@ dsdplay: all
 	mplayer sample.wav
 
 firmware.o:
+#First we make sure the firmware is ready.
+	"${MAKE}" -C ../firmware
 #May need to adjust these flags for NX compatibility.
 	arm-linux-gnueabi-objcopy \
 		-I binary ../firmware/unwrapped/D002.032.img \
