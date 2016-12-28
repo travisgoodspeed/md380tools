@@ -121,15 +121,21 @@ class DFU(object):
                              self.bcd(time[6]));
         return dt;
 
-
     def set_time(self):
         from datetime import datetime
-        dt = datetime.strftime(datetime.now(), '%Y%m%d%H%M%S').decode("hex")
+        if len(sys.argv) == 3:
+            try:
+                time_to_set = datetime.strptime(sys.argv[2], '%m/%d/%Y %H:%M:%S')
+            except ValueError:
+                print "Usage: md380-dfu settime \"mm/dd/yyyy HH:MM:SS\" (with quotes)"
+                exit()
+        else:
+            time_to_set = datetime.now()
+        dt = datetime.strftime(time_to_set, '%Y%m%d%H%M%S').decode("hex")
         self.md380_custom(0x91,0x02);
         self.download(0, "\xb5"+dt)
         self.wait_till_ready()
-        self.md380_reboot()        
-
+        self.md380_reboot()
 
     def download(self, block_number, data):
         self._device.ctrl_transfer(0x21, Request.DNLOAD, block_number, 0, data)
