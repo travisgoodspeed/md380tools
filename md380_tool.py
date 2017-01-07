@@ -36,7 +36,8 @@ class UsersDB():
                     if len(row)>0:
                         self.users[int(row[0])]=row;
         except:
-            print "WARNING: Unable to load user.bin."
+            #print "WARNING: Unable to load user.bin."
+            pass;
     def getuser(self,id):
         """Returns a user from the ID."""
         try:
