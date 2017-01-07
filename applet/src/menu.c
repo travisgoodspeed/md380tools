@@ -95,7 +95,11 @@ extern menu_t md380_menu_memory[];
 
 extern menu_entry_t md380_menu_mem_base[];
 
-#define MKTHUMB(adr) ((void(*))(((uint32_t)adr) | 0x1))
+
+//Old macro, schedule for deletion.
+//#define MKTHUMB(adr) ((void(*))(((uint32_t)adr) | 0x1))
+//New macro, prints warnings where needed.
+#define MKTHUMB(adr) (printf(((int)adr)&1?"":"Warning, 0x%08x function pointer is even.\n",adr),(void(*))(((uint32_t)adr) | 0x1))
 
 void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)(), void  (*red_key)(), int e, int f ,int item_count) 
 {
