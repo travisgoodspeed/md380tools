@@ -293,7 +293,7 @@ void hookusb(){
   
   dnld_tohook = get_md380_dnld_tohook_addr();
   if (dnld_tohook){
-  * dnld_tohook = (int) usb_dnld_hook;
+    * dnld_tohook = (int) usb_dnld_hook;
   } else {
     printf("can't find dnld_tohook_addr\n");
   }  

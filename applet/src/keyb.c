@@ -63,6 +63,7 @@ void switch_to_screen( int scr )
     nm_screen = scr ;
 }
 
+
 void copy_dst_to_contact()
 { 
 #if defined(FW_D13_020) || defined(FW_S13_020)
@@ -82,14 +83,18 @@ void copy_dst_to_contact()
     } else {
         snprintfw( p, 16, "U %d", dst );
         contact.type = CONTACT_USER ;        
-    }    
-    
+    }
+
+    /* I can't see how this doesn't crash, as draw_zone_channel() is
+       an even address. --Travis
+    */
     extern void draw_zone_channel(); // TODO.
     
     draw_zone_channel();
 #else
 #endif
 }
+
 
 //#if defined(FW_D13_020) || defined(FW_S13_020)
 #if defined(FW_S13_020)
@@ -118,7 +123,7 @@ void handle_hotkey( int keycode )
         case 5 :
             syslog_clear();
 	    lastheard_clear();
-	    nm_started = 0;				// reset nm_start flag used for some display handling
+	    nm_started = 0;// reset nm_start flag used for some display handling
             break ;
         case 6 :
         {
