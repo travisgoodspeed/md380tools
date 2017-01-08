@@ -94,13 +94,13 @@ int check_spi_flash_size(void) {
     ret=get_spi_flash_type(data);
     if ( ret == 0xef4018  ) {  // Manufacturer and Device Identification for W25Q128FV
       size=0x1000000;//16MB
-    }else if ( ret == 0x10dc01 ) { // 2. Manufacturer and Device Identification for W25Q128FV maybe
+    } else if ( ret == 0x10dc01 ) { // 2. Manufacturer and Device Identification for W25Q128FV maybe
       size=0x1000000;//16MB
-    }else if ( ret == 0xef4014 ) { // 1MB Flash in the VHF models.
+    } else if ( ret == 0xef4014 ) { // 1MB Flash in the VHF models.
       printf("Warning, just 1 MB of Flash.\n");
       size=0x0100000;//1MB
     } else {
-      printf("Unknown Flash %x %x %x\n", (ret & 0xff0000)>>16, (ret & 0xff00) >> 8 , (ret & 0xff));
+      printf("Unknown Flash %02x %02x %02x\n", (ret & 0xff0000)>>16, (ret & 0xff00) >> 8 , (ret & 0xff));
     }
     return size;
   }
