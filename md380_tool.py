@@ -389,7 +389,7 @@ def dump(dfu,filename,address):
 def flashgetid(dfu):
     size=0;
     buf=dfu.spiflashgetid();
-    print "SPI Flash ID: %x %x %x"%(buf[0],buf[1],buf[2])
+    print "SPI Flash ID: %02x %02x %02x"%(buf[0],buf[1],buf[2])
     if (buf[0] == 0xef and buf[1] == 0x40):
         if (buf[2] == 0x18):
             sys.stdout.write("W25Q128FV 16MByte\n");
@@ -400,9 +400,11 @@ def flashgetid(dfu):
     elif (buf[0] == 0x10 and buf[1] == 0xdc):
         if (buf[2] == 0x01):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
-            size=16*1024*1024;          
+            size=16*1024*1024;
+    elif (buf[0]==0x70 and buf[1]==0xf1 and buf[2]==0x01):
+        sys.stdout.write("Bad LibUSB connection.  Please see the advice from N6YN at https://github.com/travisgoodspeed/md380tools/issues/186\n");
     else:
-            sys.stdout.write("Unkown SPI Flash - please report\n");
+        sys.stdout.write("Unkown SPI Flash - please report\n");
     return size;
 
 def flashdump(dfu,filename):
