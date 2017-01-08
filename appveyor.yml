@@ -1,5 +1,7 @@
 version: 0.0.{build}
 
+os: Previous Visual Studio 2015
+
 environment:
   global:
     CYG_ROOT: C:\cygwin
