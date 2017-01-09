@@ -1,9 +1,9 @@
 /*! \file irq_handlers.c
     \brief Own interrupt handler(s), first used for a 'dimmed backlight' .
 
-  Module prefix : "IRQ_", but the patched IRQ handlers must have
-                  the official handler name (e.g. "SysTick_Handler"),
-                  else merge_d13.020.py (or similar) won't recognize it.
+  Module prefix "IRQ_", but the patched IRQ handlers must have
+                the official handler name (e.g. "SysTick_Handler"),
+                else merge_d13.020.py (or similar) won't recognize it.
 
   Drives the MD380's backlight LEDs with a PWMed backlight,
   intensity depending on 'idle' / 'active', configurable in menu.c . 
