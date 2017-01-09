@@ -1,76 +1,47 @@
 /*! \file irq_handlers.c
     \brief Own interrupt handler(s), first used for a 'dimmed backlight' .
 
-  Module prefix : "IRQ_", but the patched IRQ handlers begin with 'our',
-                  followed by the official handler name (e.g. "SysTick_Handler").
+  Module prefix : "IRQ_", but the patched IRQ handlers must have
+                  the official handler name (e.g. "SysTick_Handler"),
+                  else merge_d13.020.py (or similar) won't recognize it.
 
-  Started 2016-12 by DL4YHF as a 'proof of concept' .
-  Tries to drives the 'backlight' LEDs (for the TFT and keyboard)
-  with a pulse-width modulated driving signal.
+  Drives the MD380's backlight LEDs with a PWMed backlight,
+  intensity depending on 'idle' / 'active', configurable in menu.c . 
   
-  Contains a few (!) hijacked interrrupt handlers,
-   depending on which options are selected in md380tools/applet/config.h .
+  The MD380's "Lamp"-signal on PC6 is reconfigured as UART6_TX .
+  The pulse width modulation is realized by different UART tx patterns,
+  and by varying the number of STOP BITS for the lower intensity range.
   
-  Preliminary details / documentation / hardware details at 
-     www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
-     
-  To include the 'dimmed backlight' feature in YOUR patched firmware, 
-    add the following line in ?/md380tools/applet/Makefile (after SRCS += beep.o) :
-    SRCS += irq_handlers.o 
-  Furthermore,
-    #define CONFIG_DIMMED_LIGHT 1 // in  ?/md380tools/applet/config.h  .
+  Started by DL4YHF as a 'proof of concept', ugly details may still be
+    at www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
     
-  Also, remove src/stm32f4xx_it.c from the project/make (applet/Makefile) .
-   (stm32f4xx_it.c is useless, because there are already 
-    all necessary 'weak' default handlers 
-    in startup_XYZ.S, for example a *weak* SysTick_Handler().
-    Only those *weak* default handlers can easily be overwritten 
-    by implementing it HERE (in *this* sourcecode module. 
-    The purpose of stm32f4xx_it.c was unclear 
-    (why "occpy" all handlers without implementing anything there ?)
+ To include the 'dimmed backlight' feature in the patched firmware:
     
-  Then, with the CWD set to md380tools, issue command
-    make clean image_D13
-    (at the time of this writing, only the "D13" firmware patch was supported here).
+  1. Add the following line in applet/Makefile (after SRCS += beep.o) :
+      SRCS += irq_handlers.o 
+  
+  2. #define CONFIG_DIMMED_LIGHT 1  in  ?/md380tools/applet/config.h  .
     
-  Watch for warnings in the messages from the C compiler 
-    (at least when compiling THIS module, there shouldn't be any warning at all).
-  When our SysTick_Handler() replaced Tytera's SysTick_Handler() (as in the 1st attempt),
-   the following patch was necessary in merge_d13.020.py :
-   
-    # DL4YHF 2017-01-05 (quite prosaic, since this was the first 'vector table patch'):
-    # IF   the applet's symbol table contains a function named 'SysTick_Handler',
-    # THEN patch its address, MADE ODD to indicate Thumb-code, into the
-    # interrupt-vector-table as explained in applet/src/irq_handlers.c :
-    # ex: new_adr = sapplet.getadr("SysTick_Handler"); # threw an exception when "not found".
-    new_adr = sapplet.try_getadr("SysTick_Handler");
-    if new_adr != None:
-        vect_adr = 0x800C03C;  # address within Tytera's VT for SysTick_Handler
-        exp_adr  = 0x8093F1D;  # expected 'old' content of the above VT entry (LSBit set for THUMB)
-        old_adr  = merger.getword(vect_adr); # original content of the VT entry
-        new_adr |= 0x0000001;  # new content in this VT entry must also be an ODD address !
-        if( old_adr == exp_adr ) :
-           print "Patching SysTick_Handler in VT addr 0x%08x," % vect_adr;
-           print "  old value in vector table = 0x%08x," % old_adr;
-           print "   expected in vector table = 0x%08x," % exp_adr;
-           print "  new value in vector table = 0x%08x." % new_adr;
-           merger.setword( vect_adr, new_adr, old_adr);
-           print "  SysTick_Handler successfully patched.";
-        else:
-           print "Cannot patch SysTick_Handler() !";
-    else:
-           print "No SysTick_Handler() found in the symbol table. Building firmware without.";    
+  3. Remove src/stm32f4xx_it.c from the project/make (applet/Makefile) .
+        stm32f4xx_it.c is useless, because all 'weak' default handlers
+        alreay exist in startup_XYZ.S, for example a *weak* SysTick_Handler().
+        Only those *weak* default handlers can be overwritten without 
+        collisions when linking, by simply implementing them ANYWHERE (in C).    
+     The purpose of stm32f4xx_it.c was unclear (DL4YHF, 2017-01). 
+        Why "occpy" all handlers (non-weak), without implementing
+        any real functionality in stm32f4xx_it.c ?
+  
+  4. Add a call to IRQ_Init() in main.c : splash_hook_handler() .
 
-           
-   Insert the above Python fragment before ' print "Merging %s into %s at %08x" % ... ',
-   and watch the output when invoking 
-    > make image_D13
-   Depending on where the linker has located our SysTick_Handler(), 
-   the output will look similar to this :
+  5. Add a patch for SysTick_Handler in merge_d13.020.py (etc) .
+     ("conditionally", shall not abort if SysTick_Handler not found,
+       but build a variant WITHOUT dimmable backlight instead .
+       Details in merge_d13.020.py ).
+  
+  6. Issue "make clean image_D13", and carefully watch the output.
+      Depending on where the linker has located our SysTick_Handler(), 
+      the output from merge_d13.020.py may look like this :
    
-         DEBUG: reading "patched.img"
-         make[2]: Leaving directory '/c/tools/md380tools/patches/d13.020'
-         cp ../patches/d13.020/patched.img ./merged.img
          python2 merge_d13.020.py merged.img applet.img 0x0809b000
          Merging an applet.
          Loading symbols from applet.img.sym
@@ -88,17 +59,12 @@
          DEBUG: writing "wrapped.bin"
          cp wrapped.bin experiment.bin
          make[1]: Leaving directory '/c/tools/md380tools/applet'   
-  
-  Finally, test the patch by uploading it into the radio:
-  
-  > $ python md380_dfu.py upgrade applet/experiment.bin
-  
-  
+ 
 */
 
 #include "config.h"
 
-#include <stm32f4xx.h>   // only need this single header (not the fancy bulky stuff from the "STMCubeMX" ! )
+#include <stm32f4xx.h> // only need this single header (no bulky stuff from "STMCubeMX" ! )
 #include <string.h>
 #include "printf.h"
 #include "dmesg.h"
@@ -110,27 +76,18 @@
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
-#include "keyb.h"         // contains "backlight_timer", which seems to be Tytera's own software-timer. Does it COUNT DOWN TO ZERO ?
+#include "keyb.h"      // contains "backlight_timer", which is Tytera's own software-timer
 
 #include "irq_handlers.h" // header for THIS module
 
 // Module-internal options :
 #define L_USE_UART6_AS_PWM_GENERATOR 1 /* 0=no (use PC6 as GPIO),  1=yes (use PC6 as USART6_TX to send PWM-like bit patterns) */
 
-
-typedef void(*T_VoidFunctionPtr)(void);
-
-
-#if( CONFIG_DIMMED_LIGHT )
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
-#endif // CONFIG_DIMMED_LIGHT ?
 
-
-
-#if( CONFIG_DIMMED_LIGHT /* || .. */ )
 
 //---------------------------------------------------------------------------
-void IRQ_Init(void)
+void IRQ_Init(void) // initializes OUR interrupt handlers. Called from main.c.
 {
   // 2017-01-05 : Tried to reprogram VTOR to avoid having to patch Tytera's 
   //              vector table. But this made the firmware crash somewhere,
@@ -139,8 +96,11 @@ void IRQ_Init(void)
   // 2017-01-07 : Tried to improve the PWM resultion with the lowest possible
   //              interrupt rate (to keep the CPU load low) by abusing
   //              USART6 (with TX on PC6 = "Lamp" = backlight) for PWM generation.
-  //   
-#if( L_USE_UART6_AS_PWM_GENERATOR )
+  //
+
+#if( CONFIG_DIMMED_LIGHT ) // initialize I/O registers for dimmable backlight ?
+
+# if( L_USE_UART6_AS_PWM_GENERATOR )
   USART_TypeDef *pUSART = USART6; // load the UART's base address into register (once)
 
   RCC->APB2ENR |=  RCC_APB2ENR_USART6EN;   // enable internal clock for UART6 (from 'APB2')
@@ -205,13 +165,13 @@ void IRQ_Init(void)
   //  > 40011410: 00000000 00000000 00000001 00000000  ("USART_CR2","USART_CR3","USART_GTPR",  ---      )
 
 # endif // L_USE_UART6_AS_PWM_GENERATOR ?
+#endif // CONFIG_DIMMED_LIGHT ?
     
   
 } // IRQ_Init()
-#endif // ( CONFIG_DIMMED_LIGHT /* || .. */ ) ?
 
 
-#if( CONFIG_DIMMED_LIGHT ) // do we need 'our' SysTick_Handler() ?
+#if( CONFIG_DIMMED_LIGHT ) // do we need 'our own' SysTick_Handler() ?
 //---------------------------------------------------------------------------
 void SysTick_Handler(void)
   // ISR to generate the PWM'ed output for the backlight (and maybe more) .
@@ -366,8 +326,8 @@ void SysTick_Handler(void)
 #  error "The firmware you're trying to patch is not supported here yet !"
 #endif
   // Don't "return" from here (no 'BX LR') but "jump directly into the ORIGINAL handler" .
-  // What we WANT to have here (.. would be easy if GCC inline-asm wouldn't be so clumsy) :
-  //  > mov pc, dw  ; dw = 32-bit variable with the original handler address (even)
+  // What we WANT to have here (.. would be easy it it wasn't GCC inline-asm ..) :
+  //  > mov pc, dw  ; dw = 32-bit variable with the original handler address
   // 
   // GCC syntax: asm(  code : output operand list : input operand list : clobber list  );
   //                    |     |_________________|   |________________|   |__________|
@@ -382,7 +342,7 @@ void SysTick_Handler(void)
   //     a symbolic name enclosed in square brackets, followed by a constraint string, 
   //     followed by a C expression enclosed in parentheses. 
   // 
-  //     __"keep your fingers off MY code" ("volatile" ~~ "don't optimize me away" ??)
+  //     __"volatile" : here ~~ "don't optimize me away" (??)
   //    |
   asm volatile(  "MOV pc, %0\n\t" : /*no outputs*/ : "r" (dw) );
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -393,4 +353,4 @@ void SysTick_Handler(void)
 
 
 
-/* EOF < irq_handlers.c >  Leave an empty line for stupid compilers after this. */
+/* EOF < irq_handlers.c > .  Leave an empty line after this. */

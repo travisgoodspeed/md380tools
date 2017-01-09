@@ -19,6 +19,9 @@
 #define CONFIG_DMR
 #define CONFIG_MENU
 #define CONFIG_AES
+#ifdef FW_D13_020 // so far, the 'dimmable backlight' was only tested with FW D13.020 (non-GPS unit)
+# define CONFIG_DIMMED_LIGHT 1 // PWMed 'dimmable backlight' ? 0 or undefined = no, 1 = yes
+#endif
 
 
 /* Uncomment this to print AMBE frames for decoding with DSD.  You

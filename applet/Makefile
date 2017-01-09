@@ -93,8 +93,8 @@ CFLAGS += -Iinc -Ilib -Ilib/inc -I.
 CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals
 CFLAGS += -D "MD380_$(subst .,_,$(SRCVERSION))"  # ISO C99 requires whitespace after
 
-# DL4YHF: Had to modify the name of the startup file, to avoid being overwritten under windows.
-#         Full story in docs/md380_fw.html#own_firmware_experiments ! 
+# DL4YHF: Had to modify the name of the startup file, because it was 
+#  overwritten by somehing else (*.s = *.S under windows).
 SRCS += lib/startup_stm32f4xx_asm.S
 
 OBJS = $(SRCS:.c=.o)

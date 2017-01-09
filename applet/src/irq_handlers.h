@@ -1,6 +1,6 @@
 // File:    md380tools/applet/src/irq_handlers.h
-// Author:  Wolfgang "Wolf" Buescher, DL4YHF
-// Date:    2016-01-09 
+// Authors: Wolf (DL4YHF), 
+// Date:    2017-01-09 
 //  Contains prototypes for a few (!) hijacked interrrupt handlers,
 //           for example for the software PWMed 'dimmed backlight'.
 //   Module prefix : "IRQ_" .
@@ -27,7 +27,9 @@
 #  define IRQ_VT_ADDRESS_OUR_FIRMWARE 0x0809D000
 #  define IRQ_ORIGINAL_SYSTICK_HDLR   0x08093f1c // original SysTick_Handler address (without 'Thumb' indicator in bit 0)
 #else
-#  error "Please add a new 'elif' with the interrupt vector table for the new firmware here !"
+# if( CONFIG_DIMMED_LIGHT )    
+#  error "Either use CONFIG_DIMMED_LIGHT=0, or add a new 'elif' with the interrupt vector table for the new firmware here !"
+# endif
 #endif
 
 extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
