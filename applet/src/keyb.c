@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 
+// Values for kp
 // 1 = pressed
 // 2 = release within timeout
 // 1+2 = pressed during rx
@@ -63,6 +64,7 @@ void switch_to_screen( int scr )
     nm_screen = scr ;
 }
 
+
 void copy_dst_to_contact()
 { 
 #if defined(FW_D13_020) || defined(FW_S13_020)
@@ -82,14 +84,18 @@ void copy_dst_to_contact()
     } else {
         snprintfw( p, 16, "U %d", dst );
         contact.type = CONTACT_USER ;        
-    }    
-    
+    }
+
+    /* I can't see how this doesn't crash, as draw_zone_channel() is
+       an even address. --Travis
+    */
     extern void draw_zone_channel(); // TODO.
     
     draw_zone_channel();
 #else
 #endif
 }
+
 
 //#if defined(FW_D13_020) || defined(FW_S13_020)
 #if defined(FW_S13_020)
@@ -118,7 +124,7 @@ void handle_hotkey( int keycode )
         case 5 :
             syslog_clear();
 	    lastheard_clear();
-	    nm_started = 0;				// reset nm_start flag used for some display handling
+	    nm_started = 0;// reset nm_start flag used for some display handling
             break ;
         case 6 :
         {
@@ -161,6 +167,47 @@ void handle_hotkey( int keycode )
             switch_to_screen(3);
             break ;
     }    
+}
+
+void handle_sidekey( int keycode, int keypressed )
+{
+    PRINT("handle sidekey: %d\n", keycode );
+
+	#if defined(FW_D13_020)
+
+    if ( keycode == 18 ) {												//top button
+    	if ( (keypressed & 2) == 2 ) {									//short press
+    		evaluate_sidekey( top_side_button_pressed_function );
+    	}
+    	else if ( keypressed == 5 ) {									//long press
+    		evaluate_sidekey( top_side_button_held_function );
+    	}
+    }
+    else if ( keycode == 17 ) {											//bottom button
+    	if ( (keypressed & 2) == 2 ) {									//short press
+			evaluate_sidekey( bottom_side_button_pressed_function );
+		}
+		else if ( keypressed == 5 ) {									//long press
+			evaluate_sidekey( bottom_side_button_held_function );
+		}
+    }
+
+	#else
+	#warning Please find the address of the variables above in S13 RAM.
+	#endif
+}
+
+void evaluate_sidekey ( int button_function)							//This is where new functions for side buttons can be added
+{
+	switch ( button_function ) {										//We will start at 0x50 to avoid Tytera from adding functions and breaking ours.
+		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
+		{
+			GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+			reset_backlight();											//Activated the backlight again. Should be run on most button presses.
+			kb_keypressed = 8 ;											//Sets the key as handled. The firmware will ignore this button press now.
+			break;
+		}
+	}
 }
 
 void trace_keyb(int sw)
@@ -230,10 +277,11 @@ void kb_handler_hook()
 
     trace_keyb(1);
     
+    int kp = kb_keypressed ;
+    int kc = kb_keycode ;
     // allow calling of menu during qso.
     // not working correctly.
     if( global_addl_config.experimental ) {
-        int kp = kb_keypressed ;
         if( (kp & 2) == 2 ) {
             if( gui_opmode2 != OPM2_MENU ) {
                 gui_opmode2 = OPM2_MENU ;
@@ -243,10 +291,7 @@ void kb_handler_hook()
     }
 
     if( is_intercept_allowed() ) {
-        int kc = kb_keycode ;
         if( is_intercepted_keycode(kc) ) {
-            int kp = kb_keypressed ;
-
             if( (kp & 2) == 2 ) {
                 kb_keypressed = 8 ;
                 handle_hotkey(kc);
@@ -254,6 +299,14 @@ void kb_handler_hook()
             }
         }
     }
+
+    if ( kc == 17 || kc == 18 ) {
+    	if ( (kp & 2) == 2 || kp == 5 ) {					//The reason for the bitwise AND is that kp can be 2 or 3
+    		handle_sidekey(kc, kp);							//A 2 means it was pressed while radio is idle, 3 means the radio was receiving
+    		return;
+    	}
+    }
+
 #else
 #warning please consider hooking.
     return;

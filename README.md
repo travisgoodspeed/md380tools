@@ -192,12 +192,6 @@ firmware.  You can check your version in Menu/Utilities/Radio
 Info/Version.  If it's a recent date you're good; if it's a number,
 you need to upgrade.
 
-To actively watch incoming calls, printing a call log with name and
-callsign:
-
-**md380-tool calllog will only work with D02 firmware. See https://github.com/travisgoodspeed/md380tools/issues/493**
-
-    md380-tool calllog
 
 To dump the recent dmesg log:
 

@@ -387,8 +387,9 @@ Dump the bootloader from Flash memory.
 Print the time from the MD380.
     md380-dfu time
 
-Set time and date on MD380 to system time.
+Set time and date on MD380 to system time or specified time.
     md380-dfu settime
+    md380-dfu settime "mm/dd/yyyy HH:MM:SS" (with quotes)
 
 Detach the bootloader and execute the application firmware:
     md380-dfu detach
@@ -458,6 +459,10 @@ def main():
                 f.close()
                 print("Signed file written: %s" % dfu_file)
 
+            elif sys.argv[1] == 'settime':
+                import usb.core
+                dfu  = init_dfu()
+                dfu.set_time()
             else:
                 usage()
 
@@ -473,8 +478,8 @@ def main():
                 print dfu.get_time();
             elif sys.argv[1] == 'settime':
                 import usb.core
-                dfu  = init_dfu()
-                dfu.set_time()               
+                dfu = init_dfu()
+                dfu.set_time()
             elif sys.argv[1] == 'reboot':
                 import usb.core
                 dfu = init_dfu()

@@ -53,6 +53,8 @@ SRCS += lastheard.o
 SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
+SRCS += timer.o
+
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020
 endif
@@ -107,7 +109,7 @@ all: mark experiment.bin
 mark:
 ifeq "$(PROBLEM)" "1"
 	@echo "=================="
-	@echo "problem, make mostlyclean first"
+	@echo "problem, make clean first"
 	@echo "=================="
 	@exit 1
 else	

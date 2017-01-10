@@ -166,11 +166,10 @@ zum einen die Firmware kompilieren und danach automatisch in das Funkgerät rein
 Sollte man mit der Grafik alles richtig gemacht haben, sollte man nun beim Einschalten sein eigenes Logo zu sehen bekommen.
 
 ####Bereitstellung des Kommandozeilen-Tools md380-tool
-Mit dem md380-tool können verschiedene Interaktionen mit dem Funkgerät über das USB-Programmierkabel vorgenommen werden. Nachfolgend eine kleine Erläuterung der Kommando-Parameter, die hinter den Programmaufruf gesetzt werden (Beispiel: ''md380-tool calllog''):
+Mit dem md380-tool können verschiedene Interaktionen mit dem Funkgerät über das USB-Programmierkabel vorgenommen werden. Nachfolgend eine kleine Erläuterung der Kommando-Parameter, die hinter den Programmaufruf gesetzt werden (Beispiel: ''md380-tool dmesg''):
 
 Parameter | Verwendung
 ----------- | -----------
-calllog | Ausgabe eines Logs eingehender DMR-Anrufe auf der Standard-Ausgabe
 lookup 12345 | Ausgabe der Namensinformationen zu einer DMR-ID (hier 12345)
 dmesg | Ausgabe des dmesg-Logs
 dmesgtail | fortlaufende Ausgabe des dmesg-Logs

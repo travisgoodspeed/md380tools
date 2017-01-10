@@ -35,7 +35,7 @@ void decode_amb_file(char *infilename,
   //FIXME These are unique to 2.032 firmware; should be symbols instead.
   short *ambe=(short*) &ambe_inbuffer; //0x20011c8e;
   short *outbuf0=(short*) &ambe_outbuffer0; //0x20011aa8;//80 samples
-  short *outbuf1=(short*) &ambe_outbuffer0; //0x20011b48;//80 samples
+  short *outbuf1=(short*) &ambe_outbuffer1; //0x20011b48;//80 samples
   unsigned char packed[8]; //8 byte frames.
 
   //ambe_init_stuff();

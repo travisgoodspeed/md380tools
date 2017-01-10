@@ -3,11 +3,11 @@
 
 Clean everything
 
-    make clean
+    make distclean
 
 Clean everything except downloads
 
-    make mostlyclean
+    make clean
 
 Flash original FW for MD380 with old vocoder.
 
@@ -45,7 +45,7 @@ Check if all version compile, and processing functions OK (mainly for automatic 
 
     make ci
 
-Create a windows installation package
+Create a windows installation package (and distclean to make sure everything is fresh)
 
-    make dist
+    make distclean dist
 

@@ -1,6 +1,6 @@
 
 OBJS = md380-emu.o ambe.o
-CC=arm-linux-gnueabi-gcc-6 -static -g
+CC=arm-linux-gnueabi-gcc -static -g
 
 all: md380-emu
 clean:
@@ -22,16 +22,16 @@ play: run
 torvalds-says-linux.wav:
 	wget http://suseroot.com/misc/torvalds-says-linux.wav
 
-demo:	torvalds-says-linux.wav
+demo: torvalds-says-linux.wav md380-emu
 	rm -f torvalds-says-linux.amb
 	rm -f torvalds-says-linux-dsd.wav
 	rm -f torvalds-says-linux.md380-emu.raw
 	rm -f torvalds-says-linux.md380-emu.wav
 
 	sox torvalds-says-linux.wav --bits 16 --encoding signed-integer -c1 -r 8000 -L torvalds-says-linux.raw
-	qemu-arm  ./md380-emu -e -i torvalds-says-linux.raw -o torvalds-says-linux.amb
+	./md380-emu -e -i torvalds-says-linux.raw -o torvalds-says-linux.amb
 	dsd -n -w torvalds-says-linux-dsd.wav -r torvalds-says-linux.amb
-	qemu-arm ./md380-emu -d -i torvalds-says-linux.amb -o torvalds-says-linux.md380-emu.raw
+	./md380-emu -d -i torvalds-says-linux.amb -o torvalds-says-linux.md380-emu.raw
 	sox -r 8000 -e signed-integer -L -b 16 -c 1 torvalds-says-linux.md380-emu.raw torvalds-says-linux.md380-emu.wav
 
 	echo -e "\n\nplaying orignal\n\n"
@@ -47,6 +47,8 @@ dsdplay: all
 	mplayer sample.wav
 
 firmware.o:
+#First we make sure the firmware is ready.
+	"${MAKE}" -C ../firmware
 #May need to adjust these flags for NX compatibility.
 	arm-linux-gnueabi-objcopy \
 		-I binary ../firmware/unwrapped/D002.032.img \

@@ -36,7 +36,8 @@ class UsersDB():
                     if len(row)>0:
                         self.users[int(row[0])]=row;
         except:
-            print "WARNING: Unable to load user.bin."
+            #print "WARNING: Unable to load user.bin."
+            pass;
     def getuser(self,id):
         """Returns a user from the ID."""
         try:
@@ -285,52 +286,52 @@ class Tool(DFU):
             freqs.append(Frequency._asdict(Frequency._make((rx_freq,tx_freq ) + struct.unpack("B"*35,codes))))
         return freqs
 
-def calllog(dfu):
-    """Prints a call log to stdout, fetched from the MD380's memory."""
-    dfu.drawtext("Hooking calls!",160,50);
+# def calllog(dfu):
+#     """Prints a call log to stdout, fetched from the MD380's memory."""
+#     dfu.drawtext("Hooking calls!",160,50);
     
-    #Set the target address to the list of DMR addresses.
-    dfu.set_address(0x2001d098);
-    old1=0;
-    old2=0;
-    while 1:
-        data=dfu.upload(1,16,0);#Peek sixteen bytes.
-        llid0=(data[0]+
-               (data[1]<<8)+
-               (data[2]<<16)+
-               (data[3]<<24));
-        llid1=(data[4]+
-               (data[5]<<8)+
-               (data[6]<<16)+
-               (data[7]<<24));
-        llid2=(data[8]+
-               (data[9]<<8)+
-               (data[10]<<16)+
-               (data[11]<<24));
-        if old1!=llid1 or old2!=llid2:
-            old1=llid1;
-            old2=llid2;
-            print "DMR call from %s to %s." % (
-                users.getusername(llid1),users.getusername(llid2));
-            #get actual canel name
-            dfu.set_address(0x2001c9d4);
-            data=dfu.upload(1,32,0);
-            message=""
-            for i in range(0,32,2):
-               c=chr(data[i]&0x7F);
-               if c!='\0':
-                  message=message+c;
-            print message
-             #get actual zone name
-            dfu.set_address(0x2001b958);
-            data=dfu.upload(1,32,0);
-            message=""
-            for i in range(0,32,2):
-               c=chr(data[i]&0x7F);
-               if c!='\0':
-                 message=message+c;
-            print message
-            sys.stdout.flush();
+#     #Set the target address to the list of DMR addresses.
+#     dfu.set_address(0x2001d098);
+#     old1=0;
+#     old2=0;
+#     while 1:
+#         data=dfu.upload(1,16,0);#Peek sixteen bytes.
+#         llid0=(data[0]+
+#                (data[1]<<8)+
+#                (data[2]<<16)+
+#                (data[3]<<24));
+#         llid1=(data[4]+
+#                (data[5]<<8)+
+#                (data[6]<<16)+
+#                (data[7]<<24));
+#         llid2=(data[8]+
+#                (data[9]<<8)+
+#                (data[10]<<16)+
+#                (data[11]<<24));
+#         if old1!=llid1 or old2!=llid2:
+#             old1=llid1;
+#             old2=llid2;
+#             print "DMR call from %s to %s." % (
+#                 users.getusername(llid1),users.getusername(llid2));
+#             #get actual canel name
+#             dfu.set_address(0x2001c9d4);
+#             data=dfu.upload(1,32,0);
+#             message=""
+#             for i in range(0,32,2):
+#                c=chr(data[i]&0x7F);
+#                if c!='\0':
+#                   message=message+c;
+#             print message
+#              #get actual zone name
+#             dfu.set_address(0x2001b958);
+#             data=dfu.upload(1,32,0);
+#             message=""
+#             for i in range(0,32,2):
+#                c=chr(data[i]&0x7F);
+#                if c!='\0':
+#                  message=message+c;
+#             print message
+#             sys.stdout.flush();
 
 
 def dmesg(dfu):
@@ -388,7 +389,7 @@ def dump(dfu,filename,address):
 def flashgetid(dfu):
     size=0;
     buf=dfu.spiflashgetid();
-    print "SPI Flash ID: %x %x %x"%(buf[0],buf[1],buf[2])
+    print "SPI Flash ID: %02x %02x %02x"%(buf[0],buf[1],buf[2])
     if (buf[0] == 0xef and buf[1] == 0x40):
         if (buf[2] == 0x18):
             sys.stdout.write("W25Q128FV 16MByte\n");
@@ -399,9 +400,11 @@ def flashgetid(dfu):
     elif (buf[0] == 0x10 and buf[1] == 0xdc):
         if (buf[2] == 0x01):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
-            size=16*1024*1024;          
+            size=16*1024*1024;
+    elif (buf[0]==0x70 and buf[1]==0xf1 and buf[2]==0x01):
+        sys.stdout.write("Bad LibUSB connection.  Please see the advice from N6YN at https://github.com/travisgoodspeed/md380tools/issues/186\n");
     else:
-            sys.stdout.write("Unkown SPI Flash - please report\n");
+        sys.stdout.write("Unkown SPI Flash - please report\n");
     return size;
 
 def flashdump(dfu,filename):
@@ -535,17 +538,17 @@ def calldate(dfu):
                                 bcd(data[1] & (0x0f |  0x70)),
                                 bcd(data[0] & (0x0f | 0x70)) )
 
-def calladc1(dfu):
-    """Print ADC1 Voltage (Battery), fetched from the MD380's Memory (Update with DMA)."""
-    dfu.set_address(0x2001cfcc);   #  2.032
-    data=dfu.upload(1,4,0);
-    # 7.2V ~ 2.4V PA1 (BATT) ... 2715 ~ 6.5V ... 3.3V 12BIT
-    print "%f Volt"  % ( 3.3 / 0xfff * ((data[3] << 8 )+ data[2]) * 3 )
-def getchannel(dfu):
-    """Print actual Channel, fetched from the MD380's Memory."""
-    dfu.set_address(0x2001d376);  # 2.032
-    data=dfu.upload(1,4,0);
-    print "%02d %02d %02d %02d" % ( data[3], data[2], data[1], data[0])
+# def calladc1(dfu):
+#     """Print ADC1 Voltage (Battery), fetched from the MD380's Memory (Update with DMA)."""
+#     dfu.set_address(0x2001cfcc);   #  2.032
+#     data=dfu.upload(1,4,0);
+#     # 7.2V ~ 2.4V PA1 (BATT) ... 2715 ~ 6.5V ... 3.3V 12BIT
+#     print "%f Volt"  % ( 3.3 / 0xfff * ((data[3] << 8 )+ data[2]) * 3 )
+# def getchannel(dfu):
+#     """Print actual Channel, fetched from the MD380's Memory."""
+#     dfu.set_address(0x2001d376);  # 2.032
+#     data=dfu.upload(1,4,0);
+#     print "%02d %02d %02d %02d" % ( data[3], data[2], data[1], data[0])
 def readword(dfu, address):
     print "%x"%(int(address, 0))
     dfu.set_address(int(address,0));  # 2.032
@@ -580,9 +583,6 @@ def init_dfu(alt=0):
 def usage():
     print("""
 Usage: md380-tool <command> <arguments>
-
-Print a log of incoming DMR calls to stdout.
-    md380-tool calllog
 
 Looks up the name by an ID number.
     md380-tool lookup 12345
@@ -639,18 +639,18 @@ def main():
             elif sys.argv[1] == 'dmesgtail':
                 dfu=init_dfu();
                 dmesgtail(dfu);
-            elif sys.argv[1] == 'calllog':
-                dfu=init_dfu();
-                calllog(dfu);
+#             elif sys.argv[1] == 'calllog':
+#                 dfu=init_dfu();
+#                 calllog(dfu);
             elif sys.argv[1] == 'date':
                 dfu=init_dfu();
                 calldate(dfu);
-            elif sys.argv[1] == 'adc1':
-                dfu=init_dfu();
-                calladc1(dfu);         	    	
-            elif sys.argv[1] == 'channel':
-                dfu=init_dfu();
-                getchannel(dfu);
+#             elif sys.argv[1] == 'adc1':
+#                 dfu=init_dfu();
+#                 calladc1(dfu);
+#             elif sys.argv[1] == 'channel':
+#                 dfu=init_dfu();
+#                 getchannel(dfu);
             elif sys.argv[1] == 'c5000':
                 dfu=init_dfu();
                 c5000(dfu);
