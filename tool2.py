@@ -8,9 +8,9 @@
 # expose it to light, do not feed it after midnight, and *NEVER* give
 # it water.
 
-# 2016-12-30, DL4YHF : Added some new "potentially lethal" functions 
+# 2017-01-10, DL4YHF : Added some new "potentially lethal" functions 
 #    to poke around in the C5000, that shouldn't be in md380_tool.py .
-#    Thus using a different name (tool2.py) . Grep for the callsign..
+#    Thus using a different name (tool2.py) for this evil twin.
 
 from DFU import DFU, State, Request
 import time, sys, struct, usb.core
@@ -384,19 +384,24 @@ def hexwatch(dfu,address):
         time.sleep(0.05);
 
 def ParseHexOrRegName(address):
-    if address=="VTOR" :
-       return 0xE000ED08L;
-    elif address=="GPIOC" :  # used to inspect GPIO "C" settings, for example for PC6 = "LAMP" .
-       return 0x40020800L;   # register offsets in RM0090 Rev 7 page 284 .  Offset 0x00="MODER", 0x20="AFRL" (alternate function select), etc 
-    elif address=="USART6" : # abused by DL4YHF to generate PWM(!) on PC6 = "Lamp" = USART6_TX
-       return 0x40011400L;   # register offsets in RM0090 Rev 7 page 1002 . 
-    elif address=="RCC" :    # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405  
+    if address=="VTOR" :    # Vector Table Offset Register,
+       return 0xE000ED08L;  # part of the SCB, see PM0214 Rev5 page 220  
+    elif address=="SCB":    # System Control Block (most but not all parts) ..
+       return 0xE000ED00L;  # ..with CPUID[0], ICSR[4], VTOR[8], AIRCR[12], .... PM0214 pg 220.
+    elif address=="GPIOC" : # used to inspect GPIO "C" settings, for example for PC6 = "LAMP" .
+       return 0x40020800L;  # register offsets in RM0090 Rev7 page 284 .  Offset 0x00="MODER", 0x20="AFRL" (alternate function select), etc 
+    elif address=="GPIOA" : # used to inspect GPIO "A" settings, e.g. PA8="Save", PA1="Batt", 
+       return 0x40020000L;  #   PA0="TX LED", PA3="VOX", PA7="POW_C", ..
+    elif address=="USART6": # abused by DL4YHF to generate PWM(!) on PC6 = "Lamp" = USART6_TX
+       return 0x40011400L;  # register offsets in RM0090 Rev7 page 1002 . 
+    elif address=="RCC" :   # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405  
        return 0x40023800L; 
     elif address=="RCC_APB2RSTR": # APB2 peripheral ReSeT Register. Bit 5 controls USART6. RM0090 Rev7 page 236 .
-       return 0x40023824L; # contents seen when using UART6 to generate PWM : 0 = "none of the on-chip peripherals IN RESET"
+       return 0x40023824L;  # contents seen when using UART6 to generate PWM : 0 = "none of the on-chip peripherals IN RESET"
     elif address=="RCC_APB2ENR": # APB2 peripheral clock ENable Register. Bit 5 controls USART6. RM0090 Rev7 page 246 .
-       return 0x40023844L; # contents seen when using UART6 to generate PWM : 0x00005722, i.e. USART6 is "clocked" .
-       
+       return 0x40023844L;  # contents seen when using UART6 to generate PWM : 0x00005722, i.e. USART6 is "clocked" .
+    elif address=="TIM12":  # seems to be one of the few timers NOT occupied by Tytera FW..
+       return 0x40001800L;  # register offsets in RM0090 Rev7 page 667 .     
     else:
        return int(address,16);
         
