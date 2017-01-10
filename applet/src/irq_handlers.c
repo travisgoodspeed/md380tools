@@ -214,6 +214,10 @@ void SysTick_Handler(void)
    }
   else  // not "shortly after power-on", but during normal operation ...
    {
+     if( curr_intensity==0x00 ) // kludge to defeat 'always black screen' ...
+      {  curr_intensity= 0x51;  // which happened when intensity was not configured (new radio, or old global_addl_config)
+      }          
+       
 # if(0) // one fine day, the patched firmware will call gfx.c : lcd_background_led() 
         //     to inform us about the current "wanted backlight intensity" ..
      // In 2017-01-08, there didn't seem to be any caller for lcd_background_led(),
