@@ -27,7 +27,7 @@ class Symbols():
                 pass;
     def getadr(self,name):
         return self.addresses[name];
-    def try_getadr(self,name): # DL4YHF 2016-01, used to CHECK if a symbol exists
+    def try_getadr(self,name): # DL4YHF 2017-01, used to CHECK if a symbol exists
         try:                   # to perform patches for 'optional' C functions 
             return self.addresses[name];
         except KeyError:

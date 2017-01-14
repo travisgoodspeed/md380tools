@@ -27,6 +27,11 @@ class Symbols():
                 pass;
     def getadr(self,name):
         return self.addresses[name];
+    def try_getadr(self,name): # DL4YHF 2017-01, used to CHECK if a symbol exists
+        try:                   # to perform patches for 'optional' C functions 
+            return self.addresses[name];
+        except KeyError:
+            return None;
     def getname(self,adr):
         return self.names[adr];
 
@@ -408,6 +413,31 @@ if __name__== '__main__':
 #    merger.hookbl(0x804c1e8,sapplet.getadr("f_4102_hook"),0);
 
     merger.hookbl(0x8044662, sapplet.getadr("f_4225_hook"),0);
+    
+    
+    # DL4YHF : We don't know here if the PWM'ed backlight, and thus
+    #  SysTick_Handler() shall be included (depends on config.h) .
+    # IF   the applet's symbol table contains a function named 'SysTick_Handler',
+    # THEN patch its address, MADE ODD to indicate Thumb-code, into the
+    # interrupt-vector-table as explained in applet/src/irq_handlers.c :
+    # ex: new_adr = sapplet.getadr("SysTick_Handler"); # threw an exception when "not found" :(
+    new_adr = sapplet.try_getadr("SysTick_Handler");
+    if new_adr != None:
+        vect_adr = 0x800C03C;  # address inside the VT for SysTick_Handler
+        exp_adr  = 0x809381D;  # expected 'old' content of the above VT entry
+        old_adr  = merger.getword(vect_adr); # original content of the VT entry
+        new_adr |= 0x0000001;  # Thumb flag for new content in the VT
+        if( old_adr == exp_adr ) :
+           print "Patching SysTick_Handler in VT addr 0x%08x," % vect_adr;
+           print "  old value in vector table = 0x%08x," % old_adr;
+           print "   expected in vector table = 0x%08x," % exp_adr;
+           print "  new value in vector table = 0x%08x." % new_adr;
+           merger.setword( vect_adr, new_adr, old_adr);
+           print "  SysTick_Handler successfully patched.";
+        else:
+           print "Cannot patch SysTick_Handler() !";
+    else:
+           print "No SysTick_Handler() found in the symbol table. Building firmware without.";    
     
     print "Merging %s into %s at %08x" % (
           sys.argv[2],
