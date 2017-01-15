@@ -46,6 +46,11 @@ void gfx_blockfill(int x_from, int y_from, int x_to, int y_to);
 // assume clear ylen = 18 pixels?
 void gfx_drawtext2(wchar_t *str, int x, int y, int xlen); // firmware
 
+void gfx_drawtext6(wchar_t *str, int x, int y, int ylen); // firmware
+
+void gfx_clear3( int xlen ); // firmware
+
+
 // if larger than maxstrlen end in ".."
 void gfx_drawtext4(const wchar_t *str, int x, int y, int xlen, int maxstrlen); // firmware
 
@@ -61,6 +66,8 @@ void drawascii(char *ascii, int x, int y);
 void gfx_printf_pos(int x, int y, const char *fmt, ... );
 void gfx_printf_pos2(int x, int y, int ylen, const char*fmt, ... );
 void gfx_puts_pos(int x, int y, const char *str);
+
+void print_time_hook(char *mode);
 
 void green_led(int on);
 void red_led(int on);

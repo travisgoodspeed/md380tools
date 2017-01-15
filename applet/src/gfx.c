@@ -173,7 +173,7 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-void print_time_hook(void)
+void print_time_hook(char *log)
 {
     wchar_t wide_time[9];
 
@@ -190,7 +190,11 @@ void print_time_hook(void)
     for (int i = 0; i < 9; i++) {
         if( wide_time[i] == '\0' )
             break;
-	lastheard_putch(wide_time[i]);
+	if ( log == 'l' ) {
+		lastheard_putch(wide_time[i]);
+	} else {
+		slog_putch(wide_time[i]);
+	}
     }
 }
 
@@ -338,28 +342,67 @@ void gfx_puts_pos(int x, int y, const char *str)
 // and that it only fills background when a char or space is printed.
 void gfx_printf_pos(int x, int y, const char *fmt, ...)
 {
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    char buf[MAX_SCR_STR_LEN];
+    
+    va_list va;
+    va_start(va, fmt);
+    
+    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
+    gfx_drawtext7(buf,x,y);
+    gfx_clear3( 0 );
+    
+    va_end(va);        
+#else
     wchar_t buf[MAX_SCR_STR_LEN];
     
     va_list va;
     va_start(va, fmt);
     
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
+    
+#if 0
+    // still only displays 19 chars.
+    gfx_drawtext6( buf, x, y, 21);
+    gfx_clear3( 0 );
+#else
     gfx_drawtext2(buf, x, y, 0);
+#endif    
     
     va_end(va);        
+#endif    
 }
 
 // the intention is a string shortened with .. if it is too long.
 // and that it fills all background
 void gfx_printf_pos2(int x, int y, int xlen, const char *fmt, ...)
 {
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    char buf[MAX_SCR_STR_LEN];
+    
+    va_list va;
+    va_start(va, fmt);
+    
+    va_snprintf(buf, MAX_SCR_STR_LEN, fmt, va );
+    gfx_drawtext7(buf,x,y);
+    gfx_clear3( xlen );
+    
+    va_end(va);        
+#else
     wchar_t buf[MAX_SCR_STR_LEN];
     
     va_list va;
     va_start(va, fmt);
 
     va_snprintfw(buf, MAX_SCR_STR_LEN, fmt, va );
+#if 0
+    // still only displays 19 chars.
+    gfx_drawtext6( buf, x, y, 21);
+    gfx_clear3( xlen );
+#else
     gfx_drawtext2(buf,x,y,xlen);
+#endif    
     
     va_end(va);        
+#endif    
 }
