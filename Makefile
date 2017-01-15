@@ -1,154 +1,176 @@
 
-RELEASE=dist/md380tools-`date "+%Y-%m-%d"`
+MKLISTING=1
 
-.PHONY: dist
+FW ?= D13_020
 
-all: image_D13
+ifeq (,$(wildcard mark.tmp))
+	# not exists
+  PROBLEM=0	
+else
+  old_build := $(shell cat mark.tmp)
 
-# cleans everything also downloaded files
-distclean: clean
-	rm -rf dist
-	"${MAKE}" -C db clean
-	"${MAKE}" -C firmware clean
+  ifneq "$(old_build)" "$(FW)"
+    PROBLEM=1
+  endif	
+endif
 
-# does not clean external downloads
+ifeq ($(FW),D02_032)
+    INC_DISPFLIP=1
+    INC_I2C=1
+    FWDEFINE=FW_D02_032
+    SRCVERSION=d02.032
+    PATCHDIR=2.032
+    MERGEBASE=0x0809D000
+else ifeq ($(FW),D13_020)
+    FWDEFINE=FW_D13_020
+    SRCVERSION=d13.020
+    PATCHDIR=d13.020
+    MERGEBASE=0x0809b000
+    INC_DISPINIT=1
+else ifeq ($(FW),S13_020)
+    FWDEFINE=FW_S13_020
+    SRCVERSION=s13.020
+    PATCHDIR=s13.020
+    MERGEBASE=0x809c000
+    INC_DISPINIT=1
+else 
+$(error select firmware version)
+endif
+
+SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_config.o 
+SRCS += spiflash.o usb.o menu.o rtc_timer.o usersdb.o os.o aes.o
+SRCS += ambe.o  dmr.o 
+SRCS += display.o
+SRCS += console.o
+SRCS += util.o
+SRCS += netmon.o
+SRCS += debug.o
+SRCS += keyb.o
+SRCS += radiostate.o
+SRCS += mbox.o
+SRCS += syslog.o
+SRCS += slog.o
+SRCS += lastheard.o
+SRCS += etsi.o
+SRCS += sms.o
+SRCS += beep.o
+ifdef INC_DISPFLIP
+SRCS +=  dispflip.o  # display flip is included @ d13.020
+endif
+ifdef INC_I2C
+SRCS +=  i2c.o #  ALPU Licence Check is disabled, so we have no i2c
+endif
+ifdef INC_DISPINIT
+SRCS +=  dispinit.o
+endif
+
+###################################################
+
+CC=arm-none-eabi-gcc
+OBJCOPY=arm-none-eabi-objcopy
+OBJDUMP=arm-none-eabi-objdump
+
+GIT_VERSION := $(shell git describe --dirty --always --tags)
+
+LINKSCRIPT=applet_$(SRCVERSION).ld
+
+CFLAGS += -std=gnu99 -g -O2 -Wall -T$(LINKSCRIPT)
+CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
+CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CFLAGS += -fshort-wchar
+ifdef MKLISTING
+CFLAGS += -Wa,-a=$(@:.o=.lst)
+endif
+CFLAGS += -D$(FWDEFINE)	
+###################################################
+
+vpath %.c src
+vpath %.a lib
+
+ROOT=$(shell pwd)
+
+CFLAGS += -Iinc -Ilib -Ilib/inc -I.
+CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals
+CFLAGS += -D "MD380_$(subst .,_,$(SRCVERSION))"  # ISO C99 requires whitespace after
+
+SRCS += lib/startup_stm32f4xx.s # add startup file to build
+
+OBJS = $(SRCS:.c=.o)
+
+
+###################################################
+
+.PHONY: lib proj pre
+
+all: mark experiment.bin
+	
+.PHONY: mark
+mark:
+ifeq "$(PROBLEM)" "1"
+	@echo "=================="
+	@echo "problem, make clean first"
+	@echo "=================="
+	@exit 1
+else	
+	echo $(FW) >mark.tmp
+endif	
+
+# strange dependencies (migrate down to lib makefile if need be)
+lib: src/version.h config.h
+	"${MAKE}" -C lib libstm32f4.a
+
+.PHONY: base.img
+base.img:
+	"${MAKE}" -C ../patches/$(PATCHDIR) patched.img
+	
+merged.img: applet.img base.img   
+	cp ../patches/$(PATCHDIR)/patched.img ./merged.img
+	python2 merge_$(SRCVERSION).py merged.img applet.img $(MERGEBASE)
+
+#patched.bin: proj
+#	"${MAKE}" -C ../patches/$(PATCHDIR) patched.img
+#	cp ../patches/$(PATCHDIR)/patched.img ./patched.bin
+
+#The wrapped file is the one that works with the Windows updater.
+wrapped.bin: merged.img
+	../md380-fw --wrap merged.img wrapped.bin
+
+experiment.bin: wrapped.bin
+	cp wrapped.bin experiment.bin
+	
+##This flashes from unix. (deprecated)
+#flash: wrapped
+#	../md380-dfu upgrade experiment.bin
+
+$(SRCS): config.h src/*.h | lib	
+applet.elf: $(SRCS)
+	$(CC) $(CFLAGS) -Wl,--no-wchar-size-warning -Wl,-Map,$(basename $@).map $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_$(SRCVERSION)
+	
+%.img: %.elf	
+	$(OBJDUMP) -t $< >$(basename $@).img.sym
+	$(OBJCOPY) -O binary $< $@
+
+#Temporary file containing the build date.
+#Might use version numbers when we're ready for releases.
+src/version.h: src/*.c
+	echo "#define VERSIONDATE L\"`date "+%Y-%m-%d"`\"" >src/version.h
+	echo "#define GIT_VERSION \"$(GIT_VERSION)\"" >>src/version.h
+
 clean:
-	"${MAKE}" -C patches/2.032 clean
-	"${MAKE}" -C patches/3.020 clean
-	"${MAKE}" -C patches/s13.020 clean
-	"${MAKE}" -C patches/d13.020 clean
-	"${MAKE}" -C applet clean
-	"${MAKE}" -C annotations clean
-	"${MAKE}" -C emulator clean
-	rm -f *~ *.pyc *.bin
+	"${MAKE}" -C ../patches/$(PATCHDIR) clean
+	"${MAKE}" -C lib clean
+	rm -f *.img *.lst *.bin *.elf *.hex *.o *~ *.sym src/*~ src/version.h *.map *.tmp
 
 image_D02:
-	"${MAKE}" -C applet FW=D02_032 all  
+	"${MAKE}" FW=D02_032 all  
 
 image_D13:
-	"${MAKE}" -C applet FW=D13_020 all  
-
+	"${MAKE}" FW=D13_020 all  
+	
 image_S13:
-	"${MAKE}" -C applet FW=S13_020 all  
+	"${MAKE}" FW=S13_020 all  
 
-original_D13: 
-	"${MAKE}" -C firmware unwrapped/D013.020.img
-
-original_S13: 
-	"${MAKE}" -C firmware unwrapped/S013.020.img
-
-original_D02: 
-	"${MAKE}" -C firmware unwrapped/D002.032.img
-
-original_D03: 
-	"${MAKE}" -C firmware unwrapped/D003.020.img
-
-flash_original_D13: original_D13
-	./md380-dfu upgrade firmware/bin/D013.020.bin
-
-flash_original_D02: original_D02
-	./md380-dfu upgrade firmware/bin/D002.032.bin
-
-flash_original_D03: original_D03
-	./md380-dfu upgrade firmware/bin/D003.020.bin
-
-flash: image_D13
-	./md380-dfu upgrade applet/experiment.bin
-
-flash_D02: image_D02
-	./md380-dfu upgrade applet/experiment.bin
-
-flash_D13: image_D13
-	./md380-dfu upgrade applet/experiment.bin
-
-flash_S13: image_S13
-	./md380-dfu upgrade applet/experiment.bin
-
-sync:
-	"${MAKE}" -C annotations sync
-
-.PHONY: updatedb updatedb_eur
-
-updatedb:
-	"${MAKE}" -C db update
-
-updatedb_eur:
-	"${MAKE}" -C db update_eur
-
-.PHONY: db/stripped.csv
-db/stripped.csv:
-	"${MAKE}" -C db stripped.csv
-
-user.bin: db/stripped.csv
-	wc -c < db/stripped.csv > user.bin
-	cat db/stripped.csv >> user.bin
-
-.PHONY: flashdb
-flashdb: user.bin
-	./md380-tool spiflashwrite user.bin 0x100000
-
-.PHONY: release
-release:
-	-mkdir release
-	"${MAKE}" clean image_D13
-	cp applet/experiment.bin release/D13.exp.bin
-	"${MAKE}" clean image_S13
-	cp applet/experiment.bin release/S13.exp.bin
+ci:
 	"${MAKE}" clean image_D02
-	cp applet/experiment.bin release/S02.exp.bin
-	"${MAKE}" clean user.bin
-	cp user.bin release/
-	"${MAKE}" clean original_D13
-	cp firmware/bin/D013.020.bin release/
-	"${MAKE}" clean original_S13
-	cp firmware/bin/S013.020.bin release/
-	"${MAKE}" clean original_D02
-	cp firmware/bin/D002.032.bin release/
-	"${MAKE}" clean original_D03
-	cp firmware/bin/D003.020.bin release/
-
-dist: 
-	rm -rf $(RELEASE) $(RELEASE).zip
-	mkdir -p $(RELEASE)/python
-#Main release.
-	"${MAKE}" clean image_D13
-	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-NoGPS"`.bin
-#For GPS radios.
 	"${MAKE}" clean image_S13
-	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-GPS"`.bin
-#Older
-	"${MAKE}" clean image_D02
-	cp applet/experiment.bin $(RELEASE)/firmware-`date "+%Y-%m-%d-OLD"`.bin
-#Include the Official Installer
-	cd $(RELEASE) && unzip ../../firmware/dl/D002.032.zip
-	mv $(RELEASE)/Firmware\ 2.32 $(RELEASE)/windows
-	rm $(RELEASE)/windows/MD-380-D2.32\(AD\).bin $(RELEASE)/windows/Operation.doc.pdf
-	cp *.py 99-md380.rules md380-dfu md380-tool $(RELEASE)/python/
-#Clean out some gunk
-	rm -rf $(RELEASE)/__MACOSX
-#Zip it up for distribution.
-	zip -r $(RELEASE).zip $(RELEASE)
-
-dbg:
-	@echo ________
-	@echo PATH: '${PATH}'
-	@echo SHELL: '${SHELL}'
-	@echo MAKE: '${MAKE}'
-	@echo ________
-	@echo AWK version
-	-awk -V
-	@echo ________
-	@echo Make version
-	make -v
-	@echo ________
-
-ci: dbg clean 
-	"${MAKE}" -C applet ci
-	"${MAKE}" -C db ci
-	"${MAKE}" user.bin
-#	"${MAKE}" -C annotations/d13.020 ci
-	"${MAKE}" clean
-
-check-ignore:
-	find -type f | git check-ignore -v --stdin | less
-
+	"${MAKE}" clean image_D13
