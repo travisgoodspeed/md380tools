@@ -1,13 +1,15 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-import sys
-import struct
-import binascii
+from __future__ import print_function
+
 import argparse
+import binascii
+import struct
+import sys
+
 
 class MD380FW(object):
-
     # The stream cipher of MD-380 OEM firmware updates boils down
     # to a cyclic, static XOR key block, and here it is:
     key = (
@@ -104,9 +106,9 @@ class MD380FW(object):
         bin += header.pack(
             self.magic, self.jst, b'\xff' * 9, self.foo,
             self.bar, b'\xff' * 47, self.start, len(app),
-            b'\xff' * 120)
+                                  b'\xff' * 120)
         bin += self.crypt(self.app)
-        bin += footer.pack(b'\xff'*240, self.footer)
+        bin += footer.pack(b'\xff' * 240, self.footer)
         return bin
 
     def unwrap(self, img):
@@ -115,7 +117,7 @@ class MD380FW(object):
 
         self.start = header[6]
         app_len = header[7]
-        self.app = self.crypt(img[256:256+app_len])
+        self.app = self.crypt(img[256:256 + app_len])
 
         assert header[0].startswith(self.magic)
         assert header[1].startswith(self.jst)
@@ -132,13 +134,12 @@ class MD380FW(object):
         # FIXME: optimized version
         out = b''
         l = max(len(a), len(b))
-        for i in xrange(l):
+        for i in range(l):
             out += chr(ord(a[i % len(a)]) ^ ord(b[i % len(b)]))
         return out
 
 
 def main():
-
     def hex_int(x):
         return int(x, 0)
 
@@ -185,10 +186,10 @@ def main():
             md.unwrap(input)
         except AssertionError:
             sys.stderr.write('WARNING: Funky header:\n')
-            for i in xrange(0, 256, 16):
-                hl = binascii.hexlify(input[i:i+16])
-                hl = ' '.join(hl[i:i+2] for i in xrange(0, 32, 2))
-                sys.stderr.write(hl+'\n')
+            for i in range(0, 256, 16):
+                hl = binascii.hexlify(input[i:i + 16])
+                hl = ' '.join(hl[i:i + 2] for i in range(0, 32, 2))
+                sys.stderr.write(hl + '\n')
             sys.stderr.write('Trying anyway.\n')
         output = md.app
         print('INFO: base address 0x{0:x}'.format(md.start))
