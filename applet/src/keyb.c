@@ -171,10 +171,6 @@ void handle_hotkey( int keycode )
 
 void handle_sidekey( int keycode, int keypressed )
 {
-    PRINT("handle sidekey: %d\n", keycode );
-
-	#if defined(FW_D13_020)
-
     if ( keycode == 18 ) {												//top button
     	if ( (keypressed & 2) == 2 ) {									//short press
     		evaluate_sidekey( top_side_button_pressed_function );
@@ -191,19 +187,15 @@ void handle_sidekey( int keycode, int keypressed )
 			evaluate_sidekey( bottom_side_button_held_function );
 		}
     }
-
-	#else
-	#warning Please find the address of the variables above in S13 RAM.
-	#endif
 }
 
 void evaluate_sidekey ( int button_function)							//This is where new functions for side buttons can be added
 {
-	switch ( button_function ) {										//We will start at 0x50 to avoid Tytera from adding functions and breaking ours.
+	switch ( button_function ) {										//We will start at 0x50 to avoid conflicting with any added functions by Tytera.
 		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
 		{
 			GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
-			reset_backlight();											//Activated the backlight again. Should be run on most button presses.
+			reset_backlight();
 			kb_keypressed = 8 ;											//Sets the key as handled. The firmware will ignore this button press now.
 			break;
 		}
