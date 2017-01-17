@@ -67,6 +67,39 @@ const static wchar_t wt_cp_override_dmrid[] = L"ID Override";
 const static wchar_t wt_config_reset[] = L"Config Reset";
 const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
 
+const static wchar_t wt_sidebutton_menu[]   = L"Side Buttons";
+const static wchar_t wt_button_top_press[]  = L"Top Pressed";
+const static wchar_t wt_button_bot_press[]  = L"Bottom Pressed";
+const static wchar_t wt_button_top_held[]   = L"Top Held";
+const static wchar_t wt_button_bot_held[]   = L"Bottom Held";
+const static wchar_t wt_button_func_set[]   = L"Function Set";
+const static wchar_t wt_button_unassigned[] = L"Unassigned";
+const static wchar_t wt_button_alert_tone[] = L"All Tone Tog";
+const static wchar_t wt_button_emerg_on[]   = L"Emergency On";
+const static wchar_t wt_button_emerg_off[]  = L"Emergency Off";
+const static wchar_t wt_button_power[]      = L"High/Low Pwr";
+const static wchar_t wt_button_monitor[]    = L"Monitor";
+const static wchar_t wt_button_nuisance[]   = L"Nuisance Del";
+const static wchar_t wt_button_ot1[]        = L"One Touch 1";
+const static wchar_t wt_button_ot2[]        = L"One Touch 2";
+const static wchar_t wt_button_ot3[]        = L"One Touch 3";
+const static wchar_t wt_button_ot4[]        = L"One Touch 4";
+const static wchar_t wt_button_ot5[]        = L"One Touch 5";
+const static wchar_t wt_button_ot6[]        = L"One Touch 6";
+const static wchar_t wt_button_rep_talk[]   = L"Talkaround";
+const static wchar_t wt_button_scan[]       = L"Scan On/Off";
+const static wchar_t wt_button_squelch[]    = L"Squelch Tight";
+const static wchar_t wt_button_privacy[]    = L"Privacy On/Off";
+const static wchar_t wt_button_vox[]        = L"Vox On/Off";
+const static wchar_t wt_button_zone[]       = L"Zone Inc.";
+const static wchar_t wt_button_man_dial[]   = L"Manual Dial";
+const static wchar_t wt_button_lone_work[]  = L"Lone wk On/Off";
+const static wchar_t wt_button_1750_hz[]    = L"1750hz Tone";
+const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
+const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
+                   	   	   	   	   	   	       0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x1e, 0x1f, 0x26, 0x50};
+uint8_t button_selected = 0;
+uint8_t button_function = 0;
 
 typedef struct {
     const wchar_t* label ;  // [0]
@@ -189,6 +222,19 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 #warning TODO find language menu on this firmware version    
 #endif
 
+}
+
+uint8_t index_of(uint8_t value, uint8_t arr[], uint8_t len)
+{
+    uint8_t i = 0;
+    while(i < len)
+    {
+    	printf("i: %02x, Arr: %02x\n", i, arr[i]);
+    	if (arr[i] == value) return i;
+    	i++;
+    }
+
+    return 0;
 }
 
 //void md380_create_menu_entry(int menuid, const wchar_t * label , void * green_key, void  * red_key, int e, int f ,int enabled) {
@@ -783,6 +829,98 @@ void mn_backlight(void)
     mn_submenu_finalize();
 }
 
+void set_sidebutton_function(void)
+{
+	button_function = button_functions[currently_selected_menu_entry];
+
+	switch ( button_selected ) {
+		case 0:
+			top_side_button_pressed_function = button_function;
+			md380_spiflash_write(&button_function, 0x2102, 1);
+			mn_create_single_timed_ack(wt_button_top_press,wt_button_func_set);
+			break;
+		case 1:
+			bottom_side_button_pressed_function = button_function;
+			md380_spiflash_write(&button_function, 0x2104, 1);
+			mn_create_single_timed_ack(wt_button_bot_press,wt_button_func_set);
+			break;
+		case 2:
+			top_side_button_held_function = button_function;
+			md380_spiflash_write(&button_function, 0x2103, 1);
+			mn_create_single_timed_ack(wt_button_top_held,wt_button_func_set);
+			break;
+		case 3:
+			bottom_side_button_held_function = button_function;
+			md380_spiflash_write(&button_function, 0x2105, 1);
+			mn_create_single_timed_ack(wt_button_bot_held,wt_button_func_set);
+			break;
+	}
+}
+
+void select_sidebutton_function_screen(void)
+{
+	button_selected = currently_selected_menu_entry;
+
+	switch ( button_selected ) {
+		case 0:
+			md380_menu_entry_selected = index_of(top_side_button_pressed_function, button_functions,  sizeof(button_functions));
+			mn_submenu_init(wt_button_top_press);
+			break;
+		case 1:
+			md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, button_functions, sizeof(button_functions));
+			mn_submenu_init(wt_button_bot_press);
+			break;
+		case 2:
+			md380_menu_entry_selected = index_of(top_side_button_held_function, button_functions, sizeof(button_functions));
+			mn_submenu_init(wt_button_top_held);
+			break;
+		case 3:
+			md380_menu_entry_selected = index_of(bottom_side_button_held_function, button_functions, sizeof(button_functions));
+			mn_submenu_init(wt_button_bot_held);
+			break;
+	}
+
+
+	mn_submenu_add(wt_button_unassigned, set_sidebutton_function);
+	mn_submenu_add(wt_button_alert_tone, set_sidebutton_function);
+	mn_submenu_add(wt_button_emerg_on, set_sidebutton_function);
+	mn_submenu_add(wt_button_emerg_off, set_sidebutton_function);
+	mn_submenu_add(wt_button_power, set_sidebutton_function);
+	mn_submenu_add(wt_button_monitor, set_sidebutton_function);
+	mn_submenu_add(wt_button_nuisance, set_sidebutton_function);
+	mn_submenu_add(wt_button_ot1, set_sidebutton_function);
+	mn_submenu_add(wt_button_ot2, set_sidebutton_function);
+	mn_submenu_add(wt_button_ot3, set_sidebutton_function);
+	mn_submenu_add(wt_button_ot4, set_sidebutton_function);
+	mn_submenu_add(wt_button_ot5, set_sidebutton_function);
+	mn_submenu_add(wt_button_ot6, set_sidebutton_function);
+	mn_submenu_add(wt_button_rep_talk, set_sidebutton_function);
+	mn_submenu_add(wt_button_scan, set_sidebutton_function);
+	mn_submenu_add(wt_button_squelch, set_sidebutton_function);
+	mn_submenu_add(wt_button_privacy, set_sidebutton_function);
+	mn_submenu_add(wt_button_vox, set_sidebutton_function);
+	mn_submenu_add(wt_button_zone, set_sidebutton_function);
+	mn_submenu_add(wt_button_man_dial, set_sidebutton_function);
+	mn_submenu_add(wt_button_lone_work, set_sidebutton_function);
+	mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
+	mn_submenu_add(wt_button_bklt_en, set_sidebutton_function);
+
+	mn_submenu_finalize();
+}
+
+void create_menu_entry_sidebutton_screen(void)
+{
+	md380_menu_entry_selected = 0;
+    mn_submenu_init(wt_sidebutton_menu);
+
+    mn_submenu_add_98(wt_button_top_press, select_sidebutton_function_screen);
+    mn_submenu_add_98(wt_button_bot_press, select_sidebutton_function_screen);
+    mn_submenu_add_98(wt_button_top_held, select_sidebutton_function_screen);
+    mn_submenu_add_98(wt_button_bot_held, select_sidebutton_function_screen);
+
+    mn_submenu_finalize2();
+}
+
 void mn_config_reset2()
 {
     mn_create_single_timed_ack(wt_backlight,wt_config_reset_doit);
@@ -986,6 +1124,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
+    mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
     
     mn_submenu_add_98(wt_config_reset, mn_config_reset);
     mn_submenu_add_98(wt_backlight, mn_backlight);
