@@ -23,6 +23,7 @@
 #include "usersdb.h"
 #include "util.h"
 #include "printf.h"
+#include "keyb.h"
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -129,6 +130,7 @@ extern menu_t md380_menu_memory[];
 extern menu_entry_t md380_menu_mem_base[];
 
 
+
 //Old macro, schedule for deletion.
 //#define MKTHUMB(adr) ((void(*))(((uint32_t)adr) | 0x1))
 //New macro, prints warnings where needed.
@@ -229,7 +231,6 @@ uint8_t index_of(uint8_t value, uint8_t arr[], uint8_t len)
     uint8_t i = 0;
     while(i < len)
     {
-    	printf("i: %02x, Arr: %02x\n", i, arr[i]);
     	if (arr[i] == value) return i;
     	i++;
     }
@@ -829,6 +830,7 @@ void mn_backlight(void)
     mn_submenu_finalize();
 }
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
 void set_sidebutton_function(void)
 {
 	button_function = button_functions[currently_selected_menu_entry];
@@ -907,9 +909,14 @@ void select_sidebutton_function_screen(void)
 
 	mn_submenu_finalize();
 }
+#else
+#warning Side Buttons not supported on D02 or S02 firmware
+#endif
 
 void create_menu_entry_sidebutton_screen(void)
 {
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
 	md380_menu_entry_selected = 0;
     mn_submenu_init(wt_sidebutton_menu);
 
@@ -919,6 +926,7 @@ void create_menu_entry_sidebutton_screen(void)
     mn_submenu_add_98(wt_button_bot_held, select_sidebutton_function_screen);
 
     mn_submenu_finalize2();
+#endif
 }
 
 void mn_config_reset2()

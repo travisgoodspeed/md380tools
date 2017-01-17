@@ -191,7 +191,6 @@ void handle_sidekey( int keycode, int keypressed )
 
 void evaluate_sidekey ( int button_function)							//This is where new functions for side buttons can be added
 {
-	printf("evaluating sidekey\n");
 	switch ( button_function ) {										//We will start at 0x50 to avoid conflicting with any added functions by Tytera.
 		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
 		{
