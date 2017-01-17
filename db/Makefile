@@ -24,8 +24,11 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 custom.csv:
 	touch custom.csv
 
-stripped.csv: custom.csv special.tmp fixed.csv dmrmarc.tmp reflector.tmp
+stripped.csv: custom.csv special.tmp fixed.csv dmrmarc2.tmp reflector.tmp
 	awk -F, -f combine.awk $^ | $(ICONV)  | sort -t ',' -k1g,1 | awk -F, -f strip.awk >stripped.csv	
+	
+dmrmarc2.tmp: dmrmarc.tmp
+	awk -F, -f insert_nick.awk <$< >$@
 	
 dmrmarc.tmp:
 	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
