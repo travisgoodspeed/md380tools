@@ -24,8 +24,11 @@ de Kein Program
 # 0xc54f4 28 13 Batter Info
 # 0xc5510 28 13 Private Alert
 # 0xc552c 26 12 Enter Number
+
 # 0xc5548 26 12 Radio Number
+en Radio Number
 de Radio Nummer
+
 # 0xc5564 26 12 Tones/Alerts
 # 0xc5580 26 12 Intro Screen
 # 0xc559c 28 13 LED Indicator
@@ -34,26 +37,41 @@ de Radio Nummer
 # 0xc55f0 26 12 Keypad Tones
 # 0xc560c 28 13 Volume Offset
 # 0xc5628 26 12 New Password
+
 # 0xc5644 26 12 Eight Digits
+en Eight Digits
 de Acht Stellen
+
 # 0xc5660 26 12 Do Not Match
 # 0xc567c 26 12 Press OK and
 # 0xc5698 28 13 Missed Calls:
+
 # 0xc56b4 26 12 Setting Time
+en Setting Time
 de Zeit setzen
+
 # 0xc56d0 26 12 Setting Date
+en Setting Date
 de Datum setzen
+
 # 0xc56ec 26 12 Contact List
+en Contact List
 de Kontaktliste
+
 # 0xc5708 28 13 Outgoing List
 # 0xc5724 28 13 Answered List
 # 0xc5740 26 12 Out Of Range
 # 0xc575c 28 13 Program Radio
 # 0xc5778 26 12 Edit Channel
+
 # 0xc5794 26 12 Rx Frequency
+en Rx Frequency
 de Rx Frequenz
+
 # 0xc57b0 26 12 Tx Frequency
+en Tx Frequency
 de Tx Frequenz
+
 # 0xc57cc 26 12 Channel Name
 # 0xc57e8 28 13 Repeatar Slot
 # 0xc5820 26 25 Digital Radio in USB mode
@@ -64,8 +82,11 @@ de Tx Frequenz
 # 0xc5ba0 22 10 Call Alert
 # 0xc5bb8 24 11 View Number
 # 0xc5bd0 24 11 Edit Number
+
 # 0xc5be8 22 10 Ring Style
+en Ring Style
 de Signalton
+
 # 0xc5c00 24 11 Program Key
 # 0xc5c18 24 11 Radio Check
 # 0xc5c30 24 11 Remote Mon.
@@ -111,9 +132,12 @@ de Signalton
 # 0xeda14 20 9 Utilities
 # 0xeda28 20 9 Edit Name
 # 0xeda3c 18 8 Saved to
+
 # 0xeda50 20 9 Available
+en Available
 # de verfügbar
 de verfugbar
+
 # 0xeda64 18 8 Selected
 # 0xeda78 18 8 All Call
 # 0xeda8c 20 9 My Number
@@ -123,8 +147,11 @@ de verfugbar
 # 0xedadc 20 9 Priority1
 # 0xedaf0 20 9 Priority2
 # 0xedb04 20 9 Backlight
+
 # 0xedb18 18 8 Language
+en Language
 de Sprache
+
 # 0xedb2c 18 8 All LEDs
 # 0xedb40 20 9 All Tones
 # 0xedb54 18 8 Escalert
@@ -132,16 +159,24 @@ de Sprache
 # 0xedb7c 18 8 Tx Power
 # 0xedb90 18 8 Motorola
 # 0xedba4 18 8 PC/audio
+
 # 0xedbb8 18 8 Password
+en Password
 de Passwort
+
 # 0xedbcc 18 8 Required
+en Required
 # de benötigt
 de benotigt
+
 # 0xedbe0 18 8 Unlocked
 # 0xedbf4 18 8 Answered
 # 0xedc08 18 8 Outgoing
+
 # 0xedc1c 20 9 Emergency
+en Emergency
 de Notfall
+
 # 0xedc30 18 8 Powering
 # 0xedc44 20 9 Source ID
 # 0xedc58 20 9 Source ID
@@ -157,7 +192,9 @@ de Notfall
 
 
 # 0xee108 16 7 Contact
+en Contact
 de Kontakt
+
 # 0xee118 14 6 Drafts
 # 0xee128 16 7 Message
 # 0xee138 16 7 Cleared
@@ -193,7 +230,9 @@ de Kontakt
 # 0xee318 14 6 Manual
 # 0xee328 16 7 CTC/DCS
 # 0xee338 14 6 Volume
+
 # 0xee348 16 7 Picture
+en Picture
 de Bild
 
 
@@ -217,11 +256,17 @@ de Bild
 # 0xeeb58 10 4 Send
 # 0xeeb64 10 4 Save
 # 0xeeb70 10 4 Sent
+
 # 0xeeb7c 10 4 Full
+en Full
 de voll
+
 # 0xeeb88 10 4 List
+
 # 0xeeb94 12 5 Empty
+en Empty
 de leer
+
 # 0xeeba0 10 4 Edit
 # 0xeebac 12 5 Read?
 # 0xeebb8 12 5 Reply
