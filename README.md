@@ -137,6 +137,7 @@ is under development for Android.
 * [SUSE](docs/suse.md)
 * [Raspberry Pi](docs/raspi.md)
 * [Windows](docs/windows.md)
+* [MacOS](docs/macos.md)
 
 ###Additional steps for linux based installations###
 
