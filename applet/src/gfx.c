@@ -173,7 +173,7 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-void print_time_hook(void)
+void print_time_hook(char *log)
 {
     wchar_t wide_time[9];
 
@@ -190,7 +190,11 @@ void print_time_hook(void)
     for (int i = 0; i < 9; i++) {
         if( wide_time[i] == '\0' )
             break;
-	lastheard_putch(wide_time[i]);
+	if ( log == 'l' ) {
+		lastheard_putch(wide_time[i]);
+	} else {
+		slog_putch(wide_time[i]);
+	}
     }
 }
 

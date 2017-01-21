@@ -14,6 +14,7 @@
 #include "gfx.h"
 #include "radiostate.h"
 #include "syslog.h"
+#include "slog.h"
 #include "lastheard.h"
 #include "console.h"
 #include "radio_config.h"
@@ -25,6 +26,7 @@
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
 uint8_t rx_voice = 0 ;
+uint8_t rx_new = 0 ;
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -246,9 +248,6 @@ void netmon2_update()
 void netmon3_update()
 {
     syslog_draw_poll();
-    if ( nm_started == 0 ) {
-	nm_started = 1;				// flag for restart of LH list
-    }	
 }
 
 
@@ -259,6 +258,7 @@ void netmon4_update()
     
     int src;
     static int lh_cnt = 0 ;			// lastheard line counter 
+    char log = 'l';
 
     if ( nm_started == 0 ) {
 	lastheard_printf("Netmon 4 - Lastheard ====\n");
@@ -279,13 +279,14 @@ void netmon4_update()
 
     if( ( src != 0 ) && ( rx_voice == 1 ) ) {
         //lastheard_printf("%d",lh_cnt++);
-        print_time_hook() ;
+        print_time_hook(log) ;
         if( usr_find_by_dmrid(&usr, src) == 0 ) {
             lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
         } else {
             lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
         }
 	rx_voice = 0 ;				// call handled, wait until new voice call status received
+        rx_new = 1;				// set status to new for netmon5
      }
     }
 #else
@@ -294,10 +295,86 @@ void netmon4_update()
 
 }
 
+void netmon5_update()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    slog_draw_poll();
+    
+    int src;
+    wchar_t last_channel[40];			// last channel name
+    wchar_t curr_channel[40];			// current channel name
+
+    extern wchar_t channel_name[] ;		// read current channel name from external  
+    static int sl_cnt = 0 ;			// lastheard line counter
+    char log = 's';
+
+    if ( sl_cnt == 0 ) {
+	slog_printf("Netmon 5 - Develop ======\n");
+	nm_started = 1;				// flag for restart of LH list
+	sl_cnt = 1;				// reset lh counter 
+    }	
+
+    char mode = ' ' ;
+    if( rst_voice_active ) {
+        if( rst_mycall ) {
+            mode = '*' ; // on my tg            
+        } else {
+            mode = '<' ; // on other tg
+        }
+   src = rst_src;
+   user_t usr;
+
+    if( ( src != 0 ) && ( rx_new == 1 ) ) {
+
+ 	for (int i = 0; i < 40; i++)
+	   {
+	      curr_channel[i] = channel_name[i];
+		if (channel_name[i] == '\0')
+		break;
+	   }
+    	
+	if (last_channel != curr_channel) {			// remember channel_name 
+		slog_printf("cn:%S \n",channel_name);
+ 		   for (int i = 0; i < 40; i++)
+		   {
+  		      last_channel[i] = channel_name[i];
+			if (channel_name[i] == '\0')
+			break;
+		   }
+	}
+
+        print_time_hook(log) ;
+
+	// loookup source ID in user database to show callsign instead of ID
+        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+		// lookup destination ID in user database for status requests etc.
+        	if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+        		slog_printf("=%d->%s %c\n", src, usr.callsign, mode);
+	        } else 	{
+		        slog_printf("=%d->%d %c\n", src, rst_dst, mode);
+		}
+	} else {
+            slog_printf("=%s->", usr.callsign);
+        	if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+        		slog_printf("%s %c\n", usr.callsign, mode);
+	        } else 	{
+		        slog_printf("%d %c\n", rst_dst, mode);
+		}
+        }
+	rx_new = 0 ;				// call handled, wait until new voice call status received
+     }
+    }
+#else
+    slog_printf("No syslog available\n");    
+#endif 
+
+}
+
 void netmon_update()
 {
     if( !is_netmon_visible() ) {
-	netmon4_update();
+        netmon4_update();
+        netmon5_update();
         return ;
     }
     
@@ -315,6 +392,9 @@ void netmon_update()
             return ;
         case 4 :
             netmon4_update();
+            return ;
+        case 5 :
+            netmon5_update();
             return ;
     }
 }
