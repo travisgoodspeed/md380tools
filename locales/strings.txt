@@ -28,7 +28,7 @@ es Radio desact.
 # 0xc5414 26 12 Edit Number:
 en Edit Number:
 de ID aendern:
-es Edutar numero:
+es Editar numero:
 
 # 0xc5430 26 12 Text Message
 en Text Message
@@ -43,7 +43,7 @@ es Mensaje enviado
 # 0xc5468 26 12 Radio Check:
 en Radio Check:
 de Geraetecheck
-es Checkeo Radio
+es Chequeo Radio
 
 # 0xc5484 26 12 Target Radio
 en Target Radio
@@ -107,8 +107,10 @@ de Tastentoene
 es Tono Teclas
 
 # 0xc560c 28 13 Volume Offset
+es Comp. Volumen
+
 # 0xc5628 26 12 New Password
-es Nueva Passwd
+es Nueva Password
 
 # 0xc5644 26 12 Eight Digits
 en Eight Digits
@@ -116,7 +118,11 @@ de Acht Ziffern
 es Ocho Digitos
 
 # 0xc5660 26 12 Do Not Match
+es No coinciden
+
 # 0xc567c 26 12 Press OK and
+es Presiona OK y
+
 # 0xc5698 28 13 Missed Calls:
 es Perdidas
 
@@ -136,10 +142,19 @@ de Kontaktliste
 es Lista Contactos
 
 # 0xc5708 28 13 Outgoing List
+es Lista Salientes
+
 # 0xc5724 28 13 Answered List
+es Lista Respondidas
+
 # 0xc5740 26 12 Out Of Range
+es Fuera de Rango
+
 # 0xc575c 28 13 Program Radio
+es Programar radio
+
 # 0xc5778 26 12 Edit Channel
+es Editar canal
 
 # 0xc5794 26 12 Rx Frequency
 en Rx Frequency
@@ -162,8 +177,11 @@ de RPT Zeitschl.
 es Slot Repetidor
 
 # 0xc5820 26 25 Digital Radio in USB mode
+es Radio Digital en modo USB
 
 # 0xc5b58 22 10 PC Program
+es Programacion PC
+
 # 0xc5b70 24 11 New Contact
 en New Contact
 de Neuer Kontakt
@@ -181,7 +199,10 @@ de Rufalarm
 es Alerta Llamada
 
 # 0xc5bb8 24 11 View Number
+es Ver Numero
+
 # 0xc5bd0 24 11 Edit Number
+es Editar Numero
 
 # 0xc5be8 22 10 Ring Style
 en Ring Style
@@ -189,26 +210,34 @@ de Rufton
 es Tono Ring
 
 # 0xc5c00 24 11 Program Key
+
 # 0xc5c18 24 11 Radio Check
 en Radio Check
 de Geraete Chk
 es Check Radio
 
 # 0xc5c30 24 11 Remote Mon.
+es Monitor Remoto
+
 # 0xc5c48 24 11 Select Tone
+es Elija Tono
+
 # 0xc5c60 22 10 Select Key
 en Select Key
 de Taste ausw
-es Elije Tecla
+es Elija Tecla
 
 # 0xc5c78 24 11 This Key is
+es Esta tecla es
 
 # 0xc5c90 22 10 OverWrite?
 en Overwrite?
 de Ersetzen?
-es Sobreescribir?
+es Sobreescribo?
 
 # 0xc5ca8 22 10 Edit Name:
+es Editar Nombre:
+
 # 0xc5cc0 22 10 Quick Text
 en Quick Text
 de Vorlagetxt
@@ -245,10 +274,18 @@ de Spaeter zeigen
 es Leer despues
 
 # 0xc5d68 22 10 Radio Info
+es Info Radio
+
 # 0xc5d80 22 10 Add Member
+es Anadir Miembro
+
 # 0xc5d98 24 11 Enter Name:
+es Inserte nombre:
+
 # 0xc5db0 22 10 Talkaround
+
 # 0xc5dc8 24 11 Keypad Lock
+
 # 0xc5de0 22 10 Cable Type
 en Cable Type
 de Kabeltyp
@@ -264,32 +301,45 @@ es Llamada Privada
 # 0xc5e28 24 11 Talk Permit
 en Talk Permit
 de PTTFreigabe
+es Permiso PTT
 
 # 0xc5e40 22 10 Vol.Offset
 en Vol.Offset
 de Lautstaerke
+es Comp. Vol.
 
 # 0xc5e58 22 10 Ringer Off
 en Ringer Off
 de Rufton Aus
+es Ringer apagado
 
 # 0xc5e70 22 10 Change Pwd
 # 0xc5e88 24 11 * to Unlock
 en * to Unlock
 de Entsp.mit *
+es * para Desblq
 
 # 0xc5ea0 24 11 All Entries
 en All Entries
 de Alle Eintr.
+es Todas Entradas
 
 # 0xc5eb8 22 10 Alarm Rcvd
 en Alarm Rcvd
 de Eing. Rufe
+es Alarma Recibida
 
 # 0xc5ed0 22 10 View Later
+es Ver Despues
+
 # 0xc5ee8 24 11 Scan on/off
+
 # 0xc5f00 24 11 Missed List
+es Lista Perdidas
+
 # 0xc5f18 22 10 Enter Name
+es Intro. Nombre
+
 # 0xc5f30 22 10 Color Code
 en Color Code
 de CC Einstlg
@@ -298,6 +348,7 @@ es Codigo Color
 # 0xc5f48 24 11 Char String
 en Char String
 de Zeichenfolg
+es Cadena Carct.
 
 # 0xed9b0 18 8 USB Mode
 en USB Mode
@@ -307,7 +358,7 @@ es Modo USB
 # 0xed9c4 20 9 Press PTT
 en Press PTT
 de PTT drue.
-es Presiona PTT
+es Pres. PTT
 
 # 0xed9d8 18 8 Contacts
 en Contacts
@@ -337,20 +388,26 @@ es Editar nombre
 # 0xeda3c 18 8 Saved to
 en Saved to
 de Gespeichert
+es Guardado a
 
 # 0xeda50 20 9 Available
 en Available
 de verfuegbar
+es Disponible
 
 # 0xeda64 18 8 Selected
+es Elegido
+
 # 0xeda78 18 8 All Call
 # 0xeda8c 20 9 My Number
 en My Number
 de Meine ID
+es Mi Numero
 
 # 0xedaa0 18 8 Turn Off
 en Turn Off
 de Ausschal
+es Apagar
 
 # 0xedab4 18 8 ViewList
 # 0xedac8 18 8 Priority
@@ -359,38 +416,45 @@ de Ausschal
 # 0xedb04 20 9 Backlight
 en Backlight
 de Beleuchtg
+es Luz Fondo
 
 # 0xedb18 18 8 Language
 en Language
 de Sprache
+es Idioma
 
 # 0xedb2c 18 8 All LEDs
 en All LEDs
 de Alle LED
+es Todos LEDs
 
 # 0xedb40 20 9 All Tones
 en All Tones
 de Alle Toene
+es Todos Tonos
 
 # 0xedb54 18 8 Escalert
 # 0xedb68 20 9 Telemetry
 en Telemetry
 de Telemetrie
+es Telemetria
 
 # 0xedb7c 18 8 Tx Power
 en Tx Power
 de Tx Leistung
+es Potencia Tx
 
 # 0xedb90 18 8 Motorola
 en Motorola
 de Motorola
+es Motorola
 
 # 0xedba4 18 8 PC/audio
 
 # 0xedbb8 18 8 Password
 en Password
 de Kennwort
-es Clave
+es Contrase
 
 # 0xedbcc 18 8 Required
 en Required
@@ -398,12 +462,18 @@ de benoetigt
 es Requerido
 
 # 0xedbe0 18 8 Unlocked
+es Desbloqueado
+
 # 0xedbf4 18 8 Answered
+es Respondido
+
 # 0xedc08 18 8 Outgoing
+es Saliente
 
 # 0xedc1c 20 9 Emergency
 en Emergency
 de Notfall
+es Emergencia
 
 # 0xedc30 18 8 Powering
 # 0xedc44 20 9 Source ID
@@ -413,6 +483,7 @@ de Notfall
 # 0xedc94 18 8 Motorola
 en Motorola
 de Motorola
+es Motorola
 
 # 0xede24 17 16 uC/OS-II TmrLock
 # 0xede38 19 18 uC/OS-II TmrSignal
@@ -471,6 +542,7 @@ es Mensaje
 # 0xee348 16 7 Picture
 en Picture
 de Bild
+es Imagen
 
 # 0xee678 14 13 uC/OS-II Idle
 # 0xee688 13 12 uC/OS-II Tmr
@@ -486,46 +558,76 @@ de Bild
 # 0xee728 14 13 DFU Interface
 
 # 0xeeb28 10 4 Zone
+es Zona
+
 # 0xeeb34 12 5 Saved
+es Guardado
+
 # 0xeeb40 12 5 Inbox
+es Entrada
+
 # 0xeeb4c 12 5 Write
+es Escribir
+
 # 0xeeb58 10 4 Send
+es Enviar
+
 # 0xeeb64 10 4 Save
+es Guardar
+
 # 0xeeb70 10 4 Sent
+es Enviado
 
 # 0xeeb7c 10 4 Full
 en Full
 de voll
+es Completo
 
 # 0xeeb88 10 4 List
+es Lista
 
 # 0xeeb94 12 5 Empty
 en Empty
 de Leer
+es Vacio
 
 # 0xeeba0 10 4 Edit
+es Editar
+
 # 0xeebac 12 5 Read?
+es Leer?
+
 # 0xeebb8 12 5 Reply
 en Reply
 de Antwort
+es Responder
+
 
 # 0xeebc4 10 4 Scan
 en Scan
 de Scan
+es Scan
 
 # 0xeebd0 10 4 None
+es Ninguno
+
 # 0xeebdc 12 5 Power
+es Potencia
+
 # 0xeebe8 10 4 High
 en High
 de Hoch
+es Alta
 
 # 0xeebf4 10 4 Data
 en Data
 de Daten
+es Datos
 
 # 0xeec00 12 5 Wrong
 en Wrong
 de Falsch
+es Erroneo
 
 # 0xeec0c 12 5 Store
 # 0xeec18 12 5 Tight
@@ -541,59 +643,73 @@ de Falsch
 # 0xeec90 10 4 Time
 en Time
 de Zeit
+es Hora
 
 # 0xeec9c 10 4 Time
 en Time
 de Zeit
+es Hora
 
 # 0xeeca8 12 5 Tx/Rx
 en Tx/Rx
 de Tx/Rx
+es Tx/Rx
 
 # 0xeecb4 12 5 Clock
 en Clock
 de Takt
+es Reloj
 
 # 0xeecc0 12 5 Clock
 en Clock
 de Takt
+es Reloj
 
 # 0xeeccc 10 4 Date
 en Date
 de Datum
+es Fecha
 
 # 0xeecd8 10 4 Date
 en Date
 de Datum
+es Fecha
 
 # 0xeece4 10 4 Menu
 en Menu
 de Menue
+es Menu
 
 # 0xeecf0 10 4 Name
 en Name
 de Name
+es Nombre
 
 # 0xeecfc 12 5 Clear
 # 0xeed08 10 4 Mode
 en Mode
 de Modus
+es Modo
 
 # 0xeed14 12 5 T CTC
 en T CTC
 de T CTC
+es T CTC
 
 # 0xeed20 12 5 R CTC
 en R CTC
 de R CTC
+es R CTC
 
 # 0xeed2c 12 5 T DCS
 en T DCS
 de T DCS
+es T DCS
 
 # 0xeed38 12 5 R DCS
 en R DCS
 de R DCS
+es R DCS
 
 # 0xef607 12 11 \bStart Mbox
 # 0xef614 10 9 Sys Inter
