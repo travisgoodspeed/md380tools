@@ -9,102 +9,131 @@ en Unprogrammed
 hu Semmi Prog.
 fr Non Program
 de Kein Program
+es Sin Programar
 
 # 0xc53c0 28 13 Delete Entry?
 en Delete Entry?
 de Eintrag entf?
+es Eliminar reg?
 
 # 0xc53dc 26 12 Radio Enable
 en Radio Enable
 de Geraet aktiv.
+es Radio activa
 
 # 0xc53f8 28 13 Radio Disable
 en Radio Disable
 de Geraet deaktiv
-
+es Radio desact.
 # 0xc5414 26 12 Edit Number:
 en Edit Number:
 de ID aendern:
+es Edutar numero:
 
 # 0xc5430 26 12 Text Message
 en Text Message
 de Text Nachricht
+es Mensaje de Texto
 
 # 0xc544c 26 12 Message Send
 en Message Send
 de SMS gesendet
+es Mensaje enviado
 
 # 0xc5468 26 12 Radio Check:
 en Radio Check:
 de Geraetecheck
+es Checkeo Radio
 
 # 0xc5484 26 12 Target Radio
 en Target Radio
 de Ziel-Geraet
+es Radio Destino
 
 # 0xc54a0 28 13 Not Available
 en Not Available
 de Nicht moeglich
+es No Disponible
 
 # 0xc54bc 28 13 Radio Enable:
 # 0xc54d8 28 13 Firmware Ver.
 en Firmware Ver.
 de Firmware Vers
+es Version FW
 
 # 0xc54f4 28 13 Batter Info
 en Batter Info
 de BatterieInf
+es Info Bateria
 
 # 0xc5510 28 13 Private Alert
+es Alert Privada
+
 # 0xc552c 26 12 Enter Number
+es Intro Numero
 
 # 0xc5548 26 12 Radio Number
 en Radio Number
 de Geraete-ID
+es Numero Radio
+
 
 # 0xc5564 26 12 Tones/Alerts
 en Tones/Alerts
 de Hinweistoene
+es Tono/Alertas
 
 # 0xc5580 26 12 Intro Screen
 en Intro Screen
 de Startnachricht
+es Pant. Inicio
 
 # 0xc559c 28 13 LED Indicator
 en LED Indicator
 de LED Anzeige
+es Indicador LED
 
 # 0xc55b8 26 12 Site Roaming
+es Roaming Local
+
 # 0xc55d4 26 12 Call Ringers
 en Call Ringers
 de Ruftoene
+es Tono Llamada
 
 # 0xc55f0 26 12 Keypad Tones
 en Keypad Tones
 de Tastentoene
+es Tono Teclas
 
 # 0xc560c 28 13 Volume Offset
 # 0xc5628 26 12 New Password
+es Nueva Passwd
 
 # 0xc5644 26 12 Eight Digits
 en Eight Digits
 de Acht Ziffern
+es Ocho Digitos
 
 # 0xc5660 26 12 Do Not Match
 # 0xc567c 26 12 Press OK and
 # 0xc5698 28 13 Missed Calls:
+es Perdidas
 
 # 0xc56b4 26 12 Setting Time
 en Setting Time
 de Uhr einstellen
+es Configura Hora
 
 # 0xc56d0 26 12 Setting Date
 en Setting Date
 de Datum setzen
+es Configura fecha
 
 # 0xc56ec 26 12 Contact List
 en Contact List
 de Kontaktliste
+es Lista Contactos
 
 # 0xc5708 28 13 Outgoing List
 # 0xc5724 28 13 Answered List
@@ -115,18 +144,22 @@ de Kontaktliste
 # 0xc5794 26 12 Rx Frequency
 en Rx Frequency
 de Rx Frequenz
+es Frecuencia Rx
 
 # 0xc57b0 26 12 Tx Frequency
 en Tx Frequency
 de Tx Frequenz
+es Frecuencia Tx
 
 # 0xc57cc 26 12 Channel Name
 en Channel Name
 de Kanalname
+es Nombre Canal
 
 # 0xc57e8 28 13 Repeatar Slot
 en Repeater Slot
 de RPT Zeitschl.
+es Slot Repetidor
 
 # 0xc5820 26 25 Digital Radio in USB mode
 
@@ -134,14 +167,18 @@ de RPT Zeitschl.
 # 0xc5b70 24 11 New Contact
 en New Contact
 de Neuer Kontakt
+es Nuevo contacto
 
 # 0xc5b88 24 11 Manual Dial
 en Manual Dial
 de Manuelle Wahl
+es Marcado manual
+
 
 # 0xc5ba0 22 10 Call Alert
 en Call Alert
 de Rufalarm
+es Alerta Llamada
 
 # 0xc5bb8 24 11 View Number
 # 0xc5bd0 24 11 Edit Number
@@ -149,52 +186,63 @@ de Rufalarm
 # 0xc5be8 22 10 Ring Style
 en Ring Style
 de Rufton
+es Tono Ring
 
 # 0xc5c00 24 11 Program Key
 # 0xc5c18 24 11 Radio Check
 en Radio Check
 de Geraete Chk
+es Check Radio
 
 # 0xc5c30 24 11 Remote Mon.
 # 0xc5c48 24 11 Select Tone
 # 0xc5c60 22 10 Select Key
 en Select Key
 de Taste ausw
+es Elije Tecla
 
 # 0xc5c78 24 11 This Key is
 
 # 0xc5c90 22 10 OverWrite?
 en Overwrite?
 de Ersetzen?
+es Sobreescribir?
 
 # 0xc5ca8 22 10 Edit Name:
 # 0xc5cc0 22 10 Quick Text
 en Quick Text
 de Vorlagetxt
+es Edicion rapida
 
 # 0xc5cd8 22 10 Sent Items
 en Sent Items
 de Absenden?
+es Enviar item
 
 # 0xc5cf0 24 11 Sending to:
 en Sending to:
 de Senden an:
+es Enviando a:
 
 # 0xc5d08 22 10 Delete All
 en Delete All
 de Loeschen?
+es Eliminar todo
 
 # 0xc5d20 22 10 Successful
 en Successful
 de Erfolgreic
+es Con Exito
 
 # 0xc5d38 24 11 Call Alert:
 en Call Alert:
 de Rufalarm
+es Alerta Llamada
 
 # 0xc5d50 22 10 Read Later
 en Read Later
 de Spaeter zeigen
+es Leer despues
 
 # 0xc5d68 22 10 Radio Info
 # 0xc5d80 22 10 Add Member
@@ -204,12 +252,14 @@ de Spaeter zeigen
 # 0xc5de0 22 10 Cable Type
 en Cable Type
 de Kabeltyp
+es Tipo Cable
 
 # 0xc5df8 24 11 Passwd Lock
 
 # 0xc5e10 24 11 PrivateCall
 en PrivateCall
 de Einzelruf
+es Llamada Privada
 
 # 0xc5e28 24 11 Talk Permit
 en Talk Permit
@@ -243,6 +293,7 @@ de Eing. Rufe
 # 0xc5f30 22 10 Color Code
 en Color Code
 de CC Einstlg
+es Codigo Color
 
 # 0xc5f48 24 11 Char String
 en Char String
@@ -251,30 +302,37 @@ de Zeichenfolg
 # 0xed9b0 18 8 USB Mode
 en USB Mode
 de USB Mod.
+es Modo USB
 
 # 0xed9c4 20 9 Press PTT
 en Press PTT
 de PTT drue.
+es Presiona PTT
 
 # 0xed9d8 18 8 Contacts
 en Contacts
 de Kontakte
+es Contactos
 
 # 0xed9ec 18 8 Messages
 en Messages
 de SMS Eing
+es Mensajes
 
 # 0xeda00 18 8 Call Log
 en Call Log
 de Rufliste
+es Registro
 
 # 0xeda14 20 9 Utilities
 en Utilities
 de Werkzeuge
+es Utilidades
 
 # 0xeda28 20 9 Edit Name
 en Edit Name
 de Name aend
+es Editar nombre
 
 # 0xeda3c 18 8 Saved to
 en Saved to
@@ -332,10 +390,12 @@ de Motorola
 # 0xedbb8 18 8 Password
 en Password
 de Kennwort
+es Clave
 
 # 0xedbcc 18 8 Required
 en Required
 de benoetigt
+es Requerido
 
 # 0xedbe0 18 8 Unlocked
 # 0xedbf4 18 8 Answered
@@ -362,14 +422,17 @@ de Motorola
 # 0xee108 16 7 Contact
 en Contact
 de Kontakt
+es Contacto
 
 # 0xee118 14 6 Drafts
 en Drafts
 de Entwurf
+es Borrador
 
 # 0xee128 16 7 Message
 en Message
 de Nachricht
+es Mensaje
 
 # 0xee138 16 7 Cleared
 # 0xee148 14 6 Delete
