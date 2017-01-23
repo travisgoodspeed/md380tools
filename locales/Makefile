@@ -1,17 +1,39 @@
-CC=clang
 
-
-all: localize
+all: localize hu it de es
 clean:
 	rm -f localize *.bin *.img
-test: localize
-	cat strings.txt | ./localize hu ../firmware/unwrapped/S013.020.img S013.020-hu.img
-	cat strings.txt | ./localize hu ../firmware/unwrapped/D013.020.img D013.020-hu.img
-	make S013.020-hu.bin D013.020-hu.bin
-flash-hu-gps: test
-	../md380-dfu upgrade S013.020-hu.bin
-flash-hu: test
+
+applet:
+	cd ../applet && make
+hu: localize applet
+	cat strings.txt | ./localize hu ../applet/merged.img D013.020-hu.img
+	make D013.020-hu.bin
+
+it: localize applet
+	cat strings.txt | ./localize it ../applet/merged.img D013.020-it.img
+	make D013.020-it.bin
+
+de: localize applet
+	cat strings.txt | ./localize it ../applet/merged.img D013.020-de.img
+	make D013.020-de.bin
+
+es: localize applet
+	cat strings.txt | ./localize it ../applet/merged.img D013.020-es.img
+	make D013.020-es.bin
+
+
+flash-hu: hu
 	../md380-dfu upgrade D013.020-hu.bin
+
+flash-it: it
+	../md380-dfu upgrade D013.020-it.bin
+
+flash-de: de
+	../md380-dfu upgrade D013.020-de.bin
+
+flash-es: es
+	../md380-dfu upgrade D013.020-es.bin
+
 %.bin: %.img
 	../md380-fw --wrap $< $@
 run: test
