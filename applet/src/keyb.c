@@ -172,15 +172,15 @@ void handle_hotkey( int keycode )
 void handle_sidekey( int keycode, int keypressed )
 {
     if ( keycode == 18 ) {												//top button
-    	if ( (keypressed & 2) == 2 ) {									//short press
+    	if ( (keypressed & 2) == 2 && kb_top_side_key_press_time < kb_side_key_max_time) {									//short press
     		evaluate_sidekey( top_side_button_pressed_function );
     	}
-    	else if ( keypressed == 5 ) {									//long press
+    	else if ( keypressed == 5) {									//long press
     		evaluate_sidekey( top_side_button_held_function );
     	}
     }
     else if ( keycode == 17 ) {											//bottom button
-    	if ( (keypressed & 2) == 2 ) {									//short press
+    	if ( (keypressed & 2 && kb_bot_side_key_press_time < kb_side_key_max_time) == 2 ) {									//short press
 			evaluate_sidekey( bottom_side_button_pressed_function );
 		}
 		else if ( keypressed == 5 ) {									//long press

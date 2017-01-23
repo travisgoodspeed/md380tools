@@ -25,6 +25,9 @@ extern uint8_t top_side_button_held_function;
 extern uint8_t bottom_side_button_held_function;
 extern uint16_t kb_row_col_pressed;
 extern uint16_t backlight_timer;
+extern uint8_t kb_top_side_key_press_time;
+extern uint8_t kb_bot_side_key_press_time;
+extern uint8_t kb_side_key_max_time;
 
 void evaluate_sidekey(int);
 #endif
