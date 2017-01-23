@@ -10,7 +10,8 @@ hu Semmi Prog.
 fr Non Program
 de Kein Program
 es Sin Programar
-pt Sem Programação
+#Sem Programação
+pt Sem Programacao
 
 # 0xc53c0 28 13 Delete Entry?
 en Delete Entry?
@@ -22,7 +23,8 @@ pt Apagar entrada?
 en Radio Enable
 de Geraet aktiv.
 es Radio activa
-pt Radio ligado
+#Rádio Ligado
+pt Radio Ligado
 
 # 0xc53f8 28 13 Radio Disable
 en Radio Disable
@@ -46,13 +48,14 @@ pt Mensagem de texto
 en Message Send
 de SMS gesendet
 es Mensaje enviado
-pt Mensagem enviada
+pt Mensagem Enviada
 
 # 0xc5468 26 12 Radio Check:
 en Radio Check:
 de Geraetecheck
 es Chequeo Radio
-pt Teste a rádio:
+#Testar Rádio
+pt Testar Radio:
 
 # 0xc5484 26 12 Target Radio
 en Target Radio
@@ -64,22 +67,26 @@ pt ID de Destino
 en Not Available
 de Nicht moeglich
 es No Disponible
-pt Indisponível
+#Indisponível
+pt Indisponivel
 
 # 0xc54bc 28 13 Radio Enable:
-pt Rádio Ligado:
+#Rádio Ligado:
+pt Radio Ligado:
 
 # 0xc54d8 28 13 Firmware Ver.
 en Firmware Ver.
 de Firmware Vers
 es Version FW
-pt Versão FW
+#Versão FW
+pt Versao FW
 
 # 0xc54f4 28 13 Batter Info
 en Batter Info
 de BatterieInf
 es Info Bateria
-pt Informação de Bateria
+#Informação de Bateria
+pt Informacao de Bateria
 
 # 0xc5510 28 13 Private Alert
 es Alert Privada
@@ -87,13 +94,15 @@ pt Chamada Privada
 
 # 0xc552c 26 12 Enter Number
 es Intro Numero
-pt Introduza o número
+#Introduza o número
+pt Introduza o numero
 
 # 0xc5548 26 12 Radio Number
 en Radio Number
 de Geraete-ID
 es Numero Radio
-pt ID do Rádio
+#ID do Rádio
+pt ID do Radio
 
 # 0xc5564 26 12 Tones/Alerts
 en Tones/Alerts
@@ -105,7 +114,8 @@ pt Tons/Alertas
 en Intro Screen
 de Startnachricht
 es Pant. Inicio
-pt Ecrã de arranque
+#Ecrã de arranque
+pt Ecra de arranque
 
 # 0xc559c 28 13 LED Indicator
 en LED Indicator
@@ -141,11 +151,13 @@ pt Nova senha
 en Eight Digits
 de Acht Ziffern
 es Ocho Digitos
-pt Oito números
+#Oito Números
+pt Oito Numeros
 
 # 0xc5660 26 12 Do Not Match
 es No coinciden
-pt Não Coincidem
+#Não Coincidem
+pt Nao Coincidem
 
 # 0xc567c 26 12 Press OK and
 es Presiona OK y
@@ -187,7 +199,8 @@ pt Fora de Alcance
 
 # 0xc575c 28 13 Program Radio
 es Programar radio
-pt Programar Rádio
+#Programar Rádio
+pt Programar Radio
 
 # 0xc5778 26 12 Edit Channel
 es Editar canal
@@ -197,13 +210,15 @@ pt Editar Canal
 en Rx Frequency
 de Rx Frequenz
 es Frecuencia Rx
-pt Frequência Rx
+#Frequência Rx
+pt Frequencia Rx
 
 # 0xc57b0 26 12 Tx Frequency
 en Tx Frequency
 de Tx Frequenz
 es Frecuencia Tx
-pt Frequência Tx
+#Frequência Tx
+pt Frequencia Tx
 
 # 0xc57cc 26 12 Channel Name
 en Channel Name
@@ -219,10 +234,12 @@ pt Slot do Repetidor
 
 # 0xc5820 26 25 Digital Radio in USB mode
 es Radio Digital en modo USB
-pt Rádio digital em modo usb
+#Rádio digital em modo usb
+pt Radio digital em modo usb
 
 # 0xc5b58 22 10 PC Program
 es Programacion PC
+#Programacao PC
 pt Programação PC
 
 # 0xc5b70 24 11 New Contact
@@ -235,7 +252,8 @@ pt Novo Contacto
 en Manual Dial
 de Manuelle Wahl
 es Marcado manual
-pt Marcação Manual
+#Marcação Manual
+pt Marcacao Manual
 
 # 0xc5ba0 22 10 Call Alert
 en Call Alert
@@ -245,11 +263,13 @@ pt Alerta de Chamada
 
 # 0xc5bb8 24 11 View Number
 es Ver Numero
-pt Ver Número
+#Ver Número
+pt Ver Numero
 
 # 0xc5bd0 24 11 Edit Number
 es Editar Numero
-pt Editar Número
+#Editar Número
+pt Editar Numero
 
 # 0xc5be8 22 10 Ring Style
 en Ring Style
@@ -264,7 +284,8 @@ pt Programar tecla
 en Radio Check
 de Geraete Chk
 es Check Radio
-pt Testar Ligação
+#Testar Ligação
+pt Testar Ligacao
 
 # 0xc5c30 24 11 Remote Mon.
 es Monitor Remoto
@@ -282,7 +303,8 @@ pt Escolha a Tecla
 
 # 0xc5c78 24 11 This Key is
 es Esta tecla es
-pt Esta tecla é
+#Esta tecla é
+pt Esta tecla e
 
 # 0xc5c90 22 10 OverWrite?
 en Overwrite?
@@ -298,7 +320,8 @@ pt Editar Nome:
 en Quick Text
 de Vorlagetxt
 es Edicion rapida
-pt Texto Rápido
+#Texto Rápido
+pt Texto Rapido
 
 # 0xc5cd8 22 10 Sent Items
 en Sent Items
@@ -338,7 +361,8 @@ pt Ler mais tarde
 
 # 0xc5d68 22 10 Radio Info
 es Info Radio
-pt Informação do Rádio
+#Informação do Rádio
+pt Informacao do Rádio
 
 # 0xc5d80 22 10 Add Member
 es Anadir Miembro
@@ -373,7 +397,8 @@ pt Chamada Privada
 en Talk Permit
 de PTTFreigabe
 es Permiso PTT
-pt Permissão de Chamada
+#Permissão de Chamada
+pt Permissao de Chamada
 
 # 0xc5e40 22 10 Vol.Offset
 en Vol.Offset
@@ -427,13 +452,15 @@ pt Introduza o Nome
 en Color Code
 de CC Einstlg
 es Codigo Color
-pt Código de Cor
+#Código de Cor
+pt Codigo de Cor
 
 # 0xc5f48 24 11 Char String
 en Char String
 de Zeichenfolg
 es Cadena Carct.
-pt Sequência Caracteres
+#Sequência Caracteres
+pt Sequencia Caracteres
 
 # 0xed9b0 18 8 USB Mode
 en USB Mode
@@ -487,7 +514,8 @@ pt Guardado para
 en Available
 de verfuegbar
 es Disponible
-pt Disponível
+#Disponível
+pt Disponivel
 
 # 0xeda64 18 8 Selected
 es Elegido
@@ -524,7 +552,8 @@ pt Prioridade2
 en Backlight
 de Beleuchtg
 es Luz Fondo
-pt Luz do Ecrã
+#Luz do Ecrã
+pt Luz do Ecra
 
 # 0xedb18 18 8 Language
 en Language
@@ -557,7 +586,8 @@ pt Telemetria
 en Tx Power
 de Tx Leistung
 es Potencia Tx
-pt Potência de Transmissão
+#Potência de Transmissão
+pt Potencia de Transmissao
 
 # 0xedb90 18 8 Motorola
 en Motorola
@@ -566,7 +596,8 @@ es Motorola
 pt Motorola
 
 # 0xedba4 18 8 PC/audio
-pt PC/Áudio
+#PC/Áudio
+pt PC/Audio
 
 # 0xedbb8 18 8 Password
 en Password
@@ -578,7 +609,8 @@ pt Senha
 en Required
 de benoetigt
 es Requerido
-pt Obrigatório
+#Obrigatório
+pt Obrigatorio
 
 # 0xedbe0 18 8 Unlocked
 es Desbloqueado
@@ -590,13 +622,15 @@ pt Respondido
 
 # 0xedc08 18 8 Outgoing
 es Saliente
-pt Saída
+#Saída
+pt Saida
 
 # 0xedc1c 20 9 Emergency
 en Emergency
 de Notfall
 es Emergencia
-pt Emergência
+#Emergência
+pt Emergencia
 
 # 0xedc30 18 8 Powering
 pt A Ligar
@@ -662,7 +696,8 @@ pt Falhou
 pt Apagado
 
 # 0xee188 16 7 CP Ver.
-pt Versão CPS
+#Versão CPS
+pt Versao CPS
 
 # 0xee198 16 7 Forward
 pt Encaminhar
@@ -680,7 +715,8 @@ pt Ligar
 pt Atual
 
 # 0xee1e8 16 7 Auto On
-pt Automático Ligado
+#Automático Ligado
+pt Automatico Ligado
 
 # 0xee1f8 14 6 Keypad
 pt Teclado
@@ -689,7 +725,8 @@ pt Teclado
 pt Bloqueado
 
 # 0xee218 16 7 English
-pt Português
+#Português
+pt Portugues
 
 # 0xee228 16 7 Changed
 pt Alterado
@@ -698,7 +735,8 @@ pt Alterado
 pt Perdido
 
 # 0xee248 16 7 Invalid
-pt Inválido
+#Inválido
+pt Invalido
 
 # 0xee258 16 7 Squelch
 pt Squelch
@@ -707,7 +745,8 @@ pt Squelch
 pt Normal
 
 # 0xee278 14 6 Number
-pt Número
+#Número
+pt Numero
 
 # 0xee288 14 6 Record
 pt Registo
@@ -725,7 +764,8 @@ pt A tocar
 pt Confirmar
 
 # 0xee2d8 14 6  Back
-pt Voltar Atrás
+#Voltar Atrás
+pt Voltar Atras
 
 # 0xee2e8 14 6 Always
 pt Sempre
@@ -734,7 +774,8 @@ pt Sempre
 Modo Nome
 
 # 0xee308 16 7 MR Mode
-Modo Frequência
+#Frequência
+Modo Frequencia
 
 # 0xee318 14 6 Manual
 pt Manual
@@ -770,7 +811,8 @@ pt Processo de Tom
 pt TimeSlot Inter
 
 # 0xee6d8 13 12 State Change
-pt Mudança de Estado
+#Mudança de Estado
+pt Mudanca de Estado
 
 # 0xee6f7 16 15 \rDFU in HS mode
 pt \rDFU em modo HS
@@ -852,7 +894,8 @@ pt Nenhum
 
 # 0xeebdc 12 5 Power
 es Potencia
-pt Potência
+#Potência
+pt Potencia
 
 # 0xeebe8 10 4 High
 en High
@@ -914,7 +957,7 @@ pt Hora
 en Time
 de Zeit
 es Hora
-Hora
+pt Hora
 
 # 0xeeca8 12 5 Tx/Rx
 en Tx/Rx
@@ -926,13 +969,15 @@ pt Tx/Rx
 en Clock
 de Takt
 es Reloj
-pt Relógio
+#Relógio
+pt Relogio
 
 # 0xeecc0 12 5 Clock
 en Clock
 de Takt
 es Reloj
-pt Relógio
+#Relógio
+pt Relogio
 
 # 0xeeccc 10 4 Date
 en Date
@@ -995,7 +1040,6 @@ pt R DCS
 pt \bStart Mbox
 
 # 0xef614 10 9 Sys Inter
-pt Interno de Sistema
 
 # 0xef620 10 9 RTC Timer
 pt Relógio RTC
@@ -1013,4 +1057,5 @@ pt ChAccess Pr
 pt Tom fft
 
 # 0xef65c 11 10 DFU Config
-pt Configuração DFU
+#Configuração DFU
+pt Configuracao DFU
