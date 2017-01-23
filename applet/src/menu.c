@@ -93,12 +93,15 @@ const static wchar_t wt_button_squelch[]    = L"Squelch Tight";
 const static wchar_t wt_button_privacy[]    = L"Privacy On/Off";
 const static wchar_t wt_button_vox[]        = L"Vox On/Off";
 const static wchar_t wt_button_zone[]       = L"Zone Inc.";
+const static wchar_t wt_button_zone_tog[]   = L"Zone Toggle";
+const static wchar_t wt_button_bat_ind[]    = L"Bat Indicator";
 const static wchar_t wt_button_man_dial[]   = L"Manual Dial";
 const static wchar_t wt_button_lone_work[]  = L"Lone wk On/Off";
 const static wchar_t wt_button_1750_hz[]    = L"1750hz Tone";
 const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
-                   	   	   	   	   	   	       0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x1e, 0x1f, 0x26, 0x50};
+                   	   	   	   	   	   	       0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
+											   0x1f, 0x26, 0x50};
 uint8_t button_selected = 0;
 uint8_t button_function = 0;
 
@@ -902,6 +905,8 @@ void select_sidebutton_function_screen(void)
 	mn_submenu_add(wt_button_privacy, set_sidebutton_function);
 	mn_submenu_add(wt_button_vox, set_sidebutton_function);
 	mn_submenu_add(wt_button_zone, set_sidebutton_function);
+	mn_submenu_add(wt_button_zone_tog, set_sidebutton_function);
+	mn_submenu_add(wt_button_bat_ind, set_sidebutton_function);
 	mn_submenu_add(wt_button_man_dial, set_sidebutton_function);
 	mn_submenu_add(wt_button_lone_work, set_sidebutton_function);
 	mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
@@ -910,7 +915,7 @@ void select_sidebutton_function_screen(void)
 	mn_submenu_finalize();
 }
 #else
-#warning Side Buttons not supported on D02 or S02 firmware
+#warning Side Buttons not supported on D02 firmware
 #endif
 
 void create_menu_entry_sidebutton_screen(void)
