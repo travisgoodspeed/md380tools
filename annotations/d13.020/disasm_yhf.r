@@ -650,10 +650,6 @@ af+ 0x801b042 26 md380_menu_numerical_input
 #CCa : adds a comment for a given address (this is NOT the reason for "Cannot add function")
 CCa 0x801b8e8 md380_menu_0x2001d3f1
 
-f screen_unknown1 0 0x0800e728
-f menu_6_15_1 0 0x0800e7a8
-f menu_6_1_1 0 0x0800e7cc
-
 
 af+ 0x801fe5c 5454 f_4225
 af+ 0x802256a 324 aes_startup_check
@@ -727,6 +723,14 @@ af+ 0x8031864 76 spiflash_Program_Security_Registers_42h
 af+ 0x80318b0 78 md380_spiflash_security_registers_read
 af+ 0x8033eb4 104 OSTimeDly
 
+af+ 0x8033ca6 (0xB4-0xA6) gfx_call_via_ptr__GfxInfoPlus0x18
+af+ 0x8033cba (0xC4-0xBA) gfx_set_something_in_GfxInfoPlus0x24
+af+ 0x8033cc4 (0xCC-0xC4) gfx_store_something_in_GfxInfoPlus0x22
+af+ 0x8033cd0 (0xCE8-0xCD0) func_3cd0
+af+ 0x8033ce8 (0xD42-0xCE8) func_3ce8
+af+ 0x8033d42 (0xD76-0xD42) func_3d42
+af+ 0x8033d78 (0xDAC-0xD78) SomeBitbangingOnGPIOD
+
 af+ 0x803b39a 144 main_menu
 af+ 0x803f708 76 OSSemCreate
 af+ 0x803f754 218 OSSemPend
@@ -743,7 +747,9 @@ af+ 0x8040de0 1540 dmr_sms_arrive
 af+ 0x8041430 864 dmr_call_end
 
 af+ 0x8043de4 8 OS_ENTER_CRITICAL
+CCa 0x8043de4 Not 'invalid' but 'mrs r0, PRIMASK' !
 af+ 0x8043dec 6 OS_EXIT_CRITICAL
+CCa 0x8043dec Not 'invalid' but 'msr PRIMASK, r0' !
 af+ 0x80462bc 314 Start
 af+ 0x8046520 684 Start_multiple_tasks
 af+ 0x8049e14 798 Start_2_more_tasks__init_vocoder_tasks__Q
@@ -1013,7 +1019,9 @@ af+ 0x08036fc0 378 gfx_drawtext8
 f gfx_drawtext9 0 0x0802b0d4
 af+ 0x0802b0d4 110 gfx_drawtext9
 
-f gfx_drawchar_unk @ 0x0801d960
+s 0x0801d960
+f gfx_drawchar_unk @ $$
+af+ $$ (0x988-0x960) gfx_drawchar_unk
 
 CCa 0x08036ff4 check_for_0_term 
 CCa 0x08037118 check_for_0_term_and_loop
@@ -1023,11 +1031,20 @@ CCa 0x08033c96 mult_off21_off23_font
 f gfx_drawtext10 @ 0x0800ded8
 af+ 0x0800ded8 30 gfx_drawtext10
 
+f convert_freq_to_str @ 0x800e398
 
 f draw_channel_label 0 0x0800e5a6
-f draw_zone_label 0 0x0800e682
-f draw_zone_channel 0 0x0800e538
+
 af+ 0x0800e538 98 draw_zone_channel
+f draw_zone_channel 0 0x0800e538
+f draw_zone_label 0 0x0800e682
+
+af+ 0x0800e6e8 (0x6f6-0x6e8) func_e6e8
+af+ 0x0800e6f6 (0x704-0x6f6) func_e6f6
+
+f screen_unknown1 0 0x0800e728
+f menu_6_15_1 0 0x0800e7a8
+f menu_6_1_1 0 0x0800e7cc
 
 f scr_mode_stable 0 0x08020830
 
@@ -1388,7 +1405,6 @@ f simplex_or_repeater_flagword @ 0x2001e898
 
 f some_state_var @ 0x2001e8b8
 f smeter_rssi @ 0x2001e534
-f convert_freq_to_str @ 0x800e398
 
 #
 
@@ -1538,6 +1554,18 @@ f SystemInit 2 @ ($$+1) # addr+1, because the CALLER'S dest-addr has the LSBit s
 s 0x80943aa # subroutine called from SystemInit().. 
 af+ $$ 202 RCC_Init
 f RCC_Init @ ($$)
+CCa 0x080943b8 Set RCC_CR bit 16 = HSEON
+CCa 0x080943c4 Isolate RCC_CR bit 17 = HSE clock ready ?
+CCa 0x080943f8 Read RCC_APB1ENR
+CCa 0x080943fa Set bit 24 = PWREN for APB1  
+CCa 0x08094400 What a waste of code memory. Could have set R1 before.
+CCa 0x08094406 PWR_CR bit 14 = voltage regulator control
+CCa 0x08094412 Copy RCC clock config register to itself ?
+CCa 0x08094434 RCC_CR bit 24 = 'PLL ON'
+CCa 0x08094440 Check 'PLL Ready'-bit
+CCa 0x0809444a Set FLASH_ACR (waitstates, etc)
+CCa 0x08094452 clear RCC_CFGR bits 31+30 to select SYSCLK for MCO2
+CCa 0x0809445c select PLL as system clock (?)
                         
 # 2nd subroutine, called from Reset_Handler, and never returns:
 s 0x80FAFDC  # if 'they' used Keil's ecosystem, this is __main which calls the scatterload-thingy
@@ -1565,20 +1593,239 @@ af+ $$ 34 _main2_init_sub3
 f _main2_init_sub3 34 @ $$
 
 s 0x80F7EE6 # 4th subroutine called from _main2() 
-af+ $$ 6 _main2_init_sub4
-f _main2_init_sub4 6 @ $$
+af+ $$ (0xEF6-0xEE6) _main3
+f _main3 6 @ $$
 
-s 0x80F7EEC # called from 0x80f7ee6
-af+ $$ 16 _main2_init_sub5
-f _main2_init_sub5 16 @ $$
+s 0x8051d7e # called from _main2_init_sub1 (1st)
+af+ $$ (0x8A-0x7E) func_1d7e
 
-s 0x8095810 # really called from 0x80f7ef0 ? looks like garbage
-af+ $$ 16 _main2_init_sub6
-f _main2_init_sub6 16 @ $$
+s 0x804e2e0 # called from _main2_init_sub1 (2nd)
+af+ $$ (0xFC-0xE0) func_e2e0
 
-s 0x8044024 # .. 44064 
-af+ $$ 64 func_4024
-f func_4024 64 @ $$
+s 0x8043ed0 # called from _main2_init_sub1 (3rd)
+af+ $$ (0xFC-0xD0) InitGlobalsAndStartRealTimeKernel
+
+s 0x8046280 # called from _main2_init_sub1 (4th)
+af+ $$ (0xBC-0x80) Create_Start_Task_AndSetItsName
+# Details, and EVEN THE SOURCECODE of OSTaskCreateEx()
+# is in the uC/OS-II User's Manual, page 156 .
+# For the ARM-ABI's calling convention,
+#  registers R0 - R3 are used for the first four arguments 
+#   ("NCRN" begins with the RIGHTMOST argument, u16Options, in R0),
+#  other arguments are pushed to the stack by the caller ("NSAA" begins with *SP), thus:
+CCa 0x8046282 reserve stack space for arguments #5 to #9
+CCa 0x8046284 3 = OS_TASK_OPT_STK_CHK + OS_TASK_OPT_STK_CLR
+CCa 0x8046286 SP[4] = u16Options, 9th and last arg for OSTaskCreateExt
+CCa 0x804628a SP[3] = pvExt = user supplied data, 8th arg for OSTaskCreateExt
+CCa 0x804628c task stack size (static array)
+CCa 0x8046290 SP[2] = u32StackSize, 7th arg for OSTaskCreateExt
+CCa 0x8046296 SP[1] = pBotOfStack, 6th arg for OSTaskCreateExt
+CCa 0x804629a SP[0] = u16ID, 5th arg for OSTaskCreateExt
+CCa 0x804629c R3 = u8Prio, 4th arg for OSTaskCreateExt
+CCa 0x804629e R2 once was pTopOfStack, but what is this ?
+CCa 0x80462a2 R1 = pvData, 2nd arg for OSTaskCreateExt
+CCa 0x80462a4 R0 = pTaskFunc = PC+0x15 = Start(), ca 0x80462bc 
+CCa 0x80462a8 OSTaskCreateExt(pTaskFunc,pvData,pTOS,u8Prio,u16ID,pBOS,u32StkSize,pvExt,u16Options)
+CCa 0x80462b4 OSTaskNameSet(R0=INT8U prio, R1=char *pname, R2=INT8U *err)
+CCa 0x80462b8 clear local vars (arguments) from stack
+
+s 0x20014ab4 # looks like another TASK stack, passed to OSTaskCreateExt
+f Stack_for_Start_Task 512 @ $$
+
+# functions called from task Start(), annotated since 2017-01, first OUTSIDE loops .
+# 'af+' to know the're FUNCTIONS, 'f' to have them listed along with other symbols .
+
+s 0x8044cb4
+af+ $$ 4 func_4cb4
+f func_4cb4 4 @ $$
+
+s 0x80451ce
+af+ $$ 4 func_51ce
+f func_51ce 4 @ $$
+
+s 0x8045414
+af+ $$ 4 func_5414
+f func_5414 4 @ $$
+
+s 0x80458f8 # called via 'bl', caused strange 'LEA'-decodes in comments
+af+ $$ (0x5922-0x58F8) func_58f8
+#f func_58f8 (0x5922-0x58F8) @ $$ # removed to prevent unhelpful 'LEA'-decodes
+
+s 0x8045d18
+af+ $$ 4 func_5d18
+f func_5d18 4 @ $$
+
+#s 0x80460a8
+#af+ $$ 4 func_60a8
+#f func_60a8 4 @ $$
+
+s 0x804ce2c
+af+ $$ 4 func_ce2c
+f func_ce2c 4 @ $$
+
+s 0x8030fde
+af+ $$ 4 func_0fde
+f func_0fde 4 @ $$
+
+# above: functions called from task Start(), once (kind of "late init"-things)
+# below: functions called from task Start(), in a loop.
+
+s 0x8045954
+af+ $$ (0xC96-0x954) FuncWithAwfulLongSwitch
+#f FuncWithAwfulLongSwitch (0xC96-0x954) @ $$ # removed to prevent unhelpful 'LEA'-decodes
+
+s 0x8044e00
+af+ $$ (0x50C8-0x4E00) LongSwitchWithRadioStatus1
+f LongSwitchWithRadioStatus1 (0x50C8-0x4E00) @ $$
+
+s 0x8045484
+af+ $$ (0x82A-0x484) SomethingWithChannelsRadioConfigAndBeeps
+#f SomethingWithChannelsRadioConfigAndBeeps (0x82A-0x484) @ $$
+
+s 0x8045d94
+af+ $$ (0x604A-0x5D94) SomethingWithLongpressSettingRadioStatus1
+f SomethingWithLongpressSettingRadioStatus1 (0x604A-0x5D94) @ $$
+
+s 0x8045C9C 
+af+ $$ (0xD0A-0xC9C) CalledFromLongpressThing
+#f CalledFromLongpressThing (0xD0A-0xC9C) @ $$ # removed to prevent unhelpful 'LEA'-decodes
+
+s 0x804520c
+af+ $$ (0x5398-0x520C) func_520c
+f func_520c (0x5398-0x520C) @ $$
+
+s 0x80450c8
+af+ $$ (0x156-0x0C8) SomethingWithGuiOpmode2
+f SomethingWithGuiOpmode2 (0x156-0x0C8) @ $$
+
+s 0x80460f0
+af+ $$ (0x0F8-0x0F0) Calls_6050
+# f Calls_6050 (0x0F8-0x0F0) @ $$
+
+s 0x8046050
+af+ $$ (0x0F8-0x0F0) func_6050
+#f func_6050 (0x0F8-0x0F0) @ $$
+
+s 0x80460f8
+af+ $$ (0x204-0x0F8) SomethingWithGPIOA_and_RadioStatus1
+f SomethingWithGPIOA_and_RadioStatus1 (0x204-0x0F8) @ $$
+CCa 0x804612C return but not end of function
+
+s 0x804d688
+af+ $$ (0x92-0x88) SetBit30_ptrR0plus8
+f SetBit30_ptrR0plus8 (0x92-0x88) @ $$
+
+s 0x804d692
+af+ $$ (0x98-0x92) ExtendU16toU32_ptrR0plus4C
+f ExtendU16toU32_ptrR0plus4C (0x98-0x92) @ $$
+
+s 0x803d5e4
+af+ $$ (0x76E-0x5E4) SomethingWithGPIOC_and_Backlight_Timer
+f SomethingWithGPIOC_and_Backlight_Timer (0x76E-0x5E4) @ $$
+
+s 0x804d1b8
+af+ $$ (0x49E-0x1B8) SomethingWithRadioStatus1
+f SomethingWithRadioStatus1 (0x49E-0x1B8) @ $$
+
+s 0x803e372
+af+ $$ (0x3F6-0x372) func_e372
+f func_e372 (0x3F6-0x372) @ $$
+
+s 0x803da68
+af+ $$ (0xBDE-0xA68) func_da68
+f func_da68 (0xBDE-0xA68) @ $$
+
+s 0x803dbf0
+af+ $$ (0xC82-0xBF0) func_dbf0
+f func_dbf0 (0xC82-0xBF0) @ $$
+
+s 0x803dc90
+af+ $$ (0xCF2-0xC90) func_dc90
+f func_dc90 (0xCF2-0xC90) @ $$
+#------ end of functions directly, repeatedly called from task Start() -----
+CCa 0x080463f4 end task 'Start()', never returns
+
+s 0x8044472 # 
+af+ $$ (0x5B6-0x472) func_4472
+CCa 0x8044472 pData=pData; unused argument in R0
+
+s 0x8044618 #
+af+ $$ (0x658-0x618) func_4618
+
+s 0x8044658 #
+af+ $$ (0x758-0x658) SomethingWith_RCC_and_PLL_I2C
+
+s 0x804e132 # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x13A-0x132) ClearSomeHalfWordInRAM 
+s 0x80442ce # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x2FA-0x2CE) ClearSomeVariablesInRAM
+s 0x80442fa # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x32E-0x2FA) ClearSomeBlocksInRAM 
+s 0x8044368 # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x3C6-0x368) Func4_of_10 
+s 0x804426e # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x2CE-0x26E) Func5_of_10 
+s 0x80482c4 # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x312-0x2C4) Func6_of_10 
+
+s 0x804432e # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x368-0x32E) Create_uCOS_Idle_Task 
+CCa 0x804433A Task stack size (static array)
+CCa 0x8044350 R0 = pTaskFunc = PC+0x101 = &OS_IdleTask, ca 0x08044452
+CCa 0x8044354 OSTaskCreateExt(pTaskFunc,pvData,pTopOfStack,u8Prio,u16ID,pBotOfStack,u32StackSize,pvExt,u16Options)
+
+s 0x8044452 # task function, passed to OsTaskCreateExt somewhere. Names inspired by uC/OSII-demo ..
+af+ $$ (0x472-0x452) OS_IdleTask # name inspired by uCOS2/EX1.C
+CCa 0x8044452 pData=pData; unused argument in R0
+CCa 0x8044456 endless 'Idle' task loop
+CCa 0x8044460 OSIdleTaskCtr++; # inspired by Micrium, for uC_OS3
+CCa 0x8044470 must never return
+f OSIdleTaskCtr 4 @ 0x2001E710
+
+af+ 0x804E144 (0x14C-0x144) OSIdleTaskHook
+af+ 0x80323E6 (0x416-0x3E6) WaitForInterruptInIdle
+CCa 0x8032412 does the CPU save power here ?
+
+s 0x20018E70 # something in RAM, passed to OSTaskCreateExt
+f Stack_for_Idle_Task 256 @ $$
+# some strings in Flash, passed to OSTaskCreateExt etc
+f s_uCOS2_Start_Task 4 @ 0x80fbda8
+f s_uCOS2_Idle_Task 13 @ 0x80f8f54
+f s_uCOS2_Tmr_Task 12 @ 0x80f8f64
+f s_Call_Process 12 @ 0x80F8F74
+f s_FMTx_Process 12 @ 0x80F8F84
+f s_Beep_Process 12 @ 0x80F8F94
+f s_TimeSlot_Inter 14 @ 0x80F8F84
+f s_State_Change 12 @ 0x80F8FB4
+f s_DFU_in_HS_mode 14 @ 0x80F8FD4
+f s_000000000010B 12 @ 0x80F8FE4
+f s_000000000010C 12 @ 0x80F8FF4
+f s_DFU_Interface 13 @ 0x80F9004
+
+
+
+s 0x804b728 # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x7D6-0x728) CreateTwoSemaphores 
+s 0x804e13a # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x13C-0x13A) DoNothing_only_BX_LR 
+s 0x804e304 # called from InitGlobalsAndStartRealTimeKernel
+af+ $$ (0x3E8-0x304) ManyStrangeSimpleMoves
+CCa 0x0804e308 maybe just a dummy to suppress linker warnings
+
+s 0x8095810 # endlessly called from 0x80f7ef0 ? 
+af+ $$ 16 CalledForever
+CCa $$ Possibly for 'unexpected return from main()'
+f CalledForever 16 @ $$
+
+s 0x8044024 
+af+ $$ (0x66-0x24) func_4024
+
+s 0x8044434 # called from func_4024
+af+ $$ (0x52-0x34) func_4434
+
+s 0x8043df2 # called from func_4024
+af+ $$ ($E1E-0xDF2) func_3df2
+CCa 0x80F30988 Really an invalid opcode here ? 
 
 s 0x8044066 # .. 411a called from SysTick_Handler (after leaving a critical section)
 af+ $$ 182 SysTick_Sub1
@@ -1682,7 +1929,6 @@ af+ 0x8047cec (0xD00-0xCEC) func_7cec
 
 af+ 0x804811a (0x23A-0x11A) TimerIRQ_Sub6
 af+ 0x804823a (0x2C4-0x23A) func_823a
-af+ 0x80482c4 (0x312-0x2C4) func_82c4
 
 af+ 0x80522f4 (0x310-0x2F4) TimerIRQ_Sub7_writes_DAC # accesses the DAC-registers
 af+ 0x8052310 (0x32C-0x310) SomethingElseWritingDAC
@@ -1994,9 +2240,44 @@ pdf @RCC_Init >> listing.txt # called from SystemInit() so list it here
 pdf @__main >> listing.txt # called after SystemInit() so list it here
 pdf @FPU_Init >> listing.txt # contains an esoteric "vmsr fpscr, r0" (FPU-related, PM0214 page 169)
 pdf @_main2 >> listing.txt # 2nd function called from __main() [not main()]
+pdf @_main2_init_sub1 >> listing.txt
 pdf @_main2_init_sub2 >> listing.txt # almost as bizarre as Keil's "scatterload" !
 pdf @_main2_init_sub3 >> listing.txt # still none of the already annotated 'upper level' functions in sight !
+pdf @_main3 >> listing.txt
+pdf @CalledForever >> listing.txt
+pdf @func_1d7e >> listing.txt
+pdf @func_e2e0 >> listing.txt
+pdf @InitGlobalsAndStartRealTimeKernel >> listing.txt
+pdf @ClearSomeHalfWordInRAM >> listing.txt
+pdf @ClearSomeVariablesInRAM >> listing.txt
+pdf @ClearSomeBlocksInRAM >> listing.txt
+pdf @Func4_of_10 >> listing.txt
+pdf @Func5_of_10 >> listing.txt
+pdf @Func6_of_10 >> listing.txt
+pdf @Create_uCOS_Idle_Task >> listing.txt
+pdf @OS_IdleTask >> listing.txt
+pdf @OSIdleTaskHook >> listing.txt
+pdf @WaitForInterruptInIdle >> listing.txt
+pdf @CreateTwoSemaphores >> listing.txt
+pdf @DoNothing_only_BX_LR >> listing.txt
+pdf @ManyStrangeSimpleMoves >> listing.txt
+pdf @Create_Start_Task_AndSetItsName >> listing.txt
 
+# endless 'Start' task and functions called from there...
+pdf @Start >> listing.txt
+pdf @SomethingWithGPIOA_and_RadioStatus1 >> listing.txt
+pdf @SomethingWithGPIOC_and_Backlight_Timer >> listing.txt
+pdf @FuncWithAwfulLongSwitch >> listing.txt
+pdf @LongSwitchWithRadioStatus1 >> listing.txt
+pdf @SomethingWithChannelsRadioConfigAndBeeps >> listing.txt
+pdf @SomethingWithLongpressSettingRadioStatus1 >> listing.txt
+pdf @SomethingWithGuiOpmode2 >> listing.txt
+pdf @SomethingWithGPIOA_and_RadioStatus1 >> listing.txt
+pdf @SomethingWithGPIOC_and_Backlight_Timer >> listing.txt
+pdf @SomethingWithRadioStatus1 >> listing.txt
+pdf @func_3df2 >> listing.txt
+pdf @SetBit30_ptrR0plus8 >> listing.txt
+pdf @ExtendU16toU32_ptrR0plus4C >> listing.txt
 
 # EXCEPTION- and INTERRUPT vectors (can be told from each other by the _IRQ in the names)
 s DummyForUnusedIRQs  # ex: s NMI_Handler
@@ -2036,12 +2317,43 @@ pdf @menu_draw_something4 >> listing.txt
 pdf @menu_draw_something5 >> listing.txt
 pdf @kb_handler >> listing.txt
 
+    # Graphic functions
+pdf @gfx_drawbmp >> listing.txt
+pdf @gfx_blockfill >> listing.txt
+pdf @gfx_linefill >> listing.txt
+pdf @gfx_newline >> listing.txt
+pdf @gfx_get_xpos >> listing.txt
+pdf @gfx_get_ypos >> listing.txt
+pdf @gfx_set_fg_color >> listing.txt
+pdf @gfx_set_fg_color2 >> listing.txt
+pdf @gfx_set_bg_color >> listing.txt
+pdf @gfx_set_bg_color2 >> listing.txt
+pdf @gfx_select_font >> listing.txt
+pdf @gfx_drawchar_pos >> listing.txt
+pdf @gfx_drawchar >> listing.txt
+pdf @gfx_clear3 >> listing.txt
+pdf @gfx_drawtext >> listing.txt
+pdf @gfx_drawtext2 >> listing.txt
+pdf @gfx_drawtext3 >> listing.txt
+pdf @gfx_drawtext4 >> listing.txt
+pdf @gfx_drawtext5 >> listing.txt
+pdf @gfx_drawtext6 >> listing.txt
+pdf @gfx_drawtext7 >> listing.txt
+pdf @gfx_drawtext8 >> listing.txt
+pdf @gfx_drawtext9 >> listing.txt
+pdf @gfx_drawtext10 >> listing.txt
+pdf @gfx_drawchar_unk >> listing.txt
+pdf @draw_zone_channel >> listing.txt
+
     # RTOS kernel
 pdf @OSSemCreate >> listing.txt
 pdf @OSSemPend >> listing.txt
 pdf @OSSemPost >> listing.txt
 pdf @OSTaskCreateExt >> listing.txt
 pdf @OSTaskNameSet >> listing.txt
+pdf @OSTimeDly >> listing.txt
+pdf @md380_OSMboxPost >> listing.txt
+pdf @md380_OSMboxPend >> listing.txt
 pdf @OS_ENTER_CRITICAL >> listing.txt
 pdf @OS_EXIT_CRITICAL >> listing.txt
 

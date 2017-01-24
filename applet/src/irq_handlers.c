@@ -23,7 +23,7 @@
         stm32f4xx_it.c is useless, because all 'weak' default handlers
         alreay exist in startup_stm32f4xx_asm.S (ex startup_stm32f4xx.s) .
   
-  4. Add a call to IRQ_Init() in main.c : splash_hook_handler() .
+  4. Add calls to IRQ_Init() in main.c : splash_hook_handler() .
 
   5. Add a patch for SysTick_Handler in merge_d13.020.py (etc) .
   
@@ -169,12 +169,15 @@ void SysTick_Handler(void)
       }          
        
 # if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
-     if( GFX_backlight_on ) intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE
-# else  // as long as gfx.c : isn't called, GFX_backlight_on is a useless dummy, so...
-     // Use Tytera's own "backlight timer" instead. Reloaded anywhere, then counts down to zero somewhere, and stops at zero when IDLE.
-     if( backlight_timer>0) intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE   
+     if( GFX_backlight_on ) 
+# else  // as long as gfx.c:lcd_background_led() isn't called, GFX_backlight_on is useless, 
+        // so use Tytera's "backlight_timer" instead:
+     if( backlight_timer>0)
 # endif // < how to find out if the backlight is currently "low" (dimmed) or "high" (more intense) ?
-     intensity &= 0x0F;    // 4-bit value, but only steps 0..9 are really used
+      { intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE
+        intensity |=  1;
+      } // end if < backlight should be "on" (active state) > 
+     intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
    }
   
   // MD380 "Lamp" is on "PC6" (port C bit 6), usable also as USART6_TX . Use it as GPIO or U(S)ART ?

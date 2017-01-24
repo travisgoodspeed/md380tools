@@ -55,7 +55,7 @@ const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
-const static wchar_t wt_backlight[]         = L"Backlight Tmr";  // no effect ? (in D013.020, 2017-01)
+const static wchar_t wt_backlight[]         = L"Backlight Tmr";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
@@ -65,12 +65,10 @@ const static wchar_t wt_bl60[]              = L"60 sec";
 #if( CONFIG_DIMMED_LIGHT ) // support pulse-width modulated backlight ?
 const static wchar_t wt_bl_intensity_lo[]   = L"Backlt Low";
 const static wchar_t wt_bl_intensity_hi[]   = L"Backlt High";
-static uint8_t bIntensityMenuIndex; // 0 = modifying "backlight intensity low" (used during idle time),
-                                    // 1 = modifying "backlight intensity high" (used when 'radio active').
 #define NUM_BACKLIGHT_INTENSITIES 10 /* number of intensity steps (0..9) for the menu */
 const static wchar_t *wt_bl_intensity[NUM_BACKLIGHT_INTENSITIES] = 
- { L"0 (off)", L"1 (lowest)", L"2",    L"3",    L"4", 
-   L"5",       L"6",          L"7",    L"8",    L"9 (bright)" }; 
+ { L"0 (off)", L"1 (lowest)", L"2", L"3 (medium)", L"4", 
+   L"5",       L"6",          L"7", L"8",          L"9 (bright)" }; 
 #endif // CONFIG_DIMMED_LIGHT ?
 
 const static wchar_t wt_cp_override[]       = L"CoPl Override";
@@ -785,7 +783,7 @@ void mn_backlight_60sec()
     mn_backlight_set(12,wt_bl60);     
 }
 
-void mn_backlight(void)  // menu for the backlight-TIME (non-functional ? only Tytera's own config menu seemed to affect this. YHF 2017-01-08)
+void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, but sets the same parameter)
 {
     mn_submenu_init(wt_backlight);
     
@@ -793,14 +791,37 @@ void mn_backlight(void)  // menu for the backlight-TIME (non-functional ? only T
     mn_submenu_add(wt_bl60, mn_backlight_60sec);
 
     mn_submenu_finalize();
+    
+  // For some reason, the text shown when pressing 'Confirm' in this menu
+  // was spoiled when invoked after *OTHER* 'long' menus, e.g. 'Date Format'.
+  // The bug already existed before adding the backlight dimming menus.
+  // To reproduce this bug:
+  // 1.) Select "Date Format", "YYYY-MM-DD". Press CONFIRM.
+  //     Screen shows "   Date Format  "
+  //                  "   YYYY-MM-DD   "  .  Ok .
+  // 2.) Scroll down in the MD380Tools menu, 
+  //       select "Backlight Tmr" (ex: "Backlight),
+  //         Select "60 sec",
+  //            Press CONFIRM  .
+  //     Screen shows "   Date Format  "
+  //                  "   YYYY-MM-DD   "  again !
+  // The problem remains, even after quitting ALL menus, and re-entering them.
+  // Why are other (but similar) menu functions 'immune' against this ?
+  // Not enough space for all these menus in Tytera's part of the firmware ?
+  // Must get rid of this stuff by re-writing as much as possible in clean C...  
 }
 
 
 #if( CONFIG_DIMMED_LIGHT ) // Setup for pulse-width modulated backlight ? (DL4YHF 2017-01-08)
 typedef void(*tMenuFunctionPtr)(void);
+static uint8_t bIntensityMenuIndex; // 0 = modifying "backlight intensity low" (used during idle time),
+                                    // 1 = modifying "backlight intensity high" (used when 'radio active').
 
 void mn_backlight_intens( int intensity ) // common 'menu handler' for all <NUM_BACKLIGHT_INTENSITIES> intensity steps
-{ 
+{ // Caller: create_menu_entry_addl_functions_screen() -> mn_backlight_hi() + mn_backlight_lo()
+  //          -> mn_submenu_add() -> ?.. 
+  //              -> mn_backlight_intens_0/1/../9() -> mn_backlight_intens( intensity=0..9 )
+  // 
   switch( bIntensityMenuIndex ) // what's being edited, "low" (idle) or "high" (active) backlight intensity ?
    { case 0 : // selected a new LOW backlight intensity ...
      default:
@@ -809,14 +830,13 @@ void mn_backlight_intens( int intensity ) // common 'menu handler' for all <NUM_
         global_addl_config.backlight_intensities |= (uint8_t)intensity; 
         break;
      case 1 : // selected a new HIGH backlight intensity :
-        if( intensity < 1 ) // intensity "zero" not allowed for "high" setting
-         {  intensity = 1;  // .. to keep the display readable
-         }
         mn_create_single_timed_ack( wt_bl_intensity_hi, wt_bl_intensity[intensity]/*label*/ );
         global_addl_config.backlight_intensities &= 0x0F;  // strip old nibble (upper 4 bits for "high" intensity)
         global_addl_config.backlight_intensities |= ((uint8_t)intensity << 4);
         break;
    }
+  // the upper 4 bits must never be ZERO, to avoid 'complete darkness' of the display when ACTIVE :
+  global_addl_config.backlight_intensities |= 0x10; 
   cfg_save();
   
 } // end mn_backlight_intens()
@@ -936,7 +956,7 @@ void create_menu_entry_edit_screen(void)
       0x08012ab0      f4d3           blo 0x8012a9c
      */
 
-    // clear retrun buffer //  see 0x08012a98
+    // clear return buffer //  see 0x08012a98
     // TODO: is wchar_t (16 bits))
     for (i = 0; i < 0x11; i++) {
         p = (uint8_t *) mn_editbuffer_poi;
@@ -1087,8 +1107,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_bl_intensity_hi/*item text*/, mn_backlight_hi/*menu handler*/ ); // backlight intensity "high" (used when active)
 #  endif   
 
-    mn_submenu_add_98(wt_backlight, mn_backlight); // backlight TIMER : no effect (2017-01-08) ?
-  
+    mn_submenu_add_98(wt_backlight, mn_backlight); // backlight TIMER (longer than Tytera's 5/10/15 seconds)
     
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
