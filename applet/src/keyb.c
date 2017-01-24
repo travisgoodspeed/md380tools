@@ -12,6 +12,7 @@
 #include "mbox.h"
 #include "console.h"
 #include "syslog.h"
+#include "clog.h"
 #include "slog.h"
 #include "lastheard.h"
 #include "radio_config.h"
@@ -112,13 +113,24 @@ void handle_hotkey( int keycode )
     reset_backlight();
     
     switch( keycode ) {
+       case 0 :
+            syslog_clear();
+	    lastheard_clear();
+	    slog_clear();
+	    clog_clear();
+	    nm_started = 0;	// reset nm_start flag used for some display handling
+	    nm_started5 = 0;	// reset nm_start flag used for some display handling
+	    nm_started6 = 0;	// reset nm_start flag used for some display handling
+            break ;
         case 1 :
             sms_test();
             break ;
         case 2 :
-            syslog_clear();
-	    lastheard_clear();
-	    nm_started = 0;// reset nm_start flag used for some display handling
+        {
+            static int cnt = 0 ;
+            syslog_printf("=dump %d=\n",cnt++);
+        }
+            syslog_dump_dmesg();
             break ;
         case 3 :
             copy_dst_to_contact();
@@ -132,11 +144,8 @@ void handle_hotkey( int keycode )
             switch_to_screen(5);
             break ;
         case 6 :
-        {
-            static int cnt = 0 ;
-            syslog_printf("=dump %d=\n",cnt++);
-        }
-            syslog_dump_dmesg();
+	    clog_redraw();
+            switch_to_screen(6);
             break ;
         case 7 :
             bp_send_beep(BEEP_TEST_2);
@@ -151,14 +160,14 @@ void handle_hotkey( int keycode )
             switch_to_screen(3);
             break ;
         case 11 :
-            gui_control(1);
+            //gui_control(1);
             //bp_send_beep(BEEP_9);
             //beep_event_probe++ ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
         case 12 :
-            gui_control(241);
+            //gui_control(241);
             //bp_send_beep(BEEP_25);
             //beep_event_probe-- ;
             //sms_test2(beep_event_probe);
@@ -171,24 +180,25 @@ void handle_hotkey( int keycode )
             gui_opmode2 = OPM2_MENU ;
             gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
             break ;
-    }    
+    }   
 }
 
 void handle_sidekey( int keycode, int keypressed )
 {
-    if ( keycode == 18 ) {										//top button
-    	if ( (keypressed & 2) == 2 ) {									//short press
+
+    if ( keycode == 18 ) {												//top button
+    	if ( (keypressed & 2) == 2 && kb_top_side_key_press_time < kb_side_key_max_time) {									//short press
     		evaluate_sidekey( top_side_button_pressed_function );
     	}
-    	else if ( keypressed == 5 ) {									//long press
+    	else if ( keypressed == 5) {									//long press
     		evaluate_sidekey( top_side_button_held_function );
     	}
     }
-    else if ( keycode == 17 ) {										//bottom button
-    	if ( (keypressed & 2) == 2 ) {									//short press
-		evaluate_sidekey( bottom_side_button_pressed_function );
+    else if ( keycode == 17 ) {											//bottom button
+	if ( (keypressed & 2) == 2 && kb_bot_side_key_press_time < kb_side_key_max_time) {									//short press
+			evaluate_sidekey( bottom_side_button_pressed_function );
 	}
-	else if ( keypressed == 5 ) {								//long press
+	else if ( keypressed == 5 ) {									//long press
 		evaluate_sidekey( bottom_side_button_held_function );
 	}
     }
@@ -248,6 +258,7 @@ inline int is_intercept_allowed()
 inline int is_intercepted_keycode( int kc )
 {
     switch( kc ) {
+        case 0 :
         case 1 :
         case 2 :
         case 3 :

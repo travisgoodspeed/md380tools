@@ -19,16 +19,16 @@ inline int is_slog_enabled()
 void slog_printf(const char *fmt, ...);
 
 // radio
-#define LOGR(...) slog_printf(__VA_ARGS__)
+#define SLOGR(...) slog_printf(__VA_ARGS__)
 
 // gui
-#define LOGG(...) //slog_printf(__VA_ARGS__)
+#define SLOGG(...) //slog_printf(__VA_ARGS__)
 
 // boot/setup
-#define LOGB(...) slog_printf(__VA_ARGS__)
+#define SLOGB(...) slog_printf(__VA_ARGS__)
 
 // template for others
-#define LOGx(...) slog_printf(__VA_ARGS__)
+#define SLOGx(...) slog_printf(__VA_ARGS__)
 
 void slog_dump_dmesg();
 void slog_clear();

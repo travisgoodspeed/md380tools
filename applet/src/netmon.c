@@ -14,6 +14,7 @@
 #include "gfx.h"
 #include "radiostate.h"
 #include "syslog.h"
+#include "clog.h"
 #include "slog.h"
 #include "lastheard.h"
 #include "console.h"
@@ -25,8 +26,14 @@
 
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
+uint8_t nm_started5 = 0 ;
+uint8_t nm_started6 = 0 ;
 uint8_t rx_voice = 0 ;
 uint8_t rx_new = 0 ;
+uint8_t ch_new = 0 ;
+
+wchar_t last_channel[20];			// last channel name
+wchar_t curr_channel[20];			// current channel name
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -261,7 +268,7 @@ void netmon4_update()
     char log = 'l';
 
     if ( nm_started == 0 ) {
-	lastheard_printf("Netmon 4 - Lastheard ====\n");
+	lastheard_printf("Netmon 4 Lastheard =======\n");
 	nm_started = 1;				// flag for restart of LH list
 	lh_cnt = 1;				// reset lh counter 
     }	
@@ -277,7 +284,7 @@ void netmon4_update()
    user_t usr;
    
 
-    if( ( src != 0 ) && ( rx_voice == 1 ) ) {
+    if( ( src != 0 ) && ( rx_voice != 0 ) ) {
         //lastheard_printf("%d",lh_cnt++);
         print_time_hook(log) ;
         if( usr_find_by_dmrid(&usr, src) == 0 ) {
@@ -285,8 +292,11 @@ void netmon4_update()
         } else {
             lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
         }
+	if ( rx_voice == 1 ) {
+          rx_new = 1;				// set status to new for netmon5
+	  ch_new = 1;				// set status to new for netmon6
+	}
 	rx_voice = 0 ;				// call handled, wait until new voice call status received
-        rx_new = 1;				// set status to new for netmon5
      }
     }
 #else
@@ -295,23 +305,26 @@ void netmon4_update()
 
 }
 
+//void convert_to_string(wchar_t *channel_name, char *last_channel) {
+//while (*last_channel++ = (char)*channel_name++); }
+
 void netmon5_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     slog_draw_poll();
     
     int src;
-    wchar_t last_channel[40];			// last channel name
-    wchar_t curr_channel[40];			// current channel name
+    int cmp_res;				// compare result returncode (0= channel not changed)
 
-    extern wchar_t channel_name[] ;		// read current channel name from external  
+    extern wchar_t channel_name[20] ;		// read current channel name from external  
     static int sl_cnt = 0 ;			// lastheard line counter
+    static int cp_cnt = 1 ;			// lastheard channel page counter
     char log = 's';
 
-    if ( sl_cnt == 0 ) {
-	slog_printf("Netmon 5 - Develop ======\n");
-	nm_started = 1;				// flag for restart of LH list
-	sl_cnt = 1;				// reset lh counter 
+    if ( nm_started5 == 0 ) {
+	slog_printf("Netmon 5 LH Channel =========\n");
+	nm_started5 = 1;				// flag for restart of LH list
+	sl_cnt++;				// reset lh counter 
     }	
 
     char mode = ' ' ;
@@ -321,29 +334,32 @@ void netmon5_update()
         } else {
             mode = '<' ; // on other tg
         }
-   src = rst_src;
-   user_t usr;
+    src = rst_src;
+    user_t usr;
 
     if( ( src != 0 ) && ( rx_new == 1 ) ) {
 
- 	for (int i = 0; i < 40; i++)
+	for (int i = 0; i < 20; i++)
 	   {
 	      curr_channel[i] = channel_name[i];
 		if (channel_name[i] == '\0')
 		break;
 	   }
-    	
-	if (last_channel != curr_channel) {			// remember channel_name 
-		slog_printf("cn:%S \n",channel_name);
- 		   for (int i = 0; i < 40; i++)
-		   {
-  		      last_channel[i] = channel_name[i];
-			if (channel_name[i] == '\0')
-			break;
-		   }
+
+	if ( (wcscmp(last_channel, curr_channel) != 0)  || (sl_cnt >= 9) ) {			// compare channel_name with last_channel from latest rx
+
+		if (sl_cnt >= 9 ) {
+			slog_printf(">>:%S #%d <<< \n", curr_channel, cp_cnt);			// show page # on new log pages
+			sl_cnt = 0;								// reset sl_cnt at end of screen
+			cp_cnt++;								// increment lh page count
+		} else {
+			slog_printf("cn:%S ---------------\n", curr_channel);			// show divider line when channel changes	
+		}
+		wcscpy(last_channel, curr_channel);
+		sl_cnt++;
 	}
 
-        print_time_hook(log) ;
+        print_time_hook(log);
 
 	// loookup source ID in user database to show callsign instead of ID
         if( usr_find_by_dmrid(&usr, src) == 0 ) {
@@ -362,17 +378,68 @@ void netmon5_update()
 		}
         }
 	rx_new = 0 ;				// call handled, wait until new voice call status received
+	ch_new = 1 ;				// status for netmon6
+	sl_cnt++;
      }
     }
 #else
-    slog_printf("No syslog available\n");    
+    slog_printf("No lastheard available\n");    
 #endif 
 
+}
+
+
+//void convert_to_string(wchar_t *channel_name, char *last_channel) {
+//while (*last_channel++ = (char)*channel_name++); }
+
+void netmon6_update()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    clog_draw_poll();
+    
+    int src;
+    int cmp_res;				// compare result returncode (0= channel not changed)
+
+    extern wchar_t channel_name[20] ;		// read current channel name from external  
+    static int ch_cnt = 0 ;			// lastheard line counter
+    static int cp_cnt = 1 ;			// lastheard channel page counter
+    char log = 'c';
+
+    if ( nm_started6 == 0 ) {
+	clog_printf("Netmon 6 RX channel ========\n");
+	nm_started6 = 1;				// flag for restart of LH list
+	ch_cnt = 1;				// reset lh counter 
+    }	
+
+    src = rst_src;
+
+    //if( ( src != 0 ) && ( ch_new == 1 ) ) {
+    if( ch_new == 1 ) {
+
+	for (int i = 0; i < 20; i++)
+	   {
+	      curr_channel[i] = channel_name[i];
+		if (channel_name[i] == '\0')
+		break;
+	   }
+
+	if (wcscmp(last_channel, curr_channel) != 0)  {			// compare channel_name with last_channel from latest rx
+	        print_time_hook(log);
+		clog_printf("-%S \n", curr_channel);			// show divider line when channel changes	
+		wcscpy(last_channel, curr_channel);
+		ch_cnt++;
+		}
+	ch_new = 0 ;				// call handled, wait until new voice call status received
+     }
+#else
+    clog_printf("No channellog available\n");    
+#endif 
 }
 
 void netmon_update()
 {
     if( !is_netmon_visible() ) {
+        netmon6_update();
         netmon4_update();
         netmon5_update();
         return ;
@@ -391,10 +458,18 @@ void netmon_update()
             netmon3_update();
             return ;
         case 4 :
+            netmon6_update();
             netmon4_update();
             return ;
         case 5 :
+            netmon4_update();
+            netmon6_update();
             netmon5_update();
+            return ;
+        case 6 :
+            netmon4_update();
+            netmon5_update();
+            netmon6_update();
             return ;
     }
 }

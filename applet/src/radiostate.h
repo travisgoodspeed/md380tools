@@ -19,6 +19,8 @@ extern int rst_grp ;
 extern int rst_mycall ;
 
 extern uint8_t rx_voice ;
+extern uint8_t rx_new ;
+extern uint8_t ch_new ;
     
 extern int rst_hdr_sap ;
 extern int rst_hdr_src ;

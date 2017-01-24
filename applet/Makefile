@@ -42,6 +42,7 @@ SRCS += spiflash.o usb.o menu.o rtc_timer.o usersdb.o os.o aes.o
 SRCS += ambe.o  dmr.o 
 SRCS += display.o
 SRCS += console.o
+SRCS += clog.o
 SRCS += util.o
 SRCS += netmon.o
 SRCS += debug.o
