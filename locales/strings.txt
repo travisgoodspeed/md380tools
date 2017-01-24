@@ -77,7 +77,7 @@ it Vers.Firmware
 en Batter Info
 de BatterieInf
 es Info Bateria
-it Info Battery
+it InfoBatteria
 
 # 0xc5510 28 13 Private Alert
 en Private Alert
