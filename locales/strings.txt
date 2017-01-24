@@ -876,3 +876,5 @@ it DCS RX
 # 0xef644 12 11 ChAccess Pr
 # 0xef650 9 8 Tone fft
 # 0xef65c 11 10 DFU Config
+en DFU Config
+it DFU Config
