@@ -873,6 +873,7 @@ it DCS RX
 # 0xef620 10 9 RTC Timer
 # 0xef62c 12 11 LED Process
 # 0xef638 12 11 Set Vocoder
+it set Vocoder
 # 0xef644 12 11 ChAccess Pr
 # 0xef650 9 8 Tone fft
 # 0xef65c 11 10 DFU Config
