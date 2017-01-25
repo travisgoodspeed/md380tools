@@ -81,7 +81,7 @@ int handle(char *line){
   
   if(handlerstate==NEW){
     short *toreplace;
-    while((toreplace=memmem(firmware,firmwaresize*1024,
+    if((toreplace=memmem(firmware,firmwaresize*1024,
 			 en,enlen))){
       printf("Found it at %08x.\n",
 	     (int) toreplace - (int) firmware + 0x0800C000);
