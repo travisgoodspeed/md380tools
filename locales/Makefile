@@ -14,11 +14,11 @@ it: localize applet
 	make D013.020-it.bin
 
 de: localize applet
-	cat strings.txt | ./localize it ../applet/merged.img D013.020-de.img
+	cat strings.txt | ./localize de ../applet/merged.img D013.020-de.img
 	make D013.020-de.bin
 
 es: localize applet
-	cat strings.txt | ./localize it ../applet/merged.img D013.020-es.img
+	cat strings.txt | ./localize es ../applet/merged.img D013.020-es.img
 	make D013.020-es.bin
 
 
