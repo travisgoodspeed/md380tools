@@ -699,7 +699,7 @@ af+ 0x802f994 36 bp_sempost
 f bp_sempost2 @ 0x0802f9b8
 af+ 0x802f9b8 24 bp_sempost2
 
-af+ 0x80309b8 236 Sub2CalledFromTIM8ISR # dl4yhf 2017-01-03, ends at 8030aa2 (?), called from TIM8 handler. Tone-generator ?
+af+ 0x80309b8 236 Sub2CalledFromTimerISR # dl4yhf 2017-01-03, ends at 8030aa2 (?), called from TIM8 handler. Tone-generator ?
 af+ 0x8030aa4 52 F_293
 
 
@@ -952,8 +952,32 @@ af+ 0x80237fe 86 gfx_drawbmp
 f gfx_blockfill @ 0x801d88c
 af+ 0x801d88c 30 gfx_blockfill
 
-f gfx_linefill @ 0x0801d81a
-af+ 0x0801d81a 104 gfx_linefill
+s 0x0801d81a
+f gfx_linefill @ $$
+af+ $$ (0x4E-0x1A) gfx_linefill
+
+s 0x0801d84e
+f gfx_linefill2 @ $$
+af+ $$ (0x82-0x4E) gfx_linefill2
+
+af+ 0x0801d7fa (0x81A-0x7FA) gfx_linefill_sub
+af+ 0x0801d7ca (0x7FA-0x7CA) gfx_put_pixel
+af+ 0x08033728 (0x770-0x728) gfx_put_pixel_sub
+af+ 0x08033770 (0x7B4-0x770) gfx_put_pixel_sub2
+af+ 0x0803352C (0x534-0x52C) WriteLCDCommand # called from what MAY BE 'put_pixel'
+af+ 0x08033534 (0x53A-0x534) WriteLCDData # called from what MAY BE 'put_pixel'
+# stores R0 in 0x6004000, which may have been something like the following:
+#define Bank1_LCD_D 0x60040000 // disp Data ADDR (FSMC bank 1, A18 set to select DATA ?)
+#define Bank1_LCD_C 0x60000000 // disp Reg ADDR  (FSMC bank 1, A18 cleared to select CONTROL REGISTER ?)
+#define write_command(LCD_DATA) *(BYTE*)Bank1_LCD_C = (BYTE)LCD_DATA;  
+#define write_data(LCD_COMM)    *(BYTE*)Bank1_LCD_D = (BYTE)LCD_COMM;
+#define write_com(LCD_DATA,LCD_COMM)  write_command(LCD_DATA);write_data(LCD_COMM)
+af+ 0x0803353A (0x546-0x53A) ReadLCDData
+af+ 0x08033546 (0x55A-0x546) sub_3546
+af+ 0x0803355A (0x56E-0x55A) sub_355a
+af+ 0x0803356E (0x716-0x56E) InitLCDisplay
+
+
 
 f gfx_info @ 0x2001da1c
 
@@ -1707,8 +1731,8 @@ af+ $$ (0x0F8-0x0F0) func_6050
 #f func_6050 (0x0F8-0x0F0) @ $$
 
 s 0x80460f8
-af+ $$ (0x204-0x0F8) SomethingWithGPIOA_and_RadioStatus1
-f SomethingWithGPIOA_and_RadioStatus1 (0x204-0x0F8) @ $$
+af+ $$ (0x204-0x0F8) DrawSomethingThenBitBangIO
+f DrawSomethingThenBitBangIO (0x204-0x0F8) @ $$
 CCa 0x804612C return but not end of function
 
 s 0x804d688
@@ -2265,19 +2289,25 @@ pdf @Create_Start_Task_AndSetItsName >> listing.txt
 
 # endless 'Start' task and functions called from there...
 pdf @Start >> listing.txt
-pdf @SomethingWithGPIOA_and_RadioStatus1 >> listing.txt
+pdf @DrawSomethingThenBitBangIO >> listing.txt
 pdf @SomethingWithGPIOC_and_Backlight_Timer >> listing.txt
 pdf @FuncWithAwfulLongSwitch >> listing.txt
 pdf @LongSwitchWithRadioStatus1 >> listing.txt
 pdf @SomethingWithChannelsRadioConfigAndBeeps >> listing.txt
 pdf @SomethingWithLongpressSettingRadioStatus1 >> listing.txt
 pdf @SomethingWithGuiOpmode2 >> listing.txt
-pdf @SomethingWithGPIOA_and_RadioStatus1 >> listing.txt
+pdf @DrawSomethingThenBitBangIO >> listing.txt
 pdf @SomethingWithGPIOC_and_Backlight_Timer >> listing.txt
 pdf @SomethingWithRadioStatus1 >> listing.txt
 pdf @func_3df2 >> listing.txt
 pdf @SetBit30_ptrR0plus8 >> listing.txt
 pdf @ExtendU16toU32_ptrR0plus4C >> listing.txt
+pdf @SomeBitbangingOnGPIOD >> listing.txt
+pdf @SomethingWithGPIOC_TIM7_Status >> listing.txt
+pdf @CalledFromLongpressThing >> listing.txt
+pdf @CalledFromSomeBitbangIO >> listing.txt
+pdf @Calls_6050 >> listing.txt
+
 
 # EXCEPTION- and INTERRUPT vectors (can be told from each other by the _IRQ in the names)
 s DummyForUnusedIRQs  # ex: s NMI_Handler
@@ -2288,7 +2318,7 @@ pD (NextAfterHandlers-DummyForUnusedIRQs) >> listing.txt # this disassembles MOS
 
 # Functions called from various INTERRUPT SERVICE HANDLERS :
 pdf @CobbleUpR1_and_StoreInR0plus16 >> listing.txt # may be a tone generator (?) 
-pdf @Sub2CalledFromTIM8ISR >> listing.txt
+pdf @Sub2CalledFromTimerISR >> listing.txt
 pdf @SysTick_Sub1 >> listing.txt
 pdf @SysTick_Sub2 >> listing.txt
 pdf @nop_BX_LR >> listing.txt
@@ -2305,6 +2335,14 @@ pdf @CalledFromPinChangeIRQ >> listing.txt
 pdf @func_5824 >> listing.txt
 pdf @func_582e >> listing.txt
 pdf @func_5838 >> listing.txt
+pdf @TimerIRQ_Sub1 >> listing.txt
+pdf @TimerIRQ_Sub2 >> listing.txt
+pdf @TimerIRQ_Sub3 >> listing.txt
+pdf @TimerIRQ_Sub5 >> listing.txt
+pdf @TimerIRQ_Sub9 >> listing.txt
+pdf @TimerIRQ_Sub11 >> listing.txt
+
+    
     
 # Disassemble individual functions, most of these annotated by Travis and others:
 pdf @md380_create_main_menu_entry >> listing.txt
@@ -2321,6 +2359,10 @@ pdf @kb_handler >> listing.txt
 pdf @gfx_drawbmp >> listing.txt
 pdf @gfx_blockfill >> listing.txt
 pdf @gfx_linefill >> listing.txt
+pdf @gfx_linefill2 >> listing.txt
+pdf @gfx_linefill_sub >> listing.txt
+pdf @gfx_put_pixel >> listing.txt
+pdf @gfx_put_pixel_sub >> listing.txt
 pdf @gfx_newline >> listing.txt
 pdf @gfx_get_xpos >> listing.txt
 pdf @gfx_get_ypos >> listing.txt
@@ -2344,6 +2386,18 @@ pdf @gfx_drawtext9 >> listing.txt
 pdf @gfx_drawtext10 >> listing.txt
 pdf @gfx_drawchar_unk >> listing.txt
 pdf @draw_zone_channel >> listing.txt
+pdf @gfx_call_via_ptr__GfxInfoPlus0x18 >> listing.txt
+pdf @gfx_set_something_in_GfxInfoPlus0x24 >> listing.txt
+pdf @gfx_store_something_in_GfxInfoPlus0x22 >> listing.txt
+
+    # the following may be related to 'low level gfx'.. needs a closer look
+pdf @gfx_put_pixel_sub2 >> listing.txt
+pdf @WriteLCDCommand >> listing.txt
+pdf @WriteLCDData >> listing.txt
+pdf @ReadLCDData >> listing.txt
+pdf @sub_3546 >> listing.txt
+pdf @sub_355a >> listing.txt
+pdf @InitLCDisplay >> listing.txt
 
     # RTOS kernel
 pdf @OSSemCreate >> listing.txt
@@ -2376,6 +2430,8 @@ pdf @some_bitband_io_range >> listing.txt # called from c5000_spi0_write/readreg
 pdf @some_bitband_io >> listing.txt # called from the above..
 pdf @StoreHalfR1_in_R0plus0x18 >> listing.txt # first called from the bitbang / bitband - thing ..
 pdf @StoreHalfR1_in_R0plus0x1A >> listing.txt
+pdf @StoreR1_in_R0plus0x24 >> listing.txt
+pdf @StoreR1_in_R0plus0x2C >> listing.txt
 pdf @StoreR1R2_in_R0plus0x18_or_1A >> listing.txt
 pdf @some_func_post >> listing.txt # called from c5000_spi0_write/readreg
 pdf @dmr_call_start >> listing.txt

@@ -56,6 +56,8 @@ const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
 const static wchar_t wt_backlight[]         = L"Backlight Tmr";
+const static wchar_t wt_blunchanged[]       = L"Unchanged";
+const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
@@ -764,6 +766,14 @@ void create_menu_entry_experimental_screen(void)
     mn_submenu_finalize();
 }
 
+
+//-------------------------------------------------------------
+// Backlight configuration: Timer adjustable 5, 30, 60 seconds,
+//    besides those in the original firmware.
+//    Please don't remove the 5 second option,
+//    it's the preferred one in combination with DIMMING .
+//-------------------------------------------------------------
+
 void mn_backlight_set(int sec5, const wchar_t *label)
 {
     mn_create_single_timed_ack(wt_backlight,label);
@@ -771,6 +781,15 @@ void mn_backlight_set(int sec5, const wchar_t *label)
     md380_radio_config.backlight_time = sec5 ; // in 5 sec incr.
 
     rc_write_radio_config_to_flash();    
+}
+
+void mn_backlight_unchanged()
+{
+}
+
+void mn_backlight_5sec()
+{
+    mn_backlight_set(1,wt_bl5);     
 }
 
 void mn_backlight_30sec()
@@ -787,28 +806,19 @@ void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, b
 {
     mn_submenu_init(wt_backlight);
     
+    switch( md380_radio_config.backlight_time ) // inspired by fix stargo0's fix #674 
+     { // (fixes the selection of the current backlight-time in the menu)
+       case 1 /* times 5sec */ : md380_menu_entry_selected = 1; break;
+       case 6 /* times 5sec */ : md380_menu_entry_selected = 2; break;
+       case 12/* times 5sec */ : md380_menu_entry_selected = 3; break;
+       default/* unchanged  */ : md380_menu_entry_selected = 0; break;
+     }
+    mn_submenu_add(wt_blunchanged, mn_backlight_unchanged);
+    mn_submenu_add(wt_bl5,  mn_backlight_5sec );
     mn_submenu_add(wt_bl30, mn_backlight_30sec);
     mn_submenu_add(wt_bl60, mn_backlight_60sec);
 
     mn_submenu_finalize();
-    
-  // For some reason, the text shown when pressing 'Confirm' in this menu
-  // was spoiled when invoked after *OTHER* 'long' menus, e.g. 'Date Format'.
-  // The bug already existed before adding the backlight dimming menus.
-  // To reproduce this bug:
-  // 1.) Select "Date Format", "YYYY-MM-DD". Press CONFIRM.
-  //     Screen shows "   Date Format  "
-  //                  "   YYYY-MM-DD   "  .  Ok .
-  // 2.) Scroll down in the MD380Tools menu, 
-  //       select "Backlight Tmr" (ex: "Backlight),
-  //         Select "60 sec",
-  //            Press CONFIRM  .
-  //     Screen shows "   Date Format  "
-  //                  "   YYYY-MM-DD   "  again !
-  // The problem remains, even after quitting ALL menus, and re-entering them.
-  // Why are other (but similar) menu functions 'immune' against this ?
-  // Not enough space for all these menus in Tytera's part of the firmware ?
-  // Must get rid of this stuff by re-writing as much as possible in clean C...  
 }
 
 
