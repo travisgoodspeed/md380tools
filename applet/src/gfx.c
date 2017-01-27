@@ -192,7 +192,9 @@ void print_time_hook(char *log)
             break;
 	if ( log == 'l' ) {
 		lastheard_putch(wide_time[i]);
-	} else {
+	} else if ( log == 'c' ) {
+		clog_putch(wide_time[i]);
+	} else if ( log == 's' ) {
 		slog_putch(wide_time[i]);
 	}
     }

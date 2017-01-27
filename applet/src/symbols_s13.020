@@ -35,6 +35,7 @@ gfx_drawchar_pos                         = 0x08021c1d ;
 aes_startup_check                        = 0x08022847 ;
 Get_Welcome_Line1_from_spi_flash         = 0x0802299d ;
 Get_Welcome_Line2_from_spi_flash         = 0x080229af ;
+rc_write_radio_config_to_flash           = 0x080229d3 ;
 write_current_channel_info_to_spi        = 0x08022f89 ;
 gfx_drawbmp                              = 0x08023adb ;
 Edit_Message_Menu_Entry                  = 0x080241c1 ;
