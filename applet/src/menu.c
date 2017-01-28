@@ -74,7 +74,6 @@ const static wchar_t wt_button_top_press[]  = L"Top Pressed";
 const static wchar_t wt_button_bot_press[]  = L"Bottom Pressed";
 const static wchar_t wt_button_top_held[]   = L"Top Held";
 const static wchar_t wt_button_bot_held[]   = L"Bottom Held";
-const static wchar_t wt_button_func_set[]   = L"Function Set";
 const static wchar_t wt_button_unassigned[] = L"Unassigned";
 const static wchar_t wt_button_alert_tone[] = L"All Tone Tog";
 const static wchar_t wt_button_emerg_on[]   = L"Emergency On";
@@ -849,7 +848,7 @@ void mn_backlight(void)
 
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
-void set_sidebutton_function(void)
+void set_sidebutton_function(const wchar_t *label)
 {
 	button_function = button_functions[currently_selected_menu_entry];
 
@@ -857,25 +856,51 @@ void set_sidebutton_function(void)
 		case 0:
 			top_side_button_pressed_function = button_function;
 			md380_spiflash_write(&button_function, 0x2102, 1);
-			mn_create_single_timed_ack(wt_button_top_press,wt_button_func_set);
+			mn_create_single_timed_ack(wt_button_top_press,label);
 			break;
 		case 1:
 			bottom_side_button_pressed_function = button_function;
 			md380_spiflash_write(&button_function, 0x2104, 1);
-			mn_create_single_timed_ack(wt_button_bot_press,wt_button_func_set);
+			mn_create_single_timed_ack(wt_button_bot_press,label);
 			break;
 		case 2:
 			top_side_button_held_function = button_function;
 			md380_spiflash_write(&button_function, 0x2103, 1);
-			mn_create_single_timed_ack(wt_button_top_held,wt_button_func_set);
+			mn_create_single_timed_ack(wt_button_top_held,label);
 			break;
 		case 3:
 			bottom_side_button_held_function = button_function;
 			md380_spiflash_write(&button_function, 0x2105, 1);
-			mn_create_single_timed_ack(wt_button_bot_held,wt_button_func_set);
+			mn_create_single_timed_ack(wt_button_bot_held,label);
 			break;
 	}
 }
+
+void nm_button_unassigned() { set_sidebutton_function(wt_button_unassigned); }
+void nm_button_alert_tone() { set_sidebutton_function(wt_button_alert_tone); }
+void nm_button_emerg_on() { set_sidebutton_function(wt_button_emerg_on); }
+void nm_button_emerg_off() { set_sidebutton_function(wt_button_emerg_off); }
+void nm_button_power() { set_sidebutton_function(wt_button_power); }
+void nm_button_monitor() { set_sidebutton_function(wt_button_monitor); }
+void nm_button_nuisance() { set_sidebutton_function(wt_button_nuisance); }
+void nm_button_ot1() { set_sidebutton_function(wt_button_ot1); }
+void nm_button_ot2() { set_sidebutton_function(wt_button_ot2); }
+void nm_button_ot3() { set_sidebutton_function(wt_button_ot3); }
+void nm_button_ot4() { set_sidebutton_function(wt_button_ot4); }
+void nm_button_ot5() { set_sidebutton_function(wt_button_ot5); }
+void nm_button_ot6() { set_sidebutton_function(wt_button_ot6); }
+void nm_button_rep_talk() { set_sidebutton_function(wt_button_rep_talk); }
+void nm_button_scan() { set_sidebutton_function(wt_button_scan); }
+void nm_button_squelch() { set_sidebutton_function(wt_button_squelch); }
+void nm_button_privacy() { set_sidebutton_function(wt_button_privacy); }
+void nm_button_vox() { set_sidebutton_function(wt_button_vox); }
+void nm_button_zone() { set_sidebutton_function(wt_button_zone); }
+void nm_button_zone_tog() { set_sidebutton_function(wt_button_zone_tog); }
+void nm_button_bat_ind() { set_sidebutton_function(wt_button_bat_ind); }
+void nm_button_man_dial() { set_sidebutton_function(wt_button_man_dial); }
+void nm_button_lone_work() { set_sidebutton_function(wt_button_lone_work); }
+void nm_button_1750_hz() { set_sidebutton_function(wt_button_1750_hz); }
+void nm_button_bklt_en() { set_sidebutton_function(wt_button_bklt_en); }
 
 void select_sidebutton_function_screen(void)
 {
@@ -901,31 +926,31 @@ void select_sidebutton_function_screen(void)
 	}
 
 
-	mn_submenu_add(wt_button_unassigned, set_sidebutton_function);
-	mn_submenu_add(wt_button_alert_tone, set_sidebutton_function);
-	mn_submenu_add(wt_button_emerg_on, set_sidebutton_function);
-	mn_submenu_add(wt_button_emerg_off, set_sidebutton_function);
-	mn_submenu_add(wt_button_power, set_sidebutton_function);
-	mn_submenu_add(wt_button_monitor, set_sidebutton_function);
-	mn_submenu_add(wt_button_nuisance, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot1, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot2, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot3, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot4, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot5, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot6, set_sidebutton_function);
-	mn_submenu_add(wt_button_rep_talk, set_sidebutton_function);
-	mn_submenu_add(wt_button_scan, set_sidebutton_function);
-	mn_submenu_add(wt_button_squelch, set_sidebutton_function);
-	mn_submenu_add(wt_button_privacy, set_sidebutton_function);
-	mn_submenu_add(wt_button_vox, set_sidebutton_function);
-	mn_submenu_add(wt_button_zone, set_sidebutton_function);
-	mn_submenu_add(wt_button_zone_tog, set_sidebutton_function);
-	mn_submenu_add(wt_button_bat_ind, set_sidebutton_function);
-	mn_submenu_add(wt_button_man_dial, set_sidebutton_function);
-	mn_submenu_add(wt_button_lone_work, set_sidebutton_function);
-	mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
-	mn_submenu_add(wt_button_bklt_en, set_sidebutton_function);
+	mn_submenu_add(wt_button_unassigned, nm_button_unassigned);
+	mn_submenu_add(wt_button_alert_tone, nm_button_alert_tone);
+	mn_submenu_add(wt_button_emerg_on, nm_button_emerg_on);
+	mn_submenu_add(wt_button_emerg_off, nm_button_emerg_off);
+	mn_submenu_add(wt_button_power, nm_button_power);
+	mn_submenu_add(wt_button_monitor, nm_button_monitor);
+	mn_submenu_add(wt_button_nuisance, nm_button_nuisance);
+	mn_submenu_add(wt_button_ot1, nm_button_ot1);
+	mn_submenu_add(wt_button_ot2, nm_button_ot2);
+	mn_submenu_add(wt_button_ot3, nm_button_ot3);
+	mn_submenu_add(wt_button_ot4, nm_button_ot4);
+	mn_submenu_add(wt_button_ot5, nm_button_ot5);
+	mn_submenu_add(wt_button_ot6, nm_button_ot6);
+	mn_submenu_add(wt_button_rep_talk, nm_button_rep_talk);
+	mn_submenu_add(wt_button_scan, nm_button_scan);
+	mn_submenu_add(wt_button_squelch, nm_button_squelch);
+	mn_submenu_add(wt_button_privacy, nm_button_privacy);
+	mn_submenu_add(wt_button_vox, nm_button_vox);
+	mn_submenu_add(wt_button_zone, nm_button_zone);
+	mn_submenu_add(wt_button_zone_tog, nm_button_zone_tog);
+	mn_submenu_add(wt_button_bat_ind, nm_button_bat_ind);
+	mn_submenu_add(wt_button_man_dial, nm_button_man_dial);
+	mn_submenu_add(wt_button_lone_work, nm_button_lone_work);
+	mn_submenu_add(wt_button_1750_hz, nm_button_1750_hz);
+	mn_submenu_add(wt_button_bklt_en, nm_button_bklt_en);
 
 	mn_submenu_finalize();
 }
