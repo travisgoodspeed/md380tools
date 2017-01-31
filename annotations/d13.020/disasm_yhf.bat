@@ -6,5 +6,5 @@ rem Something was severely bugged, when Radare2 redirected its output under wind
 rem Unbelievable but true: EVERY LINE IN THE TEXT FILES ENDED WITH "\n\r" instead of "\r\n" or just "\n" .
 rem This Python script (in the same folder as this ancient batch) fixes these crappy "text files" :
 python freplace.py listing.txt "\n\r" "\r\n"
-rem python freplace.py disasm_symbols.txt "\n\r" "\r\n"
+python disasm2htm.py listing
 pause

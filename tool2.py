@@ -13,7 +13,10 @@
 #    Thus using a different name (tool2.py) for this evil twin.
 
 from DFU import DFU, State, Request
-import time, sys, struct, usb.core
+import time # the PEP8 dictator said only one module per import. Bleah.
+import sys
+import struct
+import usb.core
 from collections import namedtuple
 import json
 # The tricky thing is that *THREE* different applications all show up
@@ -24,43 +27,88 @@ import json
 # 3. The mask-rom bootloader from the STM32F405.
 md380_vendor   = 0x0483
 md380_product  = 0xdf11
+    # the PEP8 dictator disagreed with multiple spaces before operators. Oh, shut up !
+
+sfr_addresses = { # tiny subset of special function registers in an STM32F4
+    0xE000ED08L: "VTOR",  # Vector Table Offset Register, part of the SCB, PM0214 Rev5 page 220
+    0xE000ED00L: "SCB",   # System Control Block, with CPUID[0], ICSR[4], VTOR[8], AIRCR[12], .... PM0214 pg 220.
+    0x40026000L: "DMA1",  # first DMA unit, register offsets in RM0090 Rev7 pages 332 .. 335
+    0x40026010L: "DMA1_S0CR",
+    0x40026028L: "DMA1_S1CR",
+    0x40026040L: "DMA1_S2CR", # one of the USED streams in D013.020
+    0x40026044L: "DMA1_S2NDTR", # RM0090 Rev7 page 333 ...
+    0x40026048L: "DMA1_S2PAR",
+    0x4002604CL: "DMA1_S2M0AR",
+    0x40026050L: "DMA1_S2M1AR",
+    0x40026054L: "DMA1_S2FCR",
+    0x40026058L: "DMA1_S3CR",
+    0x40026078L: "DMA1_S4CR",
+    0x40026088L: "DMA1_S5CR", # another of the USED streams in D013.020
+    0x4002608CL: "DMA1_S5NDTR", # RM0090 Rev7 page 334
+    0x40026090L: "DMA1_S5PAR",
+    0x40026094L: "DMA1_S5M0AR",
+    0x40026098L: "DMA1_S5M1AR",
+    0x4002609CL: "DMA1_S5FCR",
+    0x400260A0L: "DMA1_S6CR",
+    0x400260B8L: "DMA1_S7CR",
+    0x40026400L: "DMA2",  # second DMA unit (each DMA has registers at offsets 0x00..0xCC)
+    0x40026410L: "DMA2_S0CR",
+    0x40026428L: "DMA2_S1CR",
+    0x40026440L: "DMA2_S2CR",
+    0x40026458L: "DMA2_S3CR", # another of the USED streams in D013.020
+    0x4002645CL: "DMA2_S3NDTR", # RM0090 Rev7 page 334
+    0x40026460L: "DMA2_S3PAR",
+    0x40026464L: "DMA2_S3M0AR",
+    0x40026468L: "DMA2_S3M1AR",
+    0x4002646CL: "DMA2_S3FCR",
+    0x40026478L: "DMA2_S4CR",
+    0x40026488L: "DMA2_S5CR", # another of the USED streams in D013.020
+    0x400264A0L: "DMA2_S6CR",
+    0x400264B8L: "DMA2_S7CR",
+    0x40020800L: "GPIOC", # register offsets in RM0090 Rev7 page 284 .  Offset 0x00="MODER", 0x20="AFRL", etc
+    0x40020000L: "GPIOA", # .. with PA8="Save", PA1="Batt", PA0="TX LED", PA3="VOX", PA7="POW_C", ..
+    0x40011400L: "USART6",# abused by DL4YHF to generate PWM(!) on PC6 = USART6_TX. offsets in RM0090 Rev7 page 1002 .
+    0x40023800L: "RCC",   # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405
+    0x40023824L: "RCC_APB2RSTR", # APB2 peripheral ReSeT Register. Bit 5 controls USART6. RM0090 Rev7 page 236 .
+    0x40023844L: "RCC_APB2ENR",  # APB2 peripheral clock ENable Register. Bit 5 controls USART6. RM0090 Rev7 page 246 .
+    0x40001800L: "TIM12"  # register offsets in RM0090 Rev7 page 667 .
+}
 
 class UsersDB():
     """List of registered DMR-MARC users."""
-    users={};
+    users = {} # the PEP8 dictator wants exactly whitespace around operators. Heavens, no.
+               # He also wanted one blank line before a 'def'. Agreed.
+
     def __init__(self, filename=None):
         """Loads the database."""
-        import csv;
+        import csv
         try:
-            if filename==None:
-                filename=sys.path[0]+'/user.bin';
+            if filename is None:
+                filename = sys.path[0]+'/user.bin'
             with open(filename,'rb') as csvfile:
-                reader=csv.reader(csvfile);
+                reader = csv.reader(csvfile)
                 for row in reader:
                     if len(row)>0:
-                        self.users[int(row[0])]=row;
+                        self.users[int(row[0])]=row
         except:
             print "WARNING: Unable to load user.bin."
     def getuser(self,id):
         """Returns a user from the ID."""
         try:
-            return self.users[id];
+            return self.users[id]
         except:
-            call="";
-            name="";
-            nickname="";
-            city="";
-            state="";
-            country="";
-            comment="";
-            return ["%i"%id,call,name,nickname,city,state,country,comment];
+            call = ""
+            name = ""
+            nickname = ""
+            city = ""
+            state = ""
+            country = ""
+            comment = ""
+            return ["%i"%id,call,name,nickname,city,state,country,comment]
     def getusername(self,id):
         """Returns a formatted username from the ID."""
-        user=self.getuser(id);
-        return("%s %s (%s)"%(
-                user[1],
-                user[2],
-                user[0]));
+        user = self.getuser(id)
+        return("%s %s (%s)"%( user[1], user[2], user[0]))
     
 
 # ex: Quick to load, so might as well do it early.
@@ -73,48 +121,46 @@ class Tool(DFU):
     
     def drawtext(self,str,a,b):
         """Sends a new MD380 command to draw text on the screen.."""
-        cmd=0x80; #Drawtext
-        a=a&0xFF;
-        b=b&0xFF;
+        cmd=0x80 #Drawtext
+        a=a&0xFF
+        b=b&0xFF
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd)+chr(a)+chr(b)+self.widestr(str))
-        self.get_status(); #this changes state
-        time.sleep(0.1);
-        status=self.get_status(); #this gets the status
+        self.get_status() #this changes state
+        time.sleep(0.1)
+        status=self.get_status() #this gets the status
         if status[2]==State.dfuDNLOAD_IDLE:
-            if self.verbose: print "Sent custom %02x %02x." % (a,b);
-            self.enter_dfu_mode();
+            if self.verbose: print "Sent custom %02x %02x." % (a,b)
+            self.enter_dfu_mode()
         else:
-            print "Failed to send custom %02x %02x." % (a,b);
-            return False;
-        return True;
+            print "Failed to send custom %02x %02x." % (a,b)
+            return False
+        return True
     def peek(self,adr,size):
         """Returns so many bytes from an address."""
-        self.set_address(adr);
-        return self.upload(1,size,0);
+        self.set_address(adr)
+        return self.upload(1,size,0)
     def spiflashgetid(self):
-        size=4;
+        size=4
         """Returns SPI Flash ID."""
         cmd=0x05; #SPIFLASHGETID
-        cmdstr=(chr(cmd));
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
-                                   cmdstr)
+        cmdstr=(chr(cmd))
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
-        return self.upload(1,size,0);
+        return self.upload(1,size,0)
     def spiflashpeek(self,adr,size=1024):
         """Returns so many bytes from SPI Flash."""
-        cmd=0x01; #SPIFLASHREAD
+        cmd=0x01 #SPIFLASHREAD
         cmdstr=(chr(cmd)+
                 chr(adr&0xFF)+
                 chr((adr>>8)&0xFF)+
                 chr((adr>>16)&0xFF)+
                 chr((adr>>24)&0xFF)
-                );
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
-                                   cmdstr)
+                )
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
         self.get_status(); #this changes state
         status=self.get_status(); #this gets the status
-        return self.upload(1,size,0);
+        return self.upload(1,size,0)
     def spiflash_erase64kblock(self, adr,size=1024):
         """Clear 64kb block on spi flash."""
         cmd=0x03; #SPIFLASHWRITE
@@ -123,18 +169,17 @@ class Tool(DFU):
                 chr((adr>>8)&0xFF)+
                 chr((adr>>16)&0xFF)+
                 chr((adr>>24)&0xFF)
-                );
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
-                                   cmdstr)
-        self.get_status(); #this changes state
-        time.sleep(0.1);
+                )
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
+        self.get_status() #this changes state
+        time.sleep(0.1)
 
-        status=self.get_status(); #this gets the status
-        return self.upload(1,size,0);
+        status=self.get_status() #this gets the status
+        return self.upload(1,size,0)
 
     def spiflashpoke(self,adr,size,data):
         """Returns so many bytes from SPI Flash."""
-        cmd=0x04; #SPIFLASHWRITE_NEW
+        cmd=0x04 #SPIFLASHWRITE_NEW
 #        print  size
         cmdstr=(chr(cmd)+
                 chr(adr&0xFF)+
@@ -145,18 +190,17 @@ class Tool(DFU):
                 chr((size>>8)&0xFF)+
                 chr((size>>16)&0xFF)+
                 chr((size>>24)&0xFF)
-                );
+                )
 
         for i in range(0,size,1):
-            cmdstr=cmdstr+data[i];
+            cmdstr=cmdstr+data[i]
 
 #        print len(cmdstr)
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
-                                   cmdstr)
-        self.get_status(); #this changes state
-        status=self.get_status(); #this gets the status
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
+        self.get_status() #this changes state
+        status=self.get_status() #this gets the status
 #        print status
-        return self.upload(1,size,0);
+        return self.upload(1,size,0)
     
     def getinbox(self,address):
         """return non-deleted messages from inbox"""
@@ -192,69 +236,64 @@ class Tool(DFU):
 
     def getkey(self,index):
         """Returns an Enhanced Privacy key from SPI Flash.  1-indexed"""
-        buf=self.spiflashpeek(0x59c0+16*index-16,
-                              16);
-        return buf;
+        buf=self.spiflashpeek(0x59c0+16*index-16, 16)
+        return buf
 
     def c5000peek(self,reg):
         """Returns one byte from a C5000 register."""
-        cmd=0x11; #C5000 Read Reg
-        cmdstr=(chr(cmd)+
-                chr(reg&0xFF)
-                );
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
-                                   cmdstr)
-        self.get_status(); #this changes state
-        status=self.get_status(); #this gets the status
-        buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
-        return buf[0];
+        cmd=0x11 #C5000 Read Reg
+        cmdstr=(chr(cmd) + chr(reg&0xFF) )
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
+        self.get_status() #this changes state
+        status=self.get_status() #this gets the status
+        buf=self.upload(1,1024,0) #Peek the 1024 byte dmesg buffer.
+        return buf[0]
     def c5000poke(self,reg,val):
         """Writes a byte into a C5000 register."""
-        cmd=0x10; #C5000 Write Reg
+        cmd=0x10 #C5000 Write Reg
         cmdstr=(chr(cmd)+
                 chr(reg&0xFF)+
                 chr(val&0xFF)
-                );
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
-                                   cmdstr)
-        self.get_status(); #this changes state
-        status=self.get_status(); #this gets the status
+                )
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
+        self.get_status() #this changes state
+        status=self.get_status() #this gets the status
     def custom( self, cmd):
         """Returns the 1024 byte DMESG buffer."""
 
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
-        self.get_status(); #this changes state
-        #time.sleep(0.1);
-        status=self.get_status(); #this gets the status
+        self.get_status() #this changes state
+        #time.sleep(0.1)
+        status=self.get_status() #this gets the status
 
     def getdmesg(self):
         """Returns the 1024 byte DMESG buffer."""
-        cmd=0x00; #DMESG
+        cmd=0x00 #DMESG
         self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
-        self.get_status(); #this changes state
-        #time.sleep(0.1);
-        status=self.get_status(); #this gets the status
-        buf=self.upload(1,1024,0); #Peek the 1024 byte dmesg buffer.
+        self.get_status() #this changes state
+        #time.sleep(0.1)
+        status=self.get_status() #this gets the status
+        buf=self.upload(1,1024,0) #Peek the 1024 byte dmesg buffer.
         
         #Okay, so at this point we have the buffer, but it's a ring
         #buffer that might have already looped, so we need to reorder
         #if that is the case or crop it if it isn't.
-        tail="";
-        head=None;
+        tail=""
+        head=None
         for b in buf:
-            if head==None:
+            if head is None:
                 if b>0:
-                    tail=tail+chr(b);
+                    tail=tail+chr(b)
                 else:
-                    head="";
+                    head=""
             else:
                 if b>0:
-                    head=head+chr(b);
+                    head=head+chr(b)
                 else:
-                    break;
-        if head==None:
-            return tail;
-        return head+tail;
+                    break
+        if head is None:
+            return tail
+        return head+tail
 
 
         
@@ -291,59 +330,59 @@ class Tool(DFU):
 
 def calllog(dfu):
     """Prints a call log to stdout, fetched from the MD380's memory."""
-    dfu.drawtext("Hooking calls!",160,50);
+    dfu.drawtext("Hooking calls!",160,50)
     
     #Set the target address to the list of DMR addresses.
-    dfu.set_address(0x2001d098);
-    old1=0;
-    old2=0;
+    dfu.set_address(0x2001d098)
+    old1=0
+    old2=0
     while 1:
-        data=dfu.upload(1,16,0);#Peek sixteen bytes.
+        data=dfu.upload(1,16,0) # Peek sixteen bytes.
         llid0=(data[0]+
                (data[1]<<8)+
                (data[2]<<16)+
-               (data[3]<<24));
+               (data[3]<<24))
         llid1=(data[4]+
                (data[5]<<8)+
                (data[6]<<16)+
-               (data[7]<<24));
+               (data[7]<<24))
         llid2=(data[8]+
                (data[9]<<8)+
                (data[10]<<16)+
-               (data[11]<<24));
+               (data[11]<<24))
         if old1!=llid1 or old2!=llid2:
-            old1=llid1;
-            old2=llid2;
+            old1=llid1
+            old2=llid2
             print "DMR call from %s to %s." % (
-                users.getusername(llid1),users.getusername(llid2));
+                users.getusername(llid1),users.getusername(llid2))
             #get actual canel name
-            dfu.set_address(0x2001c9d4);
+            dfu.set_address(0x2001c9d4)
             data=dfu.upload(1,32,0);
             message=""
             for i in range(0,32,2):
                c=chr(data[i]&0x7F);
                if c!='\0':
-                  message=message+c;
+                  message=message+c
             print message
              #get actual zone name
-            dfu.set_address(0x2001b958);
-            data=dfu.upload(1,32,0);
+            dfu.set_address(0x2001b958)
+            data=dfu.upload(1,32,0)
             message=""
             for i in range(0,32,2):
-               c=chr(data[i]&0x7F);
+               c=chr(data[i]&0x7F)
                if c!='\0':
-                 message=message+c;
+                 message=message+c
             print message
-            sys.stdout.flush();
+            sys.stdout.flush()
 
 
 def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     #dfu.drawtext("Dumping dmesg",160,50);
-    print dfu.getdmesg();
+    print dfu.getdmesg()
 
 def parse_calibration(dfu):
-    dfu.md380_custom(0xA2,0x05);
+    dfu.md380_custom(0xA2,0x05)
     data = str(bytearray(dfu.upload(0,512)))
     freqs = dfu.parse_calibration_data(data)
     print(json.dumps(freqs,indent=4))
@@ -355,69 +394,81 @@ def coredump(dfu,filename):
                          0x20000000+(128*1024),
                          1024):
             #print "Fetching %08x"%adr
-            buf=dfu.peek(adr,1024);
-            f.write(buf);
-        f.close();
+            buf=dfu.peek(adr,1024)
+            f.write(buf)
+        f.close()
+
+
 def hexdump(dfu,address,length=512):
     """Dumps from memory to the screen"""
-    adr=int(address,16);
-    buf=dfu.peek(adr,length);
-    i=0;
-    cbuf="";
+    adr=int(address,16)
+    buf=dfu.peek(adr,length)
+    i=0
+    cbuf=""
     for b in buf:
-        sys.stdout.write("%02x "%b);
-        i=i+1;
+        sys.stdout.write("%02x "%b)
+        i=i+1
         if(b > 32 and b < 127 ):
-            cbuf = cbuf + chr(b);
+            cbuf = cbuf + chr(b)
         else:
-            cbuf = cbuf + ".";
+            cbuf = cbuf + "."
         if i%16==0:
-            sys.stdout.write(" " + cbuf);
-            sys.stdout.write("\n");
-            cbuf="";
+            sys.stdout.write(" " + cbuf)
+            sys.stdout.write("\n")
+            cbuf=""
         elif i%8==0:
-            sys.stdout.write(" ");
+            sys.stdout.write(" ")
+
+
 def hexwatch(dfu,address):
     """Dumps from memory to the screen"""
     while True:
-        hexdump(dfu,address,16);
-        time.sleep(0.05);
+        hexdump(dfu,address,16)
+        time.sleep(0.05)
+
 
 def ParseHexOrRegName(address):
-    if address=="VTOR" :    # Vector Table Offset Register,
-       return 0xE000ED08L;  # part of the SCB, see PM0214 Rev5 page 220  
-    elif address=="SCB":    # System Control Block (most but not all parts) ..
-       return 0xE000ED00L;  # ..with CPUID[0], ICSR[4], VTOR[8], AIRCR[12], .... PM0214 pg 220.
-    elif address=="GPIOC" : # used to inspect GPIO "C" settings, for example for PC6 = "LAMP" .
-       return 0x40020800L;  # register offsets in RM0090 Rev7 page 284 .  Offset 0x00="MODER", 0x20="AFRL" (alternate function select), etc 
-    elif address=="GPIOA" : # used to inspect GPIO "A" settings, e.g. PA8="Save", PA1="Batt", 
-       return 0x40020000L;  #   PA0="TX LED", PA3="VOX", PA7="POW_C", ..
-    elif address=="USART6": # abused by DL4YHF to generate PWM(!) on PC6 = "Lamp" = USART6_TX
-       return 0x40011400L;  # register offsets in RM0090 Rev7 page 1002 . 
-    elif address=="RCC" :   # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405  
-       return 0x40023800L; 
-    elif address=="RCC_APB2RSTR": # APB2 peripheral ReSeT Register. Bit 5 controls USART6. RM0090 Rev7 page 236 .
-       return 0x40023824L;  # contents seen when using UART6 to generate PWM : 0 = "none of the on-chip peripherals IN RESET"
-    elif address=="RCC_APB2ENR": # APB2 peripheral clock ENable Register. Bit 5 controls USART6. RM0090 Rev7 page 246 .
-       return 0x40023844L;  # contents seen when using UART6 to generate PWM : 0x00005722, i.e. USART6 is "clocked" .
-    elif address=="TIM12":  # seems to be one of the few timers NOT occupied by Tytera FW..
-       return 0x40001800L;  # register offsets in RM0090 Rev7 page 667 .     
+    if address in sfr_addresses.values(): # there must be a more elegant of (ab)using a 'dict' like this:
+        return sfr_addresses.keys()[sfr_addresses.values().index(address)]
     else:
-       return int(address,16);
-        
+        return int(address,16)
+
+
+def ShowRegNameIfKnown(address):
+    if address in sfr_addresses:
+        sys.stdout.write(' ; '+ sfr_addresses[address] )
+
+
 def hexdump32(dfu,address,length=512):
     """Dumps 32-bit hex values to the screen"""
-    adr=ParseHexOrRegName(address); 
-    buf=dfu.peek(adr,length+3);
-    i=0;
-    cbuf="";
+    adr=ParseHexOrRegName(address)
+    buf=dfu.peek(adr,length+3)
+    i=0
+    cbuf=""
     while i<length:
         if i%16==0:
-            sys.stdout.write("\n%08X: "%(adr+i));
-        dw = buf[i] | (buf[i+1]<<8) | (buf[i+2]<<16) | (buf[i+3]<<24);
-        sys.stdout.write("%08X "%dw);
-        i=i+4;
-      
+            sys.stdout.write("\n%08X: "%(adr+i))
+        dw = buf[i] | (buf[i+1]<<8) | (buf[i+2]<<16) | (buf[i+3]<<24)
+        sys.stdout.write("%08X "%dw)
+        i=i+4
+
+
+def bindump32(dfu,address,length=256):
+    """Dumps 32-bit binary values to the screen"""
+    adr=ParseHexOrRegName(address)
+    buf=dfu.peek(adr,length+3)
+    i=0
+    cbuf=""
+    sys.stdout.write('\n Bit Nr : 3 2         1         0' )
+    sys.stdout.write('\n          10987654321098765432109876543210' )
+    while i<length:
+        sys.stdout.write("\n%08X: "%(adr+i))
+        dw = buf[i] | (buf[i+1]<<8) | (buf[i+2]<<16) | (buf[i+3]<<24)
+        sys.stdout.write( '{0:032b}'.format(dw) )
+        ShowRegNameIfKnown( adr+i )
+        i=i+4
+
+
 def dump(dfu,filename,address):
     """1k Binary dumps"""
     adr=int(address,16);
@@ -748,46 +799,52 @@ def main():
             elif sys.argv[1] == 'hexdump32':
                 dfu=init_dfu();
                 hexdump32(dfu,sys.argv[2]);
+            elif sys.argv[1] == 'bindump32':
+                dfu = init_dfu()
+                bindump32(dfu, sys.argv[2])
             elif sys.argv[1] == 'ramdump':
-                print "Dumping memory from %s." % sys.argv[3];
-                dfu=init_dfu();
-                ramdump(dfu,sys.argv[2],sys.argv[3]);
+                print "Dumping memory from %s." % sys.argv[3]
+                dfu=init_dfu()
+                ramdump(dfu,sys.argv[2],sys.argv[3])
             elif sys.argv[1] == 'hexwatch':
-                print "Dumping memory from %s." % sys.argv[2];
-                dfu=init_dfu();
-                hexwatch(dfu,sys.argv[2]);
+                print "Dumping memory from %s." % sys.argv[2]
+                dfu=init_dfu()
+                hexwatch(dfu,sys.argv[2])
             elif sys.argv[1] == 'lookup':
-                print users.getusername(int(sys.argv[2]));
+                print users.getusername(int(sys.argv[2]))
             elif sys.argv[1] == 'readword':
-                dfu=init_dfu();
-                readword(dfu, sys.argv[2]);
+                dfu=init_dfu()
+                readword(dfu, sys.argv[2])
             elif sys.argv[1] == 'custom':
-                dfu=init_dfu();
-                dfu.custom(int(sys.argv[2], 16));
-                dmesg(dfu);
+                dfu=init_dfu()
+                dfu.custom(int(sys.argv[2], 16))
+                dmesg(dfu)
             elif sys.argv[1] == 'c5read': # DL4YHF 2016-12
-                dfu = init_dfu();
-                c5read(dfu, int(sys.argv[2],16) );
+                dfu = init_dfu()
+                c5read(dfu, int(sys.argv[2],16) )
 
         elif len(sys.argv) == 4:
             if sys.argv[1] == 'spiflashwrite':
-                filename=sys.argv[2];
-                adr=int(sys.argv[3],16);
+                filename=sys.argv[2]
+                adr=int(sys.argv[3],16)
                 if ( adr >= int("0x100000",16) ):
-                   dfu=init_dfu();
-                   spiflashwrite(dfu,sys.argv[2],adr);
+                   dfu=init_dfu()
+                   spiflashwrite(dfu,sys.argv[2],adr)
                 else:
                    print "address to low"
             if sys.argv[1] == 'dump':
-                print "Dumping memory from %s." % sys.argv[3];
-                dfu=init_dfu();
-                dump(dfu,sys.argv[2],sys.argv[3]);
+                print "Dumping memory from %s." % sys.argv[3]
+                dfu=init_dfu()
+                dump(dfu,sys.argv[2],sys.argv[3])
             elif sys.argv[1] == 'c5write':   # DL4YHF 2016-12
-                dfu = init_dfu();
-                c5write(dfu, int(sys.argv[2],16), int(sys.argv[3],16));
+                dfu = init_dfu()
+                c5write(dfu, int(sys.argv[2],16), int(sys.argv[3],16))
             elif sys.argv[1] == 'hexdump32': # DL4YHF 2017-01
-                dfu=init_dfu();
-                hexdump32(dfu,sys.argv[2], int(sys.argv[3]) );                
+                dfu=init_dfu()
+                hexdump32(dfu,sys.argv[2], int(sys.argv[3]) )
+            elif sys.argv[1] == 'bindump32': # DL4YHF 2017-01
+                dfu=init_dfu()
+                bindump32(dfu,sys.argv[2], int(sys.argv[3]) )
 
         else:
             usage();

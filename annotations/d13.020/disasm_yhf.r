@@ -1,6 +1,8 @@
 # Radare2 script to disassemble the "D13.020" firmware.
 #   Based on the md380tool's "flash.r" + "cpu.r", but modfied
 #   by DL4YHF to produce a listing with only the "interesting" parts.
+#   Callers + Callees will be 'linked' in a post-processing step
+#   using script 'disasm2htm.py' (converts listing.txt to listing.htm).
 #    
 # 'f' name length @ address .  The '@' seems to be optional, e.g. radare2book.pdf page 129 of 216 
 f VectorTable 0x188 @ 0x0800C000
@@ -55,7 +57,7 @@ f Reset_Handler 8 @ $$ # Reset_Handler = seek_addr (as a "flag")
 af+ $$ 8 Reset_Handler # put the SIZE IN BYTES after the '$$' if you know it
    # The reset-handler in Tytera's firmware looks very much the same
    #     as the startup used for an LPC1788 in Keil's "MDK-ARM",
-   #     where Reset_Handler for almost any Cortex-M look like this: 
+   #     where a Reset_Handler for almost any Cortex-M looks like this: 
    # Reset_Handler PROC         ; stolen from the startup for an LPC1788
    #               IMPORT  SystemInit
    #               IMPORT __main
@@ -63,9 +65,6 @@ af+ $$ 8 Reset_Handler # put the SIZE IN BYTES after the '$$' if you know it
    #   BLX     R0
    #   LDR     R0, =__main      ; this is NOT the "real main" but Keil's scatterload-thingy 
    #   BX      R0               ; size of this minimalistic 'Reset_Handler' = 8 bytes
-   #           |__  "looks like a call" (places the next address in LR for returning)
-   #                but since __main (not main()!!) never returns, 
-   #                this marks THE END of the 'Reset_Handler' !
 # Address offsets of these handlers from RM0090 Rev 7 pages 369 to 372,
 # but names (when implemented at all) are compatible with startup_stm32f4xx.s !
 s (VectorTable+0x08) # seek_addr = VectorTable + offs(NMI_Handler)
@@ -113,8 +112,8 @@ f DebugMon_Handler
 s (VectorTable+0x38) # PendSV_Handler..
 s `pxw 4~[1]`
 s- 1
-f PendSV_Handler
-#af+ $$ 8 PendVC_Handler
+#f PendSV_Handler # had an invalid address in the VT so don't try to disassemble
+#af+ $$ 8 PendSV_Handler
 
 s (VectorTable+0x3C) # seek_addr = VectorTable+4*15 = address of SysTick_Handler
 s `pxw 4~[1]`      # seek_addr = *(DWORD*)(seek_addr);
@@ -125,116 +124,116 @@ f SysTick_Handler  # SysTick_Handler = seek_addr (as a "flag")
 s (VectorTable+0x40) # WWDG_Handler.. (gefensterter Wachhund)
 s `pxw 4~[1]`
 s- 1
-f WWDG_IRQHandler
-#af+ $$ 8 WWDG_IRQHandler
+#f WWDG_IRQHandler
+af+ $$ 4 WWDG_IRQHandler
 
 s (VectorTable+0x44) # PVD_Handler..
 s `pxw 4~[1]`
 s- 1
-f PVD_IRQHandler
-#af+ $$ 8 PVD_IRQHandler
+#f PVD_IRQHandler
+af+ $$ 4 PVD_IRQHandler
 
 s (VectorTable+0x48) # TAMP_STAMP_Handler.. (tampern und stampfen, sehr schön) 
 s `pxw 4~[1]`
 s- 1
-f TAMP_STAMP_IRQHandler
-#af+ $$ 8 TAMP_STAMP_IRQHandler
+#f TAMP_STAMP_IRQHandler
+af+ $$ 4 TAMP_STAMP_IRQHandler
 
 s (VectorTable+0x4C) # RTC_WKUP_Handler..
 s `pxw 4~[1]`
 s- 1
 f RTC_WKUP_IRQHandler
-af+ $$ 56 RTC_WKUP_IRQHandler # <- to see the SYMBOL as operand instead of a hex value
+#af+ $$ 56 RTC_WKUP_IRQHandler
 
 s (VectorTable+0x50) # FLASH_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f FLASH_IRQHandler
-#af+ $$ 8 FLASH_IRQHandler
+#f FLASH_IRQHandler
+af+ $$ 4 FLASH_IRQHandler
 
 s (VectorTable+0x54) # RCC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f RCC_IRQHandler
-#af+ $$ 8 RCC_IRQHandler
+#f RCC_IRQHandler
+af+ $$ 4 RCC_IRQHandler
 
 s (VectorTable+0x58) # EXTI0_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f EXTI0_IRQHandler
-#af+ $$ 8 EXTI0_IRQHandler
+#af+ $$ 4 EXTI0_IRQHandler
 
 s (VectorTable+0x5C) # EXTI1_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f EXTI1_IRQHandler
-#af+ $$ 8 EXTI1_IRQHandler
+#af+ $$ 4 EXTI1_IRQHandler
 
 s (VectorTable+0x60) # EXTI2_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f EXTI2_IRQHandler
-#af+ $$ 8 EXTI2_IRQHandler
+#af+ $$ 4 EXTI2_IRQHandler
 
 s (VectorTable+0x64) # EXTI3_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f EXTI3_IRQHandler
-#af+ $$ 8 EXTI3_IRQHandler
+#af+ $$ 4 EXTI3_IRQHandler
 
 s (VectorTable+0x68) # EXTI4_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f EXTI4_IRQHandler
-#af+ $$ 8 EXTI4_IRQHandler
+#f EXTI4_IRQHandler
+af+ $$ 4 EXTI4_IRQHandler
 
 s (VectorTable+0x6C) # DMA1_Stream0_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream0_IRQHandler
-#af+ $$ 8 DMA1_Stream0_IRQHandler
+#f DMA1_Stream0_IRQHandler
+af+ $$ 4 DMA1_Stream0_IRQHandler
 
 s (VectorTable+0x70) # DMA1_Stream1_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream1_IRQHandler
-#af+ $$ 8 DMA1_Stream1_IRQHandler
+#f DMA1_Stream1_IRQHandler
+af+ $$ 4 DMA1_Stream1_IRQHandler # just a dummy
 
 s (VectorTable+0x74) # DMA1_Stream2_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream2_IRQHandler
-#af+ $$ 8 DMA1_Stream2_IRQHandler
+#f DMA1_Stream2_IRQHandler
+af+ $$ 8 DMA1_Stream2_IRQHandler # NO DUMMY !
 
 s (VectorTable+0x78) # DMA1_Stream3_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream3_IRQHandler
-#af+ $$ 8 DMA1_Stream3_IRQHandler
+#f DMA1_Stream3_IRQHandler
+af+ $$ 4 DMA1_Stream3_IRQHandler
 
 s (VectorTable+0x7C) # DMA1_Stream4_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream4_IRQHandler
-#af+ $$ 8 DMA1_Stream4_IRQHandler
+#f DMA1_Stream4_IRQHandler
+af+ $$ 4 DMA1_Stream4_IRQHandler
 
 s (VectorTable+0x80) # DMA1_Stream5_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream5_IRQHandler
-#af+ $$ 8 DMA1_Stream5_IRQHandler
+#f DMA1_Stream5_IRQHandler
+af+ $$ 8 DMA1_Stream5_IRQHandler # NO DUMMY !
 
 s (VectorTable+0x84) # DMA1_Stream6_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream6_IRQHandler
-#af+ $$ 8 DMA1_Stream6_IRQHandler
+#f DMA1_Stream6_IRQHandler
+af+ $$ 4 DMA1_Stream6_IRQHandler
 
 s (VectorTable+0x88) # ADC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f ADC_IRQHandler
-#af+ $$ 8 ADC_IRQHandler
+#f ADC_IRQHandler # had an invalid address so don't try to disassemble
+#af+ $$ 4 ADC_IRQHandler
 
 s (VectorTable+0x8C) # CAN1_TX_IRQHandler..
 s `pxw 4~[1]`
@@ -263,39 +262,38 @@ f CAN1_SCE_IRQHandler
 s (VectorTable+0x9C) # EXTI9_5_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f EXTI9_5_IRQHandler
-#af+ $$ 8 EXTI9_5_IRQHandler
+#f EXTI9_5_IRQHandler
+af+ $$ 4 EXTI9_5_IRQHandler
 
 s (VectorTable+0xA0) # TIM1_BRK_TIM9_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM1_BRK_TIM9_IRQHandler
-#af+ $$ 8 TIM1_BRK_TIM9_IRQHandler
+#f TIM1_BRK_TIM9_IRQHandler
+af+ $$ 4 TIM1_BRK_TIM9_IRQHandler
 
 s (VectorTable+0xA4) # TIM1_UP_TIM10_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM1_UP_TIM10_IRQHandler
-#af+ $$ 8 TIM1_UP_TIM10_IRQHandler
+#f TIM1_UP_TIM10_IRQHandler
+af+ $$ 4 TIM1_UP_TIM10_IRQHandler
 
 s (VectorTable+0xA8) # TIM1_TRG_COM_TIM11_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM1_TRG_COM_TIM11_IRQHandler
-#af+ $$ 8 TIM1_TRG_COM_TIM11_IRQHandler
+#f TIM1_TRG_COM_TIM11_IRQHandler
+af+ $$ 4 TIM1_TRG_COM_TIM11_IRQHandler
 
 s (VectorTable+0xAC) # TIM1_CC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM1_CC_IRQHandler
-#af+ $$ 8 TIM1_CC_IRQHandler
+#f TIM1_CC_IRQHandler
+af+ $$ 4 TIM1_CC_IRQHandler
 
 s (VectorTable+0xB0) # TIM2_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM2_IRQHandler
+af+ $$ 8 TIM2_IRQHandler # NOT a dummy !
 
-af+ $$ 8 TIM3_IRQHandler
 s (VectorTable+0xB4) # TIM3_IRQHandler..
 s `pxw 4~[1]`
 s- 1
@@ -311,234 +309,277 @@ f TIM4_IRQHandler
 s (VectorTable+0xBC) # I2C1_EV_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f I2C1_EV_IRQHandler
-#af+ $$ 8 I2C1_EV_IRQHandler
+#f I2C1_EV_IRQHandler
+af+ $$ 4 I2C1_EV_IRQHandler
 
 s (VectorTable+0xC0) # I2C1_ER_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f I2C1_ER_IRQHandler
-#af+ $$ 8 I2C1_ER_IRQHandler
+#f I2C1_ER_IRQHandler
+af+ $$ 4 I2C1_ER_IRQHandler
 
 s (VectorTable+0xC4) # I2C2_EV_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f I2C2_EV_IRQHandler
-#af+ $$ 8 I2C2_EV_IRQHandler
+#f I2C2_EV_IRQHandler
+af+ $$ 4 I2C2_EV_IRQHandler
 
 s (VectorTable+0xC8) # I2C2_ER_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f I2C2_ER_IRQHandler
-#af+ $$ 8 I2C2_ER_IRQHandler
+#f I2C2_ER_IRQHandler
+af+ $$ 4 I2C2_ER_IRQHandler
 
 s (VectorTable+0xCC) # SPI1_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f SPI1_IRQHandler
-#af+ $$ 8 SPI1_IRQHandler
+#f SPI1_IRQHandler
+af+ $$ 4 SPI1_IRQHandler
 
 s (VectorTable+0xD0) # SPI2_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f SPI2_IRQHandler
-#af+ $$ 8 SPI2_IRQHandler
+#f SPI2_IRQHandler
+af+ $$ 4 SPI2_IRQHandler
 
 s (VectorTable+0xD4) # USART1_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f USART1_IRQHandler
-#af+ $$ 8 USART1_IRQHandler
+#f USART1_IRQHandler
+af+ $$ 4 USART1_IRQHandler
 
 s (VectorTable+0xD8) # USART2_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f USART2_IRQHandler
-#af+ $$ 8 USART2_IRQHandler
+#f USART2_IRQHandler
+af+ $$ 4 USART2_IRQHandler
 
 s (VectorTable+0xDC) # USART3_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f USART3_IRQHandler
-#af+ $$ 8 USART3_IRQHandler
+#f USART3_IRQHandler
+af+ $$ 4 USART3_IRQHandler
 
 s (VectorTable+0xE0) # EXTI15_10_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f EXTI15_10_IRQHandler
-#af+ $$ 8 EXTI15_10_IRQHandler
+#f EXTI15_10_IRQHandler
+af+ $$ 4 EXTI15_10_IRQHandler
 
 s (VectorTable+0xE4) # RTC_Alarm_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f RTC_Alarm_IRQHandler
-#af+ $$ 8 RTC_Alarm_IRQHandler
+#f RTC_Alarm_IRQHandler
+af+ $$ 4 RTC_Alarm_IRQHandler
 
 s (VectorTable+0xE8) # OTG_FS_WKUP_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f OTG_FS_WKUP_IRQHandler
-#af+ $$ 8 OTG_FS_WKUP_IRQHandler
+#af+ $$ 4 OTG_FS_WKUP_IRQHandler
 
 s (VectorTable+0xEC) # TIM8_BRK_TIM12_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM8_BRK_TIM12_IRQHandler
-#af+ $$ 8 TIM8_BRK_TIM12_IRQHandler
+#f TIM8_BRK_TIM12_IRQHandler
+af+ $$ 4 TIM8_BRK_TIM12_IRQHandler
 
 s (VectorTable+0xF0) # TIM8_UP_TIM13_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f TIM8_UP_TIM13_IRQHandler
-#af+ $$ 8 TIM8_UP_TIM13_IRQHandler
+#af+ $$ 4 TIM8_UP_TIM13_IRQHandler
 
 s (VectorTable+0xF4) # TIM8_TRG_COM_TIM14_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM8_TRG_COM_TIM14_IRQHandler
-#af+ $$ 8 TIM8_TRG_COM_TIM14_IRQHandler
+#f TIM8_TRG_COM_TIM14_IRQHandler
+af+ $$ 4 TIM8_TRG_COM_TIM14_IRQHandler
 
 s (VectorTable+0xF8) # TIM8_CC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f TIM8_CC_IRQHandler
-#af+ $$ 8 TIM8_CC_IRQHandler
+#f TIM8_CC_IRQHandler
+af+ $$ 4 TIM8_CC_IRQHandler
 
 s (VectorTable+0xFC) # DMA1_Stream7_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DMA1_Stream7_IRQHandler
-#af+ $$ 8 DMA1_Stream7_IRQHandler
+#f DMA1_Stream7_IRQHandler
+af+ $$ 4 DMA1_Stream7_IRQHandler
 
 s (VectorTable+0x0100) # FSMC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f FSMC_IRQHandler
-#af+ $$ 8 FSMC_IRQHandler
+#f FSMC_IRQHandler
+af+ $$ 4 FSMC_IRQHandler
 
 s (VectorTable+0x104) # SDIO_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f SDIO_IRQHandler
-#af+ $$ 8 SDIO_IRQHandler
+#f SDIO_IRQHandler
+af+ $$ 4 SDIO_IRQHandler
 
 s (VectorTable+0x108) # TIM5_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f TIM5_IRQHandler
-#af+ $$ 8 TIM5_IRQHandler
+#af+ $$ 4 TIM5_IRQHandler
 
 s (VectorTable+0x10C) # SPI3_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f SPI3_IRQHandler
-#af+ $$ 8 SPI3_IRQHandler
+#f SPI3_IRQHandler
+af+ $$ 8 SPI3_IRQHandler # NOT a dummy !
 
 s (VectorTable+0x110) # USART4_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f USART4_IRQHandler
-#af+ $$ 8 USART4_IRQHandler
+#f USART4_IRQHandler
+af+ $$ 4 USART4_IRQHandler
 
 s (VectorTable+0x114) # USART5_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f USART5_IRQHandler
-#af+ $$ 8 USART5_IRQHandler
+#f USART5_IRQHandler
+af+ $$ 4 USART5_IRQHandler
 
 s (VectorTable+0x118) # TIM6_DAC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f TIM6_DAC_IRQHandler
-#af+ $$ 8 TIM6_DAC_IRQHandler
+#af+ $$ 4 TIM6_DAC_IRQHandler
 
 s (VectorTable+0x11C) # TIM7_DAC_IRQHandler..
 s `pxw 4~[1]`
 s- 1
 f TIM7_DAC_IRQHandler
-#af+ $$ 8 TIM7_DAC_IRQHandler
+#af+ $$ 4 TIM7_DAC_IRQHandler
 
-#omitted : DMA2, RTH, CAN,
+s (VectorTable+0x120) # DMA2_Stream0_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream0_IRQHandler
+
+s (VectorTable+0x124) # DMA2_Stream1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream1_IRQHandler # just a dummy
+
+s (VectorTable+0x128) # DMA2_Stream2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream2_IRQHandler
+
+s (VectorTable+0x12C) # DMA2_Stream3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ (0x2d2-0x270) DMA2_Stream3_IRQHandler # NO dummy !
+
+s (VectorTable+0x130) # DMA2_Stream4_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream4_IRQHandler
+
+#omitted : ETH, CAN,
 
 s (VectorTable+0x14C) # OTG_FS_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f OTG_FS_IRQHandler
-#af+ $$ 8 OTG_FS_IRQHandler
+#f OTG_FS_IRQHandler
+af+ $$ (0x8093F88-0x8093F70) OTG_FS_IRQHandler
+
+s (VectorTable+0x150) # DMA2_Stream5_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream5_IRQHandler
+
+s (VectorTable+0x154) # DMA2_Stream6_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream6_IRQHandler
+
+s (VectorTable+0x158) # DMA2_Stream7_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream7_IRQHandler
+
 
 s (VectorTable+0x15C) # USART6_IRQHandler.. not used by Tytera, abused for backlight-PWM by DL4YHF
 s `pxw 4~[1]`
 s- 1
-f USART6_IRQHandler
-af+ $$ 8 USART6_IRQHandler
+#f USART6_IRQHandler
+af+ $$ 4 USART6_IRQHandler
 
 s (VectorTable+0x160) # I2C3_EV_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f I2C3_EV_IRQHandler
-#af+ $$ 8 I2C3_EV_IRQHandler
+#f I2C3_EV_IRQHandler
+af+ $$ 4 I2C3_EV_IRQHandler
 
 s (VectorTable+0x164) # I2C3_ER_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f I2C3_ER_IRQHandler
-#af+ $$ 8 I2C3_ER_IRQHandler
+#f I2C3_ER_IRQHandler
+af+ $$ 4 I2C3_ER_IRQHandler
 
 s (VectorTable+0x168) # OTG_HS_EP1_OUT_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f OTG_HS_EP1_OUT_IRQHandler
-#af+ $$ 8 OTG_HS_EP1_OUT_IRQHandler
+#f OTG_HS_EP1_OUT_IRQHandler
+af+ $$ 4 OTG_HS_EP1_OUT_IRQHandler
 
 s (VectorTable+0x16C) # OTG_HS_EP1_IN_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f OTG_HS_EP1_IN_IRQHandler
-#af+ $$ 8 OTG_HS_EP1_IN_IRQHandler
+#f OTG_HS_EP1_IN_IRQHandler
+af+ $$ 4 OTG_HS_EP1_IN_IRQHandler
 
 s (VectorTable+0x170) # OTG_HS_WKUP_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f OTG_HS_WKUP_IRQHandler
-#af+ $$ 8 OTG_HS_WKUP_IRQHandler
+#f OTG_HS_WKUP_IRQHandler
+af+ $$ 4 OTG_HS_WKUP_IRQHandler
 
 s (VectorTable+0x174) # OTG_HS_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f OTG_HS_IRQHandler
-#af+ $$ 8 OTG_HS_IRQHandler
+#f OTG_HS_IRQHandler
+af+ $$ 4 OTG_HS_IRQHandler
 
 s (VectorTable+0x178) # DCMI_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f DCMI_IRQHandler
-#af+ $$ 8 DCMI_IRQHandler
+#f DCMI_IRQHandler
+af+ $$ 4 DCMI_IRQHandler
 
 s (VectorTable+0x17C) # CRYP_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f CRYP_IRQHandler
-#af+ $$ 8 CRYP_IRQHandler
+#f CRYP_IRQHandler
+af+ $$ 4 CRYP_IRQHandler
 
 s (VectorTable+0x180) # HASH_RNG_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f HASH_RNG_IRQHandler
-#af+ $$ 8 HASH_RNG_IRQHandler
+#f HASH_RNG_IRQHandler
+af+ $$ 4 HASH_RNG_IRQHandler
 
 s (VectorTable+0x184) # FPU_IRQHandler..
 s `pxw 4~[1]`
 s- 1
-f FPU_IRQHandler
-#af+ $$ 8 FPU_IRQHandler
+#f FPU_IRQHandler
+af+ $$ 4 FPU_IRQHandler
 # Phew. And those weren't even ALL interrupts yet !
 
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # BELOW: symbols converted by 'make', from md380tools/applet/src/symbols_d13.020 .
-#        Editing the following section BY HAND is useless ! 
+#        Editing the following section BY HAND may be useless ! 
 #        Instead, copy them from annotations/d13.020/flash_new.tmp (after 'make) .
+#  Functions with sizes given as difference between hex addresses were added 
+#        later, by DL4YHF.
 s 0x080417e0
 af+ $$ 4 dmr_CSBK_handler # dl4yhf this was ONE of the culprits for an error from R2 (already def'd)
 f dmr_CSBK_handler 4 @ $$
@@ -571,10 +612,10 @@ af+ 0x800c72e 86 md380_create_menu_entry
 af+ 0x800fc84 18 md380_menu_entry_back
 
 f menu_draw_something @ 0x0802872c
-af+ 0x0802872c 4 menu_draw_something
+af+ 0x0802872c (0xB96-0x72C) menu_draw_something
 
 f menu_draw_something2 @ 0x08028be8
-af+ 0x08028be8 4 menu_draw_something2
+af+ 0x08028be8 (0xD80-0xBE8) menu_draw_something2
 
 f menu_draw_something3 @ 0x08027fcc
 af+ 0x08027fcc 36 menu_draw_something3
@@ -931,8 +972,8 @@ f jmp_to_mainloop 0 0x080468f6
 f md380_f_4520 0 0x802c83c
 af+ 0x802c83c 2370 md380_f_4520
 
-af+ 0x0804fdf4 10 set_AAAA
-af+ 0x0804fdfe 10 set_CCCC
+af+ 0x0804fdf4 10 FeedTheWatchdog
+af+ 0x0804fdfe 10 StartTheWatchdog
 
 f draw_statusline @ 0x08033dac
 af+ 0x08033dac 244 draw_statusline
@@ -961,9 +1002,37 @@ f gfx_linefill2 @ $$
 af+ $$ (0x82-0x4E) gfx_linefill2
 
 af+ 0x0801d7fa (0x81A-0x7FA) gfx_linefill_sub
-af+ 0x0801d7ca (0x7FA-0x7CA) gfx_put_pixel
+af+ 0x0801d7ca (0x7EE-0x7CA) gfx_put_pixel
 af+ 0x08033728 (0x770-0x728) gfx_put_pixel_sub
 af+ 0x08033770 (0x7B4-0x770) gfx_put_pixel_sub2
+af+ 0x0801D7EE (0x7FA-0x7EE) gfx_linefill_sub2
+af+ 0x08033c96 (0xCA6-0xC96) gfx_newline_sub
+af+ 0x08032DFC (0xE10-0xDFC) gfx_setcolor_sub2
+af+ 0x08032e10 (0xE24-0xE10) gfx_setcolor_sub3
+af+ 0x08032E24 (0xE5C-0xE24) gfx_2e24
+af+ 0x08032E5C (0xEB6-0xE5C) gfx_2e5c
+af+ 0x08032EB6 (0xEFC-0xEB6) gfx_2eb6
+af+ 0x08032EFC (0xF50-0xEFC) gfx_2efc
+af+ 0x08032F50 (0x316C-0x2F50) gfx_2f50
+CCa 0x0803308C return but not the end of this function
+af+ 0x0803316C (0x17A-0x16C) gfx_316c
+af+ 0x0803317A (0x1B0-0x17A) gfx_317a
+af+ 0x080331B0 (0x1BC-0x1B0) gfx_setcolor_sub1
+af+ 0x080331BC (0x1C8-0x1BC) gfx_31bc
+af+ 0x08033204 (0x23A-0x204) gfx_3204
+af+ 0x0803323A (0x24C-0x23A) gfx_323a
+af+ 0x0803324C (0x368-0x24C) gfx_324c
+af+ 0x08033368 (0x374-0x368) gfx_3368
+af+ 0x08033374 (0x382-0x374) gfx_3374
+af+ 0x08033382 (0x396-0x382) gfx_3382
+af+ 0x08033396 (0x3CC-0x396) gfx_3396
+af+ 0x080333D8 (0x428-0x3D8) gfx_33d8
+af+ 0x08033428 (0x496-0x428) gfx_3428
+af+ 0x08033496 (0x4B2-0x496) gfx_3496
+af+ 0x080334B2 (0x4D2-0x4B2) gfx_34b2
+af+ 0x080334F8 (0x51C-0x4F8) gfx_34f8
+af+ 0x0803351C (0x528-0x51C) gfx_351c
+
 af+ 0x0803352C (0x534-0x52C) WriteLCDCommand # called from what MAY BE 'put_pixel'
 af+ 0x08033534 (0x53A-0x534) WriteLCDData # called from what MAY BE 'put_pixel'
 # stores R0 in 0x6004000, which may have been something like the following:
@@ -976,6 +1045,23 @@ af+ 0x0803353A (0x546-0x53A) ReadLCDData
 af+ 0x08033546 (0x55A-0x546) sub_3546
 af+ 0x0803355A (0x56E-0x55A) sub_355a
 af+ 0x0803356E (0x716-0x56E) InitLCDisplay
+
+af+ 0x080337B4 (0x88E-0x7B4) gfx_drawtext_sub2
+af+ 0x0803388E (0x966-0x88E) gfx_drawtext_sub3
+af+ 0x08033966 (0xA68-0x966) gfx_3966
+af+ 0x08033BFC (0xC02-0xBFC) gfx_drawtext_sub1 # wild branch, no usual function
+af+ 0x0802B1D6 (0x1E2-0x1D6) gfx_drawtext_sub4
+af+ 0x08033c54 (0xC96-0xC54) gfx_drawtext_sub5
+af+ 0x0803b67c (0x6BE-0x67C) gfx_drawtext_sub6
+af+ 0x0803b6be (0x6FC-0x6BE) gfx_drawtext_sub7
+af+ 0x0803b6fc (0x7B6-0x6FC) gfx_drawtext_sub8
+af+ 0x0803b7C4 (0x828-0x7C4) gfx_b7c4
+af+ 0x0803b828 (0x84C-0x828) gfx_drawtext_sub9
+af+ 0x0803B850 (0x86C-0x850) gfx_b850
+af+ 0x0803B86C (0x8D8-0x86C) gfx_b86c
+af+ 0x0801ccf0 (0xE10-0xCF0) gfx_drawbmp_sub1
+af+ 0x08023760 (0x7FE-0x760) gfx_drawbmp_sub2
+af+ 0x0801cc94 (0xCF0-0xC94) gfx_drawbmp_sub3
 
 
 
@@ -1133,11 +1219,21 @@ f get_keycode_from_table_2 @ 0x804f8ea
 
 f store_keycode @ 0x0804fb24
 f kb_handler @ 0x0804f94c
-af+ 0x0804f94c 384 kb_handler
+af+ 0x0804f94c (0xfbb2-0xf94c) kb_handler
 CCa 0x0804fa32 definite keydown
 CCa 0x0804fa1e jump if b0 not set, reset debounce
 CCa 0x0804fa30 not debounced yet, jump
+CCa 0x0804fa80 return from kb_handler but not end of function
 CCa 0x0804fa4e jump if long keypress count is reached
+
+af+ 0x804F7DC (0x8DE-0x7DC) kb_handler_sub1
+CCa 0x804F7EA return ONE 
+CCa 0x804F856 return ZERO 
+af+ 0x8051fe6 (0x201c-0x1fe6) kb_scan_matrix_1
+af+ 0x8051ed4 (0xf22-0xed4) kb_scan_matrix_2
+af+ 0x8051fac (0xfe6-0xfac) kb_scan_matrix_3
+af+ 0x805201c (0x206a-0x201c) kb_scan_matrix_4
+af+ 0x8051f22 (0x1fac-0x1f22) kb_scan_matrix_5 
 
 f radio_status_1 @ 0x2001e5f0
 
@@ -1595,6 +1691,7 @@ CCa 0x0809445c select PLL as system clock (?)
 s 0x80FAFDC  # if 'they' used Keil's ecosystem, this is __main which calls the scatterload-thingy
 af+ $$ 12 __main
 f __main 12 @ ($$+1) # similar as above, to see the called function name in disassembly
+CCa 0x80fafdc 'jumped into' (no call) from Reset_Handler
 
 s 0x80D0010 # 1st subroutine called from __main (above)
 af+ $$ 26 FPU_Init # called from __main() [not main()] 
@@ -1602,9 +1699,13 @@ f FPU_Init 26 @ $$
 
 s 0x80F7ECC # 2nd subroutine called from __main() 
 af+ $$ 26 _main2
+CCa 0x80F7ECC 'Return_ONE', strange
 f _main2 26 @ $$
 
-s 0x80F7EE6 # 1st subroutine called from _main2() . Formerly Keil's _main_scatterload-thingy ?
+af+ 0x80f7ee2 4 Return_ONE # part of _main2 but CALLED (bl) from there !
+f Return_ONE 4 @ 0x80f7ee2 
+
+s 0x80F7EE6 # 1st meaningful subroutine called from _main2() . Formerly Keil's _main_scatterload-thingy ?
 af+ $$ 26 _main2_init_sub1
 f _main2_init_sub1 26 @ $$
 
@@ -1630,7 +1731,7 @@ s 0x8043ed0 # called from _main2_init_sub1 (3rd)
 af+ $$ (0xFC-0xD0) InitGlobalsAndStartRealTimeKernel
 
 s 0x8046280 # called from _main2_init_sub1 (4th)
-af+ $$ (0xBC-0x80) Create_Start_Task_AndSetItsName
+af+ $$ (0xBC-0x80) Create_Start_Task
 # Details, and EVEN THE SOURCECODE of OSTaskCreateEx()
 # is in the uC/OS-II User's Manual, page 156 .
 # For the ARM-ABI's calling convention,
@@ -1722,13 +1823,8 @@ s 0x80450c8
 af+ $$ (0x156-0x0C8) SomethingWithGuiOpmode2
 f SomethingWithGuiOpmode2 (0x156-0x0C8) @ $$
 
-s 0x80460f0
-af+ $$ (0x0F8-0x0F0) Calls_6050
-# f Calls_6050 (0x0F8-0x0F0) @ $$
-
-s 0x8046050
-af+ $$ (0x0F8-0x0F0) func_6050
-#f func_6050 (0x0F8-0x0F0) @ $$
+af+ 0x80460f0 (0x0F8-0x0F0) Calls_6050
+af+ 0x8046050 (0x0A0-0x050) func_6050
 
 s 0x80460f8
 af+ $$ (0x204-0x0F8) DrawSomethingThenBitBangIO
@@ -1779,21 +1875,13 @@ af+ $$ (0x658-0x618) func_4618
 s 0x8044658 #
 af+ $$ (0x758-0x658) SomethingWith_RCC_and_PLL_I2C
 
-s 0x804e132 # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x13A-0x132) ClearSomeHalfWordInRAM 
-s 0x80442ce # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x2FA-0x2CE) ClearSomeVariablesInRAM
-s 0x80442fa # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x32E-0x2FA) ClearSomeBlocksInRAM 
-s 0x8044368 # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x3C6-0x368) Func4_of_10 
-s 0x804426e # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x2CE-0x26E) Func5_of_10 
-s 0x80482c4 # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x312-0x2C4) Func6_of_10 
-
-s 0x804432e # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x368-0x32E) Create_uCOS_Idle_Task 
+af+ 0x804e132 (0x13A-0x132) ClearSomeHalfWordInRAM # called from InitGlobalsAndStartRealTimeKernel
+af+ 0x80442ce (0x2FA-0x2CE) ClearSomeVariablesInRAM # called from InitGlobalsAndStartRealTimeKernel
+af+ 0x80442fa (0x32E-0x2FA) ClearSomeBlocksInRAM # called from InitGlobalsAndStartRealTimeKernel
+af+ 0x8044368 (0x3C6-0x368) Func4_of_10 # called from InitGlobalsAndStartRealTimeKernel
+af+ 0x804426e (0x2CE-0x26E) Func5_of_10 # called from InitGlobalsAndStartRealTimeKernel
+af+ 0x80482c4 (0x312-0x2C4) Func6_of_10 # called from InitGlobalsAndStartRealTimeKernel
+af+ 0x804432e (0x368-0x32E) Create_uCOS_Idle_Task # called from InitGlobalsAndStartRealTimeKernel
 CCa 0x804433A Task stack size (static array)
 CCa 0x8044350 R0 = pTaskFunc = PC+0x101 = &OS_IdleTask, ca 0x08044452
 CCa 0x8044354 OSTaskCreateExt(pTaskFunc,pvData,pTopOfStack,u8Prio,u16ID,pBotOfStack,u32StackSize,pvExt,u16Options)
@@ -1829,66 +1917,42 @@ f s_DFU_Interface 13 @ 0x80F9004
 
 
 s 0x804b728 # called from InitGlobalsAndStartRealTimeKernel
-af+ $$ (0x7D6-0x728) CreateTwoSemaphores 
+af+ $$ (0x7D6-0x728) CreateTwoSemasAndTimerTask 
 s 0x804e13a # called from InitGlobalsAndStartRealTimeKernel
 af+ $$ (0x13C-0x13A) DoNothing_only_BX_LR 
 s 0x804e304 # called from InitGlobalsAndStartRealTimeKernel
 af+ $$ (0x3E8-0x304) ManyStrangeSimpleMoves
 CCa 0x0804e308 maybe just a dummy to suppress linker warnings
 
+af+ 0x8043e98 (0xED0-0xE98) func_3e98 # called from CreateTwoSemasAndTimerTask
+af+ 0x804b7d6 (0x810-0x7D6) Create_uCOS_Timer_Task # called from CreateTwoSemasAndTimerTask
+
 s 0x8095810 # endlessly called from 0x80f7ef0 ? 
 af+ $$ 16 CalledForever
 CCa $$ Possibly for 'unexpected return from main()'
 f CalledForever 16 @ $$
 
-s 0x8044024 
-af+ $$ (0x66-0x24) func_4024
+af+ 0x8044024 (0x66-0x24) func_4024
+af+ 0x80443c6 (0x3d8-0x3c6) func_43c6
+af+ 0x80443d8 (0x434-0x3d8) func_43d8
+af+ 0x8044434 (0x452-0x434) func_4434
+af+ 0x8043df2 (0xE1E-0xDF2) func_3df2
 
-s 0x8044434 # called from func_4024
-af+ $$ (0x52-0x34) func_4434
+af+ 0x8044066 182 SysTick_Sub1
+af+ 0x804e2a0 36 SysTick_Sub2
+af+ 0x8043efc 148 SysTick_Sub3
 
-s 0x8043df2 # called from func_4024
-af+ $$ ($E1E-0xDF2) func_3df2
-CCa 0x80F30988 Really an invalid opcode here ? 
+af+ 0x804e302 2 nop_BX_LR # 'returns without doing anything'. Dummy, or nop() ?
 
-s 0x8044066 # .. 411a called from SysTick_Handler (after leaving a critical section)
-af+ $$ 182 SysTick_Sub1
-f SysTick_Sub1 182 @ $$
-
-s 0x804e2a0 # .. e2c2 called from SysTick_Sub1
-af+ $$ 36 SysTick_Sub2
-f SysTick_Sub2 36 @ $$
-
-s 0x804e302 # .. e2c2 called from SysTick_Sub2
-af+ $$ 2 nop_BX_LR # 'returns without doing anything'. Dummy, or nop() ?
-f nop_BX_LR 2 @ $$
-
-s 0x804411c # .. 4194
-af+ $$ 122 func_411c
-f func_411c 122 @ $$
-
-s 0x8043efc # also called from SysTick_Handler (after leaving a critical section)
-af+ $$ 148 SysTick_Sub2
-f SysTick_Sub2 148 @ $$
-
-s 0x8043f90 
-af+ $$ 58 func_3f90
-f func_3f90 58 @ $$
-
-s 0x8043fca 
-af+ $$ 90 func_3fca
-f func_3fca 90 @ $$
-
-
-
+af+ 0x804411c 122 func_411c
+af+ 0x8043f90 58 func_3f90
+af+ 0x8043fca 90 func_3fca
 
 s 0x8061aea # called from the wakeup-IRQ-handler, *after* SystemInit()
 af+ $$ 40 WakeUp_Sub1
 f WakeUp_Sub1 40 @ $$
 
-s 0x8051e66 # also called from the wakeup-IRQ-handler, *after* SystemInit()
-af+ $$ 6 ClearEXTIPendingBits_R0
-f ClearEXTIPendingBits_R0 6 @ $$
+af+ 0x8051e66 6 ClearEXTIPendingBits_R0
 
 s 0x80938c8 # called from USB (OTG) IRQ handler
 af+ $$ 210 CalledFromUSB_IRQ
@@ -1907,15 +1971,46 @@ s 0x8051e42 # called from EXTI3 + EXTI2 (pin-change) interrupt handler
 af+ $$ 36 CalledFromPinChangeIRQ
 f CalledFromPinChangeIRQ 36 @ $$
 
-s 0x8043aa0 # called from EXTI2 (pin-change) interrupt handler
-af+ $$ 4 StoreR1_in_R0plus0x24 # give this a better name when you know the purpose !
-f StoreR1_in_R0plus0x24 4 @ $$
-s 0x8043aa4
-af+ $$ 4 StoreR1_in_R0plus0x2C # give this a better name when you know ..
-f StoreR1_in_R0plus0x2C 4 @ $$
-s 0x8043aa8
-af+ $$ 4 LoadR0_from_R0plus0x24 # give this a better name when you .. etc
-f LoadR0_from_R0plus0x24 4 @ $$
+# subroutines for SPI3 ...
+af+ 0x8049756 (0x7D2-0x756) SPI3_Handler
+CCa 0x804975C [0x20004A48] = 0x40003C00 = SPI3/I2S3
+CCa 0x8049772 [0x20004ABC] = 0x04008000 = bitmask
+CCa 0x8049776 [0x20004a54] = 0x40020000 = GPIOA
+CCa 0x804977e 'WAITING in an interrupt handler ?'
+CCa 0x8049798 [0x20004a4c] = 0x40004000 = I2S3ext
+CCa 0x80497b2 [0x20004a54] = 0x40020000 = GPIOA
+f baseaddr_SPI3_for_SPI3_Handler 4 @ 0x20004a48
+f bitmask_GPIOA_for_SPI3_Handler 4 @ 0x20004abc
+f baseaddr_GPIOA_for_SPI3_Handler 4 @ 0x20004a54
+
+af+ 0x804485a (0x89E-0x85A) SPI_I2S_GetITStatus
+CCa 0x804485a in: R0='SPIx' (SPI or I2S base addr)
+CCa 0x804485c in: R1='SPI_I2S_IT' (0x58 from SPI3_IRQHandler)
+CCa 0x8044868 'itpos = 0x01 SHL (SPI_I2S_IT & 0x0F);'
+CCa 0x8044872 'itmask = SPI_I2S_IT SHR 4;'
+CCa 0x804487a 'itmask = 0x01 SHL itmask;'
+CCa 0x804487e [R0+4] = SPI Control Register 2
+CCa 0x8044880 'enablestatus = (SPIx.CR2 & itmask) ;'
+CCa 0x8044884 [R0+8] = SPI Status Register
+CCa 0x804489C return: R0: 0=interrupt flag RESET, 1=SET 
+
+af+ 0x8044788 (0x7A4-0x788) SPI_I2S_EnableOrDisable
+CCa 0x8044788 in: R0='SPIx' (SPI or I2S base addr)
+CCa 0x804478a in: R1: 0=disable I2S, 1=enable I2S
+CCa 0x804478e [R0+0x1C] = SPI_I2SCFGR
+CCa 0x8044790 'SPIx.I2SCFGR OR= SPI_I2SCFGR_I2SE;'
+CCa 0x804479e 'SPIx.I2SCFGR AND= BITNOT SPI_I2SCFGR_I2SE;'
+  # how to convince R2 from misinterpreting many characters in a CCa-text-string ?
+  # ugly stuff like 'SHL', 'OR=', BITNOT etc had to be used instead of C pseudocode .
+
+af+ 0x804489e (0x8B4-0x89E) SPI_I2S_ClearITPendingBit
+CCa 0x804489e in: R0='SPIx' (SPI or I2S base addr)
+CCa 0x804489e in: R1=SPI_I2S_IT, which bit to clear
+CCa 0x80448a6 'itpos = 0x01 SHL (SPI_I2S_IT & 0x0F);'
+CCa 0x80448ae 'SPIx.SR = BITNOT itpos;'
+CCa 0x80448b0 [R0+8] = SPI Status Register
+
+af+ 0x80447a4 (0x7FA-0x7A4) func_47a4
 
 # subroutines called from various timer IRQ handlers (access SFRs via base address + register offsets)
 af+ 0x803e45e (0x47E-0x45E) TimerIRQ_Sub11
@@ -1932,16 +2027,26 @@ af+ 0x803f5e0 (0x626-0x5E0) Something2_TIM7_RadioStatus1
 af+ 0x803f626 (0x682-0x626) SomethingWithGPIOC_TIM7_Status
 af+ 0x803f682 (0x6D6-0x682) SomethingWithGFX_Info
 af+ 0x803f6d6 (0x708-0x6D6) SomethingBeforeOsSemCreate   
-af+ 0x8043ac8 (0xAE4-0xAC8) TimerIRQ_Sub2
+af+ 0x8043ac8 (0xAE4-0xAC8) TIM_EnableOrDisableCounter # stupid original name = TIM_Cmd
+CCa 0x8043ac8 in: R1: 0=DISABLE, 1=ENABLE counting
+CCa 0x8043ace in: R0= TIMx base address, ControlReg1
+CCa 0x8043ade what an effort to clear a stupid bit !
 af+ 0x8043ae4 (0xB62-0xAE4) SomethingWithTIM1_TIM8
-af+ 0x8043e62 (0xBEE-0xE62) 
+af+ 0x8043e70 (0xe74-0xe70) _enable_irq
 af+ 0x8043bee (0xC78-0xBEE) SomethingTestingTIM1_TIM8
 af+ 0x8043c78 (0xCE0-0xC78) SomethingElseWithTIM1_TIM8
 Cd (0xD20-0xCE0) @0x8043ce0 # looks like data, not executable. End of a C module ?
 af+ 0x8043d62 (0xD84-0xD62) func_3d62
-af+ 0x8043d84 (0xD9C-0xD84) TimerIRQ_Sub3
+af+ 0x8043d84 (0xD9C-0xD84) TIM_ITConfig
+CCa 0x8043d84 in: R0= TIMx base address
+CCa 0x8043d86 in: R2= 'NewState' (enable,disable)
+CCa 0x8043d8a [R0+0xC] = TIMx DMA/Interrupt enable register
+CCa 0x8043d8c in: R1= timer interrupt sources, 1=UIE, etc 
 af+ 0x8043d9c (0xDCA-0xD9C) TimerIRQ_Sub5
-af+ 0x8043dca (0xDD2-0xDCA) CobbleUpR1_and_StoreInR0plus16 # uxth mvns strh - holy sh..
+af+ 0x8043dca (0xDD2-0xDCA) TIM_ClearFlag
+CCa 0x8043dca [in] R1=bit to clear, R0= TIMx base addr
+CCa 0x8043dcc Move Negative (complement)
+CCa 0x8043dce 'clear pending' in TIMx StatusReg
 af+ 0x8043dd2 (0xDE4-0xDD2) func_3dd2 # followed by OS_ENTER_CRITICAL with a strange opcode @ 0x8043de4 !
 
 af+ 0x8047bac (0xC06-0xBAC) TimerIRQ_Sub1
@@ -1962,22 +2067,62 @@ af+ 0x8052310 (0x32C-0x310) SomethingElseWritingDAC
 af+ 0x802b6c0 (0x6DE-0x6C0) RTCWakeupIRQ_Sub1
 af+ 0x804811a (0x23A-0x11A) RTCWakeupIRQ_Sub2
 
-# subroutines called from by DMA handlers
+# subroutines called from DMA handlers
 af+ 0x804e768 4 DMAHandler_Sub1
 af+ 0x804e7ba 4 DMAHandler_Sub2
 
+af+ 0x804e768 (0xba-0x68) DMA_Stream_Sub1
+af+ 0x804e7ba (0xda-0xba) DMA_Stream_Sub2
+
+af+ 0x804966a (0x756-0x66A) DMA1_Stream2_Sub
+af+ 0x8049428 (0x66A-0x428) DMA1_Stream5_Sub
 
 # various functions easily recognizeable by push with lr / pop with pc ...
 #  .. rename when their purpose is known
 af+ 0x8095824 10 func_5824
 af+ 0x809582e 10 func_582e
 af+ 0x8095838 20 func_5838
-af+ 0x0802b80a 4 StoreHalfR1_in_R0plus0x18
-af+ 0x0802b80e 4 StoreHalfR1_in_R0plus0x1A
-af+ 0x0802b812 (0x20-0x12) StoreR1R2_in_R0plus0x18_or_1A
+
+# GPIO (most likely they used stm32f4xx_gpio.c, quite bloated)
+af+ 0x0802B748 (0x7ee-0x0x748) GPIO_Init
+CCa 0x0802B748 in: R0=base address of a GPIO block
+CCa 0x0802B75A in: R1=address of a GPIO_InitStruct
+CCa 0x0802B75C if same as in stm32f4xx_gpio.c, R4='GPIO_Pin'
+     # beware, many characters cannot be used in 'CCa'..
+CCa 0x0802B770 [R0+0] = GPIOx Mode Register
+CCa 0x0802B774 [R1+4] = GPIO_InitStruct.GPIO_Mode
+CCa 0x0802B78E [R0+8] = GPIOx Output Speed Register
+CCa 0x0802B7A0 [R1+5] = GPIO_InitStruct.GPIO_Speed
+CCa 0x0802B7AE [R0+4] = GPIOx Output Type Register
+CCa 0x0802B7BA [R1+6] = GPIO_InitStruct.GPIO_OType
+CCa 0x0802B7C4 [R0+0xC] = GPIOx PullUp/PullDown Reg
+CCa 0x0802B7BA [R1+7] = GPIO_InitStruct.GPIO_PuPd
+CCa 0x0802B7E8 loop for multiple pins of the same port
+
+af+ 0x0802b80a 4 GPIO_SetBits
+af+ 0x0802b80e 4 GPIO_ResetBits
+af+ 0x0802b812 (0x20-0x12) GPIO_WriteBit
+CCa 0x0802b812 in: R2='BitVal', 0=RESET, 1=SET
+CCa 0x0802b816 in: R1='GPIO_Pin', 0..15
+CCa 0x0802b818 in: R0=GPIOx base address
 af+ 0x0802b820 (0x72-0x20) func_b820
-af+ 0x0804dd12 (0x36-0x12) CalledFromSPI0_ReadReg
-af+ 0x0802B7EE (0x80a-0x7ee) CalledFromSomeBitbangIO
+af+ 0x0804dd12 (0x36-0x12) SPI0_ReadReg_Sub1
+
+af+ 0x0802b804 (0x80A-0x804) GPIO_ReadInputData
+CCa 0x0802b804 in: R0=GPIOx base address
+CCa 0x0802b806 out: R0=value from InputDataRegister
+
+af+ 0x0802B7EE (0x80a-0x7ee) GPIO_TestInputBits_MaskR1
+CCa 0x0802B7F0 in: R0=base address of a GPIO block, +0x10 = 'IDR'
+CCa 0x0802B7F2 zero-extend to 32 bits (2nd arg, R1, is UINT16)
+CCa 0x0802B7F4 R0=value read from GPIO InputDataRegister
+CCa 0x0802B800 return value in R0 looks like BOOLEAN
+
+# Hardware timers ... maybe compiled from stm32f4xx_tim.c
+af+ 0x8043aa0 4 TIM_SetCounter
+af+ 0x8043aa4 4 TIM_SetAutoreload
+af+ 0x8043aa8 4 TIM_GetCounter
+
 
 # more stuff seen when "panning around" in r2's Visual mode...
 s 0x08094800 # Look at this whatever-it-is in 'V'isual mode / pXA .. 
@@ -2006,20 +2151,17 @@ Cs (0x80f86da-$$) # guesstimated length by address difference
 #          'f' lists them, possibly sorted by order of definition (not address).
 #    Here, flags are also used for special function registers ("on-chip peripherals").
 
-#f io_0x40000400 @ 0x40000400
+f io_TIM2 @ 0x40000000
 f io_TIM3 @ 0x40000400
-
-#f io_0x40000800 @ 0x40000800
 f io_TIM4 @ 0x40000800
-
-#f io_0x40000c00 @ 0x40000c00
 f io_TIM5 @ 0x40000c00
-
 f io_TIM6 @ 0x40001000
 f io_TIM7 @ 0x40001400
+f io_TIM12 @ 0x40001800
+f io_TIM13 @ 0x40001C00
+f io_TIM14 @ 0x40002000
 
-#f io_0x40002800 @ 0x40002800
-f io_RTC @ 0x40002800 # offset 0 : "RTC_TR" (RM0090 page 817)
+f io_RTC @ 0x40002800 # offset 0 : "RTC_TR" (see RM0090)
 
 f io_RTC_DR @ 0x40002804
 f io_RTC_CR @ 0x40002808
@@ -2038,6 +2180,7 @@ f io_IWDG_PR @ 0x40003004
 f io_IWDG_RLR @ 0x40003008
 f io_IWDG_SR @ 0x40003008
 
+f io_I2S2ext @ 0x40003400
 f io_SPI2 @ 0x40003800
 f io_SPI2_CR2 @ 0x40003804
 f io_SPI2_SR @ 0x40003808
@@ -2230,9 +2373,59 @@ f io_USB_OTG_HS_GOTGINT @ 0x40040004 # omitted a bunch of these 'intuitive' regi
  
 f io_0x400a6666 @ 0x400a6666 # don't think this is a valid "I/O"-address
 
-
 # ABOVE: stuff formerly in cpu.r, last edited by DL4YHF 2016-01-03
-#
+# BELOW: Special addresses inside the CPU, not in RM0090 but in PM0214 :
+
+f scb_ACTLR @ 0xE000E008 # Auxiliary Control Register, etc..
+f SysTick_CTRL @ 0xe000e010 # SysTick control and status register, PM2014 Rev5 page 245
+f SysTick_LOAD @ 0xe000e014 # SysTick reload register
+f SysTick_VAL @ 0xe000e018 # SysTick current value register
+f SysTick_CAL @ 0xe000e01C # SysTick calibration register
+f nvic_ISER0 @ 0xE000E100 # Nested Vectored Interrupt Controller...
+f nvic_ISER1 @ 0xE000E104
+f nvic_ISER2 @ 0xE000E108
+f nvic_ICER0 @ 0xE000E180
+f nvic_ICER1 @ 0xE000E184 
+f nvic_ICER2 @ 0xE000E188 # etc, ..
+f nvic_ISPR0 @ 0xE000E200 # etc, ...
+f nvic_STIR @ 0xE000EF00
+f mpu_TYPER @ 0xE000ED90 # Memory Protection Unit - Type Register
+f mpu_CTRL @ 0xE000ED90 # Memory Protection Unit - Control Register, etc...
+f scb_CPUID @ 0xE000ed00 # CPU-ID base register
+f scb_ICSR @ 0xe000ed04
+f scb_VTOR @ 0xe000ed08 # Vector Table Offset Register, PM0214 Rev5 page 220
+f scb_AIRCR @ 0xe000ed0C # Air Conditioning Control Register ? :)
+f scb_SCR @ 0xe000ed10 # System Control Register (what a name..)
+f scb_CCR @ 0xe000ed14
+f scb_SHPR1 @ 0xe000ed18
+f scb_SHPR2 @ 0xe000ed1C
+f scb_SHPR3 @ 0xe000ed20
+f scb_SHCRS @ 0xe000ed24
+f scb_CFSR @ 0xE000ed28
+f fpu_CPACR @ 0xe000ed88 # Coprocessor access control register
+f fpu_FPCCR @ 0xE000EF34 # Floating-point context control register
+f fpu_FPCAR @ 0xE000EF38 # Floating-point context address register
+f fpu_FPDSC @ 0xE000EF38 # Floating-point default status control...
+  # WB finished here. The other SCB-and-Co registers appeared too exotic.
+  # Even worse, this didn't work because R2 expanded bit 31 into NEGATIVE
+  # values, so the disassembler didn't recognise any address above 0x7FFFFFFF !
+  # Accesses to these system registers are now manually 
+  # annotated (via 'CCa', or maybe in a post-processing script) - yucc.
+  # Below are just SOME of the locations where those registers are accessed:
+CCa 0x0809435c read E000ED88 = FPU.CPACR
+CCa 0x0809435e allow full coprocessor access
+CCa 0x08094364 write E000ED88 = FPU.CPACR
+CCa 0x080943a0 E000ED08 = SCB.VTOR
+CCa 0x080d0014 R1 = 0xE000ED88 = FPU.CPACR
+CCa 0x08051d86 R1 = 0xE000ED88 = FPU.CPACR
+CCa 0x08043df6 R0 = 0xE000ED22 = SCB.SysHdlrPrio3, bits 31..16
+CCa 0x08043e08 R0 = 0xE000ED04 = SCB.ICSR
+CCa 0x08093f44 E000ED1A = SCB.SHPR3, UsageFault prio ?
+CCa 0x08093f5e E000ED10 = SCB.SysCtrlReg
+CCa 0x08093f72 E000ED10 = SCB.SysCtrlReg
+CCa 0x08093f72 E000ED10 = SCB.SysCtrlReg
+
+
 # BELOW: Radare2 instructions to "produce" a nicer disassembly listing, with hex-dumps where applicable .
 #    Output redirected to a plain old text file . 
 #    A '> listing.txt' after a command creates a new file and writes the output to it.
@@ -2282,13 +2475,18 @@ pdf @Create_uCOS_Idle_Task >> listing.txt
 pdf @OS_IdleTask >> listing.txt
 pdf @OSIdleTaskHook >> listing.txt
 pdf @WaitForInterruptInIdle >> listing.txt
-pdf @CreateTwoSemaphores >> listing.txt
+pdf @CreateTwoSemasAndTimerTask >> listing.txt
+pdf @func_43c6 >> listing.txt # called from CreateTwoSemasAndTimerTask
+pdf @func_3e98 >> listing.txt # 8043e98 called from CreateTwoSemasAndTimerTask
+pdf @Create_uCOS_Timer_Task >> listing.txt # 804b7d6 called from CreateTwoSemasAndTimerTask
+
 pdf @DoNothing_only_BX_LR >> listing.txt
 pdf @ManyStrangeSimpleMoves >> listing.txt
-pdf @Create_Start_Task_AndSetItsName >> listing.txt
+pdf @Create_Start_Task >> listing.txt
 
 # endless 'Start' task and functions called from there...
 pdf @Start >> listing.txt
+pdf @Start_multiple_tasks >> listing.txt
 pdf @DrawSomethingThenBitBangIO >> listing.txt
 pdf @SomethingWithGPIOC_and_Backlight_Timer >> listing.txt
 pdf @FuncWithAwfulLongSwitch >> listing.txt
@@ -2305,26 +2503,113 @@ pdf @ExtendU16toU32_ptrR0plus4C >> listing.txt
 pdf @SomeBitbangingOnGPIOD >> listing.txt
 pdf @SomethingWithGPIOC_TIM7_Status >> listing.txt
 pdf @CalledFromLongpressThing >> listing.txt
-pdf @CalledFromSomeBitbangIO >> listing.txt
 pdf @Calls_6050 >> listing.txt
-
+pdf @func_6050 >> listing.txt
 
 # EXCEPTION- and INTERRUPT vectors (can be told from each other by the _IRQ in the names)
 s DummyForUnusedIRQs  # ex: s NMI_Handler
 pD (NextAfterHandlers-DummyForUnusedIRQs) >> listing.txt # this disassembles MOST (but not all) 
-  # interrupt- and exception handlers in a contiguous block.
+  # Many interrupt- and exception handlers were in a contiguous block.
   # "pd N" disassembles N opcodes, "pD" diassembes N bytes. 
   # Both are aware of constant DATA blocks, and shows 'data' in hex.
+  # Interrupt handlers NOT contained in the above 'pD'-block
+  # must be annotated with 'af+' (including their length),
+  # so we can list them below, one by one, before commenting out
+  # the stuff that is not required, or turned out to be a dummy.
+  # Initially, ALL handlers were disassembled, because ALL of them
+  # had individual addresses (instead of using one common "do-nothing"-handler.
+#pdf @PendSV_Handler >> listing.txt # invalid address in the VT !
+pdf @WWDG_IRQHandler >> listing.txt
+pdf @PVD_IRQHandler >> listing.txt
+pdf @TAMP_STAMP_IRQHandler >> listing.txt
+#pdf @RTC_WKUP_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @FLASH_IRQHandler >> listing.txt
+pdf @RCC_IRQHandler >> listing.txt
+#pdf @EXTI0_IRQHandler >> listing.txt # already contained in the 'pD'-block
+#pdf @EXTI1_IRQHandler >> listing.txt
+#pdf @EXTI2_IRQHandler >> listing.txt
+#pdf @EXTI3_IRQHandler >> listing.txt
+pdf @EXTI4_IRQHandler >> listing.txt
+#pdf @DMA1_Stream0_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA1_Stream1_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+pdf @DMA1_Stream2_IRQHandler >> listing.txt
+pdf @DMA1_Stream2_Sub >> listing.txt
+#pdf @DMA1_Stream3_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA1_Stream4_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+pdf @DMA1_Stream5_IRQHandler >> listing.txt
+pdf @DMA1_Stream5_Sub >> listing.txt
+#pdf @DMA1_Stream6_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream0_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream1_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream2_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream3_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @DMA_Stream_Sub1 >> listing.txt
+pdf @DMA_Stream_Sub2 >> listing.txt
+#pdf @DMA2_Stream4_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream5_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream6_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @DMA2_Stream7_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @ADC_IRQHandler >> listing.txt # had an invalid address so don't try to disassemble
+#pdf @CAN1_TX_IRQHandler >> listing.txt # don't think the radio has a CAN bus
+#pdf @CAN1_RX0_IRQHandler >> listing.txt # even though it would be nice
+#pdf @CAN1_RX1_IRQHandler >> listing.txt # if it did :)
+#pdf @CAN1_SCE_IRQHandler >> listing.txt
+pdf @EXTI9_5_IRQHandler >> listing.txt
+pdf @TIM1_BRK_TIM9_IRQHandler >> listing.txt # leave this in even if it's a dummy.. someone may be looking for unused timers
+pdf @TIM1_UP_TIM10_IRQHandler >> listing.txt
+pdf @TIM1_TRG_COM_TIM11_IRQHandler >> listing.txt
+pdf @TIM1_CC_IRQHandler >> listing.txt
+pdf @TIM2_IRQHandler >> listing.txt
+#pdf @TIM3_IRQHandler >> listing.txt # already contained in the 'pD'-block
+#pdf @TIM4_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @I2C1_EV_IRQHandler >> listing.txt
+pdf @I2C1_ER_IRQHandler >> listing.txt
+pdf @I2C2_EV_IRQHandler >> listing.txt
+pdf @I2C2_ER_IRQHandler >> listing.txt
+pdf @SPI1_IRQHandler >> listing.txt
+pdf @SPI2_IRQHandler >> listing.txt
+pdf @USART1_IRQHandler >> listing.txt
+pdf @USART2_IRQHandler >> listing.txt
+pdf @USART3_IRQHandler >> listing.txt
+pdf @EXTI15_10_IRQHandler >> listing.txt
+pdf @RTC_Alarm_IRQHandler >> listing.txt
+#pdf @OTG_FS_WKUP_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @TIM8_BRK_TIM12_IRQHandler >> listing.txt
+#pdf @TIM8_UP_TIM13_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @TIM8_TRG_COM_TIM14_IRQHandler >> listing.txt
+pdf @TIM8_CC_IRQHandler >> listing.txt
+#pdf @DMA1_Stream7_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @FSMC_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @SDIO_IRQHandler >> listing.txt # unused, deliberately gets stuck in a loop
+#pdf @TIM5_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @SPI3_IRQHandler >> listing.txt
+pdf @USART4_IRQHandler >> listing.txt
+pdf @USART5_IRQHandler >> listing.txt
+#pdf @TIM6_DAC_IRQHandler >> listing.txt # already contained in the 'pD'-block
+#pdf @TIM7_DAC_IRQHandler >> listing.txt # already contained in the 'pD'-block
+pdf @OTG_FS_IRQHandler >> listing.txt
+pdf @USART6_IRQHandler >> listing.txt
+pdf @I2C3_EV_IRQHandler >> listing.txt
+pdf @I2C3_ER_IRQHandler >> listing.txt
+pdf @OTG_HS_EP1_OUT_IRQHandler >> listing.txt
+pdf @OTG_HS_EP1_IN_IRQHandler >> listing.txt
+pdf @OTG_HS_WKUP_IRQHandler >> listing.txt
+pdf @OTG_HS_IRQHandler >> listing.txt
+pdf @DCMI_IRQHandler >> listing.txt
+pdf @CRYP_IRQHandler >> listing.txt
+pdf @HASH_RNG_IRQHandler >> listing.txt
+pdf @FPU_IRQHandler >> listing.txt
 
-# Functions called from various INTERRUPT SERVICE HANDLERS :
-pdf @CobbleUpR1_and_StoreInR0plus16 >> listing.txt # may be a tone generator (?) 
+# Functions called from various INTERRUPT SERVICE HANDLERS and Reset_Handler:
 pdf @Sub2CalledFromTimerISR >> listing.txt
 pdf @SysTick_Sub1 >> listing.txt
 pdf @SysTick_Sub2 >> listing.txt
+pdf @SysTick_Sub3 >> listing.txt
 pdf @nop_BX_LR >> listing.txt
 pdf @func_3f90 >> listing.txt
 pdf @func_3fca >> listing.txt
-pdf @func_4024 >> listing.txt
+pdf @func_4024 >> listing.txt # still in the initialisation, but 'Start' task already running
+pdf @func_4434 >> listing.txt
 pdf @func_411c >> listing.txt
 pdf @WakeUp_Sub1 >> listing.txt
 pdf @RTCWakeupIRQ_Sub1 >> listing.txt
@@ -2335,28 +2620,45 @@ pdf @CalledFromPinChangeIRQ >> listing.txt
 pdf @func_5824 >> listing.txt
 pdf @func_582e >> listing.txt
 pdf @func_5838 >> listing.txt
+pdf @SPI3_Handler >> listing.txt
+pdf @SPI_I2S_GetITStatus >> listing.txt
+pdf @SPI_I2S_EnableOrDisable >> listing.txt
+pdf @SPI_I2S_ClearITPendingBit >> listing.txt
 pdf @TimerIRQ_Sub1 >> listing.txt
-pdf @TimerIRQ_Sub2 >> listing.txt
-pdf @TimerIRQ_Sub3 >> listing.txt
+pdf @TIM_EnableOrDisableCounter >> listing.txt
+pdf @TIM_ITConfig >> listing.txt
+pdf @TimerIRQ_Sub4 >> listing.txt
 pdf @TimerIRQ_Sub5 >> listing.txt
+pdf @TimerIRQ_Sub7_writes_DAC >> listing.txt
+pdf @TimerIRQ_Sub8 >> listing.txt
 pdf @TimerIRQ_Sub9 >> listing.txt
 pdf @TimerIRQ_Sub11 >> listing.txt
-
-    
     
 # Disassemble individual functions, most of these annotated by Travis and others:
 pdf @md380_create_main_menu_entry >> listing.txt
 pdf @md380_create_menu_entry >> listing.txt
 pdf @md380_menu_entry_back >> listing.txt
+pdf @menu_add_number_of_menuentries_counts >> listing.txt
 pdf @menu_draw_something >> listing.txt
 pdf @menu_draw_something2 >> listing.txt
 pdf @menu_draw_something3 >> listing.txt
 pdf @menu_draw_something4 >> listing.txt
 pdf @menu_draw_something5 >> listing.txt
+pdf @F_858 >> listing.txt
 pdf @kb_handler >> listing.txt
+pdf @kb_handler_sub1 >> listing.txt
+pdf @kb_scan_matrix_1 >> listing.txt
+pdf @kb_scan_matrix_2 >> listing.txt
+pdf @kb_scan_matrix_3 >> listing.txt
+pdf @kb_scan_matrix_4 >> listing.txt
+pdf @kb_scan_matrix_5 >> listing.txt
+pdf @func_b820 >> listing.txt
 
     # Graphic functions
 pdf @gfx_drawbmp >> listing.txt
+pdf @gfx_drawbmp_sub1 >> listing.txt
+pdf @gfx_drawbmp_sub2 >> listing.txt
+pdf @gfx_drawbmp_sub3 >> listing.txt
 pdf @gfx_blockfill >> listing.txt
 pdf @gfx_linefill >> listing.txt
 pdf @gfx_linefill2 >> listing.txt
@@ -2392,6 +2694,22 @@ pdf @gfx_store_something_in_GfxInfoPlus0x22 >> listing.txt
 
     # the following may be related to 'low level gfx'.. needs a closer look
 pdf @gfx_put_pixel_sub2 >> listing.txt
+pdf @gfx_linefill_sub2 >> listing.txt
+pdf @gfx_newline_sub >> listing.txt
+pdf @gfx_setcolor_sub1 >> listing.txt
+pdf @gfx_setcolor_sub2 >> listing.txt
+pdf @gfx_setcolor_sub3 >> listing.txt
+
+pdf @gfx_drawtext_sub2 >> listing.txt
+pdf @gfx_drawtext_sub3 >> listing.txt
+pdf @gfx_drawtext_sub1 >> listing.txt
+pdf @gfx_drawtext_sub4 >> listing.txt
+pdf @gfx_drawtext_sub5 >> listing.txt
+pdf @gfx_drawtext_sub6 >> listing.txt
+pdf @gfx_drawtext_sub7 >> listing.txt
+pdf @gfx_drawtext_sub8 >> listing.txt
+pdf @gfx_drawtext_sub9 >> listing.txt
+
 pdf @WriteLCDCommand >> listing.txt
 pdf @WriteLCDData >> listing.txt
 pdf @ReadLCDData >> listing.txt
@@ -2399,7 +2717,33 @@ pdf @sub_3546 >> listing.txt
 pdf @sub_355a >> listing.txt
 pdf @InitLCDisplay >> listing.txt
 
-    # RTOS kernel
+pdf @gfx_2e24 >> listing.txt
+pdf @gfx_2e5c >> listing.txt
+pdf @gfx_2eb6 >> listing.txt
+pdf @gfx_2efc >> listing.txt
+pdf @gfx_2f50 >> listing.txt
+pdf @gfx_316c >> listing.txt
+pdf @gfx_317a >> listing.txt
+pdf @gfx_31bc >> listing.txt
+pdf @gfx_3204 >> listing.txt
+pdf @gfx_323a >> listing.txt
+pdf @gfx_324c >> listing.txt
+pdf @gfx_3368 >> listing.txt
+pdf @gfx_3374 >> listing.txt
+pdf @gfx_3382 >> listing.txt
+pdf @gfx_3396 >> listing.txt
+pdf @gfx_33d8 >> listing.txt
+pdf @gfx_3428 >> listing.txt
+pdf @gfx_3496 >> listing.txt
+pdf @gfx_34b2 >> listing.txt
+pdf @gfx_34f8 >> listing.txt
+pdf @gfx_351c >> listing.txt
+pdf @gfx_3966 >> listing.txt
+pdf @gfx_b7c4 >> listing.txt
+pdf @gfx_b850 >> listing.txt
+pdf @gfx_b86c >> listing.txt
+
+    # RTOS kernel and related functions
 pdf @OSSemCreate >> listing.txt
 pdf @OSSemPend >> listing.txt
 pdf @OSSemPost >> listing.txt
@@ -2410,6 +2754,7 @@ pdf @md380_OSMboxPost >> listing.txt
 pdf @md380_OSMboxPend >> listing.txt
 pdf @OS_ENTER_CRITICAL >> listing.txt
 pdf @OS_EXIT_CRITICAL >> listing.txt
+#pdf @_enable_irq >> listing.txt # ?
 
     # USB ("API" layer)
 pdf @usb_setcallbacks >> listing.txt
@@ -2421,24 +2766,40 @@ pdf @usb_dfu_write >> listing.txt
 pdf @usb_dfu_read >> listing.txt
 pdf @usb_serialnumber >> listing.txt    
 
+    # Low-level I/O stuff
+pdf @GPIO_Init >> listing.txt # compiled from stm32f4xx_gpio.c ?
+pdf @GPIO_TestInputBits_MaskR1 >> listing.txt
+pdf @GPIO_SetBits >> listing.txt
+pdf @GPIO_ResetBits >> listing.txt
+pdf @GPIO_WriteBit >> listing.txt
+pdf @GPIO_ReadInputData >> listing.txt
+pdf @FeedTheWatchdog >> listing.txt
+pdf @StartTheWatchdog >> listing.txt
+
+pdf @TIM_GetCounter >> listing.txt
+pdf @TIM_SetCounter >> listing.txt
+pdf @TIM_SetAutoreload >> listing.txt
+pdf @TIM_ClearFlag >> listing.txt
+
     # C5000 'baseband chip'
 pdf @c5000_spi0_writereg >> listing.txt
 pdf @c5000_spi0_readreg >> listing.txt
+pdf @SPI0_ReadReg_Sub1 >> listing.txt
 pdf @c5000_spi0_writereg_1 >> listing.txt
 pdf @some_func_pend >> listing.txt # called from c5000_spi0_write/readreg
 pdf @some_bitband_io_range >> listing.txt # called from c5000_spi0_write/readreg
 pdf @some_bitband_io >> listing.txt # called from the above..
-pdf @StoreHalfR1_in_R0plus0x18 >> listing.txt # first called from the bitbang / bitband - thing ..
-pdf @StoreHalfR1_in_R0plus0x1A >> listing.txt
-pdf @StoreR1_in_R0plus0x24 >> listing.txt
-pdf @StoreR1_in_R0plus0x2C >> listing.txt
-pdf @StoreR1R2_in_R0plus0x18_or_1A >> listing.txt
 pdf @some_func_post >> listing.txt # called from c5000_spi0_write/readreg
 pdf @dmr_call_start >> listing.txt
 pdf @dmr_before_squelch >> listing.txt
 pdf @dmr_sms_arrive >> listing.txt
 pdf @dmr_call_end >> listing.txt
 pdf @dmr_CSBK_handler >> listing.txt
+
+    # Real Time Clock
+pdf @md380_RTC_GetDate >> listing.txt
+pdf @md380_RTC_GetTime >> listing.txt
+
 
 # Finally append a complete list of all 'known' symbols (outcomment if not needed) :
 f >> listing.txt # 'f' (without args) lists all "flags". Kind of our symbol table... but too long
