@@ -55,6 +55,7 @@ const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
 const static wchar_t wt_backlight[]         = L"Backlight";
+const static wchar_t wt_blunchanged[]       = L"Unchanged";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
@@ -813,6 +814,10 @@ void mn_backlight_set(int sec5, const wchar_t *label)
     rc_write_radio_config_to_flash();    
 }
 
+void mn_backlight_unchanged()
+{
+}
+
 void mn_backlight_30sec()
 {
     mn_backlight_set(6,wt_bl30);     
@@ -826,7 +831,16 @@ void mn_backlight_60sec()
 void mn_backlight(void)
 {
     mn_submenu_init(wt_backlight);
+
+    if ( md380_radio_config.backlight_time == 12 ) {
+        md380_menu_entry_selected = 2;
+    } else if ( md380_radio_config.backlight_time == 6 ) {
+        md380_menu_entry_selected = 1;
+    } else {
+        md380_menu_entry_selected = 0;
+    }
     
+    mn_submenu_add(wt_blunchanged, mn_backlight_unchanged);
     mn_submenu_add(wt_bl30, mn_backlight_30sec);
     mn_submenu_add(wt_bl60, mn_backlight_60sec);
 
