@@ -46,6 +46,9 @@ original_D03:
 flash_original_D13: original_D13
 	./md380-dfu upgrade firmware/bin/D013.020.bin
 
+flash_original_S13: original_S13
+	./md380-dfu upgrade firmware/bin/S013.020.bin
+
 flash_original_D02: original_D02
 	./md380-dfu upgrade firmware/bin/D002.032.bin
 
