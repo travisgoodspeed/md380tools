@@ -815,6 +815,9 @@ if __name__ == '__main__':
     # keyboard
     merger.hookbl(0x0804ebd2, sapplet.getadr("kb_handler_hook"))
 
+    #Change TIM12 IRQ Handler to new one
+    merger.setword(0x0800c0ec, sapplet.getadr("New_TIM12_IRQHandler")+1);
+    
     #    for adr in drwbmplist:
     #        merger.hookbl(adr, sapplet.getadr("dummy"));
 

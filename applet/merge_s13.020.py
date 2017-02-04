@@ -675,8 +675,10 @@ if __name__ == '__main__':
     # keyboard
     merger.hookbl(0x0804fa12, sapplet.getadr("kb_handler_hook"))
 
-    #    merger.hookbl(0x08047628,sapplet.getadr("f_4520_hook"));
+    #Change TIM12 IRQ Handler to new one
+    merger.setword(0x0800c0ec, sapplet.getadr("New_TIM12_IRQHandler")+1);
 
+    #    merger.hookbl(0x08047628,sapplet.getadr("f_4520_hook"));
     #    merger.hookbl(0x0802cca8,sapplet.getadr("dummy"));
     #    merger.hookbl(0x0802ccb4,sapplet.getadr("dummy"));
 
