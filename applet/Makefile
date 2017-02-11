@@ -54,6 +54,8 @@ SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
 SRCS += irq_handlers.o # DL4YHF 2017-01-06
+SRCS += timer.o
+
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020
 endif

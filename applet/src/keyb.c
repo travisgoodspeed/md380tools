@@ -22,6 +22,7 @@
 
 #include <stdint.h>
 
+// Values for kp
 // 1 = pressed
 // 2 = release within timeout
 // 1+2 = pressed during rx
@@ -168,6 +169,42 @@ void handle_hotkey( int keycode )
     }    
 }
 
+void handle_sidekey( int keycode, int keypressed )
+{
+    if ( keycode == 18 ) {												//top button
+    	if ( (keypressed & 2) == 2 && kb_top_side_key_press_time < kb_side_key_max_time) {									//short press
+    		evaluate_sidekey( top_side_button_pressed_function );
+    	}
+    	else if ( keypressed == 5) {									//long press
+    		evaluate_sidekey( top_side_button_held_function );
+    	}
+    }
+    else if ( keycode == 17 ) {											//bottom button
+    	if ( (keypressed & 2) == 2 && kb_bot_side_key_press_time < kb_side_key_max_time) {									//short press
+			evaluate_sidekey( bottom_side_button_pressed_function );
+		}
+		else if ( keypressed == 5 ) {									//long press
+			evaluate_sidekey( bottom_side_button_held_function );
+		}
+    }
+}
+
+void evaluate_sidekey ( int button_function)							//This is where new functions for side buttons can be added
+{
+	switch ( button_function ) {										//We will start at 0x50 to avoid conflicting with any added functions by Tytera.
+		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
+		{
+			GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+			reset_backlight();
+			break;
+		}
+		default:
+			return;
+	}
+
+	kb_keypressed = 8 ;											//Sets the key as handled. The firmware will ignore this button press now.
+}
+
 void trace_keyb(int sw)
 {
     static uint8_t old_kp = -1 ;
@@ -235,10 +272,11 @@ void kb_handler_hook()
 
     trace_keyb(1);
     
+    int kp = kb_keypressed ;
+    int kc = kb_keycode ;
     // allow calling of menu during qso.
     // not working correctly.
     if( global_addl_config.experimental ) {
-        int kp = kb_keypressed ;
         if( (kp & 2) == 2 ) {
             if( gui_opmode2 != OPM2_MENU ) {
                 gui_opmode2 = OPM2_MENU ;
@@ -248,10 +286,7 @@ void kb_handler_hook()
     }
 
     if( is_intercept_allowed() ) {
-        int kc = kb_keycode ;
         if( is_intercepted_keycode(kc) ) {
-            int kp = kb_keypressed ;
-
             if( (kp & 2) == 2 ) {
                 kb_keypressed = 8 ;
                 handle_hotkey(kc);
@@ -259,6 +294,14 @@ void kb_handler_hook()
             }
         }
     }
+
+    if ( kc == 17 || kc == 18 ) {
+    	if ( (kp & 2) == 2 || kp == 5 ) {					//The reason for the bitwise AND is that kp can be 2 or 3
+    		handle_sidekey(kc, kp);							//A 2 means it was pressed while radio is idle, 3 means the radio was receiving
+    		return;
+    	}
+    }
+
 #else
 #warning please consider hooking.
     return;

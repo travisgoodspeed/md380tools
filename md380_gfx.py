@@ -1,18 +1,20 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-import sys
-import struct
-import os
-import math
-import binascii
+from __future__ import print_function
+
 import argparse
+import binascii
+import math
+import os
+import struct
+import sys
 
 FontGFX_CN_START = 0x809c714
 FontGFX_CN_END = 0x80d0f80
 
-class Memory(object):
 
+class Memory(object):
     def __init__(self, data, base_address=0x800c000):
         # expecting a byte-like data object
         # makes for efficient read, but inefficient write
@@ -36,49 +38,49 @@ class Memory(object):
         """Read unsigned 16-bit word"""
         addr -= self.addr
         f = '<H'
-        return struct.unpack(f, self.mem[addr:addr+2])[0]
+        return struct.unpack(f, self.mem[addr:addr + 2])[0]
 
     def rws(self, addr):
         """Read signed 16-bit word"""
         addr -= self.addr
         f = '<h'
-        return struct.unpack(f, self.mem[addr:addr+2])[0]
+        return struct.unpack(f, self.mem[addr:addr + 2])[0]
 
     def rl(self, addr):
         """Read unsigned 32-bit longword"""
         addr -= self.addr
         f = '<I'
-        return struct.unpack(f, self.mem[addr:addr+4])[0]
+        return struct.unpack(f, self.mem[addr:addr + 4])[0]
 
     def rls(self, addr):
         """Read signed 32-bit longword"""
         addr -= self.addr
         f = '<i'
-        return struct.unpack(f, self.mem[addr:addr+4])[0]
+        return struct.unpack(f, self.mem[addr:addr + 4])[0]
 
     def read(self, addr, length):
         """Read a number of bytes, returns list"""
-        s = struct.Struct('<'+'B'*length)
-        return s.unpack_from(self.mem, addr-self.addr)
+        s = struct.Struct('<' + 'B' * length)
+        return s.unpack_from(self.mem, addr - self.addr)
 
     def readbytes(self, addr, length):
         """Read a number of bytes, returns bytes object"""
         addr -= self.addr
-        return self.mem[addr:addr+length]
+        return self.mem[addr:addr + length]
 
     def write(self, addr, data):
         """Write a number of bytes"""
         addr -= self.addr
         data = bytes(data)
         l = len(data)
-        self.mem = self.mem[:addr] + data + self.mem[addr+l:]
+        self.mem = self.mem[:addr] + data + self.mem[addr + l:]
 
     def readbits(self, addr, bitlength, skip=0):
         """Read a number of bits"""
         addr -= self.addr
-        bytelength = int(math.ceil(bitlength/8.0))
-        bytedata = self.mem[addr:addr+bytelength]
-        hexdata = binascii.hexlify(b'\x01'+bytedata)
+        bytelength = int(math.ceil(bitlength / 8.0))
+        bytedata = self.mem[addr:addr + bytelength]
+        hexdata = binascii.hexlify(b'\x01' + bytedata)
         bitdata = bin(int(hexdata, 16))[3:]  # 1+...[:3] to preserve leading zeros
         cutoff = len(bitdata) - bitlength
         if cutoff > 0:
@@ -89,7 +91,7 @@ class Memory(object):
         """Write a number of bits with zero-padding"""
         # TODO: masking instead of padding
         bitdata += b'0' * ((8 - len(bitdata)) % 8)  # pad to full bytes
-        hexdata = hex(int(b'1'+bitdata, 2))[3:]  # 1+...[3:] to preserve leading zeros
+        hexdata = hex(int(b'1' + bitdata, 2))[3:]  # 1+...[3:] to preserve leading zeros
         # Throw away python2.7's trailing long int marker
         if hexdata.endswith('L'):
             hexdata = hexdata[:-1]
@@ -98,7 +100,6 @@ class Memory(object):
 
 
 class MD380Graphics(Memory):
-
     def __init__(self, data, base_address=0x800c000):
         super(MD380Graphics, self).__init__(data, base_address)
         self.gfxscancache = None
@@ -106,22 +107,22 @@ class MD380Graphics(Memory):
     def gfxparse(self, addr):
         """Parse sprite structure and return image"""
         s = struct.Struct('<hhhhLL')
-        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr-self.addr)
-    
-        s = struct.Struct('<llL')
-        ncol, someb, colptr = s.unpack_from(self.mem, palptr-self.addr)
+        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr - self.addr)
 
-        #bitplanes = len(bin(ncol-1))-2
+        s = struct.Struct('<llL')
+        ncol, someb, colptr = s.unpack_from(self.mem, palptr - self.addr)
+
+        # bitplanes = len(bin(ncol-1))-2
         img = {'address': addr, 'width': width, 'height': height, 'palette': None, 'pixels': []}
-        
+
         img['palette'] = []
-        for i in xrange(colptr, colptr+ncol*4, 4):
+        for i in range(colptr, colptr + ncol * 4, 4):
             r, g, b, a = self.read(i, 4)
             img['palette'].append([r, g, b, a])
 
-        for y in xrange(height):
-            linebits = self.readbits(pixptr+y*bytesperline, width*bitsperpixel)
-            line = [int(linebits[i:i+bitsperpixel], 2) for i in xrange(0, len(linebits), bitsperpixel)]
+        for y in range(height):
+            linebits = self.readbits(pixptr + y * bytesperline, width * bitsperpixel)
+            line = [int(linebits[i:i + bitsperpixel], 2) for i in range(0, len(linebits), bitsperpixel)]
             img['pixels'].append(line)
 
         img['checksum'] = self.gfxchecksum(img)
@@ -130,20 +131,20 @@ class MD380Graphics(Memory):
     def glyphparse(self, addr):
         """Parse a font glyph structure and return image"""
         s = struct.Struct('<bbbbL')
-        width, height, bytesperline, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
+        width, height, bytesperline, somea, pixptr = s.unpack_from(self.mem, addr - self.addr)
         # somea seems to be padding; always 0 in v2.32
-    
-        #sys.stdout.write('glyphparse: address 0x%x wid=%d height=%d  bpl=%d  somea=%d  pixptr=0x%x\n' % (addr, width, height, bytesperline, somea, pixptr) )
+
+        # sys.stdout.write('glyphparse: address 0x%x wid=%d height=%d  bpl=%d  somea=%d  pixptr=0x%x\n' % (addr, width, height, bytesperline, somea, pixptr) )
         if height <= 8:
-            height = height * 2  # CN characters are right height, latin are reported 1/2 height
-    
+            height *= 2  # CN characters are right height, latin are reported 1/2 height
+
         img = {'address': addr, 'width': width, 'height': height, 'palette': None, 'pixels': []}
-    
-        for y in xrange(height):
-            linebits = self.readbits(pixptr+y*bytesperline, width)
+
+        for y in range(height):
+            linebits = self.readbits(pixptr + y * bytesperline, width)
             line = [int(color) for color in linebits]
             img['pixels'].append(line)
-        
+
         img['checksum'] = self.gfxchecksum(img)
         return img
 
@@ -155,15 +156,15 @@ class MD380Graphics(Memory):
     def glyphreplace(self, gfx, addr):
         """Overwrite existing glyph structure - must be same byte width."""
         s = struct.Struct('<bbbbL')
-        old_width, old_height, old_bytesperline, somea, pixptr = s.unpack_from(self.mem, addr-self.addr)
-        height_in_table = old_height     # funky value stored in table
+        old_width, old_height, old_bytesperline, somea, pixptr = s.unpack_from(self.mem, addr - self.addr)
+        height_in_table = old_height  # funky value stored in table
         if old_height <= 8:
-            old_height = old_height * 2  # CN characters are right height, latin are reported 1/2 height
+            old_height *= 2  # CN characters are right height, latin are reported 1/2 height
 
-        new_bytesperline = int(math.ceil(gfx['width']/8.0))
+        new_bytesperline = int(math.ceil(gfx['width'] / 8.0))
 
-        assert new_bytesperline <= old_bytesperline  #technically new can be <= old
-        #assert gfx['width'] == old_width  # doesn't matter as long as bytesperline same.
+        assert new_bytesperline <= old_bytesperline  # technically new can be <= old
+        # assert gfx['width'] == old_width  # doesn't matter as long as bytesperline same.
         assert gfx['height'] == old_height
 
         # ok, now update.  Height and bytesperline must stay the same, but width can change.
@@ -172,23 +173,23 @@ class MD380Graphics(Memory):
 
         pixbytes = b''
         for line in gfx['pixels']:
-            padding = new_bytesperline*8 - len(line)
-            line += [0]*padding
-            linebits = [bin(c+0x10000)[-1:] for c in line]
+            padding = new_bytesperline * 8 - len(line)
+            line += [0] * padding
+            linebits = [bin(c + 0x10000)[-1:] for c in line]
             linebits = ''.join(linebits)
-            for i in xrange(0, len(linebits), 8):
-                pixbytes += chr(int(linebits[i:i+8], 2))
+            for i in range(0, len(linebits), 8):
+                pixbytes += chr(int(linebits[i:i + 8], 2))
         self.write(pixptr, pixbytes)
 
     def gfxreplace(self, gfx, addr):
         """Overwrite existing sprite structure"""
         s = struct.Struct('<hhhhLL')
-        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr-self.addr)
+        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr - self.addr)
         assert gfx['width'] == width
         assert gfx['height'] == height
 
         s = struct.Struct('<llL')
-        ncol, someb, colptr = s.unpack_from(self.mem, palptr-self.addr)
+        ncol, someb, colptr = s.unpack_from(self.mem, palptr - self.addr)
         assert len(gfx['palette']) <= ncol
 
         # TODO: check bitplanes match
@@ -196,12 +197,12 @@ class MD380Graphics(Memory):
 
         pixbytes = b''
         for line in gfx['pixels']:
-            padding = bytesperline*(8/bitsperpixel) - len(line)
-            line += [0]*padding
-            linebits = [bin(c+0x10000)[-bitsperpixel:] for c in line]
+            padding = bytesperline * (8 / bitsperpixel) - len(line)
+            line += [0] * padding
+            linebits = [bin(c + 0x10000)[-bitsperpixel:] for c in line]
             linebits = ''.join(linebits)
-            for i in xrange(0, len(linebits), 8):
-                pixbytes += chr(int(linebits[i:i+8], 2))
+            for i in range(0, len(linebits), 8):
+                pixbytes += chr(int(linebits[i:i + 8], 2))
         self.write(pixptr, pixbytes)
 
         palbytes = b''
@@ -216,7 +217,7 @@ class MD380Graphics(Memory):
     def gfxrelocate(self, gfx, addr, location):
         """Overwrite existing sprite structure with data in a new location"""
         s = struct.Struct('<hhhhLL')
-        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr-self.addr)
+        width, height, bytesperline, bitsperpixel, pixptr, palptr = s.unpack_from(self.mem, addr - self.addr)
         if gfx['width'] != width or gfx['height'] != height:
             sys.stderr.write('WARNING: Graphics dimensions have changed. Expect glitches.\n')
 
@@ -224,25 +225,25 @@ class MD380Graphics(Memory):
         new_height = gfx['height']
 
         s = struct.Struct('<llL')
-        ncol, someb, colptr = s.unpack_from(self.mem, palptr-self.addr)
+        ncol, someb, colptr = s.unpack_from(self.mem, palptr - self.addr)
 
         # TODO: check bitplanes match
         # TODO: rewrite to use Memory bitbanging methods
 
-        new_bitsperpixel = int(math.ceil(math.log(len(gfx['palette']))/math.log(2)))
-        new_bytesperline = int(math.ceil(new_bitsperpixel*new_width/8.0))
+        new_bitsperpixel = int(math.ceil(math.log(len(gfx['palette'])) / math.log(2)))
+        new_bytesperline = int(math.ceil(new_bitsperpixel * new_width / 8.0))
         new_pixptr = location
         pixbytes = b''
         for line in gfx['pixels']:
             padding = new_width - len(line)
-            line += [0]*padding
-            linebits = [bin(c+0x10000)[-new_bitsperpixel:] for c in line]
+            line += [0] * padding
+            linebits = [bin(c + 0x10000)[-new_bitsperpixel:] for c in line]
             linebits = ''.join(linebits)
-            for i in xrange(0, len(linebits), 8):
-                pixbytes += chr(int(linebits[i:i+8], 2))
+            for i in range(0, len(linebits), 8):
+                pixbytes += chr(int(linebits[i:i + 8], 2))
         self.write(new_pixptr, pixbytes)
 
-        new_colptr = location + len(pixbytes) + (16-(len(pixbytes)%16))
+        new_colptr = location + len(pixbytes) + (16 - (len(pixbytes) % 16))
         palbytes = b''
         for color in gfx['palette']:
             r, g, b, a = color
@@ -252,7 +253,7 @@ class MD380Graphics(Memory):
             palbytes += chr(a)
         self.write(new_colptr, palbytes)
 
-        new_palptr = new_colptr + len(palbytes) + (16-(len(palbytes)%16))
+        new_palptr = new_colptr + len(palbytes) + (16 - (len(palbytes) % 16))
         new_ncol = len(gfx['palette'])
         s = struct.Struct('<llL')
         self.write(new_palptr, s.pack(new_ncol, someb, new_colptr))
@@ -274,15 +275,15 @@ class MD380Graphics(Memory):
         for line in gfx['pixels']:
             for color in line:
                 r, g, b, a = gfx['palette'][color]
-                sys.stdout.write(MD380Graphics.bashcolor(r, g, b)+' ')
-            sys.stdout.write(MD380Graphics.bashcolor()+'\n')
-    
+                sys.stdout.write(MD380Graphics.bashcolor(r, g, b) + ' ')
+            sys.stdout.write(MD380Graphics.bashcolor() + '\n')
+
     @staticmethod
     def glyphshow(gfx):
         for line in gfx['pixels']:
-            sys.stdout.write(''.join(line)+'\n')
-    
-    @staticmethod    
+            sys.stdout.write(''.join(line) + '\n')
+
+    @staticmethod
     def gfxprint(gfx):
         print("%s %d×%d" % (hex(gfx['address']), gfx['width'], gfx['height']))
         print("%s" % repr(gfx['palette']))
@@ -294,7 +295,7 @@ class MD380Graphics(Memory):
                     px = hex(color)[-1]  # ensure single char for color
                 sys.stdout.write(px)
             sys.stdout.write('\n')
-    
+
     @staticmethod
     def ppm(gfx):
         """Convert sprite object to PPM(P6) image"""
@@ -332,18 +333,18 @@ class MD380Graphics(Memory):
         width, height = ppml[i].split()
         width = int(width)
         height = int(height)
-        maxc = int(ppml[i+1])
+        maxc = int(ppml[i + 1])
         assert maxc == 255
-        data = '\n'.join(ppml[i+2:])
+        data = '\n'.join(ppml[i + 2:])
         paletteidx = {}
         pixels = []
         palette = []
-        for y in xrange(height):
+        for y in range(height):
             line = []
-            for x in xrange(width):
-                r = ord(data[y*width*3+x*3])
-                g = ord(data[y*width*3+x*3+1])
-                b = ord(data[y*width*3+x*3+2])
+            for x in range(width):
+                r = ord(data[y * width * 3 + x * 3])
+                g = ord(data[y * width * 3 + x * 3 + 1])
+                b = ord(data[y * width * 3 + x * 3 + 2])
                 a = 0
                 key = '%d,%d,%d,%d' % (r, g, b, a)
                 if key in paletteidx:
@@ -370,19 +371,19 @@ class MD380Graphics(Memory):
         out += '%d %d\n' % (gfx['width'], gfx['height'])
         for line in gfx['pixels']:
             bitline = ''.join([str(pixel) for pixel in line])
-            
-            #ASCII output (P1)
+
+            # ASCII output (P1)
             sys.stdout.write('bit line  %s\n' % bitline)
             out += bitline + '\n'
-            
-            #Hex ouput (P4) - OSX doesn't render non-byte widths correctly (like all latin fonts)
-            #bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
-            #hexline = hex(int('1'+bitline, 2))[3:]
-            ## Throw away python2.7's trailing long int marker
-            #if hexline.endswith('L'):
+
+            # Hex ouput (P4) - OSX doesn't render non-byte widths correctly (like all latin fonts)
+            # bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
+            # hexline = hex(int('1'+bitline, 2))[3:]
+            # # Throw away python2.7's trailing long int marker
+            # if hexline.endswith('L'):
             #    hexline = hexline[:-1]
-            #byteline = binascii.unhexlify(hexline)
-            #out += byteline
+            # byteline = binascii.unhexlify(hexline)
+            # out += byteline
         return out
 
     @staticmethod
@@ -391,7 +392,7 @@ class MD380Graphics(Memory):
         while (pbml != []) and (pbml[0] != 'P1'):
             pbml = pbml[1:]
         if (pbml == []) or (pbml[0] != 'P1'):
-            return (None, None)
+            return None, None
         i = 1
         addr = 0
         while pbml[i].startswith('#'):
@@ -403,11 +404,11 @@ class MD380Graphics(Memory):
         width, height = pbml[i].split()
         width = int(width)
         height = int(height)
-        
-        #bytewidth = int(math.ceil(width/8.0))
-        #data = b''.join(pbml[i+1:])
-        #pixels = []
-        #for y in xrange(height):
+
+        # bytewidth = int(math.ceil(width/8.0))
+        # data = b''.join(pbml[i+1:])
+        # pixels = []
+        # for y in range(height):
         #    bytesline = data[y*bytewidth:(y+1)*bytewidth]
         #    hexline = binascii.hexlify(b'\x01'+bytesline)
         #    binline = bin(int(hexline, 16))[3:]
@@ -416,8 +417,8 @@ class MD380Graphics(Memory):
 
         i += 1
         pixels = []
-        for y in xrange(height):
-            hexline = '1'+pbml[i]
+        for y in range(height):
+            hexline = '1' + pbml[i]
             binline = bin(int(hexline, 2))[3:]
             line = [int(pixel) for pixel in binline]
             pixels.append(line[:width])
@@ -427,26 +428,26 @@ class MD380Graphics(Memory):
                'palette': None, 'pixels': pixels,
                'oldchecksum': oldchecksum}
         img['checksum'] = MD380Graphics.gfxchecksum(img)
-        return (img, pbml[i:])
+        return img, pbml[i:]
 
     def isSpriteStruct(self, p):
         mstart = self.addr
         mend = mstart + len(self.mem)
-        if 0 < self.rw(p) < 0x200 and 0 < self.rw(p+2) < 0x200:
-            if 0 < self.rw(p+4) < 0x0200 and 0 < self.rw(p+6) < 0x200:
-                if mstart < self.rl(p+8) < mend and mstart < self.rl(p+12) < mend:
-                    cptr = self.rl(p+12)
-                    if self.rl(cptr) < 0x20 and self.rl(cptr+4) < 0x20:
-                        if mstart < self.rl(cptr+8) < mend:
+        if 0 < self.rw(p) < 0x200 and 0 < self.rw(p + 2) < 0x200:
+            if 0 < self.rw(p + 4) < 0x0200 and 0 < self.rw(p + 6) < 0x200:
+                if mstart < self.rl(p + 8) < mend and mstart < self.rl(p + 12) < mend:
+                    cptr = self.rl(p + 12)
+                    if self.rl(cptr) < 0x20 and self.rl(cptr + 4) < 0x20:
+                        if mstart < self.rl(cptr + 8) < mend:
                             return True
         return False
 
     def isGlyphStruct(self, p):
         mstart = self.addr
         mend = mstart + len(self.mem)
-        if 0 < self.rb(p) < 0x20 and 0 < self.rb(p+1) < 0x20:
-            if 0 < self.rb(p+2) < 0x10 and 0 == self.rb(p+3):
-                if mstart < self.rl(p+4) < mend:
+        if 0 < self.rb(p) < 0x20 and 0 < self.rb(p + 1) < 0x20:
+            if 0 < self.rb(p + 2) < 0x10 and 0 == self.rb(p + 3):
+                if mstart < self.rl(p + 4) < mend:
                     return True
         return False
 
@@ -455,8 +456,8 @@ class MD380Graphics(Memory):
         if self.gfxscancache is None:
             self.gfxscancache = []
             mstart = self.addr
-            mend = mstart+len(self.mem)
-            for p in xrange(mstart, mend, 4):
+            mend = mstart + len(self.mem)
+            for p in range(mstart, mend, 4):
                 if self.isSpriteStruct(p):
                     parsed = self.gfxparse(p)
                     self.gfxscancache.append(parsed)
@@ -478,22 +479,22 @@ class MD380Graphics(Memory):
                 candidates.append(candidate)
         return candidates
 
-class MD380Fonts(Memory):
 
+class MD380Fonts(Memory):
     def table(self):
         t = []
         start = 0x080fbbb4
         end = 0x080fc6dc
-        for p in xrange(start, end, 12):
+        for p in range(start, end, 12):
             a = self.rw(p)
-            b = self.rw(p+2)
-            addra = self.rl(p+4)
-            addrb = self.rl(p+8)
-            t.append({'x':a, 'y':b, 'addra':addra, 'addrb':addrb})
+            b = self.rw(p + 2)
+            addra = self.rl(p + 4)
+            addrb = self.rl(p + 8)
+            t.append({'x': a, 'y': b, 'addra': addra, 'addrb': addrb})
         return t
 
 
-#with open('prom-private.img', 'rb') as f:
+# with open('prom-private.img', 'rb') as f:
 #    mdgfx = MD380Graphics(f.read(), 0x800c000)
 # with open('patched.bin', 'rb') as f:
 #     mdgfx = MD380Graphics(f.read(), 0x8000000)
@@ -527,7 +528,7 @@ class MD380Fonts(Memory):
 #     img = f.read()
 #
 # gfx = mdgfx.ppmparse(img)
-# print gfx
+# print(gfx)
 # mdgfx.gfxprint(gfx)
 
 
@@ -535,7 +536,6 @@ class MD380Fonts(Memory):
 
 
 def main():
-
     def hex_int(x):
         return int(x, 0)
 
@@ -546,7 +546,7 @@ def main():
     parser.add_argument('--addr', '-a', dest='addr', type=hex_int,
                         default=0x800c000,
                         help='base address of raw flash image (default 0x800c000)')
-    location_default = FontGFX_CN_START+0x30000-0xc714
+    location_default = FontGFX_CN_START + 0x30000 - 0xc714
     parser.add_argument('--location', '-l', dest='location', type=hex_int,
                         default=location_default,
                         help='Location of free memory to write to (default 0x%x)'
@@ -560,7 +560,7 @@ def main():
     parser.add_argument('command', nargs=1, help='function to perform')
     args = parser.parse_args()
 
-    #print "DEBUG: args: %s" % repr(args)
+    # print("DEBUG: args: %s" % repr(args))
 
     sys.stdout.write('DEBUG: reading "%s"\n' % args.firmware)
     with open(args.firmware, 'rb') as f:
@@ -578,15 +578,15 @@ def main():
             os.makedirs(args.dir)
         for gfx in md.gfxscan():
             if gfx['palette'] is None:
-              img = md.pbm(gfx)
-              name = '%s.pbm' % hex(gfx['address'])
-              sys.stdout.write('DEBUG: Writing font glyph "%s".\n' % name)
+                img = md.pbm(gfx)
+                name = '%s.pbm' % hex(gfx['address'])
+                sys.stdout.write('DEBUG: Writing font glyph "%s".\n' % name)
             else:
-              img = md.ppm(gfx)
-              name = '%s.ppm' % hex(gfx['address'])
-              sys.stdout.write('DEBUG: Writing sprite "%s".\n' % name)
+                img = md.ppm(gfx)
+                name = '%s.ppm' % hex(gfx['address'])
+                sys.stdout.write('DEBUG: Writing sprite "%s".\n' % name)
             with open('%s/%s' % (args.dir, name), 'wb') as f:
-              f.write(img)
+                f.write(img)
     elif cmd == 'restore':
         sys.stderr.write('ERROR: Not implemented\n')
         sys.exit(5)
@@ -647,26 +647,26 @@ def main():
         pbmfontsl = pbmfonts.split('\n')
 
         gfx, pbmfontsl = md.pbmparse(pbmfontsl)
-        while gfx != None:
-            # print '\n---------------------\nNew glyph:'
+        while gfx is not None:
+            # print('\n---------------------\nNew glyph:')
             # md.gfxprint(gfx)
             target_checksum = gfx['oldchecksum']
-            #print "DEBUG: Looking for graphics checksum %d...\n" % target_checksum
+            # print("DEBUG: Looking for graphics checksum %d...\n" % target_checksum)
             candidates = md.gfxfind(target_checksum)
             if len(candidates) > 0:
-                #print "DEBUG: Overwriting matching structure at %s.\n" % hex(candidates[0]['address'])
-                #print 'replaces old glyph:'
+                # print("DEBUG: Overwriting matching structure at %s.\n" % hex(candidates[0]['address']))
+                # print('replaces old glyph:')
                 md.glyphreplace(gfx, candidates[0]['address'])
                 modified = True
             else:
-                print 'WARNING: Checksum not found. Trying address fallback.\n'
+                print('WARNING: Checksum not found. Trying address fallback.\n')
                 if gfx['address'] is not None:
                     addr = gfx['address']
-                    print 'DEBUG: Overwriting address %s from PPM header.\n' % hex(addr)
+                    print('DEBUG: Overwriting address %s from PPM header.\n' % hex(addr))
                     md.glyphreplace(gfx, addr)
                     modified = True
                 else:
-                    print 'ERROR: Can not determine fallback address from PPM header.\n'
+                    print('ERROR: Can not determine fallback address from PPM header.\n')
                     sys.exit(5)
             gfx, pbmfontsl = md.pbmparse(pbmfontsl)
 
@@ -706,10 +706,10 @@ def main():
         from IPython import embed
         embed()
     else:
-        sys.stderr.write('ERROR: Use extract, restore, write, fontreplace or relocate as command.\n' % cmd)
+        sys.stderr.write('ERROR: Use extract, restore, write, fontreplace or relocate as command. %s\n' % cmd)
         sys.exit(5)
     if modified:
-        #args.firmware += '.modified'
+        # args.firmware += '.modified'
         sys.stderr.write('DEBUG: writing "%s"\n' % args.firmware)
         with open(args.firmware, 'wb') as f:
             f.write(md.mem)
