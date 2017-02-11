@@ -32,6 +32,7 @@ typedef struct addl_config {
     uint8_t cp_override ;
     char bootline1[10];
     char bootline2[10];
+    uint8_t backlight_intensities; // lower nibble = backlight intensity during IDLE,  upper nibble = backlight intensity during ACTIVITY
 } addl_config_t ;
 
 #define CPO_BL1 0x1

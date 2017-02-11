@@ -25,6 +25,8 @@
 #include "printf.h"
 #include "keyb.h"
 
+#include "config.h"  // need to know CONFIG_DIMMED_LIGHT (defined in config.h since 2017-01-03)
+
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"USB logging";
@@ -54,10 +56,24 @@ const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
-const static wchar_t wt_backlight[]         = L"Backlight";
+
+const static wchar_t wt_backlight[]         = L"Backlight Tmr";
 const static wchar_t wt_blunchanged[]       = L"Unchanged";
+const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
+
+#ifndef  CONFIG_DIMMED_LIGHT    // want 'dimmed backlight', two adjustable intensities ?
+# define CONFIG_DIMMED_LIGHT 0  // guess not (unless defined AS ONE in config.h)
+#endif
+#if( CONFIG_DIMMED_LIGHT ) // support pulse-width modulated backlight ?
+const static wchar_t wt_bl_intensity_lo[]   = L"Backlt Low";
+const static wchar_t wt_bl_intensity_hi[]   = L"Backlt High";
+#define NUM_BACKLIGHT_INTENSITIES 10 /* number of intensity steps (0..9) for the menu */
+const static wchar_t *wt_bl_intensity[NUM_BACKLIGHT_INTENSITIES] = 
+ { L"0 (off)", L"1 (lowest)", L"2", L"3 (medium)", L"4", 
+   L"5",       L"6",          L"7", L"8",          L"9 (bright)" }; 
+#endif // CONFIG_DIMMED_LIGHT ?
 
 const static wchar_t wt_cp_override[]       = L"CoPl Override";
 const static wchar_t wt_splash_manual[]     = L"Disabled";
@@ -133,12 +149,11 @@ extern menu_t md380_menu_memory[];
 
 extern menu_entry_t md380_menu_mem_base[];
 
-
-
 //Old macro, schedule for deletion.
 //#define MKTHUMB(adr) ((void(*))(((uint32_t)adr) | 0x1))
 //New macro, prints warnings where needed.
 #define MKTHUMB(adr) (printf(((int)adr)&1?"":"Warning, 0x%08x function pointer is even.\n",adr),(void(*))(((uint32_t)adr) | 0x1))
+
 
 void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)(), void  (*red_key)(), int e, int f ,int item_count) 
 {
@@ -805,6 +820,14 @@ void create_menu_entry_experimental_screen(void)
     mn_submenu_finalize();
 }
 
+
+//-------------------------------------------------------------
+// Backlight configuration: Timer adjustable 5, 30, 60 seconds,
+//    besides those in the original firmware.
+//    Please don't remove the 5 second option,
+//    it's the preferred one in combination with DIMMING .
+//-------------------------------------------------------------
+
 void mn_backlight_set(int sec5, const wchar_t *label)
 {
     mn_create_single_timed_ack(wt_backlight,label);
@@ -818,6 +841,12 @@ void mn_backlight_unchanged()
 {
 }
 
+
+void mn_backlight_5sec()
+{
+    mn_backlight_set(1,wt_bl5);     
+}
+
 void mn_backlight_30sec()
 {
     mn_backlight_set(6,wt_bl30);     
@@ -828,7 +857,7 @@ void mn_backlight_60sec()
     mn_backlight_set(12,wt_bl60);     
 }
 
-void mn_backlight(void)
+void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, but sets the same parameter)
 {
     mn_submenu_init(wt_backlight);
 
@@ -840,12 +869,108 @@ void mn_backlight(void)
         md380_menu_entry_selected = 0;
     }
     
+
+    switch( md380_radio_config.backlight_time ) // inspired by fix stargo0's fix #674 
+     { // (fixes the selection of the current backlight-time in the menu)
+       case 1 /* times 5sec */ : md380_menu_entry_selected = 1; break;
+       case 6 /* times 5sec */ : md380_menu_entry_selected = 2; break;
+       case 12/* times 5sec */ : md380_menu_entry_selected = 3; break;
+       default/* unchanged  */ : md380_menu_entry_selected = 0; break;
+     }
     mn_submenu_add(wt_blunchanged, mn_backlight_unchanged);
+    mn_submenu_add(wt_bl5,  mn_backlight_5sec );
+
     mn_submenu_add(wt_bl30, mn_backlight_30sec);
     mn_submenu_add(wt_bl60, mn_backlight_60sec);
 
     mn_submenu_finalize();
 }
+
+
+#if( CONFIG_DIMMED_LIGHT ) // Setup for pulse-width modulated backlight ? (DL4YHF 2017-01-08)
+typedef void(*tMenuFunctionPtr)(void);
+static uint8_t bIntensityMenuIndex; // 0 = modifying "backlight intensity low" (used during idle time),
+                                    // 1 = modifying "backlight intensity high" (used when 'radio active').
+
+void mn_backlight_intens( int intensity ) // common 'menu handler' for all <NUM_BACKLIGHT_INTENSITIES> intensity steps
+{ // Caller: create_menu_entry_addl_functions_screen() -> mn_backlight_hi() + mn_backlight_lo()
+  //          -> mn_submenu_add() -> ?.. 
+  //              -> mn_backlight_intens_0/1/../9() -> mn_backlight_intens( intensity=0..9 )
+  // 
+  switch( bIntensityMenuIndex ) // what's being edited, "low" (idle) or "high" (active) backlight intensity ?
+   { case 0 : // selected a new LOW backlight intensity ...
+     default:
+        mn_create_single_timed_ack( wt_bl_intensity_lo, wt_bl_intensity[intensity]/*label*/ );
+        global_addl_config.backlight_intensities &= 0xF0;  // strip old nibble (lower 4 bits for "lower" intensity)
+        global_addl_config.backlight_intensities |= (uint8_t)intensity; 
+        break;
+     case 1 : // selected a new HIGH backlight intensity :
+        mn_create_single_timed_ack( wt_bl_intensity_hi, wt_bl_intensity[intensity]/*label*/ );
+        global_addl_config.backlight_intensities &= 0x0F;  // strip old nibble (upper 4 bits for "high" intensity)
+        global_addl_config.backlight_intensities |= ((uint8_t)intensity << 4);
+        break;
+   }
+  // the upper 4 bits must never be ZERO, to avoid 'complete darkness' of the display when ACTIVE :
+  global_addl_config.backlight_intensities |= 0x10; 
+  cfg_save();
+  
+} // end mn_backlight_intens()
+
+// 'menu callback' for backlight intensity steps 0 .. 9 
+//  (kludge required because the callback doesn't pass the item-index)
+void mn_backlight_intens_0(void) {  mn_backlight_intens(0); }
+void mn_backlight_intens_1(void) {  mn_backlight_intens(1); }
+void mn_backlight_intens_2(void) {  mn_backlight_intens(2); }
+void mn_backlight_intens_3(void) {  mn_backlight_intens(3); }
+void mn_backlight_intens_4(void) {  mn_backlight_intens(4); }
+void mn_backlight_intens_5(void) {  mn_backlight_intens(5); }
+void mn_backlight_intens_6(void) {  mn_backlight_intens(6); }
+void mn_backlight_intens_7(void) {  mn_backlight_intens(7); }
+void mn_backlight_intens_8(void) {  mn_backlight_intens(8); }
+void mn_backlight_intens_9(void) {  mn_backlight_intens(9); }
+
+tMenuFunctionPtr nm_backlight_intensity_funcs[ NUM_BACKLIGHT_INTENSITIES ] =
+ { mn_backlight_intens_0, mn_backlight_intens_1, mn_backlight_intens_2, mn_backlight_intens_3, mn_backlight_intens_4,
+   mn_backlight_intens_5, mn_backlight_intens_6, mn_backlight_intens_7, mn_backlight_intens_8, mn_backlight_intens_9 
+ };
+ 
+void mn_backlight_lo(void)  // configure LOW backlight intensity (used when "idle")
+{
+  int i;
+  bIntensityMenuIndex = 0;  // "now selecting the LOW backlight intensity" ...
+  i = (global_addl_config.backlight_intensities & 15) % NUM_BACKLIGHT_INTENSITIES;
+  if( i>= NUM_BACKLIGHT_INTENSITIES )
+   {  i = NUM_BACKLIGHT_INTENSITIES-1; // valid ITEM indices: 0..9 (with NUM_BACKLIGHT_INTENSITIES=10)
+   }
+  md380_menu_entry_selected = i;       // <- always a zero-based item index
+  mn_submenu_init(wt_bl_intensity_lo);
+  for(i=0; i<NUM_BACKLIGHT_INTENSITIES; ++i)
+   { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
+   }
+  mn_submenu_finalize();
+}
+
+void mn_backlight_hi(void)  // configure HIGH backlight intensity (used when "active")
+{
+  int i;
+  bIntensityMenuIndex = 1;  // "now selecting the HIGH backlight intensity" ...
+  // intensity value '0' (off) NOT ALLOWED for the 'HIGH' setting, thus SUBTRACT ONE below:
+  i = ( (global_addl_config.backlight_intensities>>4) & 15) - 1;
+  if( i>= (NUM_BACKLIGHT_INTENSITIES-1) )
+   {  i = NUM_BACKLIGHT_INTENSITIES-2; // valid ITEM indices: 0..8 (with NUM_BACKLIGHT_INTENSITIES=10)
+   }
+  if( i<0 )
+   {  i=0;
+   }
+  md380_menu_entry_selected = i;       // <- always a zero-based item index
+  mn_submenu_init(wt_bl_intensity_hi);
+  for(i=1/*!!*/; i<NUM_BACKLIGHT_INTENSITIES; ++i)
+   { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
+   }
+  mn_submenu_finalize();
+}
+#endif // CONFIG_DIMMED_LIGHT ?
+
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
 void set_sidebutton_function(void)
@@ -948,6 +1073,7 @@ void create_menu_entry_sidebutton_screen(void)
 #endif
 }
 
+
 void mn_config_reset2()
 {
     mn_create_single_timed_ack(wt_backlight,wt_config_reset_doit);
@@ -1008,7 +1134,7 @@ void create_menu_entry_edit_screen(void)
       0x08012ab0      f4d3           blo 0x8012a9c
      */
 
-    // clear retrun buffer //  see 0x08012a98
+    // clear return buffer //  see 0x08012a98
     // TODO: is wchar_t (16 bits))
     for (i = 0; i < 0x11; i++) {
         p = (uint8_t *) mn_editbuffer_poi;
@@ -1154,7 +1280,14 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
     
     mn_submenu_add_98(wt_config_reset, mn_config_reset);
-    mn_submenu_add_98(wt_backlight, mn_backlight);
+
+#  if( CONFIG_DIMMED_LIGHT )    // *optional* feature since 2017-01-08 - see config.h
+    mn_submenu_add_98(wt_bl_intensity_lo/*item text*/, mn_backlight_lo/*menu handler*/ ); // backlight intensity "low" (used when idle)
+    mn_submenu_add_98(wt_bl_intensity_hi/*item text*/, mn_backlight_hi/*menu handler*/ ); // backlight intensity "high" (used when active)
+#  endif   
+
+    mn_submenu_add_98(wt_backlight, mn_backlight); // backlight TIMER (longer than Tytera's 5/10/15 seconds)
+    
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     

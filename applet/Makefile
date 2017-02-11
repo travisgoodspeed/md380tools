@@ -37,7 +37,7 @@ else
 $(error select firmware version)
 endif
 
-SRCS  = main.o printf.o dmesg.o gfx.o stm32f4xx_it.o system_stm32f4xx.o addl_config.o 
+SRCS  = main.o printf.o dmesg.o gfx.o system_stm32f4xx.o addl_config.o 
 SRCS += spiflash.o usb.o menu.o rtc_timer.o usersdb.o os.o aes.o
 SRCS += ambe.o  dmr.o 
 SRCS += display.o
@@ -53,6 +53,7 @@ SRCS += lastheard.o
 SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
+SRCS += irq_handlers.o # DL4YHF 2017-01-06
 SRCS += timer.o
 
 ifdef INC_DISPFLIP
@@ -94,7 +95,9 @@ CFLAGS += -Iinc -Ilib -Ilib/inc -I.
 CFLAGS += -Ilib/inc/core -Ilib/inc/peripherals
 CFLAGS += -D "MD380_$(subst .,_,$(SRCVERSION))"  # ISO C99 requires whitespace after
 
-SRCS += lib/startup_stm32f4xx.s # add startup file to build
+# DL4YHF: Had to modify the name of the startup file, because it was 
+#  overwritten by somehing else (*.s = *.S under windows).
+SRCS += lib/startup_stm32f4xx_asm.S
 
 OBJS = $(SRCS:.c=.o)
 
