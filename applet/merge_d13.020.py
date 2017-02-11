@@ -7,6 +7,8 @@
 # fewer explicit addresses, so that we can target our patches to more
 # than one version of the MD380 firmware.
 
+from __future__ import print_function
+
 import sys
 
 
@@ -1118,21 +1120,21 @@ if __name__ == '__main__':
         old_adr  = merger.getword(vect_adr); # original content of the VT entry
         new_adr |= 0x0000001;  # Thumb flag for new content in the VT
         if( old_adr == exp_adr ) :
-           print "Patching SysTick_Handler in VT addr 0x%08x," % vect_adr;
-           print "  old value in vector table = 0x%08x," % old_adr;
-           print "   expected in vector table = 0x%08x," % exp_adr;
-           print "  new value in vector table = 0x%08x." % new_adr;
+           print("Patching SysTick_Handler in VT addr 0x%08x," % vect_adr)
+           print("  old value in vector table = 0x%08x," % old_adr)
+           print("   expected in vector table = 0x%08x," % exp_adr)
+           print("  new value in vector table = 0x%08x." % new_adr)
            merger.setword( vect_adr, new_adr, old_adr);
-           print "  SysTick_Handler successfully patched.";
+           print("  SysTick_Handler successfully patched.")
         else:
-           print "Cannot patch SysTick_Handler() !";
+           print("Cannot patch SysTick_Handler() !")
     else:
-           print "No SysTick_Handler() found in the symbol table. Building firmware without.";    
+           print("No SysTick_Handler() found in the symbol table. Building firmware without.")
 
-    print "Merging %s into %s at %08x" % (
+    print("Merging %s into %s at %08x" % (
           sys.argv[2],
           sys.argv[1],
-          index);
+          index));
 
     #Change TIM12 IRQ Handler to new one
     merger.setword(0x0800c0ec, sapplet.getadr("New_TIM12_IRQHandler")+1);
