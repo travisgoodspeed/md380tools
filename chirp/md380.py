@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Dan Smith <dsmith@danplanet.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 # This is an incomplete and bug-ridden attempt at a chirp driver for
 # the TYT MD-380 by Travis Goodspeed, KK4VCZ.  To use this plugin,
 # copy or symlink it into the drivers/ directory of Chirp.
@@ -23,25 +24,26 @@
 # radio.img' and then open it as a file with chirpw.
 
 
-from chirp import chirp_common, directory, memmap
-from chirp import bitwise, errors
-from chirp.settings import RadioSetting, RadioSettingGroup, \
-    RadioSettingValueInteger, RadioSettingValueList, \
-    RadioSettingValueBoolean, RadioSettingValueString, \
-    RadioSettingValueFloat, InvalidValueError, RadioSettings
-
 import logging
+
+from chirp.settings import RadioSetting, RadioSettingGroup, \
+    RadioSettingValueInteger, RadioSettingValueString, \
+    RadioSettings
+
+from chirp import bitwise
+from chirp import chirp_common, directory, memmap
+
 LOG = logging.getLogger(__name__)
 
 # Someday I'll figure out Chinese encoding, but for now we'll stick to ASCII.
 CHARSET = ["%i" % int(x) for x in range(0, 10)] + \
-    [chr(x) for x in range(ord("A"), ord("Z") + 1)] + \
-    [" ", ] + \
-    [chr(x) for x in range(ord("a"), ord("z") + 1)] + \
-    list(".,:;*#_-/&()@!?^ +") + list("\x00" * 100)
-DUPLEX = ["", "-", "+", "split"];
-#TODO 'DMR' should be added as a valid mode.
-MODES = ["DIG", "NFM", "FM"];
+          [chr(x) for x in range(ord("A"), ord("Z") + 1)] + \
+          [" ", ] + \
+          [chr(x) for x in range(ord("a"), ord("z") + 1)] + \
+          list(".,:;*#_-/&()@!?^ +") + list("\x00" * 100)
+DUPLEX = ["", "-", "+", "split"]
+# TODO 'DMR' should be added as a valid mode.
+MODES = ["DIG", "NFM", "FM"]
 TMODES = ["", "Tone", "TSQL"]
 
 # Here is where we define the memory map for the radio. Since
@@ -254,15 +256,17 @@ struct {
 
 """
 
+
 def blankbcd(num):
     """Sets an LBCD value to 0xFFFF"""
-    num[0].set_bits(0xFF);
-    num[1].set_bits(0xFF);
+    num[0].set_bits(0xFF)
+    num[1].set_bits(0xFF)
+
 
 def do_download(radio):
     """Dummy function that will someday download from the radio."""
     # NOTE: Remove this in your real implementation!
-    #return memmap.MemoryMap("\x00" * 262144)
+    # return memmap.MemoryMap("\x00" * 262144)
 
     # Get the serial port connection
     serial = radio.pipe
@@ -280,7 +284,7 @@ def do_download(radio):
 def do_upload(radio):
     """Dummy function that will someday upload to the radio."""
     # NOTE: Remove this in your real implementation!
-    #raise Exception("This template driver does not really work!")
+    # raise Exception("This template driver does not really work!")
 
     # Get the serial port connection
     serial = radio.pipe
@@ -294,61 +298,68 @@ def do_upload(radio):
 
 def utftoasc(utfstring):
     """Converts a UTF16 string to ASCII by dropping the zeroes."""
-    toret="";
+    toret = ""
     for c in utfstring:
-        if c!='\x00':
-            toret+=c;
-    return toret;
-def asctoutf(ascstring,size=None):
-    """Converts an ASCII string to UTF16."""
-    toret="";
-    for c in ascstring:
-        toret=toret+c+"\x00";
-    if size==None: return toret;
-    
-    #Correct the size here.
-    while len(toret)<size:
-        toret=toret+"\x00";
+        if c != '\x00':
+            toret += c
+    return toret
 
-    return toret[:size];
-    
+
+def asctoutf(ascstring, size=None):
+    """Converts an ASCII string to UTF16."""
+    toret = ""
+    for c in ascstring:
+        toret = toret + c + "\x00"
+    if size is not None:
+        return toret
+
+    # Correct the size here.
+    while len(toret) < size:
+        toret += "\x00"
+
+    return toret[:size]
+
+
 class MD380Bank(chirp_common.NamedBank):
     """A VX3 Bank"""
+
     def get_name(self):
-        _bank = self._radio._memobj.bank[self.index];
-        name = utftoasc(str(_bank.name));
-        return name.rstrip();
+        _bank = self._radio._memobj.bank[self.index]
+        name = utftoasc(str(_bank.name))
+        return name.rstrip()
 
     def set_name(self, name):
         name = name.upper()
-        _bank = self._radio._memobj.bank[self.index];
-        _bank.name = asctoutf(name,32);
+        _bank = self._radio._memobj.bank[self.index]
+        _bank.name = asctoutf(name, 32)
+
 
 class MD380BankModel(chirp_common.MTOBankModel):
     """An MD380 Bank model"""
+
     def get_num_mappings(self):
         return 99
-        #return len(self.get_mappings());
+        # return len(self.get_mappings());
 
     def get_mappings(self):
         banks = []
         for i in range(0, 99):
-            #bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
-            bank = MD380Bank(self, "%i" % (i+1), "MG%i" % (i+1))
-            bank._radio=self._radio;
-            bank.index = i;
-            #print "Bank #%i has name %s" % (i,bank.get_name());
-            #if len(bank.get_name())>0:
-            banks.append(bank);
+            # bank = chirp_common.Bank(self, "%i" % (i+1), "MG%i" % (i+1))
+            bank = MD380Bank(self, "%i" % (i + 1), "MG%i" % (i + 1))
+            bank._radio = self._radio
+            bank.index = i
+            # print("Bank #%i has name %s" % (i, bank.get_name()))
+            # if len(bank.get_name())>0:
+            banks.append(bank)
         return banks
 
     def add_memory_to_mapping(self, memory, bank):
         _members = self._radio._memobj.bank[bank.index].members
-        #_bank_used = self._radio._memobj.bank_used[bank.index]
+        # _bank_used = self._radio._memobj.bank_used[bank.index]
         for i in range(0, 16):
             if _members[i] == 0x0000:
                 _members[i] = memory.number
-                #_bank_used.in_use = 0x0000
+                # _bank_used.in_use = 0x0000
                 break
 
     def remove_memory_from_mapping(self, memory, bank):
@@ -357,7 +368,7 @@ class MD380BankModel(chirp_common.MTOBankModel):
         found = False
         remaining_members = 0
         for i in range(0, len(_members)):
-            if _members[i] == (memory.number):
+            if _members[i] == memory.number:
                 _members[i] = 0x0000
                 found = True
             elif _members[i] != 0x0000:
@@ -367,25 +378,25 @@ class MD380BankModel(chirp_common.MTOBankModel):
             raise Exception("Memory {num} not in " +
                             "bank {bank}".format(num=memory.number,
                                                  bank=bank))
-        #if not remaining_members:
-        #    _bank_used.in_use = 0x0000
+            # if not remaining_members:
+            #    _bank_used.in_use = 0x0000
 
     def get_mapping_memories(self, bank):
         memories = []
-        
-        _members = self._radio._memobj.bank[bank.index].members
-        #_bank_used = self._radio._memobj.bank_used[bank.index]
 
-        #if _bank_used.in_use == 0x0000:
+        _members = self._radio._memobj.bank[bank.index].members
+        # _bank_used = self._radio._memobj.bank_used[bank.index]
+
+        # if _bank_used.in_use == 0x0000:
         #    return memories
 
         for number in _members:
-            #Zero items are not memories.
+            # Zero items are not memories.
             if number == 0x0000:
                 continue
-            
-            mem=self._radio.get_memory(number);
-            print "Appending memory %i" % number;
+
+            mem = self._radio.get_memory(number)
+            print("Appending memory %i" % number)
             memories.append(mem)
         return memories
 
@@ -405,17 +416,17 @@ class MD380Radio(chirp_common.CloneModeRadio):
     VENDOR = "TYT"
     MODEL = "MD-380"
     FILE_EXTENSION = "img"
-    BAUD_RATE = 9600    # This is a lie.
-    
-    _memsize=262144;
+    BAUD_RATE = 9600  # This is a lie.
+
+    _memsize = 262144
+
     @classmethod
     def match_model(cls, filedata, filename):
         return (
-               len(filedata) == cls._memsize
-            or len(filedata) == cls._memsize+565
-            );
-    
-    
+            len(filedata) == cls._memsize
+            or len(filedata) == cls._memsize + 565
+        )
+
     # Return information about this radio's features, including
     # how many memories it has, what bands it supports, etc
     def get_features(self):
@@ -426,208 +437,201 @@ class MD380Radio(chirp_common.CloneModeRadio):
         rf.can_odd_split = True
         rf.valid_tmodes = TMODES
         rf.memory_bounds = (1, 999)  # Maybe 1000?
-        
-        rf.valid_bands = [(400000000, 480000000), # 70cm model is most common.
+
+        rf.valid_bands = [(400000000, 480000000),  # 70cm model is most common.
                           (136000000, 174000000)  # 2m model sold separately.
                           ]
-        rf.valid_characters = "".join(CHARSET);
-        rf.has_settings = True;
-        rf.has_tuning_step = False;
-        rf.has_ctone=True;
-        rf.has_dtcs=False;   #TODO Enable DTCS support.
-        rf.has_cross=False;
-        rf.valid_modes = list(MODES);
-        rf.valid_skips = [""]; #["", "S"]
-#        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
+        rf.valid_characters = "".join(CHARSET)
+        rf.has_settings = True
+        rf.has_tuning_step = False
+        rf.has_ctone = True
+        rf.has_dtcs = False  # TODO Enable DTCS support.
+        rf.has_cross = False
+        rf.valid_modes = list(MODES)
+        rf.valid_skips = [""]  # ["", "S"]
+        #        rf.valid_tmodes = ["", "Tone", "TSQL", "DTCS", "Cross"]
         rf.valid_tmodes = ["", "Tone", "TSQL"]
         rf.valid_duplexes = list(DUPLEX)
         rf.valid_name_length = 16
         return rf
-    
+
     # Processes the mmap from a file.
     def process_mmap(self):
-        if(len(self._mmap)==self._memsize):
+        if len(self._mmap) == self._memsize:
             self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
-        elif(len(self._mmap)==self._memsize+565):
+        elif len(self._mmap) == self._memsize + 565:
             self._memobj = bitwise.parse(MEM_FORMAT, self._mmap[549:])
 
-        #self._memobj = bitwise.parse(
-        #    MEM_FORMAT, self._mmap)
-    
+            # self._memobj = bitwise.parse(
+            #    MEM_FORMAT, self._mmap)
+
     # Do a download of the radio from the serial port
     def sync_in(self):
-        pass;
-    
-#         try:
-#             self._mmap = do_download(self)
-#         except errors.RadioError:
-#             raise
-#         except Exception, e:
-#             raise errors.RadioError("Failed to communicate with radio: %s" % e)
-#         #hexdump(self._mmap);
-        
-#         if(len(self._mmap)==self._memsize):
-#             self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
-#         else:
-#             raise errors.RadioError("Incorrect 'Model' selected.")
+        pass
+
+    #         try:
+    #             self._mmap = do_download(self)
+    #         except errors.RadioError:
+    #             raise
+    #         except Exception, e:
+    #             raise errors.RadioError("Failed to communicate with radio: %s" % e)
+    #         #hexdump(self._mmap);
+
+    #         if(len(self._mmap)==self._memsize):
+    #             self._memobj = bitwise.parse(MEM_FORMAT, self._mmap)
+    #         else:
+    #             raise errors.RadioError("Incorrect 'Model' selected.")
     # Do an upload of the radio to the serial port
     def sync_out(self):
-        #do_upload(self)
-        pass;
+        # do_upload(self)
+        pass
 
     # Return a raw representation of the memory object, which
     # is very helpful for development
     def get_raw_memory(self, number):
-        return repr(self._memobj.memory[number-1])
+        return repr(self._memobj.memory[number - 1])
 
     # Extract a high-level memory object from the low-level memory map
     # This is called to populate a memory in the UI
     def get_memory(self, number):
         # Get a low-level memory object mapped to the image
-        _mem = self._memobj.memory[number-1]
-        
+        _mem = self._memobj.memory[number - 1]
+
         # Create a high-level memory object to return to the UI
         mem = chirp_common.Memory()
 
-        mem.number = number;
+        mem.number = number
         mem.name = utftoasc(str(_mem.name)).rstrip()  # Set the alpha tag
-        mem.freq = int(_mem.rxfreq)*10;
-        
-        ctone=int(_mem.ctone)/10.0;
-        rtone=int(_mem.rtone)/10.0;
+        mem.freq = int(_mem.rxfreq) * 10
 
-        
+        ctone = int(_mem.ctone) / 10.0
+        rtone = int(_mem.rtone) / 10.0
+
         # Anything with an unset frequency is unused.
         # Maybe we should be looking at the mode instead?
-        if mem.freq >500e6:
-            mem.freq=400e6;
-            mem.empty = True;
-            mem.name="Empty";
-            mem.mode="NFM";
-            mem.duplex=""
-            mem.offset=mem.freq;
-            _mem.mode=0x61; #Narrow FM.
-        
+        if mem.freq > 500e6:
+            mem.freq = 400e6
+            mem.empty = True
+            mem.name = "Empty"
+            mem.mode = "NFM"
+            mem.duplex = ""
+            mem.offset = mem.freq
+            _mem.mode = 0x61  # Narrow FM.
 
-        
-        #print "Tones for %s are %s and %s" %(
-        #    mem.name, rtone, ctone);
-        #mem.rtone=91.5
-        #mem.ctone=97.4 #88.5
-        if ctone==1666.5 and rtone!=1666.5:
-            mem.rtone=rtone;
-            #mem.ctone=rtone;  #Just one tone here, because the radio can't store a second.
-            mem.tmode="Tone";
-        elif ctone!=1666.5 and rtone!=1666.5:
-            mem.ctone=ctone;
-            mem.rtone=rtone;
-            mem.tmode="TSQL";
+        # print("Tones for %s are %s and %s" % (
+        #     mem.name, rtone, ctone))
+        # mem.rtone=91.5
+        # mem.ctone=97.4 #88.5
+        if ctone == 1666.5 and rtone != 1666.5:
+            mem.rtone = rtone
+            # mem.ctone=rtone;  #Just one tone here, because the radio can't store a second.
+            mem.tmode = "Tone"
+        elif ctone != 1666.5 and rtone != 1666.5:
+            mem.ctone = ctone
+            mem.rtone = rtone
+            mem.tmode = "TSQL"
         else:
-            mem.tmode="";
+            mem.tmode = ""
 
-        mem.offset = int(_mem.txfreq)*10; #In split mode, offset is the TX freq.
-        if mem.offset==mem.freq:
-            mem.duplex=""; #Same freq.
-            mem.offset=0;
-        elif mem.offset==mem.freq+5e6:
-            mem.duplex="+";
-            mem.offset=5e6;
-        elif mem.offset==mem.freq-5e6:
-            mem.duplex="-";
-            mem.offset=5e6;
-        elif mem.offset==mem.freq+6e5:
-            mem.duplex="+";
-            mem.offset=6e5;
-        elif mem.offset==mem.freq-6e5:
-            mem.duplex="-";
-            mem.offset=6e5;
+        mem.offset = int(_mem.txfreq) * 10  # In split mode, offset is the TX freq.
+        if mem.offset == mem.freq:
+            mem.duplex = ""  # Same freq.
+            mem.offset = 0
+        elif mem.offset == mem.freq + 5e6:
+            mem.duplex = "+"
+            mem.offset = 5e6
+        elif mem.offset == mem.freq - 5e6:
+            mem.duplex = "-"
+            mem.offset = 5e6
+        elif mem.offset == mem.freq + 6e5:
+            mem.duplex = "+"
+            mem.offset = 6e5
+        elif mem.offset == mem.freq - 6e5:
+            mem.duplex = "-"
+            mem.offset = 6e5
         else:
-            mem.duplex="split";
-        
-        mem.mode="DIG";
-        rmode=_mem.mode&0x0F;
-        if rmode==0x02:
-            mem.mode="DIG";
-        elif rmode==0x01:
-            mem.mode="NFM";
-        elif rmode==0x09:
-            mem.mode="FM";
-        else:
-            print "WARNING: Mode bytes 0x%02 isn't understood for %s." % (
-                _mem.mode, mem.name);
+            mem.duplex = "split"
 
-        
+        mem.mode = "DIG"
+        rmode = _mem.mode & 0x0F
+        if rmode == 0x02:
+            mem.mode = "DIG"
+        elif rmode == 0x01:
+            mem.mode = "NFM"
+        elif rmode == 0x09:
+            mem.mode = "FM"
+        else:
+            print("WARNING: Mode bytes 0x%02 isn't understood for %s." % (_mem.mode, mem.name))
         return mem
 
     # Store details about a high-level memory to the memory map
     # This is called when a user edits a memory in the UI
     def set_memory(self, mem):
         # Get a low-level memory object mapped to the image
-        _mem = self._memobj.memory[mem.number-1]
+        _mem = self._memobj.memory[mem.number - 1]
 
         # Convert to low-level frequency representation
-        _mem.rxfreq = mem.freq/10;
-        
+        _mem.rxfreq = mem.freq / 10
+
         # Janky offset support.
         # TODO Emulate modes other than split.
-        if mem.duplex=="split":
-            _mem.txfreq = mem.offset/10;
-        elif mem.duplex=="+":
-            _mem.txfreq = mem.freq/10+mem.offset/10;
-        elif mem.duplex=="-":
-            _mem.txfreq = mem.freq/10-mem.offset/10;
+        if mem.duplex == "split":
+            _mem.txfreq = mem.offset / 10
+        elif mem.duplex == "+":
+            _mem.txfreq = mem.freq / 10 + mem.offset / 10
+        elif mem.duplex == "-":
+            _mem.txfreq = mem.freq / 10 - mem.offset / 10
         else:
-            _mem.txfreq = _mem.rxfreq;
-        _mem.name = asctoutf(mem.name,32);
-        
-        #print "Tones in mode %s of %s and %s for %s" % (
-        #    mem.tmode, mem.ctone, mem.rtone, mem.name);
-        # These need to be 16665 when unused.
-        _mem.ctone=mem.ctone*10;
-        _mem.rtone=mem.rtone*10;
-        
-        if mem.tmode=="Tone":
-            blankbcd(_mem.ctone); #No receiving tone.
-        elif mem.tmode=="TSQL":
-            pass;
-        else:
-            blankbcd(_mem.ctone);
-            blankbcd(_mem.rtone);
-        
-        if mem.mode=="FM":
-            _mem.mode=0x69;
-        elif mem.mode=="NFM":
-            _mem.mode=0x61;
-        elif mem.mode=="DIG":
-            _mem.mode=0x62;
-        else:
-            _mem.mode=0x69;
-        
-        if _mem.slot==0xff:
-            _mem.slot=0x14;  #TODO Make this 0x18 for S2.
+            _mem.txfreq = _mem.rxfreq
+        _mem.name = asctoutf(mem.name, 32)
 
+        # print("Tones in mode %s of %s and %s for %s" % (
+        #     mem.tmode, mem.ctone, mem.rtone, mem.name))
+        # These need to be 16665 when unused.
+        _mem.ctone = mem.ctone * 10
+        _mem.rtone = mem.rtone * 10
+
+        if mem.tmode == "Tone":
+            blankbcd(_mem.ctone)  # No receiving tone.
+        elif mem.tmode == "TSQL":
+            pass
+        else:
+            blankbcd(_mem.ctone)
+            blankbcd(_mem.rtone)
+
+        if mem.mode == "FM":
+            _mem.mode = 0x69
+        elif mem.mode == "NFM":
+            _mem.mode = 0x61
+        elif mem.mode == "DIG":
+            _mem.mode = 0x62
+        else:
+            _mem.mode = 0x69
+
+        if _mem.slot == 0xff:
+            _mem.slot = 0x14  # TODO Make this 0x18 for S2.
 
     def get_settings(self):
         _general = self._memobj.general
         _info = self._memobj.info
-        
+
         basic = RadioSettingGroup("basic", "Basic")
         info = RadioSettingGroup("info", "Model Info")
-        general = RadioSettingGroup("general", "General Settings");
-        
-        
-        #top = RadioSettings(identity, basic)
+        general = RadioSettingGroup("general", "General Settings")
+
+        # top = RadioSettings(identity, basic)
         top = RadioSettings(general)
         general.append(RadioSetting(
-                "dmrid", "DMR Radio ID",
-                RadioSettingValueInteger(0, 100000000, _general.dmrid)));
+            "dmrid", "DMR Radio ID",
+            RadioSettingValueInteger(0, 100000000, _general.dmrid)))
         general.append(RadioSetting(
-                "line1", "Startup Line 1",
-                RadioSettingValueString(0, 10, utftoasc(str(_general.line1)))));
+            "line1", "Startup Line 1",
+            RadioSettingValueString(0, 10, utftoasc(str(_general.line1)))))
         general.append(RadioSetting(
-                "line2", "Startup Line 2",
-                RadioSettingValueString(0, 10, utftoasc(str(_general.line2)))));
+            "line2", "Startup Line 2",
+            RadioSettingValueString(0, 10, utftoasc(str(_general.line2)))))
         return top
+
     def set_settings(self, settings):
         _general = self._memobj.general
         _info = self._memobj.info
@@ -639,18 +643,18 @@ class MD380Radio(chirp_common.CloneModeRadio):
                 continue
             try:
                 setting = element.get_name()
-                #oldval = getattr(_settings, setting)
+                # oldval = getattr(_settings, setting)
                 newval = element.value
-                
-                #LOG.debug("Setting %s(%s) <= %s" % (setting, oldval, newval))
-                if setting=="line1":
-                    _general.line1=asctoutf(str(newval),20);
-                elif setting=="line2":
-                    _general.line2=asctoutf(str(newval),20);
+
+                # LOG.debug("Setting %s(%s) <= %s" % (setting, oldval, newval))
+                if setting == "line1":
+                    _general.line1 = asctoutf(str(newval), 20)
+                elif setting == "line2":
+                    _general.line2 = asctoutf(str(newval), 20)
                 else:
                     print("Setting %s <= %s" % (setting, newval))
                     setattr(_general, setting, newval)
-            except Exception, e:
+            except Exception as e:
                 LOG.debug(element.get_name())
                 raise
 

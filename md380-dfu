@@ -1,9 +1,9 @@
 #!/usr/bin/env python2
+# -*- coding: utf-8 -*-
 
-import sys
 from md380_dfu import main
 
 if __name__ == '__main__':
     main()
 
-#All my code now exists in md380_dfu.py
+# All my code now exists in md380_dfu.py

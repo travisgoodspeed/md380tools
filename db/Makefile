@@ -24,26 +24,29 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 custom.csv:
 	touch custom.csv
 
-stripped.csv: custom.csv special.tmp fixed.csv dmrmarc.tmp reflector.tmp
+stripped.csv: custom.csv special.tmp fixed.csv dmrmarc2.tmp reflector.tmp
 	awk -F, -f combine.awk $^ | $(ICONV)  | sort -t ',' -k1g,1 | awk -F, -f strip.awk >stripped.csv	
 	
+dmrmarc2.tmp: dmrmarc.tmp
+	awk -F, -f insert_nick.awk <$< >$@
+	
 dmrmarc.tmp:
-	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
+	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
 	
 reflector.tmp:
-	curl -L -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
+	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 		
 special.tmp:
 	python2 get_special_IDs.py
 	
 users.json:
-	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
+	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
 
 repeaters.json:
-	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=json&header=0' >$@
+	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=json&header=0' >$@
 
 repeaters.csv:
-	curl -L -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=csv&header=0' | perl -pe 's,<BR/>,,' >$@
+	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=csv&header=0' | perl -pe 's,<BR/>,,' >$@
 
 # not used
 bmgroups.json:
