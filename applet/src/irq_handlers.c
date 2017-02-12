@@ -74,7 +74,8 @@ void IRQ_Init(void) // initializes OUR interrupt handlers. Called from main.c.
   // 2017-01-14 : Reduced the UART baudrate when a user reported the earlier
   //              version (which used a PWM frequency of 220 Hz) didn't work
   //              on his radio. 
-  //
+  // 2017-02-12 : Some users reported hum in their radios, thus now using
+  //              new defaults: BL off on idle, max brightness when active.
 
 #if( CONFIG_DIMMED_LIGHT ) // initialize I/O registers for dimmable backlight ?
 
@@ -97,7 +98,7 @@ void IRQ_Init(void) // initializes OUR interrupt handlers. Called from main.c.
   // Two bits in "PUPDR" per pin for the Pull-up / Pull down resistor configuration. 00bin = none
   GPIOC->PUPDR  /*400280C*/ &= ~(3 << (6/*pinpos*/ * 2) );  // RM0090 Rev7 page 280
   
-  // Tell "PC6" which of the 16 alternate functions it shall have from: USART6_TX . RM0090 Rev7 page 283.
+  // Tell "PC6" which of the 16 alternate functions it shall have: USART6_TX . RM0090 Rev7 page 283.
   // There are FOUR bits per pin in AFR[0..1], thus PC6 is in AFR[0] bits 27..24. USART6_TX = "AF8" (STM32F405/7 DS page 62).
   GPIOC->AFR[0] = (GPIOC->AFR[0] & ~(0x0F << (6/*pinpos*/ * 4 ) ) )  |  (0x08 << (6/*pinpos*/ * 4) );
 
@@ -147,9 +148,6 @@ void SysTick_Handler(void)
 #if( CONFIG_DIMMED_LIGHT ) // simple GPIO "bit banging", min PWM pulse with = one 'SysTick' period. 
   // [in] global_addl_config.backlight_intensities : can be edited (sort of..) in applet/src/menu.c
   uint8_t intensity = global_addl_config.backlight_intensities; // bits 3..0 for IDLE, bits 7..4 for ACTIVE intensity
-# if( L_USE_UART6_AS_PWM_GENERATOR )
-  uint16_t wTxData;
-# endif  // L_USE_UART6_AS_PWM_GENERATOR ?
 #endif  // CONFIG_DIMMED_LIGHT ?
 
   ++IRQ_dwSysTickCounter; // counts SysTick_Handler() calls, which seemed to happen every 1.5 ms .
@@ -165,7 +163,7 @@ void SysTick_Handler(void)
   else  // not "shortly after power-on", but during normal operation ...
    {
      if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
-      {  intensity= 0x52; // use meaningful default (without overwriting global_addl_config in an interrupt!)
+      {  intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
       }          
        
 # if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
@@ -202,26 +200,23 @@ void SysTick_Handler(void)
      else // backlight not one of the 'very dark' states, so configure PC6 as UART_TXD and send PWM pattern:
       { GPIOC->MODER = (GPIOC->MODER & ~( 3 << (6/*pin*/ * 2))) |  ( 2 << (6/*pin*/ * 2) ); // PC6 now configured as UART6_TX again
         switch( intensity ) // which UART-data to send as PWM ?
-         { case 1 : wTxData = 0x00; // low intensity: backlight only driven by stopbit.
+         { case 1 : USART6->DR = 0x00; // low intensity: backlight only driven by stopbit.
               // Theoretic duty cycle (DC): 100% * 0.5 / (1+9+0.5) = 4.76 % 
               break;
-           case 2 : wTxData = 0x100; break; // DC = 100% * 1.5 / 10.5 = 14.3 % 
+           case 2 : USART6->DR = 0x100; break; // DC = 100% * 1.5 / 10.5 = 14.3 % 
               // A UART sends the LSBit first. For the lowest possible RFI,
               // we only want ONE PULSE in each cycle. Thus 0x100, not 0x001 .  
               break;
-           case 3 : wTxData = 0x180; break; // DC = 100% * 2.5 / 10.5 = 23.8 % 
-           case 4 : wTxData = 0x1C0; break; // DC = 100% * 3.5 / 10.5 = 33.3 % 
-           case 5 : wTxData = 0x1E0; break; // DC = 100% * 4.5 / 10.5 = 42.3 % 
-           case 6 : wTxData = 0x1F0; break; // DC = 100% * 5.5 / 10.5 = 52.4 % 
-           case 7 : wTxData = 0x1F8; break; // DC = 100% * 6.5 / 10.5 = 61.9 % 
-           case 8 : wTxData = 0x1FC; break; // DC = 100% * 7.5 / 10.5 = 71.4 % 
-           default: wTxData = 0x1FF; break; // DC = 100% * 9.5 / 10.5 = 90.5 % 
-              // (There's still an unavoidable gap, caused by the START(!)-bit.
-              //  This "loss" is neglectable and doesn't justify reconfiguring
-              //  PC6 as GPIO, to turn the backlight on continuously)              
+           case 3 : USART6->DR = 0x180; break; // DC = 100% * 2.5 / 10.5 = 23.8 % 
+           case 4 : USART6->DR = 0x1C0; break; // DC = 100% * 3.5 / 10.5 = 33.3 % 
+           case 5 : USART6->DR = 0x1E0; break; // DC = 100% * 4.5 / 10.5 = 42.3 % 
+           case 6 : USART6->DR = 0x1F0; break; // DC = 100% * 5.5 / 10.5 = 52.4 % 
+           case 7 : USART6->DR = 0x1F8; break; // DC = 100% * 6.5 / 10.5 = 61.9 % 
+           case 8 : USART6->DR = 0x1FC; break; // DC = 100% * 7.5 / 10.5 = 71.4 % 
+           default: break; // max possible brightness, 100% duty cycle,
+              // hopefully no hum on certain radios with this .. 2017-02-12 .      
               break;
          } // end switch( curr_intensity )
-        USART6->DR  = wTxData;   // keep transmit data register filled, all the time
       }   // end else < backlight not completely dark >
      
    } // end if( RCC->APB2ENR & RCC_APB2ENR_USART6EN )
