@@ -121,8 +121,10 @@ static int find_dmr_user(char *outstr, int dmr_search, const char *data, int out
 {
     const long datasize = getfirstnumber(data);
 
-    if (datasize == 0 || datasize > 3279629)  // filesize @ 20160420 is 2279629 byte
-       return(0);
+    if (datasize == 0 || datasize > 5242879)  // 5 Meg sanity limit
+       // filesize @ 20160420 is 2279629 bytes
+       //          @ 20170213 is 2604591 bytes
+    return(0);
 
     const char *data_start = next_line_ptr(data);
     const char *data_end = data_start + datasize; // exclusive
