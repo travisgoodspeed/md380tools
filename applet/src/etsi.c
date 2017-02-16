@@ -121,9 +121,9 @@ void dump_full_lc( lc_t *lc )
         taContext.marked |= 1 << (flco - 4);
 
         //Print TA if no more blocks
-        if (taContext.format == 1 || taContext.format == 2)
+        if (taContext.blocks == taContext.marked)
         {
-            if (taContext.format == 1)
+            if (taContext.format == 1 || taContext.format == 2)
             {
                 PRINT("TA (%d): %s\n", taContext.length, taContext.text);
             }
