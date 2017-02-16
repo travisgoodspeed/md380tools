@@ -144,6 +144,15 @@ struct TABlock
   char text[7]; 
 };
 
+struct TAContext
+{
+  uint8_t format;
+  uint8_t length;
+  uint8_t blocks;
+  uint8_t marked;
+  char text[28];
+};
+
 #ifdef __cplusplus
 }
 #endif
