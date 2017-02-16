@@ -129,6 +129,21 @@ inline uint8_t get_flco( lc_t *lc )
     return lc->pf_flco & 0x3f ;
 }
 
+struct TAHeader
+{
+  uint8_t code;
+  uint8_t feature;
+  uint8_t options;
+  char text[6]; 
+};
+
+struct TABlock
+{
+  uint8_t code;
+  uint8_t feature;
+  char text[7]; 
+};
+
 #ifdef __cplusplus
 }
 #endif
