@@ -65,8 +65,9 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
     0x40026488L: "DMA2_S5CR", # another of the USED streams in D013.020
     0x400264A0L: "DMA2_S6CR",
     0x400264B8L: "DMA2_S7CR",
-    0x40020800L: "GPIOC", # register offsets in RM0090 Rev7 page 284 .  Offset 0x00="MODER", 0x20="AFRL", etc
+    0x40020800L: "GPIOC", # register offsets: 0x00="MODER", 0x10="IDR", 0x14="ODR", 0x20="AFRL", etc
     0x40020000L: "GPIOA", # .. with PA8="Save", PA1="Batt", PA0="TX LED", PA3="VOX", PA7="POW_C", ..
+    0x40020C00L: "GPIOD", # .. with PD3="K3" ("Key 3" .. what's that ? )
     0x40011400L: "USART6",# abused by DL4YHF to generate PWM(!) on PC6 = USART6_TX. offsets in RM0090 Rev7 page 1002 .
     0x40023800L: "RCC",   # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405
     0x40023824L: "RCC_APB2RSTR", # APB2 peripheral ReSeT Register. Bit 5 controls USART6. RM0090 Rev7 page 236 .
@@ -401,7 +402,7 @@ def coredump(dfu,filename):
 
 def hexdump(dfu,address,length=512):
     """Dumps from memory to the screen"""
-    adr=int(address,16)
+    adr=address
     buf=dfu.peek(adr,length)
     i=0
     cbuf=""
@@ -422,13 +423,14 @@ def hexdump(dfu,address,length=512):
 
 def hexwatch(dfu,address):
     """Dumps from memory to the screen"""
+    adr=ParseHexOrRegName(address)
     while True:
-        hexdump(dfu,address,16)
+        hexdump(dfu,adr,16)
         time.sleep(0.05)
 
 
 def ParseHexOrRegName(address):
-    if address in sfr_addresses.values(): # there must be a more elegant of (ab)using a 'dict' like this:
+    if address in sfr_addresses.values(): # there must be a more elegant way than this..
         return sfr_addresses.keys()[sfr_addresses.values().index(address)]
     else:
         return int(address,16)
@@ -794,8 +796,9 @@ def main():
                 coredump(dfu,sys.argv[2]);
             elif sys.argv[1] == 'hexdump':
                 print "Dumping memory from %s." % sys.argv[2];
+                adr=ParseHexOrRegName(sys.argv[2])
                 dfu=init_dfu();
-                hexdump(dfu,sys.argv[2]);
+                hexdump(dfu,adr);
             elif sys.argv[1] == 'hexdump32':
                 dfu=init_dfu();
                 hexdump32(dfu,sys.argv[2]);
@@ -807,7 +810,7 @@ def main():
                 dfu=init_dfu()
                 ramdump(dfu,sys.argv[2],sys.argv[3])
             elif sys.argv[1] == 'hexwatch':
-                print "Dumping memory from %s." % sys.argv[2]
+                print "Watching memory at %s." % sys.argv[2]
                 dfu=init_dfu()
                 hexwatch(dfu,sys.argv[2])
             elif sys.argv[1] == 'lookup':

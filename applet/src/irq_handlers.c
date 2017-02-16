@@ -54,53 +54,68 @@
 #  error "Missing address of the original SysTick_Handler in 'irq_handlers.h' !"
 #endif
 
+typedef void (*void_func_ptr)(void);
 
-// Module-internal options :
-#define L_USE_UART6_AS_PWM_GENERATOR 1 /* 0=no (use PC6 as GPIO),  1=yes (use PC6 as USART6_TX to send PWM) */
+  // How to drive the LEDs (here, mostly for testing) ? From gfx.c :
+  // > The RED LED is supposed to be on pin A0 by the schematic, but in
+  // > point of fact it's on E1.  Expect more hassles like this.
+#define PINPOS_C_BL 6 /* pin position of backlight output within GPIO_C */
+#define PINPOS_E_TX 1 /* pin position of the red   TX LED within GPIO_E */
+#define PINPOS_E_RX 0 /* pin position of the green RX LED within GPIO_E */
+#define LED_GREEN_ON  GPIOE->BSRRL=(1<<PINPOS_E_RX) /* green LED on (w/o ST-bulk) */
+#define LED_GREEN_OFF GPIOE->BSRRH=(1<<PINPOS_E_RX) /* green LED off */
+#define LED_RED_ON    GPIOE->BSRRL=(1<<PINPOS_E_TX) /* red LED on  */
+#define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* red LED off */
+
+  // How to poll a few keys 'directly' after power-on ? 
+  // The schematic shows "K3" from the PTT pad to the STM32, 
+  // but it doesn't look like an INPUT (may be a multiplexer
+  // to poll the two "side buttons" shared with LCD_D6 & D7 .. eeek)
+  // -> leave that for later... something like
+  // "keep 'M' pressed on power-on for Morse output" will be difficult.
 
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
+#if( CONFIG_DIMMED_LIGHT )
+ static uint8_t may_turn_on_backlight = 0; // ok to turn on the backlight ? 0=no, 1=yes
+#endif
 
 
-//---------------------------------------------------------------------------
-void IRQ_Init(void) // initializes OUR interrupt handlers. Called from main.c.
-{
-  // 2017-01-05 : Tried to reprogram VTOR to avoid having to patch Tytera's 
-  //              vector table. But this made the firmware crash somewhere,
-  //              so stick to the old method of patching THEIR vector table
-  //              to use OUR SysTick_Handler .  
-  // 2017-01-07 : Tried to improve the PWM resultion with the lowest possible
-  //              interrupt rate (to keep the CPU load low) by abusing
-  //              USART6 (with TX on PC6 = "Lamp" = backlight) for PWM generation.
-  // 2017-01-14 : Reduced the UART baudrate when a user reported the earlier
-  //              version (which used a PWM frequency of 220 Hz) didn't work
-  //              on his radio. 
-  // 2017-02-12 : Some users reported hum in their radios, thus now using
-  //              new defaults: BL off on idle, max brightness when active.
-
-#if( CONFIG_DIMMED_LIGHT ) // initialize I/O registers for dimmable backlight ?
-
-# if( L_USE_UART6_AS_PWM_GENERATOR )
-  USART_TypeDef *pUSART = USART6; // load the UART's base address into register (once)
+#if( CONFIG_DIMMED_LIGHT )
+static void InitDimming(void)
+{ // Since 2017-02-16, called from SysTick_Handler() when Tytera's firmware(!)
+  // has initialized the hardware, waited until the power supply is stable, 
+  // and turned on the backlight via GPIO port register for the first time.
+  // Only THEN, it's definitely safe to draw the current for the backlight !
+  // (when turning on the backlight "too early", the CPU seemed to reset itself
+  //  in some radios. The CPU possibly starts to run before the power supply
+  //  can provide the full current. By "waiting" until the original firmware 
+  //  turns on the backlight for the first time (polled in SysTick_Handler),
+  //  there should be no risk of drawing too much current too early.
+  
+  USART_TypeDef *pUSART = USART6; // load the UART's base address into a register (once)
 
   RCC->APB2ENR |=  RCC_APB2ENR_USART6EN;    // enable internal clock for UART6 (from 'APB2')
-  RCC->APB2RSTR &= ~RCC_APB2RSTR_USART6RST; // bring USART6 "out of reset" (RM0090 Rev7 page 176)
-
+  RCC->APB2RSTR &= ~RCC_APB2RSTR_USART6RST; // bring USART6 "out of reset" (RM0090 Rev13 page 240)
+    
   // Turn pin "PC6" from a GPIO into "UART6_TX". No need for a bloated struct ("GPIO_InitTypeDef") for this:
-  // Two bits in "MODER" per pin : 00bin for GPI, 01 for GPO, 10 for 'alternate function mode'. RM0090 Rev7 page 278:
-  GPIOC->MODER  /*4002800*/ = ( GPIOC->MODER & ~(3 << (6/*pinpos*/ * 2) ) ) |  (2/*ALT*/ << (6/*pinpos*/ * 2) );
+  // Two bits in "MODER" per pin : 00bin for GPI, 01 for GPO, 10 for 'alternate function mode'. RM0090 Rev13 page 283:
+  GPIOC->MODER  /*4002800*/ = ( GPIOC->MODER & ~(3 << (PINPOS_C_BL * 2) ) ) |  (2/*ALT*/ << (PINPOS_C_BL * 2) );
   
   // Two bits in "OSPEEDR" per pin : 00bin for the 'lowest speed', to cause the lowest possible RFI                                  
-  GPIOC->OSPEEDR/*4002808*/ &= ~(3 << (6/*pinpos*/ * 2) );  // RM0090 Rev7 page 279
+  GPIOC->OSPEEDR/*4002808*/ &= ~(3 << (PINPOS_C_BL * 2) );  // RM0090 Rev7 page 283
   
   // One bit per pin in "OTYPER" to select open drain or push/pull output mode:
-  GPIOC->OTYPER /*4002804*/ &= ~(1<<6);  // RM0090 Rev7 page 279 : Low for push-pull
+  GPIOC->OTYPER /*4002804*/ &= ~(1<<PINPOS_C_BL);  // RM0090 Rev13 page 279 : Low for push-pull
   
   // Two bits in "PUPDR" per pin for the Pull-up / Pull down resistor configuration. 00bin = none
-  GPIOC->PUPDR  /*400280C*/ &= ~(3 << (6/*pinpos*/ * 2) );  // RM0090 Rev7 page 280
+  GPIOC->PUPDR  /*400280C*/ &= ~(3 << (PINPOS_C_BL * 2) );
   
-  // Tell "PC6" which of the 16 alternate functions it shall have: USART6_TX . RM0090 Rev7 page 283.
+  // BEEN_HERE__STOP; // 2017-02-16 : No.
+
+  // Tell "PC6" which of the 16 alternate functions it shall have: USART6_TX . RM0090 Rev13 page 287.
+  // Only has an effect if the two MODER-bits for this pin are 10bin = "alternate function mode". 
   // There are FOUR bits per pin in AFR[0..1], thus PC6 is in AFR[0] bits 27..24. USART6_TX = "AF8" (STM32F405/7 DS page 62).
-  GPIOC->AFR[0] = (GPIOC->AFR[0] & ~(0x0F << (6/*pinpos*/ * 4 ) ) )  |  (0x08 << (6/*pinpos*/ * 4) );
+  GPIOC->AFR[0] = (GPIOC->AFR[0] & ~(0x0F << (PINPOS_C_BL * 4 ) ) )  |  (0x08 << (PINPOS_C_BL * 4) );
 
   // Init the "USART". Page numbers from RM0090 Rev13 (Reference Manual).
   pUSART->CR2 /*pg 1017*/ = (1<<12);  // "normal" UART, no LIN, no clock pin, 0.5 stopbits (!)
@@ -117,11 +132,9 @@ void IRQ_Init(void) // initializes OUR interrupt handlers. Called from main.c.
   // PWM frequency = UART Frame rate. With BRR=0xFFF0, 'OVER8'=0, and 1+9+0.5 bits per frame:
   //   f_pwm = 72 MHz [f_APB2] / ( 10.5 [bits per frame] * 4095.0 [BRR] * 16 [samples per bit] ) = 104.65 Hz .
   // Confirmed with a photocell on the display, and an oscilloscope.
-# endif // L_USE_UART6_AS_PWM_GENERATOR ?
+ 
+} // InitDimming()
 #endif // CONFIG_DIMMED_LIGHT ?
-  
-} // IRQ_Init()
-
 
 
 //---------------------------------------------------------------------------
@@ -142,52 +155,95 @@ void SysTick_Handler(void)
   // >    expected in vector table = 0x08093f1d,
   // >   new value in vector table = 0x080a02b9.  <-- address of "our handler" PLUS ONE because it's Thumb !
   // >   SysTick_Handler successfully patched.    <-- lengthy output from DL4YHF's modified merge_d13.020.py
-  
 {
   uint32_t dw;
 #if( CONFIG_DIMMED_LIGHT ) // simple GPIO "bit banging", min PWM pulse with = one 'SysTick' period. 
-  // [in] global_addl_config.backlight_intensities : can be edited (sort of..) in applet/src/menu.c
+  // [in] global_addl_config.backlight_intensities : configurable in applet/src/menu.c
   uint8_t intensity = global_addl_config.backlight_intensities; // bits 3..0 for IDLE, bits 7..4 for ACTIVE intensity
 #endif  // CONFIG_DIMMED_LIGHT ?
 
-  ++IRQ_dwSysTickCounter; // counts SysTick_Handler() calls, which seemed to happen every 1.5 ms .
+  // Will any of "tytera's" interrupts have a higher priority, and/or will it
+  // be able to interrupt THIS interrupt handler ? Instead of finding out,
+  // play safe, assume anything can happen, and DISABLE interrupts in the core
+  // before fiddling around with GPIO-, UART-, RCC-, and who knows what else :
+  int irq_was_disabled = __get_PRIMASK();  // ugly, non-portable, but .. ?
+  __disable_irq(); // -> cpsid I (disable IRQ by setting PRIMASK on Cortex-M)
+
+  ++IRQ_dwSysTickCounter; // counts SysTick_Handler() calls, every 1.5 ms
 
 #if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight (here, via GPIO, or PWM-from-UART) ?
 
-  if( IRQ_dwSysTickCounter < 3000/* x 1.5 ms*/ )
-   { dw = IRQ_dwSysTickCounter / 100; // brightness ramps up during init
-     intensity = (dw<9) ? dw : 9;
-     // while demo runs / config being loaded from SPI-Flash . During this time,
-     // global_addl_config.backlight_intensities is invalid, so avoid black screen
-   }
-  else  // not "shortly after power-on", but during normal operation ...
-   {
-     if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
-      {  intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
-      }          
+  // "Wait" until the original firmware turns on the backlight:
+  if( ! may_turn_on_backlight ) 
+   { // Did the original firmware turn on the backlight ? 
+     // First of all, did it turn on the peripheral clocks for GPIO A..E ?
+#    define RCC_AHB1ENR_GPIO_A_to_E (RCC_AHB1ENR_GPIOAEN|RCC_AHB1ENR_GPIOBEN|RCC_AHB1ENR_GPIOCEN|RCC_AHB1ENR_GPIODEN|RCC_AHB1ENR_GPIOEEN)
+     if( (RCC->AHB1ENR & RCC_AHB1ENR_GPIO_A_to_E) == RCC_AHB1ENR_GPIO_A_to_E )
+      { // Did the firmware configure backlight and RX,TX-LEDs as output ?
+        if(   ( (GPIOC->MODER & (3<<(PINPOS_C_BL*2)) ) == (1<<(PINPOS_C_BL*2)) ) 
+           && ( (GPIOE->MODER & (3<<(PINPOS_E_TX*2)) ) == (1<<(PINPOS_E_TX*2)) )
+           && ( (GPIOE->MODER & (3<<(PINPOS_E_RX*2)) ) == (1<<(PINPOS_E_RX*2)) )
+          )
+         { // Ok, from here on, we can safely (?) drive the GPIOs .
+#         if(0) // TEST: How long does it take until Tytera turns the BL on ?
+           // Turn on the GREEN 'RX' LED to find out if/when we get here .
+           // Test result: The first time Tytera turns the backlight on
+           // was ~~ 1 second after power-on. Turn it on too early -> CRASH.
+           dw = IRQ_dwSysTickCounter & 0x1F; // flickering, dimmed green LED
+           if( dw==0x00 )   // Note: MOST of the time, Tytera drives this LED,
+            { LED_GREEN_ON; // so it could still act as a squelch indicator !
+            }
+           if( dw==0x01 )    
+            { LED_GREEN_OFF;  
+            }
+#         endif // TEST ?
+
+           // Did the firmware turn the backlight on (for the 1st time) ?  
+           if( GPIOC->ODR & (1<<6) ) // backlight-bit in Output Data Register set ?
+            { // Yes; guess it's ok to "take over" backlight control now .
+              InitDimming();  // switch from GPIO- to UART-generated PWM
+              IRQ_dwSysTickCounter  = 0; // restart timer (to ramp up brightness)
+              may_turn_on_backlight = 1; // start dimming in the next interrupt
+            } // end if < backlight turned ON (by original firmware) >
+         }   // end if < GPIO_C.6 configured as OUTPUT >
+      }     // end if < GPIO_C supplied with a peripheral clock >
+   }       // end if < may NOT turn on the backlight yet >   
+  else    // may control the backlight now ...
+   { 
+     if( IRQ_dwSysTickCounter < 3000/* x 1.5 ms*/ )
+      { dw = IRQ_dwSysTickCounter / 100; // brightness ramps up during init
+        intensity = (dw<9) ? dw : 9;     // ... from 0 to 9 (=max brightness)
+      }
+     else  // not "shortly after power-on", but during normal operation ...
+      {
+        if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
+         {  intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
+                             // lower nibble = brightness when idle, upper nibble = brightness when active.          
+         }          
        
-# if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
-     if( GFX_backlight_on ) 
-# else  // as long as gfx.c:lcd_background_led() isn't called, GFX_backlight_on is useless, 
-        // so use Tytera's "backlight_timer" instead:
-     if( backlight_timer>0)
-# endif // < how to find out if the backlight is currently "low" (dimmed) or "high" (more intense) ?
-      { intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE
-        intensity |=  1;
-      } // end if < backlight should be "on" (active state) > 
-     intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
-   }
-  
-  // MD380 "Lamp" is on "PC6" (port C bit 6), usable also as USART6_TX . Use it as GPIO or U(S)ART ?
-# if( L_USE_UART6_AS_PWM_GENERATOR )
-  // Who knows what the Tytera firmware is doing.. maybe it enables SysTick_Handler() before WE called IRQ_Init().
-  if( RCC->APB2ENR & RCC_APB2ENR_USART6EN ) // only if USART6 is 'fed with a system clock':
-   { // Keep feeding bytes into the UART's transmit data register 
-     // (don't care if it can accept data or not, don't care if tx-bytes get lost here)
+#    if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
+        if( GFX_backlight_on ) 
+#    else  // as long as gfx.c:lcd_background_led() isn't called, GFX_backlight_on is useless, 
+           // so use Tytera's "backlight_timer" instead:
+        if( backlight_timer>0)
+#    endif // < how to find out if the backlight is currently "low" (dimmed) or "high" (more intense) ?
+         { intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE
+           intensity |=  1;
+         } // end if < backlight should be "on" (active state) > 
+        intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
+      } // <normal operation>
+
+     if( ! (RCC->APB2ENR & RCC_APB2ENR_USART6EN) ) // oops.. USART6 has been de-initialized ?!
+      { InitDimming();   
+      }
+      
+     // Except for min and max brightness, keep feeding bytes into the UART's 
+     //     transmit data register to generate the PWM .
+     // Don't care if it can accept data or not, don't care if tx-bytes get lost here.
      // Unfortunately, the UART's TX-output has the wrong polarity :
      // > When the transmitter is enabled and nothing is to be transmitted, 
      // > the TX pin is at high level.   (YHF: .. which would turn the backlight ON)
-     // Thus, when sending NOTHING, the backlight would have MAXIMUM brightness,
+     // Thus, when sending NOTHING, the backlight will have MAXIMUM brightness,
      //  -> UART transmit data register must be continuously 'flooded' with data.
      if( intensity == 0 )  // backlight shall be COMPLETELY DARK ->
       { // Reconfigure PC6 as 'GPIO' to turn the backlight COMPLETELY off .
@@ -196,7 +252,7 @@ void SysTick_Handler(void)
         // hope we didn't interrupt another read-modify-write on this register.
         // (if it happens, no big problem, the NEXT SysTick-interrupt will put things right again)
         GPIOC->BSRRH = (1<<6);  // turn BL off (completely, as GPIO, no PWM)
-      }
+      }  
      else // backlight not one of the 'very dark' states, so configure PC6 as UART_TXD and send PWM pattern:
       { GPIOC->MODER = (GPIOC->MODER & ~( 3 << (6/*pin*/ * 2))) |  ( 2 << (6/*pin*/ * 2) ); // PC6 now configured as UART6_TX again
         switch( intensity ) // which UART-data to send as PWM ?
@@ -218,57 +274,26 @@ void SysTick_Handler(void)
               break;
          } // end switch( curr_intensity )
       }   // end else < backlight not completely dark >
-     
-   } // end if( RCC->APB2ENR & RCC_APB2ENR_USART6EN )
-   
-# else // L_USE_UART6_AS_PWM_GENERATOR : first experiment, simply drive PC6 as GPIO (purely soft-PWM) :
-  // Revived 2017-01-12 when some users reported the UART method didn't work
-  //           for their radios (not sure what happened there..) .
-  // Maybe the UART-generated PWM frequency was too high, and there are low-pass RC filters
-  // populated on some boards ? Trying this with f_pwm = ~~ 74 Hz may tell.
-  // Downside: Tytera firmware drives PC6 via GPIO too, and this interferes
-  //           occasionally (for example when turning the volume pot,
-  //           the intensity flickers momentarily because Tytera switches PC6
-  //           outside our nice PWM cycle ).
-  // Test result: On the author's RT3 (old FW D002.034) both methods work,
-  //           but the UART method works best due to the '0.5 stopbits' trick.
-  //
-  // According to RM0090 page 281, the STM's GPIO 'port bit set/reset register'
-  // can be used to modify a single port pin (without a costly read/modify/write).
-  dw = IRQ_dwSysTickCounter % 9; // dw = sawtooth ranging from 0..8. One step = 1.5 ms. f_pwm = 1 / (9*1.5ms) = 74 Hz .
-  if( intensity > dw )           // intensity from config, ranging from 0..9 (!)
-   { GPIOC->BSRRL = (1<<6);  // turn BL on  (strange name: a one written into BSRRL *SETS* a bit in GPIOx_ODR !)
-   }
-  else // e.g. intensity=0, can never be > dw; PC6 must bw LOW (bit in GPIOx_ODR *cleared* :
-   { GPIOC->BSRRH = (1<<6);  // turn BL off (strange name: a one written into BSRRH *CLEARS* a bit in GPIOx_ODR !!)
-   }
-# endif // L_USE_UART6_AS_PWM_GENERATOR ?
-#endif // CONFIG_DIMMED_LIGHT ?
+   }     // may_turn_on_backlight ? 
+#endif  // CONFIG_DIMMED_LIGHT ?
 
+  // Morse output will go here ... after finding out how to drive the speaker
+  //                               independently of the analog volume pot .
+
+  // Restore original interrupt (enable-) status. Don't blindly re-enable it !
+  if( ! irq_was_disabled ) // don't enable IRQs if they were DISABLED on entry
+   { __enable_irq(); // -> cpsie I (enable IRQ by clearing PRIMASK on Cortex-M)    
+   }
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  // Next: "Jump into the original handler", at the following address:
-  dw = IRQ_ORIGINAL_SYSTICK_HDLR; // for the "D013.020" firmware, see www.qsl.net/dl4yhf/RT3/listing.txt
-  // Don't "return" from here (no 'BX LR') but "jump directly into the ORIGINAL handler" .
-  // What we WANT to have here (.. would be easy it it wasn't GCC inline-asm ..) :
-  //  > mov pc, dw  ; dw = 32-bit variable with the original handler address
-  // 
-  // GCC syntax: asm(  code : output operand list : input operand list : clobber list  );
-  //                    |     |_________________|   |________________|   |__________|
-  //    Aaalmost looks like     |                     |    ________________|
-  //    'normal' assembly,      |                     |   |
-  //    except for operands,    |    _________________|   Optional list of clobbered registers   
-  //    e.g. "B %[handler]"     |   |
-  //      ______________________|   comma separated list of input operands,
-  //     |                          same syntax as the list of output operands
-  //     |
-  //     list of output operands, separated by commas. Each entry consists of  
-  //     a symbolic name enclosed in square brackets, followed by a constraint string, 
-  //     followed by a C expression enclosed in parentheses. 
-  // 
-  //     __"volatile" : here ~~ "don't optimize me away" (??)
-  //    |
-  asm volatile(  "MOV pc, %0\n\t" : /*no outputs*/ : "r" (dw) );
+  // Invoke Tytera's original SysTick_Handler.
+  // Since our SysTick_Handler also calls other subroutines,
+  //  and uses local variables (which may live on the stack),
+  //  we can't simply jump into the original SysTick_Handler anymore.
+  // Instead, call it like a normal subroutine (the magic of Cortex-M),
+  //  then let the compiler-generated epilogue clean up the stack
+  //  and restore whatever the compiler wanted to save.
+  (*(void_func_ptr)(IRQ_ORIGINAL_SYSTICK_HDLR|0x01/*THUMB*/))();
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   
