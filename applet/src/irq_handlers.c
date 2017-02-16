@@ -173,6 +173,7 @@ void SysTick_Handler(void)
 
 #if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight (here, via GPIO, or PWM-from-UART) ?
 
+<<<<<<< HEAD
   // "Wait" until the original firmware turns on the backlight:
   if( ! may_turn_on_backlight ) 
    { // Did the original firmware turn on the backlight ? 
@@ -220,6 +221,19 @@ void SysTick_Handler(void)
          {  intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
                              // lower nibble = brightness when idle, upper nibble = brightness when active.          
          }          
+=======
+  if( IRQ_dwSysTickCounter < 3000/* x 1.5 ms*/ )
+   { dw = IRQ_dwSysTickCounter / 100; // brightness ramps up during init
+     intensity = (dw<9) ? dw : 9;
+     // while demo runs / config being loaded from SPI-Flash . During this time,
+     // global_addl_config.backlight_intensities is invalid, so avoid black screen
+   }
+  else  // not "shortly after power-on", but during normal operation ...
+   {
+     if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
+      {  intensity= 0x09; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
+      }          
+>>>>>>> refs/remotes/travisgoodspeed/master
        
 #    if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
         if( GFX_backlight_on ) 
