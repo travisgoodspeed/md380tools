@@ -39,4 +39,3 @@ void rst_signal_my_call();
 #endif
 
 #endif /* RADIOSTATE_H */
-
