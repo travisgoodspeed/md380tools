@@ -15,6 +15,8 @@ extern "C" {
 
 void f_4101();
 
+uint8_t kb_backlight;
+
 #if defined(FW_D13_020) || defined(FW_S13_020)
 extern uint8_t kb_keycode;
 extern uint8_t kb_keypressed;
