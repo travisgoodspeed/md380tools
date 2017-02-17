@@ -62,13 +62,13 @@ const static wchar_t wt_blunchanged[]       = L"Unchanged";
 const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
-
+const static wchar_t wt_backlight_menu[]    = L"Backlight";
 #ifndef  CONFIG_DIMMED_LIGHT    // want 'dimmed backlight', two adjustable intensities ?
 # define CONFIG_DIMMED_LIGHT 0  // guess not (unless defined AS ONE in config.h)
 #endif
 #if( CONFIG_DIMMED_LIGHT ) // support pulse-width modulated backlight ?
-const static wchar_t wt_bl_intensity_lo[]   = L"Backlt Low";
-const static wchar_t wt_bl_intensity_hi[]   = L"Backlt High";
+const static wchar_t wt_bl_intensity_lo[]   = L"Level Low";
+const static wchar_t wt_bl_intensity_hi[]   = L"Level High";
 #define NUM_BACKLIGHT_INTENSITIES 10 /* number of intensity steps (0..9) for the menu */
 const static wchar_t *wt_bl_intensity[NUM_BACKLIGHT_INTENSITIES] = 
  { L"0 (off)", L"1 (lowest)", L"2", L"3 (medium)", L"4", 
@@ -117,8 +117,8 @@ const static wchar_t wt_button_lone_work[]  = L"Lone wk On/Off";
 const static wchar_t wt_button_1750_hz[]    = L"1750hz Tone";
 const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
-                   	   	   	   	   	   	       0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
-											   0x1f, 0x26, 0x50};
+                                               0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
+                                               0x1f, 0x26, 0x50};
 uint8_t button_selected = 0;
 uint8_t button_function = 0;
 
@@ -250,8 +250,8 @@ uint8_t index_of(uint8_t value, uint8_t arr[], uint8_t len)
     uint8_t i = 0;
     while(i < len)
     {
-    	if (arr[i] == value) return i;
-    	i++;
+        if (arr[i] == value) return i;
+        i++;
     }
 
     return 0;
@@ -910,8 +910,11 @@ void mn_backlight_intens( int intensity ) // common 'menu handler' for all <NUM_
         global_addl_config.backlight_intensities |= ((uint8_t)intensity << 4);
         break;
    }
-  // the upper 4 bits must never be ZERO, to avoid 'complete darkness' of the display when ACTIVE :
-  global_addl_config.backlight_intensities |= 0x10; 
+  // The upper 4 bits must never be ZERO, to avoid 'complete darkness' of the display when ACTIVE .
+  // Because in some radios, the PWM caused audible hum, use max brightness per default:
+  if( !(global_addl_config.backlight_intensities & 0xF0) )
+   {    global_addl_config.backlight_intensities |= 0xF0;
+   }
   cfg_save();
   
 } // end mn_backlight_intens()
@@ -975,83 +978,83 @@ void mn_backlight_hi(void)  // configure HIGH backlight intensity (used when "ac
 #if defined(FW_D13_020) || defined(FW_S13_020)
 void set_sidebutton_function(void)
 {
-	button_function = button_functions[currently_selected_menu_entry];
+    button_function = button_functions[currently_selected_menu_entry];
 
-	switch ( button_selected ) {
-		case 0:
-			top_side_button_pressed_function = button_function;
-			md380_spiflash_write(&button_function, 0x2102, 1);
-			mn_create_single_timed_ack(wt_button_top_press,wt_button_func_set);
-			break;
-		case 1:
-			bottom_side_button_pressed_function = button_function;
-			md380_spiflash_write(&button_function, 0x2104, 1);
-			mn_create_single_timed_ack(wt_button_bot_press,wt_button_func_set);
-			break;
-		case 2:
-			top_side_button_held_function = button_function;
-			md380_spiflash_write(&button_function, 0x2103, 1);
-			mn_create_single_timed_ack(wt_button_top_held,wt_button_func_set);
-			break;
-		case 3:
-			bottom_side_button_held_function = button_function;
-			md380_spiflash_write(&button_function, 0x2105, 1);
-			mn_create_single_timed_ack(wt_button_bot_held,wt_button_func_set);
-			break;
-	}
+    switch ( button_selected ) {
+        case 0:
+            top_side_button_pressed_function = button_function;
+            md380_spiflash_write(&button_function, 0x2102, 1);
+            mn_create_single_timed_ack(wt_button_top_press,wt_button_func_set);
+            break;
+        case 1:
+            bottom_side_button_pressed_function = button_function;
+            md380_spiflash_write(&button_function, 0x2104, 1);
+            mn_create_single_timed_ack(wt_button_bot_press,wt_button_func_set);
+            break;
+        case 2:
+            top_side_button_held_function = button_function;
+            md380_spiflash_write(&button_function, 0x2103, 1);
+            mn_create_single_timed_ack(wt_button_top_held,wt_button_func_set);
+            break;
+        case 3:
+            bottom_side_button_held_function = button_function;
+            md380_spiflash_write(&button_function, 0x2105, 1);
+            mn_create_single_timed_ack(wt_button_bot_held,wt_button_func_set);
+            break;
+    }
 }
 
 void select_sidebutton_function_screen(void)
 {
-	button_selected = currently_selected_menu_entry;
+    button_selected = currently_selected_menu_entry;
 
-	switch ( button_selected ) {
-		case 0:
-			md380_menu_entry_selected = index_of(top_side_button_pressed_function, button_functions,  sizeof(button_functions));
-			mn_submenu_init(wt_button_top_press);
-			break;
-		case 1:
-			md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, button_functions, sizeof(button_functions));
-			mn_submenu_init(wt_button_bot_press);
-			break;
-		case 2:
-			md380_menu_entry_selected = index_of(top_side_button_held_function, button_functions, sizeof(button_functions));
-			mn_submenu_init(wt_button_top_held);
-			break;
-		case 3:
-			md380_menu_entry_selected = index_of(bottom_side_button_held_function, button_functions, sizeof(button_functions));
-			mn_submenu_init(wt_button_bot_held);
-			break;
-	}
+    switch ( button_selected ) {
+        case 0:
+            md380_menu_entry_selected = index_of(top_side_button_pressed_function, button_functions,  sizeof(button_functions));
+            mn_submenu_init(wt_button_top_press);
+            break;
+        case 1:
+            md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, button_functions, sizeof(button_functions));
+            mn_submenu_init(wt_button_bot_press);
+            break;
+        case 2:
+            md380_menu_entry_selected = index_of(top_side_button_held_function, button_functions, sizeof(button_functions));
+            mn_submenu_init(wt_button_top_held);
+            break;
+        case 3:
+            md380_menu_entry_selected = index_of(bottom_side_button_held_function, button_functions, sizeof(button_functions));
+            mn_submenu_init(wt_button_bot_held);
+            break;
+    }
 
 
-	mn_submenu_add(wt_button_unassigned, set_sidebutton_function);
-	mn_submenu_add(wt_button_alert_tone, set_sidebutton_function);
-	mn_submenu_add(wt_button_emerg_on, set_sidebutton_function);
-	mn_submenu_add(wt_button_emerg_off, set_sidebutton_function);
-	mn_submenu_add(wt_button_power, set_sidebutton_function);
-	mn_submenu_add(wt_button_monitor, set_sidebutton_function);
-	mn_submenu_add(wt_button_nuisance, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot1, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot2, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot3, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot4, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot5, set_sidebutton_function);
-	mn_submenu_add(wt_button_ot6, set_sidebutton_function);
-	mn_submenu_add(wt_button_rep_talk, set_sidebutton_function);
-	mn_submenu_add(wt_button_scan, set_sidebutton_function);
-	mn_submenu_add(wt_button_squelch, set_sidebutton_function);
-	mn_submenu_add(wt_button_privacy, set_sidebutton_function);
-	mn_submenu_add(wt_button_vox, set_sidebutton_function);
-	mn_submenu_add(wt_button_zone, set_sidebutton_function);
-	mn_submenu_add(wt_button_zone_tog, set_sidebutton_function);
-	mn_submenu_add(wt_button_bat_ind, set_sidebutton_function);
-	mn_submenu_add(wt_button_man_dial, set_sidebutton_function);
-	mn_submenu_add(wt_button_lone_work, set_sidebutton_function);
-	mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
-	mn_submenu_add(wt_button_bklt_en, set_sidebutton_function);
+    mn_submenu_add(wt_button_unassigned, set_sidebutton_function);
+    mn_submenu_add(wt_button_alert_tone, set_sidebutton_function);
+    mn_submenu_add(wt_button_emerg_on, set_sidebutton_function);
+    mn_submenu_add(wt_button_emerg_off, set_sidebutton_function);
+    mn_submenu_add(wt_button_power, set_sidebutton_function);
+    mn_submenu_add(wt_button_monitor, set_sidebutton_function);
+    mn_submenu_add(wt_button_nuisance, set_sidebutton_function);
+    mn_submenu_add(wt_button_ot1, set_sidebutton_function);
+    mn_submenu_add(wt_button_ot2, set_sidebutton_function);
+    mn_submenu_add(wt_button_ot3, set_sidebutton_function);
+    mn_submenu_add(wt_button_ot4, set_sidebutton_function);
+    mn_submenu_add(wt_button_ot5, set_sidebutton_function);
+    mn_submenu_add(wt_button_ot6, set_sidebutton_function);
+    mn_submenu_add(wt_button_rep_talk, set_sidebutton_function);
+    mn_submenu_add(wt_button_scan, set_sidebutton_function);
+    mn_submenu_add(wt_button_squelch, set_sidebutton_function);
+    mn_submenu_add(wt_button_privacy, set_sidebutton_function);
+    mn_submenu_add(wt_button_vox, set_sidebutton_function);
+    mn_submenu_add(wt_button_zone, set_sidebutton_function);
+    mn_submenu_add(wt_button_zone_tog, set_sidebutton_function);
+    mn_submenu_add(wt_button_bat_ind, set_sidebutton_function);
+    mn_submenu_add(wt_button_man_dial, set_sidebutton_function);
+    mn_submenu_add(wt_button_lone_work, set_sidebutton_function);
+    mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
+    mn_submenu_add(wt_button_bklt_en, set_sidebutton_function);
 
-	mn_submenu_finalize();
+    mn_submenu_finalize();
 }
 #else
 #warning Side Buttons not supported on D02 firmware
@@ -1061,7 +1064,7 @@ void create_menu_entry_sidebutton_screen(void)
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
 
-	md380_menu_entry_selected = 0;
+    md380_menu_entry_selected = 0;
     mn_submenu_init(wt_sidebutton_menu);
 
     mn_submenu_add_98(wt_button_top_press, select_sidebutton_function_screen);
@@ -1069,6 +1072,21 @@ void create_menu_entry_sidebutton_screen(void)
     mn_submenu_add_98(wt_button_top_held, select_sidebutton_function_screen);
     mn_submenu_add_98(wt_button_bot_held, select_sidebutton_function_screen);
 
+    mn_submenu_finalize2();
+#endif
+}
+
+void create_menu_entry_backlight_screen(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    md380_menu_entry_selected = 0;
+    mn_submenu_init(wt_backlight_menu);
+
+#  if( CONFIG_DIMMED_LIGHT )    // *optional* feature since 2017-01-08 - see config.h
+    mn_submenu_add_98(wt_bl_intensity_lo/*item text*/, mn_backlight_lo/*menu handler*/ ); // backlight intensity "low" (used when idle)
+    mn_submenu_add_98(wt_bl_intensity_hi/*item text*/, mn_backlight_hi/*menu handler*/ ); // backlight intensity "high" (used when active)
+#  endif   
+    mn_submenu_add_98(wt_backlight, mn_backlight); // backlight TIMER (longer than Tytera's 5/10/15 seconds)
     mn_submenu_finalize2();
 #endif
 }
@@ -1281,13 +1299,8 @@ void create_menu_entry_addl_functions_screen(void)
     
     mn_submenu_add_98(wt_config_reset, mn_config_reset);
 
-#  if( CONFIG_DIMMED_LIGHT )    // *optional* feature since 2017-01-08 - see config.h
-    mn_submenu_add_98(wt_bl_intensity_lo/*item text*/, mn_backlight_lo/*menu handler*/ ); // backlight intensity "low" (used when idle)
-    mn_submenu_add_98(wt_bl_intensity_hi/*item text*/, mn_backlight_hi/*menu handler*/ ); // backlight intensity "high" (used when active)
-#  endif   
-
-    mn_submenu_add_98(wt_backlight, mn_backlight); // backlight TIMER (longer than Tytera's 5/10/15 seconds)
-    
+    mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
+   
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
@@ -1350,11 +1363,11 @@ void *main_menu_hook(void *menu){
     menustruct=(void*) *((int*)menu + 2);
 
     printf("Menu struct: @0x%08x\n",
-	   menustruct);
+       menustruct);
     printf("Item %5d/%5d selected. %s\n",
-	   (int) *((unsigned short*) (menustruct+0x42)),
-	   (int) *((unsigned short*)menustruct),
-	   "test");
+       (int) *((unsigned short*) (menustruct+0x42)),
+       (int) *((unsigned short*)menustruct),
+       "test");
 
 
     //printhex(*((int*) menu+2),128);
