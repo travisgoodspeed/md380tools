@@ -173,7 +173,6 @@ void SysTick_Handler(void)
 
 #if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight (here, via GPIO, or PWM-from-UART) ?
 
-<<<<<<< HEAD
   // "Wait" until the original firmware turns on the backlight:
   if( ! may_turn_on_backlight ) 
    { // Did the original firmware turn on the backlight ? 
@@ -221,19 +220,6 @@ void SysTick_Handler(void)
          {  intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
                              // lower nibble = brightness when idle, upper nibble = brightness when active.          
          }          
-=======
-  if( IRQ_dwSysTickCounter < 3000/* x 1.5 ms*/ )
-   { dw = IRQ_dwSysTickCounter / 100; // brightness ramps up during init
-     intensity = (dw<9) ? dw : 9;
-     // while demo runs / config being loaded from SPI-Flash . During this time,
-     // global_addl_config.backlight_intensities is invalid, so avoid black screen
-   }
-  else  // not "shortly after power-on", but during normal operation ...
-   {
-     if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
-      {  intensity= 0x09; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
-      }          
->>>>>>> refs/remotes/travisgoodspeed/master
        
 #    if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
         if( GFX_backlight_on ) 
@@ -259,7 +245,7 @@ void SysTick_Handler(void)
      // > the TX pin is at high level.   (YHF: .. which would turn the backlight ON)
      // Thus, when sending NOTHING, the backlight will have MAXIMUM brightness,
      //  -> UART transmit data register must be continuously 'flooded' with data.
-     if( intensity == 0 )  // backlight shall be COMPLETELY DARK ->
+     if( intensity == 0 || kb_backlight )  // backlight shall be COMPLETELY DARK ->
       { // Reconfigure PC6 as 'GPIO' to turn the backlight COMPLETELY off .
         // Two bits in "MODER" per pin : 00bin for GPI,  01bin for GPO, 10bin for 'alternate function mode'.
         GPIOC->MODER = (GPIOC->MODER & ~( 3 << (6/*pin*/ * 2))) |  ( 1 << (6/*pin*/ * 2) ) ;
@@ -267,7 +253,7 @@ void SysTick_Handler(void)
         // (if it happens, no big problem, the NEXT SysTick-interrupt will put things right again)
         GPIOC->BSRRH = (1<<6);  // turn BL off (completely, as GPIO, no PWM)
       }  
-     else // backlight not one of the 'very dark' states, so configure PC6 as UART_TXD and send PWM pattern:
+     else // backlight not 'completely dark', so configure PC6 as UART_TXD and send PWM pattern:
       { GPIOC->MODER = (GPIOC->MODER & ~( 3 << (6/*pin*/ * 2))) |  ( 2 << (6/*pin*/ * 2) ); // PC6 now configured as UART6_TX again
         switch( intensity ) // which UART-data to send as PWM ?
          { case 1 : USART6->DR = 0x00; // low intensity: backlight only driven by stopbit.

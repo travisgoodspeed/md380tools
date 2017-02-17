@@ -9,9 +9,6 @@
 # define CONFIG_DIMMED_LIGHT 0  // guess not (otherwise CONFIG_DIMMED_LIGHT would have been defined AS ONE in config.h)
 #endif
 
-#ifndef  BYTE
-# define BYTE uint8_t /* formerly kown as 'unsigned char' (for stoneage C compilers). 'uint8_t' was unknwon here. */
-#endif
 
 // Offsets into the STM32's vector table. These may be defined somewhere else, but WB didn't find anything like this.
 // See also: description of 'tested vectors' at www.qsl.net/dl4yhf/RT3/md380_fw.html#vector_table  .
@@ -44,6 +41,5 @@
 extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
 //   (note: GFX_backlight_on is useless, as long as no-one calls gfx.c : 
 
-void IRQ_Init(void); // details in the implementaion ( irq_handlers.c )
-
+extern uint8_t kb_backlight; // flag to disable the backlight via sidekey (in keyb.c)
 
