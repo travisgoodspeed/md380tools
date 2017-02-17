@@ -20,6 +20,7 @@ int rst_src = 0 ;
 int rst_dst = 0 ;
 int rst_grp = 0 ;
 int rst_mycall = 0 ;
+uint8_t rst_flco = 0;
 
 int rst_hdr_sap ;
 int rst_hdr_src ;
@@ -43,6 +44,7 @@ void rst_voice_lc_header(lc_t *lc)
     if( !rst_voice_active || rst_src != src || rst_dst != dst) {
         rst_src = src ;
         rst_dst = dst ;
+        rst_flco = flco ;
 
         PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
 
@@ -60,7 +62,7 @@ void rst_voice_lc_header(lc_t *lc)
         LOGR("cs %c %d->%d\n", grp_c, src, dst );
 
         rst_voice_active = 1 ;
-	rx_voice = 1 ;				// flag for new voice call received    
+        rx_voice = 1 ;				// flag for new voice call received    
     }
 }
 
@@ -88,7 +90,7 @@ void rst_term_with_lc(lc_t *lc)
         LOGR("ce %c %d->%d\n", grp_c, src, dst );
 
         rst_voice_active = 0 ;
-	rx_voice = 0 ;				// flag for voice call ended
+        rx_voice = 0 ;				// flag for voice call ended
     }
 }
 

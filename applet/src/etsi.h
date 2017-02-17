@@ -150,8 +150,13 @@ struct TAContext
   uint8_t length;
   uint8_t blocks;
   uint8_t marked;
+  uint8_t displayed;
+  uint32_t src;
   char text[28];
 };
+
+struct TAContext taContext;
+extern struct TAContext talkerAlias;
 
 #ifdef __cplusplus
 }

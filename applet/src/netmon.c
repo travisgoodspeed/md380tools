@@ -21,10 +21,13 @@
 #include "codeplug.h"
 #include "unclear.h"
 #include "usersdb.h"
+#include "etsi.h"
 
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
 uint8_t rx_voice = 0 ;
+uint8_t call_start_state = 0;
+uint8_t previous_call_state = 0;
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -256,37 +259,48 @@ void netmon4_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     lastheard_draw_poll();
-    
+
     int src;
     static int lh_cnt = 0 ;			// lastheard line counter 
 
     if ( nm_started == 0 ) {
-	lastheard_printf("Netmon 4 - Lastheard ====\n");
-	nm_started = 1;				// flag for restart of LH list
-	lh_cnt = 1;				// reset lh counter 
+        lastheard_printf("Netmon 4 - Lastheard ====\n");
+        nm_started = 1;				// flag for restart of LH list
+        lh_cnt = 1;				// reset lh counter 
     }	
 
     char mode = ' ' ;
+    if( rst_voice_active != previous_call_state && rst_voice_active)
+    {
+        call_start_state = 1;
+        talkerAlias.displayed = 0;
+    }
+    previous_call_state = rst_voice_active;
+
     if( rst_voice_active ) {
         if( rst_mycall ) {
             mode = '*' ; // on my tg            
         } else {
             mode = '!' ; // on other tg
         }
-   src = rst_src;
-   user_t usr;
+        src = rst_src;
+        user_t usr;
    
-
-    if( ( src != 0 ) && ( rx_voice == 1 ) ) {
-        //lastheard_printf("%d",lh_cnt++);
-        print_time_hook() ;
-        if( usr_find_by_dmrid(&usr, src) == 0 ) {
-            lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
-        } else {
-            lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
+        if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
+            call_start_state = 0;
+            //lastheard_printf("%d",lh_cnt++);
+            print_time_hook() ;
+            if( usr_find_by_dmrid(&usr, src) == 0 ) {
+                lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
+            } else {
+                lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
+            }
         }
-	rx_voice = 0 ;				// call handled, wait until new voice call status received
-     }
+        if ( talkerAlias.displayed != 1 && talkerAlias.length > 0 )
+        {
+            talkerAlias.displayed = 1;
+            lastheard_printf("TA: %s\n",talkerAlias.text);
+        }
     }
 #else
     lastheard_printf("No lastheard available\n");    
