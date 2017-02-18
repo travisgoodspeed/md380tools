@@ -44,6 +44,8 @@
 extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
 //   (note: GFX_backlight_on is useless, as long as no-one calls gfx.c : 
 
+extern uint8_t kb_backlight;
+
 void IRQ_Init(void); // details in the implementaion ( irq_handlers.c )
 
 

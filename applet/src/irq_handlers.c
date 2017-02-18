@@ -145,7 +145,7 @@ void SysTick_Handler(void)
   
 {
   uint32_t dw;
-#if( CONFIG_DIMMED_LIGHT ) // simple GPIO "bit banging", min PWM pulse with = one 'SysTick' period. 
+#if( CONFIG_DIMMED_LIGHT ) // simple GPIO "bit banging", min PWM pulse with = one 'SysTick' period.
   // [in] global_addl_config.backlight_intensities : can be edited (sort of..) in applet/src/menu.c
   uint8_t intensity = global_addl_config.backlight_intensities; // bits 3..0 for IDLE, bits 7..4 for ACTIVE intensity
 #endif  // CONFIG_DIMMED_LIGHT ?
@@ -189,7 +189,7 @@ void SysTick_Handler(void)
      // > the TX pin is at high level.   (YHF: .. which would turn the backlight ON)
      // Thus, when sending NOTHING, the backlight would have MAXIMUM brightness,
      //  -> UART transmit data register must be continuously 'flooded' with data.
-     if( intensity == 0 )  // backlight shall be COMPLETELY DARK ->
+     if( intensity == 0 || kb_backlight)  // backlight shall be COMPLETELY DARK ->
       { // Reconfigure PC6 as 'GPIO' to turn the backlight COMPLETELY off .
         // Two bits in "MODER" per pin : 00bin for GPI,  01bin for GPO, 10bin for 'alternate function mode'.
         GPIOC->MODER = (GPIOC->MODER & ~( 3 << (6/*pin*/ * 2))) |  ( 1 << (6/*pin*/ * 2) ) ;
