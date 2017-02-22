@@ -6,10 +6,11 @@
 #define DEBUG
 
 #include "etsi.h"
-
 #include "debug.h"
 
 struct TAContext taContext;
+struct TAContext talkerAlias;
+
 
 inline const char* get_flco_str( lc_t *lc )
 {
@@ -66,14 +67,19 @@ void dump_full_lc( lc_t *lc )
     
     PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
 
+    if (flco == 0 && fid == 0x00 && taContext.src != get_adr(lc->src))
+    {
+        memset(&taContext, 0, sizeof(taContext)); //Clear TA context
+        memset(&talkerAlias, 0, sizeof(talkerAlias)); //Clear TA context
+        taContext.src = (uint32_t)get_adr(lc->src);
+    }
+
     //Read TA Header from full LC
     if (flco == 4 && fid == 0x00)
     {
-        memset(&taContext, 0, sizeof(taContext)); //Clear TA context
         struct TAHeader* header = (struct TAHeader*)lc; //Copy LC over TA struct
         taContext.format = (header->options >> 6) & 0x03;
         taContext.length = (header->options >> 1) & 0x1f;
-
         //Read first 6 bytes of TA
         char* destination = taContext.text;
         memcpy(destination, header->text, 6);
@@ -81,10 +87,10 @@ void dump_full_lc( lc_t *lc )
         //Calculate amount of TA blocks
         const uint8_t table[] =
         {
-            7, 15, 23, 32,
+            7, 15, 23, 31,
             6, 13, 20, 27,
             6, 13, 20, 27,
-            3,  7, 11, 15
+            3,  6, 10, 13
         };
         uint8_t length = taContext.length;
         const uint8_t* row = table + taContext.format * 4;
@@ -100,11 +106,16 @@ void dump_full_lc( lc_t *lc )
         {
             if (taContext.format == 1 || taContext.format == 2)
             {
-                PRINT("TA (%d): %s\n", taContext.length, taContext.text);
+                PRINT("TA %d (%d): %s\n", taContext.src, taContext.length, taContext.text);
+                if (talkerAlias.src != taContext.src)
+                {
+                    talkerAlias = taContext;
+                }
             }
             else
             {
                 PRINT("TA Unsupported format: %s", get_ta_type_str(taContext.format));
+                talkerAlias.length = 0;
             }
         }
     }
@@ -125,11 +136,16 @@ void dump_full_lc( lc_t *lc )
         {
             if (taContext.format == 1 || taContext.format == 2)
             {
-                PRINT("TA (%d): %s\n", taContext.length, taContext.text);
+                PRINT("TA %d (%d): %s\n", taContext.src, taContext.length, taContext.text);
+                if (talkerAlias.src != taContext.src)
+                {
+                    talkerAlias = taContext;
+                }
             }
             else
             {
                 PRINT("TA Unsupported format: %s", get_ta_type_str(taContext.format));
+                talkerAlias.length = 0;
             }
         }
     }
