@@ -1010,19 +1010,20 @@ void select_sidebutton_function_screen(void)
 
     switch ( button_selected ) {
         case 0:
-            md380_menu_entry_selected = index_of(top_side_button_pressed_function, button_functions,  sizeof(button_functions));
+            md380_menu_entry_selected = index_of(top_side_button_pressed_function, (uint8_t*)button_functions,  sizeof(button_functions)); 
+            // cast to (uint8_t*) to eliminate a handful of 'const' warnings
             mn_submenu_init(wt_button_top_press);
             break;
         case 1:
-            md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, button_functions, sizeof(button_functions));
+            md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, (uint8_t*)button_functions, sizeof(button_functions));
             mn_submenu_init(wt_button_bot_press);
             break;
         case 2:
-            md380_menu_entry_selected = index_of(top_side_button_held_function, button_functions, sizeof(button_functions));
+            md380_menu_entry_selected = index_of(top_side_button_held_function, (uint8_t*)button_functions, sizeof(button_functions));
             mn_submenu_init(wt_button_top_held);
             break;
         case 3:
-            md380_menu_entry_selected = index_of(bottom_side_button_held_function, button_functions, sizeof(button_functions));
+            md380_menu_entry_selected = index_of(bottom_side_button_held_function, (uint8_t*)button_functions, sizeof(button_functions));
             mn_submenu_init(wt_button_bot_held);
             break;
     }

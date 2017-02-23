@@ -63,7 +63,7 @@ typedef void (*void_func_ptr)(void);
 #define PINPOS_E_RX 0 /* pin position of the green RX LED within GPIO_E */
 #define LED_GREEN_ON  GPIOE->BSRRL=(1<<PINPOS_E_RX) /* green LED on  */
 #define LED_GREEN_OFF GPIOE->BSRRH=(1<<PINPOS_E_RX) /* green LED off */
-#define IS_RX_LED_ON (GPIOE->ODR&(1<<PINPOS_E_RX)!=0) /* poll green RX LED*/
+#define IS_RX_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_RX))!=0) /* poll green RX LED*/
 #define LED_RED_ON    GPIOE->BSRRL=(1<<PINPOS_E_TX) /* red LED on  */
 #define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* red LED off */
 
@@ -256,7 +256,7 @@ static void InitDimming(void)
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
 static void BeepStart( int freq_Hz, int volume )
-  // Programs Mr. Beep's output on "PC8") for a given tone frequency,
+  // Programs Mr. Beep's output on "PC8" for a given tone frequency,
   //   with an attempt to keep the volume at a tolerable level.
   // ( In contrast to the schematics, Mr Beep's output is not
   //   volume-controllable by the analog volume pot.
@@ -404,9 +404,9 @@ static void BeepReset(void)
   pTIM8->CCER &= ~TIM_CCER_CC3E; // first step in TIM_OC3Init() !
   pTIM8->CCMR2 = 0x68; // CCMR2 register value as in the original FW
   pTIM8->CCER |= TIM_CCER_CC3E;  // Capture/Compare 3 output enable
-  pTIM8->EGR = TIM_EGR_UG; // "..must initialize all the registers by setting the UG bit.."
-  pTIM8->CR1 = 0x81; // original configuration of TIM8_CR1 as in the original FW
-  pTIM8->CCR3= 0x61; // quasi-analog output (after lowpass filtering) to mid level
+  pTIM8->EGR  = TIM_EGR_UG; // "..must initialize all the registers by setting the UG bit.."
+  pTIM8->CR1  = 0x81; // original configuration of TIM8_CR1 as in the original FW
+  pTIM8->CCR3 = 0x61; // quasi-analog output (after lowpass filtering) to mid level
   pTIM8->BDTR = TIM_BDTR_MOE; // "Main Output Enable" for the PWM (0x8000)
 
 } // end BeepReset()
@@ -433,7 +433,7 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
   if( u8ASCII>='a' && u8ASCII<='z' ) // convert lower to UPPER case
    {  u8ASCII -= ('a'-'A');
    }
-  if( u8ASCII>'z' )  // no 'special' characters in the small table !   
+  if( u8ASCII>'Z' )  // no 'special' characters in the small table !   
    { u8ASCII = '?';  // send question mark instead
    }
   morse_code = Morse_table[ u8ASCII - 32 ];
@@ -651,8 +651,6 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            // But in the meantime, the receiver's squelch may have opened !
            // In that case, do NOT turn the audio PA off.
            // But how to find out if the receiver squelch is OPEN ?
-           //  - there's "rx_voice" in radiostate.h ,
-           //  - there's "rst_voice_active", 
            if( IS_RX_LED_ON ) 
             { // guess the RX-squelch is open now...
               //  so skip shutting down the audio PA:
@@ -665,11 +663,11 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
             }  
            break;
 
-        case MORSE_GEN_STOP_ANTI_POP : // speaker has been disconnected from audio PA
+        case MORSE_GEN_STOP_ANTI_POP: // speaker has been disconnected from audio PA
            AUDIO_AMP_OFF;  // .. so turn off the audio PA without a 'pop'
            pMorseGen->u8State = MORSE_GEN_STOP_AUDIO_PA;
            break;
-        case MORSE_GEN_STOP_AUDIO_PA : // audio PA has been turned off (completely)
+        case MORSE_GEN_STOP_AUDIO_PA: // audio PA has been turned off (completely)
            pMorseGen->u8State = MORSE_GEN_PASSIVE;
            break;
         default: // oops..
@@ -712,10 +710,12 @@ void SysTick_Handler(void)
    { // Init whatever we need to initialize. This is ugly, but eliminates
      // the need to hook into a bunch of functions in the original firmware.
 
-#   if( CONFIG_MORSE_OUTPUT ) 
-     // The C runtime should have cleared global variable, 
-     // but don't assume anything about the calling sequence. Thus:
+#   if( CONFIG_MORSE_OUTPUT ) // Initial settings for the Morse generator.
+     // Will be in use as long as there's nothing in global_addl_config :
      morse_generator.u8State = MORSE_GEN_PASSIVE; // initial state
+     morse_generator.u16DotLength = 40; // default for 20 WPM
+     morse_generator.u16Freq  = 650; // configurable tone frequency in Hertz
+     morse_generator.u8Volume = 25;  // volume (-> PWM duty cycle) in percent 
 #   endif // CONFIG_MORSE_OUTPUT ? 
 
    } // end if < 1st call of SysTick_Handler >
@@ -762,7 +762,7 @@ void SysTick_Handler(void)
       { dw = oldSysTickCounter / 100; // brightness ramps up during init
         intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
 
-#      if( 1 && CONFIG_MORSE_OUTPUT )  // delayed start of the "Morse demo" ?
+#      if( 0 && CONFIG_MORSE_OUTPUT )  // delayed start of the "Morse demo" ?
         if( oldSysTickCounter == 3000 )
          { // TEST: send something in Morse code immediately after power-on ?
            MorseGen_AppendString( "cq test 0123456789", 0/*no 'MaxLen'*/ );
@@ -774,7 +774,7 @@ void SysTick_Handler(void)
       {
         if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
          {  intensity= 0x99; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
-                             // lower nibble = brightness when idle, upper nibble = brightness when active.          
+            // lower nibble = brightness when idle, upper nibble = brightness when active.          
          }          
        
 #    if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :

@@ -267,6 +267,7 @@ void netmon4_update()
         lastheard_printf("Netmon 4 - Lastheard ====\n");
         nm_started = 1;				// flag for restart of LH list
         lh_cnt = 1;				// reset lh counter 
+        (void)lh_cnt;         // defeat warning: 'set but not used'
     }	
 
     char mode = ' ' ;

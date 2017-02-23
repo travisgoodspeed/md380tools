@@ -23,6 +23,7 @@ void lastheard_printf(const char *fmt, ...);
 
 void lastheard_dump_dmesg();
 void lastheard_clear();
+void lastheard_putch( char c ); // avoid warning: implicit declaration of function, called from gfx.c 
 
 void lastheard_redraw();
 void lastheard_draw_poll();
