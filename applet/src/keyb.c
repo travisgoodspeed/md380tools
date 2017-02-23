@@ -22,6 +22,11 @@
 
 #include <stdint.h>
 
+uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
+// Other keyboard-related variables belong to the original firmware,
+// e.g. kb_keypressed, address defined in symbols_d13.020 (etc).
+
+
 // Values for kp
 // 1 = pressed
 // 2 = release within timeout
@@ -194,7 +199,11 @@ void evaluate_sidekey ( int button_function)							//This is where new functions
 	switch ( button_function ) {										//We will start at 0x50 to avoid conflicting with any added functions by Tytera.
 		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
 		{
-			GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+			#if (CONFIG_DIMMED_LIGHT) // If backlight dimmer is enabled, we will use that instead.
+				kb_backlight ^= 0x01; // flag for SysTick_Handler() to turn backlight off completely
+			#else
+				GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+            #endif
 			reset_backlight();
 			break;
 		}
