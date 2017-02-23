@@ -773,7 +773,7 @@ void SysTick_Handler(void)
      else  // not "shortly after power-on", but during normal operation ...
       {
         if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
-         {  intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
+         {  intensity= 0x99; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
                              // lower nibble = brightness when idle, upper nibble = brightness when active.          
          }          
        
