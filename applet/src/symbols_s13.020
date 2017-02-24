@@ -6,7 +6,7 @@ md380_GPIO_ResetBits                     = 0x0802baeb;
 
 
 
-md380_create_main_meny_entry             = 0x0800c189 ;
+md380_create_main_menu_entry             = 0x0800c189 ;
 md380_create_menu_entry                  = 0x0800c72f ;
 gfx_drawtext                             = 0x0800def7 ;
 draw_datetime_row                        = 0x0800df1b ;
@@ -145,6 +145,7 @@ event2_mbox_poi_beep                     = 0x2001e750 ;
 bp_freq                                  = 0x2001e794 ;
 md380_blockadr                           = 0x2001e828 ;
 md380_packetlen                          = 0x2001e82c ;
+m_cntr2				        = 0x2001e844;
 q_timer_1                                = 0x2001e87e ;
 kb_top_side_key_press_time				 = 0x2001e884 ;
 kb_bot_side_key_press_time				 = 0x2001e886 ;

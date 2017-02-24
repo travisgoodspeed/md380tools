@@ -16,6 +16,7 @@
 #include "console.h"      // defines option CONFIG_DIMMED_LIGHT (0 or 1) since 2017-01-07
 #include "netmon.h"
 #include "debug.h"
+#include "etsi.h"		// 2017-02-18 added for talker alias usage
 
 #include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
 
@@ -192,8 +193,11 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-void print_time_hook(void)
+void print_time_hook(char *log)
 {
+    if( is_netmon_visible() ) {
+        return;
+    }
     wchar_t wide_time[9];
 
     RTC_TimeTypeDef RTC_TimeStruct;
@@ -209,7 +213,13 @@ void print_time_hook(void)
     for (int i = 0; i < 9; i++) {
         if( wide_time[i] == '\0' )
             break;
-	lastheard_putch(wide_time[i]);
+	if ( log == 'l' ) {
+		lastheard_putch(wide_time[i]);
+	} else if ( log == 'c' ) {
+		clog_putch(wide_time[i]);
+	} else if ( log == 's' ) {
+		slog_putch(wide_time[i]);
+	}
     }
 }
 
@@ -222,6 +232,10 @@ void print_ant_sym_hook(char *bmp, int x, int y)
 #ifdef CONFIG_GRAPHICS
     gfx_drawbmp(bmp, x, y);
     draw_eye_opt();
+	//if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )				// 2017-02-19 show talker alias if option selected and rcvd valid alias
+	//	{
+	//	draw_rx_screen(0xff8032);								// 2017-02-18 redraw userinfo when valid talker alias rcvd
+	//	}
 #endif
 }
 
