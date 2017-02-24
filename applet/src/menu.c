@@ -24,6 +24,7 @@
 #include "util.h"
 #include "printf.h"
 #include "keyb.h"
+#include "codeplug.h"
 
 #include "config.h"  // need to know CONFIG_DIMMED_LIGHT (defined in config.h since 2017-01-03)
 
@@ -52,6 +53,7 @@ const static wchar_t wt_datef_alt[]         = L"Alt. Status";
 const static wchar_t wt_promtg[]            = L"Promiscuous";
 const static wchar_t wt_edit[]              = L"Edit";
 const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
+const static wchar_t wt_set_tg_id[]       = L"Set Talkgroup";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
@@ -1271,6 +1273,98 @@ void create_menu_entry_edit_dmr_id_screen(void)
 #endif
 }
 
+void create_menu_entry_set_tg_screen_store(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    uint32_t new_tx_id = 0;
+    wchar_t *bf;
+
+#if 0
+    printf("your enter: ");
+    printhex2((char *) md380_menu_edit_buf, 14);
+    printf("\n");
+#endif
+
+    bf = md380_menu_edit_buf;
+    while (*bf != 0) {
+        new_tx_id *= 10;
+        new_tx_id += (*bf++) - '0';
+    }
+
+    if ( new_tx_id > 0xffffff ) {
+        return;
+    }
+
+#if 0
+    printf("\n%d\n", new_tx_id);
+#endif
+
+    contact.id_l = new_tx_id & 0xFF ;
+    contact.id_m = (new_tx_id>>8) & 0xFF ;
+    contact.id_h = (new_tx_id>>16) & 0xFF ;
+    contact.type = CONTACT_GROUP ;
+
+    extern void draw_zone_channel(); // TODO.
+    draw_zone_channel();
+
+#ifdef CONFIG_MENU
+    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
+#endif
+#endif
+}
+
+void create_menu_entry_set_tg_screen(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+	menu_t *menu_mem;
+	uint8_t i;
+	uint8_t *p;
+	uint32_t nchars;
+	int current_tg = 0;
+
+	md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
+	mn_editbuffer_poi = md380_menu_edit_buf;
+
+
+
+	// clear return buffer //  see 0x08012a98
+	// TODO: is wchar_t (16 bits))
+	for (i = 0; i < 0x11; i++) {
+		p = (uint8_t *) mn_editbuffer_poi;
+		p = p + i;
+		*p = 0;
+	}
+	//extern int rst_dst ;
+	current_tg = (int) contact.id_h ;
+    current_tg = (current_tg<<8) + (int) contact.id_m;
+    current_tg = (current_tg<<8) + (int) contact.id_l;
+
+	nchars = uli2w(current_tg, md380_menu_edit_buf);
+#if 0
+    printf("\ncreate_menu_entry_set_tg_screen %x %d \n", md380_menu_edit_buf, nchars);
+    printhex2((char *) md380_menu_edit_buf, 14);
+    printf("\n");
+#endif
+
+    md380_menu_0x2001d3ed = 8; // max char
+    md380_menu_0x2001d3ee = nchars; //  startpos cursor
+    md380_menu_0x2001d3ef = nchars; //  startpos cursor
+    md380_menu_0x2001d3f0 = 3; // 3 = numerical input
+    md380_menu_0x2001d3f1 = 0;
+    md380_menu_0x2001d3f4 = 0;
+    menu_mem = get_menu_stackpoi();
+    menu_mem->menu_title = wt_set_tg_id;
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->numberof_menu_entries = 1;
+    menu_mem->unknown_00 = 0;
+    menu_mem->unknown_01 = 0;
+
+#ifdef CONFIG_MENU
+    md380_create_menu_entry(md380_menu_id, wt_set_tg_id, MKTHUMB(create_menu_entry_set_tg_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
+#endif
+#endif
+}
+
 void create_menu_entry_addl_functions_screen(void)
 {
     mn_submenu_init(wt_addl_func);
@@ -1293,6 +1387,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
     mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
+    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
