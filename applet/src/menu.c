@@ -1307,6 +1307,9 @@ void create_menu_entry_set_tg_screen_store(void)
     extern void draw_zone_channel(); // TODO.
     draw_zone_channel();
 
+    md380_menu_id = md380_menu_id - 1;
+    md380_menu_depth = md380_menu_depth - 1;
+
 #ifdef CONFIG_MENU
     md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
 #endif
