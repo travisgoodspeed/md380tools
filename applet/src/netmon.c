@@ -44,7 +44,15 @@ int progress = 0 ;
 #warning should be symbols, not sure if it is worth the effort
 #endif
 /* uint16_t *cntr2 = (void*)0x2001e844 ;*/
-extern uint16_t m_cntr2 ;
+
+#if defined(FW_D13_020) || defined(FW_S13_020)	
+    extern uint16_t m_cntr2 ;
+#endif
+
+#if defined(FW_D02_032)
+uint8_t gui_opmode3 = 0xFF ;
+uint16_t m_cntr2 = 0x00;
+#endif
     
 // mode2
 // 1 idle
@@ -102,15 +110,11 @@ void print_vce()
 
 void print_smeter()
 {
-#if defined(FW_D13_020) || defined(FW_S13_020)		
+#if defined(FW_D13_020) || defined(FW_S13_020)	
     extern uint8_t smeter_rssi ;
     con_printf("rssi:%d\n", smeter_rssi );
 #endif
 }
-
-#if defined(FW_D02_032)
-uint8_t gui_opmode3 = 0xFF ;
-#endif
 
 void netmon1_update()
 {
