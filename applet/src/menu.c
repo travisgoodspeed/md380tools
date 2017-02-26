@@ -1239,7 +1239,7 @@ void create_menu_entry_edit_dmr_id_screen(void)
 
 
 
-    // clear retrun buffer //  see 0x08012a98
+    // clear return buffer //  see 0x08012a98
     // TODO: is wchar_t (16 bits))
     for (i = 0; i < 0x11; i++) {
         p = (uint8_t *) mn_editbuffer_poi;
@@ -1304,6 +1304,9 @@ void create_menu_entry_set_tg_screen_store(void)
     contact.id_h = (new_tx_id>>16) & 0xFF ;
     contact.type = CONTACT_GROUP ;
 
+    wchar_t *p = (void*)contact.name ;
+    snprintfw( p, 16, "TG %d*", new_tx_id );
+
     extern void draw_zone_channel(); // TODO.
     draw_zone_channel();
 
@@ -1337,7 +1340,7 @@ void create_menu_entry_set_tg_screen(void)
 		p = p + i;
 		*p = 0;
 	}
-	//extern int rst_dst ;
+	//load current tg into edit buffer ;
 	current_tg = (int) contact.id_h ;
     current_tg = (current_tg<<8) + (int) contact.id_m;
     current_tg = (current_tg<<8) + (int) contact.id_l;
