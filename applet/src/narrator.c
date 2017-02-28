@@ -57,10 +57,13 @@ static void report_menu_entry(T_Narrator *pNarrator);
 //---------------------------------------------------------------------------
 void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
   // Assembles text for output in CW (voice will not fit into ROM).
-  // If this 'narrator' tells a long story, or just a verbose info,
-  // can be configured in the 
+  // If this 'narrator' tells a long story, or just a verbose info, etc,
+  // can be configured in the MD380Tools menu under 'Morse output'.
+  // Even if NOT enabled in that menu, the op can let the narrator talk
+  // by pressing one of the programmable buttons (see menu.c),
+  // which then calls narrator_start_talking() - the name speaks for itself.
   //
-  // Periodically called from rtc_timer.c::f_4225_hook()
+  // narrate() is periodically called from rtc_timer.c::f_4225_hook()
   //      and possibly other functions (time will tell..),
   //      whenever a change in gui_opmode_X, etc, etc .
   // This appeared to be a good place because it should be safe
@@ -145,6 +148,35 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
 } // end narrate()
 
 //---------------------------------------------------------------------------
+void narrator_start_talking(void)
+{ // Lets Mr Narrator 'talk' (with the help of Sam Morse and Mr Beep),
+  // but -unlike narrate()- will talk even if 'Morse output' is NOT enabled
+  // in the MD380Tools menu. Called from keyb.c via programmable sidekey.
+  // This feature is intended for visually impaired ops who don't want
+  // a radio that starts beeping whenever the channel knob is turned,
+  // or a cursor key pressed in the menu.  In other words, "talk on request".
+  T_Narrator *pNarrator = &Narrator;
+
+  MorseGen_ClearTxBuffer(); // stop telling old storys
+
+#if defined(FW_D13_020) || defined(FW_S13_020)
+  pNarrator->channel_number = channel_num;
+#else
+  pNarrator->channel_number = read_channel_switch(); // read the current channel from rotary switch
+#endif 
+
+  if( gui_opmode2 == OPM2_MENU ) 
+   {   // guess we're in the menu so start talking about it :
+     report_menu_entry( pNarrator );  
+   }
+  else // we're not in the menu so talk about channel and (maybe) zone...
+   { report_channel( pNarrator );
+   }
+
+
+} // end narrator_start_talking()
+
+//---------------------------------------------------------------------------
 static void report_channel(T_Narrator *pNarrator)
 {
   char sz20Temp[24];
@@ -159,6 +191,9 @@ static void report_channel(T_Narrator *pNarrator)
      // 'channel_name' [at 0x2001e1f4] is referenced.  
      // This was also NOT declared in any header; now it's in narrator.h .
      MorseGen_AppendWideString( channel_name, 16/*maxchars*/ );
+     // FIXME: When switching to an 'Unprogrammed' channel,
+     //  channel_name isn't 'Unprogrammed' but *UNCHANGED* !
+     //  (so sends the name of the last 'existing' channel)
    }
   else // not verbose but short: don't report the NAME
    {   // but the shortest possible channel NUMBER :

@@ -200,7 +200,6 @@ void evaluate_sidekey ( int button_function) //This is where new functions for s
 {
   switch ( button_function ) {  //We will start at 0x50 to avoid conflicting with any added functions by Tytera.
     case 0x50 :                 //Toggle backlight enable pin to input/output. Disables backlight completely.
-    {
       #if (CONFIG_DIMMED_LIGHT) // If backlight dimmer is enabled, we will use that instead.
         kb_backlight ^= 0x01;   // flag for SysTick_Handler() to turn backlight off completely
       #else
@@ -208,12 +207,14 @@ void evaluate_sidekey ( int button_function) //This is where new functions for s
       #endif
       reset_backlight();
       break;
-    }
     case 0x51 :
-    {
       create_menu_entry_set_tg_screen();
-    }
-
+      break;
+#  if( CONFIG_MORSE_OUTPUT )    // optional feature - see config.h 
+    case 0x52 : // starts the 'Morse narrator' via programmable button ("on request")
+      narrator_start_talking();
+      break;
+#  endif
     default:
       return;
   }

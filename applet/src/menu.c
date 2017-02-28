@@ -72,7 +72,7 @@ const static wchar_t wt_backlight_menu[]    = L"Backlight";
 #ifndef  CONFIG_MORSE_OUTPUT   // Morse output for visually impaired hams ?
 # define CONFIG_MORSE_OUTPUT 0 // only if defined AS ONE in config.h
 #endif
-#if( CONFIG_DIMMED_LIGHT ) // support pulse-width modulated backlight ?
+#if( CONFIG_DIMMED_LIGHT )
 const static wchar_t wt_bl_intensity_lo[]   = L"Level Low";
 const static wchar_t wt_bl_intensity_hi[]   = L"Level High";
 #define NUM_BACKLIGHT_INTENSITIES 10 /* number of intensity steps (0..9) for the menu */
@@ -123,9 +123,16 @@ const static wchar_t wt_button_lone_work[]  = L"Lone wk On/Off";
 const static wchar_t wt_button_1750_hz[]    = L"1750hz Tone";
 const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
 const static wchar_t wt_button_set_tg[]     = L"Set Talkgroup";
+#if( CONFIG_MORSE_OUTPUT )
+const static wchar_t wt_button_narrator[]   = L"Morse Narrator";
+#endif
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
                                                0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
-                                               0x1f, 0x26, 0x50, 0x51};
+                                               0x1f, 0x26, 0x50, 0x51
+#                                            if( CONFIG_MORSE_OUTPUT )
+                                              ,0x52 // starts the 'Morse narrator' via programmable button
+#                                            endif
+                                              };
 uint8_t button_selected = 0;
 uint8_t button_function = 0;
 
@@ -1053,6 +1060,9 @@ void select_sidebutton_function_screen(void)
     mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
     mn_submenu_add(wt_button_bklt_en, set_sidebutton_function);
     mn_submenu_add(wt_button_set_tg,  set_sidebutton_function);
+#  if( CONFIG_MORSE_OUTPUT )
+    mn_submenu_add(wt_button_narrator,set_sidebutton_function);
+#  endif
 
     mn_submenu_finalize();
 }
@@ -1119,14 +1129,19 @@ const static wchar_t wt_high[]     = L"high";
 void mn_morse_mode_off(void)
 {  
    mn_create_single_timed_ack(wt_morse_mode, wt_off);
-   global_addl_config.narrator_mode = NARRATOR_MODE_OFF; 
+   // ex: global_addl_config.narrator_mode = NARRATOR_MODE_OFF; 
+   // Since Mr Narrator can be started via prog'able sidekey,
+   // leave the 'verbosity' flag unchanged, clear TEST mode,
+   // disable the AUTOMATIC start of the narrator (e.g. channel knob),
+   // so the *requested* announcement can be short or verbose.
+   global_addl_config.narrator_mode &= ~(NARRATOR_MODE_ENABLED|NARRATOR_MODE_TEST);
    cfg_save();
 }
 
 void mn_morse_mode_short(void)
 {  
    mn_create_single_timed_ack(wt_morse_mode, wt_short);
-   global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED; 
+   global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED;
    cfg_save();
 }
 
@@ -1141,13 +1156,13 @@ void mn_morse_mode_test(void)
 {  
    mn_create_single_timed_ack(wt_morse_mode, wt_test);
    global_addl_config.narrator_mode |= NARRATOR_MODE_ENABLED | NARRATOR_MODE_TEST;
-   // This lets the "VERBOSE"-flag unchanged, so to have both 'test' AND 
+   // Don't modify the "VERBOSE"-flag here. To have both 'test' AND 
    //  'verbose' mode, first select 'verbose',  then select 'test' mode.
-   // More details about the Morse code 'storyteller' in narrator.c .
+   // Details about the narrator and his configuration in narrator.c .
    cfg_save();
 }
 
-void mn_morse_mode(void)  // CW output mode : off / short / verbose
+void mn_morse_mode(void)  // CW output mode : off / short / verbose / test ?
 {
     if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
      { md380_menu_entry_selected = 3;
@@ -1235,7 +1250,7 @@ void mn_cw_volume_high(void)
 }
 
 void mn_cw_volume(void) 
-{  // Also here, a simple DECIMAL input field would be really nice to have...
+{  // Also here, a simple DECIMAL input field would be nice to have...
     if( global_addl_config.cw_volume <= 5 ) 
      { md380_menu_entry_selected = 0; // "low" (on a very unscientific scale)
      }
