@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "netmon.h"
 #include "syslog.h"
+#include "narrator.h" // tells channel, zone, and menu in Morse code
  
 //static int flag=0;
 
@@ -43,6 +44,11 @@ extern void f_4315_hook()
 {
     netmon_update();
     con_redraw();
+
+#if( CONFIG_MORSE_OUTPUT ) 
+    narrate(); // may "tell a story" in Morse code (for visually impaired hams)
+#endif
+
     if( is_netmon_visible() ) {
         return ;
     }
@@ -88,6 +94,11 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
         gfx_drawbmp(bmp, x, y);
     }
 #endif //CONFIG_GRAPHICS
+
+#if( CONFIG_MORSE_OUTPUT ) 
+    narrate(); // "tell a story" in Morse code (for visually impaired hams) ?
+#endif
+
 }
 
 void rx_screen_gray_hook(void *bmp, int x, int y)
@@ -100,6 +111,11 @@ void rx_screen_gray_hook(void *bmp, int x, int y)
         gfx_drawbmp(bmp, x, y);
     }
 #endif //CONFIG_GRAPHICS
+
+#if( CONFIG_MORSE_OUTPUT ) 
+    narrate(); // "tell a story" in Morse code (for visually impaired hams) ?
+#endif
+
 }
 
 
@@ -242,6 +258,9 @@ void trace_gui_opmode2()
         PRINT( "mode2: %d -> %d\n", old, new );
         LOGG( "mode2: %d -> %d\n", old, new );
         old = new ;
+#      if( CONFIG_MORSE_OUTPUT ) 
+        narrate(); // "tell a different story" in Morse code (?)
+#      endif
     }
 }
 
@@ -254,6 +273,9 @@ void trace_gui_opmode3()
         PRINT( "mode3: %d -> %d\n", old, new );
         LOGG( "mode3: %d -> %d\n", old, new );
         old = new ;
+#      if( CONFIG_MORSE_OUTPUT ) 
+        narrate(); // "say what's going on" (gui_opmode3 related ?)
+#      endif
     }
 }
 #else
@@ -317,6 +339,10 @@ void f_4225_hook()
             gui_opmode2 = OPM2_IDLE;
         }
     }
+
+# if( CONFIG_MORSE_OUTPUT ) 
+    narrate(); // "tell what's going on" (after change in gui_opmode*)
+# endif
     
 }
 
@@ -329,5 +355,12 @@ void gui_control_hook( int r0 )
     gui_control( r0 );
 //    PRINT("-> %d\n", r0 );
 //    return r0 ;
+
+#if( CONFIG_MORSE_OUTPUT ) 
+    narrate(); // not sure what gui_control_hook() actually does, but
+               // if won't hurt to let the "CW storyteller" take a look
+               // at the current values in gui_opmode_x again. (?)
+#endif
+
 }
 #endif

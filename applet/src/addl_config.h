@@ -33,6 +33,10 @@ typedef struct addl_config {
     char bootline1[10];
     char bootline2[10];
     uint8_t backlight_intensities; // lower nibble = backlight intensity during IDLE,  upper nibble = backlight intensity during ACTIVITY
+    uint8_t narrator_mode; // Mode/verbosity for CW output. See narrator.c .
+    uint8_t cw_pitch_10Hz; // 'CW pitch' in TEN HERTZ units, to fit in a BYTE.
+    uint8_t cw_volume;     // output volume for CW messages. In fact a PWM duty cycle.
+    uint8_t cw_speed_WPM;  // output speed, measured in words per minute .
 } addl_config_t ;
 
 #define CPO_BL1 0x1

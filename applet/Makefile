@@ -53,7 +53,8 @@ SRCS += lastheard.o
 SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
-SRCS += irq_handlers.o # DL4YHF 2017-01-06
+SRCS += irq_handlers.o
+SRCS += narrator.o
 SRCS += timer.o
 
 ifdef INC_DISPFLIP

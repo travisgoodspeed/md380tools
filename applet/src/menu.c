@@ -24,8 +24,9 @@
 #include "util.h"
 #include "printf.h"
 #include "keyb.h"
+#include "codeplug.h"
+#include "narrator.h" // tells channel, zone, menu in Morse code
 
-#include "config.h"  // need to know CONFIG_DIMMED_LIGHT (defined in config.h since 2017-01-03)
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -52,6 +53,7 @@ const static wchar_t wt_datef_alt[]         = L"Alt. Status";
 const static wchar_t wt_promtg[]            = L"Promiscuous";
 const static wchar_t wt_edit[]              = L"Edit";
 const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
+const static wchar_t wt_set_tg_id[]         = L"Set Talkgroup";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
@@ -63,8 +65,12 @@ const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 const static wchar_t wt_backlight_menu[]    = L"Backlight";
-#ifndef  CONFIG_DIMMED_LIGHT    // want 'dimmed backlight', two adjustable intensities ?
-# define CONFIG_DIMMED_LIGHT 0  // guess not (unless defined AS ONE in config.h)
+
+#ifndef  CONFIG_DIMMED_LIGHT   // Dimmed backlight ?
+# define CONFIG_DIMMED_LIGHT 0 // only if defined AS ONE in config.h
+#endif
+#ifndef  CONFIG_MORSE_OUTPUT   // Morse output for visually impaired hams ?
+# define CONFIG_MORSE_OUTPUT 0 // only if defined AS ONE in config.h
 #endif
 #if( CONFIG_DIMMED_LIGHT ) // support pulse-width modulated backlight ?
 const static wchar_t wt_bl_intensity_lo[]   = L"Level Low";
@@ -82,7 +88,7 @@ const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 const static wchar_t wt_cp_override_dmrid[] = L"ID Override";
 
-const static wchar_t wt_config_reset[] = L"Config Reset";
+const static wchar_t wt_config_reset[]      = L"Config Reset";
 const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
 
 const static wchar_t wt_sidebutton_menu[]   = L"Side Buttons";
@@ -116,9 +122,10 @@ const static wchar_t wt_button_man_dial[]   = L"Manual Dial";
 const static wchar_t wt_button_lone_work[]  = L"Lone wk On/Off";
 const static wchar_t wt_button_1750_hz[]    = L"1750hz Tone";
 const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
+const static wchar_t wt_button_set_tg[]     = L"Set Talkgroup";
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
                                                0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
-                                               0x1f, 0x26, 0x50};
+                                               0x1f, 0x26, 0x50, 0x51};
 uint8_t button_selected = 0;
 uint8_t button_function = 0;
 
@@ -861,16 +868,7 @@ void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, b
 {
     mn_submenu_init(wt_backlight);
 
-    if ( md380_radio_config.backlight_time == 12 ) {
-        md380_menu_entry_selected = 2;
-    } else if ( md380_radio_config.backlight_time == 6 ) {
-        md380_menu_entry_selected = 1;
-    } else {
-        md380_menu_entry_selected = 0;
-    }
-    
-
-    switch( md380_radio_config.backlight_time ) // inspired by fix stargo0's fix #674 
+    switch( md380_radio_config.backlight_time ) // inspired by stargo0's fix #674 
      { // (fixes the selection of the current backlight-time in the menu)
        case 1 /* times 5sec */ : md380_menu_entry_selected = 1; break;
        case 6 /* times 5sec */ : md380_menu_entry_selected = 2; break;
@@ -946,7 +944,7 @@ void mn_backlight_lo(void)  // configure LOW backlight intensity (used when "idl
    {  i = NUM_BACKLIGHT_INTENSITIES-1; // valid ITEM indices: 0..9 (with NUM_BACKLIGHT_INTENSITIES=10)
    }
   md380_menu_entry_selected = i;       // <- always a zero-based item index
-  mn_submenu_init(wt_bl_intensity_lo);
+  mn_submenu_init(wt_bl_intensity_lo); // call before or after setting md380_menu_entry_selected ?
   for(i=0; i<NUM_BACKLIGHT_INTENSITIES; ++i)
    { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
    }
@@ -1054,6 +1052,7 @@ void select_sidebutton_function_screen(void)
     mn_submenu_add(wt_button_lone_work, set_sidebutton_function);
     mn_submenu_add(wt_button_1750_hz, set_sidebutton_function);
     mn_submenu_add(wt_button_bklt_en, set_sidebutton_function);
+    mn_submenu_add(wt_button_set_tg,  set_sidebutton_function);
 
     mn_submenu_finalize();
 }
@@ -1083,7 +1082,7 @@ void create_menu_entry_backlight_screen(void)
     md380_menu_entry_selected = 0;
     mn_submenu_init(wt_backlight_menu);
 
-#  if( CONFIG_DIMMED_LIGHT )    // *optional* feature since 2017-01-08 - see config.h
+#  if( CONFIG_DIMMED_LIGHT )    // *optional* feature since 2017 - see config.h
     mn_submenu_add_98(wt_bl_intensity_lo/*item text*/, mn_backlight_lo/*menu handler*/ ); // backlight intensity "low" (used when idle)
     mn_submenu_add_98(wt_bl_intensity_hi/*item text*/, mn_backlight_hi/*menu handler*/ ); // backlight intensity "high" (used when active)
 #  endif   
@@ -1092,6 +1091,224 @@ void create_menu_entry_backlight_screen(void)
 #endif
 }
 
+#if( CONFIG_MORSE_OUTPUT )  // *optional* feature since 2017 - see config.h
+//-------------------------------------------------------------
+// CW output for visually impaired hams ?
+// Morse code generator in irq_handlers.c, 'narrator' in narrator.c .
+// Configuration are 4 bytes in md380_radio_config, NOT in the codeplug.
+const static wchar_t wt_morse_menu[] = L"Morse output";
+const static wchar_t wt_morse_mode[] = L"Mode";   // ex: "Mode/verbosity" (too verbose :)
+const static wchar_t wt_off[]      = L"off";
+const static wchar_t wt_short[]    = L"short";
+const static wchar_t wt_verbose[]  = L"verbose";
+const static wchar_t wt_test[]     = L"test/DevOnly";
+const static wchar_t wt_cw_speed[] = L"Speed [WPM]";
+const static wchar_t wt_15_WPM[]   = L"15";
+const static wchar_t wt_18_WPM[]   = L"18";
+const static wchar_t wt_22_WPM[]   = L"22";
+const static wchar_t wt_30_WPM[]   = L"30";
+const static wchar_t wt_cw_pitch[] = L"CW pitch [Hz]";
+const static wchar_t wt_400[]      = L"400";
+const static wchar_t wt_650[]      = L"650";
+const static wchar_t wt_800[]      = L"800";
+const static wchar_t wt_cw_volume[]= L"CW volume";
+const static wchar_t wt_low[]      = L"low";
+const static wchar_t wt_medium[]   = L"medium";
+const static wchar_t wt_high[]     = L"high";
+
+void mn_morse_mode_off(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_off);
+   global_addl_config.narrator_mode = NARRATOR_MODE_OFF; 
+   cfg_save();
+}
+
+void mn_morse_mode_short(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_short);
+   global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED; 
+   cfg_save();
+}
+
+void mn_morse_mode_verbose(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_verbose);
+   global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE; 
+   cfg_save();
+}
+
+void mn_morse_mode_test(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_test);
+   global_addl_config.narrator_mode |= NARRATOR_MODE_ENABLED | NARRATOR_MODE_TEST;
+   // This lets the "VERBOSE"-flag unchanged, so to have both 'test' AND 
+   //  'verbose' mode, first select 'verbose',  then select 'test' mode.
+   // More details about the Morse code 'storyteller' in narrator.c .
+   cfg_save();
+}
+
+void mn_morse_mode(void)  // CW output mode : off / short / verbose
+{
+    if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
+     { md380_menu_entry_selected = 3;
+     }
+    else if( global_addl_config.narrator_mode & NARRATOR_MODE_VERBOSE )
+     { md380_menu_entry_selected = 2;
+     }
+    else if( global_addl_config.narrator_mode & NARRATOR_MODE_ENABLED )
+     { md380_menu_entry_selected = 1;
+     }
+    else // neither "TEST", "VERBOSE", "NORMAL", or any combination...
+     { md380_menu_entry_selected = 0; // .. so the Morse output is OFF
+     }
+    mn_submenu_init(wt_morse_mode);
+    mn_submenu_add(wt_off,    mn_morse_mode_off );      // no morse output at all
+    mn_submenu_add(wt_short,  mn_morse_mode_short );    // channel NUMBERS, short output
+    mn_submenu_add(wt_verbose,mn_morse_mode_verbose );  // channel NAMES, longer output
+    mn_submenu_add(wt_test,   mn_morse_mode_test );     // signal any state transition in CW
+    mn_submenu_finalize();
+}
+
+void mn_cw_pitch_400(void)
+{  
+   mn_create_single_timed_ack(wt_cw_pitch, wt_400);
+   global_addl_config.cw_pitch_10Hz = 40; // 400 Hz
+   cfg_save();
+}
+
+void mn_cw_pitch_650(void)
+{  
+   mn_create_single_timed_ack(wt_cw_pitch, wt_650);
+   global_addl_config.cw_pitch_10Hz = 65; // 650 Hz
+   cfg_save();
+}
+
+void mn_cw_pitch_800(void)
+{  
+   mn_create_single_timed_ack(wt_cw_pitch, wt_800);
+   global_addl_config.cw_pitch_10Hz = 80; // 800 Hz
+   cfg_save();
+}
+
+void mn_cw_pitch(void)  // CW pitch : stored in 10-Hz unit in global_addl_config
+{  // A DECIMAL input field appeared too complicated for a start, 
+   // so for the moment, only offer a few 'tone frequencies'.
+   // The PWM'ed rectangular wave is rich in harmonics,
+   // thus even 400 Hz is well audible in the speaker.
+   // Note: To fit in a byte, the unit for storage is 10 Hz.
+    if( global_addl_config.cw_pitch_10Hz < 50 ) 
+     { md380_menu_entry_selected = 0; // 400 Hz
+     }
+    else if( global_addl_config.cw_pitch_10Hz < 70 ) 
+     { md380_menu_entry_selected = 1; // 650 Hz
+     }
+    else
+     { md380_menu_entry_selected = 2; // 800 Hz
+     }
+    mn_submenu_init(wt_cw_pitch);
+    mn_submenu_add(wt_400, mn_cw_pitch_400 );
+    mn_submenu_add(wt_650, mn_cw_pitch_650 );
+    mn_submenu_add(wt_800, mn_cw_pitch_800 );
+    mn_submenu_finalize();
+}
+
+void mn_cw_volume_low(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_low);
+   global_addl_config.cw_volume = 5; // proportinal to the PWM duty cycle,
+   cfg_save();
+}
+
+void mn_cw_volume_medium(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_medium);
+   global_addl_config.cw_volume = 10; // proportinal to the PWM duty cycle...
+   cfg_save();
+}
+
+void mn_cw_volume_high(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_high);
+   global_addl_config.cw_volume = 20; // unfortunately NOT affected by the pot !
+     // (the ADC reading for the pot's wiper position is just lousy)
+   cfg_save();
+}
+
+void mn_cw_volume(void) 
+{  // Also here, a simple DECIMAL input field would be really nice to have...
+    if( global_addl_config.cw_volume <= 5 ) 
+     { md380_menu_entry_selected = 0; // "low" (on a very unscientific scale)
+     }
+    else if( global_addl_config.cw_volume < 20 ) 
+     { md380_menu_entry_selected = 1; // "medium"
+     }
+    else
+     { md380_menu_entry_selected = 2; // "high" (don't use this if you have "good ears")
+     }
+    mn_submenu_init(wt_cw_volume);
+    mn_submenu_add(wt_low,    mn_cw_volume_low    );
+    mn_submenu_add(wt_medium, mn_cw_volume_medium );
+    mn_submenu_add(wt_high,   mn_cw_volume_high   );
+    mn_submenu_finalize();
+}
+
+void mn_cw_speed_15WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_15_WPM );
+   global_addl_config.cw_speed_WPM = 15;
+   cfg_save();
+}
+
+void mn_cw_speed_18WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_18_WPM );
+   global_addl_config.cw_speed_WPM = 18;
+   cfg_save();
+}
+
+void mn_cw_speed_22WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_22_WPM );
+   global_addl_config.cw_speed_WPM = 22;
+   cfg_save();
+}
+
+void mn_cw_speed_30WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_30_WPM );
+   global_addl_config.cw_speed_WPM = 30;
+   cfg_save();
+}
+
+void mn_cw_speed(void) 
+{ 
+   switch( global_addl_config.cw_speed_WPM )
+    { case 15: md380_menu_entry_selected = 0; break;
+      case 18: md380_menu_entry_selected = 1; break;
+      case 22: md380_menu_entry_selected = 2; break;
+      case 30: md380_menu_entry_selected = 3; break;
+      default: md380_menu_entry_selected = 2; break; // meaningful default ?
+      // wrong md380_menu_entry_selected makes the menu crash !
+    }
+   mn_submenu_init(wt_cw_speed);
+   mn_submenu_add(wt_15_WPM, mn_cw_speed_15WPM );
+   mn_submenu_add(wt_18_WPM, mn_cw_speed_18WPM );
+   mn_submenu_add(wt_22_WPM, mn_cw_speed_22WPM );
+   mn_submenu_add(wt_30_WPM, mn_cw_speed_30WPM );
+   mn_submenu_finalize();
+}
+
+void create_menu_entry_morse_screen(void)
+{
+    md380_menu_entry_selected = 0;
+    mn_submenu_init(wt_morse_menu);
+    mn_submenu_add_98(wt_morse_mode,mn_morse_mode); // disable, short, verbose output ?
+    mn_submenu_add_98(wt_cw_speed,  mn_cw_speed  ); // morse output speed in WPM
+    mn_submenu_add_98(wt_cw_pitch,  mn_cw_pitch  ); // audio frequency in Hertz
+    mn_submenu_add_98(wt_cw_volume, mn_cw_volume ); // speaker output volume (pot has no effect)
+    mn_submenu_finalize2();
+}
+#endif // CONFIG_MORSE_OUTPUT ?
 
 void mn_config_reset2()
 {
@@ -1238,7 +1455,7 @@ void create_menu_entry_edit_dmr_id_screen(void)
 
 
 
-    // clear retrun buffer //  see 0x08012a98
+    // clear return buffer //  see 0x08012a98
     // TODO: is wchar_t (16 bits))
     for (i = 0; i < 0x11; i++) {
         p = (uint8_t *) mn_editbuffer_poi;
@@ -1272,6 +1489,104 @@ void create_menu_entry_edit_dmr_id_screen(void)
 #endif
 }
 
+void create_menu_entry_set_tg_screen_store(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    uint32_t new_tx_id = 0;
+    wchar_t *bf;
+
+#if 0
+    printf("your enter: ");
+    printhex2((char *) md380_menu_edit_buf, 14);
+    printf("\n");
+#endif
+
+    bf = md380_menu_edit_buf;
+    while (*bf != 0) {
+        new_tx_id *= 10;
+        new_tx_id += (*bf++) - '0';
+    }
+
+    if ( new_tx_id > 0xffffff ) {
+        return;
+    }
+
+#if 0
+    printf("\n%d\n", new_tx_id);
+#endif
+
+    contact.id_l = new_tx_id & 0xFF ;
+    contact.id_m = (new_tx_id>>8) & 0xFF ;
+    contact.id_h = (new_tx_id>>16) & 0xFF ;
+    contact.type = CONTACT_GROUP ;
+
+    wchar_t *p = (void*)contact.name; // write entered tg to the contact name 
+                             // so that it is dislayed on the monitor1 screen
+    snprintfw( p, 16, "TG %d*", new_tx_id ); // (#708)
+
+    extern void draw_zone_channel(); // TODO.
+    draw_zone_channel();
+
+    md380_menu_id = md380_menu_id - 1; // exit menu to the proper level (#708) 
+    md380_menu_depth = md380_menu_depth - 1;
+
+#ifdef CONFIG_MENU
+    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
+#endif
+#endif
+}
+
+void create_menu_entry_set_tg_screen(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+   menu_t *menu_mem;
+   uint8_t i;
+   uint8_t *p;
+   uint32_t nchars;
+   int current_tg = 0;
+
+   md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
+   mn_editbuffer_poi = md380_menu_edit_buf;
+
+   // clear return buffer //  see 0x08012a98
+   // TODO: is wchar_t (16 bits))
+   for (i = 0; i < 0x11; i++) {
+      p = (uint8_t *) mn_editbuffer_poi;
+      p = p + i;
+      *p = 0;
+   }
+
+   // load current tg into edit buffer (#708) :
+   current_tg = (int) contact.id_h ;
+   current_tg = (current_tg<<8) + (int) contact.id_m;
+   current_tg = (current_tg<<8) + (int) contact.id_l;
+
+   nchars = uli2w(current_tg, md380_menu_edit_buf);
+#if 0
+    printf("\ncreate_menu_entry_set_tg_screen %x %d \n", md380_menu_edit_buf, nchars);
+    printhex2((char *) md380_menu_edit_buf, 14);
+    printf("\n");
+#endif
+
+    md380_menu_0x2001d3ed = 8; // max char
+    md380_menu_0x2001d3ee = nchars; //  startpos cursor
+    md380_menu_0x2001d3ef = nchars; //  startpos cursor
+    md380_menu_0x2001d3f0 = 3; // 3 = numerical input
+    md380_menu_0x2001d3f1 = 0;
+    md380_menu_0x2001d3f4 = 0;
+    menu_mem = get_menu_stackpoi();
+    menu_mem->menu_title = wt_set_tg_id;
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->numberof_menu_entries = 1;
+    menu_mem->unknown_00 = 0;
+    menu_mem->unknown_01 = 0;
+
+#ifdef CONFIG_MENU
+    md380_create_menu_entry(md380_menu_id, wt_set_tg_id, MKTHUMB(create_menu_entry_set_tg_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
+#endif
+#endif
+}
+
 void create_menu_entry_addl_functions_screen(void)
 {
     mn_submenu_init(wt_addl_func);
@@ -1294,6 +1609,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
     mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
+    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1);
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
@@ -1301,7 +1617,9 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_config_reset, mn_config_reset);
 
     mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
-   
+#if( CONFIG_MORSE_OUTPUT )
+    mn_submenu_add(wt_morse_menu, create_menu_entry_morse_screen);
+#endif   
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     

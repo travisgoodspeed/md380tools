@@ -1,14 +1,14 @@
 /*! \file irq_handlers.c
-    \brief Own interrupt handler(s), first used for a 'dimmed backlight' .
+    \brief Own interrupt handler(s), used for optional dimmed backlight
+     and the low-level Morse code generator with audio output.
 
   Module prefix "IRQ_", except for IRQ handlers (e.g. "SysTick_Handler").
 
   Drives the MD380's backlight LEDs with a PWMed backlight,
   intensity depending on 'idle' / 'active', configurable in menu.c . 
-  
-  The MD380's "Lamp"-signal on PC6 is reconfigured as UART6_TX .
-  The pulse width modulation is realized by different UART tx patterns,
-  and by varying the number of STOP BITS for the lower intensity range.
+
+  Also contains a simple Morse code generator (with 'audio modulator'),
+  used to output the text assembled by the 'narrator' (narrator.c) .  
   
   Details may still be at www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
     
@@ -28,6 +28,13 @@
   5. Issue "make clean image_D13", and carefully watch the output.
        There should be a message indicating SysTick_Handler being patched.
  
+ To include also the Morse generator (for visually impaired hams):
+
+  6. #define CONFIG_MORSE_OUTPUT 1  in  md380tools/applet/config.h .
+
+  7. Add the 'Narrator' to applet/makefile (besides irq_handlers.o):
+      SRCS += narrator.o 
+
 */
 
 #include "config.h"
@@ -45,6 +52,7 @@
 #include "syslog.h"
 #include "usersdb.h"
 #include "keyb.h"      // contains "backlight_timer", which is Tytera's own software-timer
+#include "narrator.h"  // some flags in global_addl_config.narrator_mode are required here
 
 #include "irq_handlers.h" // header for THIS module
 
@@ -61,11 +69,12 @@ typedef void (*void_func_ptr)(void);
 #define PINPOS_C_BL 6 /* pin position of backlight output within GPIO_C */
 #define PINPOS_E_TX 1 /* pin position of the red   TX LED within GPIO_E */
 #define PINPOS_E_RX 0 /* pin position of the green RX LED within GPIO_E */
-#define LED_GREEN_ON  GPIOE->BSRRL=(1<<PINPOS_E_RX) /* green LED on  */
-#define LED_GREEN_OFF GPIOE->BSRRH=(1<<PINPOS_E_RX) /* green LED off */
-#define IS_RX_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_RX))!=0) /* poll green RX LED*/
-#define LED_RED_ON    GPIOE->BSRRL=(1<<PINPOS_E_TX) /* red LED on  */
-#define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* red LED off */
+#define LED_GREEN_ON  GPIOE->BSRRL=(1<<PINPOS_E_RX) /* turn green LED on  */
+#define LED_GREEN_OFF GPIOE->BSRRH=(1<<PINPOS_E_RX) /* turn green LED off */
+#define IS_GREEN_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_RX))!=0) /* check green LED*/
+#define LED_RED_ON    GPIOE->BSRRL=(1<<PINPOS_E_TX) /* turn red LED on  */
+#define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* turn red LED off */
+#define IS_RED_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_TX))!=0) /* check red LED*/
 
   // How to poll a few keys 'directly' after power-on ? 
   // The schematic shows "K3" from the PTT pad to the STM32, 
@@ -90,8 +99,10 @@ typedef void (*void_func_ptr)(void);
 #define AUDIO_BEEP_HI  GPIOC->BSRRL=(1<<PINPOS_C_AUDIO_BEEP) /* squarewave H */
 #define AUDIO_AMP_ON   GPIOB->BSRRL=(1<<PINPOS_B_AUDIO_PA) /* audio PA on ("AFCO") */
 #define AUDIO_AMP_OFF  GPIOB->BSRRH=(1<<PINPOS_B_AUDIO_PA) /* audio PA off */
+#define IS_AUDIO_AMP_ON ((GPIOB->ODR&(1<<PINPOS_B_AUDIO_PA))!=0) /* check audio PA */
 #define SPKR_SWITCH_ON GPIOB->BSRRH=(1<<PINPOS_B_SPK_C)  /* speaker on */
 #define SPKR_SWITCH_OFF GPIOB->BSRRL=(1<<PINPOS_B_SPK_C) /* speaker off*/
+#define IS_SPKR_SWITCH_ON ((GPIOB->ODR&(1<<PINPOS_B_SPK_C))==0) /*check spkr switch*/
 
 
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
@@ -106,19 +117,17 @@ typedef struct tMorseGenerator
 #    define MORSE_GEN_START   1 // request to start output
    // All other states (below) must be considered 'volatile',
    // because the timer interrupt may switch u8State anytime:
-#  define MORSE_GEN_START_AUDIO_PA 2 // waiting for audio PA to start
-#  define MORSE_GEN_START_ANTI_POP 3 // waiting for 'Anti-Pop' switch
-#  define MORSE_GEN_START_CHAR_TX  4 // waiting for begin of the next char
-#  define MORSE_GEN_SENDING_TONE   5 // sending a tone (dash or dot)
-#  define MORSE_GEN_SENDING_GAP    6 // sending gap (between dashes and dots)
-#  define MORSE_GEN_END_OF_MESSAGE 7 // all characters sent; reached end of message
-#  define MORSE_GEN_STOP_ANTI_POP  8 // opening 'Anti-Pop' switch (to stop output)
-#  define MORSE_GEN_STOP_AUDIO_PA  9 // shutting down audio PA (with 'Anti-Pop')
+#  define MORSE_GEN_START_AP_OPEN  2 // waiting for 'Anti-Pop' switch to open (!)
+#  define MORSE_GEN_START_AUDIO_PA 3 // waiting for audio PA to start
+#  define MORSE_GEN_START_AP_CLOSE 4 // waiting for 'Anti-Pop' switch to close
+#  define MORSE_GEN_START_CHAR_TX  5 // waiting for begin of the next char (maybe long gap)
+#  define MORSE_GEN_SENDING_TONE   6 // sending a tone (dash or dot)
+#  define MORSE_GEN_SENDING_GAP    7 // sending gap (between dashes and dots)
+#  define MORSE_GEN_END_OF_MESSAGE 8 // all characters sent; reached end of message
+#  define MORSE_GEN_STOP_ANTI_POP  9 // opening 'Anti-Pop' switch (to stop output)
+#  define MORSE_GEN_STOP_AUDIO_PA 10 // shutting down audio PA (with 'Anti-Pop')
    uint8_t  u8ShiftReg;   // shift register. MSbit first, 0=dot, 1=dash.
    uint8_t  u8NrElements; // number of elements (dots and dashes) remaining
-   uint16_t u16DotLength; // length of a Morse code dot in 1.5 ms - units
-   uint16_t u16Freq;      // configurable tone frequency in Hertz
-   uint8_t  u8Volume;     // volume (-> PWM duty cycle) in percent 
    uint16_t u16Timer;     // countdown timer, decrements in 1.5 ms - steps,
                           // state transition when counted down to zero
 #  define MORSE_TX_FIFO_LENGTH 20 // long enough for channel- or zone names ?
@@ -186,6 +195,10 @@ uint8_t Morse_table[] =
 
 #endif // CONFIG_MORSE_OUTPUT ?
 
+uint8_t red_led_timer = 0; // 'countdown' timer, in 1.5 ms steps,
+                           // to TEMPORARILY turn the red LED on.
+                           // ZERO means 'Tytera controls the LED'.
+uint8_t green_led_timer = 0; // similar for the GREEN (RX) LED .
 
 // Internal 'forward' references (avoid compiler warnings)
 #if( CONFIG_MORSE_OUTPUT )
@@ -228,6 +241,11 @@ static void InitDimming(void)
   // Two bits in "PUPDR" per pin for the Pull-up / Pull down resistor configuration. 00bin = none
   GPIOC->PUPDR  /*400280C*/ &= ~(3 << (PINPOS_C_BL * 2) );
   
+  // Except when the backlight is completely off (dark), the MD380's "Lamp"-
+  // output on PC6 is reconfigured as UART6_TX .
+  // The pulse width modulation is realized by different UART tx patterns,
+  // and by varying the number of STOP BITS for the lower intensity range.
+  //
   // Tell "PC6" which of the 16 alternate functions it shall have: USART6_TX . RM0090 Rev13 page 287.
   // Only has an effect if the two MODER-bits for this pin are 10bin = "alternate function mode". 
   // There are FOUR bits per pin in AFR[0..1], thus PC6 is in AFR[0] bits 27..24. USART6_TX = "AF8" (STM32F405/7 DS page 62).
@@ -302,9 +320,14 @@ static void BeepStart( int freq_Hz, int volume )
              // > The counter clock frequency (CK_CNT) is f_CK_PSC / (PSC+1).
   pTIM8->RCR = 0;  // Repetition Counter (post-scaler for events) : unused 
 
-  if( freq_Hz < 100/*Hz*/ ) 
-   {  freq_Hz = 100; // avoid div-by-zero below !
+  if( freq_Hz < 100/*Hz*/ || freq_Hz > 3000 ) 
+   {  freq_Hz = 650; // avoid overflow or div-by-zero below,
+      // and 'take meaningful default' if global_addl_config not valid yet
    }
+  if( volume < 1/*percent*/ || volume > 100 ) 
+   {  volume = 10; 
+   }
+
   // The 16-bit Auto-Reload-Register defines the PWM audio frequency.
   // f_PWM = f_CK_CNT / (ARR+1) ), e.g. 1 MHz / 1537 = 650 Hz :
   pTIM8->ARR = (1000000L / freq_Hz) - 1;
@@ -315,7 +338,7 @@ static void BeepStart( int freq_Hz, int volume )
        // > compared to the counter TIMx_CNT and signalled on OC3 output.
        // The max, ear-deafening volume would be at 50 % PWM duty cycle.
 
-  // The original firmware had 'Update interrupt' enabled (bit 0),
+  // The original firmware had 'Update interrupt' enabled (DIER bit 0),
   //     and it implements TIM8_UP_TIM13_IRQHandler to reprogram
   //     the PWM duty cycle after each Timer8-"Update".
   // See www.qsl.net/dl4yhf/RT3/listing.htm#TIM8_UP_TIM13_IRQHandler
@@ -417,6 +440,19 @@ static void BeepReset(void)
 
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
+uint16_t MorseGen_GetDotLengthInTimerTicks(void)
+{
+  uint16_t u16Temp = global_addl_config.cw_speed_WPM; 
+  if( u16Temp<5 || u16Temp>60)  // avoid div-by-zero use meaningful default:
+   { 
+     return 40; // default for 20 WPM : 60 ms for a dot
+   }
+  else // 1.5 ms per timer tick, thus not 1200/WPM, but:
+   { return 800 / u16Temp; 
+   }
+}
+
+//---------------------------------------------------------------------------
 static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
   // Prepares the transmission of a single character in Morse code.
   //  [out] pMorseGen->u8ShiftReg, 
@@ -454,7 +490,8 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
   // HERE, in this entirely state-machine-driven Morse generator,
   //  only start sending the first dot or dash.
   //  The remaining elements will be sent in MorseGen_OnTimerTick().
-  pMorseGen->u16Timer = pMorseGen->u16DotLength;
+  pMorseGen->u16Timer = MorseGen_GetDotLengthInTimerTicks();
+
   if( nr_elements > 0 ) // character is NOT a space..
    { pMorseGen->u8NrElements = nr_elements-1; // # elements remaining
      pMorseGen->u8ShiftReg = morse_code << 1;
@@ -462,7 +499,8 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
      if( morse_code & 0x80 )
       { pMorseGen->u16Timer *= 3; // dash = 3 dot times
       } 
-     BeepStart( pMorseGen->u16Freq, pMorseGen->u8Volume ); 
+     BeepStart( global_addl_config.cw_pitch_10Hz * 10, 
+                global_addl_config.cw_volume ); 
    }
   else // pMorseGen->u8NrElements == 0 : SPACE character...
    { pMorseGen->u8NrElements = 0; // neither dots nor dashes to send
@@ -477,17 +515,21 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
 
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
-int MorseGen_AppendString( // API: appends a string to the Mors tx-buffer
-     char *pszText,  // [in] plain ASCII string
-     int  iMaxLen )  // [in] number of chars (if pszText isn't a C string)
+void MorseGen_ClearTxBuffer(void) // aborts the current Morse transmission (if any)
+{
+  // Don't lock interrupts here .. only modify the FIFO *HEAD* index:
+  morse_generator.u8FifoHead = morse_generator.u8FifoTail; // head==tails means "empty"
+} 
+
+//---------------------------------------------------------------------------
+int MorseGen_AppendString( // API to send good old 8-bit C-strings
+     char *pszText ) // [in] plain old C-string (zero-terminated)
 {
   T_MorseGen *pMorseGen = &morse_generator; // only one instance here
   int nCharsAppended = 0;
   uint8_t u8NewFifoHead;
   pMorseGen->u8FifoHead %= MORSE_TX_FIFO_LENGTH; // safety first
-  if( iMaxLen==0 )  // caller promised pszText is zero-terminated
-   { iMaxLen = MORSE_TX_FIFO_LENGTH; // ..so allow maximum length
-   }
+  int iMaxLen = MORSE_TX_FIFO_LENGTH; // ultimate limit for unterminated strings
   while( iMaxLen > 0 )
    { if( *pszText=='\0' )
       { break; // reached the end of the source string
@@ -510,6 +552,43 @@ int MorseGen_AppendString( // API: appends a string to the Mors tx-buffer
    } 
   return nCharsAppended;
 } // MorseGen_AppendString()
+
+int MorseGen_AppendWideString( wchar_t *pwsText, int iMaxLen ) // API to send 'wide' (16-bit) strings .
+  // Obviously the Tytera firmware was written before the invention
+  // of UTF-8. What a waste of memory. We simply ignore the upper 8 bits 
+  // in each of the 'wide characters' in the string (cannot 'morse them').
+  // Because we don't know (or don't want to assume) that Tytera's 
+  // wide strings are always properly terminated with a (16-bit) ZERO, pass
+  // in a positive 'iMaxLen', for example in narrator.c : report_channel().
+{ T_MorseGen *pMorseGen = &morse_generator;
+  int nCharsAppended = 0;
+  uint8_t u8NewFifoHead;
+  pMorseGen->u8FifoHead %= MORSE_TX_FIFO_LENGTH;
+  if( iMaxLen == 0 )
+   { iMaxLen = MORSE_TX_FIFO_LENGTH;
+   }
+  while( iMaxLen > 0 )
+   { if( *pwsText==0 )
+      { break; // reached the end of the source string
+      }
+     u8NewFifoHead = (pMorseGen->u8FifoHead + 1) % MORSE_TX_FIFO_LENGTH; 
+     if( u8NewFifoHead == pMorseGen->u8FifoTail )
+      { break; // oops.. running out space in our tiny buffer
+      }
+     
+     pMorseGen->u8Fifo[ pMorseGen->u8FifoHead ] = (uint8_t)*pwsText++;
+     pMorseGen->u8FifoHead = u8NewFifoHead;
+     ++nCharsAppended;
+     --iMaxLen;
+   }
+  // Similar as for 8-bit strings: Start output ?
+  if( pMorseGen->u8FifoHead != pMorseGen->u8FifoTail )
+   { if( pMorseGen->u8State == MORSE_GEN_PASSIVE )
+      {  pMorseGen->u8State =  MORSE_GEN_START;
+      }
+   } 
+  return nCharsAppended;
+}
 #endif // CONFIG_MORSE_OUTPUT ?
 
 
@@ -520,7 +599,7 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
   //  as long as the Morse output is active (busy) .
   // Controls the audio output (power amplifier), and produces
   // the Morse code. The 'tone' (waveform) is generated
-  // via hardware (only PWM is possible, there's no DAC on PC8 ).
+  // via hardware (simple PWM, no CPU-hogging 'wavetable').
 {
 
   // Because the original firmware isn't aware of the Morse output,
@@ -531,12 +610,13 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
   // (more on that in BeeperReset). So watch out for Tytera's reprogramming
   // of Timer8's "Update Interrupt" enable flag, and if set, immediately
   // reprogram timer 8 as *WE* need it (for the simple/single-frequency tone):
-  if( TIM8->DIER ) // oops.. someone has enamed the Timer8 interrupt !
+  if( TIM8->DIER ) // oops.. someone has enabled the Timer8 interrupt !
    { // "Whoever" modified TIM8->DIER may also have overwritten
      // the timer's output frequency and PWM duty cycle. Defeat this:
      switch( pMorseGen->u8State )
       { case MORSE_GEN_SENDING_TONE: // immediately turn *OUR* tone on again:
-           BeepStart( pMorseGen->u16Freq, pMorseGen->u8Volume );
+           BeepStart( global_addl_config.cw_pitch_10Hz * 10, 
+                      global_addl_config.cw_volume );
            break; 
         case MORSE_GEN_SENDING_GAP : // immediately turn *THEIR* tone off:
            BeepMute();
@@ -548,67 +628,65 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
  
   if(  pMorseGen->u16Timer > 0 ) // state timer not expired yet ?
    { --pMorseGen->u16Timer;   // nothing else to do, besides WAITING ?
-
      // The original firmware occasionally tried to turn off 
      // the audio PA (because from its point of view there's no
      // reason to keep it on). Patching out all those accesses 
      // to the GPIO registers would be a nightmare. So instead:
      // As long as the Morse output is 'busy', keep on updating
      // the GPIOs for the audio output, 666 times per second.
-     switch( pMorseGen->u8State )
-      { case MORSE_GEN_START_AUDIO_PA: // been waiting for audio PA to start
-           AUDIO_AMP_ON;  // keep the supply voltage for the audio PA on
-           break;
-        case MORSE_GEN_SENDING_TONE:  // sending a tone (dash or dot)
-           // ex: LED_GREEN_ON; // TEST, used instead of beeps to check timing
-           // NO BREAK HERE !
-        case MORSE_GEN_START_ANTI_POP:
-        case MORSE_GEN_START_CHAR_TX:
-        case MORSE_GEN_SENDING_GAP:   // sending a gap (silence but active)
-           AUDIO_AMP_ON;   // keep the supply voltage for the audio PA on
-           SPKR_SWITCH_ON; // keep speaker connected to audio PA
-           break;
-
-        default: // really nothing to do, let 'Tytera' control the audio PA
-           break; 
-      }   // end switch( pMorseGen->u8State )
+     if(  (pMorseGen->u8State==MORSE_GEN_SENDING_TONE )
+       || (pMorseGen->u8State==MORSE_GEN_SENDING_GAP  )
+       || (pMorseGen->u8State==MORSE_GEN_START_CHAR_TX) // <- avoid 'rattling' during gaps
+       )
+      {
+#      if(1) // TEST : What caused the 'rattling noise' during CW output ?
+        if( (!IS_AUDIO_AMP_ON) || (!IS_SPKR_SWITCH_ON) )
+         { // Gotcha ! Tytera's tiny part of the firmware has interfeared :)
+           // Sometimes, when a Morse message was still being sent,
+           // and the firmware decided to reduce the power consumption
+           // by turning the audio PA off, there was a 'rattling' noise
+           // in the speaker (same "rhythm" as the DC input current,
+           // observable on an old-fashioned ammeter) ?
+           // Cured by forcing the audio-PA on in all 'active' generator states.
+           if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
+            { // show when something 'interfered':
+              if( ! IS_RED_LED_ON )
+               { red_led_timer = 10; // let the RED (TX) LED flash up for a few ms
+               }
+            }
+         }
+#      endif // TEST ?
+        AUDIO_AMP_ON;   // keep the supply voltage for the audio PA on
+        SPKR_SWITCH_ON; // keep the speaker connected to the audio PA
+      }
    }
   else // timer expired, so what's up next (state transition) ?
-   { pMorseGen->u16Timer = 30;  // ~~50 ms default to turn on the amplifier, etc
+   { pMorseGen->u16Timer = 30;  // ~~50 ms for most PA on/off- and anti-pop transitions
      switch( pMorseGen->u8State )
       { case MORSE_GEN_PASSIVE : // not active, waiting for start
            break;  // nothing to do
         case MORSE_GEN_START   : // someone request to start the Morse Machine..
-           // ToDo: Wait until the radio stops TRANSMITTING (RF),
-           //       or let the caller (of MorseGen_AppendString)
+           // TODO: Wait until the radio stops TRANSMITTING (RF),
+           //       or let the caller (e.g. the 'narrator')
            //       decide whether 'to morse' during TX or not ? 
            // If the radio's Audio power amplifier isn't powered up yet,
            // turn it on. To reduce the 'pop' in the speaker, Tytera possibly
            // invested in two N-channel MOSFETs between audio PA and speaker.
            SPKR_SWITCH_OFF; // 'anti-pop' switch between PA and speaker still disconnected
+           pMorseGen->u8State = MORSE_GEN_START_AP_OPEN;
+           break;
+        case MORSE_GEN_START_AP_OPEN:  // been waiting for anti-pop switch to open
            AUDIO_AMP_ON;    // turn on the supply voltage for the audio PA
            pMorseGen->u8State = MORSE_GEN_START_AUDIO_PA;
-           break;
+           break;      
         case MORSE_GEN_START_AUDIO_PA: // been waiting for audio PA to start
            SPKR_SWITCH_ON; // close the 'anti-pop' switch between PA and speaker
-           pMorseGen->u8State = MORSE_GEN_START_ANTI_POP;
+           pMorseGen->u8State = MORSE_GEN_START_AP_CLOSE;
            break;
-        case MORSE_GEN_START_ANTI_POP: // been waiting for Anti-Pop switch to close
+        case MORSE_GEN_START_AP_CLOSE: // been waiting for anti-pop switch to close
            pMorseGen->u8State = MORSE_GEN_START_CHAR_TX;
            break;
         case MORSE_GEN_START_CHAR_TX:  // start transmission of next char
-           if( pMorseGen->u16DotLength==0  // oops.. config not loaded yet ?
-            || pMorseGen->u16Freq<100 )
-            { // > '0' means take proper default .
-              // 20 WPM was used by an old TR751 which sounded nice.
-              // In milliseconds per dot, that's 1200 / 20 = 60 [ms] .
-              // With 1.5 ms per timer tick: 60 / 1.5 = 40 ticks per dot.
-              // If this Morse generator ever goes into 'production',
-              // this parameter must be editable in the config menu !
-              pMorseGen->u16DotLength = 40; // default for 20 WPM
-              pMorseGen->u16Freq  = 650; // configurable tone frequency in Hertz
-              pMorseGen->u8Volume = 25;  // volume (-> PWM duty cycle) in percent 
-            }
            if( pMorseGen->u8FifoHead != pMorseGen->u8FifoTail )
             { // there's more to send...
               MorseGen_BeginToSendChar( pMorseGen, 
@@ -625,22 +703,23 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            pMorseGen->u8State = MORSE_GEN_SENDING_GAP; 
            break;
         case MORSE_GEN_SENDING_GAP:  // finished sending a gap 
+           pMorseGen->u16Timer = MorseGen_GetDotLengthInTimerTicks();
            // Send another dot or dash, or begin the next character ?
            if( pMorseGen->u8NrElements > 0 ) // send next dot or dash
             { --pMorseGen->u8NrElements;
-              pMorseGen->u16Timer = pMorseGen->u16DotLength;
               if( pMorseGen->u8ShiftReg & 0x80 )
                { pMorseGen->u16Timer *= 3; // dash = 3 dot times
                } 
               pMorseGen->u8ShiftReg <<= 1;
               pMorseGen->u8State = MORSE_GEN_SENDING_TONE;
-              BeepStart( pMorseGen->u16Freq, pMorseGen->u8Volume ); 
+              BeepStart( global_addl_config.cw_pitch_10Hz * 10, 
+                         global_addl_config.cw_volume );
             }
            else // inter-character gap ...
             { // The spacing between two characters (within a WORD)
               // is 3 dots; a gap of 1 dot is already over. Thus:
-              pMorseGen->u16Timer = 2 * pMorseGen->u16DotLength;
-              pMorseGen->u8State = MORSE_GEN_START_CHAR_TX; // after that, send next char
+              pMorseGen->u16Timer *= 2;                     // after long gap,
+              pMorseGen->u8State = MORSE_GEN_START_CHAR_TX; //  send next char
             }
            break;
 
@@ -651,7 +730,7 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            // But in the meantime, the receiver's squelch may have opened !
            // In that case, do NOT turn the audio PA off.
            // But how to find out if the receiver squelch is OPEN ?
-           if( IS_RX_LED_ON ) 
+           if( IS_GREEN_LED_ON ) // boolean or with some other RX-indicator (*)
             { // guess the RX-squelch is open now...
               //  so skip shutting down the audio PA:
               pMorseGen->u8State = MORSE_GEN_PASSIVE;
@@ -660,6 +739,10 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
             { SPKR_SWITCH_OFF; // disconnect speaker from audio PA,
               // but wait before powering down the PA itself :
               pMorseGen->u8State = MORSE_GEN_STOP_ANTI_POP;
+              // (*) The assumption that, if the green LED is off, 
+              //     the receiver is squelched may be wrong :
+              //     In Tytera's 'Radio Settings' the LED may be disabled.
+              //     Who the hell needs such a feature, secret agents ?  
             }  
            break;
 
@@ -713,12 +796,22 @@ void SysTick_Handler(void)
 #   if( CONFIG_MORSE_OUTPUT ) // Initial settings for the Morse generator.
      // Will be in use as long as there's nothing in global_addl_config :
      morse_generator.u8State = MORSE_GEN_PASSIVE; // initial state
-     morse_generator.u16DotLength = 40; // default for 20 WPM
-     morse_generator.u16Freq  = 650; // configurable tone frequency in Hertz
-     morse_generator.u8Volume = 25;  // volume (-> PWM duty cycle) in percent 
 #   endif // CONFIG_MORSE_OUTPUT ? 
 
    } // end if < 1st call of SysTick_Handler >
+
+  if(red_led_timer) // <- rarely used, only hijack the red LED for TESTING !
+   { LED_RED_ON;    // "debug signal 1" : short, single flash with the RED LED
+     if( (--red_led_timer) == 0 ) // only in the moment this timer expires,
+      { LED_RED_OFF;              // turn the red (TX-) LED off again .
+      } // note: almost "no" time is wasted in SysTick_Handler when timer=0 .
+   }
+  if( green_led_timer ) // same for the green (RX-) LED : ONLY USE FOR TESTING
+   { LED_GREEN_ON; // "debug signal 2": short, single flash with the GREEN LED
+     if( (--green_led_timer) == 0 )
+      { LED_GREEN_OFF;
+      }
+   }
 
 #if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight (here, via GPIO, or PWM-from-UART) ?
   // "Wait" until the original firmware turns on the backlight:
@@ -765,7 +858,7 @@ void SysTick_Handler(void)
 #      if( 0 && CONFIG_MORSE_OUTPUT )  // delayed start of the "Morse demo" ?
         if( oldSysTickCounter == 3000 )
          { // TEST: send something in Morse code immediately after power-on ?
-           MorseGen_AppendString( "cq test 0123456789", 0/*no 'MaxLen'*/ );
+           MorseGen_AppendString( "cq test 0123456789" );
          }
 #      endif // CONFIG_MORSE_OUTPUT ?
 

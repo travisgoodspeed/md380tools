@@ -205,10 +205,15 @@ void evaluate_sidekey ( int button_function) //This is where new functions for s
         kb_backlight ^= 0x01;   // flag for SysTick_Handler() to turn backlight off completely
       #else
         GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
-            #endif
+      #endif
       reset_backlight();
       break;
     }
+    case 0x51 :
+    {
+      create_menu_entry_set_tg_screen();
+    }
+
     default:
       return;
   }

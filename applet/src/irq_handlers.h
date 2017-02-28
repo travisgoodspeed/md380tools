@@ -46,6 +46,12 @@ extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intens
 
 extern uint8_t kb_backlight; // flag to disable the backlight via sidekey (in keyb.c)
 
+extern uint8_t red_led_timer;   // 'countdown' timer, in 1.5 ms steps, to turn
+            // the red LED on TEMPORARILY. ZERO when 'Tytera controls the LED'.
+extern uint8_t green_led_timer; // similar for the GREEN (RX) LED.  TEST ONLY !
+
 #if( CONFIG_MORSE_OUTPUT )
-int MorseGen_AppendString( char *pszText, int iMaxLen ); // API to send 8-bit strings in Morse code
+void MorseGen_ClearTxBuffer(void); // aborts the current Morse transmission (if any)
+int  MorseGen_AppendString( char *pszText ); // API to send 8-bit, zero-terminated strings
+int  MorseGen_AppendWideString( wchar_t *pwsText, int iMaxLen ); // API to send 16-bit strings
 #endif // CONFIG_MORSE_OUTPUT ?
