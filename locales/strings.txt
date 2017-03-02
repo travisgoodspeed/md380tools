@@ -18,7 +18,7 @@ en Delete Entry?
 de Eintrag entf?
 es Eliminar reg?
 it Elimino reg?
-sr Briši unos?
+sr Brisi unos?
 
 # 0xc53dc 26 12 Radio Enable
 en Radio Enable
@@ -67,7 +67,7 @@ en Target Radio
 de Ziel-Geraet
 es Radio Destino
 it Destinatario
-sr Odredište
+sr Odrediste
 
 # 0xc54a0 28 13 Not Available
 en Not Available
@@ -77,7 +77,7 @@ it Non disponib.
 sr Nije dostupno
 
 # 0xc54bc 28 13 Radio Enable:
-sr Uključi radio
+sr Ukljuci radio
 
 # 0xc54d8 28 13 Firmware Ver.
 en Firmware Ver.
@@ -157,7 +157,7 @@ sr Offset zvuka
 # 0xc5628 26 12 New Password
 es Nueva Password
 it Nuova password
-sr Nova šifra
+sr Nova sifra
 
 # 0xc5644 26 12 Eight Digits
 en Eight Digits
@@ -169,7 +169,7 @@ sr Osam cifara
 # 0xc5660 26 12 Do Not Match
 es No coinciden
 it Non corrisp.
-sr Ne slaže se
+sr Ne slaze se
 
 # 0xc567c 26 12 Press OK and
 es Presiona OK y
@@ -179,7 +179,7 @@ sr Pritisni OK i
 # 0xc5698 28 13 Missed Calls:
 es Perdidas
 it perse
-sr Propušteni
+sr Propusteni
 
 # 0xc56b4 26 12 Setting Time
 en Setting Time
@@ -205,7 +205,7 @@ sr Kontakti
 # 0xc5708 28 13 Outgoing List
 es Lista Salientes
 it Lista uscita
-sr Odlazeći
+sr Odlazeci
 
 # 0xc5724 28 13 Answered List
 es Lista Respondidas
@@ -258,7 +258,7 @@ sr Slot repetit.
 # 0xc5820 26 25 Digital Radio in USB mode
 es Radio Digital en modo USB
 it Radio Digitale in modo USB
-sr Radio je u USB režimu
+sr Radio je u USB rezimu
 
 # 0xc5b58 22 10 PC Program
 es Programacion PC
@@ -277,7 +277,7 @@ en Manual Dial
 de Manuelle Wahl
 es Marcado manual
 it Chiam. manuale
-sr Ručno bira.
+sr Rucno bira.
 
 # 0xc5ba0 22 10 Call Alert
 en Call Alert
@@ -304,7 +304,7 @@ it Tipo suon.
 sr Tip zvona
 
 # 0xc5c00 24 11 Program Key
-sr Podeš. tast
+sr Podes. tast
 
 # 0xc5c18 24 11 Radio Check
 en Radio Check
@@ -340,7 +340,7 @@ en Overwrite?
 de Ersetzen?
 es Sobreescribo?
 it Sovrascrivo?
-sr Prepiši
+sr Prepisi
 
 # 0xc5ca8 22 10 Edit Name:
 es Editar Nombre:
@@ -366,21 +366,21 @@ en Sending to:
 de Senden an:
 es Enviando a:
 it Invio a:
-sr Šalje se:
+sr Salje se:
 
 # 0xc5d08 22 10 Delete All
 en Delete All
 de Loeschen?
 es Eliminar todo
 it Elimina tutto
-sr Briši sve
+sr Brisi sve
 
 # 0xc5d20 22 10 Successful
 en Successful
 de Erfolgreic
 es Con Exito
 it Riuscito
-sr Uspešno
+sr Uspesno
 
 # 0xc5d38 24 11 Call Alert:
 en Call Alert:
@@ -404,7 +404,7 @@ sr Radio info
 # 0xc5d80 22 10 Add Member
 es Anadir Miembro
 it Agg. membro
-sr Dodaj čl.
+sr Dodaj cl.
 
 # 0xc5d98 24 11 Enter Name:
 es Inserte nombre:
@@ -417,7 +417,7 @@ sr Talkaround
 
 # 0xc5dc8 24 11 Keypad Lock
 it Blocco tast.
-sr Zaključaj
+sr Zakljucaj
 
 # 0xc5de0 22 10 Cable Type
 en Cable Type
@@ -427,7 +427,7 @@ it Tipo cavo
 sr Tip kabla
 
 # 0xc5df8 24 11 Passwd Lock
-sr Zaključaj
+sr Zakljucaj
 
 # 0xc5e10 24 11 PrivateCall
 en PrivateCall
@@ -458,7 +458,7 @@ it Suoneria off
 sr Zvuk Isklj
 
 # 0xc5e70 22 10 Change Pwd
-sr Promeni šf
+sr Promeni sf
 
 # 0xc5e88 24 11 * to Unlock
 en * to Unlock
@@ -492,7 +492,7 @@ sr Sken da/ne
 # 0xc5f00 24 11 Missed List
 es Lista Perdidas
 it Lista perse
-sr Propušteni
+sr Propusteni
 
 # 0xc5f18 22 10 Enter Name
 es Intro. Nombre
@@ -567,7 +567,7 @@ en Saved to
 de Gespeichert
 es Guardado a
 it Salvato su
-sr Sačuvano u
+sr Sacuvano u
 
 # 0xeda50 20 9 Available
 en Available
@@ -596,7 +596,7 @@ en Turn Off
 de Ausschal
 es Apagar
 it Spegni
-sr Isključi
+sr Iskljuci
 
 # 0xedab4 18 8 ViewList
 # 0xedac8 18 8 Priority
@@ -660,7 +660,7 @@ en Password
 de Kennwort
 es Contrase
 it Password
-sr Šifra
+sr Sifra
 
 # 0xedbcc 18 8 Required
 en Required
@@ -672,7 +672,7 @@ sr Obavezno
 # 0xedbe0 18 8 Unlocked
 es Desbloqueado
 it Sbloccato
-sr Otključ.
+sr Otkljuc.
 
 # 0xedbf4 18 8 Answered
 es Respondido
@@ -698,7 +698,7 @@ sr Opasnost
 sr Verzije
 
 # 0xedc80 18 8 Disabled
-sr Isključ.
+sr Iskljuc.
 
 # 0xedc94 18 8 Motorola
 en Motorola
@@ -745,7 +745,7 @@ sr Ponovo
 sr Ignori.
 
 # 0xee1c8 16 7 Turn On
-sr Uključi
+sr Ukljuci
 
 # 0xee1d8 16 7 Current
 sr Trenutn
@@ -772,7 +772,7 @@ sr Propu.
 sr Nije ok
 
 # 0xee258 16 7 Squelch
-sr Skvelč
+sr Skvelc
 
 # 0xee268 14 6 Normal
 sr Normal
@@ -787,7 +787,7 @@ sr Rekord
 sr Rekord
 
 # 0xee2a8 14 6 Delete
-sr Briši
+sr Brisi
 
 # 0xee2b8 16 7 Playing
 # 0xee2c8 16 7 Confirm
@@ -804,20 +804,20 @@ sr CH mod
 sr MR mod
 
 # 0xee318 14 6 Manual
-sr Ručno
+sr Rucno
 
 # 0xee328 16 7 CTC/DCS
 sr CTC/DCS
 
 # 0xee338 14 6 Volume
-sr Jačina
+sr Jacina
 
 # 0xee348 16 7 Picture
 en Picture
 de Bild
 es Imagen
 it Immag.
-sr Sličica
+sr Slicica
 
 # 0xee678 14 13 uC/OS-II Idle
 # 0xee688 13 12 uC/OS-II Tmr
@@ -850,12 +850,12 @@ sr Primlj
 # 0xeeb4c 12 5 Write
 es Escribir
 it Scrivi
-sr Piši
+sr Pisi
 
 # 0xeeb58 10 4 Send
 es Enviar
 it Invia
-sr Šalji
+sr Salji
 
 # 0xeeb64 10 4 Save
 es Guardar
@@ -894,7 +894,7 @@ sr Izme
 # 0xeebac 12 5 Read?
 es Leer?
 it Leggi?
-sr Čitaj
+sr Citaj
 
 # 0xeebb8 12 5 Reply
 en Reply
@@ -913,7 +913,7 @@ sr Sken
 # 0xeebd0 10 4 None
 es Ninguno
 it Nessun
-sr Ništ
+sr Nist
 
 # 0xeebdc 12 5 Power
 es Potencia
@@ -939,7 +939,7 @@ en Wrong
 de Falsch
 es Erroneo
 it Errato
-sr Loše
+sr Lose
 
 # 0xeec0c 12 5 Store
 # 0xeec18 12 5 Tight
@@ -1026,7 +1026,7 @@ it Nome
 sr Ime
 
 # 0xeecfc 12 5 Clear
-sr Čisti
+sr Cisti
 
 # 0xeed08 10 4 Mode
 en Mode
