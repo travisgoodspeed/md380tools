@@ -12,3 +12,9 @@ sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
 
 sudo pip install pyusb -U
 ```
+```
+Tested on 2017-03-02-raspbian-jessie by YT5ZEC (dragstor)
+In addition to the notes above, install the following pip package, in order to get cable to work.
+
+sudo pip install pyusb==1.0.0b1
+```
