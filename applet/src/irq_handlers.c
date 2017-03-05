@@ -128,9 +128,9 @@ typedef struct tMorseGenerator
 #  define MORSE_GEN_STOP_AUDIO_PA 10 // shutting down audio PA (with 'Anti-Pop')
    uint8_t  u8ShiftReg;   // shift register. MSbit first, 0=dot, 1=dash.
    uint8_t  u8NrElements; // number of elements (dots and dashes) remaining
-   uint16_t u16Timer;     // countdown timer, decrements in 1.5 ms - steps,
-                          // state transition when counted down to zero
-#  define MORSE_TX_FIFO_LENGTH 20 // long enough for channel- or zone names ?
+   uint16_t u16Timer;     // countdown timer, decrements in 1.5 ms - steps.
+                          // state transition when counted down to zero.
+#  define MORSE_TX_FIFO_LENGTH 40 // must be long enough for 'verbose' output !
    uint8_t u8Fifo[MORSE_TX_FIFO_LENGTH]; // lock-free buffer for transmission
    uint8_t u8FifoHead;  // produce index, modified ONLY by 'writer'
    uint8_t u8FifoTail;  // consume index, modified ONLY by 'reader'
@@ -522,27 +522,19 @@ void MorseGen_ClearTxBuffer(void) // aborts the current Morse transmission (if a
 } 
 
 //---------------------------------------------------------------------------
-int MorseGen_AppendString( // API to send good old 8-bit C-strings
-     char *pszText ) // [in] plain old C-string (zero-terminated)
+int MorseGen_AppendChar( char c )
 {
-  T_MorseGen *pMorseGen = &morse_generator; // only one instance here
-  int nCharsAppended = 0;
+  T_MorseGen *pMorseGen = &morse_generator;
   uint8_t u8NewFifoHead;
+
   pMorseGen->u8FifoHead %= MORSE_TX_FIFO_LENGTH; // safety first
-  int iMaxLen = MORSE_TX_FIFO_LENGTH; // ultimate limit for unterminated strings
-  while( iMaxLen > 0 )
-   { if( *pszText=='\0' )
-      { break; // reached the end of the source string
-      }
-     u8NewFifoHead = (pMorseGen->u8FifoHead + 1) % MORSE_TX_FIFO_LENGTH; 
-     if( u8NewFifoHead == pMorseGen->u8FifoTail )
-      { break; // oops.. running out of buffer space
-      }
-     pMorseGen->u8Fifo[ pMorseGen->u8FifoHead ] = *pszText++;
-     pMorseGen->u8FifoHead = u8NewFifoHead;
-     ++nCharsAppended;
-     --iMaxLen;
+  u8NewFifoHead = (pMorseGen->u8FifoHead + 1) % MORSE_TX_FIFO_LENGTH; 
+  if( u8NewFifoHead == pMorseGen->u8FifoTail )
+   { return 0; // oops.. running out of buffer space
    }
+  pMorseGen->u8Fifo[ pMorseGen->u8FifoHead ] = (uint8_t)c;
+  pMorseGen->u8FifoHead = u8NewFifoHead;
+
   // Start output (a few milliseconds later, in a background process) ?
   if( pMorseGen->u8FifoHead != pMorseGen->u8FifoTail )
    { if( pMorseGen->u8State == MORSE_GEN_PASSIVE )
@@ -550,45 +542,53 @@ int MorseGen_AppendString( // API to send good old 8-bit C-strings
          // MorseGen_OnTimerTick() will do the rest..
       }
    } 
+  return 1;    // successfully appended a character
+} // end MorseGen_AppendChar()
+
+//---------------------------------------------------------------------------
+int MorseGen_AppendString( // API to send good old 8-bit C-strings
+     char *pszText ) // [in] plain old C-string (zero-terminated)
+{
+  int nCharsAppended = 0;
+  int iMaxLen = MORSE_TX_FIFO_LENGTH; // ultimate limit for unterminated strings
+
+  while( iMaxLen > 0 )
+   { if( *pszText=='\0' )
+      { break; // reached the end of the source string
+      }
+     if( ! MorseGen_AppendChar( *pszText++ ) )
+      { break; // Morse output buffer exhausted
+      }
+     ++nCharsAppended;
+     --iMaxLen;
+   }
   return nCharsAppended;
 } // MorseGen_AppendString()
 
-int MorseGen_AppendWideString( wchar_t *pwsText, int iMaxLen ) // API to send 'wide' (16-bit) strings .
-  // Obviously the Tytera firmware was written before the invention
-  // of UTF-8. What a waste of memory. We simply ignore the upper 8 bits 
-  // in each of the 'wide characters' in the string (cannot 'morse them').
-  // Because we don't know (or don't want to assume) that Tytera's 
-  // wide strings are always properly terminated with a (16-bit) ZERO, pass
-  // in a positive 'iMaxLen', for example in narrator.c : report_channel().
-{ T_MorseGen *pMorseGen = &morse_generator;
+int MorseGen_AppendWideString( wchar_t *pwsText ) // API to send 'wide' (16-bit) strings .
+{
   int nCharsAppended = 0;
-  uint8_t u8NewFifoHead;
-  pMorseGen->u8FifoHead %= MORSE_TX_FIFO_LENGTH;
-  if( iMaxLen == 0 )
-   { iMaxLen = MORSE_TX_FIFO_LENGTH;
-   }
+  int iMaxLen = MORSE_TX_FIFO_LENGTH; // ultimate limit for unterminated strings
+
   while( iMaxLen > 0 )
    { if( *pwsText==0 )
       { break; // reached the end of the source string
       }
-     u8NewFifoHead = (pMorseGen->u8FifoHead + 1) % MORSE_TX_FIFO_LENGTH; 
-     if( u8NewFifoHead == pMorseGen->u8FifoTail )
-      { break; // oops.. running out space in our tiny buffer
+     if( ! MorseGen_AppendChar( (char)*pwsText++ ) )
+      { break; // Morse output buffer exhausted
       }
-     
-     pMorseGen->u8Fifo[ pMorseGen->u8FifoHead ] = (uint8_t)*pwsText++;
-     pMorseGen->u8FifoHead = u8NewFifoHead;
      ++nCharsAppended;
      --iMaxLen;
    }
-  // Similar as for 8-bit strings: Start output ?
-  if( pMorseGen->u8FifoHead != pMorseGen->u8FifoTail )
-   { if( pMorseGen->u8State == MORSE_GEN_PASSIVE )
-      {  pMorseGen->u8State =  MORSE_GEN_START;
-      }
-   } 
   return nCharsAppended;
 }
+
+int MorseGen_AppendDecimal( int i )
+{ char sz15[16];
+  sprintf(sz15, "%d", i );
+  return MorseGen_AppendString( sz15 );
+}
+
 #endif // CONFIG_MORSE_OUTPUT ?
 
 
@@ -641,12 +641,13 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
       {
 #      if(1) // TEST : What caused the 'rattling noise' during CW output ?
         if( (!IS_AUDIO_AMP_ON) || (!IS_SPKR_SWITCH_ON) )
-         { // Gotcha ! Tytera's tiny part of the firmware has interfeared :)
-           // Sometimes, when a Morse message was still being sent,
-           // and the firmware decided to reduce the power consumption
-           // by turning the audio PA off, there was a 'rattling' noise
-           // in the speaker (same "rhythm" as the DC input current,
-           // observable on an old-fashioned ammeter) ?
+         { // Gotcha.. the original firmware interfeared :)
+           // Sometimes, while a Morse message was still being sent,
+           // the firmware decided to reduce the power consumption
+           // by turning the audio PA (or something else) off, 
+           // causing a 'rattling' noise in the speaker .
+           //   (same "rhythm" as the DC input current,
+           //    observable on an old-fashioned ammeter)
            // Cured by forcing the audio-PA on in all 'active' generator states.
            if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
             { // show when something 'interfered':

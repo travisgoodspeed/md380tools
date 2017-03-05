@@ -16,7 +16,7 @@
 #if defined(FW_D13_020) || defined(FW_S13_020)
   extern uint8_t channel_num;    // borrowed from netmon.c ..
   // (channel_num wasn't in any header; address in applet/src/symbols_d13.020 + _s13.020 only)
-  extern wchar_t channel_name[]; // borrowed from keyb.c (!).. not sure if ZERO-terminated !
+  extern wchar_t channel_name[]; // borrowed from keyb.c (!)
 #endif
 
 // Possible values for global_addl_config.narrator_mode :
@@ -45,7 +45,8 @@ typedef struct tNarrator // instance data.
   // Purely 'internal stuff', to detect changes in narrator() :
   uint8_t old_opmode2; // previous value of gui_opmode, seen in..
   uint8_t old_opmode3; // ..the last call of narrator() [etc, etc]
-  uint8_t menu_entry;
+  int     focused_item_index; // menu item index "with the cursor line"
+              // (not necessarily the previously "Confirmed" option !)
   uint8_t channel_number;
 
 } T_Narrator;

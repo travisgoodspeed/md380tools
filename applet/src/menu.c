@@ -1167,14 +1167,15 @@ void mn_morse_mode(void)  // CW output mode : off / short / verbose / test ?
     if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
      { md380_menu_entry_selected = 3;
      }
-    else if( global_addl_config.narrator_mode & NARRATOR_MODE_VERBOSE )
+    else if( (global_addl_config.narrator_mode & (NARRATOR_MODE_VERBOSE|NARRATOR_MODE_ENABLED) )
+                                              == (NARRATOR_MODE_VERBOSE|NARRATOR_MODE_ENABLED) )
      { md380_menu_entry_selected = 2;
      }
     else if( global_addl_config.narrator_mode & NARRATOR_MODE_ENABLED )
      { md380_menu_entry_selected = 1;
      }
     else // neither "TEST", "VERBOSE", "NORMAL", or any combination...
-     { md380_menu_entry_selected = 0; // .. so the Morse output is OFF
+     { md380_menu_entry_selected = 0; // .. so *automatic* Morse output is OFF
      }
     mn_submenu_init(wt_morse_mode);
     mn_submenu_add(wt_off,    mn_morse_mode_off );      // no morse output at all

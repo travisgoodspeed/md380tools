@@ -52,6 +52,10 @@ extern uint8_t green_led_timer; // similar for the GREEN (RX) LED.  TEST ONLY !
 
 #if( CONFIG_MORSE_OUTPUT )
 void MorseGen_ClearTxBuffer(void); // aborts the current Morse transmission (if any)
+int  MorseGen_AppendChar( char c );
 int  MorseGen_AppendString( char *pszText ); // API to send 8-bit, zero-terminated strings
-int  MorseGen_AppendWideString( wchar_t *pwsText, int iMaxLen ); // API to send 16-bit strings
+int  MorseGen_AppendWideString( wchar_t *pwsText ); // API to send 16-bit strings
+int  MorseGen_AppendDecimal( int i );
+int  MorseGen_AppendHex( uint32_t num );
+
 #endif // CONFIG_MORSE_OUTPUT ?

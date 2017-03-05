@@ -453,6 +453,7 @@ def hexwatch(dfu,address):
     adr=ParseHexOrRegName(address)
     while True:
         hexdump(dfu,adr,16)
+        sys.stdout.flush() # required for mingw and similar shells
         time.sleep(0.05)
 
 
@@ -496,6 +497,15 @@ def hexdump32(dfu,address,length=512):
     if know_name: # if known, show SFR names for the last line
         sys.stdout.write("("+names+")")
 
+def hexwatch32(dfu,address,length=16):
+    """Continously samples/displays four 32-bit words"""
+    while True:
+        hexdump32(dfu,address,length)
+        sys.stdout.flush() # required for mingw and similar shells
+        if length<=4:
+           time.sleep(0.05)
+        else:
+           time.sleep(0.2)
 
 def bindump32(dfu,address,length=256):
     """Dumps 32-bit binary values to the screen"""
@@ -627,6 +637,7 @@ def rssi(dfu):
         rssil=dfu.c5000peek(0x44);
         rssi=(rssih<<8)|rssil;
         print "%04x" % rssi;
+        sys.stdout.flush() # required for mingw and similar shells
         time.sleep(0.25);
 def messages(dfu):
     """Prints all the SMS messages."""
@@ -855,6 +866,10 @@ def main():
                 print "Watching memory at %s." % sys.argv[2]
                 dfu=init_dfu()
                 hexwatch(dfu,sys.argv[2])
+            elif sys.argv[1] == 'hexwatch32':
+                print "Watching 32-bit words at %s." % sys.argv[2]
+                dfu=init_dfu()
+                hexwatch32(dfu,sys.argv[2])
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]))
             elif sys.argv[1] == 'readword':
@@ -887,6 +902,10 @@ def main():
             elif sys.argv[1] == 'hexdump32': # DL4YHF 2017-01
                 dfu=init_dfu()
                 hexdump32(dfu,sys.argv[2], int(sys.argv[3]) )
+            elif sys.argv[1] == 'hexwatch32': # DL4YHF 2017-03
+                print "Watching 32-bit words at %s." % sys.argv[2]
+                dfu=init_dfu()
+                hexwatch32(dfu,sys.argv[2], int(sys.argv[3]))
             elif sys.argv[1] == 'bindump32': # DL4YHF 2017-01
                 dfu=init_dfu()
                 bindump32(dfu,sys.argv[2], int(sys.argv[3]) )
