@@ -266,6 +266,7 @@ radio will be radio to accept this firmware update.""")
 
         while address_idx < numaddresses:  # for each section
             print("%0d%% complete" % (address_idx * 100 / numaddresses))
+            sys.stdout.flush() # let text appear immediately (for mingw)
             address = addresses[address_idx]
             size = sizes[address_idx]
             dfu.set_address(address)
