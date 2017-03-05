@@ -315,7 +315,7 @@ class MD380Graphics(Memory):
     @staticmethod
     def ppmparse(ppm):
         """Convert PPM(P6) image to sprite object"""
-        ppml = ppm.split('\n')
+        ppml = ppm.splitlines()
         assert ppml[0] == 'P6'
         i = 1
         addr = 0
@@ -644,7 +644,7 @@ def main():
             sys.exit(5)
         with open(args.gfx, 'rb') as f:
             pbmfonts = f.read()
-        pbmfontsl = pbmfonts.split('\n')
+        pbmfontsl = pbmfonts.splitlines()
 
         gfx, pbmfontsl = md.pbmparse(pbmfontsl)
         while gfx is not None:
