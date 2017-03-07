@@ -644,7 +644,7 @@ def main():
             sys.exit(5)
         with open(args.gfx, 'rb') as f:
             pbmfonts = f.read()
-        pbmfontsl = pbmfonts.splitlines() # cares for "\n", "\r\n", etc
+        pbmfontsl = pbmfonts.splitlines()
 
         gfx, pbmfontsl = md.pbmparse(pbmfontsl)
         while gfx is not None:
