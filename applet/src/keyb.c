@@ -54,7 +54,9 @@ void reset_backlight()
     // enabling backlight again on MD390/G in monitor mode
     void (*f)(uint32_t,uint32_t) = (void*)( 0x0802bae6 + 1 ); // S: ??? 0x0802BAE6
     f(0x40020800,0x40);
-#warning please consider adding symbols.
+    // # warning please consider hooking. // too many warnings - see issue #704 on github
+#else //TODO add support for other firmware, e.g. D02.032 (?)
+
 #endif
 }
 
@@ -123,13 +125,13 @@ void handle_hotkey( int keycode )
             copy_dst_to_contact();
             break ;
         case 4 :
-	    lastheard_redraw();
+            lastheard_redraw();
             switch_to_screen(4);
             break ;
         case 5 :
             syslog_clear();
-	    lastheard_clear();
-	    nm_started = 0;// reset nm_start flag used for some display handling
+            lastheard_clear();
+            nm_started = 0;// reset nm_start flag used for some display handling
             break ;
         case 6 :
         {
@@ -176,42 +178,42 @@ void handle_hotkey( int keycode )
 
 void handle_sidekey( int keycode, int keypressed )
 {
-    if ( keycode == 18 ) {												//top button
-    	if ( (keypressed & 2) == 2 && kb_top_side_key_press_time < kb_side_key_max_time) {									//short press
-    		evaluate_sidekey( top_side_button_pressed_function );
-    	}
-    	else if ( keypressed == 5) {									//long press
-    		evaluate_sidekey( top_side_button_held_function );
-    	}
+    if ( keycode == 18 ) {             //top button
+      if ( (keypressed & 2) == 2 && kb_top_side_key_press_time < kb_side_key_max_time) {  //short press
+        evaluate_sidekey( top_side_button_pressed_function );
+      }
+      else if ( keypressed == 5) {     //long press
+        evaluate_sidekey( top_side_button_held_function );
+      }
     }
-    else if ( keycode == 17 ) {											//bottom button
-    	if ( (keypressed & 2) == 2 && kb_bot_side_key_press_time < kb_side_key_max_time) {									//short press
-			evaluate_sidekey( bottom_side_button_pressed_function );
-		}
-		else if ( keypressed == 5 ) {									//long press
-			evaluate_sidekey( bottom_side_button_held_function );
-		}
+    else if ( keycode == 17 ) {        //bottom button
+      if ( (keypressed & 2) == 2 && kb_bot_side_key_press_time < kb_side_key_max_time) { //short press
+      evaluate_sidekey( bottom_side_button_pressed_function );
+    }
+    else if ( keypressed == 5 ) {      //long press
+      evaluate_sidekey( bottom_side_button_held_function );
+    }
     }
 }
 
-void evaluate_sidekey ( int button_function)							//This is where new functions for side buttons can be added
+void evaluate_sidekey ( int button_function) //This is where new functions for side buttons can be added
 {
-	switch ( button_function ) {										//We will start at 0x50 to avoid conflicting with any added functions by Tytera.
-		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
-		{
-			#if (CONFIG_DIMMED_LIGHT) // If backlight dimmer is enabled, we will use that instead.
-				kb_backlight ^= 0x01; // flag for SysTick_Handler() to turn backlight off completely
-			#else
-				GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+  switch ( button_function ) {  //We will start at 0x50 to avoid conflicting with any added functions by Tytera.
+    case 0x50 :                 //Toggle backlight enable pin to input/output. Disables backlight completely.
+    {
+      #if (CONFIG_DIMMED_LIGHT) // If backlight dimmer is enabled, we will use that instead.
+        kb_backlight ^= 0x01;   // flag for SysTick_Handler() to turn backlight off completely
+      #else
+        GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
             #endif
-			reset_backlight();
-			break;
-		}
-		default:
-			return;
-	}
+      reset_backlight();
+      break;
+    }
+    default:
+      return;
+  }
 
-	kb_keypressed = 8 ;											//Sets the key as handled. The firmware will ignore this button press now.
+  kb_keypressed = 8 ; // Sets the key as handled. The firmware will ignore this button press now.
 }
 
 void trace_keyb(int sw)
@@ -305,14 +307,14 @@ void kb_handler_hook()
     }
 
     if ( kc == 17 || kc == 18 ) {
-    	if ( (kp & 2) == 2 || kp == 5 ) {					//The reason for the bitwise AND is that kp can be 2 or 3
-    		handle_sidekey(kc, kp);							//A 2 means it was pressed while radio is idle, 3 means the radio was receiving
-    		return;
-    	}
+      if ( (kp & 2) == 2 || kp == 5 ) { // The reason for the bitwise AND is that kp can be 2 or 3
+        handle_sidekey(kc, kp);         // A 2 means it was pressed while radio is idle, 3 means the radio was receiving
+        return;
+      }
     }
 
-#else
-#warning please consider hooking.
+#else //TODO add support for other firmware, e.g. D02.032 (?)
+    // # warning please consider hooking. // too many warnings - see issue #704 on github
     return;
 #endif
 }

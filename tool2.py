@@ -105,8 +105,7 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
 
 class UsersDB():
     """List of registered DMR-MARC users."""
-    users = {} # the PEP8 dictator wants exactly whitespace around operators. Heavens, no.
-               # He also wanted one blank line before a 'def'. Agreed.
+    users = {}
 
     def __init__(self, filename=None):
         """Loads the database."""
@@ -458,7 +457,7 @@ def hexwatch(dfu,address):
 
 
 def ParseHexOrRegName(address):
-    if address in sfr_addresses.values(): # there must be a more elegant way than this..
+    if address in sfr_addresses.values():
         return sfr_addresses.keys()[sfr_addresses.values().index(address)]
     else:
         return int(address,16)

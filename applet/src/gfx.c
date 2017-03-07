@@ -13,9 +13,10 @@
 #include "string.h"
 #include "addl_config.h"
 #include "display.h"
-#include "console.h"      // defines option CONFIG_DIMMED_LIGHT (0 or 1) since 2017-01-07
+#include "console.h"
 #include "netmon.h"
 #include "debug.h"
+#include "lastheard.h" // reduce number of warnings - use function prototypes
 
 #include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
 
@@ -209,7 +210,7 @@ void print_time_hook(void)
     for (int i = 0; i < 9; i++) {
         if( wide_time[i] == '\0' )
             break;
-	lastheard_putch(wide_time[i]);
+        lastheard_putch(wide_time[i]);
     }
 }
 
