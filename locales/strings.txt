@@ -11,60 +11,70 @@ fr Non Program
 de Kein Program
 es Sin Programar
 it Non program.
+ru Не запрограмировано
 
 # 0xc53c0 28 13 Delete Entry?
 en Delete Entry?
 de Eintrag entf?
 es Eliminar reg?
 it Elimino reg?
+ru Удалить?
 
 # 0xc53dc 26 12 Radio Enable
 en Radio Enable
 de Geraet aktiv.
 es Radio activa
 it Attiva radio
+ru Радио активано
 
 # 0xc53f8 28 13 Radio Disable
 en Radio Disable
 de Geraet deaktiv
 es Radio desact.
 it Disatt. radio
+ru Радио не активно
 
 # 0xc5414 26 12 Edit Number:
 en Edit Number:
 de ID aendern:
 es Editar numero:
 it Edita numero:
+ru Редактировать номер:
 
 # 0xc5430 26 12 Text Message
 en Text Message
 de Text Nachricht
 es Mensaje de Texto
 it SMS
+ru SMS меню
 
 # 0xc544c 26 12 Message Send
 en Message Send
 de SMS gesendet
 es Mensaje enviado
 it Invio SMS
+ru Сообщение отправлено
 
 # 0xc5468 26 12 Radio Check:
 en Radio Check:
 de Geraetecheck
 es Chequeo Radio
 it Verif. radio
+ru Проверка радио:
 
 # 0xc5484 26 12 Target Radio
 en Target Radio
 de Ziel-Geraet
 es Radio Destino
 it Destinatario
+ru Цель
 
 # 0xc54a0 28 13 Not Available
 en Not Available
 de Nicht moeglich
 es No Disponible
 it Non disponib.
+ru Не доступно
 
 # 0xc54bc 28 13 Radio Enable:
 # 0xc54d8 28 13 Firmware Ver.
@@ -72,253 +82,303 @@ en Firmware Ver.
 de Firmware Vers
 es Version FW
 it Versione FW
+ru Версия прошивки
 
 # 0xc54f4 28 13 Batter Info
 en Batter Info
 de BatterieInf
 es Info Bateria
 it Info Batt.
+ru Об аккумуляторе
 
 # 0xc5510 28 13 Private Alert
 es Alert Privada
 it Avviso priv.
+ru Персональный вызов
 
 # 0xc552c 26 12 Enter Number
 es Intro Numero
 it Inser. num.
+ru Ввод номера
 
 # 0xc5548 26 12 Radio Number
 en Radio Number
 de Geraete-ID
 es Numero Radio
 it Numero Radio
+ru Номер РЭС
 
 # 0xc5564 26 12 Tones/Alerts
 en Tones/Alerts
 de Hinweistoene
 es Tono/Alertas
 it Toni/Avvisi
+ru Звук/Оповещение
 
 # 0xc5580 26 12 Intro Screen
 en Intro Screen
 de Startnachricht
 es Pant. Inicio
 it Scherm. iniz.
+ru Вывод на Экран
 
 # 0xc559c 28 13 LED Indicator
 en LED Indicator
 de LED Anzeige
 es Indicador LED
 it Indic. LED
+ru LED индикатор
 
 # 0xc55b8 26 12 Site Roaming
 es Roaming Local
 it Roaming Locale
+ru Роуминг
 
 # 0xc55d4 26 12 Call Ringers
 en Call Ringers
 de Ruftoene
 es Tono Llamada
 it Suoneria
+ru Звонки вызова
 
 # 0xc55f0 26 12 Keypad Tones
 en Keypad Tones
 de Tastentoene
 es Tono Teclas
 it Tono tasti
+ru Звук клавиатуры
 
 # 0xc560c 28 13 Volume Offset
 es Comp. Volumen
+ru Уровень отклонения
 
 # 0xc5628 26 12 New Password
 es Nueva Password
 it Nuova password
+ru Новый пароль
 
 # 0xc5644 26 12 Eight Digits
 en Eight Digits
 de Acht Ziffern
 es Ocho Digitos
 it Otto cifre
+ru 8 цифр
 
 # 0xc5660 26 12 Do Not Match
 es No coinciden
 it Non corrisp.
+ru Не подходит
 
 # 0xc567c 26 12 Press OK and
 es Presiona OK y
 it Premi OK e
+ru Надмите OK и
 
 # 0xc5698 28 13 Missed Calls:
 es Perdidas
 it perse
+ru Пропущенный вызов
 
 # 0xc56b4 26 12 Setting Time
 en Setting Time
 de Uhr einstellen
 es Configura Hora
 it Configura ora
+ru Настройка часов
 
 # 0xc56d0 26 12 Setting Date
 en Setting Date
 de Datum setzen
 es Configura fecha
 it Configura data
+ru Настройка даты
 
 # 0xc56ec 26 12 Contact List
 en Contact List
 de Kontaktliste
 es Lista Contactos
 it Lista contatti
+ru Контакты
 
 # 0xc5708 28 13 Outgoing List
 es Lista Salientes
 it Lista uscita
+ru Исходящие
 
 # 0xc5724 28 13 Answered List
 es Lista Respondidas
 it Lista risposte
+ru Отвеченные
 
 # 0xc5740 26 12 Out Of Range
 es Fuera de Rango
 it Fuori copert.
+ru Выход за предел
 
 # 0xc575c 28 13 Program Radio
 es Programar radio
 it Programm. radio
+ru Програмирование РЭС
 
 # 0xc5778 26 12 Edit Channel
 es Editar canal
 it Modif. canale
+ru Редактировать канал
 
 # 0xc5794 26 12 Rx Frequency
 en Rx Frequency
 de Rx Frequenz
 es Frecuencia Rx
 it Freq. RX
+ru RX частота
 
 # 0xc57b0 26 12 Tx Frequency
 en Tx Frequency
 de Tx Frequenz
 es Frecuencia Tx
 it Freq. TX
+ru TX частота
 
 # 0xc57cc 26 12 Channel Name
 en Channel Name
 de Kanalname
 es Nombre Canal
 it Nome canale
+ru Имя канала
 
 # 0xc57e8 28 13 Repeatar Slot
 en Repeater Slot
 de RPT Zeitschl.
 es Slot Repetidor
 it Slot ripetit.
+ru Слот репитера
 
 # 0xc5820 26 25 Digital Radio in USB mode
 es Radio Digital en modo USB
 it Radio Digitale in modo USB
+ru Цифровой режим USB
 
 # 0xc5b58 22 10 PC Program
 es Programacion PC
 it Programmaz. PC
+ru PC програмирование
 
 # 0xc5b70 24 11 New Contact
 en New Contact
 de Neuer Kontakt
 es Nuevo contacto
 it Nuovo contatto
+ru Новый контакт
 
 # 0xc5b88 24 11 Manual Dial
 en Manual Dial
 de Manuelle Wahl
 es Marcado manual
 it Chiam. manuale
+ru Ввод с клавиатуры
 
 # 0xc5ba0 22 10 Call Alert
 en Call Alert
 de Rufalarm
 es Alerta Llamada
 it Avviso chiam.
+ru Оповещение вызова
 
 # 0xc5bb8 24 11 View Number
 es Ver Numero
 it Visual. num.
+ru Посмотреть номер
 
 # 0xc5bd0 24 11 Edit Number
 es Editar Numero
 it Modif. num.
+ru Редактировать номер
 
 # 0xc5be8 22 10 Ring Style
 en Ring Style
 de Rufton
 es Tono Ring
 it Tipo suon.
+ru Стиль звонка
 
 # 0xc5c00 24 11 Program Key
+ru Клавиша программы
 
 # 0xc5c18 24 11 Radio Check
 en Radio Check
 de Geraete Chk
 es Check Radio
 it Verif. radio
+ru Проверка радио
 
 # 0xc5c30 24 11 Remote Mon.
 es Monitor Remoto
 it Monitor remoto
+ru Удаленный монитор
 
 # 0xc5c48 24 11 Select Tone
 es Elija Tono
 it Scegli tono
+ru Выбор тона
 
 # 0xc5c60 22 10 Select Key
 en Select Key
 de Taste ausw
 es Elija Tecla
 it Scegli tasto
+ru Выбор клавиши
 
 # 0xc5c78 24 11 This Key is
 es Esta tecla es
 it Questo tasto e'
+ru Эта клавиша 
 
 # 0xc5c90 22 10 OverWrite?
 en Overwrite?
 de Ersetzen?
 es Sobreescribo?
 it Sovrascrivo?
+ru Перезаписать?
 
 # 0xc5ca8 22 10 Edit Name:
 es Editar Nombre:
 it Modif. num.:
+ru Редактировать имя:
 
 # 0xc5cc0 22 10 Quick Text
 en Quick Text
 de Vorlagetxt
 es Edicion rapida
 it Testo rapido
+ru Быстрое сообщение
 
 # 0xc5cd8 22 10 Sent Items
 en Sent Items
 de Absenden?
 es Enviar item
 it Inviare
+ru Отправленные
 
 # 0xc5cf0 24 11 Sending to:
 en Sending to:
 de Senden an:
 es Enviando a:
 it Invio a:
+ru Отправляется для
 
 # 0xc5d08 22 10 Delete All
 en Delete All
 de Loeschen?
 es Eliminar todo
 it Elimina tutto
+ru Удалить все
 
 # 0xc5d20 22 10 Successful
 en Successful
 de Erfolgreic
 es Con Exito
 it Riuscito
+ru Завершено
 
 # 0xc5d38 24 11 Call Alert:
 en Call Alert:
