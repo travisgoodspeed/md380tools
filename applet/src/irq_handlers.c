@@ -60,6 +60,9 @@
 #  error "Missing address of the original SysTick_Handler in 'irq_handlers.h' !"
 #endif
 
+ 
+
+
 typedef void (*void_func_ptr)(void);
 
   // How to drive the LEDs (here, mostly for testing) ? From gfx.c :
@@ -84,14 +87,9 @@ typedef void (*void_func_ptr)(void);
   // "keep 'M' pressed on power-on for Morse output" will be difficult.
 
   // How to control audio power amplifier and speaker ?
-  // (to generate message beeps without wading through the mud 
-  //  of the original firmware, which seems to use DMA, DAC,
-  //  and a bunch of hardware timers for this purpose...)
-  // Again, the schematic diagram doesn't tell the full story.
-  //  Details: www.qsl.net/dl4yhf/RT3/md380_fw.html#audio_message_beeps .
-  // And again, beware of the dreadful register names:
-  //   BSRRH sets a portbit LOW in an atomic sequence,
-  //   BSRRL sets a portbit HIGH ! ! !
+  // Details: www.qsl.net/dl4yhf/RT3/md380_fw.html#audio_message_beeps .
+  // Note: BSRRH sets a portbit LOW in an atomic sequence,
+  //       BSRRL sets a portbit HIGH (counter-intuitive names) !
 #define PINPOS_C_AUDIO_BEEP 8 /* pin pos of the 'beep' output, GPIO_C */
 #define PINPOS_B_AUDIO_PA   9 /* pin pos of AF Control (PA),   GPIO_B */
 #define PINPOS_B_SPK_C      8 /* pin pos of SPK_C (Anti-Pop?), GPIO_B */
@@ -103,7 +101,6 @@ typedef void (*void_func_ptr)(void);
 #define SPKR_SWITCH_ON GPIOB->BSRRH=(1<<PINPOS_B_SPK_C)  /* speaker on */
 #define SPKR_SWITCH_OFF GPIOB->BSRRL=(1<<PINPOS_B_SPK_C) /* speaker off*/
 #define IS_SPKR_SWITCH_ON ((GPIOB->ODR&(1<<PINPOS_B_SPK_C))==0) /*check spkr switch*/
-
 
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
 #if( CONFIG_DIMMED_LIGHT )
@@ -179,7 +176,7 @@ uint8_t Morse_table[] =
    0x40 + 0x0C,  /*  ?  ..--.. : startbit(6) + 001100bin        */
    0x40 + 0x1A,  /*  @  .--.-. : startbit(6) + 011010bin ("AC") */
 
-   /* Entries [48..58] for ASCII 65..90, characters 'A'..'Z' :  */
+   /* Entries #48..#58 for ASCII 65..90, characters 'A'..'Z' :  */
    /* A .-   */  0x05,   /* B -... */ 0x18,   /* C -.-. */ 0x1A,
    /* D -..  */  0x0C,   /* E .    */ 0x02,   /* F ..-. */ 0x12,
    /* G --.  */  0x0E,   /* H .... */ 0x10,   /* I ..   */ 0x04,
@@ -188,7 +185,14 @@ uint8_t Morse_table[] =
    /* P .--. */  0x16,   /* Q --.- */ 0x1D,   /* R .-.  */ 0x0A,
    /* S ...  */  0x08,   /* T -    */ 0x03,   /* U ..-  */ 0x09,
    /* V ...- */  0x11,   /* W .--  */ 0x0B,   /* X -..- */ 0x19,
-   /* Y -.-- */  0x1B,   /* Z --.. */ 0x1C
+   /* Y -.-- */  0x1B,   /* Z --.. */ 0x1C,
+
+   /* Entries #59..#63 for ASCII 91..95, characters '['..'_' :  */
+   /* ASCII 91: [ (like '(' )  : -.--.  */ 0x36,
+   /* ASCII 92: \ (like '/' )  : -..-.  */ 0x32,
+   /* ASCII 93: ] (like ')' )  : -.--.- */ 0x6D,
+   /* ASCII 94: ^ (like ''' )) : .----. */ 0x5E,
+   /* ASCII 95: _ (like '-' )) : -....- */ 0x61
  
  }; /* end Morse_table[] */
 
@@ -469,7 +473,7 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
   if( u8ASCII>='a' && u8ASCII<='z' ) // convert lower to UPPER case
    {  u8ASCII -= ('a'-'A');
    }
-  if( u8ASCII>'Z' )  // no 'special' characters in the small table !   
+  if( u8ASCII>127 )  // no 'special' characters in the small table !   
    { u8ASCII = '?';  // send question mark instead
    }
   morse_code = Morse_table[ u8ASCII - 32 ];
@@ -659,6 +663,20 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
 #      endif // TEST ?
         AUDIO_AMP_ON;   // keep the supply voltage for the audio PA on
         SPKR_SWITCH_ON; // keep the speaker connected to the audio PA
+
+        // When on an inactive DMR channel, AND the volume pot not at MINIMUM,
+        // there was an annoying 'rattling noise' in the speaker.
+        // This happened when the DMR chip (C5000) was periodically switched
+        // into "sleep mode", causing a step at its 'LINEOUT' pin.
+        // When watching the RAM contents (periodically updated),
+        // the 16-bit location at 0x2001E5D0 in D13.020 had counted
+        // counted down from ~~0x01FF (when active) to ~~ 3 or 4,
+        // when the chattering started. Tried to prevent this as follows:
+        *((uint16_t*)MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN) |= 0x80;
+        // This eliminated the 'rattling' noise, but it's ugly.
+        // The least significant bits of this variable seem to have 
+        // a special meaning (e.g. in D13.020 at 0x08031f1c),
+        // so don't modify the lower bits here.
       }
    }
   else // timer expired, so what's up next (state transition) ?
@@ -671,20 +689,20 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            //       or let the caller (e.g. the 'narrator')
            //       decide whether 'to morse' during TX or not ? 
            // If the radio's Audio power amplifier isn't powered up yet,
-           // turn it on. To reduce the 'pop' in the speaker, Tytera possibly
-           // invested in two N-channel MOSFETs between audio PA and speaker.
-           SPKR_SWITCH_OFF; // 'anti-pop' switch between PA and speaker still disconnected
+           // turn it on. To reduce the 'pop' in the speaker, open the
+           // two N-channel MOSFET switches between audio PA and speaker:
+           SPKR_SWITCH_OFF; // 'anti-pop' switch between PA and speaker open
            pMorseGen->u8State = MORSE_GEN_START_AP_OPEN;
            break;
-        case MORSE_GEN_START_AP_OPEN:  // been waiting for anti-pop switch to open
+        case MORSE_GEN_START_AP_OPEN:  // anti-pop switch is now open
            AUDIO_AMP_ON;    // turn on the supply voltage for the audio PA
            pMorseGen->u8State = MORSE_GEN_START_AUDIO_PA;
            break;      
         case MORSE_GEN_START_AUDIO_PA: // been waiting for audio PA to start
-           SPKR_SWITCH_ON; // close the 'anti-pop' switch between PA and speaker
+           SPKR_SWITCH_ON; // close 'anti-pop' switch between PA and speaker
            pMorseGen->u8State = MORSE_GEN_START_AP_CLOSE;
            break;
-        case MORSE_GEN_START_AP_CLOSE: // been waiting for anti-pop switch to close
+        case MORSE_GEN_START_AP_CLOSE: // anti-pop switch is now closed
            pMorseGen->u8State = MORSE_GEN_START_CHAR_TX;
            break;
         case MORSE_GEN_START_CHAR_TX:  // start transmission of next char
@@ -699,7 +717,6 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
             }
            break; 
         case MORSE_GEN_SENDING_TONE: // finished sending a tone (dash or dot)
-           // LED_GREEN_OFF; // TEST (used before the PWM-beeps worked properly)
            BeepMute(); 
            pMorseGen->u8State = MORSE_GEN_SENDING_GAP; 
            break;

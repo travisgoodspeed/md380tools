@@ -16,9 +16,11 @@ from DFU import DFU, State, Request
 import time # the PEP8 dictator said only one module per import. Bleah.
 import sys
 import struct
+#import msvcrt # why the heck doesn't Python have a SIMPLE, PORTABLE 'conio' ?!
 import usb.core
 from collections import namedtuple
 import json
+
 # The tricky thing is that *THREE* different applications all show up
 # as this same VID/PID pair.
 #
@@ -81,7 +83,7 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
     0x40020C00L: "GPIOD", # .. with PD3="K3" ("Key 3" .. what's that ? )
     0x40020C04L:  "PD_OTYPE",0x40020C08L:"PD_OSPEED", 0x40020C0CL:"PD_PUPD",
     0x40020C10L:  "PD_IDR",  0x40020C14L:"PD_ODR",    0x40020C18L:"PD_BSRR", 
-    0x4002081CL:  "PD_LCKR", 0x40020C20L:"PD_AFRL",   0x40020C24L:"PD_AFRH",
+    0x40020C1CL:  "PD_LCKR", 0x40020C20L:"PD_AFRL",   0x40020C24L:"PD_AFRH",
     0x40021000L: "GPIOE", # .. with RX_LED, TX_LED, FSMC, PTT, etc..
     0x40021004L:  "PE_OTYPE",0x40021008L:"PE_OSPEED", 0x4002100CL:"PE_PUPD",
     0x40021010L:  "PE_IDR",  0x40021014L:"PE_ODR",    0x40021018L:"PE_BSRR", 
@@ -103,7 +105,13 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
 
 }
 
-class UsersDB():
+def NonBlockingGetKey():
+    if msvcrt.kbhit():
+       return msvcrt.getch()
+    else:
+       return 0
+
+class UsersDB:
     """List of registered DMR-MARC users."""
     users = {}
 
@@ -469,7 +477,7 @@ def ShowRegNameIfKnown(address):
         sys.stdout.write(' ; '+ sfr_addresses[address] )
 
 
-def hexdump32(dfu,address,length=512):
+def hexdump32(dfu,address,length=512,bytesPerLine=16):
     """Dumps 32-bit hex values to the screen"""
     adr=ParseHexOrRegName(address)
     buf=dfu.peek(adr,length+3)
@@ -478,7 +486,7 @@ def hexdump32(dfu,address,length=512):
     cbuf=""
     names=""
     while i<length:
-        if i%16==0:
+        if i%bytesPerLine==0:
             if know_name: # if at least one address is a known SFR, show them
                sys.stdout.write("("+names+")")
             sys.stdout.write("\n%08X: "%(adr+i))
@@ -491,21 +499,24 @@ def hexdump32(dfu,address,length=512):
             names = names+sfr_addresses[adr+i]
         else:
             names = names+"?"
-        if i%16 < 12:
+        if i%bytesPerLine < (bytesPerLine-4):
             names = names+","
         i=i+4
     if know_name: # if known, show SFR names for the last line
         sys.stdout.write("("+names+")")
 
-def hexwatch32(dfu,address,length=16):
-    """Continously samples/displays four 32-bit words"""
+def hexwatch32(dfu,address,length=32,bytesPerLine=32):
+    """Continously samples/displays 32-bit words"""
+    if bytesPerLine>length:
+       bytesPerLine=length
     while True:
-        hexdump32(dfu,address,length)
+        hexdump32(dfu,address,length,bytesPerLine)
         sys.stdout.flush() # required for mingw and similar shells
         if length<=4:
            time.sleep(0.05)
         else:
            time.sleep(0.2)
+        # Simple keyboard control ? Hopeless without bulky or non-portable crap !
 
 def bindump32(dfu,address,length=256):
     """Dumps 32-bit binary values to the screen"""
