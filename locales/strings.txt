@@ -385,272 +385,348 @@ en Call Alert:
 de Rufalarm
 es Alerta Llamada
 it Avviso chiam.
+ru Оповещение вызова
 
 # 0xc5d50 22 10 Read Later
 en Read Later
 de Spaeter zeigen
 es Leer despues
 it Leggi dopo
+ru Читать позже
 
 # 0xc5d68 22 10 Radio Info
 es Info Radio
 it Info Radio
+ru Информация о РЭС
 
 # 0xc5d80 22 10 Add Member
 es Anadir Miembro
 it Agg. membro
+ru Добавить запись
 
 # 0xc5d98 24 11 Enter Name:
 es Inserte nombre:
 it Inser. nome:
+ru Ввод имени:
 
 # 0xc5db0 22 10 Talkaround
 it Diretta
+ru Симплекс
 
 # 0xc5dc8 24 11 Keypad Lock
 it Blocco tast.
+ru Блокировка клавиатуры
 
 # 0xc5de0 22 10 Cable Type
 en Cable Type
 de Kabeltyp
 es Tipo Cable
 it Tipo cavo
+ru Тип кабеля
 
 # 0xc5df8 24 11 Passwd Lock
+ru Блокировка паралем
 
 # 0xc5e10 24 11 PrivateCall
 en PrivateCall
 de Einzelruf
 es Llamada Privada
 it Chiam privata
+ru Персональный вызов
 
 # 0xc5e28 24 11 Talk Permit
 en Talk Permit
 de PTTFreigabe
 es Permiso PTT
 it Permesso TX
+ru Разрешить передачу
 
 # 0xc5e40 22 10 Vol.Offset
 en Vol.Offset
 de Lautstaerke
 es Comp. Vol.
 it Comp. vol.
+ru Уровень грамкости
 
 # 0xc5e58 22 10 Ringer Off
 en Ringer Off
 de Rufton Aus
 es Ringer apagado
 it Suoneria off
+ru Звонок выкл.
 
 # 0xc5e70 22 10 Change Pwd
+ru Изменить пароль
+
 # 0xc5e88 24 11 * to Unlock
 en * to Unlock
 de Entsp.mit *
 es * para Desblq
 it * per sblocc.
+ru * для разблокировки
 
 # 0xc5ea0 24 11 All Entries
 en All Entries
 de Alle Eintr.
 es Todas Entradas
 it Tutte
+ru Все записи
 
 # 0xc5eb8 22 10 Alarm Rcvd
 en Alarm Rcvd
 de Eing. Rufe
 es Alarma Recibida
 it Avviso ricevuto
+ru Полученные оповещения
 
 # 0xc5ed0 22 10 View Later
 es Ver Despues
 it Vedi dopo
+ru Смотреть позже
 
 # 0xc5ee8 24 11 Scan on/off
+ru Вкл\Выкл сканирование
 
 # 0xc5f00 24 11 Missed List
 es Lista Perdidas
 it Lista perse
+ru Пропущенные
 
 # 0xc5f18 22 10 Enter Name
 es Intro. Nombre
 it Inser. nome
+ru Ввод имени
 
 # 0xc5f30 22 10 Color Code
 en Color Code
 de CC Einstlg
 es Codigo Color
 it Cod. colore
+ru Color Code
 
 # 0xc5f48 24 11 Char String
 en Char String
 de Zeichenfolg
 es Cadena Carct.
 it Stringa
+ru Текст
 
 # 0xed9b0 18 8 USB Mode
 en USB Mode
 de USB Mod.
 es Modo USB
 it Mod. USB
+ru Режим USB
 
 # 0xed9c4 20 9 Press PTT
 en Press PTT
 de PTT drue.
 es Pres. PTT
 it Premi PTT
+ru Нажать PTT
 
 # 0xed9d8 18 8 Contacts
 en Contacts
 de Kontakte
 es Contactos
 it Contatti
+ru Контрасность
 
 # 0xed9ec 18 8 Messages
 en Messages
 de SMS Eing
 es Mensajes
 it Messaggi
+ru Сообщения
 
 # 0xeda00 18 8 Call Log
 en Call Log
 de Rufliste
 es Registro
 it Registro
+ru Журнал вызовов
 
 # 0xeda14 20 9 Utilities
 en Utilities
 de Werkzeuge
 es Utilidades
 it Utilita'
+ru Инструменты
 
 # 0xeda28 20 9 Edit Name
 en Edit Name
 de Name aend
 es Editar nombre
 it Modif. nome
+ru Редактировать имя
 
 # 0xeda3c 18 8 Saved to
 en Saved to
 de Gespeichert
 es Guardado a
 it Salvato su
+ru Сохранено в
 
 # 0xeda50 20 9 Available
 en Available
 de verfuegbar
 es Disponible
 it Disponibile
+ru Доступно
 
 # 0xeda64 18 8 Selected
 es Elegido
 it Selezion.
+ru Выбрано
 
 # 0xeda78 18 8 All Call
+ru Все вызовы
+
 # 0xeda8c 20 9 My Number
 en My Number
 de Meine ID
 es Mi Numero
 it Mio num.
+ru Мой номер
 
 # 0xedaa0 18 8 Turn Off
 en Turn Off
 de Ausschal
 es Apagar
 it Spegni
+ru Выключить
 
 # 0xedab4 18 8 ViewList
+ru Просмотр
+
 # 0xedac8 18 8 Priority
+ru Приритеты
+
 # 0xedadc 20 9 Priority1
+ru Приоритет 1
+
 # 0xedaf0 20 9 Priority2
+ru Приоритет 2
+
 # 0xedb04 20 9 Backlight
 en Backlight
 de Beleuchtg
 es Luz Fondo
 it Illuminaz.
+ru Подсветка
 
 # 0xedb18 18 8 Language
 en Language
 de Sprache
 es Idioma
 it Lingua
+ru Russian
 
 # 0xedb2c 18 8 All LEDs
 en All LEDs
 de Alle LED
 es Todos LEDs
 it Tutti LED
+ru Все светодиоды
 
 # 0xedb40 20 9 All Tones
 en All Tones
 de Alle Toene
 es Todos Tonos
 it Tutti toni
+ru Все звуки
 
 # 0xedb54 18 8 Escalert
+ru Escalert
+
 # 0xedb68 20 9 Telemetry
 en Telemetry
 de Telemetrie
 es Telemetria
 it Telemetria
+ru Телеметирия
 
 # 0xedb7c 18 8 Tx Power
 en Tx Power
 de Tx Leistung
 es Potencia Tx
 it Potenza TX
+ru Мощность
 
 # 0xedb90 18 8 Motorola
 en Motorola
 de Motorola
 es Motorola
 it Motorola
+ru Motorola
 
 # 0xedba4 18 8 PC/audio
+ru ПК/звук
 
 # 0xedbb8 18 8 Password
 en Password
 de Kennwort
 es Contrase
 it Password
+ru Пароль
 
 # 0xedbcc 18 8 Required
 en Required
 de benoetigt
 es Requerido
 it Richiesto
+ru Требуется
 
 # 0xedbe0 18 8 Unlocked
 es Desbloqueado
 it Sbloccato
+ru Разблокировано
 
 # 0xedbf4 18 8 Answered
 es Respondido
 it Risposto
+ru Отвеченные
 
 # 0xedc08 18 8 Outgoing
 es Saliente
 it Uscita
+ru Исходящие
 
 # 0xedc1c 20 9 Emergency
 en Emergency
 de Notfall
 es Emergencia
 it Emergenza
+ru Экстренный
 
 # 0xedc30 18 8 Powering
 # 0xedc44 20 9 Source ID
+ru ID источника 
+
 # 0xedc58 20 9 Source ID
+ru ID источника 
+
 # 0xedc6c 18 8 Versions
+ru Версии 
+
 # 0xedc80 18 8 Disabled
+ru Отключено 
+
 # 0xedc94 18 8 Motorola
 en Motorola
 de Motorola
 es Motorola
 it Motorola
+ru Motorola
 
 # 0xede24 17 16 uC/OS-II TmrLock
+ru Таймер блокировки
+
 # 0xede38 19 18 uC/OS-II TmrSignal
+ru Таймер сигнала
+
 # 0xede4c 19 18 AnyRoad Technology
+ru AnyRoad Technology
 
 
 # 0xee108 16 7 Contact
@@ -658,128 +734,227 @@ en Contact
 de Kontakt
 es Contacto
 it Contatto
+ru Контакт
 
 # 0xee118 14 6 Drafts
 en Drafts
 de Entwurf
 es Borrador
+ru Черновики
 
 # 0xee128 16 7 Message
 en Message
 de Nachricht
 es Mensaje
 it Messag.
+ru Сообщение
 
 # 0xee138 16 7 Cleared
+ru Очищено
+
 # 0xee148 14 6 Delete
+ru Ударить
+
 # 0xee158 16 7 Deleted
+ru Удалено
+
 # 0xee168 14 6 Failed
+ru Неудачно
+
 # 0xee178 14 6 Delete
+ru Удалить
+
 # 0xee188 16 7 CP Ver.
+ru Верисия кодплага
+
 # 0xee198 16 7 Forward
+ru Переслать
+
 # 0xee1a8 14 6 Resend
+ru Повторить отправку
+
 # 0xee1b8 16 7 Ignore?
+ru Игнорировать?
+
 # 0xee1c8 16 7 Turn On
+ru Включить
+
 # 0xee1d8 16 7 Current
+ru Текущий
+
 # 0xee1e8 16 7 Auto On
+ru Автовключение
+
 # 0xee1f8 14 6 Keypad
+ru Клавиатура
+
 # 0xee208 14 6 Locked
+ru Заблокировано
+
 # 0xee218 16 7 English
+ru Английский
+
 # 0xee228 16 7 Changed
+ru Изменено
+
 # 0xee238 14 6 Missed
+ru Пропущено
+
 # 0xee248 16 7 Invalid
+ru Неверный 
+
 # 0xee258 16 7 Squelch
+ru Шумоподавитель
+
+
 # 0xee268 14 6 Normal
+ru Нормальный
+
 # 0xee278 14 6 Number
+ru Номер
+
 # 0xee288 14 6 Record
+ru Запись
+
 # 0xee298 14 6 Record
+ru Запись
+
 # 0xee2a8 14 6 Delete
+ru Удалить
+
 # 0xee2b8 16 7 Playing
+ru Проигрование
+
 # 0xee2c8 16 7 Confirm
+ru Подтвердить
+
 # 0xee2d8 14 6  Back
+ru Назад
+
 # 0xee2e8 14 6 Always
+ru Всегда
+
 # 0xee2f8 16 7 CH Mode
+ru Режим CH
+
 # 0xee308 16 7 MR Mode
+ru Режим MR
+
 # 0xee318 14 6 Manual
+ru Ручной ввод
+
 # 0xee328 16 7 CTC/DCS
+ru CTC/DCS
+
 # 0xee338 14 6 Volume
+ru Громкость
 
 # 0xee348 16 7 Picture
 en Picture
 de Bild
 es Imagen
 it Immag.
+ru Картинка
 
 # 0xee678 14 13 uC/OS-II Idle
+ru Ожидание
+
 # 0xee688 13 12 uC/OS-II Tmr
+ru Таймер
+
 # 0xee698 13 12 Call Process
+ru Голосовой вызов
+
 # 0xee6a8 13 12 FMTx Process
+ru FMTX вызов
+
 # 0xee6b8 13 12 Beep Process
+ru Бипер вызов
+
 # 0xee6c8 15 14 TimeSlot Inter
+ru Таймслот
+
 # 0xee6d8 13 12 State Change
+ru Изменение состояния
 
 # 0xee6f7 16 15 \rDFU in HS mode
+ru DFU в режиме HS
+
 # 0xee708 13 12 00000000010B
 # 0xee718 13 12 00000000010C
 # 0xee728 14 13 DFU Interface
+ru DFU интерфейс
 
 # 0xeeb28 10 4 Zone
 es Zona
 it Zona
+ru Зона
 
 # 0xeeb34 12 5 Saved
 es Guardado
 it Salvato
+ru Сохранено
 
 # 0xeeb40 12 5 Inbox
 es Entrada
 it In arrivo
+ru Входящие
 
 # 0xeeb4c 12 5 Write
 es Escribir
 it Scrivi
+ru Записать
 
 # 0xeeb58 10 4 Send
 es Enviar
 it Invia
+ru Отправить
 
 # 0xeeb64 10 4 Save
 es Guardar
 it Salva
+ru Сохранить
 
 # 0xeeb70 10 4 Sent
 es Enviado
 it Inviato
+ru Отправленные
 
 # 0xeeb7c 10 4 Full
 en Full
 de voll
 es Completo
 it Pieno
+ru Нет места
 
 # 0xeeb88 10 4 List
 es Lista
 it Lista
+ru Список
 
 # 0xeeb94 12 5 Empty
 en Empty
 de Leer
 es Vacio
 it Vuoto
+ru Пусто
 
 # 0xeeba0 10 4 Edit
 es Editar
 it Modif.
+ru Редактировать
 
 # 0xeebac 12 5 Read?
 es Leer?
 it Leggi?
+ru Читать?
 
 # 0xeebb8 12 5 Reply
 en Reply
 de Antwort
 es Responder
 it Rispondi
+ru Ответить
 
 
 # 0xeebc4 10 4 Scan
@@ -787,49 +962,76 @@ en Scan
 de Scan
 es Scan
 it Scan
+ru Сканировать
 
 # 0xeebd0 10 4 None
 es Ninguno
 it Nessun
+ru Ничего
 
 # 0xeebdc 12 5 Power
 es Potencia
 it Potenza
+ru Мощность
 
 # 0xeebe8 10 4 High
 en High
 de Hoch
 es Alta
 it Alta
+ru Высокая
 
 # 0xeebf4 10 4 Data
 en Data
 de Daten
 es Datos
 it Dati
+ru Данные
 
 # 0xeec00 12 5 Wrong
 en Wrong
 de Falsch
 es Erroneo
 it Errato
+ru Неверно
 
 # 0xeec0c 12 5 Store
+ru Хранить
+
 # 0xeec18 12 5 Tight
+ru Сжато
+
 # 0xeec24 12 5 Entry
+ru Запись
+
 # 0xeec31 6 5 {SO-N
 # 0xeec3c 12 5 Empty
+ru Пусто
+
 # 0xeec48 10 4 Down
+ru Вниз
+
 # 0xeec54 12 5 View?
+ru Смотреть?
+
 # 0xeec60 10 4 Play
+ru Воспроизвести
+
 # 0xeec6c 10 4 Time
+ru Время
+
 # 0xeec78 12 5 Tx/Rx
+ru Tx/Rx
+
 # 0xeec84 10 4 Play
+ru Воспроизвести
+
 # 0xeec90 10 4 Time
 en Time
 de Zeit
 es Hora
 it Ora
+ru Время
 
 # 0xeec9c 10 4 Time
 en Time
@@ -842,30 +1044,35 @@ en Tx/Rx
 de Tx/Rx
 es Tx/Rx
 it Tx/Rx
+ru Tx/Rx
 
 # 0xeecb4 12 5 Clock
 en Clock
 de Takt
 es Reloj
 it Orol.
+ru Часы
 
 # 0xeecc0 12 5 Clock
 en Clock
 de Takt
 es Reloj
 it Orol.
+ru Tx/Rx
 
 # 0xeeccc 10 4 Date
 en Date
 de Datum
 es Fecha
 it Data
+ru Дата
 
 # 0xeecd8 10 4 Date
 en Date
 de Datum
 es Fecha
 it Data
+ru Дата
 
 # 0xeece4 10 4 Menu
 en Menu
@@ -878,43 +1085,67 @@ en Name
 de Name
 es Nombre
 it Nome
+ru Имя
 
 # 0xeecfc 12 5 Clear
+ru Пусто
+
 # 0xeed08 10 4 Mode
 en Mode
 de Modus
 es Modo
 it Modo
+ru Режим
 
 # 0xeed14 12 5 T CTC
 en T CTC
 de T CTC
 es T CTC
 it T CTC
+ru TХ CTC
 
 # 0xeed20 12 5 R CTC
 en R CTC
 de R CTC
 es R CTC
 it R CTC
+ru RХ CTC
 
 # 0xeed2c 12 5 T DCS
 en T DCS
 de T DCS
 es T DCS
 it T DCS
+ru TX DCS
 
 # 0xeed38 12 5 R DCS
 en R DCS
 de R DCS
 es R DCS
 it R DCS
+ru RX DCS
 
 # 0xef607 12 11 \bStart Mbox
+ru \bStart Mbox
+
 # 0xef614 10 9 Sys Inter
+ru Sys Inter
+
 # 0xef620 10 9 RTC Timer
+ru RTC таймер
+
 # 0xef62c 12 11 LED Process
+ru LED индикация
+
 # 0xef638 12 11 Set Vocoder
+ru Установить вокодер
+
 # 0xef644 12 11 ChAccess Pr
+ru Доступ к каналу
+
 # 0xef650 9 8 Tone fft
+ru Тон fft
+
 # 0xef65c 11 10 DFU Config
+ru Установки DFU
+
