@@ -51,4 +51,3 @@ inline int is_statusline_visible()
 #endif
 
 #endif /* NETMON_H */
-
