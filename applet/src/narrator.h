@@ -33,21 +33,36 @@
 #if( CONFIG_MORSE_OUTPUT )
 typedef struct tNarrator // instance data. 
 { 
-  uint8_t state; // NARRATOR state (not Morse generator state):
-# define NARRATOR_PASSIVE      0x00
-# define NARRATOR_TELL_CHANNEL 0x01
-# define NARRATOR_TELL_ZONE    0x02
-# define NARRATOR_TELL_MENU    0x04
-
   uint8_t mode;  // bitwise combination of NARRATOR_MODE-flags,
     //  copied from global_addl_config.narrator_mode somewhere
+
+  uint8_t to_do; // what "to do" for the narrator ? bitwise combineable flags..
+# define NARRATOR_PASSIVE      0x00 // nothing else to tell / everything 'done'
+# define NARRATOR_REPORT_CHANNEL 0x01 // report current channel name / number
+# define NARRATOR_REPORT_ZONE    0x02 // report current zone (on main screen)
+# define NARRATOR_REPORT_BATTERY 0x04 // report whatever the battery icon does..
+# define NARRATOR_REPORT_TITLE   0x08 // report title of the current menu
+# define NARRATOR_REPORT_MENU    0x10 // report currently focused menu item
+# define NARRATOR_READ_CONSOLE   0x20 // read out Console/Netmon screen
+# define NARRATOR_APPEND_DEBUG_1 0x80 // append something.. only for debugging
+
+  uint8_t item_index; // menu item index when reading the ENTIRE menu,
+                      // or line number when reading console/netmon.
+  uint8_t num_items;  // number of items to be read out,
+                      // or number of lines on the console/netmon screen
+    // (there's only enough space for ONE LINE in the Morse output FIFO,
+    //  to save precious RAM. Thus read the screen line-by-line.)
+
+  uint32_t stopwatch; // stopwatch for DELAYED activation after changes
+                      // in the menu, channel knob, or similar
+         
 
   // Purely 'internal stuff', to detect changes in narrator() :
   uint8_t old_opmode2; // previous value of gui_opmode, seen in..
   uint8_t old_opmode3; // ..the last call of narrator() [etc, etc]
   int     focused_item_index; // menu item index "with the cursor line"
               // (not necessarily the previously "Confirmed" option !)
-  uint8_t channel_number;
+  uint8_t channel_number;    // 0..15; bit 7 indicates UNPROGRAMMED channel
 
 } T_Narrator;
 
@@ -55,5 +70,10 @@ extern T_Narrator Narrator;  // data for a single "storyteller" instance
 
 void narrate(void); // called from various places (also periodically)
            // whenever something happened that may have to be 'told'.
+void narrator_start_talking(void); // called per sidekey
+
+// Aux. functions written for, and implemented in narrate.c :
+int get_battery_voltage_mV(void);
+
 
 #endif // CONFIG_MORSE_OUTPUT ?

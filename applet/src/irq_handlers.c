@@ -51,6 +51,7 @@
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
+#include "display.h"   // contains "gui_opmode3", which indicates RX-squelch state, too
 #include "keyb.h"      // contains "backlight_timer", which is Tytera's own software-timer
 #include "narrator.h"  // some flags in global_addl_config.narrator_mode are required here
 
@@ -65,19 +66,6 @@
 
 typedef void (*void_func_ptr)(void);
 
-  // How to drive the LEDs (here, mostly for testing) ? From gfx.c :
-  // > The RED LED is supposed to be on pin A0 by the schematic, but in
-  // > point of fact it's on E1.  Expect more hassles like this.
-  // For trivial GPIO accesses as used here, avoid ST's bulky library !
-#define PINPOS_C_BL 6 /* pin position of backlight output within GPIO_C */
-#define PINPOS_E_TX 1 /* pin position of the red   TX LED within GPIO_E */
-#define PINPOS_E_RX 0 /* pin position of the green RX LED within GPIO_E */
-#define LED_GREEN_ON  GPIOE->BSRRL=(1<<PINPOS_E_RX) /* turn green LED on  */
-#define LED_GREEN_OFF GPIOE->BSRRH=(1<<PINPOS_E_RX) /* turn green LED off */
-#define IS_GREEN_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_RX))!=0) /* check green LED*/
-#define LED_RED_ON    GPIOE->BSRRL=(1<<PINPOS_E_TX) /* turn red LED on  */
-#define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* turn red LED off */
-#define IS_RED_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_TX))!=0) /* check red LED*/
 
   // How to poll a few keys 'directly' after power-on ? 
   // The schematic shows "K3" from the PTT pad to the STM32, 
@@ -274,6 +262,38 @@ static void InitDimming(void)
 } // InitDimming()
 #endif // CONFIG_DIMMED_LIGHT ?
 
+//---------------------------------------------------------------------------
+void StartStopwatch( uint32_t *pu32Stopwatch )
+  // Starts measuring a time interval .
+  // Pass in the address of an 32-bit integer.
+  // To determine the elapsed time in milliseconds,
+  // call ReadStopwatch_ms() with the same 'stopwatch address'
+  // as often as you like.
+{
+  *pu32Stopwatch = IRQ_dwSysTickCounter;
+}
+
+//---------------------------------------------------------------------------
+int ReadStopwatch_ms( uint32_t *pu32Stopwatch )
+  // Returns the number of milliseconds elapsed
+  // since the last call of StartStopwatch() [for the same watch].
+  // You can have as many stopwatches running at the same time
+  // as permitted by the amount of RAM. A "running stopwatch" doesn't
+  // consume any CPU time. ReadStopwatch_ms() does NOT stop anything.
+{
+  int32_t diff = (int32_t)(*pu32Stopwatch - IRQ_dwSysTickCounter);
+  // The magic of two's complement makes sure the difference
+  // is even correct if the tick counter runs over from 0xFFFFFFFF 
+  // to 0x00000000 between starting and reading the 'stopwatch' .
+  // If the difference is NEGATIVE here, the time-difference must
+  // have been *very* large (2^31 * 1.5 ms = ca. 37 days) :
+  if( diff < 0 )
+   {  return 0x7FFFFFFF;     // over 37 days have passed .. impressive :)
+   }
+  else // convert from 1.5ms-timer-ticks to milliseconds:
+   {  return diff - diff/3;  // diff * 0.66666 (without floats)
+   }
+} 
 
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
@@ -442,6 +462,47 @@ static void BeepReset(void)
 #endif // "beeper" for CONFIG_MORSE_OUTPUT ?
 
 
+//---------------------------------------------------------------------------
+int IsRxSquelchOpen(void) //  0 when closed (muted), 1 when open (audio on)
+{
+  // Don't remove the following table - it's referenced from other modules !
+  // From netmon.c (2017-202) : 
+  // > mode3   (what's this, "gui_opmode3" or radio_status_1.m3 ? (*)
+  // > 0 = idle?
+  // > 3 = unprog channel
+  // > 5 = block dmr processing?
+  // WB: Watched both,  (*)   "gui_opmode3" and "radio_status_1", 
+  //     in D13.020 based FW:  @0x2001e892   |    @0x2001e5f0
+  //   --------------------------------------+-----------------
+  // RX, FM, with signal, busy: 0x10010600   |     0x02002200
+  // RX, FM, no sig but active: 0x10010400   |     0x02000200
+  // RX, FM, no signal, idle  : 0x10010100.. |     0x00000200..
+  //                            0x10010300   |     0x02000200
+  // RX, DMR, with signal,busy: 0x10080600   |     0x03604200..
+  //                                         |     0x03600200
+  // RX, DMR,no sig but active: 0x10010400   |     0x02000200
+  // RX, DMR, no signal, idle : 0x10010100.. |     0x02000200 
+  //                            0x10010300   |
+  // On unprogrammed channel  : 0x00010003   |     0x00000200
+  // TX, FM                   : 0x00070A00   |     0x00000D00
+  // TX, DMR, talkaround      : 0x10070B00   |     0x00000900..
+  //    (on dummyload)                 |||   |     0x00000D00 <- bit toggles rapidly 
+  //        bit 9 = "squelch open" ? __/||   |            |
+  //  mode3 aka gui_opmode3 indicates __//   |  bit  8: transmitting
+  //       an unprogrammed channel           |  bit  9: receiving ?
+  //                                         |  bit 10: TX "in current timeslot" ?
+  // Note: The orignal firmware MOSTLY accesses 'gui_opmode3' as a byte.
+  //       But it's in fact a 32-bit word, accessed 8-, 16-, and 32-bit wide.
+  //
+  if( ((uint8_t*)&gui_opmode3)[1] & (1<<1) ) // RX-squelch open ?
+   { return 1; // the Morse generator must not turn off the audio-PA  now !
+   }  
+  else
+   { return 0; // guess the receiver squelch is "closed", i.e. audio muted
+   }
+} // IsRxSquelchOpen()
+
+
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
 uint16_t MorseGen_GetDotLengthInTimerTicks(void)
@@ -524,6 +585,16 @@ void MorseGen_ClearTxBuffer(void) // aborts the current Morse transmission (if a
   // Don't lock interrupts here .. only modify the FIFO *HEAD* index:
   morse_generator.u8FifoHead = morse_generator.u8FifoTail; // head==tails means "empty"
 } 
+
+//---------------------------------------------------------------------------
+int MorseGen_GetTxBufferUsage(void) // number of characters waiting for TX
+{
+  int buffer_usage = morse_generator.u8FifoHead - morse_generator.u8FifoTail;
+  if( buffer_usage < 0 )
+   {  buffer_usage += MORSE_TX_FIFO_LENGTH; // circular FIFO index wrapped
+   }
+  return buffer_usage;
+}
 
 //---------------------------------------------------------------------------
 int MorseGen_AppendChar( char c )
@@ -748,19 +819,18 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            // But in the meantime, the receiver's squelch may have opened !
            // In that case, do NOT turn the audio PA off.
            // But how to find out if the receiver squelch is OPEN ?
-           if( IS_GREEN_LED_ON ) // boolean or with some other RX-indicator (*)
-            { // guess the RX-squelch is open now...
-              //  so skip shutting down the audio PA:
+   // ex:  if( IS_GREEN_LED_ON ) // boolean or with some other RX-indicator (*)
+           // In DL4YHF's 'butchered' RT3, the green LED didn't work in DMR *ON A REPEATER*.
+           // And in Tytera's 'Radio Settings' the LEDs may be disabled.
+           // So try something else to find out if the audio PA may be powered off:
+           if( IsRxSquelchOpen() )
+            { // RX-squelch seems to be open, so don't shut down audio PA:
               pMorseGen->u8State = MORSE_GEN_PASSIVE;
             }
            else // guess the RX-squelch is CLOSED so turn audio off:
             { SPKR_SWITCH_OFF; // disconnect speaker from audio PA,
               // but wait before powering down the PA itself :
               pMorseGen->u8State = MORSE_GEN_STOP_ANTI_POP;
-              // (*) The assumption that, if the green LED is off, 
-              //     the receiver is squelched may be wrong :
-              //     In Tytera's 'Radio Settings' the LED may be disabled.
-              //     Who the hell needs such a feature, secret agents ?  
             }  
            break;
 
@@ -969,6 +1039,8 @@ void SysTick_Handler(void)
 
   
 } // end SysTick_Handler()
+
+
 
 
 /* EOF < irq_handlers.c > .  Leave an empty line after this. */

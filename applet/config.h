@@ -16,7 +16,7 @@
 #define CONFIG_GRAPHICS
 #define CONFIG_SPIC5000
 #define CONFIG_AMBE
-#define CONFIG_DMR
+//#define CONFIG_DMR
 #define CONFIG_MENU
 #define CONFIG_AES
 #ifndef FW_D02_032  // Not for very old firmware (missing hooks..):

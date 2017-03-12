@@ -53,6 +53,12 @@
 #include "keyb.h"
 #include "menu.h"         // currently_selected_menu_entry / currently_focused_item_index ?
 #include "display.h"      // gui_opmode_x, OPM2_MENU, etc
+#include "netmon.h"       // is_netmon_visible(), etc
+#include "codeplug.h"     // zone_name[], etc (beware, unknown for old firmware)
+#include "console.h"
+#define CONSOLE_Y_SIZE   10 // in console.c: #define Y_SIZE   10 (but not exposed in .h)
+#define CONSOLE_MAX_XPOS 27 // in console.c: #define MAX_XPOS 27 (but not exposed in .h)  
+extern char con_buf[CONSOLE_Y_SIZE][CONSOLE_MAX_XPOS+1]; // +1 for terminating 0 every line.
 #include "irq_handlers.h" // contains the API for the Morse code generator
 #include "narrator.h" // announces channel, zone, and maybe current menu selection in Morse code
 
@@ -66,13 +72,17 @@
 T_Narrator Narrator;  // a single CW narrator, aka "storyteller" instance
 
 // internal 'forward' references :
-static void    report_channel(void);
-static void    report_menu_title(void);
-static void    report_menu_item(void);
-static uint8_t get_current_channel_number(void);
-static int     get_focused_menu_item_index(void);
+static void report_channel(void);
+static void report_zone(void);
+static void report_menu_title(void);
+static void report_menu_item(void);
+static void report_battery_voltage(void);
+static uint8_t get_current_channel_number(void); // 0..15; bit 7 indicates "unprogrammed" channel
+static int  get_focused_menu_item_index(void);
 static wchar_t *get_menu_title(void);
 static wchar_t *get_menu_item_text(int itemIndex);
+static void start_reading_console(void);
+static void continue_reading_console(void);
 #endif // CONFIG_MORSE_OUTPUT ?
 
 
@@ -107,91 +117,144 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
 
   pNarrator->mode = global_addl_config.narrator_mode;  
 
-  if( ! (pNarrator->mode & NARRATOR_MODE_ENABLED ) )
-   { return; // nothing to do, don't waste time checking for 'events'
+  if( IS_PTT_PRESSED ) // stop (or pause?) morse output when PTT pressed ?
+   { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any)
+     StartStopwatch( &pNarrator->stopwatch );   // gap after releasing PTT
    }
-
-  if( pNarrator->old_opmode2 != gui_opmode2 )
-   { // What does gui_opmode2 tell us - important for Mr Narrator ?
-     if( gui_opmode2 == OPM2_MENU ) 
-      { // it's getting tricky - guess we entered the MENU !
-        MorseGen_ClearTxBuffer(); // abort previous transmission (if any)
-        if( pNarrator->mode & NARRATOR_MODE_TEST ) // TEST: say 'menu'..
-         { MorseGen_AppendString( "menu " ); // .. in morse code (VERY helpful, isn't it ? Well, it's a TEST)
-         }
-        report_menu_title();
-      }   // end if < just entered the MENU >
-     else if( pNarrator->old_opmode2 == OPM2_MENU )
-      { // seems we RETURNED from a menu..
-        MorseGen_ClearTxBuffer();
-        if( pNarrator->mode & NARRATOR_MODE_TEST ) // TEST: say 'menu'..
-         { MorseGen_AppendString( "back" ); // back from menu !
-         }
-        else // not in TEST MODE ...
-         { // say anything (but don't say goodnight tonight) ?
-           if( !( pNarrator->mode & NARRATOR_MODE_VERBOSE)  ) 
-            { // don't say it.. 
-            }
-           else // returned from a menu, with VERBOSE output:
-            { report_channel();
-            }
-         } // end else < just entered the MENU >
-      }
-     pNarrator->old_opmode2 =  gui_opmode2;
-   } // end if < gui_opmode2 changed > 
-
-  if( gui_opmode2 == OPM2_MENU ) // care about the currently focused menu item ?
-   { i = get_focused_menu_item_index();
-     if( pNarrator->focused_item_index != i )
-      {
-        pNarrator->focused_item_index = i;
-        MorseGen_ClearTxBuffer();
-        report_menu_item();
-      } // end if < FOCUSED menu item changed ? >
-   } // end if < currently in a MENU ? >
-  else // currently NOT in a menu, so the main interest will be the current CHANNEL
+  else // PTT not pressed..
+  if( pNarrator->mode & NARRATOR_MODE_ENABLED ) // AUTOMATIC reporting ?
    { 
-       u8Temp = get_current_channel_number();  
-       if( pNarrator->channel_number != u8Temp )
-        {  pNarrator->channel_number =  u8Temp;
-           MorseGen_ClearTxBuffer();
-           report_channel();
-        }
-   }
+     i = get_focused_menu_item_index(); 
+     // ex: if( pNarrator->old_opmode2 != gui_opmode2 )
+     //      { // What does gui_opmode2 tell us - important for Mr Narrator ?
+     //        if( gui_opmode2 == OPM2_MENU ) 
+     if( i != pNarrator->focused_item_index ) // ENTERED or LEFT a menu !
+      { MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
+        StartStopwatch( &pNarrator->stopwatch );   // restart stopwatch (don't "start talking" immediately)
+        if( i >= 0 )                               // now IN a menu ..
+         { if( pNarrator->focused_item_index < 0 ) // .. and previously wasn't:
+            { pNarrator->to_do |= NARRATOR_REPORT_TITLE;
+            }
+           pNarrator->focused_item_index = i; // input for report_menu_item()
+           pNarrator->to_do |= NARRATOR_REPORT_MENU;
+         }   // end if < just entered the MENU >
+        else // seems we RETURNED from the main menu to the 'main screen'
+         { pNarrator->to_do = NARRATOR_REPORT_CHANNEL;
+         }
+        pNarrator->focused_item_index = i;
+      } // end if < ENTERED or LEFT a menu > 
+     if( i<0 ) // currently NOT in a menu, so the main interest will be the current CHANNEL
+      { 
+        u8Temp = get_current_channel_number();  
+        if( pNarrator->channel_number != u8Temp )
+         {  pNarrator->channel_number =  u8Temp;
+            MorseGen_ClearTxBuffer();
+            pNarrator->to_do = NARRATOR_REPORT_CHANNEL; 
+            // Also report the zone here ? Unnecessary in most cases.
+            // So use a sidekey to 'request' a full report, including the zone.
+         }
+      }
+   } // end if( pNarrator->mode & NARRATOR_MODE_ENABLED )
+
+
+  // Start output if a new announcement is pending, but only
+  // if the operator didn't turn the channel button of select
+  // a different menu item more than XXX milliseconds :
+  if( (pNarrator->to_do != 0 )
+   && (ReadStopwatch_ms(&pNarrator->stopwatch) > 1000/*ms*/ ) )
+   {
+     if( MorseGen_GetTxBufferUsage() < 2 ) // enough space in TX buffer now
+      { // (don't wait for the buffer to run empty, avoid gaps,
+        //  we don't know how frequently this function is called)
+        // What to send next (ordered by priority) ?
+        if( pNarrator->to_do & NARRATOR_REPORT_CHANNEL ) 
+         { // report the current channel (highest prio)
+           MorseGen_AppendChar(' '); // short gap instead of a "line break" ..
+           report_channel();         // followed by channel name or -number
+           pNarrator->to_do &= ~NARRATOR_REPORT_CHANNEL; // "done" !
+         } 
+
+        if( pNarrator->to_do & NARRATOR_REPORT_ZONE ) 
+         { // next lower priority, etc...
+           MorseGen_AppendChar(' '); // gap between channel and zone
+           report_zone();
+           pNarrator->to_do &= ~NARRATOR_REPORT_ZONE;
+         } 
+
+        if( pNarrator->to_do & NARRATOR_REPORT_TITLE ) 
+         { MorseGen_AppendChar(' ');
+           report_menu_title();
+           pNarrator->to_do &= ~NARRATOR_REPORT_TITLE;
+         } 
+
+        if( pNarrator->to_do & NARRATOR_REPORT_MENU ) 
+         { MorseGen_AppendChar(' ');
+           report_menu_item();
+           pNarrator->to_do &= ~NARRATOR_REPORT_MENU;
+         } 
+
+        if( pNarrator->to_do & NARRATOR_READ_CONSOLE ) 
+         { // Such a 'long story' doesn't fit in the Morse TX buffer,
+           // so send the contents of the console screen line by line :
+           continue_reading_console(); // clears NARRATOR_READ_CONSOLE when finished
+         } 
+
+        if( pNarrator->to_do & NARRATOR_REPORT_BATTERY )
+         { report_battery_voltage();
+           pNarrator->to_do &= ~NARRATOR_REPORT_BATTERY;
+         }
+
+        if( pNarrator->to_do & NARRATOR_APPEND_DEBUG_1 )
+         { // lowest priority :
+           // report index of the currently selected menu item ?
+           MorseGen_AppendString(" sel ");
+           MorseGen_AppendDecimal( md380_menu_entry_selected );
+           MorseGen_AppendString(" foc ");
+           MorseGen_AppendDecimal( get_focused_menu_item_index() ); // "-1" when NOT in a menu
+           pNarrator->to_do &= ~NARRATOR_APPEND_DEBUG_1; // done
+         }
+
+      } // end if < enough space in the TX-buffer for another line >
+   } // end if < "ok to say something now" >
 
 } // end narrate()
 
 //---------------------------------------------------------------------------
-void narrator_start_talking(void)
-{ // Lets Mr Narrator 'talk' (with the help of Sam Morse and Mr Beep),
-  // but -unlike narrate()- will talk even if 'Morse output' is NOT enabled
-  // in the MD380Tools menu. Called from keyb.c via programmable sidekey.
+void narrator_start_talking(void) // called on programmed sidekey from keyb.c
+{ // 'Starts talking' in Morse code, even if NOT enabled in the menu. 
+  // Called from keyb.c via programmable sidekey.
   // This feature is intended for visually impaired ops who don't want
   // a radio that starts beeping whenever the channel knob is turned,
   // or a cursor key pressed in the menu.  In other words, "talk on request".
+  // Send a few more details than when simply turning the channel knob,
+  // e.g. zone, and (in 'verbose' mode) battery charge state (etc?).
   T_Narrator *pNarrator = &Narrator;
 
+  // Take a 'snapshot' of the most important 'radio states' :
   pNarrator->mode = global_addl_config.narrator_mode;  
   pNarrator->channel_number = get_current_channel_number();
+  pNarrator->focused_item_index = get_focused_menu_item_index(); 
 
   MorseGen_ClearTxBuffer(); // stop telling old storys
 
-  if( gui_opmode2 == OPM2_MENU ) 
-   {   // guess we're in the menu so start talking about it :
-     report_menu_title();
-     report_menu_item();  
+  if( pNarrator->focused_item_index >= 0 ) 
+   { // guess we're in the menu so start talking about it :
+     pNarrator->to_do = NARRATOR_REPORT_TITLE | NARRATOR_REPORT_MENU;
    }
-  else // we're not in the menu so talk about channel and (maybe) zone...
-   { report_channel();
+  else // we're not in the menu so talk about something else ..
+  if( is_netmon_visible() )
+   { start_reading_console(); 
+   }
+  else // none of the above, so tell what's on the 'main' screen
+   { pNarrator->to_do = NARRATOR_REPORT_CHANNEL | NARRATOR_REPORT_ZONE;
+     if( pNarrator->mode & NARRATOR_MODE_VERBOSE )
+      { pNarrator->to_do |= NARRATOR_REPORT_BATTERY;
+      }
    }
 
-  if( pNarrator->mode & NARRATOR_MODE_TEST )
-   { // even more 'debug output' in Morse code ?
-#   if(1)  // report index of the currently selected menu item ?
-     MorseGen_AppendString(" sel ");
-     MorseGen_AppendDecimal( md380_menu_entry_selected );
-#   endif 
-   } // end if( pNarrator->mode & NARRATOR_MODE_TEST )
+  if( pNarrator->mode & NARRATOR_MODE_TEST ) // "debug output" in Morse code ?
+   { pNarrator->to_do |= NARRATOR_APPEND_DEBUG_1;
+   }
 
 } // end narrator_start_talking()
 
@@ -199,7 +262,8 @@ void narrator_start_talking(void)
 static void report_channel(void)
 {
   // Report the channel NUMBER (short) or NAME (verbose) ?
-  if( Narrator.mode & NARRATOR_MODE_VERBOSE )
+  if( (Narrator.mode & NARRATOR_MODE_VERBOSE)
+    &&( !(Narrator.channel_number&0x80) ) ) // suppress name when UNPROGRAMMED
    { // Report the CHANNEL NAME, not just the number.
      // In the D13.020 disassembly, somewhere near 'draw_channel_label',
      // 'channel_name' [at 0x2001e1f4] is referenced. Try it:
@@ -210,10 +274,25 @@ static void report_channel(void)
    }
   else // not verbose but short: don't report the NAME
    {   // but the shortest possible channel NUMBER :
-     MorseGen_AppendDecimal( Narrator.channel_number );
+     MorseGen_AppendDecimal( Narrator.channel_number & 0x7F );
+     if( Narrator.channel_number & 0x80 )
+      { MorseGen_AppendString( " unp" );
+        if(Narrator.mode & NARRATOR_MODE_VERBOSE)
+         { MorseGen_AppendString( "rogrammed" ); 
+         }
+      }
    }
 
 } // end report_channel()
+
+//---------------------------------------------------------------------------
+static void report_zone(void)
+{
+  MorseGen_AppendString( "zone " );
+#if defined(FW_D13_020) || defined(FW_S13_020)
+  MorseGen_AppendWideString( zone_name );
+#endif
+}
 
 //---------------------------------------------------------------------------
 static void report_menu_title(void)
@@ -245,7 +324,53 @@ static void report_menu_item(void)
   MorseGen_AppendChar(' '); 
 } // end report_menu_item()
 
+//---------------------------------------------------------------------------
+static void start_reading_console(void) 
+{ // gadget, useful feature, or an alternative 'Morse trainer' ?
+  T_Narrator *pNarrator = &Narrator;
+  pNarrator->item_index = 0; // here: console text line index
+  pNarrator->num_items  = CONSOLE_Y_SIZE;
+  pNarrator->to_do |= NARRATOR_READ_CONSOLE;
+} // end start_reading_console()
 
+//---------------------------------------------------------------------------
+static void continue_reading_console(void)
+{
+  T_Narrator *pNarrator = &Narrator;
+  char *cp;
+  int  i,j;
+
+  // Look for the next NON-EMPTY line in the console text buffer:
+  while( pNarrator->item_index < CONSOLE_Y_SIZE )
+   { cp = con_buf[pNarrator->item_index++];
+     // truncate trailing spaces or zero-bytes, and skip empty lines...
+     i = CONSOLE_MAX_XPOS-1;
+     while( i>0 && (cp[i]==' ' || cp[i]=='\0') )
+      { --i;
+      }
+     if( i>0 ) // another non-empty line: send it without trailing spaces
+      { for(j=0; j<=i; ++j)
+         { MorseGen_AppendChar( cp[j] );
+         }
+        MorseGen_AppendChar(' ');  // ONE space since there's no '\n' in Morse code
+        return; // wait for empty TX buffer before sending the next line
+      }
+   }
+  // Arrived here ? All lines of the text console are through. End of this story.
+  pNarrator->to_do &= ~NARRATOR_READ_CONSOLE;  // done (reading the console screen)
+
+} // end continue_reading_console()
+
+static void report_battery_voltage(void)
+{ int voltage = get_battery_voltage_mV();
+  MorseGen_AppendString( " vbat " );
+  MorseGen_AppendDecimal( voltage/1000 );
+  MorseGen_AppendChar( '.' );
+  voltage %= 1000;
+  MorseGen_AppendDecimal( voltage/100 );
+  // The supply voltage reading is so noisy, useless to send more digits !
+  MorseGen_AppendString( " v " );
+}
 
 //---------------------------------------------------------------------------
 // Helper functions to retrieve channel-, zone-, and menu strings 
@@ -338,7 +463,7 @@ static menu_t * get_current_menu(void) // may return NULL !!
 } // get_ptr_to_current_menu()
 
 //---------------------------------------------------------------------------
-int get_focused_menu_item_index(void)
+int get_focused_menu_item_index(void) // negative when NOT in a menu !
 {
   // For the Morse "narrator", it's important to report the
   //     CURRENTLY FOCUSED item (menu/submenu/check-or-radio-button), 
@@ -350,17 +475,48 @@ int get_focused_menu_item_index(void)
   //            is "focused" (after cursor up/down, blue background)
   // * 'currently_selected_menu_entry' seemed just right here
   //     ( watch it in D13.020 while navigating in ANY menu
-  //       or button-list:  > python md380-tool.py hexwatch 0x20004cba 
-  //       - it changes immediately after cursor up/down ),
-  //    
+  //       or button-list:  > python tool2.py hexwatch 0x20004cba 
+  //       - it changes immediately after cursor up/down ) .
+  //    Unfortunately 'currently_selected_menu_entry' sometimes didn't work,
+  //    sometimes it indicated the WRONG item, and sometimes contained 0xFF
+  //    when *NOT* on the main screen.
 
-  int itemIndex = currently_selected_menu_entry;
-  // ( watch it in D13.020 while navigating in the menus or radio-button-lists: 
-  //    > python md380-tool.py hexwatch 0x20004cba 
+  int itemIndex = currently_selected_menu_entry; // <-- CANNOT ALWAYS BE TRUSTED !
+  // ( watch this in D13.020 while navigating in the menus or radio-button-lists: 
+  //     > python tool2.py hexwatch 0x20004ca0 64
+  //   In D13.020, the CURRENTLY FOCUSED ITEM INDEX may be at 0x20004CC2 first,
+  //      and at 0x20004CBA after entering the MD380Tools menu. Details below. 
+  //   No idea where those two 'competing' variables are located in other firmware.
   // )
-  if( itemIndex == 255 ) // 0xFF possibly means 'invalid' / 'not in a menu or button-list'
-   {  itemIndex = -1;
+  if( gui_opmode2 == OPM2_MENU ) // opmode2 should indicate if we're in a MENU or not..
+   { if( itemIndex > 100 ) // ... but currently_selected_menu_entry contains garbage:
+      { // (this usually happened when entering the main menu,
+        //  before selecting ("Confirm!") the MD380Tools menu.
+        //  'currently_selected_menu_entry' (@ 0x20004CBA in D13.020) contained 0xFF then,
+        //  and 'another' menu-item-index appeared at address 0x20004CC2 in D13.020 . 
+        //  This is crazy: After ENTERING and LEAVING the "MD380Tools" menu,
+        //  even in TYTERA'S menu, the 'original' menu-item-index @ 0x20004CC2
+        //  wasn't used again !
+        //  Instead currently_selected_menu_entry was used from then on,
+        //  even for Tytera's menu, until returning to the MAIN screen.
+        // Guesswork: 'currently_selected_menu_entry' isn't a simple global var
+        //            at a fixed memory location. Instead it's part of a STRUCT,
+        //            and for some reason the base address of that struct was 
+        //            modified when ENTERING the MD380Tools menu .
+        //              (-> create_menu_entry_addl_functions_screen(), etc )
+#      if defined(FW_D13_020) || defined(FW_S13_020)
+        itemIndex = *((uint8_t*)0x20004CC2); // "competing" menu-item-index in D13.020, BEFORE entering MD380Tools menu (bizarre...)
+        // ToDo: Find out if this "competing" menu-item-index is really at the same address in S13.020 .
+        // 'currently_selected_menu_item' is at 0x20004CBA in *both* cases, according to the 'symbols' files.
+#      endif
+      } // end if < bad contents in 'currently_selected_menu_entry' >
+     if( itemIndex > 100 ) // still no trustable 'currently FOCUSED menu item index' ?
+      { itemIndex = -1;    // give up, something is really screwed up somewhere
+      }
    }
+  else // gui_opmode2 tells us we're NOT in a menu, so trust neither 0x20004CBA nor 0x20004CC2 :
+   { itemIndex = -1;
+   } 
   return itemIndex;
 
 } // end get_focused_menu_item_index()
@@ -398,20 +554,53 @@ wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
 }
 
 //---------------------------------------------------------------------------
-uint8_t get_current_channel_number(void)
-{
-  // How to retrieve the current channel (number) ? 
+uint8_t get_current_channel_number(void) // 0..15; bit 7 set when unprogrammed
+{ uint8_t chn_nr; 
+  // How to retrieve the current channel, and how to tell if it's PROGRAMMED ?
   // In md380.h, there was only an address of 'channelnum', and only for D002.032 .
-  // In netmon.c, there was a well-hidden external 'channel_num' (in 2017-02-20).
+  // In netmon.c, there was a well-hidden external 'channel_num' (2017-02-20).
   // The D13.020 firmware sets at address 0x0804fd70 (see disassembly).
   // For D02.032, the address will be different. Thus:
 #if defined(FW_D13_020) || defined(FW_S13_020)
-  return channel_num;           // read the current channel from a global variable
+  chn_nr = channel_num;           // read the current channel from a global variable
 #else
-  return read_channel_switch(); // read the current channel from rotary switch
+  chn_nr = read_channel_switch(); // read the current channel from rotary switch
 #endif
+  if( (gui_opmode3 & 0x0F) == 3 ) // 'trick' discovered in netmon.c
+   { chn_nr |= 0x80; // set bit 7 to indicate UNPROGRAMMED channel
+   }
+  return chn_nr;
 } // end get_current_channel_number()
 
+//---------------------------------------------------------------------------
+int get_battery_voltage_mV(void) // return the (very unaccurate) battery voltage
+{
+  // Battery voltage is sampled per ADC1 on PA1.
+  // SIX of that ADC's multiplexed inputs are 'transported' via DMA2, stream 0.
+  // Details at www.qsl.net/dl4yhf/RT3/md380_hw.html#ADC1 .
+  int result; 
+  // Retrieve the address of the conversion result from the DMA controller.
+  // Eliminates the daunting task to find out the RAM address for different
+  // firmware versions and add them in the symbol file. "Hardware doesn't lie". 
+  uint16_t *pwConvResults = (uint16_t *)DMA2_Stream0->M0AR;
+  // We don't want to crash with an access violation if someone calls us at
+  // the wrong time (before DMA2.Stream0.Mode0.AddressRegister is set), thus:
+  if( (pwConvResults > (uint16_t*)0x20000000)
+   && (pwConvResults < (uint16_t*)0x20020000) ) // looks like an address in RAM
+   { result = pwConvResults[5]; // last of 6 converted channels from ADC1.
+     // The 'raw' result was very noisy, and drifted 'like crazy'
+     // even with a rock-solid 8.4 V supply at the battery connector.
+     // With 8.4 V there, the raw ADC result was CIRCA 0x0B70.
+     // 8400 [mV] / 2880 = 2.92 . DON'T BET ON THIS. 
+     // Theory: "Vbatt" divided by 100k/(100k+200k) = 1/3, Vref=3.3 V;
+     //     0x0FFF = 4095 at 3.3 V * 3 ->
+     //     conversion factor = 9900 mV/4095 = 2.41 . Eeek !
+     return (result * 292) / 100; 
+   }
+  else
+   { return 0;
+   }
+} // end get_battery_voltage_mV() 
 
 #endif // CONFIG_MORSE_OUTPUT ?
 

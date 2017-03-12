@@ -239,6 +239,7 @@ radio will be radio to accept this firmware update.""")
             sys.exit(1)
 
         print("Beginning firmware upgrade.")
+        sys.stdout.flush() # let text appear immediately (for mingw)
         status, timeout, state, discarded = dfu.get_status()
         assert state == State.dfuIDLE
 
@@ -248,6 +249,7 @@ radio will be radio to accept this firmware update.""")
         for address in addresses:
             if dfu.verbose:
                 print("Erasing address@ 0x%x" % address)
+                sys.stdout.flush()
             dfu.erase_block(address)
 
         block_size = 1024
