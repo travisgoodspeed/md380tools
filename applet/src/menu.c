@@ -43,7 +43,7 @@ const static wchar_t wt_demoscr_disable[]   = L"Disable";
 const static wchar_t wt_splash[]            = L"Splash Mode";
 
 const static wchar_t wt_userscsv[]          = L"UsersCSV";
-const static wchar_t wt_datef_original[]    = L"YYYY/MM/DD";
+const static wchar_t wt_datef_original[]    = L"YYYY-MM-DD";
 const static wchar_t wt_datef_germany[]     = L"DD.MM.YYYY";
 const static wchar_t wt_datef_italy[]       = L"DD/MM/YYYY";
 const static wchar_t wt_datef_american[]    = L"MM/DD/YYYY";
