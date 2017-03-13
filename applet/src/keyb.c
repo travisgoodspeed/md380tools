@@ -5,6 +5,8 @@
 
 #define DEBUG
 
+#include "config.h"
+
 #include "keyb.h"
 
 #include "debug.h"
@@ -19,6 +21,10 @@
 #include "codeplug.h"
 #include "radiostate.h"
 #include "printf.h"
+#include "menu.h" // create_menu_entry_set_tg_screen() called from keyb.c !
+#if( CONFIG_MORSE_OUTPUT ) 
+# include "narrator.h"  // 'storyteller', triggerable via sidekey
+#endif
 
 #include <stdint.h>
 
@@ -196,10 +202,10 @@ void handle_sidekey( int keycode, int keypressed )
     }
 }
 
-void evaluate_sidekey ( int button_function) //This is where new functions for side buttons can be added
+void evaluate_sidekey( int button_function) // This is where new functions for side buttons can be added
 {
-  switch ( button_function ) {  //We will start at 0x50 to avoid conflicting with any added functions by Tytera.
-    case 0x50 :                 //Toggle backlight enable pin to input/output. Disables backlight completely.
+  switch ( button_function ) {  // We will start at 0x50 to avoid conflicting with any added functions by Tytera.
+    case 0x50 :                 // Toggle backlight enable pin to input/output. Disables backlight completely.
       #if (CONFIG_DIMMED_LIGHT) // If backlight dimmer is enabled, we will use that instead.
         kb_backlight ^= 0x01;   // flag for SysTick_Handler() to turn backlight off completely
       #else
@@ -207,12 +213,19 @@ void evaluate_sidekey ( int button_function) //This is where new functions for s
       #endif
       reset_backlight();
       break;
-    case 0x51 :
-      create_menu_entry_set_tg_screen();
+    case 0x51 :    // "Set Talkgroup"
+      create_menu_entry_set_tg_screen(); 
+      // Creating' the menu entry seems ok here, 
+      // but it's impossible (or at least unsafe) to ENTER / invoke the menu from here.
+      // Call stack: kb_handler_hook() -> handle_sidekey() -> evaluate_sidekey()
+      //               |__ in D13.020, patched to address 0x0804ebd2, thus
+      //                   called from task 'biglist_pollsubsys_maybe', when the
+      //                   shared keyboard/LCD interface is configured to poll the keyboard,
+      //                   not to 'drive the display'. See the monster-disassembly.
       break;
 #  if( CONFIG_MORSE_OUTPUT )    // optional feature - see config.h 
     case 0x52 : // starts the 'Morse narrator' via programmable button ("on request")
-      narrator_start_talking();
+      narrator_start_talking(); // doesn't call anything in the original firmware
       break;
 #  endif
     default:
