@@ -31,7 +31,7 @@
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"USB logging";
-//const static wchar_t wt_netmon[]            = L"NetMon";
+//const static wchar_t wt_netmon[]          = L"NetMon";
 const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
@@ -57,7 +57,6 @@ const static wchar_t wt_set_tg_id[]         = L"Set Talkgroup";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
-
 
 const static wchar_t wt_backlight[]         = L"Backlight Tmr";
 const static wchar_t wt_blunchanged[]       = L"Unchanged";
