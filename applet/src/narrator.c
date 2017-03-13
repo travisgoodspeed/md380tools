@@ -361,9 +361,10 @@ static void continue_reading_console(void)
 
 } // end continue_reading_console()
 
+//---------------------------------------------------------------------------
 static void report_battery_voltage(void)
 { int voltage = get_battery_voltage_mV();
-  MorseGen_AppendString( " vbat " );
+  MorseGen_AppendString( " bat " );
   MorseGen_AppendDecimal( voltage/1000 );
   MorseGen_AppendChar( '.' );
   voltage %= 1000;
@@ -540,13 +541,30 @@ wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
   //                       (repeatedly call until return = NULL);
   //                  -1 to retrieve only the CURRENTLY SELECTED item's text.
 {
+  int i, nItems, nVisible;
   menu_t *pMenu = get_current_menu();
+  menu_entry_t *pItem;
   if( itemIndex < 0 )
    {  itemIndex = get_focused_menu_item_index();
    }
   if( pMenu )
-   { if( itemIndex>=0 && itemIndex<pMenu->numberof_menu_entries )
-      { return pMenu->entries[itemIndex].label;
+   { nItems = pMenu->numberof_menu_entries;
+     // guesswork: numberof_menu_entries includes the INVISIBLE items, too
+     if( itemIndex>=0 && itemIndex<nItems )
+      { // ex: return pMenu->entries[itemIndex].label;
+        // The above often gave wrong results, it reported 'hidden' items
+        // for example 'Contacts' (invisible when on an FM channel).
+        i = nVisible = 0;
+        while( i<nItems )
+         { pItem = &pMenu->entries[i++];
+           if( pItem->item_count )  // "item_count" controls VISIBILITY !
+            { // THIS menu item is visible. Is it the one we're looking for ?
+              if( nVisible == itemIndex )
+               { return pItem->label;
+               }
+              ++nVisible;
+            } 
+         }
       }
    }
   // Arrived here: Not in a menu, or the item-index is invalid (i.e. "reached the end")
