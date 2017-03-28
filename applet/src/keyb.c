@@ -227,6 +227,9 @@ void evaluate_sidekey( int button_function) // This is where new functions for s
     case 0x52 : // starts the 'Morse narrator' via programmable button ("on request")
       narrator_start_talking(); // doesn't call anything in the original firmware
       break;
+    case 0x53 : // repeats the last 'Morse anouncement' (short, not the full story)
+      narrator_repeat();
+      break;
 #  endif
     default:
       return;
