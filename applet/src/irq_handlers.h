@@ -44,7 +44,7 @@
 # error "Please add new 'ifdef' with the interrupt vector table for the new firmware above !"
 #endif
 
-// Low-level hardware access, bypassing the firmware (use carefully!)...
+// Low-level hardware access, bypassing the firmware (use carefully!).
 // How to drive the LEDs (here, mostly for testing) ? From gfx.c :
 // > The RED LED is supposed to be on pin A0 by the schematic, but in
 // > point of fact it's on E1.  Expect more hassles like this.
@@ -70,6 +70,11 @@ extern uint8_t red_led_timer;   // 'countdown' timer, in 1.5 ms steps, to turn
             // the red LED on TEMPORARILY. ZERO when 'Tytera controls the LED'.
 extern uint8_t green_led_timer; // similar for the GREEN (RX) LED.  TEST ONLY !
 
+extern uint8_t  volume_pot_percent; // audio volume potentiometer position [%]
+
+extern uint16_t battery_voltage_mV; // battery voltage [millivolts]
+
+
 void StartStopwatch( uint32_t *pu32Stopwatch );   // details and usage in *.c 
 int  ReadStopwatch_ms( uint32_t *pu32Stopwatch );
 
@@ -82,5 +87,10 @@ int  MorseGen_AppendString( char *pszText ); // API to send 8-bit, zero-terminat
 int  MorseGen_AppendWideString( wchar_t *pwsText ); // API to send 16-bit strings
 int  MorseGen_AppendDecimal( int i );
 int  MorseGen_AppendHex( uint32_t num );
+
+void BeepStart( int freq_Hz, int volume ); // starts a pulse-width modulated beep
+void BeepMute(void);  // mutes the beep without turning the audio PA off
+void BeepReset(void); // reprograms Timer8 for tytera's funny tones ("Boooo" & co) 
+
 
 #endif // CONFIG_MORSE_OUTPUT ?

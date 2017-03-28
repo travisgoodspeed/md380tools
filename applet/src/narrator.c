@@ -79,6 +79,7 @@ static void report_menu_item(void);
 static void report_battery_voltage(void);
 static uint8_t get_current_channel_number(void); // 0..15; bit 7 indicates "unprogrammed" channel
 static int  get_focused_menu_item_index(void);
+static void *get_current_menu(void); // may return NULL !!
 static wchar_t *get_menu_title(void);
 static wchar_t *get_menu_item_text(int itemIndex);
 static void start_reading_console(void);
@@ -112,6 +113,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
   //
 {
   T_Narrator *pNarrator = &Narrator;
+  void *pMenu;
   uint8_t u8Temp;
   int i;
 
@@ -123,25 +125,26 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
    }
   else // PTT not pressed..
   if( pNarrator->mode & NARRATOR_MODE_ENABLED ) // AUTOMATIC reporting ?
-   { 
-     i = get_focused_menu_item_index(); 
-     // ex: if( pNarrator->old_opmode2 != gui_opmode2 )
-     //      { // What does gui_opmode2 tell us - important for Mr Narrator ?
-     //        if( gui_opmode2 == OPM2_MENU ) 
-     if( i != pNarrator->focused_item_index ) // ENTERED or LEFT a menu !
+   { i = get_focused_menu_item_index(); 
+     pMenu = get_current_menu(); 
+
+     if( (i != pNarrator->focused_item_index ) // ENTERED or LEFT a menu ?
+       ||(pMenu != pNarrator->current_menu) ) 
       { MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
         StartStopwatch( &pNarrator->stopwatch );   // restart stopwatch (don't "start talking" immediately)
         if( i >= 0 )                               // now IN a menu ..
-         { if( pNarrator->focused_item_index < 0 ) // .. and previously wasn't:
+         { if( (pNarrator->focused_item_index < 0 ) // .. and previously wasn't:
+            || (pMenu != pNarrator->current_menu) )
             { pNarrator->to_do |= NARRATOR_REPORT_TITLE;
             }
-           pNarrator->focused_item_index = i; // input for report_menu_item()
            pNarrator->to_do |= NARRATOR_REPORT_MENU;
          }   // end if < just entered the MENU >
         else // seems we RETURNED from the main menu to the 'main screen'
          { pNarrator->to_do = NARRATOR_REPORT_CHANNEL;
          }
-        pNarrator->focused_item_index = i;
+        pNarrator->focused_item_index = i; // set new values to detect..
+        pNarrator->current_menu = pMenu;   // ..the NEXT menu-related change
+
       } // end if < ENTERED or LEFT a menu > 
      if( i<0 ) // currently NOT in a menu, so the main interest will be the current CHANNEL
       { 
@@ -216,7 +219,6 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
 
       } // end if < enough space in the TX-buffer for another line >
    } // end if < "ok to say something now" >
-
 } // end narrate()
 
 //---------------------------------------------------------------------------
@@ -226,7 +228,7 @@ void narrator_start_talking(void) // called on programmed sidekey from keyb.c
   // This feature is intended for visually impaired ops who don't want
   // a radio that starts beeping whenever the channel knob is turned,
   // or a cursor key pressed in the menu.  In other words, "talk on request".
-  // Send a few more details than when simply turning the channel knob,
+  // Sends a few more details than when simply turning the channel knob,
   // e.g. zone, and (in 'verbose' mode) battery charge state (etc?).
   T_Narrator *pNarrator = &Narrator;
 
@@ -258,6 +260,25 @@ void narrator_start_talking(void) // called on programmed sidekey from keyb.c
 
 } // end narrator_start_talking()
 
+
+//---------------------------------------------------------------------------
+void narrator_repeat(void) // called on another programmed sidekey
+  // Repeats the last (autonomously) sent message like channel or menu item.
+  // See github issue #580 / suggestion by KB5ELV .
+{ T_Narrator *pNarrator = &Narrator;
+
+  MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
+  pNarrator->focused_item_index = get_focused_menu_item_index(); 
+  StartStopwatch( &pNarrator->stopwatch ); // restart stopwatch (don't start immediately)
+  if( pNarrator->focused_item_index >= 0 ) // in a menu ?
+   { pNarrator->to_do = NARRATOR_REPORT_MENU;
+   }
+  else // currently NOT in a menu -> must be the 'main screen'
+   { pNarrator->channel_number = get_current_channel_number();  
+     pNarrator->to_do = NARRATOR_REPORT_CHANNEL; // "short story" : only report the CHANNEL 
+   }
+} // end narrator_repeat()
+
 //---------------------------------------------------------------------------
 static void report_channel(void)
 {
@@ -268,13 +289,13 @@ static void report_channel(void)
      // In the D13.020 disassembly, somewhere near 'draw_channel_label',
      // 'channel_name' [at 0x2001e1f4] is referenced. Try it:
      MorseGen_AppendWideString( channel_name );
-     // FIXME: When switching to an 'Unprogrammed' channel,
-     //  channel_name isn't 'Unprogrammed' but *UNCHANGED* !
-     //  (so sends the name of the last 'existing' channel)
+     // Note: When switching to an 'Unprogrammed' channel,
+     //  channel_name isn't 'Unprogrammed' but remains UNCHANGED !
    }
-  else // not verbose but short: don't report the NAME
-   {   // but the shortest possible channel NUMBER :
+  else // not verbose but short (or UNPROGRAMMED) : 
+   { // don't report the NAME but the channel NUMBER...
      MorseGen_AppendDecimal( Narrator.channel_number & 0x7F );
+     // ..followed by "unp" (short) / "unprogrammed" (verbose)
      if( Narrator.channel_number & 0x80 )
       { MorseGen_AppendString( " unp" );
         if(Narrator.mode & NARRATOR_MODE_VERBOSE)
@@ -298,13 +319,26 @@ static void report_zone(void)
 static void report_menu_title(void)
 {
   wchar_t *pwsText = get_menu_title();
+  MorseGen_AppendChar( '\x09' ); // decrease pitch by approx one whole tone
+     
   if( pwsText )
    { MorseGen_AppendWideString( pwsText );
    }
-  else if( Narrator.mode & NARRATOR_MODE_TEST )
-   { MorseGen_AppendString( "title?" );
-   }
-  MorseGen_AppendChar(' '); 
+  else
+   { 
+#   if defined(FW_D13_020) /* || .. ? */
+     MorseGen_AppendString( menu_title_cstring );  // menu title in RAM; WB 2017-03: for D13.020 only !
+     // (Not sure what this variable @0x2001E3C0 in D13.020 REALLY is.
+     //  Sometimes it contained the text 'Back' after pressing 'Back'.
+     //  So taking the title from the menu_t struct is the better choice,
+     //  and the above (0x2001E3C0) is only a kludge for the MAIN menu,
+     //  because in the MAIN menu (just "Menu") pMenu->menu_title was invalid.
+#  else  // address of the MENU TITLE IN RAM isn't known -> guess it's "Menu" !
+     MorseGen_AppendString( "menu" );
+#  endif // any <firmware for which the address of 'menu_title_cstring' is known> 
+   } // end if < menu_t without a valid TITLE > ?
+  MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch (650 Hz?)
+ 
 }
 
 
@@ -363,14 +397,10 @@ static void continue_reading_console(void)
 
 //---------------------------------------------------------------------------
 static void report_battery_voltage(void)
-{ int voltage = get_battery_voltage_mV();
-  MorseGen_AppendString( " bat " );
-  MorseGen_AppendDecimal( voltage/1000 );
-  MorseGen_AppendChar( '.' );
-  voltage %= 1000;
-  MorseGen_AppendDecimal( voltage/100 );
-  // The supply voltage reading is so noisy, useless to send more digits !
-  MorseGen_AppendString( " v " );
+{ int voltage = battery_voltage_mV; // <- grabbed from DMA and filtered in irq_handlers.c
+  char sz15[16];
+  sprintf(sz15, " bat %d.%d v ", voltage/1000, (voltage % 1000)/100/*0..9*/ );
+  MorseGen_AppendString( sz15 );
 }
 
 //---------------------------------------------------------------------------
@@ -407,13 +437,16 @@ extern menu_t md380_menu_memory[];
 
 
 //---------------------------------------------------------------------------
-static menu_t * get_current_menu(void) // may return NULL !!
+static void* get_current_menu(void) // may return NULL !!
 {
   // Part of a 'non-intrusive' method  to retrieve the currently
   // visible menu title (top line) and the currently selected item
-  // (the 'blue line') would not call a subroutine in the original
-  // firmware. So which menu-related *global variables* do we have ?
-  // Collected from various modules, headers, and the symbol file :
+  // (the 'blue line').
+  // To avoid calling anything in the original firmware, which
+  //    menu-related *global variables* are available ?
+  //    A very incomplete summary (collected by DL4YHF
+  //   from various modules, headers, the monster disassembly listing,
+  //   and the symbol file (md380tools/applet/src/symbols_d13.020) :
   // 
   // (a) menu_t md380_menu_memory[]  with the following members:
   //             |_  wchar_t  *menu_title; 
@@ -430,6 +463,7 @@ static menu_t * get_current_menu(void) // may return NULL !!
   //         - in 'Scan.ViewList' : 0x02
   //         - in 'Zone', 1st item: 0x01
   //         - in 'Zone', 2nd item: 0x01 (same, as expected)
+  //         - 'volume' indicator : 0x01 ("behaves like a menu"!)
   // 
   // (b) menu_entry_t md380_menu_mem_base[] :
   //      md380_menu_mem_base[] is not a 'dynamic' pool but a static array. 
@@ -453,15 +487,34 @@ static menu_t * get_current_menu(void) // may return NULL !!
   //       to retrieve at least the text of the CURRENTLY SELECTED item,
   //       without calling a function (which may have bad side effects) .
   //
+  menu_t *pMenu;
   int iMenu = md380_menu_depth;  // array index into md380_menu_memory[]
   if( iMenu>=0 && iMenu<10/*?*/) // guess the NESTING LEVEL won't exceed 10
-   { return &md380_menu_memory[iMenu];
+   { pMenu = &md380_menu_memory[iMenu];
+     // As noted above (a), when rotating the volume knob, or in the
+     // presence of noise on the analog input sensing the knop position,
+     // the volume indicator bargraph pops up, and appears 'like a menu'
+     // (with md380_menu_depth=1). But we don't want to indicate the
+     // useless (and often erroneously-popped-up) volume bar in Morse code.
+     // So how to find out if pMenu is a "real" menu or just the volume bar ?
+     //  (1) While on the MAIN SCREEN, 'gui_opmode2' was ONE .
+     //      This didn't change when the volume indicator bar popped up.
+     //  (2) If the parameters "e" and "f", passed to md380_create_menu_entry(),
+     //      were stored somewhere as part of the menu_t structure,
+     //      f=2 ("remove after timeout", see menu.c) could also indicate
+     //      that md380_menu_depth=1 is NOT a menu but the volume bar. 
+     if( gui_opmode2 != OPM2_MENU ) 
+      { if( md380_menu_depth==1 ) // guess not a MENU but the VOLUME BAR !
+         { pMenu = NULL; // ignore the volume bar here
+         }
+      }
    }
   else // invalid index into md380_menu_memory[], guess we're not in a menu:
-   { return NULL;
+   { pMenu = NULL;
    }
+  return (void*)pMenu; // 'void*' because 'menu_t' isn't exposed in narrator.h
 
-} // get_ptr_to_current_menu()
+} // get_current_menu()
 
 //---------------------------------------------------------------------------
 int get_focused_menu_item_index(void) // negative when NOT in a menu !
@@ -469,7 +522,7 @@ int get_focused_menu_item_index(void) // negative when NOT in a menu !
   // For the Morse "narrator", it's important to report the
   //     CURRENTLY FOCUSED item (menu/submenu/check-or-radio-button), 
   //     i.e. the line with dark blue background, controlled 
-  //     via cursor up/down keys (or, maybe, an autorepeat-thing one day).
+  //     via cursor up/down keys (maybe with autorepeat one fine day).
   // So how to find that info, which md380_menu_entry_selected doesn't provide ?
   // 
   // * 'md380_menu_entry_selected' doesn't care about which item
@@ -489,7 +542,7 @@ int get_focused_menu_item_index(void) // negative when NOT in a menu !
   //      and at 0x20004CBA after entering the MD380Tools menu. Details below. 
   //   No idea where those two 'competing' variables are located in other firmware.
   // )
-  if( gui_opmode2 == OPM2_MENU ) // opmode2 should indicate if we're in a MENU or not..
+  if( gui_opmode2 == OPM2_MENU ) // gui_opmode2 (@0x2001e94b) should indicate if we're in a MENU or not..
    { if( itemIndex > 100 ) // ... but currently_selected_menu_entry contains garbage:
       { // (this usually happened when entering the main menu,
         //  before selecting ("Confirm!") the MD380Tools menu.
@@ -504,7 +557,7 @@ int get_focused_menu_item_index(void) // negative when NOT in a menu !
         //            at a fixed memory location. Instead it's part of a STRUCT,
         //            and for some reason the base address of that struct was 
         //            modified when ENTERING the MD380Tools menu .
-        //              (-> create_menu_entry_addl_functions_screen(), etc )
+        //           (-> create_menu_entry_addl_functions_screen(), etc )
 #      if defined(FW_D13_020) || defined(FW_S13_020)
         itemIndex = *((uint8_t*)0x20004CC2); // "competing" menu-item-index in D13.020, BEFORE entering MD380Tools menu (bizarre...)
         // ToDo: Find out if this "competing" menu-item-index is really at the same address in S13.020 .
@@ -526,14 +579,26 @@ int get_focused_menu_item_index(void) // negative when NOT in a menu !
 //---------------------------------------------------------------------------
 wchar_t *get_menu_title(void)  // may return NULL when not in a menu !
 {
-  menu_t *pMenu = get_current_menu();
+  menu_t *pMenu = (menu_t*)get_current_menu();
   if( pMenu )
-   { return pMenu->menu_title;
+   { // In the MAIN MENU (simply titled "menu"),
+     // pMenu->menu_title was NULL, and (in D13.020)
+     // the title was a wide string at 0x2001E3C0 !
+     if( pMenu->menu_title != NULL ) 
+      { return pMenu->menu_title;
+      }
+     else  // menu_t.menu_tile is NULL.. what to send instead ?
+      { // In D13.020, there's a classic 8-bit string (C-string)
+        // which is valid even in the MAIN menu, but due to the 
+        // stupid 16-bit string type used in menu_t.title, 
+        // we cannot simply return its address from here. Sigh.
+        // Why the heck did they use this crappy "wide strings"
+        // instead of UTF-8 ? 
+      }   
    }
-  else
-   { return NULL;
-   }
-}
+  // Arrived here ? Give up, cannot retrieve the menu title (text)
+  return NULL;
+} // end get_menu_title()
 
 //---------------------------------------------------------------------------
 wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
@@ -542,7 +607,7 @@ wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
   //                  -1 to retrieve only the CURRENTLY SELECTED item's text.
 {
   int i, nItems, nVisible;
-  menu_t *pMenu = get_current_menu();
+  menu_t *pMenu = (menu_t*)get_current_menu();
   menu_entry_t *pItem;
   if( itemIndex < 0 )
    {  itemIndex = get_focused_menu_item_index();
@@ -589,36 +654,6 @@ uint8_t get_current_channel_number(void) // 0..15; bit 7 set when unprogrammed
    }
   return chn_nr;
 } // end get_current_channel_number()
-
-//---------------------------------------------------------------------------
-int get_battery_voltage_mV(void) // return the (very unaccurate) battery voltage
-{
-  // Battery voltage is sampled per ADC1 on PA1.
-  // SIX of that ADC's multiplexed inputs are 'transported' via DMA2, stream 0.
-  // Details at www.qsl.net/dl4yhf/RT3/md380_hw.html#ADC1 .
-  int result; 
-  // Retrieve the address of the conversion result from the DMA controller.
-  // Eliminates the daunting task to find out the RAM address for different
-  // firmware versions and add them in the symbol file. "Hardware doesn't lie". 
-  uint16_t *pwConvResults = (uint16_t *)DMA2_Stream0->M0AR;
-  // We don't want to crash with an access violation if someone calls us at
-  // the wrong time (before DMA2.Stream0.Mode0.AddressRegister is set), thus:
-  if( (pwConvResults > (uint16_t*)0x20000000)
-   && (pwConvResults < (uint16_t*)0x20020000) ) // looks like an address in RAM
-   { result = pwConvResults[5]; // last of 6 converted channels from ADC1.
-     // The 'raw' result was very noisy, and drifted 'like crazy'
-     // even with a rock-solid 8.4 V supply at the battery connector.
-     // With 8.4 V there, the raw ADC result was CIRCA 0x0B70.
-     // 8400 [mV] / 2880 = 2.92 . DON'T BET ON THIS. 
-     // Theory: "Vbatt" divided by 100k/(100k+200k) = 1/3, Vref=3.3 V;
-     //     0x0FFF = 4095 at 3.3 V * 3 ->
-     //     conversion factor = 9900 mV/4095 = 2.41 . Eeek !
-     return (result * 292) / 100; 
-   }
-  else
-   { return 0;
-   }
-} // end get_battery_voltage_mV() 
 
 #endif // CONFIG_MORSE_OUTPUT ?
 

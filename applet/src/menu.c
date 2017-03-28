@@ -124,12 +124,14 @@ const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
 const static wchar_t wt_button_set_tg[]     = L"Set Talkgroup";
 #if( CONFIG_MORSE_OUTPUT )
 const static wchar_t wt_button_narrator[]   = L"Morse Narrator";
+const static wchar_t wt_button_cw_repeat[]  = L"Morse Repeat";
 #endif
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
                                                0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
                                                0x1f, 0x26, 0x50, 0x51
 #                                            if( CONFIG_MORSE_OUTPUT )
                                               ,0x52 // starts the 'Morse narrator' via programmable button
+                                              ,0x53 // repeats the last 'Morse announcement'  "  "  "
 #                                            endif
                                               };
 uint8_t button_selected = 0;
@@ -1061,6 +1063,7 @@ void select_sidebutton_function_screen(void)
     mn_submenu_add(wt_button_set_tg,  set_sidebutton_function);
 #  if( CONFIG_MORSE_OUTPUT )
     mn_submenu_add(wt_button_narrator,set_sidebutton_function);
+    mn_submenu_add(wt_button_cw_repeat,set_sidebutton_function);
 #  endif
 
     mn_submenu_finalize();
@@ -1112,10 +1115,12 @@ const static wchar_t wt_short[]    = L"short";
 const static wchar_t wt_verbose[]  = L"verbose";
 const static wchar_t wt_test[]     = L"test/DevOnly";
 const static wchar_t wt_cw_speed[] = L"Speed [WPM]";
-const static wchar_t wt_15_WPM[]   = L"15";
-const static wchar_t wt_18_WPM[]   = L"18";
-const static wchar_t wt_22_WPM[]   = L"22";
-const static wchar_t wt_30_WPM[]   = L"30";
+const static wchar_t wt_15[]       = L"15";
+const static wchar_t wt_18[]       = L"18";
+const static wchar_t wt_22[]       = L"22";
+const static wchar_t wt_30[]       = L"30";
+const static wchar_t wt_35[]       = L"35";
+const static wchar_t wt_40[]       = L"40";
 const static wchar_t wt_cw_pitch[] = L"CW pitch [Hz]";
 const static wchar_t wt_400[]      = L"400";
 const static wchar_t wt_650[]      = L"650";
@@ -1124,6 +1129,7 @@ const static wchar_t wt_cw_volume[]= L"CW volume";
 const static wchar_t wt_low[]      = L"low";
 const static wchar_t wt_medium[]   = L"medium";
 const static wchar_t wt_high[]     = L"high";
+const static wchar_t wt_auto[]     = L"auto";
 
 void mn_morse_mode_off(void)
 {  
@@ -1230,22 +1236,28 @@ void mn_cw_pitch(void)  // CW pitch : stored in 10-Hz unit in global_addl_config
 void mn_cw_volume_low(void)
 {  
    mn_create_single_timed_ack(wt_cw_volume, wt_low);
-   global_addl_config.cw_volume = 5; // proportinal to the PWM duty cycle,
+   global_addl_config.cw_volume = 5; // unit: "percent of maximum"
    cfg_save();
 }
 
 void mn_cw_volume_medium(void)
 {  
    mn_create_single_timed_ack(wt_cw_volume, wt_medium);
-   global_addl_config.cw_volume = 10; // proportinal to the PWM duty cycle...
+   global_addl_config.cw_volume = 10; 
    cfg_save();
 }
 
 void mn_cw_volume_high(void)
 {  
    mn_create_single_timed_ack(wt_cw_volume, wt_high);
-   global_addl_config.cw_volume = 20; // unfortunately NOT affected by the pot !
-     // (the ADC reading for the pot's wiper position is just lousy)
+   global_addl_config.cw_volume = 20; // %, NOT affected by the pot !
+   cfg_save();
+}
+
+void mn_cw_volume_auto(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_auto);
+   global_addl_config.cw_volume = BEEP_VOLUME_AUTO; // "try to follow the audio volume pot"
    cfg_save();
 }
 
@@ -1257,59 +1269,81 @@ void mn_cw_volume(void)
     else if( global_addl_config.cw_volume < 20 ) 
      { md380_menu_entry_selected = 1; // "medium"
      }
+    else if( global_addl_config.cw_volume == BEEP_VOLUME_AUTO ) 
+     { md380_menu_entry_selected = 3; // "auto[matic]"
+     }
     else
-     { md380_menu_entry_selected = 2; // "high" (don't use this if you have "good ears")
+     { md380_menu_entry_selected = 2; // "high"
      }
     mn_submenu_init(wt_cw_volume);
     mn_submenu_add(wt_low,    mn_cw_volume_low    );
     mn_submenu_add(wt_medium, mn_cw_volume_medium );
     mn_submenu_add(wt_high,   mn_cw_volume_high   );
+    mn_submenu_add(wt_auto,   mn_cw_volume_auto   );
     mn_submenu_finalize();
 }
 
 void mn_cw_speed_15WPM(void)
 {  
-   mn_create_single_timed_ack(wt_cw_speed, wt_15_WPM );
+   mn_create_single_timed_ack(wt_cw_speed, wt_15 );
    global_addl_config.cw_speed_WPM = 15;
    cfg_save();
 }
 
 void mn_cw_speed_18WPM(void)
 {  
-   mn_create_single_timed_ack(wt_cw_speed, wt_18_WPM );
+   mn_create_single_timed_ack(wt_cw_speed, wt_18 );
    global_addl_config.cw_speed_WPM = 18;
    cfg_save();
 }
 
 void mn_cw_speed_22WPM(void)
 {  
-   mn_create_single_timed_ack(wt_cw_speed, wt_22_WPM );
+   mn_create_single_timed_ack(wt_cw_speed, wt_22 );
    global_addl_config.cw_speed_WPM = 22;
    cfg_save();
 }
 
 void mn_cw_speed_30WPM(void)
 {  
-   mn_create_single_timed_ack(wt_cw_speed, wt_30_WPM );
+   mn_create_single_timed_ack(wt_cw_speed, wt_30 );
    global_addl_config.cw_speed_WPM = 30;
+   cfg_save();
+}
+
+void mn_cw_speed_35WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_35 );
+   global_addl_config.cw_speed_WPM = 35;
+   cfg_save();
+}
+
+void mn_cw_speed_40WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_40 );
+   global_addl_config.cw_speed_WPM = 40;
    cfg_save();
 }
 
 void mn_cw_speed(void) 
 { 
    switch( global_addl_config.cw_speed_WPM )
-    { case 15: md380_menu_entry_selected = 0; break;
+    { case 15: md380_menu_entry_selected = 0; break; // for beginners
       case 18: md380_menu_entry_selected = 1; break;
-      case 22: md380_menu_entry_selected = 2; break;
+      case 22: md380_menu_entry_selected = 2; break; // for advanced
       case 30: md380_menu_entry_selected = 3; break;
+      case 35: md380_menu_entry_selected = 4; break; // for freaks
+      case 40: md380_menu_entry_selected = 5; break; // for complete nuts 
       default: md380_menu_entry_selected = 2; break; // meaningful default ?
       // wrong md380_menu_entry_selected makes the menu crash !
     }
    mn_submenu_init(wt_cw_speed);
-   mn_submenu_add(wt_15_WPM, mn_cw_speed_15WPM );
-   mn_submenu_add(wt_18_WPM, mn_cw_speed_18WPM );
-   mn_submenu_add(wt_22_WPM, mn_cw_speed_22WPM );
-   mn_submenu_add(wt_30_WPM, mn_cw_speed_30WPM );
+   mn_submenu_add(wt_15, mn_cw_speed_15WPM );
+   mn_submenu_add(wt_18, mn_cw_speed_18WPM );
+   mn_submenu_add(wt_22, mn_cw_speed_22WPM );
+   mn_submenu_add(wt_30, mn_cw_speed_30WPM );
+   mn_submenu_add(wt_35, mn_cw_speed_35WPM );
+   mn_submenu_add(wt_40, mn_cw_speed_40WPM );
    mn_submenu_finalize();
 }
 

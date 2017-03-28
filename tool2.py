@@ -517,9 +517,30 @@ def hexdump(dfu,address,length=512):
         elif i%8==0:
             sys.stdout.write(" ")
 
+def ascdump(dfu,address,length=1024):
+    """Dumps 8-bit chars from memory to the screen"""
+    adr=address
+    buf=dfu.peek(adr,length)
+    i=0
+    cbuf=""
+    for b in buf:
+        if i%64==0:
+            sys.stdout.write("%08X: "%(adr+i))
+        i=i+1
+        if(b==0):
+            cbuf = cbuf + '~'
+        elif(b >= 32 and b < 127 ):
+            cbuf = cbuf + chr(b)
+        else:
+            cbuf = cbuf + "."
+        if i%64==0:
+            sys.stdout.write( cbuf )
+            sys.stdout.write("\n")
+            cbuf=""
+
 
 def hexwatch(dfu,address,length=16):
-    """Dumps from memory to the screen"""
+    """Live hex display"""
     adr=ParseHexOrRegName(address)
     while True:
         hexdump(dfu,adr,length)
@@ -528,6 +549,19 @@ def hexwatch(dfu,address,length=16):
            time.sleep(0.05)
         else:
            time.sleep(0.2) # non-Pythonic. I know. Who cares ?
+
+def ascwatch(dfu,address,length=2048):
+    """Live ASCII display (8 bit chars)"""
+    adr=ParseHexOrRegName(address)
+    while True:
+        sys.stdout.write("\n")
+        ascdump(dfu,adr,length)
+        sys.stdout.flush() # required for mingw and similar shells
+        if length<=64 :
+           time.sleep(0.05)
+        else:
+           time.sleep(0.2) # non-Pythonic. I know. Who cares ?
+
 
 def ParseHexOrRegName(address):
     if address in sfr_addresses.values():
@@ -945,6 +979,10 @@ def main():
                 print "Watching 32-bit words at %s." % sys.argv[2]
                 dfu=init_dfu()
                 hexwatch32(dfu,sys.argv[2])
+            elif sys.argv[1] == 'ascwatch':
+                print "Watching 8-bit strings at %s." % sys.argv[2]
+                dfu=init_dfu()
+                ascwatch(dfu,sys.argv[2])
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]))
             elif sys.argv[1] == 'readword':
@@ -985,6 +1023,10 @@ def main():
                 print "Watching 32-bit words at %s." % sys.argv[2]
                 dfu=init_dfu()
                 hexwatch32(dfu,sys.argv[2], int(sys.argv[3]))
+            elif sys.argv[1] == 'ascwatch':
+                print "Watching 8-bit strings at %s." % sys.argv[2]
+                dfu=init_dfu()
+                ascwatch(dfu,sys.argv[2], int(sys.argv[3]))
             elif sys.argv[1] == 'bindump32': # DL4YHF 2017-01
                 dfu=init_dfu()
                 bindump32(dfu,sys.argv[2], int(sys.argv[3]) )

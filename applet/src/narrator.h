@@ -18,6 +18,9 @@
   // (channel_num wasn't in any header; address in applet/src/symbols_d13.020 + _s13.020 only)
   extern wchar_t channel_name[]; // borrowed from keyb.c (!)
 #endif
+#if defined(FW_D13_020)
+  extern char menu_title_cstring[]; // global var (?) in RAM, required for the narrator in a few cases
+#endif
 
 // Possible values for global_addl_config.narrator_mode :
 //  (some of these are combineable bitflags, forget about enums)
@@ -62,7 +65,8 @@ typedef struct tNarrator // instance data.
   uint8_t old_opmode3; // ..the last call of narrator() [etc, etc]
   int     focused_item_index; // menu item index "with the cursor line"
               // (not necessarily the previously "Confirmed" option !)
-  uint8_t channel_number;    // 0..15; bit 7 indicates UNPROGRAMMED channel
+  uint8_t channel_number; // 0..15; bit 7 indicates UNPROGRAMMED channel
+  void *current_menu;  // address or handle of the current menu, to detect changes
 
 } T_Narrator;
 
@@ -70,10 +74,8 @@ extern T_Narrator Narrator;  // data for a single "storyteller" instance
 
 void narrate(void); // called from various places (also periodically)
            // whenever something happened that may have to be 'told'.
-void narrator_start_talking(void); // called per sidekey
-
-// Aux. functions written for, and implemented in narrate.c :
-int get_battery_voltage_mV(void);
+void narrator_start_talking(void);  // callable per sidekey: tell full story
+void narrator_repeat(void); // callable per sidekey: repeat last sentence or message
 
 
 #endif // CONFIG_MORSE_OUTPUT ?

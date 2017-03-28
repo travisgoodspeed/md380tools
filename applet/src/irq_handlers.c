@@ -111,10 +111,13 @@ typedef struct tMorseGenerator
 #  define MORSE_GEN_END_OF_MESSAGE 8 // all characters sent; reached end of message
 #  define MORSE_GEN_STOP_ANTI_POP  9 // opening 'Anti-Pop' switch (to stop output)
 #  define MORSE_GEN_STOP_AUDIO_PA 10 // shutting down audio PA (with 'Anti-Pop')
+#  define MORSE_GEN_PASSIVE_NOT_MUTED 11 // "should be passive but couldn't turn off the PA yet"
    uint8_t  u8ShiftReg;   // shift register. MSbit first, 0=dot, 1=dash.
    uint8_t  u8NrElements; // number of elements (dots and dashes) remaining
    uint16_t u16Timer;     // countdown timer, decrements in 1.5 ms - steps.
                           // state transition when counted down to zero.
+   int8_t i8PitchShift;   // CW pitch offset (+/- N whole tones, 0=no offset)
+   uint16_t u16Freq_Hz;   // current audio frequency in Hertz (for Mr Beep)
 #  define MORSE_TX_FIFO_LENGTH 40 // must be long enough for 'verbose' output !
    uint8_t u8Fifo[MORSE_TX_FIFO_LENGTH]; // lock-free buffer for transmission
    uint8_t u8FifoHead;  // produce index, modified ONLY by 'writer'
@@ -176,9 +179,9 @@ uint8_t Morse_table[] =
    /* Y -.-- */  0x1B,   /* Z --.. */ 0x1C,
 
    /* Entries #59..#63 for ASCII 91..95, characters '['..'_' :  */
-   /* ASCII 91: [ (like '(' )  : -.--.  */ 0x36,
+   /* ASCII 91: [ (omitted)             */ 0x00,
    /* ASCII 92: \ (like '/' )  : -..-.  */ 0x32,
-   /* ASCII 93: ] (like ')' )  : -.--.- */ 0x6D,
+   /* ASCII 93: ] (omitted)             */ 0x00,
    /* ASCII 94: ^ (like ''' )) : .----. */ 0x5E,
    /* ASCII 95: _ (like '-' )) : -....- */ 0x61
  
@@ -191,6 +194,12 @@ uint8_t red_led_timer = 0; // 'countdown' timer, in 1.5 ms steps,
                            // to TEMPORARILY turn the red LED on.
                            // ZERO means 'Tytera controls the LED'.
 uint8_t green_led_timer = 0; // similar for the GREEN (RX) LED .
+
+uint8_t  volume_pot_percent; // position of the audio volume pot [percent]
+uint16_t battery_voltage_mV; // battery voltage [millivolts]
+uint32_t battery_voltage_lp; // internal, for digital lowpass (not 'static' to ease debugging)
+uint32_t volume_pot_lp;      // internal, for digital lowpass
+
 
 // Internal 'forward' references (avoid compiler warnings)
 #if( CONFIG_MORSE_OUTPUT )
@@ -297,7 +306,7 @@ int ReadStopwatch_ms( uint32_t *pu32Stopwatch )
 
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
-static void BeepStart( int freq_Hz, int volume )
+void BeepStart( int freq_Hz, int volume )
   // Programs Mr. Beep's output on "PC8" for a given tone frequency,
   //   with an attempt to keep the volume at a tolerable level.
   // ( In contrast to the schematics, Mr Beep's output is not
@@ -305,11 +314,19 @@ static void BeepStart( int freq_Hz, int volume )
   //   Instead, there's only an RC lowpass between PC8 and the
   //   input to the audio power amplifier. 
   //   Details may still be available at 
-  //      www.qsl.net/dl4yhf/RT3/md380_fw.html#morse_output  
+  //      www.qsl.net/dl4yhf/RT3/md380_fw.html#morse_output .
   // )
 {
   TIM_TypeDef *pTIM8 = TIM8; // only load the base address into a register ONCE
   uint16_t CR1val;
+
+  // With volume = BEEP_VOLUME_AUTO, the beep volume tries to
+  // 'follow' the volume control potentiometer, by selecting a 
+  // PWM duty cycle depending on volume_pot_percent :
+  if( volume == BEEP_VOLUME_AUTO ) 
+   {  volume = volume_pot_percent;
+   }
+
  
   // To find out how *Tytera* generate their beep tones,
   // the GPIO_C registers were inspected and analysed.
@@ -361,6 +378,7 @@ static void BeepStart( int freq_Hz, int volume )
        // > The active capture/compare register contains the value to be
        // > compared to the counter TIMx_CNT and signalled on OC3 output.
        // The max, ear-deafening volume would be at 50 % PWM duty cycle.
+       // But with volume = 100 (%), 10 percent DC was 'loud enough' .
 
   // The original firmware had 'Update interrupt' enabled (DIER bit 0),
   //     and it implements TIM8_UP_TIM13_IRQHandler to reprogram
@@ -408,7 +426,7 @@ static void BeepStart( int freq_Hz, int volume )
 } // BeepStart()
 
 //---------------------------------------------------------------------------
-static void BeepMute(void) // mutes the beep without turning the audio PA off
+void BeepMute(void) // mutes the beep without turning the audio PA off
 {
   TIM8->CCR3 = 0;  // duty cycle = 0, but keep timer running
   TIM8->DIER = 0;  // disable Timer8 "update"-interrupt (reason in BeepStart)
@@ -416,7 +434,7 @@ static void BeepMute(void) // mutes the beep without turning the audio PA off
 
 
 //---------------------------------------------------------------------------
-static void BeepReset(void) 
+void BeepReset(void) 
   // Resets the beeper, and returns to Tytera's default setting .
   // Called from the Morse generator's state machine when 'done'.
 {
@@ -463,7 +481,7 @@ static void BeepReset(void)
 
 
 //---------------------------------------------------------------------------
-int IsRxSquelchOpen(void) //  0 when closed (muted), 1 when open (audio on)
+int IsRxAudioMuted(void) // returns 1 when RX-audio is muted ("no RX signal")
 {
   // Don't remove the following table - it's referenced from other modules !
   // From netmon.c (2017-202) : 
@@ -472,12 +490,12 @@ int IsRxSquelchOpen(void) //  0 when closed (muted), 1 when open (audio on)
   // > 3 = unprog channel
   // > 5 = block dmr processing?
   // WB: Watched both,  (*)   "gui_opmode3" and "radio_status_1", 
-  //     in D13.020 based FW:  @0x2001e892   |    @0x2001e5f0
+  //     in D13.020-based FW:  @0x2001e892   |    @0x2001e5f0
   //   --------------------------------------+-----------------
   // RX, FM, with signal, busy: 0x10010600   |     0x02002200
   // RX, FM, no sig but active: 0x10010400   |     0x02000200
   // RX, FM, no signal, idle  : 0x10010100.. |     0x00000200..
-  //                            0x10010300   |     0x02000200
+  //     (bit 9 toggling --->)  0x10010300   |     0x02000200
   // RX, DMR, with signal,busy: 0x10080600   |     0x03604200..
   //                                         |     0x03600200
   // RX, DMR,no sig but active: 0x10010400   |     0x02000200
@@ -486,21 +504,23 @@ int IsRxSquelchOpen(void) //  0 when closed (muted), 1 when open (audio on)
   // On unprogrammed channel  : 0x00010003   |     0x00000200
   // TX, FM                   : 0x00070A00   |     0x00000D00
   // TX, DMR, talkaround      : 0x10070B00   |     0x00000900..
-  //    (on dummyload)                 |||   |     0x00000D00 <- bit toggles rapidly 
-  //        bit 9 = "squelch open" ? __/||   |            |
-  //  mode3 aka gui_opmode3 indicates __//   |  bit  8: transmitting
-  //       an unprogrammed channel           |  bit  9: receiving ?
-  //                                         |  bit 10: TX "in current timeslot" ?
+  //                                   |||   |     0x00000D00 <- bit 10 toggles rapidly 
+  //        'mode_bits' below _________/||   |            |
+  //                                    ||   |  bit  8: transmitting
+  //  mode3 aka gui_opmode3 indicates __//   |  bit  9: receiving ?
+  //       an unprogrammed channel           |  bit 10: TX "in current timeslot" ?
+  //                                         |  
   // Note: The orignal firmware MOSTLY accesses 'gui_opmode3' as a byte.
   //       But it's in fact a 32-bit word, accessed 8-, 16-, and 32-bit wide.
   //
-  if( ((uint8_t*)&gui_opmode3)[1] & (1<<1) ) // RX-squelch open ?
-   { return 1; // the Morse generator must not turn off the audio-PA  now !
+  uint8_t mode_bits = 0x0F & ((uint8_t*)&gui_opmode3)[1];
+  if( mode_bits==4 || mode_bits==1 ) // see lenghty table above ...
+   { return 1; // receiver seems to be 'squelched', i.e. audio muted
    }  
-  else
-   { return 0; // guess the receiver squelch is "closed", i.e. audio muted
+  else         // receiver NOT squelched, i.e. RX signal audible:
+   { return 0; // the Morse generator must not turn off the audio-PA  now !
    }
-} // IsRxSquelchOpen()
+} // IsRxAudioMuted()
 
 
 #if( CONFIG_MORSE_OUTPUT )
@@ -526,10 +546,29 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
   //        pMorseGen->u16Timer .
 {
   uint8_t morse_code, nr_elements;
+  int i;
 
   // Is the to-be-transmitted character in the Morse code table ?
-  if( u8ASCII< 32 ) // anything below ASCII 32 is sent like a SPACE
-   { u8ASCII = 32;
+  if( u8ASCII<=0x12 ) // anything below ASCII 32 is a CONTROL CHARACTER:
+   { // \x08 = decrease pitch (audio frequency) by two steps, etc,
+     // \x09 = decrease pitch by one step,
+     // \x10 = restore normal pitch, as configured in menu,
+     // \x11 = increase pitch by one step,
+     // \x12 = increase pitch by two steps.
+     // Added 2017-03-26 to tell a menu title from a menu item,
+     //       when 'announcing' an entire menu on request:
+     //   ___ Contacts ___  (title, gray background, sent with slightly lower pitch)
+     //       Contacts      (menu item, cyan background, sent with normal pitch)
+     //   ##  New Contact## (currently focused item, dark blue background, higher pitch)
+     //       Manual Dial   (another unselected item, also cyan background)
+     pMorseGen->i8PitchShift/*-2..0..+2*/ = (int8_t)u8ASCII - 0x10;
+     // Besides shifting the pitch, control characters are sent like spaces !
+   } // end if( u8ASCII< 32 )
+  i = global_addl_config.cw_pitch_10Hz * 10;
+  i +=  (i * (int)pMorseGen->i8PitchShift) / 64; // f * (1+1/64) = approx 1/4 tone interval
+  pMorseGen->u16Freq_Hz = (uint16_t)i; 
+  if( u8ASCII< 32 )
+   { u8ASCII = 32;  // send other control characters like a SPACE
    }
   if( u8ASCII>='a' && u8ASCII<='z' ) // convert lower to UPPER case
    {  u8ASCII -= ('a'-'A');
@@ -564,8 +603,7 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
      if( morse_code & 0x80 )
       { pMorseGen->u16Timer *= 3; // dash = 3 dot times
       } 
-     BeepStart( global_addl_config.cw_pitch_10Hz * 10, 
-                global_addl_config.cw_volume ); 
+     BeepStart( pMorseGen->u16Freq_Hz, global_addl_config.cw_volume ); 
    }
   else // pMorseGen->u8NrElements == 0 : SPACE character...
    { pMorseGen->u8NrElements = 0; // neither dots nor dashes to send
@@ -612,7 +650,8 @@ int MorseGen_AppendChar( char c )
 
   // Start output (a few milliseconds later, in a background process) ?
   if( pMorseGen->u8FifoHead != pMorseGen->u8FifoTail )
-   { if( pMorseGen->u8State == MORSE_GEN_PASSIVE )
+   { if( pMorseGen->u8State == MORSE_GEN_PASSIVE 
+      || pMorseGen->u8State == MORSE_GEN_PASSIVE_NOT_MUTED )
       {  pMorseGen->u8State =  MORSE_GEN_START;
          // MorseGen_OnTimerTick() will do the rest..
       }
@@ -690,8 +729,7 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
      // the timer's output frequency and PWM duty cycle. Defeat this:
      switch( pMorseGen->u8State )
       { case MORSE_GEN_SENDING_TONE: // immediately turn *OUR* tone on again:
-           BeepStart( global_addl_config.cw_pitch_10Hz * 10, 
-                      global_addl_config.cw_volume );
+           BeepStart( pMorseGen->u16Freq_Hz, global_addl_config.cw_volume );
            break; 
         case MORSE_GEN_SENDING_GAP : // immediately turn *THEIR* tone off:
            BeepMute();
@@ -721,7 +759,7 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            // the firmware decided to reduce the power consumption
            // by turning the audio PA (or something else) off, 
            // causing a 'rattling' noise in the speaker .
-           //   (same "rhythm" as the DC input current,
+           //   (same 10-Hz-"rhythm" as the DC input current,
            //    observable on an old-fashioned ammeter)
            // Cured by forcing the audio-PA on in all 'active' generator states.
            if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
@@ -801,8 +839,7 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
                } 
               pMorseGen->u8ShiftReg <<= 1;
               pMorseGen->u8State = MORSE_GEN_SENDING_TONE;
-              BeepStart( global_addl_config.cw_pitch_10Hz * 10, 
-                         global_addl_config.cw_volume );
+              BeepStart( pMorseGen->u16Freq_Hz, global_addl_config.cw_volume );
             }
            else // inter-character gap ...
             { // The spacing between two characters (within a WORD)
@@ -817,20 +854,20 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            // If the audio PA was off *before* sending the Morse message(s),
            // we may be tempted to simply turning it off again here.
            // But in the meantime, the receiver's squelch may have opened !
-           // In that case, do NOT turn the audio PA off.
-           // But how to find out if the receiver squelch is OPEN ?
-   // ex:  if( IS_GREEN_LED_ON ) // boolean or with some other RX-indicator (*)
-           // In DL4YHF's 'butchered' RT3, the green LED didn't work in DMR *ON A REPEATER*.
-           // And in Tytera's 'Radio Settings' the LEDs may be disabled.
-           // So try something else to find out if the audio PA may be powered off:
-           if( IsRxSquelchOpen() )
-            { // RX-squelch seems to be open, so don't shut down audio PA:
-              pMorseGen->u8State = MORSE_GEN_PASSIVE;
-            }
-           else // guess the RX-squelch is CLOSED so turn audio off:
-            { SPKR_SWITCH_OFF; // disconnect speaker from audio PA,
+           // So only turn the audio-PA off if the RX-audio is muted NOW :
+           if( IsRxAudioMuted() )
+            { // guess it's ok to turn the audio-PA off now:
+              SPKR_SWITCH_OFF; // disconnect speaker from audio PA,
               // but wait before powering down the PA itself :
               pMorseGen->u8State = MORSE_GEN_STOP_ANTI_POP;
+            }
+           else // end of Morse message, but keep audio-PA on:
+            { pMorseGen->u8State = MORSE_GEN_PASSIVE_NOT_MUTED;
+              // TEST (for debugging): short, higher-pitched "bipp" = 
+              // "wanted to turn the PA off but IsRxAudioMuted() told me that I shouldn't"
+              BeepStart( global_addl_config.cw_pitch_10Hz * 12, 
+                         global_addl_config.cw_volume );
+              // TEST ?
             }  
            break;
 
@@ -841,6 +878,21 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
         case MORSE_GEN_STOP_AUDIO_PA: // audio PA has been turned off (completely)
            pMorseGen->u8State = MORSE_GEN_PASSIVE;
            break;
+        case MORSE_GEN_PASSIVE_NOT_MUTED: // end of audio message but audio PA kept running..
+           BeepMute();
+           // check again if the rx-audio is muted by the original firmware,
+           // or if the radio is about to enter power-saving mode 
+           // (during which the C5000 creates the 'rattling noise' on LINEOUT):
+           if( IsRxAudioMuted() || (MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN<10) )
+            { // guess it's ok to turn the audio-PA off now:
+              SPKR_SWITCH_OFF; // disconnect speaker from audio PA,
+              // but wait before powering down the PA itself :
+              pMorseGen->u8State = MORSE_GEN_STOP_ANTI_POP;
+              // (don't leave this state without turning the audio PA off,
+              //  even if it takes minutes. WE turned the PA on, so WE must
+              //  turn it off again, when the 'rx audio' is over)
+            }
+           break;
         default: // oops..
            pMorseGen->u8State = MORSE_GEN_PASSIVE;
            break; 
@@ -848,6 +900,72 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
    }     // end else < timer expired >
 }       // end MorseGen_OnTimerTick()
 #endif // CONFIG_MORSE_OUTPUT ?
+
+//---------------------------------------------------------------------------
+static void PollAnalogInputs(void)
+  // [out] battery_voltage_mV, volume_pot_pos [%] .
+{ // Battery voltage and the analog volume potentiometer
+  // are sampled per DMA and ADC1 on PA1. 
+  // Only READ the conversion results here, but don't interfere
+  // with the A/D conversion itself !
+  // SIX of the ADC's inputs are 'transported' via DMA2, stream 0.
+  // Details at www.qsl.net/dl4yhf/RT3/md380_hw.html#ADC1 .
+  uint32_t result; 
+  // Retrieve the address of the conversion result from the DMA controller.
+  // Eliminates the daunting task to find out the RAM address for different
+  // firmware versions and add them in the symbol file. "Hardware doesn't lie". 
+  uint16_t *pwConvResults = (uint16_t *)DMA2_Stream0->M0AR;
+  // We don't want to crash with an access violation if someone calls us at
+  // the wrong time (before DMA2.Stream0.Mode0.AddressRegister is set), thus:
+  if( (pwConvResults > (uint16_t*)0x20000000)   // DMA destination address..
+   && (pwConvResults < (uint16_t*)0x20020000) ) // ..looks like RAM, ok
+   { // last of the 6 converted channels from ADC1 = 'battery voltage' :
+     result = pwConvResults[5];  // battery voltage, raw value from ADC
+     // The 'raw' result was very noisy, even with a rock-solid 8.4 V supply.
+     // Theory: "Vbatt" divided by 100k/(100k+200k) = 1/3, Vref=3.3 V;
+     //     0x0FFF = 4095 at 3.3 V * 3 ->
+     //     conversion factor = 9900 mV/4095 = 2.41 .
+     // Practice: Don't bet on the 3.3 V "reference". It's rubbish.
+     result = (290 * result) / 100;  // -> vbat in millivolts 
+     // Because the conversion result was very noisy,
+     // run the result through a crude 1st order lowpass .
+     //  See en.wikipedia.org/wiki/Low-pass_filter,
+     //  "algorithmic implementation of a time-discrete filter":
+     // > alpha = t_sample / ( tau + t_sample )
+     // > y[i]  = alpha * x[i] + (1-alpha) * y[i-1]
+     //  where:
+     //   tau      = time constant (R*C), here: ca. 2 seconds
+     //   t_sample = sampling interval,   here: 16 * 1.5 ms = 0.024 seconds
+     //   alpha    = 0.024 / 2.024 = 0.01185 = circa 0.01 to simplify: 
+     // To avoid floating point coeffs, multiply all terms by 100:
+     // > 100 * y[i] = 100 * alpha * x[i] + 100 * (1-alpha) * y[i-1]
+     // With alpha = 0.01, and y_lp = 100*y :
+     // > y_lp[i] = x[i] + 99 * y[i-1] = x[i] + 99*y_lp[i-1] / 100 
+     //    |         |________                      |
+     //    |                  |                     |
+     battery_voltage_lp = result + (99 * battery_voltage_lp) / 100;
+     battery_voltage_mV = battery_voltage_lp / 100; // scale to mV for convenience
+     // Similar digital low-pass for the analog volume pot:
+     // This ADC channel suffers a lot from noise caused
+     // by the "DMR chip" (C5000) periodically entering sleep-
+     // mode. At 100% volume in FM (squelched, muted), the result
+     // was around 2000, but IN IDLE on a DMR channel,
+     // it jumped between 1000 and 4000(!) . Thus only update
+     // the 'volume pot position' here when the radio is NOT in
+     // power-saving (idle) mode:
+     if( *((uint16_t*)MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN) > 10 )
+      { // "DMR chip" (C5000) not toggling it's LINEOUT-pin at the moment,
+        // so we MAY get a 'good reading' from this ADC channel :
+        result = pwConvResults[4];  // volume pot, also read per DMA from ADC1
+        volume_pot_lp = result + (99 * volume_pot_lp) / 100;
+        result = (uint16_t)(volume_pot_lp / 2000); // scale to percent
+        if( result>100 )
+         {  result=100;
+         }
+        volume_pot_percent = (uint8_t)result; // -> position of the volume pot, 0..100 percent
+      } // end if <not in "power-saving mode" (no "rattling" on LINEOUT)>
+   }
+} // end PollAnalogInputs() 
 
 
 //---------------------------------------------------------------------------
@@ -942,14 +1060,6 @@ void SysTick_Handler(void)
      if( oldSysTickCounter <= 3000/* x 1.5 ms*/ )
       { dw = oldSysTickCounter / 100; // brightness ramps up during init
         intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
-
-#      if( 0 && CONFIG_MORSE_OUTPUT )  // delayed start of the "Morse demo" ?
-        if( oldSysTickCounter == 3000 )
-         { // TEST: send something in Morse code immediately after power-on ?
-           MorseGen_AppendString( "cq test 0123456789" );
-         }
-#      endif // CONFIG_MORSE_OUTPUT ?
-
       }
      else  // not "shortly after power-on", but during normal operation ...
       {
@@ -1011,6 +1121,11 @@ void SysTick_Handler(void)
               break;
          } // end switch( curr_intensity )
       }   // end else < backlight not completely dark >
+
+     // Also only during 'normal operation' :  Poll a few analog inputs...
+     if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
+      { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
+      }
    }     // may_turn_on_backlight ? 
 #endif  // CONFIG_DIMMED_LIGHT ?
 
