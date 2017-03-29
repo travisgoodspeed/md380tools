@@ -548,6 +548,15 @@ static void MorseGen_BeginToSendChar( T_MorseGen *pMorseGen, uint8_t u8ASCII )
   uint8_t morse_code, nr_elements;
   int i;
 
+  if( global_addl_config.cw_pitch_10Hz < 20 ) // CW pitch not configured ?
+   {  global_addl_config.cw_pitch_10Hz = 65;  // use default: 65 * 10 Hz
+   }
+  if( global_addl_config.cw_volume == 0 )     // Output volume not configured ?
+   {  global_addl_config.cw_volume = BEEP_VOLUME_AUTO; // use 'automatic' volume
+   }
+  if( global_addl_config.cw_speed_WPM == 0 )  // CW speed not configured ?
+   {  global_addl_config.cw_speed_WPM = 18;   // use 18 WPM per default 
+   }
   // Is the to-be-transmitted character in the Morse code table ?
   if( u8ASCII<=0x12 ) // anything below ASCII 32 is a CONTROL CHARACTER:
    { // \x08 = decrease pitch (audio frequency) by two steps, etc,
@@ -622,6 +631,7 @@ void MorseGen_ClearTxBuffer(void) // aborts the current Morse transmission (if a
 {
   // Don't lock interrupts here .. only modify the FIFO *HEAD* index:
   morse_generator.u8FifoHead = morse_generator.u8FifoTail; // head==tails means "empty"
+  morse_generator.i8PitchShift = 0; // begin with nominal pitch
 } 
 
 //---------------------------------------------------------------------------
@@ -967,6 +977,44 @@ static void PollAnalogInputs(void)
    }
 } // end PollAnalogInputs() 
 
+void PollKeysOnPowerOn(void)
+{
+  // Checks for keyboard events for a few seconds after power-on
+  //  (must be long enough for global_addl_config to be loaded) .
+  // Used (for example) to turn on the Morse output for visually impaired ops,
+  // avoids struggling through the deeply nested menus (without seeing them).
+  // 'kb_keycode' is useless here because it doesn't return to zero 
+  // when releasing a key.
+  // So use 'kb_row_col_pressed' (16 bit) instead
+  //    ___________________________________
+  //   | MENU   | cursor | cursor |  BACK  |
+  //   | (green)|   up   |  down  |  (red) |
+  //   | 0x000A | 0x0012 | 0x0022 | 0x0402 |
+  //   |--------+--------+--------+--------|
+  //   |  '1'   |  '2'   |  '3'   |  '*'   |
+  //   | 0x000C | 0x0014 | 0x0024 | 0x0404 |
+  //   |--------+--------+--------+--------|
+  //   |  '4'   |  '5'   |  '6'   |  '0'   |
+  //   | 0x0044 | 0x0084 | 0x0104 | 0x0204 |
+  //   |--------+--------+--------+--------|
+  //   |  '7'   |  '8'   |  '9'   |  '#'   |
+  //   | 0x0042 | 0x0082 | 0x0102 | 0x0202 |
+  //   |________|________|________|________|
+  //  
+  // kb_row_col_pressed also supports a few COMBINATIONS:
+  //   MENU+BACK (simultaneously pressed) : 0x040A
+  // 
+  switch( (uint16_t)kb_row_col_pressed )
+   { case 0x0402 : // red 'BACK' button in upper right corner
+        global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE;
+        global_addl_config.cw_pitch_10Hz = 65;  // 65 * 10 Hz
+        global_addl_config.cw_volume = BEEP_VOLUME_AUTO; // try to(!) track volume pot pos
+        global_addl_config.cw_speed_WPM = 15;   // moderate speed for beginners
+        break;
+     default:
+        break;
+   }
+} // end PollKeysAfterPowerOn()
 
 //---------------------------------------------------------------------------
 void SysTick_Handler(void)
@@ -977,7 +1025,9 @@ void SysTick_Handler(void)
   // vector table, and the address of the original handler must be known
   // because we also call the original handler from here.
 {
+#if( CONFIG_DIMMED_LIGHT )
   uint32_t dw;
+#endif
   uint32_t oldSysTickCounter = IRQ_dwSysTickCounter++; 
     // this local copy is more efficient to read than the global variable,
     // because the C compiler needs to load addresses of global variables
@@ -1057,15 +1107,21 @@ void SysTick_Handler(void)
    }       // end if < may NOT turn on the backlight yet >   
   else    // may control the backlight now ...
    { 
-     if( oldSysTickCounter <= 3000/* x 1.5 ms*/ )
-      { dw = oldSysTickCounter / 100; // brightness ramps up during init
+     if( oldSysTickCounter <= 6000/* x 1.5 ms*/ )
+      { dw = oldSysTickCounter / 128; // brightness ramps up during init
         intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
+        PollKeysOnPowerOn(); // 'special functions' for a few keys shortly after power-on
       }
      else  // not "shortly after power-on", but during normal operation ...
       {
         if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
-         {  intensity= 0x99; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
-            // lower nibble = brightness when idle, upper nibble = brightness when active.          
+         { if( md380_radio_config.backlight_time == 0 )  // backlight 'always on' ?
+            { intensity= 0x99; // 'hum.free' default : always on with MAX brightness (no PWM)
+            }
+           else // backlight-timeout nonzero ->
+            { intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
+              // lower nibble = brightness when idle, upper nibble = brightness when active.
+            }
          }          
        
 #    if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :

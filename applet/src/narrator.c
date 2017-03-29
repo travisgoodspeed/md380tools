@@ -117,7 +117,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
   uint8_t u8Temp;
   int i;
 
-  pNarrator->mode = global_addl_config.narrator_mode;  
+  pNarrator->mode = global_addl_config.narrator_mode;
 
   if( IS_PTT_PRESSED ) // stop (or pause?) morse output when PTT pressed ?
    { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any)
