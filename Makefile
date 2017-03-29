@@ -1,7 +1,7 @@
 
 RELEASE=dist/md380tools-`date "+%Y-%m-%d"`
 
-.PHONY: dist
+.PHONY: dist all
 
 all: image_D13
 
@@ -139,7 +139,7 @@ dbg:
 	@echo MAKE: '${MAKE}'
 	@echo ________
 	@echo AWK version
-	-awk -V
+	-awk -Wversion 2>/dev/null || awk --version
 	@echo ________
 	@echo Make version
 	make -v
