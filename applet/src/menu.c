@@ -1361,7 +1361,7 @@ void create_menu_entry_morse_screen(void)
 
 void mn_config_reset2()
 {
-    mn_create_single_timed_ack(wt_backlight,wt_config_reset_doit);
+    mn_create_single_timed_ack(wt_config_reset,wt_config_reset_doit);
 
     memset( &global_addl_config, 0, sizeof(global_addl_config) );
     
