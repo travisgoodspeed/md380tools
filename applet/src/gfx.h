@@ -71,6 +71,7 @@ void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);
 
+void print_time_hook(void);
 
 typedef struct gfx_pal {
   long	ncol;

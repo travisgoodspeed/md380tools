@@ -16,6 +16,7 @@
 #include "console.h"      // defines option CONFIG_DIMMED_LIGHT (0 or 1) since 2017-01-07
 #include "netmon.h"
 #include "debug.h"
+#include "lastheard.h"
 
 #include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
 

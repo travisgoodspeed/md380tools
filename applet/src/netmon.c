@@ -261,12 +261,10 @@ void netmon4_update()
     lastheard_draw_poll();
 
     int src;
-    static int lh_cnt = 0 ;			// lastheard line counter 
 
     if ( nm_started == 0 ) {
         lastheard_printf("Netmon 4 - Lastheard ====\n");
         nm_started = 1;				// flag for restart of LH list
-        lh_cnt = 1;				// reset lh counter 
     }	
 
     char mode = ' ' ;
@@ -288,7 +286,6 @@ void netmon4_update()
    
         if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
             call_start_state = 0;
-            //lastheard_printf("%d",lh_cnt++);
             print_time_hook() ;
             if( usr_find_by_dmrid(&usr, src) == 0 ) {
                 lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);

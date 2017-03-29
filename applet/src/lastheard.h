@@ -27,6 +27,8 @@ void lastheard_clear();
 void lastheard_redraw();
 void lastheard_draw_poll();
 
+void lastheard_putch(char c);
+
 #ifdef __cplusplus
 }
 #endif
