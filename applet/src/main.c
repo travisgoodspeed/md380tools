@@ -3,6 +3,8 @@
   
 */
 
+#define COMPILING_MAIN_C 1  // flag to show warnings in headers only ONCE
+                   // (e.g. "please consider finding symbols.." in gfx.h)
 
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?

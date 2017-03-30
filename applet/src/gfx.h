@@ -171,6 +171,8 @@ extern uint32_t gfx_font_norm[];
 uint32_t gfx_get_fg_color(void);
 
 #ifdef _WARN_ONCE_ // Cleanup Superfluous Warnings, issue #704 . Here: only show ONE warning, if any:
-# warning TODO: please consider finding symbol(s); there may be more than one of these...
-  // (still this warning will be displayed dozens of times when making 'image_D02' ..)
-#endif
+# ifdef COMPILING_MAIN_C
+#  warning TODO: please consider finding symbol(s); there may be more than one of these...
+   // (still this warning was displayed dozens of times when making 'image_D02' ..)
+# endif // compiling MAIN.C ?
+#endif // WARN ?

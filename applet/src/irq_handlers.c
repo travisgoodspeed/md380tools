@@ -791,7 +791,9 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
         // the 16-bit location at 0x2001E5D0 in D13.020 had counted
         // counted down from ~~0x01FF (when active) to ~~ 3 or 4,
         // when the chattering started. Tried to prevent this as follows:
+#      ifdef MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN
         *((uint16_t*)MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN) |= 0x80;
+#      endif
         // This eliminated the 'rattling' noise, but it's ugly.
         // The least significant bits of this variable seem to have 
         // a special meaning (e.g. in D13.020 at 0x08031f1c),
@@ -893,7 +895,11 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
            // check again if the rx-audio is muted by the original firmware,
            // or if the radio is about to enter power-saving mode 
            // (during which the C5000 creates the 'rattling noise' on LINEOUT):
-           if( IsRxAudioMuted() || (MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN<10) )
+           if( IsRxAudioMuted() 
+#          ifdef MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN
+             || (MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN<10) 
+#          endif
+             )
             { // guess it's ok to turn the audio-PA off now:
               SPKR_SWITCH_OFF; // disconnect speaker from audio PA,
               // but wait before powering down the PA itself :
@@ -963,7 +969,9 @@ static void PollAnalogInputs(void)
      // it jumped between 1000 and 4000(!) . Thus only update
      // the 'volume pot position' here when the radio is NOT in
      // power-saving (idle) mode:
+#   ifdef MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN
      if( *((uint16_t*)MD380_ADDR_DMR_POWER_SAVE_COUNTDOWN) > 10 )
+#   endif
       { // "DMR chip" (C5000) not toggling it's LINEOUT-pin at the moment,
         // so we MAY get a 'good reading' from this ADC channel :
         result = pwConvResults[4];  // volume pot, also read per DMA from ADC1
@@ -977,6 +985,7 @@ static void PollAnalogInputs(void)
    }
 } // end PollAnalogInputs() 
 
+#if( CAN_POLL_KEYS ) // <- def'd as 0 or 1 in keyb.h, depends on firmware variant, subject to change
 void PollKeysOnPowerOn(void)
 {
   // Checks for keyboard events for a few seconds after power-on
@@ -1014,7 +1023,8 @@ void PollKeysOnPowerOn(void)
      default:
         break;
    }
-} // end PollKeysAfterPowerOn()
+} // end PollKeysOnPowerOn()
+#endif // CAN_POLL_KEYS ?
 
 //---------------------------------------------------------------------------
 void SysTick_Handler(void)
@@ -1110,7 +1120,9 @@ void SysTick_Handler(void)
      if( oldSysTickCounter <= 6000/* x 1.5 ms*/ )
       { dw = oldSysTickCounter / 128; // brightness ramps up during init
         intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
+#      if( CAN_POLL_KEYS )   // at the time of this writing, only for D13.020 and S13.020 :
         PollKeysOnPowerOn(); // 'special functions' for a few keys shortly after power-on
+#      endif
       }
      else  // not "shortly after power-on", but during normal operation ...
       {
@@ -1177,13 +1189,15 @@ void SysTick_Handler(void)
               break;
          } // end switch( curr_intensity )
       }   // end else < backlight not completely dark >
+   }     // may_turn_on_backlight ? 
+#endif  // CONFIG_DIMMED_LIGHT ?
 
-     // Also only during 'normal operation' :  Poll a few analog inputs...
+  if( oldSysTickCounter > 6000 )
+   { // Only during 'normal operation' :  Poll a few analog inputs...
      if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
       { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
       }
-   }     // may_turn_on_backlight ? 
-#endif  // CONFIG_DIMMED_LIGHT ?
+   }
 
 #if( CONFIG_MORSE_OUTPUT ) // Morse output (optional, since 2017-02-19) ?
   if( morse_generator.u8State != MORSE_GEN_PASSIVE )
