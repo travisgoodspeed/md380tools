@@ -82,8 +82,12 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 {
     netmon_update();
 #ifdef CONFIG_GRAPHICS
-    if( global_addl_config.userscsv == 1 && !is_menu_visible() ) {
-        draw_rx_screen(0xff8032);
+    if( global_addl_config.userscsv > 0 && !is_menu_visible() ) {
+	if( global_addl_config.userscsv == 2) {
+ 	        draw_rx_screen(0xff8032);		// ta
+	} else {
+ 	        draw_rx_screen(0xff8032);
+ 	}
     } else {
         gfx_drawbmp(bmp, x, y);
     }
@@ -94,17 +98,17 @@ void rx_screen_gray_hook(void *bmp, int x, int y)
 {
     netmon_update();
 #ifdef CONFIG_GRAPHICS
-    if( global_addl_config.userscsv == 1 && !is_menu_visible() ) {
-        draw_rx_screen(0x888888);
+    if( global_addl_config.userscsv > 0 && !is_menu_visible() ) {
+	if( global_addl_config.userscsv == 2) {
+ 	        draw_rx_screen(0x888888);		// ta
+	} else {
+ 	        draw_rx_screen(0x888888);
+ 	}
     } else {
         gfx_drawbmp(bmp, x, y);
     }
 #endif //CONFIG_GRAPHICS
 }
-
-
-
-
 
 
 // Lab hooks - for training only :)

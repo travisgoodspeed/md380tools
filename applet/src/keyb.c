@@ -116,8 +116,16 @@ void handle_hotkey( int keycode )
     reset_backlight();
     
     switch( keycode ) {
+        case 0 :
+	    clog_redraw();
+            switch_to_screen(6);
+            break ;
         case 1 :
             sms_test();
+            break ;
+        case 2 :
+	    slog_redraw();
+            switch_to_screen(5);
             break ;
         case 3 :
             copy_dst_to_contact();
@@ -129,7 +137,11 @@ void handle_hotkey( int keycode )
         case 5 :
             syslog_clear();
 	    lastheard_clear();
-	    nm_started = 0;// reset nm_start flag used for some display handling
+	    slog_clear();
+	    clog_clear();
+	    nm_started = 0;	// reset nm_start flag used for some display handling
+	    nm_started5 = 0;	// reset nm_start flag used for some display handling
+	    nm_started6 = 0;	// reset nm_start flag used for some display handling
             break ;
         case 6 :
         {
@@ -252,7 +264,9 @@ inline int is_intercept_allowed()
 inline int is_intercepted_keycode( int kc )
 {
     switch( kc ) {
+        case 0 :
         case 1 :
+        case 2 :
         case 3 :
         case 4 :
         case 5 :
