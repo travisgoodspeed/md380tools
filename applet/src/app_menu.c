@@ -1231,7 +1231,7 @@ BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c)
 
 //---------------------------------------------------------------------------
 void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
-{ int cbk_result;
+{ 
   menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
   if( pItem ) 
    { // If the edited value is NUMERIC, really increment/decrement THE VALUE
@@ -1241,7 +1241,11 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
  
 
      // TODO: If the currently edited item has a callback function,
-     // invoke that function to let the callback do whatever it wants..
+     // invoke that function to let the callback do whatever it wants
+     // *AFTER* the edited value was modified, for example: 
+     //  - apply the edited colour for the display immediately,
+     //  - use the new CW pitch (tone frequency) immediately, etc.
+
    }
 } // end Menu_OnIncDecEdit()
 

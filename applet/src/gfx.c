@@ -16,16 +16,10 @@
 #include "console.h"
 #include "netmon.h"
 #include "debug.h"
-<<<<<<< HEAD
 #include "lastheard.h" // reduce number of warnings - use function prototypes
 #include "app_menu.h" // optional 'application' menu, activated by red BACK-button
           // When visible, some gfx-calls must be disabled via our hooks
           // to prevent interference from Tytera's "gfx" (similar as for Netmon)
-=======
-#include "etsi.h"		// 2017-02-18 added for talker alias usage
-
-#include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
->>>>>>> refs/remotes/travisgoodspeed/master
 
 // Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -205,7 +199,12 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-void print_time_hook(char *log)
+// ex: void print_time_hook(void) // YHF: Does 'Tytera' really pass in the address of a string ?
+    // Or isn't this a hook (for a function in the original firmware) at all ?
+    // Besides that, what netmon.c passes in (into print_time_hook) is a char,
+    // not a "char pointer" ! Thus :
+// ex: void print_time_hook(char *log) // DL2MF (?)
+void print_time_hook(char log)         // DL4YHF (2017-04-17)
 {
     if( is_netmon_visible() ) {
         return;
@@ -213,7 +212,6 @@ void print_time_hook(char *log)
     wchar_t wide_time[9];
 
     RTC_TimeTypeDef RTC_TimeStruct;
-
     md380_RTC_GetTime(RTC_Format_BCD, &RTC_TimeStruct);
 
     md380_itow(&wide_time[0], RTC_TimeStruct.RTC_Hours);
@@ -223,22 +221,20 @@ void print_time_hook(char *log)
     md380_itow(&wide_time[6], RTC_TimeStruct.RTC_Seconds);
     wide_time[8] = '\0';
  
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) 
+     {
         if( wide_time[i] == '\0' )
             break;
-<<<<<<< HEAD
-        lastheard_putch(wide_time[i]);
-=======
-	if ( log == 'l' ) {
-		lastheard_putch(wide_time[i]);
-	} else if ( log == 'c' ) {
-		clog_putch(wide_time[i]);
-	} else if ( log == 's' ) {
-		slog_putch(wide_time[i]);
-	}
->>>>>>> refs/remotes/travisgoodspeed/master
+        if ( log == 'l' ) {
+           lastheard_putch(wide_time[i]);
+           // "warning: implicit declaration of function 'lastheard_putch'" - added proper prototype where it belongs
+        } else if ( log == 'c' ) {
+           clog_putch(wide_time[i]);
+        } else if ( log == 's' ) {
+           slog_putch(wide_time[i]);
+        }
     }
-}
+} 
 
 // deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
@@ -255,10 +251,6 @@ void print_ant_sym_hook(char *bmp, int x, int y)
 #ifdef CONFIG_GRAPHICS
     gfx_drawbmp(bmp, x, y);
     draw_eye_opt();
-	//if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )				// 2017-02-19 show talker alias if option selected and rcvd valid alias
-	//	{
-	//	draw_rx_screen(0xff8032);								// 2017-02-18 redraw userinfo when valid talker alias rcvd
-	//	}
 #endif
 }
 

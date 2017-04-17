@@ -71,11 +71,12 @@ void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);
 
-void print_time_hook(void);  // avoid warning: implicit declaration of function, called from netmon.c 
-
+// ex: void print_time_hook(void);  // avoid warning: implicit declaration of function, called from netmon.c 
+void print_time_hook(char log);  // for DL2MF's modified netmon.c . But is it safe to pass in an argument
+     // into a 'hooked' function ? May find out one day... YHF, 2017-04-17. Remove this when fixed or validated.
 
 typedef struct gfx_pal {
-  long	ncol;
+  long   ncol;
   long  someb; 
   const char * palptr;
   } gfx_pal;
