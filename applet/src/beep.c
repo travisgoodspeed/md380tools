@@ -61,7 +61,7 @@ void bp_tone_off();
 extern uint8_t bp_2001e8a7 ;
 
 #else
-# define CAN_BEEP 1
+# define CAN_BEEP 0
 #define bp_set_freq(x) /*nop*/
 #define bp_sempost()
 #define bp_sempost2()
