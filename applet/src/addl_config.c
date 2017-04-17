@@ -102,6 +102,7 @@ void cfg_load()
 #else
     global_addl_config.netmon = 0 ;
 #endif
+
 }
 
 void cfg_save()

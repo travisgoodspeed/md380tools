@@ -17,8 +17,9 @@
 #include "netmon.h"
 #include "debug.h"
 #include "lastheard.h" // reduce number of warnings - use function prototypes
-
-#include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
+#include "app_menu.h" // optional 'application' menu, activated by red BACK-button
+          // When visible, some gfx-calls must be disabled via our hooks
+          // to prevent interference from Tytera's "gfx" (similar as for Netmon)
 
 // Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
@@ -129,6 +130,11 @@ void dump_ram_to_spi_flash() {
 void print_date_hook(void)
 { // copy from the md380 code
 
+# if (CONFIG_APP_MENU)
+   if( Menu_IsVisible() ) // 'app menu' visible ? Don't allow Tytera to print into the framebuffer !
+    { return; 
+    }
+# endif
     if( is_netmon_visible() ) {
         return;
     }
@@ -198,6 +204,7 @@ void print_time_hook(void)
     wchar_t wide_time[9];
 
     RTC_TimeTypeDef RTC_TimeStruct;
+
     md380_RTC_GetTime(RTC_Format_BCD, &RTC_TimeStruct);
 
     md380_itow(&wide_time[0], RTC_TimeStruct.RTC_Hours);
@@ -217,6 +224,12 @@ void print_time_hook(void)
 // deprecated, left for other versions.
 void print_ant_sym_hook(char *bmp, int x, int y)
 {
+# if (CONFIG_APP_MENU)
+    if( Menu_IsVisible() )  // If the 'app menu' is visible,
+     { return; // then don't allow Tytera's "gfx" to spoil the framebuffer
+     }
+# endif
+
     if( is_netmon_visible() ) {
         return ;
     }
@@ -245,6 +258,13 @@ void gfx_blockfill_hook(int x_from, int y_from, int x_to, int y_to)
 //    PRINTRET();
 //    PRINT( "bf: %d %d %d %d\n", x_from, y_from, x_to, y_to );
     
+# if (CONFIG_APP_MENU)
+   if( Menu_IsVisible() )  // If the 'app menu' is visible,
+    { return; // then don't allow Tytera's "gfx" to spoil the framebuffer
+    }
+# endif
+
+
     if( y_from == 0 && x_from == 61 ) {
         con_redraw();
     }
@@ -269,6 +289,12 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
 //    PRINTRET();
 //    PRINT( "db: %d %d\n", x, y );
     
+# if (CONFIG_APP_MENU)
+   if( Menu_IsVisible() )  // If the 'app menu' is visible,
+    { return; // don't allow Tytera's "gfx" to spoil the framebuffer
+    }
+# endif
+
     // supress bmp drawing in console mode.
     if( is_netmon_visible() ) {
         if( x == D_ICON_ANT_X && y == D_ICON_ANT_Y ) {
@@ -287,6 +313,14 @@ void gfx_drawbmp_hook( void *bmp, int x, int y )
 // r0 = str, r1 = x, r2 = y, r3 = xlen
 void gfx_drawtext2_hook(wchar_t *str, int x, int y, int xlen)
 {
+# if (CONFIG_APP_MENU)
+   if( Menu_IsVisible() )  // If the 'app menu' is visible,
+    { return; // don't allow Tytera's "gfx" to spoil the framebuffer
+    }
+# endif
+
+
+
     // filter datetime (y=96)
     if( y != D_DATETIME_Y ) {
 //        PRINTRET();
@@ -304,6 +338,13 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
 //    PRINTRET();
 //    PRINT("dt4: %d %d %d %d %S (%x)\n", x, y, xlen, ylen, str, str);
+
+# if (CONFIG_APP_MENU)
+   if( Menu_IsVisible() )  // If the 'app menu' is visible,
+    { return; // then don't allow Tytera's "gfx" to spoil the framebuffer
+    }
+# endif
+
     
     if( is_netmon_visible() ) {
         // channel name
@@ -327,6 +368,14 @@ extern void gfx_drawchar_pos( int r0, int r1, int r2 );
 
 void gfx_drawchar_pos_hook( int r0, int r1, int r2 )
 {
+
+# if (CONFIG_APP_MENU)
+   if( Menu_IsVisible() )  // If the 'app menu' is visible,
+    { return; // don't allow Tytera's "gfx" to spoil the framebuffer
+      // (must get rid of all this crazy hooking one fine day)
+    }
+# endif
+
     if( is_netmon_visible() ) {
         return ;
     }

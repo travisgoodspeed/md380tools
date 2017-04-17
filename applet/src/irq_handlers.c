@@ -51,11 +51,12 @@
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
-#include "display.h"   // contains "gui_opmode3", which indicates RX-squelch state, too
-#include "keyb.h"      // contains "backlight_timer", which is Tytera's own software-timer
-#include "narrator.h"  // some flags in global_addl_config.narrator_mode are required here
-
+#include "display.h"  // contains "gui_opmode3", which indicates RX-squelch state, too
+#include "keyb.h"     // contains "backlight_timer", which is Tytera's own software-timer
+#include "narrator.h" // optional: tells channel, zone, menu in Morse code
+#include "app_menu.h" // optional 'application' menu, activated by red BACK-button
 #include "irq_handlers.h" // header for THIS module
+
 
 #ifndef IRQ_ORIGINAL_SYSTICK_HDLR  // Do we know the address of SysTick_Handler in the *original* firmware ?
 #  error "Missing address of the original SysTick_Handler in 'irq_handlers.h' !"
@@ -985,46 +986,120 @@ static void PollAnalogInputs(void)
    }
 } // end PollAnalogInputs() 
 
+
 #if( CAN_POLL_KEYS ) // <- def'd as 0 or 1 in keyb.h, depends on firmware variant, subject to change
-void PollKeysOnPowerOn(void)
+//---------------------------------------------------------------------------
+char KeyRowColToASCII(uint16_t kb_row_col)
+{ // Converts a hardware-specific keyboard code into a character.
+  // Implemented 2017-03-31 for the alternative 'red menu' .
+  //   [in]  16-bit "row/column" combination shown below
+  //   [out] simple 8-bit character also shown in the table:
+  //       (lower case letters are reserved for Morse input)
+  //    ___________________________________    
+  //   | 'M'ENU | cursor | cursor | 'B'ACK |   __
+  //   |(green) |  up, U | down,D | (red)  |     \  may have to be used
+  //   | 0x000A | 0x0012 | 0x0022 | 0x0402 |   __/  as 'A'..'D' for DTMF
+  //   |--------+--------+--------+--------|   __
+  //   |  '1'   |  '2'   |  '3'   |  '*'   |     |
+  //   | 0x000C | 0x0014 | 0x0024 | 0x0404 |     |
+  //   |--------+--------+--------+--------|     |
+  //   |  '4'   |  '5'   |  '6'   |  '0'   |      \  "DTMF"-like,
+  //   | 0x0044 | 0x0084 | 0x0104 | 0x0204 |      /  with non-standard
+  //   |--------+--------+--------+--------|     |   layout
+  //   |  '7'   |  '8'   |  '9'   |  '#'   |     |
+  //   | 0x0042 | 0x0082 | 0x0102 | 0x0202 |     |
+  //   |________|________|________|________|   --
+  //  
+  switch( kb_row_col ) // sorted by switch-value for shortest code..
+   { case 0x000A : return 'M'; // Green 'Menu' key (which usually opens TYTERA's menu)
+     case 0x000C : return '1';
+     case 0x0012 : return 'U'; // cursor up
+     case 0x0014 : return '2';
+     case 0x0022 : return 'D'; // cursor down
+     case 0x0024 : return '3';
+     case 0x0042 : return '7';
+     case 0x0044 : return '4';
+     case 0x0082 : return '8';
+     case 0x0084 : return '5';
+     case 0x0102 : return '9';
+     case 0x0104 : return '6';
+     case 0x0202 : return '#';
+     case 0x0204 : return '0';
+     case 0x0402 : return 'B'; // 'back' aka 'red button'
+     case 0x0404 : return '*';
+     // kb_row_col_pressed also supports a few COMBINATIONS:
+     //   MENU+BACK (simultaneously pressed) : 0x040A
+     case 0x040A : return 'X'; // eXit all menus and sub-menus
+     default     : return 0;
+   }
+} // end KeyRowColToASCII()
+#endif // CAN_POLL_KEYS ?
+
+
+#if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature ...
+//---------------------------------------------------------------------------
+static void PollKeysForRedMenu(void)
+  // Non-intrusive polling of keys for the 'red menu' (activated 
+  //  by pressing the red 'BACK'-button),
+  // when that button isn't used to control Tytera's own 'geen' menu.
+  // Called approximately once every 24 milliseconds from SysTick_Handler(), 
+  // so don't call anything else from here (especially nothing in
+  // the original firmware, unless you know exactly what you're doing).
+  // Only peek at a few locations in RAM, and carefully set some others.
 {
-  // Checks for keyboard events for a few seconds after power-on
-  //  (must be long enough for global_addl_config to be loaded) .
-  // Used (for example) to turn on the Morse output for visually impaired ops,
-  // avoids struggling through the deeply nested menus (without seeing them).
+  static uint8_t green_menu_countdown=0;
+  static uint8_t autorepeat_countdown=0;
+  static uint16_t prev_key;
+  uint16_t key = kb_row_col_pressed; 
   // 'kb_keycode' is useless here because it doesn't return to zero 
   // when releasing a key.
-  // So use 'kb_row_col_pressed' (16 bit) instead
-  //    ___________________________________
-  //   | MENU   | cursor | cursor |  BACK  |
-  //   | (green)|   up   |  down  |  (red) |
-  //   | 0x000A | 0x0012 | 0x0022 | 0x0402 |
-  //   |--------+--------+--------+--------|
-  //   |  '1'   |  '2'   |  '3'   |  '*'   |
-  //   | 0x000C | 0x0014 | 0x0024 | 0x0404 |
-  //   |--------+--------+--------+--------|
-  //   |  '4'   |  '5'   |  '6'   |  '0'   |
-  //   | 0x0044 | 0x0084 | 0x0104 | 0x0204 |
-  //   |--------+--------+--------+--------|
-  //   |  '7'   |  '8'   |  '9'   |  '#'   |
-  //   | 0x0042 | 0x0082 | 0x0102 | 0x0202 |
-  //   |________|________|________|________|
-  //  
-  // kb_row_col_pressed also supports a few COMBINATIONS:
-  //   MENU+BACK (simultaneously pressed) : 0x040A
+  // So use 'kb_row_col_pressed' (16 bit) instead . Seems to be the
+  // lowest level of polling the keyboard matrix without rolling our own.
   // 
-  switch( (uint16_t)kb_row_col_pressed )
-   { case 0x0402 : // red 'BACK' button in upper right corner
-        global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE;
-        global_addl_config.cw_pitch_10Hz = 65;  // 65 * 10 Hz
-        global_addl_config.cw_volume = BEEP_VOLUME_AUTO; // try to(!) track volume pot pos
-        global_addl_config.cw_speed_WPM = 15;   // moderate speed for beginners
-        break;
-     default:
-        break;
+  // Our own ("red") menu must not interfere with Tyter's "green" menu,
+  // where the red "BACK"-button switches back from any submenu to the
+  // parent, and from the main menu to the main screen:
+  if( gui_opmode2 == OPM2_MENU )
+   { // keyboard focus currently on Tytera's 'green' menu 
+     // -> ignore kb_row_col_pressed until the key was released
+     green_menu_countdown = 200/*ms*/ / 24; 
    }
-} // end PollKeysOnPowerOn()
-#endif // CAN_POLL_KEYS ?
+  else // keyboard focus not on Tytera's ('green') menu...
+   {   // so is it "our" key now ?  Not necessarily !
+     // Tytera's menu already quits when PRESSING the red button,
+     // so just because the red button is PRESSED doesn't mean 
+     // the operator wants to open our 'red menu'.  Thus:
+     if( green_menu_countdown > 0 )
+      { if( key==0 )
+         { --green_menu_countdown;
+         }
+        else // guess the RED BUTTON is still pressed after leaving the GREEN-button-menu
+         { green_menu_countdown = 200/*ms*/ / 24; // ignore keypress for another 200 ms
+         }
+      }
+     else // "green menu" countdown expired, guess the alternative menu may process this key..
+      { if( prev_key==0 && key!=0 )
+         { Menu_OnKey( KeyRowColToASCII(key) ); 
+           // no fancy FIFO but a simple 1-level buffer.
+           // Consumed in another task or thread, see app_menu.c 
+           autorepeat_countdown = 500/*ms*/ / 24; // <- autorepeat DELAY
+         }
+        else // no CHANGE in the keyboard matrix, but maybe...
+        if( key==0x0012 || key==0x0022 ) // cursor key still pressed ?
+         { if(  autorepeat_countdown > 0 )
+            { --autorepeat_countdown;
+            }
+           else // send the same key again, prevents rubbing the paint off..  
+            { autorepeat_countdown = 130/*ms*/ / 24; // 1 / "autorepeat RATE"
+              Menu_OnKey( KeyRowColToASCII(key) );
+            }
+         }
+      }
+   } 
+  prev_key = key;
+} // end PollKeysForRedMenu()
+#endif // CONFIG_APP_MENU ?
+
 
 //---------------------------------------------------------------------------
 void SysTick_Handler(void)
@@ -1115,14 +1190,28 @@ void SysTick_Handler(void)
          }   // end if < GPIO_C.6 configured as OUTPUT >
       }     // end if < GPIO_C supplied with a peripheral clock >
    }       // end if < may NOT turn on the backlight yet >   
-  else    // may control the backlight now ...
+  else    // may control the backlight now ... "normal operation" ?
    { 
      if( oldSysTickCounter <= 6000/* x 1.5 ms*/ )
       { dw = oldSysTickCounter / 128; // brightness ramps up during init
         intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
-#      if( CAN_POLL_KEYS )   // at the time of this writing, only for D13.020 and S13.020 :
-        PollKeysOnPowerOn(); // 'special functions' for a few keys shortly after power-on
-#      endif
+#      if( CAN_POLL_KEYS )  // at the time of this writing, only for D13.020 and S13.020 :
+        if( oldSysTickCounter>4096 )  
+         { // global_addl_config should have been loaded by now ...
+#         if( CONFIG_MORSE_OUTPUT )
+           // Visually impaired hams will have difficulties turning on the Morse
+           // output in the original MD380Tools menu. Solution: when holding the
+           // red 'back' button pressed during power-on, activate the Morse output
+           // with the following meaningful defaults (overriding global_addl_config):
+           if( kb_row_col_pressed == 0x0402 ) // red 'BACK' button pressed shortly after power-up ?
+            { global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE;
+              global_addl_config.cw_pitch_10Hz = 65; // 65 * 10 Hz
+              global_addl_config.cw_volume     = 50; // .. percent of maximum
+              global_addl_config.cw_speed_WPM  = 15; // moderate speed for beginners
+            }
+#         endif // CONFIG_MORSE_OUTPUT ?
+         }     // end if < circa 9 seconds after power-on, check our part of global_addl_config > 
+#      endif  // CAN_POLL_KEYS ?
       }
      else  // not "shortly after power-on", but during normal operation ...
       {
@@ -1197,7 +1286,16 @@ void SysTick_Handler(void)
      if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
       { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
       }
-   }
+#   if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature, 
+     // depending on the value defined as CONFIG_APP_MENU in config.h:
+     if( (oldSysTickCounter & 0x0F) == 1 ) // .. on every 16-th SysTick
+      { // (but in another call, not the same as PollAnalogInputs)
+        PollKeysForRedMenu(); // non-intrusive polling of keys for the 
+        // 'red menu' (menu activated by pressing the red 'BACK'-button,
+        // when that button isn't used to control Tytera's own menu).
+      }
+#   endif // CONFIG_APP_MENU ?
+   } // end if( oldSysTickCounter > 6000 )
 
 #if( CONFIG_MORSE_OUTPUT ) // Morse output (optional, since 2017-02-19) ?
   if( morse_generator.u8State != MORSE_GEN_PASSIVE )
