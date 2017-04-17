@@ -269,7 +269,7 @@ void * get_md380_dnld_tohook_addr(){
   int ram_size = 0x1ffff / 4;
   int i;
   int n=0;
-  void * ret;
+  void * ret = NULL;
  
   for (i = 0;  i < ram_size ; i++){
     if (usb_dnld_handle == (void *) ram_start[i]){
