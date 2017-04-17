@@ -25,7 +25,9 @@
 #if( CONFIG_MORSE_OUTPUT ) 
 # include "narrator.h"  // 'storyteller', triggerable via sidekey
 #endif
-
+#if( CONFIG_APP_MENU )
+# include "app_menu.h" // optional 'application' menu, activated by red BACK-button
+#endif
 #include <stdint.h>
 
 uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
@@ -215,7 +217,7 @@ void evaluate_sidekey( int button_function) // This is where new functions for s
       break;
     case 0x51 :    // "Set Talkgroup"
       create_menu_entry_set_tg_screen(); 
-      // Creating' the menu entry seems ok here, 
+      // Creating the menu entry seems ok here, 
       // but it's impossible (or at least unsafe) to ENTER / invoke the menu from here.
       // Call stack: kb_handler_hook() -> handle_sidekey() -> evaluate_sidekey()
       //               |__ in D13.020, patched to address 0x0804ebd2, thus
@@ -298,6 +300,7 @@ extern void kb_handler();
 
 void kb_handler_hook()
 {
+
 #if defined(FW_D13_020) || defined(FW_S13_020)
     trace_keyb(0);
 
@@ -334,6 +337,19 @@ void kb_handler_hook()
         return;
       }
     }
+
+#  if( CONFIG_APP_MENU )  // prevent opening "green key menu" as long as our "alternative menu" is open
+    if( Menu_IsVisible() )  
+     { 
+       if( (kp & 2) == 2 ) 
+        { kb_keypressed = 8; // Sets the key as handled. The firmware will ignore this button press now.
+          // (would be nice if it did. But Tytera's original menu still flashed up
+          //  when leaving our ALTERNATIVE menu (aka 'app menu') via GREEN key)
+        }
+       return; // "return early", don't let kb_handler() process 'kb_row_col_pressed' at all .
+     }
+#  endif // CONFIG_APP_MENU ?
+
 
 #else //TODO add support for other firmware, e.g. D02.032 (?)
     // # warning please consider hooking. // too many warnings - see issue #704 on github

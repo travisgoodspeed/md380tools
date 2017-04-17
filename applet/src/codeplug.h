@@ -24,6 +24,7 @@ typedef struct {
 } contact_t ; // sizeof() = 36 (0x24)
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
+# define HAVE_ZONE_NAME 1
 extern wchar_t zone_name[16];
 #endif
 

@@ -25,6 +25,8 @@
 #include "netmon.h"
 #include "syslog.h"
 #include "narrator.h" // tells channel, zone, and menu in Morse code
+#include "app_menu.h" // optional 'application' menu, activated by red BACK-button.
+
  
 //static int flag=0;
 
@@ -42,17 +44,31 @@
 
 extern void f_4315_hook()
 {
-    netmon_update();
-    con_redraw();
-
-#if( CONFIG_MORSE_OUTPUT ) 
+#  if( CONFIG_MORSE_OUTPUT ) 
     narrate(); // may "tell a story" in Morse code (for visually impaired hams)
-#endif
+#  endif
+
+#  if( CONFIG_APP_MENU ) 
+    // Note : Trying to DRAW the 'app menu' into the framebuffer HERE
+    //        didn't work (had no effect). The call to Menu_DrawIfVisible()
+    //        had to be placed in display.c : draw_statusline_hook() .
+    // Guesswork (is this documented anywhere??) : "F_4315" is only called
+    // when Tytera's own ('green-button-') menu is visible.
+    if( Menu_DrawIfVisible(AM_CALLER_F_4315_HOOK) )  
+     { return; // the menu covers the entire screen, so don't draw anything else
+     }
+#  endif // CONFIG_APP_MENU ?
+
+    netmon_update(); // YHF: update netmon even when it's disabled ?
+    con_redraw();    // YHF: con_redraw() did NOTHING when Netmon was invisible.
+
 
     if( is_netmon_visible() ) {
         return ;
     }
-    F_4315();
+    F_4315(); // Seems to be Tytera's own "painter" for update_scr_17.
+              // Calls stuff like gfx_set_fg_color(), gfx_blockfill(),
+              // and various flavours of gfx_drawtext(), etc...
 }
 
 //// this hook switcht of the exit from the menu in case of RX
@@ -87,6 +103,13 @@ extern void f_4315_hook()
 void rx_screen_blue_hook(char *bmp, int x, int y)
 {
     netmon_update();
+
+#  if( CONFIG_APP_MENU ) 
+    if( Menu_DrawIfVisible(AM_CALLER_RX_SCREEN_BLUE_HOOK) )  
+     { return; // the menu covers the entire screen, so don't draw anything else
+     }
+#  endif // CONFIG_APP_MENU ?
+
 #ifdef CONFIG_GRAPHICS
     if( global_addl_config.userscsv == 1 && !is_menu_visible() ) {
         draw_rx_screen(0xff8032);
@@ -104,6 +127,13 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 void rx_screen_gray_hook(void *bmp, int x, int y)
 {
     netmon_update();
+
+#  if( CONFIG_APP_MENU ) 
+    if( Menu_DrawIfVisible(AM_CALLER_RX_SCREEN_BLUE_HOOK) )  
+     { return; // the menu covers the entire screen, so don't draw anything else
+     }
+#  endif // CONFIG_APP_MENU ?
+
 #ifdef CONFIG_GRAPHICS
     if( global_addl_config.userscsv == 1 && !is_menu_visible() ) {
         draw_rx_screen(0x888888);
@@ -317,6 +347,15 @@ void f_4225_hook()
     
     netmon_update();
 
+#  if( CONFIG_APP_MENU ) 
+    if( Menu_DrawIfVisible(AM_CALLER_F_4225_HOOK) )  
+     { return; // THIS call made the 'App Menu' work on a busy FM channel
+       // (when Tytera doesn't paint anything to camouflage the QRM
+       //  caused by traffic on the 8-bit LCD interface / connector cable) 
+     }
+#  endif // CONFIG_APP_MENU ?
+
+
 #if 0
     int upd = gui_opmode1 > 0x7F ;
     if( upd == 0 ) {
@@ -334,7 +373,7 @@ void f_4225_hook()
     
     if( is_netmon_visible() ) {
         
-        // steer back to idle screen, because thata the most intercepted.
+        // steer back to idle screen, because that's the most intercepted.
         if( gui_opmode2 == OPM2_VOICE ) {
             gui_opmode2 = OPM2_IDLE;
         }
