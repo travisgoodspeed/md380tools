@@ -102,3 +102,4 @@ void BeepMute(void);  // mutes the beep without turning the audio PA off
 void BeepReset(void); // reprograms Timer8 for tytera's funny tones ("Boooo" & co) 
 
 #endif // CONFIG_MORSE_OUTPUT ?
+

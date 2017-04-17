@@ -25,9 +25,17 @@
 
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
+uint8_t nm_started5 = 0 ;
+uint8_t nm_started6 = 0 ;
 uint8_t rx_voice = 0 ;
+uint8_t rx_new = 0 ;
+uint8_t ch_new = 0 ;
 uint8_t call_start_state = 0;
 uint8_t previous_call_state = 0;
+
+wchar_t curr_channel[20];			// current channel name
+wchar_t sh_last_channel[20];			// last channel name sh log
+wchar_t ch_last_channel[20];			// last channel name ch log
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -35,7 +43,16 @@ int progress = 0 ;
 #ifndef FW_D13_020
 #warning should be symbols, not sure if it is worth the effort
 #endif
-uint16_t *cntr2 = (void*)0x2001e844 ;
+/* uint16_t *cntr2 = (void*)0x2001e844 ;*/
+
+#if defined(FW_D13_020) || defined(FW_S13_020)	
+    extern uint16_t m_cntr2 ;
+#endif
+
+#if defined(FW_D02_032)
+uint8_t gui_opmode3 = 0xFF ;
+uint16_t m_cntr2 = 0x00;
+#endif
     
 // mode2
 // 1 idle
@@ -93,15 +110,11 @@ void print_vce()
 
 void print_smeter()
 {
-#if defined(FW_D13_020) || defined(FW_S13_020)		
+#if defined(FW_D13_020) || defined(FW_S13_020)	
     extern uint8_t smeter_rssi ;
     con_printf("rssi:%d\n", smeter_rssi );
 #endif
 }
-
-#if defined(FW_D02_032)
-uint8_t gui_opmode3 = 0xFF ;
-#endif
 
 void netmon1_update()
 {
@@ -115,7 +128,7 @@ void netmon1_update()
     
     con_clrscr();
     
-    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, gui_opmode3, *cntr2 ); 
+    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, gui_opmode3, m_cntr2 ); 
     
 #if defined(FW_D13_020) || defined(FW_S13_020)
     extern uint8_t channel_num ;
@@ -249,9 +262,12 @@ void netmon2_update()
 void netmon3_update()
 {
     syslog_draw_poll();
+<<<<<<< HEAD
     if ( nm_started == 0 ) {
          nm_started = 1;				// flag for restart of LH list
     }	
+=======
+>>>>>>> refs/remotes/travisgoodspeed/master
 }
 
 
@@ -262,6 +278,7 @@ void netmon4_update()
 
     int src;
     static int lh_cnt = 0 ;			// lastheard line counter 
+    char log = 'l';
 
     if ( nm_started == 0 ) {
         lastheard_printf("Netmon 4 - Lastheard ====\n");
@@ -289,15 +306,17 @@ void netmon4_update()
    
         if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
             call_start_state = 0;
+	    rx_new = 1;				// set status to new for netmon5
+	    ch_new = 1;				// set status to new for netmon6
             //lastheard_printf("%d",lh_cnt++);
-            print_time_hook() ;
+ 	    print_time_hook(log);
             if( usr_find_by_dmrid(&usr, src) == 0 ) {
                 lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
             } else {
                 lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
             }
         }
-        if ( talkerAlias.displayed != 1 && talkerAlias.length > 0 )
+        if ( global_addl_config.userscsv > 1 && (talkerAlias.displayed != 1 && talkerAlias.length > 0) )
         {
             talkerAlias.displayed = 1;
             lastheard_printf("TA: %s\n",talkerAlias.text);
@@ -309,10 +328,141 @@ void netmon4_update()
 
 }
 
+void netmon5_update()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    slog_draw_poll();
+    
+    int src;
+    int cmp_res;				// compare result returncode (0= channel not changed)
+
+    extern wchar_t channel_name[20] ;		// read current channel name from external  
+    static int sl_cnt = 0 ;			// lastheard line counter
+    static int cp_cnt = 1 ;			// lastheard channel page counter
+    char slog = 's';
+
+    if ( nm_started5 == 0 ) {
+	slog_printf("Netmon 5 LH Channel =========\n");
+	nm_started5 = 1;				// flag for restart of LH list
+	sl_cnt++;				// reset lh counter 
+    }	
+
+    char mode = ' ' ;
+    if( rst_voice_active ) {
+        if( rst_mycall ) {
+            mode = '*' ; // on my tg            
+        } else {
+            mode = '<' ; // on other tg
+        }
+    src = rst_src;
+    user_t usr;
+
+    if( ( src != 0 ) && ( rx_new == 1 ) ) {
+
+	for (int i = 0; i < 20; i++)
+	   {
+	      curr_channel[i] = channel_name[i];
+		if (channel_name[i] == '\0')
+		break;
+	   }
+
+	if ( (wcscmp(sh_last_channel, curr_channel) != 0)  || (sl_cnt >= 9) ) {			// compare channel_name with last_channel from latest rx
+
+		if (sl_cnt >= 9 ) {
+			slog_printf(">>:%S #%d <<< \n", curr_channel, cp_cnt);			// show page # on new log pages
+			sl_cnt = 0;								// reset sl_cnt at end of screen
+			cp_cnt++;								// increment lh page count
+		} else {
+			slog_printf("cn:%S ---------------\n", curr_channel);			// show divider line when channel changes	
+		}
+		wcscpy(sh_last_channel, curr_channel);
+		sl_cnt++;
+	}
+
+        print_time_hook(slog);
+
+	// loookup source ID in user database to show callsign instead of ID
+        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+		// lookup destination ID in user database for status requests etc.
+        	if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+        		slog_printf("=%d->%s %c\n", src, usr.callsign, mode);
+	        } else 	{
+		        slog_printf("=%d->%d %c\n", src, rst_dst, mode);
+		}
+	} else {
+            slog_printf("=%s->", usr.callsign);
+        	if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+        		slog_printf("%s %c\n", usr.callsign, mode);
+	        } else 	{
+		        slog_printf("%d %c\n", rst_dst, mode);
+		}
+        }
+	rx_new = 0 ;				// call handled, wait until new voice call status received
+	ch_new = 1 ;				// status for netmon6
+	sl_cnt++;
+     }
+    }
+#else
+    slog_printf("No lastheard available\n");    
+#endif 
+
+}
+
+
+void netmon6_update()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    clog_draw_poll();
+    
+    int src;
+    int cmp_res;				// compare result returncode (0= channel not changed)
+
+    extern wchar_t channel_name[20] ;		// read current channel name from external  
+    static int ch_cnt = 0 ;			// lastheard line counter
+    static int cp_cnt = 1 ;			// lastheard channel page counter
+    char clog = 'c';
+
+    if ( nm_started6 == 0 ) {
+	clog_printf("Netmon 6 RX channel ========\n");
+	nm_started6 = 1;				// flag for restart of LH list
+	ch_cnt = 1;				// reset lh counter 
+    }	
+
+    src = rst_src;
+
+    //if( ( src != 0 ) && ( ch_new == 1 ) ) {
+    if( ch_new == 1 ) {
+
+	for (int i = 0; i < 20; i++)
+	   {
+	      curr_channel[i] = channel_name[i];
+		if (channel_name[i] == '\0')
+		break;
+	   }
+
+	if (wcscmp(ch_last_channel, curr_channel) != 0)  {			// compare channel_name with last_channel from latest rx
+	        print_time_hook(clog);
+		clog_printf("-%02d:%S \n", ch_cnt, curr_channel);			// show divider line when channel changes	
+		wcscpy(ch_last_channel, curr_channel);
+		ch_cnt++;
+		}
+	ch_new = 0 ;				// call handled, wait until new voice call status received
+     }
+#else
+    clog_printf("No channellog available\n");    
+#endif 
+}
+
 void netmon_update()
 {
     if( !is_netmon_visible() ) {
+<<<<<<< HEAD
         netmon4_update();
+=======
+        netmon6_update();
+        netmon4_update();
+        netmon5_update();
+>>>>>>> refs/remotes/travisgoodspeed/master
         return ;
     }
     
@@ -329,7 +479,18 @@ void netmon_update()
             netmon3_update();
             return ;
         case 4 :
+            netmon6_update();
             netmon4_update();
+            return ;
+        case 5 :
+            netmon4_update();
+            netmon6_update();
+            netmon5_update();
+            return ;
+        case 6 :
+            netmon4_update();
+            //netmon5_update();
+            netmon6_update();
             return ;
     }
 }

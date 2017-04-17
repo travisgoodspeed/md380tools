@@ -104,7 +104,7 @@ md380_OSMboxPend = 0x0803029d;
 /* //! Functions and Variabes regarding the menu */
 main_menu                              = 0x08039c23;
 md380_create_menu_entry                = 0x0800c731;
-md380_create_main_meny_entry           = 0x0800c189;
+md380_create_main_menu_entry           = 0x0800c189;
 md380_menu_numerical_input             = 0x0801a2d7;
 md380_create_menu_entry                = 0x0800c731;
 md380_menu_entry_back                  = 0x0800f453;

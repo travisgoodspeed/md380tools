@@ -1,4 +1,4 @@
-md380_create_main_meny_entry             = 0x0800c189 ;
+md380_create_main_menu_entry             = 0x0800c189 ;
 md380_create_menu_entry                  = 0x0800c72f ;
 gfx_drawtext10                           = 0x0800ded9 ;
 gfx_drawtext                             = 0x0800def7 ;
@@ -155,12 +155,18 @@ event2_mbox_poi_beep                     = 0x2001e67c ;
 bp_freq                                  = 0x2001e6c0 ;
 md380_blockadr                           = 0x2001e754 ;
 md380_packetlen                          = 0x2001e758 ;
+<<<<<<< HEAD
 kb_top_side_key_press_time               = 0x2001e7b0 ;
 kb_bot_side_key_press_time               = 0x2001e7b2 ;
+=======
+kb_top_side_key_press_time		 = 0x2001e7b0 ;
+kb_bot_side_key_press_time		 = 0x2001e7b2 ;
+>>>>>>> refs/remotes/travisgoodspeed/master
 kb_side_key_max_time                     = 0x2001e7b8 ;
 kb_row_col_pressed                       = 0x2001e7ba ;
 kb_key_press_time                        = 0x2001e7be ;
 backlight_timer                          = 0x2001e7f8 ;
+m_cntr2				         = 0x2001e844 ;
 selected_channel                         = 0x2001e850 ;
 kb_keycode                               = 0x2001e890 ;
 gui_opmode3                              = 0x2001e892 ;

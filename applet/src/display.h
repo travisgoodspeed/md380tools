@@ -94,6 +94,7 @@ gfx_drawtex6( sp+4, 25, 32, 18 );
 void draw_eye_opt();
 void draw_micbargraph();
 void draw_rx_screen(unsigned int bg_color);
+void draw_ta_screen(unsigned int bg_color);
 
 void draw_statusline( uint32_t r0 ); // in md380
 
