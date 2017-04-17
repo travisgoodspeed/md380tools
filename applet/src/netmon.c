@@ -250,7 +250,7 @@ void netmon3_update()
 {
     syslog_draw_poll();
     if ( nm_started == 0 ) {
-         nm_started = 1;				// flag for restart of LH list
+	nm_started = 1;				// flag for restart of LH list
     }	
 }
 
@@ -312,7 +312,7 @@ void netmon4_update()
 void netmon_update()
 {
     if( !is_netmon_visible() ) {
-        netmon4_update();
+	netmon4_update();
         return ;
     }
     

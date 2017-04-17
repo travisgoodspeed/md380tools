@@ -6,17 +6,12 @@
 //   Module prefix : "IRQ_" .
 
 #ifndef  CONFIG_DIMMED_LIGHT   // want 'dimmable backlight' ?
-# define CONFIG_DIMMED_LIGHT 0 // guess not (else set CONFIG_DIMMED_LIGHT>0 in config.h)
+# define CONFIG_DIMMED_LIGHT 0 // guess not (else set CONFIG_DIMMED_LIGHT=1 in config.h)
 #endif
 
 #ifndef  CONFIG_MORSE_OUTPUT   // want output in Morse code ?
-# define CONFIG_MORSE_OUTPUT 0 // guess not (else set CONFIG_MORSE_OUTPUT>0 in config.h)
+# define CONFIG_MORSE_OUTPUT 0 // guess not (else set CONFIG_MORSE_OUTPUT=1 in config.h)
 #endif
-
-#ifndef  CONFIG_APP_MENU   // Alternative menu activated by red 'BACK'-button ?
-# define CONFIG_APP_MENU 0 // only if defined > 0 in config.h
-#endif
-
 
 // Offsets into the STM32's vector table. These may be defined somewhere else, but WB didn't find anything like this.
 // See also: description of 'tested vectors' at www.qsl.net/dl4yhf/RT3/md380_fw.html#vector_table  .
@@ -64,9 +59,6 @@
 #define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* turn red LED off */
 #define IS_RED_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_TX))!=0) /* check red LED*/
 #define IS_PTT_PRESSED ((GPIOE->IDR&(1<<PINPOS_E_PTT))==0) /* check PTT */ 
-#define PINPOS_D_LCD_CS 6 /* PD6 = LCD_CS, see md380hw.html#PD6 */
-#define LCD_CS_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select LOW*/
-#define LCD_CS_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select HIGH*/
 
 
 extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
@@ -81,7 +73,6 @@ extern uint8_t green_led_timer; // similar for the GREEN (RX) LED.  TEST ONLY !
 extern uint8_t  volume_pot_percent; // audio volume potentiometer position [%]
 
 extern uint16_t battery_voltage_mV; // battery voltage [millivolts]
-
 
 
 void StartStopwatch( uint32_t *pu32Stopwatch );   // details and usage in *.c 
@@ -100,5 +91,6 @@ int  MorseGen_AppendHex( uint32_t num );
 void BeepStart( int freq_Hz, int volume ); // starts a pulse-width modulated beep
 void BeepMute(void);  // mutes the beep without turning the audio PA off
 void BeepReset(void); // reprograms Timer8 for tytera's funny tones ("Boooo" & co) 
+
 
 #endif // CONFIG_MORSE_OUTPUT ?

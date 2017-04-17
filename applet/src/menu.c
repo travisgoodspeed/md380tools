@@ -25,10 +25,8 @@
 #include "printf.h"
 #include "keyb.h"
 #include "codeplug.h"
-#include "narrator.h" // optional: tells channel, zone, menu in Morse code.
-// #include "app_menu.h" // optional 'application' menu, activated by red BACK-button.
-            // whichever was opened FIRST (via red or green button) 
-            // will gain control over the framebuffer and thus disable "the other" menu.
+#include "narrator.h" // tells channel, zone, menu in Morse code
+
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -68,12 +66,11 @@ const static wchar_t wt_bl60[]              = L"60 sec";
 const static wchar_t wt_backlight_menu[]    = L"Backlight";
 
 #ifndef  CONFIG_DIMMED_LIGHT   // Dimmed backlight ?
-# define CONFIG_DIMMED_LIGHT 0 // only if defined > 0 in config.h
+# define CONFIG_DIMMED_LIGHT 0 // only if defined AS ONE in config.h
 #endif
 #ifndef  CONFIG_MORSE_OUTPUT   // Morse output for visually impaired hams ?
-# define CONFIG_MORSE_OUTPUT 0 // only if defined > 0 in config.h
+# define CONFIG_MORSE_OUTPUT 0 // only if defined AS ONE in config.h
 #endif
-
 #if( CONFIG_DIMMED_LIGHT )
 const static wchar_t wt_bl_intensity_lo[]   = L"Level Low";
 const static wchar_t wt_bl_intensity_hi[]   = L"Level High";
@@ -929,7 +926,7 @@ void mn_backlight_intens( int intensity ) // common 'menu handler' for all <NUM_
 } // end mn_backlight_intens()
 
 // 'menu callback' for backlight intensity steps 0 .. 9 
-//  (kludge required because Tytera's callback doesn't pass the item-index)
+//  (kludge required because the callback doesn't pass the item-index)
 void mn_backlight_intens_0(void) {  mn_backlight_intens(0); }
 void mn_backlight_intens_1(void) {  mn_backlight_intens(1); }
 void mn_backlight_intens_2(void) {  mn_backlight_intens(2); }

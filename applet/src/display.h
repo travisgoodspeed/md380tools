@@ -99,9 +99,9 @@ void draw_statusline( uint32_t r0 ); // in md380
 
 void draw_datetime_row(); // in md380
 
-#define OPM2_IDLE  1 // in FM: 'IDLE' even when actively receving 'voice'
-#define OPM2_VOICE 2 // only seen in DMR on RX, but not in FM
-#define OPM2_TERM  4
+#define OPM2_IDLE 1
+#define OPM2_VOICE 2
+#define OPM2_TERM 4
 #define OPM2_MSG_POPUP 5
 #define OPM2_ALARM_RECV 7
 

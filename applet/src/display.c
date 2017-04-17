@@ -22,8 +22,6 @@
 #include "netmon.h"
 #include "radiostate.h"
 #include "unclear.h"
-#include "app_menu.h" // optional 'application' menu, activated by red BACK-button
-
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -274,21 +272,6 @@ int main(void)
 
 void draw_statusline_hook( uint32_t r0 )
 {
-
-# if (CONFIG_APP_MENU)
-    // If the screen is occupied by the optional 'red button menu', 
-    // update or even redraw it completely:
-    if( Menu_DrawIfVisible(AM_CALLER_STATUSLINE_HOOK) )  
-     { return; // the menu covers the entire screen, so don't draw anything else
-     }
-    // NOTE: draw_statusline_hook() isn't called when the squelch
-    //       is 'open' in FM, i.e. when the channel is BUSY .
-    // Of course we don't want to be tyrannized by the radio like that.
-    // It's THE OPERATOR'S decision what to do and when to invoke the menu,
-    // not the radio's. 
-    // Fixed by also calling Menu_DrawIfVisible() from other places .
-# endif // CONFIG_APP_MENU ?
-
     if( is_netmon_visible() ) {
         con_redraw();
         return ;
@@ -333,15 +316,6 @@ void draw_alt_statusline()
 
 void draw_datetime_row_hook()
 {
-# if (CONFIG_APP_MENU)
-    // If the screen is occupied by the optional 'red button menu', 
-    // update or even redraw it completely:
-    if( Menu_DrawIfVisible(AM_CALLER_DATETIME_HOOK) )  
-     { return; // the menu covers the entire screen, so don't draw anything else
-     }
-# endif
-
-
 #if defined(FW_D13_020) || defined(FW_S13_020)
     if( is_netmon_visible() ) {
         return ;

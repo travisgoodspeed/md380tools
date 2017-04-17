@@ -55,9 +55,6 @@ SRCS += sms.o
 SRCS += beep.o
 SRCS += irq_handlers.o
 SRCS += narrator.o
-SRCS += lcd_driver.o
-SRCS += font_8_8.o
-SRCS += app_menu.o
 SRCS += timer.o
 
 ifdef INC_DISPFLIP

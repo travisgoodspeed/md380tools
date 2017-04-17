@@ -11,15 +11,6 @@
       - main screen (e.g. after rotating the channel knob)
       - main menu (expect this to be the trickiest part)
       - MD380Tools menu (easier, because it's under OUR control)
-
- To include the 'Morse narrator' in the patched firmware:
-    
-  1. Add the following line in applet/Makefile (after SRCS += irq_handlers.o) :
-      SRCS += narrator.o 
-  
-  2. #define CONFIG_MORSE_OUTPUT 1  in  md380tools/applet/config.h  .
-    
-
 */
 
 /*
@@ -37,6 +28,11 @@
      "MD380Tools  \x02Set Talkgroup\x01  Mic bargraph  Experimental"
        (string assembled by the narrator, passed to WB's 
         Morse generator / audio 'modulator' in irq_handlers.c )
+     Special 'control' characters for Morse output :
+         \x02 = slightly increase audio pitch to emphasize text
+         \x01 = back to normal text attributes
+         \x00 : cannot be a 'control' character because it marks
+                it marks the end of a string (0x0000 for WIDE chars)
 */
 
 
@@ -59,9 +55,11 @@
 #include "display.h"      // gui_opmode_x, OPM2_MENU, etc
 #include "netmon.h"       // is_netmon_visible(), etc
 #include "codeplug.h"     // zone_name[], etc (beware, unknown for old firmware)
-#include "console.h"      // text screen buffer for Netmon and the 'red menu'
+#include "console.h"
+#define CONSOLE_Y_SIZE   10 // in console.c: #define Y_SIZE   10 (but not exposed in .h)
+#define CONSOLE_MAX_XPOS 27 // in console.c: #define MAX_XPOS 27 (but not exposed in .h)  
+extern char con_buf[CONSOLE_Y_SIZE][CONSOLE_MAX_XPOS+1]; // +1 for terminating 0 every line.
 #include "irq_handlers.h" // contains the API for the Morse code generator
-#include "app_menu.h" // optional 'application' menu, activated by red BACK-button.
 #include "narrator.h" // announces channel, zone, and maybe current menu selection in Morse code
 
 // Configuration for the 'narrator' and his companion, Mr. Morse:
@@ -72,8 +70,6 @@
 
 #if( CONFIG_MORSE_OUTPUT )
 T_Narrator Narrator;  // a single CW narrator, aka "storyteller" instance
-
-wchar_t narrator_temp_wstring[10];
 
 // internal 'forward' references :
 static void report_channel(void);
@@ -352,35 +348,14 @@ static void report_menu_item(void)
   wchar_t *pwsText = get_menu_item_text( Narrator.focused_item_index );
 
   if( pwsText )  // get_menu_item_text() may return NULL when invalid !
-   { // report the MENU ITEM TEXT, without calling anything
-     // in the original firmware to avoid bad surprises and side-effects
+   { // report the MENU ITEM TEXT, if possible without calling anything
+     // in the original firmware (to avoid bad side-effects).
      MorseGen_AppendWideString( pwsText );
    }
-  else // get_menu_item_text() failed to retrieve a string.
-   { // This happened in the ZONE- and in the CONTACTS menu,
-     // and maybe in other menus with data from the codeplug, too.
-     // But how to find out if we're in the ZONE- or CONTACTS menu ? 
-     // * md380_menu_id (BYTE at 0x2001e915 in D13.020) ? 
-     //   |___ 0x07 in menu "Zone";  0x0A in menu "Contacts". Let's try:
-     switch( md380_menu_id )
-      { case 0x07: // guess we're in Tytera's "Zone" menu
-#         ifdef HAVE_ZONE_NAME
-           MorseGen_AppendWideString(zone_name ); 
-#         endif
-           break;
-        case 0x0A: // guess we're in Tytera's "Contacts" menu
-#         ifdef HAVE_SELECTED_CONTACT_NAME
-           MorseGen_AppendWideString(selected_contact_name_wstring );
-#         endif
-           break;
-        default:
-           if( Narrator.mode & NARRATOR_MODE_TEST )
-            { MorseGen_AppendString( "item?" );
-            }
-           break;
-      } // end switch( md380_menu_id )
-   }   // end else < get_menu_item_text() failed >
-  MorseGen_AppendChar(' '); // separator between menu item and whatever follows 
+  else if( Narrator.mode & NARRATOR_MODE_TEST )
+   { MorseGen_AppendString( "item?" );
+   }
+  MorseGen_AppendChar(' '); 
 } // end report_menu_item()
 
 //---------------------------------------------------------------------------
@@ -512,10 +487,11 @@ static void* get_current_menu(void) // may return NULL !!
   //       to retrieve at least the text of the CURRENTLY SELECTED item,
   //       without calling a function (which may have bad side effects) .
   //
-  menu_t *pMenu = NULL;
+  menu_t *pMenu;
   int iMenu = md380_menu_depth;  // array index into md380_menu_memory[]
   if( iMenu>=0 && iMenu<10/*?*/) // guess the NESTING LEVEL won't exceed 10
-   { // As noted above (a), when rotating the volume knob, or in the
+   { pMenu = &md380_menu_memory[iMenu];
+     // As noted above (a), when rotating the volume knob, or in the
      // presence of noise on the analog input sensing the knop position,
      // the volume indicator bargraph pops up, and appears 'like a menu'
      // (with md380_menu_depth=1). But we don't want to indicate the
@@ -527,12 +503,14 @@ static void* get_current_menu(void) // may return NULL !!
      //      were stored somewhere as part of the menu_t structure,
      //      f=2 ("remove after timeout", see menu.c) could also indicate
      //      that md380_menu_depth=1 is NOT a menu but the volume bar. 
-     pMenu = &md380_menu_memory[iMenu];
      if( gui_opmode2 != OPM2_MENU ) 
       { if( md380_menu_depth==1 ) // guess not a MENU but the VOLUME BAR !
          { pMenu = NULL; // ignore the volume bar here
          }
       }
+   }
+  else // invalid index into md380_menu_memory[], guess we're not in a menu:
+   { pMenu = NULL;
    }
   return (void*)pMenu; // 'void*' because 'menu_t' isn't exposed in narrator.h
 
@@ -647,9 +625,7 @@ wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
            if( pItem->item_count )  // "item_count" controls VISIBILITY !
             { // THIS menu item is visible. Is it the one we're looking for ?
               if( nVisible == itemIndex )
-               { if( pItem->label != NULL )
-                  { return pItem->label;
-                  }
+               { return pItem->label;
                }
               ++nVisible;
             } 
@@ -658,7 +634,7 @@ wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
    }
   // Arrived here: Not in a menu, or the item-index is invalid (i.e. "reached the end")
   return NULL;
-} // end get_menu_item_text() [doesn't work properly for certain menus!]
+}
 
 //---------------------------------------------------------------------------
 uint8_t get_current_channel_number(void) // 0..15; bit 7 set when unprogrammed
