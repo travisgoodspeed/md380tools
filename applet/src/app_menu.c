@@ -1,8 +1,11 @@
 // File:    md380tools/applet/src/app_menu.c
 // Author:  Wolf (DL4YHF) [initial version] 
-// Date:    2017-04-14 
+//          Please respect the author's coding style, indentations,
+//          and don't poison this soucecode with TAB characters . 
+//
+// Date:    2017-04-17
 //  Implements a simple menu opened with the red BACK button,
-//             wich doesn't rely on ANY of Tytera's firmware
+//             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
 //  Module prefix 'am_' for "Application Menu" .
 //  Added 2017-03-31 for the Morse output for visually impaired hams,
@@ -23,6 +26,8 @@
 
 #include <stm32f4xx.h>
 #include <string.h>
+#include <wchar.h>  // wcscmp(), wscpy() .. dreadful "wide strings" instead of UTF-8 !
+#include <limits.h> // INT_MIN, INT_MAX, ...
 #include "printf.h"
 #include "dmesg.h"
 #include "md380.h"
@@ -53,10 +58,129 @@ uint8_t am_key;   // one-level keyboard buffer, fed by irq_handlers.c
 // whereever possible via a pointer in a LOCAL variable:
 app_menu_t AppMenu;  // data for a single instance of the 'application menu'
 
-// Prototypes for some menu item callbacks (identifyable by prefix):
-int am_cbk_ColorTest( menu_item_t *pItem, int event, int param );
-int am_cbk_Backlt( menu_item_t *pItem, int event, int param );
-int am_cbk_Morse( menu_item_t *pItem, int event, int param );
+// Before entering a SUB-menu, num_items, item_index, and pItems are stacked here:
+# define APPMENU_STACKSIZE 4 // ~~maximum nesting level
+struct
+{ menu_item_t *pItems;
+  uint8_t item_index;
+  uint8_t vert_scroll_pos;
+} submenu_stack[APPMENU_STACKSIZE];
+
+
+//---------------------------------------------------------------------------
+// Internal 'forward' references (not 'static', who knows if....) 
+int  Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iTextLineNr);
+int  Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey );
+BOOL Menu_IsFormatStringDelimiter( char c );
+int  Menu_ParseDecimal( char **ppszSource );
+BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c);
+void Menu_OnEnterKey(app_menu_t *pMenu);
+void Menu_OnExitKey(app_menu_t *pMenu);
+void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem );
+void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem );
+void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta );
+void Menu_PushSubmenuToStack(app_menu_t *pMenu);
+BOOL Menu_PopSubmenuFromStack(app_menu_t *pMenu);
+menu_item_t *Menu_GetFocusedItem(app_menu_t *pMenu);
+int  Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int param);
+int  Menu_ReadIntFromPtr( void *pvValue, int data_type );
+
+
+// Prototypes and forward references for some menu items :
+int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
+int am_cbk_Backlt(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
+int am_cbk_Morse(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
+const menu_item_t am_Setup[]; // referenced from main menu
+const am_stringtable_t am_stringtab_opmode2[]; // for gui_opmode2
+const am_stringtable_t am_stringtab_255Auto[];
+const am_stringtable_t am_stringtab_narrator_modes[];
+
+//---------------------------------------------------------------------------
+// Alternative 'main' menu, opened with the RED 'BACK'-button :
+
+const menu_item_t am_Main[] = 
+{ // { "Text__max__13", data_type,  options,opt_value,
+  //     pvValue,iMinValue,iMaxValue, string table, callback }
+  { "Chnl",             DTYPE_WSTRING, APPMENU_OPT_NONE,0, 
+         channel_name,0,0,          NULL,         NULL     },
+  { "Zone",             DTYPE_WSTRING, APPMENU_OPT_NONE,0, 
+         zone_name,0,0,             NULL,         NULL     },
+  { "Cont",             DTYPE_WSTRING, APPMENU_OPT_NONE,0, 
+         contact.name,0,0,          NULL,         NULL     },
+   // yet to be found out: Relation between 'contact.name', 'tx_id',
+   // DMR-"talkgroup", -"reflector", current_channel_info, 
+   // and how all this sticks together in the original firmware.
+   // See (old) menu.c : create_menu_entry_set_tg_screen_store() .
+   
+  { "TkGr",             DTYPE_NONE, APPMENU_OPT_NONE,0, 
+         NULL,0,0,                  NULL,         NULL     },
+  { "[1]Test/Setup",       DTYPE_SUBMENU, APPMENU_OPT_NONE,0, 
+   // |__ hotkey to get here quickly (press RED BUTTON followed by this key)
+     (void*)am_Setup,0,0,           NULL,         NULL     },
+  { "Exit",             DTYPE_NONE, APPMENU_OPT_BACK,0,
+         NULL,0,0,                  NULL,         NULL     },
+  // (an extra "Exit to main screen" may be redundant here, 
+  //  and didn't work really well because Tytera's menu immediately
+  //  popped up when pressing the green 'Enter' key in THIS menu.
+  //  Alternative: Press the RED key to leave this alternative menu (sic!).
+  //  One fine day, we may find a more reliable way to intercept keys
+  //  than the current stuff in keyb.c : kb_handler_hook() ... )
+
+  // End of the list marked by "all zeroes" :
+  { NULL, 0/*dt*/, 0/*opt*/, 0/*ov*/, NULL/*pValue*/, 0,0, NULL, NULL }
+
+};
+
+const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
+{ // { "Text__max__13", data_type,  options,opt_value,
+  //     pvValue,iMinValue,iMaxValue, string table, callback }
+  { "Setup:Back",       DTYPE_NONE,    APPMENU_OPT_BACK,0,
+         NULL,0,0,                  NULL,         NULL     },
+
+  // { "Text__max__13", data_type,  options,opt_value,
+  //    pvValue,iMinValue,iMaxValue, string table, callback }
+  { "[1 Backlight]Level Lo", DTYPE_INTEGER, 
+      APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE|APPMENU_OPT_BITMASK_R,0x0F,
+        &global_addl_config.backlight_intensities,0,9,NULL,NULL},
+  { "Level Hi", DTYPE_INTEGER, 
+      APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE|APPMENU_OPT_BITMASK_R,0xF0, 
+        &global_addl_config.backlight_intensities,1,9,NULL,NULL},
+  { "Time/sec", DTYPE_UNS8,   APPMENU_OPT_EDITABLE|APPMENU_OPT_FACTOR,5/*!*/, 
+        &md380_radio_config.backlight_time,0,120, NULL, NULL   },
+
+  // { "Text__max__13", data_type,  options,opt_value,
+  //    pvValue,iMinValue,iMaxValue,           string table, callback }
+  { "[2 Morse output]Mode", DTYPE_UNS8,
+        APPMENU_OPT_EDITABLE|APPMENU_OPT_BITMASK,
+            NARRATOR_MODE_OFF|NARRATOR_MODE_ENABLED|NARRATOR_MODE_VERBOSE, // <- here: bitmask !
+        &global_addl_config.narrator_mode,0,9, am_stringtab_narrator_modes,am_cbk_Morse },  
+  { "Speed/WPM",        DTYPE_UNS8, 
+        APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE, 0, 
+        &global_addl_config.cw_speed_WPM,10,60, NULL,am_cbk_Morse },  
+  { "Pitch/Hz",         DTYPE_UNS8, 
+        APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE|APPMENU_OPT_FACTOR,10, 
+        &global_addl_config.cw_pitch_10Hz,200,2000,NULL,am_cbk_Morse },  
+  { "Volume",           DTYPE_UNS8, 
+        APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE, 0, 
+        &global_addl_config.cw_volume,0,100,   am_stringtab_255Auto, am_cbk_Morse },
+
+  // { "Text__max__13", data_type,  options,opt_value,
+  //     pvValue,iMinValue,iMaxValue, string table, callback }
+  { "[3 Test/Debug]bl_timer",   DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
+        &backlight_timer,0,0,      NULL,         NULL     },
+  { "opmode2",          DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &gui_opmode2,0,0,      am_stringtab_opmode2, NULL },
+  { "[b8]opmode1",      DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &gui_opmode1,0,0,          NULL,         NULL     },
+  { "Colour test",      DTYPE_NONE, APPMENU_OPT_NONE,0, 
+        NULL,0,0,                  NULL, am_cbk_ColorTest },
+  { "Setup:Back",       DTYPE_NONE, APPMENU_OPT_BACK,0,
+        NULL,0,0,                  NULL,         NULL     },
+
+  // End of the list marked by "all zeroes" :
+  { NULL, 0/*dt*/, 0/*opt*/, 0/*ov*/, NULL/*pValue*/, 0,0, NULL, NULL }
+
+}; // end am_Setup[]
 
 //---------------------------------------------------------------------------
 // 'Test' menu to inspect some of the original firmware's variables:
@@ -80,110 +204,10 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
 { { NARRATOR_MODE_OFF,     "off"     },
   { NARRATOR_MODE_ENABLED, "enabled" }, 
   { NARRATOR_MODE_ENABLED|NARRATOR_MODE_VERBOSE, "verbose" },
+  // Note: If a menu item's parameter value is connected to
+  // a string table (like this), the only values that can be
+  // selected in the menu are those from the table - no integers.
 };
-
-
-//---------------------------------------------------------------------------
-// Alternative 'main' menu, opened with the RED 'BACK'-button :
-const menu_item_t am_Setup[]; // referenced from main menu
-
-const menu_item_t am_Main[] = 
-{ // { "Text__max__13", data_type,  options,opt_value,
-  //     pvValue,minValue,maxValue, string table, callback }
-  { "Chnl",             DTYPE_WSTRING, APPMENU_OPT_NONE,0, 
-         channel_name,0,0,          NULL,         NULL     },
-  { "Zone",             DTYPE_WSTRING, APPMENU_OPT_NONE,0, 
-         zone_name,0,0,             NULL,         NULL     },
-  { "Cont",             DTYPE_NONE, APPMENU_OPT_NONE,0, 
-         contact.name,0,0,          NULL,         NULL     },
-   // yet to be found out: Relation between 'contact.name', 'tx_id',
-   // DMR-"talkgroup", -"reflector", current_channel_info, 
-   // and how all this sticks together in the original firmware.
-   // See (old) menu.c : create_menu_entry_set_tg_screen_store() .
-   
-  { "TkGr",             DTYPE_NONE, APPMENU_OPT_NONE,0, 
-         NULL,0,0,                  NULL,         NULL     },
-  { "Test/Setup",       DTYPE_SUBMENU, APPMENU_OPT_NONE,0, 
-     (void*)am_Setup,0,0,           NULL,         NULL     },
-  { "Exit",             DTYPE_NONE, APPMENU_OPT_BACK,0,
-         NULL,0,0,                  NULL,         NULL     },
-  // (an extra "Exit to main screen" may be redundant here, 
-  //  and didn't work really well because Tytera's menu immediately
-  //  popped up when pressing the green 'Enter' key in THIS menu.
-  //  Alternative: Press the RED key to leave this alternative menu (sic!).
-  //  One fine day, we may find a more reliable way to intercept keys
-  //  than the current stuff in keyb.c : kb_handler_hook() ... )
-
-  // End of the list marked by "all zeroes" :
-  { NULL, 0/*dt*/, 0/*opt*/, 0/*ov*/, NULL/*pValue*/, 0,0, NULL, NULL }
-
-};
-
-const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
-{ // { "Text__max__13", data_type,  options,opt_value,
-  //     pvValue,minValue,maxValue, string table, callback }
-  { "Setup:Back",       DTYPE_NONE,    APPMENU_OPT_BACK,0,
-         NULL,0,0,                  NULL,         NULL     },
-
-  // { "Text__max__13", data_type,  options,opt_value,
-  //    pvValue,minValue,maxValue, string table, callback }
-  { "[1 Backlight]Level Lo", DTYPE_INTEGER, APPMENU_OPT_EDITABLE|APPMENU_OPT_BITMASK_R,0x0F, 
-        &global_addl_config.backlight_intensities,0,9,NULL,NULL},
-  { "Level Hi",      DTYPE_INTEGER, APPMENU_OPT_EDITABLE|APPMENU_OPT_BITMASK_R,0xF0, 
-        &global_addl_config.backlight_intensities,0,9,NULL,NULL},
-  { "Time/sec",      DTYPE_UNS8,    APPMENU_OPT_EDITABLE|APPMENU_OPT_FACTOR,5/*!*/, 
-        &md380_radio_config.backlight_time,0,120, NULL, NULL   },
-
-  // { "Text__max__13", data_type,  options,opt_value,
-  //    pvValue,minValue,maxValue, string table, callback }
-  { "[2 Morse output]Mode", DTYPE_UNS8,
-         APPMENU_OPT_EDITABLE|APPMENU_OPT_BITMASK,NARRATOR_MODE_OFF|NARRATOR_MODE_ENABLED|NARRATOR_MODE_VERBOSE, 
-        &global_addl_config.narrator_mode,0,9, am_stringtab_narrator_modes,am_cbk_Morse },  
-  { "Speed/WPM",        DTYPE_UNS8, APPMENU_OPT_EDITABLE, 0, 
-        &global_addl_config.cw_speed_WPM,0,9,  NULL,am_cbk_Morse },  
-  { "Pitch/Hz",         DTYPE_UNS8, APPMENU_OPT_EDITABLE|APPMENU_OPT_FACTOR,10, 
-        &global_addl_config.cw_pitch_10Hz,200,2000,NULL,am_cbk_Morse },  
-  { "Volume",           DTYPE_UNS8, APPMENU_OPT_EDITABLE, 0, 
-        &global_addl_config.cw_volume,0,100, am_stringtab_255Auto, am_cbk_Morse },
-
-  // { "Text__max__13", data_type,  options,opt_value,
-  //     pvValue,minValue,maxValue, string table, callback }
-  { "[3 Test/Debug]bl_timer",   DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
-        &backlight_timer,0,0,      NULL,         NULL     },
-  { "opmode2",          DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
-        &gui_opmode2,0,0,      am_stringtab_opmode2, NULL },
-  { "[b8]opmode1",      DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
-        &gui_opmode1,0,0,          NULL,         NULL     },
-  { "Colour test",      DTYPE_NONE, APPMENU_OPT_NONE,0, 
-        NULL,0,0,                  NULL, am_cbk_ColorTest },
-  { "Setup:Back",       DTYPE_NONE, APPMENU_OPT_BACK,0,
-        NULL,0,0,                  NULL,         NULL     },
-
-  // End of the list marked by "all zeroes" :
-  { NULL, 0/*dt*/, 0/*opt*/, 0/*ov*/, NULL/*pValue*/, 0,0, NULL, NULL }
-
-}; // end am_Setup[]
-
-
-//---------------------------------------------------------------------------
-// Internal 'forward' references:
-static int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iTextLineNr);
-static int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey );
-
-BOOL Menu_IsFormatStringDelimiter( char c );
-int  Menu_ParseDecimal( char **ppszSource );
-BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c);
-void Menu_OnEnterKey(app_menu_t *pMenu);
-void Menu_OnExitKey(app_menu_t *pMenu);
-void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem );
-void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem );
-void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta );
-void Menu_PushSubmenuToStack(app_menu_t *pMenu);
-BOOL Menu_PopSubmenuFromStack(app_menu_t *pMenu);
-menu_item_t *Menu_GetFocusedItem(app_menu_t *pMenu);
-int  Menu_InvokeCallback(menu_item_t *pItem, int event, int param);
-int  Menu_ReadIntFromPtr( void *pvValue, int data_type );
-
 
 //---------------------------------------------------------------------------
 void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
@@ -206,7 +230,7 @@ int Menu_GetNumItems( menu_item_t *pItems )
 void Menu_Open(app_menu_t *pMenu)
 {
   memset( pMenu, 0, sizeof( app_menu_t ) );
-  pMenu->pItems  = (menu_item_t*)am_Main; // cast to avoid 'const'-warning.
+  pMenu->pItems  = (void*)am_Main; // VERY unfortunately, this cast is necessary
   pMenu->num_items = Menu_GetNumItems( pMenu->pItems );
   pMenu->visible = APPMENU_VISIBLE; 
   pMenu->redraw  = TRUE;
@@ -286,16 +310,6 @@ __attribute__ ((noinline)) int Fletcher32( uint32_t prev_sum, uint16_t *pwData, 
 }
 
 //---------------------------------------------------------------------------
-int my_wcslen( wchar_t *wide_string )
-{ int n=0;
-  while( *wide_string )
-   { ++n;
-     ++wide_string;
-   }
-  return n;
-}
-
-//---------------------------------------------------------------------------
 int wide_to_C_string( wchar_t *wide_string, char *c_string, int maxlen )
   // Notes:
   //  * If the source (wide_string) exceeds the capacity
@@ -335,7 +349,7 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
    {  imax =  pMenu->num_items-1;
    }
   while( item_index <= imax )
-   { pItem = &pMenu->pItems[item_index++];
+   { pItem = &((menu_item_t *)pMenu->pItems)[item_index++];
      if( pItem->pvValue )
       { switch( pItem->data_type )
          { case DTYPE_STRING : // the 'value' is a good old "C"-string (8 bit) .
@@ -349,7 +363,8 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
               // Like it or not, must support this stuff because Tytera
               // uses wide strings for channel-, zone-, "contact"-, 
               // and possibly some other names which may change "in the background".
-              checksum = Fletcher32( checksum, (uint16_t *)pItem->pvValue, my_wcslen((wchar_t*)pItem->pvValue) );
+              checksum = Fletcher32( checksum, (uint16_t *)pItem->pvValue, wcslen((wchar_t*)pItem->pvValue) );
+              // btw "wcslen" was used elsewhere, so don't bother using that bulk here.
               break;
            default: // anything else should be convertable into an INTEGER: 
               value = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
@@ -474,6 +489,55 @@ void Menu_WriteIntToPtr( int iValue, void *pvValue, int data_type )
 } // end Menu_WriteIntToPtr()
 
 //---------------------------------------------------------------------------
+void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue )
+{
+  int min=0, max=0;
+  switch( data_type )
+   { case DTYPE_NONE   /*0*/ :
+        break;  
+     case DTYPE_BOOL   /*1*/ :
+        max = 1;
+        break;  
+     case DTYPE_INT8   /*2*/ :  
+        min = -128;
+        max = 127;
+        break;  
+     case DTYPE_INT16  /*3*/ :  
+        min = -32768;
+        max = 32767;
+        break;  
+     case DTYPE_INTEGER/*4*/ :
+        min = INT_MIN;
+        max = INT_MAX;
+        break;  
+     case DTYPE_UNS8   /*5*/ :
+        max = 255;
+        break;  
+     case DTYPE_UNS16  /*6*/ :  
+        max = 65535;
+        break;  
+     case DTYPE_UNS32  /*7*/ :
+     // max = 0xFFFFFFFF; // dilemma.. this wouldn't work with SIGNED 32 BIT INTEGERS !
+        max = INT_MAX; // better than a MAX LIMIT of "-1" (=0xFFFFFFFF)..
+        break;  
+     case DTYPE_FLOAT  /*8*/ : // permitted value range cannot be expressed with an int..
+        min = INT_MIN;
+        max = INT_MAX;
+        break;  
+     case DTYPE_STRING /*9*/ :
+     case DTYPE_WSTRING/*10*/: // string types not supported HERE
+        break;
+   }
+  if( piMinValue != NULL )
+   { *piMinValue = min;
+   }
+  if( piMaxValue != NULL )
+   { *piMaxValue = max;
+   }
+} // end Menu_GetMinMaxForDataType()
+
+
+//---------------------------------------------------------------------------
 void IntToBinaryString(
         int iValue,      // [in] value to be converted
         int nDigits,     // [in] number of fixed digits, 
@@ -547,6 +611,8 @@ void IntToDecHexBinString(
 
 //---------------------------------------------------------------------------
 char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDigits, char **cppHotkey )
+  // Returns a pointer to the first "plain text" character 
+  // after the list of printing options in squared brackets
 {
   int num_base = 10;    // default: decimal numeric output
   int fixed_digits = 0; // default: no FIXED number of digits
@@ -606,7 +672,8 @@ char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDig
   if( piFixedDigits != NULL )
    { *piFixedDigits = fixed_digits;
    }
-  return pszText; // returns a pointer to the first character after ']'
+  return pszText; // returns a pointer to the first "plain text" character 
+                  // after the list of printing options in squared brackets.
 
 } // end Menu_GetParamsFromItemText()
 
@@ -615,7 +682,6 @@ void Menu_ItemValueToString( menu_item_t *pItem,  int iValue, char *sz40Dest )
   // For simplicity (and to keep the code size low), the destination buffer
   // should be large enough for 40 characters . Thus sz40Dest .
 {
-  int i,n=0;
   int num_base,fixed_digits;
   char *cp;
 
@@ -637,40 +703,15 @@ void Menu_ItemValueToString( menu_item_t *pItem,  int iValue, char *sz40Dest )
         case DTYPE_SUBMENU:
            break;
         default : 
-           n = iValue; // ex (not ok while editing): n = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
-           // Convert or scale the above 'value read from pointer' ?
-           i = pItem->opt_value; // this 'option value' serves multiple purposes..
-           if( i != 0 ) // .. but only if nonzero (to avoid nonsense or endless loops):
-            {
-              if( pItem->options & APPMENU_OPT_FACTOR )
-               { n *= i; 
-                 // for example, used in the CW pitch (byte), 65 means 650 Hz, factor=10
-               }
-              if( pItem->options & (APPMENU_OPT_BITMASK | APPMENU_OPT_BITMASK_R ) )
-               { n &= i;
-                 if( pItem->options & APPMENU_OPT_BITMASK_R )
-                  { while( !(i & 1) ) // bitwise "right-align" the bitgroup ..
-                     { i >>= 1;
-                       n >>= 1;
-                     } // after this loop, the least significant bit is in bit 0 (mask 1)
-                  }
-                 // Note: this bit-fiddling happens BEFORE looking up 
-                 //  the value in the string table a few lines below !
-               }
-            } // end if < "option value" nonzero >
-
-           cp = Menu_FindInStringTable( pItem->pStringTable, n );
+           cp = Menu_FindInStringTable( pItem->pStringTable, iValue );
            if( cp ) 
             { strlcpy( sz40Dest, cp, 40 );
             }
            else // don't show string from table but numeric value:
-            { IntToDecHexBinString( n, num_base, fixed_digits, sz40Dest );
+            { IntToDecHexBinString( iValue, num_base, fixed_digits, sz40Dest );
             }
            break;
       }
-   }
-  else // no 'value' ...
-   { n = 0; // number of characters occupied by the "value"
    }
 } // end Menu_ItemValueToString()
 
@@ -702,7 +743,31 @@ int Menu_ParseDecimal( char **ppszSource )
 }
 
 //---------------------------------------------------------------------------
-static int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
+int Menu_ScaleItemValue( menu_item_t *pItem, int n )
+{ int i = pItem->opt_value; // this 'option value' serves multiple purposes..
+  if( i != 0 ) // .. but only if nonzero (to avoid nonsense or endless loops):
+   {
+     if( pItem->options & (APPMENU_OPT_BITMASK | APPMENU_OPT_BITMASK_R ) )
+      { n &= i;
+        if( pItem->options & APPMENU_OPT_BITMASK_R )
+         { while( !(i & 1) ) // bitwise "right-align" the bitgroup ..
+            { i >>= 1;
+              n >>= 1;
+            } // after this loop, the least significant bit is in bit 0 (mask 1)
+         }
+        // Note: this bit-fiddling happens BEFORE looking up 
+        //  the value in the string table a few lines below !
+      }
+     if( pItem->options & APPMENU_OPT_FACTOR )
+      { n *= pItem->opt_value; 
+        // for example, used in the CW pitch (byte), 65 means 650 Hz, factor=10
+      }
+   } // end if < "option value" nonzero >
+  return n;
+} // end Menu_ScaleItemValue()
+
+//---------------------------------------------------------------------------
+int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
 {
   int x=0,i,n;
   int text_height_pixels = 2 * LCD_FONT_HEIGHT;
@@ -728,7 +793,7 @@ static int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
   if( pMenu->pItems != NULL ) // does this "menu" have items at all ?
    { 
      if( item_index>=0 && item_index<pMenu->num_items ) 
-      { pItem = &pMenu->pItems[item_index];
+      { pItem = &((menu_item_t *)pMenu->pItems)[item_index];
         if( pItem->pszText != NULL )
          { pszText = (char*)pItem->pszText; // cast to defeat 'const' warning
            pszText = Menu_GetParamsFromItemText( pszText, &num_base, &fixed_digits, &cp );
@@ -746,6 +811,7 @@ static int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
          }
         else
          { n = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
+           n = Menu_ScaleItemValue( pItem, n );
          }
         Menu_ItemValueToString( pItem, n, sz40Temp );
         n = strlen( sz40Temp ); // number of characters occupied by the "value" 
@@ -829,7 +895,7 @@ static int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
 
 
 //---------------------------------------------------------------------------
-static int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
+int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
 {
   int x = 0;
   uint16_t fg_color, bg_color;
@@ -890,7 +956,7 @@ int Menu_DrawIfVisible(int caller)
      if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE )
       { // screen and keyboard occupied by a 'user screen' 
         // -> try to pass on keyboard events to whatever-it-is : 
-        y = Menu_InvokeCallback( Menu_GetFocusedItem(pMenu), APPMENU_EVT_KEY, c );
+        y = Menu_InvokeCallback( pMenu, Menu_GetFocusedItem(pMenu), APPMENU_EVT_KEY, c );
         if( y != AM_RESULT_OCCUPY_SCREEN )
          { // framebuffer no longer occupied by the callback, so back to the 'app menu':
            pMenu->visible = APPMENU_VISIBLE;
@@ -949,7 +1015,7 @@ int Menu_DrawIfVisible(int caller)
                   default: // not "editing" but "navigating" ... 
                      ++pMenu->item_index;
                      if( pMenu->item_index >= pMenu->num_items )  
-                      {  pMenu->item_index = pMenu->num_items-1;
+                      { pMenu->item_index = pMenu->num_items-1;
                       }
                      break;
                }
@@ -957,7 +1023,7 @@ int Menu_DrawIfVisible(int caller)
               // ex: green_led_timer = 20; // <- poor man's debugging
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
-              if( pMenu->edit_mode )
+              if( pMenu->edit_mode != APPMENU_EDIT_OFF )
                {
                }
               else
@@ -998,7 +1064,7 @@ int Menu_DrawIfVisible(int caller)
       } // end if( pMenu->redraw ) 
    } // end if < "app menu" visible >
   else if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // some 'user screen' visible ?
-   { y = Menu_InvokeCallback( Menu_GetFocusedItem(pMenu), APPMENU_EVT_PAINT, 0 );
+   { y = Menu_InvokeCallback( pMenu, Menu_GetFocusedItem(pMenu), APPMENU_EVT_PAINT, 0 );
      if( y != AM_RESULT_OCCUPY_SCREEN )
       { // framebuffer no longer occupied by the callback, so back to the 'app menu':
         pMenu->visible = APPMENU_VISIBLE;
@@ -1016,8 +1082,8 @@ menu_item_t *Menu_GetFocusedItem(app_menu_t *pMenu)
   //   (with the default colour, "the line with blue background").
   // Caller beware: the result may be NULL !
 {
-  if( pMenu->pItems && (pMenu->item_index < pMenu->num_items) )
-   { return &pMenu->pItems[pMenu->item_index];
+  if( pMenu->pItems!=NULL && (pMenu->item_index < pMenu->num_items) )
+   { return &((menu_item_t*)pMenu->pItems)[pMenu->item_index];
    }
   return NULL;
 } // end Menu_GetFocusedItem()
@@ -1030,9 +1096,9 @@ void Menu_PushSubmenuToStack(app_menu_t *pMenu)
 {
   int sp = pMenu->depth; 
   if( sp < APPMENU_STACKSIZE )
-   {  pMenu->submenu_stack[sp].pItems = pMenu->pItems;
-      pMenu->submenu_stack[sp].item_index= pMenu->item_index;
-      pMenu->submenu_stack[sp].vert_scroll_pos= pMenu->vert_scroll_pos;
+   {  submenu_stack[sp].pItems = (menu_item_t*)pMenu->pItems;
+      submenu_stack[sp].item_index= pMenu->item_index;
+      submenu_stack[sp].vert_scroll_pos= pMenu->vert_scroll_pos;
       pMenu->depth = (uint8_t)(sp+1);
    }
 } 
@@ -1045,10 +1111,10 @@ BOOL Menu_PopSubmenuFromStack(app_menu_t *pMenu)
 {
   int sp = (int)pMenu->depth-1; 
   if( sp >= 0 )
-   {  pMenu->pItems = pMenu->submenu_stack[sp].pItems;
+   {  pMenu->pItems = (void*)submenu_stack[sp].pItems;
       pMenu->num_items = Menu_GetNumItems(pMenu->pItems);
-      pMenu->item_index = pMenu->submenu_stack[sp].item_index;
-      pMenu->vert_scroll_pos = pMenu->submenu_stack[sp].vert_scroll_pos;
+      pMenu->item_index = submenu_stack[sp].item_index;
+      pMenu->vert_scroll_pos = submenu_stack[sp].vert_scroll_pos;
       pMenu->depth  = (uint8_t)sp;
       pMenu->redraw = TRUE;
       return TRUE;
@@ -1060,7 +1126,7 @@ BOOL Menu_PopSubmenuFromStack(app_menu_t *pMenu)
 BOOL Menu_IsOnStack(app_menu_t *pMenu, menu_item_t *pItems)
 { int sp;
   for(sp=0; sp<pMenu->depth; ++sp)
-   { if( pMenu->submenu_stack[sp].pItems==pItems )
+   { if( submenu_stack[sp].pItems==pItems )
       { return TRUE;
       } 
    }
@@ -1068,11 +1134,11 @@ BOOL Menu_IsOnStack(app_menu_t *pMenu, menu_item_t *pItems)
 }
 
 //---------------------------------------------------------------------------
-int Menu_InvokeCallback(menu_item_t *pItem, int event, int param)
+int Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int param)
 {
   if( pItem ) 
    { if( pItem->callback )
-      { return pItem->callback( pItem, event, param );
+      { return pItem->callback( pMenu, pItem, event, param );
       }
    }
   return AM_RESULT_NONE; // "proceed as if there was NO callback function"
@@ -1085,7 +1151,7 @@ BOOL Menu_EnterSubmenu(app_menu_t *pMenu, menu_item_t *pItems )
   if( pItems )
    { if( !Menu_IsOnStack(pMenu,pItems) ) // don't push the same item twice !
       { Menu_PushSubmenuToStack(pMenu);
-        pMenu->pItems = pItems;
+        pMenu->pItems = (void*)pItems;
         pMenu->num_items = Menu_GetNumItems( pItems );
         pMenu->vert_scroll_pos = pMenu->item_index = 0;
         pMenu->visible = pMenu->redraw = TRUE;
@@ -1106,7 +1172,7 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
   if( pItem ) 
    { // If the currently focused item has a callback function,
      // invoke that function to let the callback do whatever it wants:
-     cbk_result = Menu_InvokeCallback( pItem, APPMENU_EVT_ENTER, 0 );
+     cbk_result = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_ENTER, 0 );
      switch( cbk_result )
       { case AM_RESULT_ERROR: // callback disagrees to 'enter' this item !
            return;
@@ -1130,8 +1196,9 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
       }
      else // begin or end editing ?
      if( (pItem->options & APPMENU_OPT_EDITABLE ) && (pItem->pvValue!=NULL) )
-      { if( pMenu->edit_mode ) // was editing -> finish input ("write back")
-         {  Menu_FinishEditing( pMenu, pItem );
+      { if( pMenu->edit_mode != APPMENU_EDIT_OFF) 
+         {  // was editing -> finish input ("write back")
+            Menu_FinishEditing( pMenu, pItem );
          }
         else // begin editing: copy current value to edit buffer (string or int)
          {  Menu_BeginEditing( pMenu, pItem );
@@ -1142,24 +1209,134 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
 
 //---------------------------------------------------------------------------
 void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem )
-{
+{ int cbk_result;
   if( (pItem->options & APPMENU_OPT_EDITABLE ) && (pItem->pvValue!=NULL) )
    { // Copy the 'current' value into the internal storage,
      //  for both integer and string types :
-     pMenu->edit_mode = FALSE;  // flag for Menu_ItemValueToString() to read a 'fresh' value
-     pMenu->iEditValue= Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
+     pMenu->iEditValue= pMenu->iValueBeforeEditing 
+       = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+     pMenu->edit_mode = APPMENU_EDIT_INC_DEC; // suggest to use simple "increment/decrement"-editing via CURSOR KEYS (!)
+        // setting edit_mode also "disconnects" the displayed value from pItem->pvValue
      Menu_ItemValueToString( pItem, pMenu->iEditValue, pMenu->sz40EditBuf );
-     pMenu->edit_mode = TRUE;   // flag to "disconnect" the displayed value from pItem->pvValue
+     pMenu->iMinValue = pItem->iMinValue; // min/max-range copied from menu_item_t...
+     pMenu->iMaxValue = pItem->iMaxValue; // the callback below may override these !
+     if( pMenu->iMinValue==0 && pMenu->iMaxValue==0 ) // if min/max-range not specified..
+      { // ..use suitable limits depending on the data type:
+        Menu_GetMinMaxForDataType( pItem->data_type, &pMenu->iMinValue, &pMenu->iMaxValue );
+      } // end if < no min/max-range specified for editing >
+     // Allow the callback function to modify the above "editing parameters" :
+     cbk_result = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_BEGIN_EDIT, 0 );
+     // As usual, the callback function may DISAGREE with editing, so :
+     switch( cbk_result )
+      { case AM_RESULT_ERROR: // callback disagrees to 'edit' from this item !
+           return;
+        case AM_RESULT_OCCUPY_SCREEN: // callback wants to 'edit' this on its own screen,
+           // so stop painting into the framebuffer until the callback "gives it back":
+           pMenu->visible = APPMENU_USERSCREEN_VISIBLE;
+           return;
+        default:
+           break;
+      } 
    }
   else 
-   { pMenu->edit_mode = FALSE;  // cannot edit this !
+   { pMenu->edit_mode = APPMENU_EDIT_OFF;  // cannot edit this !
    } 
 } // end Menu_BeginEditing()
 
 //---------------------------------------------------------------------------
+void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
+{ int i,n,old;
+  // Since callbacks are not required for normal configuation parameters,
+  // scale (inversely) and write back the current edit value via pointer .
+  n = pMenu->iEditValue;  // to avoid confusion: this is the DISPLAY value,
+                          // not the 'raw, unscaled' value !
+  i = pItem->opt_value;   // this 'option value' serves multiple purposes..
+  if( i != 0 ) // .. but only if nonzero (to avoid nonsense or endless loops):
+   {
+     if( pItem->options & APPMENU_OPT_FACTOR )
+      { n /= i; 
+        // Example: CW pitch (Morse tone frequency), scale 650 [Hz] back
+        // to 65, which fits in a single byte (global_addl_config.cw_pitch_10Hz).
+      }
+     if( pItem->options & (APPMENU_OPT_BITMASK | APPMENU_OPT_BITMASK_R ) )
+      { // Example: The "higher" backlight intensity, used when ACTIVE,
+        // is stored in the upper 4 bits of a byte . Thus the BITMASK is 0xF0,
+        // but the EDITED VALUE ranges from 1 to 9 only 
+        // (OPT_BITMASK_R means not only bitwise AND, but shift RIGHT for the display).
+        // So convert BACK by bitwise shifting LEFT here, until the LSBit is in bit 0:
+        if( pItem->options & APPMENU_OPT_BITMASK_R )
+         { while( !(i & 1) ) // back from "right-aligned" display value to original..
+            { i >>= 1;
+              n <<= 1;
+            } // after this loop, the least significant bit is in bit 0 (mask 1)
+         }
+        n &= pItem->opt_value; // all 'foreign' bits in n are zero now...
+        // The byte/word/dword/int that pvValue points to may contain bits
+        // that must NOT be modified here, so get those bits, and bitwise OR them:
+        old = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
+        n |= (old & ~pItem->opt_value); // leave all bits that are NOT set in opt_value unchanged
+        // Phew. Enough of this bit-fiddling :)
+      }
+   } // end if < "option value" nonzero >
+  // Write back the inversely scaled 'edit value' :
+  Menu_WriteIntToPtr( n, pItem->pvValue, pItem->data_type );
+
+  // If there's a callback function, politely inform it that we're not editing anymore:
+  Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 1/*finish, not abort*/ );
+
+} // end Menu_WriteBackEditedValue() 
+
+//---------------------------------------------------------------------------
+void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
+{ 
+  int64_t i64;
+  menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
+  // If the edited value is NUMERIC, really increment/decrement THE VALUE
+  // (not characters in a string). This way, the min/max limits can be 
+  // easily checked while editing, and depending on the numeric based,
+  // "editing" is in facting adding or subtracting a power of two, ten, or sixteen.
+  if(pItem!=NULL) 
+   { if(pItem->options & APPMENU_OPT_FACTOR)
+      { if( pItem->opt_value != 0 )
+         { delta *= pItem->opt_value; 
+           // Example: The CW pitch is stored in a BYTE, 65 means 650 Hz, factor=10,
+           // so the smallest meaningful stepwidth for increment/decrement is 10 .
+         }
+      }
+   }
+
+  // To avoid overflow of iEditValue (integer!!) from 0x7FFFFFFF to 0x80000000,
+  // use a costly 64-bit calculation internally:
+  i64 = (int64_t)pMenu->iEditValue + (int64_t)delta;
+  if(i64 < pMenu->iMinValue )
+   { i64 = pMenu->iMinValue; 
+   }
+  if(i64 > pMenu->iMaxValue )
+   { i64 = pMenu->iMaxValue; 
+   }
+  pMenu->iEditValue = (int)i64;
+  
+  if( pItem != NULL ) // "write back" immediately ?
+   { if( pItem->options & APPMENU_OPT_IMM_UPDATE )
+      { Menu_WriteBackEditedValue(pMenu, pItem);
+      } 
+     // If the currently edited item has a callback function,
+     // invoke that function to let the callback do whatever it wants
+     // *AFTER* the edited value was modified, e.g.: 
+     //  - apply the edited colour for the display immediately,
+     //  - use the new CW pitch (tone frequency) immediately, etc.
+     Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_BEGIN_EDIT, 0 );
+   }
+} // end Menu_OnIncDecEdit()
+
+
+//---------------------------------------------------------------------------
 void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem )
 {
-  pMenu->edit_mode = FALSE;  // not editing anymore
+  if( pItem != NULL )
+   { Menu_WriteBackEditedValue(pMenu, pItem);
+   }
+  pMenu->edit_mode = APPMENU_EDIT_OFF;  // not editing anymore
   pMenu->redraw = TRUE;      // for simplicity, redraw everything (let edit-cursor disappear)
 } // end Menu_FinishEditing()
 
@@ -1167,9 +1344,22 @@ void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem )
 void Menu_AbortEditing( app_menu_t *pMenu, menu_item_t *pItem )
 { 
   if( pMenu->edit_mode )
-   {  pMenu->redraw = TRUE;
+   {  
+      if( pMenu->iEditValue != pMenu->iValueBeforeEditing )
+       { // The value has been edited.. need to "undo" this ?
+         if( pItem->options & APPMENU_OPT_IMM_UPDATE ) // yes..  
+          { pMenu->iEditValue = pMenu->iValueBeforeEditing;
+            Menu_WriteBackEditedValue( pMenu, pItem ); // "undo" editing,
+            // after the 'immediately updated' value was already active
+            // but the operator didn't like it (e.g. CW speed or pitch,
+            // or the display is unreadable now because colour or brightness
+            // has been screwed up).
+          }
+       }
+      Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 0/* abort, not "finish" */ );
+      pMenu->redraw = TRUE;
    }
-  pMenu->edit_mode = FALSE;
+  pMenu->edit_mode = APPMENU_EDIT_OFF;
 } // end Menu_AbortEditing()
 
 //---------------------------------------------------------------------------
@@ -1183,7 +1373,7 @@ void Menu_OnExitKey(app_menu_t *pMenu)
   if( pItem ) 
    { // If the currently focused item has a callback function,
      // invoke that function to let the callback do whatever it wants:
-     cbk_result = Menu_InvokeCallback( pItem, APPMENU_EVT_EXIT, 0 );
+     cbk_result = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_EXIT, 0 );
      switch( cbk_result )
       { case AM_RESULT_ERROR: // callback disagrees to 'exit' from this item !?
            return;
@@ -1211,7 +1401,7 @@ void Menu_OnExitKey(app_menu_t *pMenu)
 
 //---------------------------------------------------------------------------
 BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c)
-{ menu_item_t *pItem = pMenu->pItems;
+{ menu_item_t *pItem = (menu_item_t*)pMenu->pItems;
   int item_index = 0;
   while( pItem->pszText != NULL )
    { if( (pItem->pszText[0]=='[') && (pItem->pszText[1]==c)  )
@@ -1230,28 +1420,13 @@ BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c)
 } // end Menu_ProcessHotkey()
 
 //---------------------------------------------------------------------------
-void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
-{ 
-  menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
-  if( pItem ) 
-   { // If the edited value is NUMERIC, really increment/decrement THE VALUE
-     // (not characters in a string). This way, the min/max limits can be 
-     // easily checked while editing, and depending on the numeric based,
-     // "editing" is in facting adding or subtracting a power of two, ten, or sixteen.
- 
-
-     // TODO: If the currently edited item has a callback function,
-     // invoke that function to let the callback do whatever it wants
-     // *AFTER* the edited value was modified, for example: 
-     //  - apply the edited colour for the display immediately,
-     //  - use the new CW pitch (tone frequency) immediately, etc.
-
-   }
-} // end Menu_OnIncDecEdit()
+void Menu_LimitEditedValue( app_menu_t *pMenu )
+{
+}
 
 
 //---------------------------------------------------------------------------
-int am_cbk_ColorTest( menu_item_t *pItem, int event, int param )
+int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
 {
   if( event==APPMENU_EVT_ENTER ) // pressed ENTER (to launch the colour test) ?
    { LCD_ColourGradientTest(); // only draw the colour test pattern ONCE...
@@ -1266,15 +1441,70 @@ int am_cbk_ColorTest( menu_item_t *pItem, int event, int param )
 } // end am_cbk_ColorTest()
 
 //---------------------------------------------------------------------------
-int am_cbk_Backlt( menu_item_t *pItem, int event, int param )
+int am_cbk_Backlt(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
 {
   return AM_RESULT_NONE; // "proceed as if there was NO callback function"
 } // end am_cbk_Backlt()
 
 //---------------------------------------------------------------------------
-int am_cbk_Morse( menu_item_t *pItem, int event, int param )
+int am_cbk_Morse(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
 {
   return AM_RESULT_NONE; // "proceed as if there was NO callback function"
 } // end am_cbk_Morse()
+
+#if( CONFIG_MORSE_OUTPUT )
+//---------------------------------------------------------------------------
+int  Menu_GetItemIndex(void)
+{ // used by the Morse narrator (narrator.c) to detect "changes"
+  app_menu_t *pMenu = &AppMenu; // load the struct's address only ONCE
+  if( pMenu->visible==APPMENU_VISIBLE )
+   { return pMenu->item_index;
+   }
+  else
+   { return -1;
+   }
+} 
+
+//---------------------------------------------------------------------------
+BOOL Menu_ReportItemInMorseCode(void)
+{ // Called from the Morse narrator when the Morse-transmit-buffer is empty,
+  // and some time passed since the last modification of the current menu item.
+  app_menu_t *pMenu = &AppMenu; // load the struct's address only ONCE
+  menu_item_t *pItem;
+  int  n;
+  char *cp, sz40[44];
+  BOOL reported_something = FALSE;
+  if( pMenu->visible==APPMENU_VISIBLE )
+   { pItem = Menu_GetFocusedItem(pMenu);
+     if( pItem != NULL )
+      { if( pItem->pszText != NULL ) // items WITHOUT a fixed text on the right are rare,
+         { // but they do occurr.. for example it the "menu" is just a list of names .
+           // skip the "output options" at the begin of the fixed item text:
+           cp = Menu_GetParamsFromItemText( (char*)pItem->pszText, NULL, NULL, NULL );
+           MorseGen_AppendChar( '\x09' ); // decrease pitch by approx one whole tone
+           MorseGen_AppendString( cp );
+           MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch
+           reported_something = TRUE;
+         }
+        // Convert the optional 'value' into a string, here for Morse output:
+        if( (pItem->pvValue != NULL) 
+         && (pItem->data_type != DTYPE_SUBMENU) )
+         { if( pMenu->edit_mode != APPMENU_EDIT_OFF )
+            { n = pMenu->iEditValue;
+            }
+           else
+            { n = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
+              n = Menu_ScaleItemValue( pItem, n );
+            }
+           Menu_ItemValueToString( pItem, n, sz40 );
+           MorseGen_AppendString( sz40 );
+           MorseGen_AppendChar( ' ' ); // SPACE before whatever may follow
+           reported_something = TRUE;
+         }
+      }
+   }
+  return reported_something;
+} // end Menu_ReportItemInMorseCode()
+#endif  // CONFIG_MORSE_OUTPUT ?
 
 #endif // CONFIG_APP_MENU ?

@@ -404,11 +404,24 @@ uint8_t *LCD_GetFontPixelPtr_6x12( uint8_t c)
 int LCD_GetTextWidth( int font_options, char *pszText )
 { 
   // As long as only FIXED-WIDTH fonts are supported, the calculation is trivial:
-  int iResult = ( font_options & LCD_OPT_FONT_8x8 ) ? 8 : 6;
+  int text_width=0, font_width = ( font_options & LCD_OPT_FONT_8x8 ) ? 8 : 6;
   if( font_options & LCD_OPT_DOUBLE_WIDTH )
-   {  iResult *= 2;
+   {  font_width *= 2;
    }
-  return iResult * strlen(pszText);
+  if( pszText != NULL )
+   { // In future (when PROPORTIONAL fonts shall be supported), this gets tricky..
+     while(*pszText)
+      { // if < something special >
+        //    text_width += width_of_that_special_character;
+        // else ...
+        text_width += font_width;
+        ++pszText;
+      }
+   }
+  else // special service for lazy callers: NULL = "average width of ONE character"
+   { text_width = font_width;
+   }
+  return text_width;
 } // end LCD_GetTextWidth()
 
 //---------------------------------------------------------------------------

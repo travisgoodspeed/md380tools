@@ -14,10 +14,15 @@
 
  To include the 'Morse narrator' in the patched firmware:
     
-  1. Add the following line in applet/Makefile (after SRCS += irq_handlers.o) :
+  1. Add the following lines in applet/Makefile (after SRCS += irq_handlers.o) :
       SRCS += narrator.o 
+      SRCS += app_menu.o    (not a requirement but preferred - easier to use)
+      SRCS += lcd_driver.o  (required by app_menu.c - details there)
+      SRCS += font_8_8.o
   
-  2. #define CONFIG_MORSE_OUTPUT 1  in  md380tools/applet/config.h  .
+  2. #define CONFIG_MORSE_OUTPUT 1  in  md380tools/applet/config.h,
+                            and (preferred for easier use) also
+     #define CONFIG_APP_MENU 1
     
 
 */
@@ -129,27 +134,42 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
    }
   else // PTT not pressed..
   if( pNarrator->mode & NARRATOR_MODE_ENABLED ) // AUTOMATIC reporting ?
-   { i = get_focused_menu_item_index(); 
-     pMenu = get_current_menu(); 
-
-     if( (i != pNarrator->focused_item_index ) // ENTERED or LEFT a menu ?
-       ||(pMenu != pNarrator->current_menu) ) 
-      { MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
-        StartStopwatch( &pNarrator->stopwatch );   // restart stopwatch (don't "start talking" immediately)
-        if( i >= 0 )                               // now IN a menu ..
-         { if( (pNarrator->focused_item_index < 0 ) // .. and previously wasn't:
-            || (pMenu != pNarrator->current_menu) )
-            { pNarrator->to_do |= NARRATOR_REPORT_TITLE;
-            }
+   { i = -1;
+#   if (CONFIG_APP_MENU)
+     if( Menu_IsVisible() ) // <- things are MUCH easier in the "alternative" menu 
+      { i = Menu_GetItemIndex();  // used by the Morse narrator (narrator.c)
+        if( i != pNarrator->focused_item_index ) // switched to another item ?
+         { pNarrator->focused_item_index = i;
+           MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
+           StartStopwatch( &pNarrator->stopwatch ); // restart stopwatch (don't "start talking" immediately)
            pNarrator->to_do |= NARRATOR_REPORT_MENU;
-         }   // end if < just entered the MENU >
-        else // seems we RETURNED from the main menu to the 'main screen'
-         { pNarrator->to_do = NARRATOR_REPORT_CHANNEL;
          }
-        pNarrator->focused_item_index = i; // set new values to detect..
-        pNarrator->current_menu = pMenu;   // ..the NEXT menu-related change
+      }
+     else // umm.. not in "our" (alternative) menu but in Tytera's 
+#   endif // CONFIG_APP_MENU ?
+      {   // (includes the "MD380Tools" menu, which was there long before the "app-menu")
+        i = get_focused_menu_item_index(); 
+        pMenu = get_current_menu(); 
 
-      } // end if < ENTERED or LEFT a menu > 
+        if( (i != pNarrator->focused_item_index ) // ENTERED or LEFT a menu ?
+          ||(pMenu != pNarrator->current_menu) ) 
+         { MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
+           StartStopwatch( &pNarrator->stopwatch );   // restart stopwatch (don't "start talking" immediately)
+           if( i >= 0 )                               // now IN a menu ..
+            { if( (pNarrator->focused_item_index < 0 ) // .. and previously wasn't:
+               || (pMenu != pNarrator->current_menu) )
+               { pNarrator->to_do |= NARRATOR_REPORT_TITLE;
+               }
+              pNarrator->to_do |= NARRATOR_REPORT_MENU;
+            }   // end if < just entered the MENU >
+           else // seems we RETURNED from the main menu to the 'main screen'
+            { pNarrator->to_do = NARRATOR_REPORT_CHANNEL;
+            }
+           pNarrator->focused_item_index = i; // set new values to detect..
+           pNarrator->current_menu = pMenu;   // ..the NEXT menu-related change
+   
+         } // end if < ENTERED or LEFT a menu > 
+      }
      if( i<0 ) // currently NOT in a menu, so the main interest will be the current CHANNEL
       { 
         u8Temp = get_current_channel_number();  
@@ -243,6 +263,15 @@ void narrator_start_talking(void) // called on programmed sidekey from keyb.c
 
   MorseGen_ClearTxBuffer(); // stop telling old storys
 
+  // If the 'alternative' menu is open, it has priority over anything else:
+#if (CONFIG_APP_MENU)
+  if( Menu_IsVisible() ) // <- this is the "alternative" menu, not Tytera's ! 
+   { pNarrator->to_do = NARRATOR_REPORT_MENU;
+     // Items in "our menu" speak for themselves, they don't need a title
+     // to understand what they mean. At least, that was the plan in 2017-04 .
+   }
+  else
+#endif // CONFIG_APP_MENU ?
   if( pNarrator->focused_item_index >= 0 ) 
    { // guess we're in the menu so start talking about it :
      pNarrator->to_do = NARRATOR_REPORT_TITLE | NARRATOR_REPORT_MENU;
@@ -341,7 +370,7 @@ static void report_menu_title(void)
      MorseGen_AppendString( "menu" );
 #  endif // any <firmware for which the address of 'menu_title_cstring' is known> 
    } // end if < menu_t without a valid TITLE > ?
-  MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch (650 Hz?)
+  MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch
  
 }
 
@@ -349,37 +378,49 @@ static void report_menu_title(void)
 //---------------------------------------------------------------------------
 static void report_menu_item(void)
 {
-  wchar_t *pwsText = get_menu_item_text( Narrator.focused_item_index );
+  wchar_t *pwsText;
 
-  if( pwsText )  // get_menu_item_text() may return NULL when invalid !
-   { // report the MENU ITEM TEXT, without calling anything
-     // in the original firmware to avoid bad surprises and side-effects
-     MorseGen_AppendWideString( pwsText );
+#if (CONFIG_APP_MENU)
+  if( Menu_IsVisible() ) // again, things are easier in the "alternative" menu:
+   { Menu_ReportItemInMorseCode();
    }
-  else // get_menu_item_text() failed to retrieve a string.
-   { // This happened in the ZONE- and in the CONTACTS menu,
-     // and maybe in other menus with data from the codeplug, too.
-     // But how to find out if we're in the ZONE- or CONTACTS menu ? 
-     // * md380_menu_id (BYTE at 0x2001e915 in D13.020) ? 
-     //   |___ 0x07 in menu "Zone";  0x0A in menu "Contacts". Let's try:
-     switch( md380_menu_id )
-      { case 0x07: // guess we're in Tytera's "Zone" menu
-#         ifdef HAVE_ZONE_NAME
-           MorseGen_AppendWideString(zone_name ); 
-#         endif
-           break;
-        case 0x0A: // guess we're in Tytera's "Contacts" menu
-#         ifdef HAVE_SELECTED_CONTACT_NAME
-           MorseGen_AppendWideString(selected_contact_name_wstring );
-#         endif
-           break;
-        default:
-           if( Narrator.mode & NARRATOR_MODE_TEST )
-            { MorseGen_AppendString( "item?" );
-            }
-           break;
-      } // end switch( md380_menu_id )
-   }   // end else < get_menu_item_text() failed >
+  else
+#endif // CONFIG_APP_MENU ?
+   { // arrived here ? Guess we're in one of the deeply nested "Tytera"-menus,
+     // or in the MD380Tools menu (which hooks into the original menu) ...
+     // Fasten seat belt, retrieving text strings from that beast is tricky !
+     pwsText = get_menu_item_text( Narrator.focused_item_index );
+
+     if( pwsText )  // get_menu_item_text() may return NULL when invalid !
+      { // report the MENU ITEM TEXT, without calling anything
+        // in the original firmware to avoid bad surprises and side-effects
+        MorseGen_AppendWideString( pwsText );
+      }
+     else // get_menu_item_text() failed to retrieve a string.
+      { // This happened in the ZONE- and in the CONTACTS menu,
+        // and maybe in other menus with data from the codeplug, too.
+        // But how to find out if we're in the ZONE- or CONTACTS menu ? 
+        // * md380_menu_id (BYTE at 0x2001e915 in D13.020) ? 
+        //   |___ 0x07 in menu "Zone";  0x0A in menu "Contacts". Let's try:
+        switch( md380_menu_id )
+         { case 0x07: // guess we're in Tytera's "Zone" menu
+#            ifdef HAVE_ZONE_NAME
+              MorseGen_AppendWideString(zone_name ); 
+#            endif
+              break;
+           case 0x0A: // guess we're in Tytera's "Contacts" menu
+#            ifdef HAVE_SELECTED_CONTACT_NAME
+              MorseGen_AppendWideString(selected_contact_name_wstring );
+#            endif
+              break;
+           default:
+              if( Narrator.mode & NARRATOR_MODE_TEST )
+               { MorseGen_AppendString( "item?" );
+               }
+              break;
+         } // end switch( md380_menu_id )
+      }   // end else < get_menu_item_text() failed >
+   }
   MorseGen_AppendChar(' '); // separator between menu item and whatever follows 
 } // end report_menu_item()
 
@@ -541,6 +582,13 @@ static void* get_current_menu(void) // may return NULL !!
 //---------------------------------------------------------------------------
 int get_focused_menu_item_index(void) // negative when NOT in a menu !
 {
+  int itemIndex;
+#if (CONFIG_APP_MENU)
+  if( Menu_IsVisible() ) // <- things are MUCH easier in the "alternative" menu 
+   { return Menu_GetItemIndex();
+   }
+#endif
+
   // For the Morse "narrator", it's important to report the
   //     CURRENTLY FOCUSED item (menu/submenu/check-or-radio-button), 
   //     i.e. the line with dark blue background, controlled 
@@ -556,8 +604,7 @@ int get_focused_menu_item_index(void) // negative when NOT in a menu !
   //    Unfortunately 'currently_selected_menu_entry' sometimes didn't work,
   //    sometimes it indicated the WRONG item, and sometimes contained 0xFF
   //    when *NOT* on the main screen.
-
-  int itemIndex = currently_selected_menu_entry; // <-- CANNOT ALWAYS BE TRUSTED !
+  itemIndex = currently_selected_menu_entry; // <-- CANNOT ALWAYS BE TRUSTED !
   // ( watch this in D13.020 while navigating in the menus or radio-button-lists: 
   //     > python tool2.py hexwatch 0x20004ca0 64
   //   In D13.020, the CURRENTLY FOCUSED ITEM INDEX may be at 0x20004CC2 first,

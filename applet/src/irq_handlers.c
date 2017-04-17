@@ -529,7 +529,7 @@ int IsRxAudioMuted(void) // returns 1 when RX-audio is muted ("no RX signal")
 uint16_t MorseGen_GetDotLengthInTimerTicks(void)
 {
   uint16_t u16Temp = global_addl_config.cw_speed_WPM; 
-  if( u16Temp<5 || u16Temp>60)  // avoid div-by-zero use meaningful default:
+  if( u16Temp<5 || u16Temp>100)  // avoid div-by-zero use meaningful default:
    { 
      return 40; // default for 20 WPM : 60 ms for a dot
    }
