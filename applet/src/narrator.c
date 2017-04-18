@@ -115,7 +115,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
   //
   // narrate() is periodically called from rtc_timer.c::f_4225_hook()
   //      and possibly other functions (time will tell..),
-  //      whenever a change in gui_opmode_X, etc, etc .
+  //      on any change in gui_opmode_X, etc, etc .
   //
   // The (CW-) narrator looks for changes in several global
   // variables, to decide if/when/what to send in Morse code .
@@ -130,6 +130,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
 
   if( IS_PTT_PRESSED ) // stop (or pause?) morse output when PTT pressed ?
    { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any)
+     pNarrator->to_do = 0;
      StartStopwatch( &pNarrator->stopwatch );   // gap after releasing PTT
    }
   else // PTT not pressed..
@@ -137,13 +138,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
    { i = -1;
 #   if (CONFIG_APP_MENU)
      if( Menu_IsVisible() ) // <- things are MUCH easier in the "alternative" menu 
-      { i = Menu_GetItemIndex();  // used by the Morse narrator (narrator.c)
-        if( i != pNarrator->focused_item_index ) // switched to another item ?
-         { pNarrator->focused_item_index = i;
-           MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
-           StartStopwatch( &pNarrator->stopwatch ); // restart stopwatch (don't "start talking" immediately)
-           pNarrator->to_do |= NARRATOR_REPORT_MENU;
-         }
+      { // .. and there's nothing to do HERE, because app_menu.c will send Morse by itself
       }
      else // umm.. not in "our" (alternative) menu but in Tytera's 
 #   endif // CONFIG_APP_MENU ?
@@ -154,6 +149,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
         if( (i != pNarrator->focused_item_index ) // ENTERED or LEFT a menu ?
           ||(pMenu != pNarrator->current_menu) ) 
          { MorseGen_ClearTxBuffer(); // abort ongoing transmission (if any)
+           pNarrator->to_do = 0;
            StartStopwatch( &pNarrator->stopwatch );   // restart stopwatch (don't "start talking" immediately)
            if( i >= 0 )                               // now IN a menu ..
             { if( (pNarrator->focused_item_index < 0 ) // .. and previously wasn't:
@@ -176,6 +172,7 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
         if( pNarrator->channel_number != u8Temp )
          {  pNarrator->channel_number =  u8Temp;
             MorseGen_ClearTxBuffer();
+            StartStopwatch( &pNarrator->stopwatch );   // also here, don't "start talking" immediately
             pNarrator->to_do = NARRATOR_REPORT_CHANNEL; 
             // Also report the zone here ? Unnecessary in most cases.
             // So use a sidekey to 'request' a full report, including the zone.
@@ -185,10 +182,10 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
 
 
   // Start output if a new announcement is pending, but only
-  // if the operator didn't turn the channel button of select
-  // a different menu item more than XXX milliseconds :
+  // if the operator didn't rotate the channel knob, or select
+  // a different menu item  within the previous XXX milliseconds :
   if( (pNarrator->to_do != 0 )
-   && (ReadStopwatch_ms(&pNarrator->stopwatch) > 1000/*ms*/ ) )
+   && (ReadStopwatch_ms(&pNarrator->stopwatch) > 200/*ms*/ ) )
    {
      if( MorseGen_GetTxBufferUsage() < 2 ) // enough space in TX buffer now
       { // (don't wait for the buffer to run empty, avoid gaps,
@@ -381,8 +378,9 @@ static void report_menu_item(void)
   wchar_t *pwsText;
 
 #if (CONFIG_APP_MENU)
-  if( Menu_IsVisible() ) // again, things are easier in the "alternative" menu:
-   { Menu_ReportItemInMorseCode();
+  if( Menu_IsVisible() ) // this is for the "alternative" menu (not Tytera's):
+   { Menu_ReportItemInMorseCode(  AMENU_MORSE_REQUEST_ITEM_TEXT 
+                                | AMENU_MORSE_REQUEST_ITEM_VALUE );
    }
   else
 #endif // CONFIG_APP_MENU ?
@@ -421,7 +419,7 @@ static void report_menu_item(void)
          } // end switch( md380_menu_id )
       }   // end else < get_menu_item_text() failed >
    }
-  MorseGen_AppendChar(' '); // separator between menu item and whatever follows 
+  MorseGen_AppendChar(' '); // separator between menu item and whatever may follow
 } // end report_menu_item()
 
 //---------------------------------------------------------------------------

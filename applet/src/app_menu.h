@@ -104,6 +104,14 @@ typedef struct tRedMenu // instance data (in RAM, not Flash)
   // shall contain pointers to BOTH struct-types in the argument list. So:
   void *pItems; // use this ugly "anoymous pointer" even though it's always a menu_item_t* !
 
+#if( CONFIG_MORSE_OUTPUT )
+  uint32_t morse_stopwatch; // stopwatch for delayed Morse output while editing, etc
+  uint8_t  morse_request;   // bitwise combination of the following:
+#         define AMENU_MORSE_REQUEST_NONE       0x00
+#         define AMENU_MORSE_REQUEST_ITEM_TEXT  0x01
+#         define AMENU_MORSE_REQUEST_ITEM_VALUE 0x02
+#endif 
+
 } app_menu_t;
 
 
@@ -203,8 +211,8 @@ char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value);
 void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue );
 
 #if( CONFIG_MORSE_OUTPUT )
-BOOL Menu_ReportItemInMorseCode(void); // ONLY used by the Morse narrator
-#endif
+void Menu_ReportItemInMorseCode(int morse_request); // used internally and by the Morse narrator
+#endif // CONFIG_MORSE_OUTPUT ?
 
 
 #endif // CONFIG_APP_MENU ?

@@ -68,13 +68,6 @@
 typedef void (*void_func_ptr)(void);
 
 
-  // How to poll a few keys 'directly' after power-on ? 
-  // The schematic shows "K3" from the PTT pad to the STM32, 
-  // but it doesn't look like an INPUT (may be a multiplexer
-  // to poll the two "side buttons" shared with LCD_D6 & D7 .. eeek)
-  // -> leave that for later... something like
-  // "keep 'M' pressed on power-on for Morse output" will be difficult.
-
   // How to control audio power amplifier and speaker ?
   // Details: www.qsl.net/dl4yhf/RT3/md380_fw.html#audio_message_beeps .
   // Note: BSRRH sets a portbit LOW in an atomic sequence,
@@ -291,7 +284,7 @@ int ReadStopwatch_ms( uint32_t *pu32Stopwatch )
   // as permitted by the amount of RAM. A "running stopwatch" doesn't
   // consume any CPU time. ReadStopwatch_ms() does NOT stop anything.
 {
-  int32_t diff = (int32_t)(*pu32Stopwatch - IRQ_dwSysTickCounter);
+  int32_t diff = (int32_t)(IRQ_dwSysTickCounter - *pu32Stopwatch);
   // The magic of two's complement makes sure the difference
   // is even correct if the tick counter runs over from 0xFFFFFFFF 
   // to 0x00000000 between starting and reading the 'stopwatch' .
@@ -876,11 +869,7 @@ static void MorseGen_OnTimerTick(T_MorseGen *pMorseGen)
             }
            else // end of Morse message, but keep audio-PA on:
             { pMorseGen->u8State = MORSE_GEN_PASSIVE_NOT_MUTED;
-              // TEST (for debugging): short, higher-pitched "bipp" = 
-              // "wanted to turn the PA off but IsRxAudioMuted() told me that I shouldn't"
-              BeepStart( global_addl_config.cw_pitch_10Hz * 12, 
-                         global_addl_config.cw_volume );
-              // TEST ?
+              red_led_timer = 20; // kludge for debugging: "there was a problem with the audio PA control"
             }  
            break;
 
@@ -1195,23 +1184,6 @@ void SysTick_Handler(void)
      if( oldSysTickCounter <= 6000/* x 1.5 ms*/ )
       { dw = oldSysTickCounter / 128; // brightness ramps up during init
         intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
-#      if( CAN_POLL_KEYS )  // at the time of this writing, only for D13.020 and S13.020 :
-        if( oldSysTickCounter>4096 )  
-         { // global_addl_config should have been loaded by now ...
-#         if( CONFIG_MORSE_OUTPUT )
-           // Visually impaired hams will have difficulties turning on the Morse
-           // output in the original MD380Tools menu. Solution: when holding the
-           // red 'back' button pressed during power-on, activate the Morse output
-           // with the following meaningful defaults (overriding global_addl_config):
-           if( kb_row_col_pressed == 0x0402 ) // red 'BACK' button pressed shortly after power-up ?
-            { global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE;
-              global_addl_config.cw_pitch_10Hz = 65; // 65 * 10 Hz
-              global_addl_config.cw_volume     = 50; // .. percent of maximum
-              global_addl_config.cw_speed_WPM  = 15; // moderate speed for beginners
-            }
-#         endif // CONFIG_MORSE_OUTPUT ?
-         }     // end if < circa 9 seconds after power-on, check our part of global_addl_config > 
-#      endif  // CAN_POLL_KEYS ?
       }
      else  // not "shortly after power-on", but during normal operation ...
       {
@@ -1232,7 +1204,9 @@ void SysTick_Handler(void)
         if( backlight_timer>0)
 #    endif // < how to find out if the backlight is currently "low" (dimmed) or "high" (more intense) ?
          { intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE
-           intensity |=  1;
+           if(intensity < 1)
+            { intensity = 1; // when "active", the backlight shouldn't be completely off (happened after cfg-reset)
+            }
          } // end if < backlight should be "on" (active state) > 
         intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
       } // <normal operation>
@@ -1281,15 +1255,15 @@ void SysTick_Handler(void)
    }     // may_turn_on_backlight ? 
 #endif  // CONFIG_DIMMED_LIGHT ?
 
-  if( oldSysTickCounter > 6000 )
-   { // Only during 'normal operation' :  Poll a few analog inputs...
+  if( oldSysTickCounter > 3000 )
+   { // Some seconds after power-on, begin to poll analog inputs...
      if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
       { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
       }
 #   if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature, 
      // depending on the value defined as CONFIG_APP_MENU in config.h:
      if( (oldSysTickCounter & 0x0F) == 1 ) // .. on every 16-th SysTick
-      { // (but in another call, not the same as PollAnalogInputs)
+      { // (but not in the same interrupt as PollAnalogInputs)
         PollKeysForRedMenu(); // non-intrusive polling of keys for the 
         // 'red menu' (menu activated by pressing the red 'BACK'-button,
         // when that button isn't used to control Tytera's own menu).

@@ -951,6 +951,11 @@ int Menu_DrawIfVisible(int caller)
   c = am_key;
   if( c ) 
    { am_key=0; // remove key from this buffer
+#   if( CONFIG_MORSE_OUTPUT )
+     // Restart the "stopwatch" for delayed Morse output, for example after modifying a value.
+     // Output in Morse code can only start if this stopwatch expires. Avoids excessive chatter.
+     StartStopwatch( &pMenu->morse_stopwatch );
+#   endif 
      // Reload Tytera's "backlight_timer" here, because their own control doesn't work now:
      backlight_timer = md380_radio_config.backlight_time * 500; 
      if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE )
@@ -1071,6 +1076,22 @@ int Menu_DrawIfVisible(int caller)
         pMenu->redraw  = TRUE; // ... redraw menu IN THE NEXT CALL
       }
    }
+
+# if( CONFIG_MORSE_OUTPUT )
+  // If a request to report the edited value in Morse code, AND some time has passed
+  // since the last modification (via cursor up/down), start sending the value:
+  if( global_addl_config.narrator_mode & NARRATOR_MODE_ENABLED )
+   { if( ReadStopwatch_ms( &pMenu->morse_stopwatch ) > 500 )
+      { // ok, no further keyboard events for some time, so start sending NOW:
+        if( pMenu->morse_request != 0 )
+         {  Menu_ReportItemInMorseCode( pMenu->morse_request );
+            pMenu->morse_request = 0; // "done" (Morse output started)
+         }
+      }
+   }
+# endif 
+
+
   return pMenu->visible != APPMENU_OFF;
 
 } // end Menu_DrawIfVisible()
@@ -1288,7 +1309,8 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
 
 //---------------------------------------------------------------------------
 void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
-{ 
+{
+  int     i; 
   int64_t i64;
   menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
   // If the edited value is NUMERIC, really increment/decrement THE VALUE
@@ -1314,7 +1336,14 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
   if(i64 > pMenu->iMaxValue )
    { i64 = pMenu->iMaxValue; 
    }
-  pMenu->iEditValue = (int)i64;
+  i = (int)i64;
+#if( CONFIG_MORSE_OUTPUT )
+  if( pMenu->iEditValue != i ) // value was modified..
+   { // .. report this in Morse code (the VALUE only, not the entire line) ?
+     pMenu->morse_request |= AMENU_MORSE_REQUEST_ITEM_VALUE;
+   }
+#endif // CONFIG_MORSE_OUTPUT ?
+  pMenu->iEditValue = i;
   
   if( pItem != NULL ) // "write back" immediately ?
    { if( pItem->options & APPMENU_OPT_IMM_UPDATE )
@@ -1466,29 +1495,32 @@ int  Menu_GetItemIndex(void)
 } 
 
 //---------------------------------------------------------------------------
-BOOL Menu_ReportItemInMorseCode(void)
+void Menu_ReportItemInMorseCode( 
+        int morse_request ) // [in] bitwise combination of AM_MORSE_REQUEST_.. 
 { // Called from the Morse narrator when the Morse-transmit-buffer is empty,
   // and some time passed since the last modification of the current menu item.
+  // (a few shorter messages may be sent directly from the menu event handlers,
+  //  for example after modifying a value with some delay, etc etc)
   app_menu_t *pMenu = &AppMenu; // load the struct's address only ONCE
   menu_item_t *pItem;
   int  n;
   char *cp, sz40[44];
-  BOOL reported_something = FALSE;
   if( pMenu->visible==APPMENU_VISIBLE )
    { pItem = Menu_GetFocusedItem(pMenu);
      if( pItem != NULL )
-      { if( pItem->pszText != NULL ) // items WITHOUT a fixed text on the right are rare,
+      { if( (pItem->pszText != NULL ) // items WITHOUT a fixed text are rare but possible!
+         && (morse_request & AMENU_MORSE_REQUEST_ITEM_TEXT) )
          { // but they do occurr.. for example it the "menu" is just a list of names .
            // skip the "output options" at the begin of the fixed item text:
            cp = Menu_GetParamsFromItemText( (char*)pItem->pszText, NULL, NULL, NULL );
            MorseGen_AppendChar( '\x09' ); // decrease pitch by approx one whole tone
            MorseGen_AppendString( cp );
            MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch
-           reported_something = TRUE;
          }
         // Convert the optional 'value' into a string, here for Morse output:
         if( (pItem->pvValue != NULL) 
-         && (pItem->data_type != DTYPE_SUBMENU) )
+         && (pItem->data_type != DTYPE_SUBMENU) 
+         && (morse_request & AMENU_MORSE_REQUEST_ITEM_VALUE) )
          { if( pMenu->edit_mode != APPMENU_EDIT_OFF )
             { n = pMenu->iEditValue;
             }
@@ -1498,12 +1530,9 @@ BOOL Menu_ReportItemInMorseCode(void)
             }
            Menu_ItemValueToString( pItem, n, sz40 );
            MorseGen_AppendString( sz40 );
-           MorseGen_AppendChar( ' ' ); // SPACE before whatever may follow
-           reported_something = TRUE;
          }
       }
    }
-  return reported_something;
 } // end Menu_ReportItemInMorseCode()
 #endif  // CONFIG_MORSE_OUTPUT ?
 
