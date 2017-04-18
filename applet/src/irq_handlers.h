@@ -49,3 +49,4 @@ extern uint8_t kb_backlight; // flag to disable the backlight via sidekey (in ke
 #if( CONFIG_MORSE_OUTPUT )
 int MorseGen_AppendString( char *pszText, int iMaxLen ); // API to send 8-bit strings in Morse code
 #endif // CONFIG_MORSE_OUTPUT ?
+

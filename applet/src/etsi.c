@@ -23,6 +23,9 @@ inline const char* get_flco_str( lc_t *lc )
             // Unit to Unit Voice Channel User
             return "u2u" ;
         case 4 :
+		//if( global_addl_config.userscsv == 2 && talkerAlias.length != 0) {
+		//	draw_ta_screen(0xff8032);
+		//}
             return "talker alias hdr" ;
         case 5 :
             return "talker alias blk 1" ;
@@ -58,6 +61,8 @@ inline const char* get_ta_type_str(uint8_t taFormat)
             break;
     }
 }
+
+
 
 // Full Link Control PDU
 void dump_full_lc( lc_t *lc )
@@ -151,4 +156,3 @@ void dump_full_lc( lc_t *lc )
         }
     }
 }
-
