@@ -978,7 +978,7 @@ void mn_backlight_intens_7(void) {  mn_backlight_intens(7); }
 void mn_backlight_intens_8(void) {  mn_backlight_intens(8); }
 void mn_backlight_intens_9(void) {  mn_backlight_intens(9); }
 
-tMenuFunctionPtr nm_backlight_intensity_funcs[ NUM_BACKLIGHT_INTENSITIES ] =
+tMenuFunctionPtr mn_backlight_intensity_funcs[ NUM_BACKLIGHT_INTENSITIES ] =
  { mn_backlight_intens_0, mn_backlight_intens_1, mn_backlight_intens_2, mn_backlight_intens_3, mn_backlight_intens_4,
    mn_backlight_intens_5, mn_backlight_intens_6, mn_backlight_intens_7, mn_backlight_intens_8, mn_backlight_intens_9 
  };
@@ -994,7 +994,7 @@ void mn_backlight_lo(void)  // configure LOW backlight intensity (used when "idl
   md380_menu_entry_selected = i;       // <- always a zero-based item index
   mn_submenu_init(wt_bl_intensity_lo);
   for(i=0; i<NUM_BACKLIGHT_INTENSITIES; ++i)
-   { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
+   { mn_submenu_add(wt_bl_intensity[i], mn_backlight_intensity_funcs[i] );
    }
   mn_submenu_finalize();
 }
@@ -1014,7 +1014,7 @@ void mn_backlight_hi(void)  // configure HIGH backlight intensity (used when "ac
   md380_menu_entry_selected = i;       // <- always a zero-based item index
   mn_submenu_init(wt_bl_intensity_hi);
   for(i=1/*!!*/; i<NUM_BACKLIGHT_INTENSITIES; ++i)
-   { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
+   { mn_submenu_add(wt_bl_intensity[i], mn_backlight_intensity_funcs[i] );
    }
   mn_submenu_finalize();
 }
@@ -1131,10 +1131,10 @@ void select_sidebutton_function_screen(void)
    mn_submenu_add(wt_button_lone_work, nm_button_lone_work);
    mn_submenu_add(wt_button_1750_hz, nm_button_1750_hz);
    mn_submenu_add(wt_button_bklt_en, nm_button_bklt_en);
-   mn_submenu_add(wt_button_set_tg,  set_sidebutton_function);
+   mn_submenu_add(wt_button_set_tg,  nm_button_set_tg );
 # if( CONFIG_MORSE_OUTPUT )
-   mn_submenu_add(wt_button_narrator,set_sidebutton_function);
-   mn_submenu_add(wt_button_cw_repeat,set_sidebutton_function);
+   mn_submenu_add(wt_button_narrator,nm_button_narrator);
+   mn_submenu_add(wt_button_cw_repeat,nm_button_cw_repeat);
 # endif
 
    mn_submenu_finalize();
