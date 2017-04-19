@@ -194,7 +194,7 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-void print_time_hook(char *log)
+void print_time_hook(const char log)
 {
     if( is_netmon_visible() ) {
         return;

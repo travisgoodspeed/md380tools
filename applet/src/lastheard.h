@@ -66,6 +66,9 @@ void slog_draw_poll();
 #define SLOGx(...) slog_printf(__VA_ARGS__)
 
 void lastheard_putch(char c);
+void clog_putch(char c);
+void slog_putch(char c);
+void clog_putch(char c);
 
 #ifdef __cplusplus
 }
