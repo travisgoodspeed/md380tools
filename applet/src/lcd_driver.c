@@ -264,7 +264,7 @@ void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
 } // end LCD_FillRect()
 
 //---------------------------------------------------------------------------
-void LCD_ColourGradientTest(void)
+void LCD_ColorGradientTest(void)
   // Fills the framebuffer with a 2D colour gradient for testing .
   // If the colour-bit-fiddling below is ok, the display
   // should be filled with colour gradients :
@@ -291,7 +291,47 @@ void LCD_ColourGradientTest(void)
          |((y/4)<<11) );   // increasing from top to bottom: BLUE
       }
    }
-} // end LCD_ColourGradientTest()
+} // end LCD_ColorGradientTest()
+
+//---------------------------------------------------------------------------
+void LCD_NativeColorToRGB( uint16_t native_color, 
+       uint8_t *pbRed, uint8_t *pbGreen, uint8_t *pbBlue )
+  // Converts a 'native' colour (in the display's hardware-specific format)
+  // into red, green, and blue component; each ranging from 0 to ~~255 .
+{
+  *pbRed  = (native_color & 0x001F) << 3; // don't care about the LSBits being zero now..
+  *pbGreen= (native_color & 0x07E0) >> 3;
+  *pbBlue = (native_color & 0xF800) >> 8; // simple, but keep this bit-fiddling in one place
+} // end LCD_NativeColorToRGB()
+
+//---------------------------------------------------------------------------
+uint16_t LCD_RGBToNativeColor(uint8_t red, uint8_t green, uint8_t blue )
+  // Converts an RGB mix (red,green,blue ranging from 0 to 255)
+  // into the LCD controller's hardware specific format (here: BGR565).
+{
+  return ((uint16_t)(red  & 0xF8) >> 3)  // red  : move bits 7..3 into b 4..0 
+       | ((uint16_t)(green& 0xFC) << 3)  // green: move bits 7..2 into b 10..5
+       | ((uint16_t)(blue & 0xF8) << 8); // blue : move bits 7..3 into b 15..11
+} // end LCD_RGBToNativeColor()
+
+//---------------------------------------------------------------------------
+int LCD_GetColorDifference( uint16_t color1, uint16_t color2 )
+  // Crude measure for the "similarity" of two colours:
+  // Colours are split into R,G,B (range 0..255 each), 
+  // then absolute differences added. 
+  // Theoretic maximum 3*255, here slightly less (doesn't matter).
+{ uint8_t two_rgbs[6];
+  int delta_r, delta_g, delta_b;
+  LCD_NativeColorToRGB( color1, two_rgbs+0, two_rgbs+1, two_rgbs+2 );
+  LCD_NativeColorToRGB( color2, two_rgbs+3, two_rgbs+4, two_rgbs+5 );
+  delta_r = (int)two_rgbs[0] - (int)two_rgbs[3];
+  delta_g = (int)two_rgbs[1] - (int)two_rgbs[4];
+  delta_b = (int)two_rgbs[2] - (int)two_rgbs[5];
+  if( delta_r<0) delta_r = -delta_r;  // abs() may be a code-space-hogging macro..
+  if( delta_g<0) delta_g = -delta_g;  // .. and there are already TOO MANY dependencies here
+  if( delta_b<0) delta_b = -delta_b;
+  return delta_r + delta_g + delta_b;
+} // end LCD_GetColorDifference()
 
 //---------------------------------------------------------------------------
 uint8_t *LCD_GetFontPixelPtr_8x8( uint8_t c)

@@ -78,6 +78,10 @@ typedef struct tRedMenu // instance data (in RAM, not Flash)
 #         define APPMENU_EDIT_INSERT  3 // similar, but digit from keyboard is INSERTED into the string
   uint8_t edit_length;  // current length of the VALUE when *editing*
   uint8_t cursor_pos;   // edit digit position, 0..edit_length-1
+  uint8_t save_on_exit; // flag set if any member of global_addl_config was edited
+           // (only save ONCE on exit, don't unnecessarily stress the Flash.
+           //  Also, if the user thinks he made a mistake, he can turn off
+           //  the radio without leaving the menu, to avoid SAVING the config)
   int  iEditValue; // "offline" value, used while editing, written back when done.
            // If an modifyable parameter uses a STRING TABLE for display,
            // iEditValue is an index into that table, but not directly

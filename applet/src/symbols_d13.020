@@ -137,6 +137,7 @@ print_buffer                             = 0x2001e0d0 ;
 contact                                  = 0x2001e1ac ;
 msg_sms_hdr                              = 0x2001e1d0 ;
 channel_name                             = 0x2001e1f4 ;
+
 menu_title_cstring                       = 0x2001e3c0 ;
 toplinetext                              = 0x2001e3fc ;
 botlinetext                              = 0x2001e410 ;

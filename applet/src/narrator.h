@@ -15,14 +15,17 @@
 // Variables READ BY the 'narrator' :
 #if defined(FW_D13_020) || defined(FW_S13_020)
   extern uint8_t channel_num;    // borrowed from netmon.c ..
-  // (channel_num wasn't in any header; address in applet/src/symbols_d13.020 + _s13.020 only)
+  // (channel_num wasn't in any header; address in applet/src/symbols_d13.020 + .._s13.020 only)
   extern wchar_t channel_name[]; // borrowed from keyb.c (!)
 #endif
-#if defined(FW_D13_020)
+#if defined(FW_D13_020) || defined(FW_S13_020)
   extern char menu_title_cstring[]; // global var (?) in RAM, required for the narrator in a few cases
-# define HAVE_MENU_TITLE 1  
+  // 2017-04-19: menu_title_cstring only sure in symbols_d13.020 .  In symbols_s13.020, just a guess.
+# define HAVE_MENU_TITLE 1  // <- indicates if menu_title_cstring[] exists 
+#endif
+#if defined(FW_D13_020) || defined(FW_S13_020)
   extern wchar_t selected_contact_name_wstring[]; // currently selected name in the 'Contacts' menu
-# define HAVE_SELECTED_CONTACT_NAME 1  
+# define HAVE_SELECTED_CONTACT_NAME 1 // <- indicates if selected_contact_name_wstring[] exists
 #endif
 
 #ifndef  HAVE_MENU_TITLE

@@ -239,6 +239,11 @@ void Menu_Open(app_menu_t *pMenu)
 //---------------------------------------------------------------------------
 void Menu_Close(app_menu_t *pMenu)
 {
+  if( pMenu->save_on_exit ) // modified global_addl_config but didn't save yet ?
+   {  cfg_save();           // [in] global_addl_config,  [out] SPI-Flash
+      pMenu->save_on_exit = FALSE; // "done"
+   }
+
   if( kb_row_col_pressed ) // some key (especially the green MENU key) still pressed ?
    { pMenu->visible = APPMENU_VISIBLE_UNTIL_KEY_RELEASED;
    } // end if < trying to exit but a key is still pressed >
@@ -246,7 +251,7 @@ void Menu_Close(app_menu_t *pMenu)
    {
      // The original firmware didn't COMPLETELY redraw it's own 'main screen'
      // now, because it's not aware of the display been hijacked temporarily.
-     LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOUR_MD380_BKGND_BLUE ); 
+     LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOR_MD380_BKGND_BLUE ); 
      // Calling display_idle_screen() from here would be asking for trouble. 
      // Better let the ugly monster 'f_4225()' (@0x801fe5c) decide what
      // to draw. 
@@ -283,6 +288,10 @@ static void Menu_CheckVertScrollPos(app_menu_t *pMenu)
 { int i,n = LCD_SCREEN_HEIGHT / ( 2 * LCD_FONT_HEIGHT );
   pMenu->n_items_visible = n; // <- this is just an INITIAL GUESS,
                               // since the items may have different heights !
+  if( pMenu->item_index >= pMenu->num_items ) // oops.. 
+   {  pMenu->item_index = pMenu->num_items-1; // limit item_index BEFORE auto-scroll
+   }
+
   // Scroll the currently selected item into view :
   // Visible range of items is vert_scroll_pos to vert_scroll_pos+n-1 .
   // If item_index is outside that range, adjust vert_scroll_pos:
@@ -297,8 +306,10 @@ static void Menu_CheckVertScrollPos(app_menu_t *pMenu)
 
 //---------------------------------------------------------------------------
 __attribute__ ((noinline)) int Fletcher32( uint32_t prev_sum, uint16_t *pwData, int nWords ) 
-{ // principle similar as 'Fletcher32', but it doesn't matter much..
+{ // Kind of block checksum inspired by 'Fletcher32', but it doesn't matter much..
   //  .. as long as if it gives a different result when A FEW BITS in the input change.
+  //  Used by the menu to find out if it needs to redraw itself, when the VALUES
+  //  currently displayed on the menu screen have been modified *anywhere* .
   uint32_t sum1 = prev_sum;
   uint32_t sum2 = prev_sum >> 16;
   while( nWords-- ) 
@@ -383,20 +394,33 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
 //---------------------------------------------------------------------------
 void Menu_GetColours( int sel_flags, uint16_t *pFgColor, uint16_t *pBgColor )
 { 
-  // For a start, imitate Tytera's menu colours .
-  // For later, make some of these colours adjustable,
-  //     using a few bits(!) in global_addl_config .  
-  if( sel_flags & SEL_FLAG_CURSOR )
-   { *pFgColor = LCD_COLOUR_WHITE;
-     *pBgColor = LCD_COLOUR_RED;
+  // Per default, imitate Tytera's menu colours .
+  // Some of these colours adjustable,
+  //     using a few words(!) in global_addl_config .
+  // If the colours have NOT been customized yet,
+  // the colour values in global_addl_config are ZERO.
+  if( LCD_GetColorDifference( global_addl_config.fg_color, global_addl_config.bg_color ) < 10 )
+   { // difference too small -> discard customized colours to make the menu "readable" again
+     global_addl_config.fg_color  = LCD_COLOR_BLACK;
+     global_addl_config.bg_color  = LCD_COLOR_WHITE;
+     global_addl_config.sel_fg_color = LCD_COLOR_WHITE;
+     global_addl_config.sel_bg_color = LCD_COLOR_BLUE;
+     global_addl_config.edit_fg_color= LCD_COLOR_WHITE;
+     global_addl_config.edit_bg_color= LCD_COLOR_RED;
+     // (not a perfect solution, but don't waste too much time on this)
+   }
+
+  if( sel_flags & SEL_FLAG_CURSOR ) // "edit cursor" or the field subject to "inc/dec-editing"
+   { *pFgColor = global_addl_config.edit_fg_color;
+     *pBgColor = global_addl_config.edit_bg_color;
    }
   else if( sel_flags & SEL_FLAG_FOCUSED ) 
-   { *pFgColor = LCD_COLOUR_WHITE;
-     *pBgColor = LCD_COLOUR_BLUE;
+   { *pFgColor = global_addl_config.sel_fg_color;
+     *pBgColor = global_addl_config.sel_bg_color;
    }
   else // neither the edit cursor nor not marked : 
-   { *pFgColor = LCD_COLOUR_BLACK;
-     *pBgColor = LCD_COLOUR_WHITE;
+   { *pFgColor = global_addl_config.fg_color;
+     *pBgColor = global_addl_config.bg_color;
    }
 } // end Menu_GetColours()
 
@@ -900,6 +924,28 @@ int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
   int x = 0;
   uint16_t fg_color, bg_color;
 
+  // At the moment (2017-04), this is more or less a 'design study' .
+  // It may get replaced anytime, if there's a nicer way of indicating
+  // a new section, topic, paragraph, etc, and the presence of a hotkey.
+  // The general idea is to have a fairly 'flat' menu structure, not
+  // as deeply nested as Tytera's menu. Hopefully these menus remain shorter
+  // than Android's 'cogwheel' menu (connections, my device, options, ...).
+  // The screen is barely WIDE enough to item text + item value,
+  // so the basic idea was to show hotkey number and 'chapter header'
+  // along with a horizontal rule, e.g. :
+  //
+  // [ 1 Radio >--------
+  // Bla, bla..
+  // [ 2 Settings >-----
+  // Etc, etc..
+  // [ 3 Backlight >----
+  // Level Lo          1
+  // Level Hi          4
+  // Time/sec         30
+  // [ 4 Morse output>--
+  // Mode        verbose 
+  // Speed/WPM        30
+
   Menu_GetColours( SEL_FLAG_NONE, &fg_color, &bg_color );
   x = LCD_DrawCharAt( ' ', x, y, bg_color/*!*/, fg_color/*!*/, LCD_OPT_FONT_8x8 );
   while( !Menu_IsFormatStringDelimiter( *cpHotkey ) )
@@ -938,7 +984,7 @@ int Menu_DrawIfVisible(int caller)
      // on the same keystroke that was used here to CLOSE the "red key menu".
      if( kb_row_col_pressed == 0 )
       { 
-        LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOUR_MD380_BKGND_BLUE ); 
+        LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOR_MD380_BKGND_BLUE ); 
         pMenu->visible = APPMENU_OFF; // now "really closed",
         // and Menu_IsVisible() returns FALSE for half a dozen of hooks 
         // (allows the original firmware to use the framebuffer again)
@@ -976,9 +1022,13 @@ int Menu_DrawIfVisible(int caller)
               Menu_OnEnterKey(pMenu);
               break;
            case 'B' :  // red "Back"-key : 
-              red_led_timer  = 20;    // <- poor man's debugging
+              // red_led_timer  = 20;    // <- poor man's debugging 
               if( pMenu->visible == APPMENU_OFF ) // not visible yet..
                { Menu_Open( pMenu );
+                 pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+                 // Read out the entire screen in Morse code ? Too chatty.
+                 // If necessary, the user can "walk through the lines"
+                 // with the cursor keys to *hear* what's in the list.
                }
               else // already in the app menu: treat the RED KEY like "BACK",
                {   // "Exit", "Escape", or "Delete" ?
@@ -1000,6 +1050,8 @@ int Menu_DrawIfVisible(int caller)
                   default: // not "editing" but "navigating" ... 
                      if( pMenu->item_index > 0 ) 
                       { --pMenu->item_index; 
+                        // If no other keystrokes follow, and if Morse output is enabled,..:
+                        pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                       }
                }
               pMenu->redraw = TRUE;
@@ -1018,9 +1070,9 @@ int Menu_DrawIfVisible(int caller)
                       }
                      break;
                   default: // not "editing" but "navigating" ... 
-                     ++pMenu->item_index;
-                     if( pMenu->item_index >= pMenu->num_items )  
-                      { pMenu->item_index = pMenu->num_items-1;
+                     if(pMenu->item_index < (pMenu->num_items-1) )  
+                      { ++pMenu->item_index;
+                        pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                       }
                      break;
                }
@@ -1056,7 +1108,7 @@ int Menu_DrawIfVisible(int caller)
         // unless the currently focused item isn't completely visible, which
         // would cause Menu_DrawLineWithItem() to modify pMenu->vert_scroll_pos
         // and set pMenu->redraw = TRUE again. Ugly, but keeps things simple.
-        Menu_CheckVertScrollPos(pMenu);
+        Menu_CheckVertScrollPos(pMenu); // make sure item-index is valid and 'in view'
         y=iTextLineNr=0;
         while( y < (LCD_SCREEN_HEIGHT-LCD_FONT_HEIGHT) )
          { y = Menu_DrawLineWithItem( pMenu, y, iTextLineNr++ );
@@ -1299,10 +1351,19 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
         // Phew. Enough of this bit-fiddling :)
       }
    } // end if < "option value" nonzero >
+
+  // If the edited value is a member of global_addl_config, save it in Flash LATER.
+  // (DO NOT save it immediately after every inc/dec-step or similar. 
+  //  Writing to Flash takes time, stresses the Flash, may cause audio drop-outs, etc)
+  if( (uint8_t*)pItem->pvValue >= (uint8_t*)&global_addl_config
+   && (uint8_t*)pItem->pvValue < ((uint8_t*)&global_addl_config+sizeof(global_addl_config) ) )
+   { pMenu->save_on_exit = TRUE;
+   }
+
   // Write back the inversely scaled 'edit value' :
   Menu_WriteIntToPtr( n, pItem->pvValue, pItem->data_type );
 
-  // If there's a callback function, politely inform it that we're not editing anymore:
+  // If there's a callback function, inform it that we're not editing anymore:
   Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 1/*finish, not abort*/ );
 
 } // end Menu_WriteBackEditedValue() 
@@ -1458,7 +1519,7 @@ void Menu_LimitEditedValue( app_menu_t *pMenu )
 int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
 {
   if( event==APPMENU_EVT_ENTER ) // pressed ENTER (to launch the colour test) ?
-   { LCD_ColourGradientTest(); // only draw the colour test pattern ONCE...
+   { LCD_ColorGradientTest(); // only draw the colour test pattern ONCE...
      return AM_RESULT_OCCUPY_SCREEN; // screen now 'occupied' by the colour test screen
    }
   else if( event==APPMENU_EVT_PAINT )
@@ -1496,11 +1557,12 @@ int  Menu_GetItemIndex(void)
 
 //---------------------------------------------------------------------------
 void Menu_ReportItemInMorseCode( 
-        int morse_request ) // [in] bitwise combination of AM_MORSE_REQUEST_.. 
-{ // Called from the Morse narrator when the Morse-transmit-buffer is empty,
-  // and some time passed since the last modification of the current menu item.
-  // (a few shorter messages may be sent directly from the menu event handlers,
-  //  for example after modifying a value with some delay, etc etc)
+        int morse_request ) // [in] bitcombination of AM_MORSE_REQUEST_.. 
+{ // Called from ..
+  //  - the Morse narrator when the operator requested to read out the screen,
+  //    using one of the programmable sidebuttons;
+  //  - Menu_DrawIfVisible() after selecting a new item, or after editing
+  //    something, with some delay to avoid 'too much chatter' from the radio.
   app_menu_t *pMenu = &AppMenu; // load the struct's address only ONCE
   menu_item_t *pItem;
   int  n;
@@ -1510,11 +1572,10 @@ void Menu_ReportItemInMorseCode(
      if( pItem != NULL )
       { if( (pItem->pszText != NULL ) // items WITHOUT a fixed text are rare but possible!
          && (morse_request & AMENU_MORSE_REQUEST_ITEM_TEXT) )
-         { // but they do occurr.. for example it the "menu" is just a list of names .
-           // skip the "output options" at the begin of the fixed item text:
+         { // Skip the "output formatting options" at the begin of the item text:
            cp = Menu_GetParamsFromItemText( (char*)pItem->pszText, NULL, NULL, NULL );
-           MorseGen_AppendChar( '\x09' ); // decrease pitch by approx one whole tone
-           MorseGen_AppendString( cp );
+           MorseGen_AppendChar( '\x09' ); // decrease pitch (auto frequency),
+           MorseGen_AppendString( cp );   // report the "fixed" menu item text
            MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch
          }
         // Convert the optional 'value' into a string, here for Morse output:

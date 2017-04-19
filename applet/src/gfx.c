@@ -199,12 +199,7 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-// ex: void print_time_hook(void) // YHF: Does 'Tytera' really pass in the address of a string ?
-    // Or isn't this a hook (for a function in the original firmware) at all ?
-    // Besides that, what netmon.c passes in (into print_time_hook) is a char,
-    // not a "char pointer" ! Thus :
-// ex: void print_time_hook(char *log) // DL2MF (?)
-void print_time_hook(char log)         // DL4YHF (2017-04-17)
+void print_time_hook(const char log) // ex: void print_time_hook(void), 'log' used by netmon.c
 {
     if( is_netmon_visible() ) {
         return;
@@ -227,7 +222,7 @@ void print_time_hook(char log)         // DL4YHF (2017-04-17)
             break;
         if ( log == 'l' ) {
            lastheard_putch(wide_time[i]);
-           // "warning: implicit declaration of function 'lastheard_putch'" - added proper prototype where it belongs
+           // "warning: implicit declaration of function 'lastheard_putch'" - added prototype in *.h
         } else if ( log == 'c' ) {
            clog_putch(wide_time[i]);
         } else if ( log == 's' ) {
