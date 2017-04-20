@@ -1,7 +1,6 @@
 // File:    md380tools/applet/src/app_menu.c
 // Author:  Wolf (DL4YHF) [initial version] 
-//          Please respect the author's coding style, indentations,
-//          and don't poison this soucecode with TAB characters . 
+//          Please don't poison this soucecode with TAB characters . 
 //
 // Date:    2017-04-17
 //  Implements a simple menu opened with the red BACK button,
@@ -18,6 +17,7 @@
 //      SRCS += app_menu.o 
 //      SRCS += lcd_driver.o
 //      SRCS += font_8_8.o
+//      SRCS += color_picker.o
 //  
 //  2. #define CONFIG_APP_MENU 1  in  md380tools/applet/config.h  .
 
@@ -166,7 +166,26 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
 
   // { "Text__max__13", data_type,  options,opt_value,
   //     pvValue,iMinValue,iMaxValue, string table, callback }
-  { "[3 Test/Debug]bl_timer",   DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
+  // In the following items, the colour values are shown in short HEX format [h4],
+  // but when pressing ENTER on one of these icons, the callback shows
+  // a simple 'colour picker' dialog where the colour can be modified:
+  { "[3 Colours;h4]foregnd", DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
+        &global_addl_config.fg_color,0,0,   NULL,   am_cbk_ColorPicker },
+  { "[h4]backgnd",          DTYPE_UNS16,  APPMENU_OPT_NONE, 0, 
+        &global_addl_config.bg_color,0,0,   NULL,   am_cbk_ColorPicker },
+  { "[h4]sel/nav fg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+        &global_addl_config.sel_fg_color,0,0, NULL, am_cbk_ColorPicker },
+  { "[h4]sel/nav bg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+        &global_addl_config.sel_bg_color,0,0, NULL, am_cbk_ColorPicker },
+  { "[h4]editor fg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+        &global_addl_config.edit_fg_color,0,0, NULL, am_cbk_ColorPicker},
+  { "[h4]editor bg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+        &global_addl_config.edit_fg_color,0,0, NULL, am_cbk_ColorPicker},
+
+
+  // { "Text__max__13", data_type,  options,opt_value,
+  //     pvValue,iMinValue,iMaxValue, string table, callback }
+  { "[4 Test/Debug]bl_timer",   DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
         &backlight_timer,0,0,      NULL,         NULL     },
   { "opmode2",          DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &gui_opmode2,0,0,      am_stringtab_opmode2, NULL },
@@ -394,34 +413,39 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
 //---------------------------------------------------------------------------
 void Menu_GetColours( int sel_flags, uint16_t *pFgColor, uint16_t *pBgColor )
 { 
-  // Per default, imitate Tytera's menu colours .
-  // Some of these colours adjustable,
-  //     using a few words(!) in global_addl_config .
-  // If the colours have NOT been customized yet,
-  // the colour values in global_addl_config are ZERO.
-  if( LCD_GetColorDifference( global_addl_config.fg_color, global_addl_config.bg_color ) < 10 )
-   { // difference too small -> discard customized colours to make the menu "readable" again
-     global_addl_config.fg_color  = LCD_COLOR_BLACK;
-     global_addl_config.bg_color  = LCD_COLOR_WHITE;
-     global_addl_config.sel_fg_color = LCD_COLOR_WHITE;
-     global_addl_config.sel_bg_color = LCD_COLOR_BLUE;
-     global_addl_config.edit_fg_color= LCD_COLOR_WHITE;
-     global_addl_config.edit_bg_color= LCD_COLOR_RED;
-     // (not a perfect solution, but don't waste too much time on this)
-   }
+  uint16_t fg_color, bg_color;
 
   if( sel_flags & SEL_FLAG_CURSOR ) // "edit cursor" or the field subject to "inc/dec-editing"
-   { *pFgColor = global_addl_config.edit_fg_color;
-     *pBgColor = global_addl_config.edit_bg_color;
+   { fg_color = global_addl_config.edit_fg_color;
+     bg_color = global_addl_config.edit_bg_color;
    }
   else if( sel_flags & SEL_FLAG_FOCUSED ) 
-   { *pFgColor = global_addl_config.sel_fg_color;
-     *pBgColor = global_addl_config.sel_bg_color;
+   { fg_color = global_addl_config.sel_fg_color;
+     bg_color = global_addl_config.sel_bg_color;
    }
   else // neither the edit cursor nor not marked : 
-   { *pFgColor = global_addl_config.fg_color;
-     *pBgColor = global_addl_config.bg_color;
+   { fg_color = global_addl_config.fg_color;
+     bg_color = global_addl_config.bg_color;
    }
+
+  if( LCD_GetColorDifference( fg_color, bg_color ) < 10 )
+   { // difference too small -> discard customized colours to make the menu "readable" again
+     // Imitate Tytera's menu colours instead :
+     if( sel_flags & SEL_FLAG_CURSOR ) // "edit cursor" or the field subject to "inc/dec-editing"
+      { fg_color = LCD_COLOR_WHITE;
+        bg_color = LCD_COLOR_BLUE;
+      }
+     else if( sel_flags & SEL_FLAG_FOCUSED ) 
+      { fg_color = LCD_COLOR_WHITE;
+        bg_color = LCD_COLOR_RED;
+      }
+     else // neither the edit cursor nor not marked : 
+      { fg_color = LCD_COLOR_BLACK;
+        bg_color = LCD_COLOR_WHITE;
+      }
+   }
+  *pFgColor = fg_color;
+  *pBgColor = bg_color;
 } // end Menu_GetColours()
 
 //---------------------------------------------------------------------------
@@ -966,7 +990,8 @@ int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
 
 //---------------------------------------------------------------------------
 int Menu_DrawIfVisible(int caller)
-  // When visible(!), paints the 'app menu' into the framebuffer. 
+  // When visible(!), paints the 'app menu' into the framebuffer.
+  //      Also processes pending keyboard events (from its own buffer).
   //      Called from various 'display-update' hook functions .
   // [in] caller : tells which of the half dozen of hooked functions
   //               calls us .  Mostly used for debugging .
@@ -974,13 +999,14 @@ int Menu_DrawIfVisible(int caller)
   //                0 when invisible (and someone else should 'draw').
 {
   app_menu_t *pMenu = &AppMenu; // load the struct's address only ONCE
+  menu_item_t *pItem;
   char c;
   int y,iTextLineNr;
   uint16_t fg_color, bg_color;
 
   if( pMenu->visible==APPMENU_VISIBLE_UNTIL_KEY_RELEASED )
    { // Menu "almost closed" but still visible until releasing the last key.
-     // This is a kludge to prevent opening Tytera's "green key menu"
+     // The following is a kludge to prevent opening Tytera's "green key menu"
      // on the same keystroke that was used here to CLOSE the "red key menu".
      if( kb_row_col_pressed == 0 )
       { 
@@ -1001,6 +1027,13 @@ int Menu_DrawIfVisible(int caller)
      // Restart the "stopwatch" for delayed Morse output, for example after modifying a value.
      // Output in Morse code can only start if this stopwatch expires. Avoids excessive chatter.
      StartStopwatch( &pMenu->morse_stopwatch );
+     if(pMenu->visible==APPMENU_VISIBLE)
+      { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any)
+        // (if the operator presses a key, he knows what's going on,
+        //  and doesn't want a continuously chattering radio. 
+        //  At least not when the APPLICATION MENU is visible, but not
+        //  a function launched from here. Thus the check for APPMENU_VISIBLE)
+      }
 #   endif 
      // Reload Tytera's "backlight_timer" here, because their own control doesn't work now:
      backlight_timer = md380_radio_config.backlight_time * 500; 
@@ -1019,6 +1052,14 @@ int Menu_DrawIfVisible(int caller)
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
               green_led_timer = 20;   // <- poor man's debugging
+              // To simplify the implementation of some dialog screens
+              // (e.g. color_picker.c), update pMenu->iEditValue already
+              // BEFORE invoking the callback with event=APPMENU_EVT_ENTER :
+              pItem = Menu_GetFocusedItem(pMenu);
+              if( pItem != NULL )
+               { pMenu->iEditValue= pMenu->iValueBeforeEditing 
+                  = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+               }
               Menu_OnEnterKey(pMenu);
               break;
            case 'B' :  // red "Back"-key : 
@@ -1209,13 +1250,31 @@ BOOL Menu_IsOnStack(app_menu_t *pMenu, menu_item_t *pItems)
 //---------------------------------------------------------------------------
 int Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int param)
 {
+  int cbk_result = AM_RESULT_NONE; // "proceed as if there was NO callback function"
+                            // (also returned here if there IS NO callback..) 
   if( pItem ) 
    { if( pItem->callback )
-      { return pItem->callback( pMenu, pItem, event, param );
-      }
-   }
-  return AM_RESULT_NONE; // "proceed as if there was NO callback function"
-                            // (because, in this case, there IS NO callback..)
+      { cbk_result = pItem->callback( pMenu, pItem, event, param );
+        // Check a few result codes immediately.. kind of "common default handler",
+        // to simplify the implementation of dialog screens and similar gadgets
+        // (for example, the 'colour picker' dialog in applet/src/color_picker.c) :
+        switch( cbk_result )
+         { case AM_RESULT_EXIT_AND_RELEASE_SCREEN :
+              // The whatever-it-is ("dialog screen"?) wants to be closed,
+              // and returns the framebuffer control back to the 'app menu':
+              if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE )
+               { // the callback didn't switch back from 'user screen' to 'menu screen'
+                 // so do that here, and prepare redrawing the entire screen (menu):
+                 pMenu->visible = APPMENU_VISIBLE;
+                 pMenu->redraw  = TRUE; // ... redraw menu a.s.a.p.
+               }
+              break; 
+           default:  // no special action required here
+              break; 
+         } // end switch < callback-result >
+      } // end if < callback function exists >
+   } // end if < menu-item-pointer not NULL >
+  return cbk_result;
 } // end Menu_InvokeCallback()
 
 //---------------------------------------------------------------------------
@@ -1271,7 +1330,9 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
      if( (pItem->options & APPMENU_OPT_EDITABLE ) && (pItem->pvValue!=NULL) )
       { if( pMenu->edit_mode != APPMENU_EDIT_OFF) 
          {  // was editing -> finish input ("write back")
-            Menu_FinishEditing( pMenu, pItem );
+            Menu_FinishEditing( pMenu, pItem ); // [in] pMenu->iEditValue [out] *pItem->pvValue 
+            // If there's a callback function, inform it that we're not editing anymore:
+            Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 1/*finish, not abort*/ );
          }
         else // begin editing: copy current value to edit buffer (string or int)
          {  Menu_BeginEditing( pMenu, pItem );
@@ -1282,6 +1343,7 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
 
 //---------------------------------------------------------------------------
 void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem )
+  // Must NOT be invoked from a callback, because callback is invoke FROM here
 { int cbk_result;
   if( (pItem->options & APPMENU_OPT_EDITABLE ) && (pItem->pvValue!=NULL) )
    { // Copy the 'current' value into the internal storage,
@@ -1363,8 +1425,6 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
   // Write back the inversely scaled 'edit value' :
   Menu_WriteIntToPtr( n, pItem->pvValue, pItem->data_type );
 
-  // If there's a callback function, inform it that we're not editing anymore:
-  Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 1/*finish, not abort*/ );
 
 } // end Menu_WriteBackEditedValue() 
 
@@ -1421,8 +1481,8 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
 
 
 //---------------------------------------------------------------------------
-void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem )
-{
+void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ) // API !
+{ // Must not invoke a callback, because this function MAY BE called from a callback.
   if( pItem != NULL )
    { Menu_WriteBackEditedValue(pMenu, pItem);
    }

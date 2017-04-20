@@ -441,6 +441,16 @@ uint8_t *LCD_GetFontPixelPtr_6x12( uint8_t c)
 } // end LCD_GetFontPixelPtr_6x12()
 
 //---------------------------------------------------------------------------
+int LCD_GetFontHeight( int font_options )
+{
+  int font_height = ( font_options & LCD_OPT_FONT_8x8 ) ? 8 : 12;
+  if( font_options & LCD_OPT_DOUBLE_HEIGHT )
+   {  font_height *= 2;
+   }
+  return font_height;
+} // end LCD_GetFontHeight()
+
+//---------------------------------------------------------------------------
 int LCD_GetTextWidth( int font_options, char *pszText )
 { 
   // As long as only FIXED-WIDTH fonts are supported, the calculation is trivial:
@@ -551,9 +561,17 @@ int LCD_DrawStringAt(char *cp, int x, int y,
                       int options ) // [in] LCD_OPT_xyz (bitwise combined)
   // Draws a zero-terminated ASCII string. 
   // Returns the graphic coordinate (x) to print the next character .
+  // Can optionally fill the end of the text line with the background colour
+  // (bitflag LCD_OPT_CLEAR_EOL in options), to avoid having to clear 
+  // the entire line (or even the whole screen) before drawing text. 
 {
   while( *cp )
    { x = LCD_DrawCharAt( *cp++, x, y, fg_color, bg_color, options );
+   }
+  if( options & LCD_OPT_CLEAR_EOL )
+   { if( x < (LCD_SCREEN_WIDTH-1) )
+      { LCD_FillRect( x, y, LCD_SCREEN_WIDTH-1, y+LCD_GetFontHeight(options)-1, bg_color );
+      }
    }
   return x;
 } // end LCD_DrawStringAt()

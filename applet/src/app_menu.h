@@ -36,13 +36,16 @@
         // Instead of the default paint procedure, Menu_DrawIfVisible()
         //  will repeatedly invoke the callback with event=APPMENU_EVT_PAINT,
         //  as long as the callback function returns AM_RESULT_OCCUPY_SCREEN .
-        // Simple example in RedMenuCbk_ColorTest() .
+        // Simple example in am_cbk_ColorTest() .
+#define AM_RESULT_EXIT_AND_RELEASE_SCREEN 5 // returned by menu callback
+        // to release the 'occupied' screen, and return control to the menu.
+        // Simple example in am_cbk_ColorPicker() .
 
 
   // flags to mark focused lines or individual characters ("edit cursor") in the menu:
 #define SEL_FLAG_NONE     0 // normal output attributes, neither focused nor editing
-#define SEL_FLAG_FOCUSED  1
-#define SEL_FLAG_CURSOR   2
+#define SEL_FLAG_FOCUSED  1 // curently focused item, steerable "navigation bar", etc
+#define SEL_FLAG_CURSOR   2 // edit cursor or (in "inc/dec"-editing mode) edit field
 
 
 // Data types and structs ...
@@ -64,7 +67,7 @@ typedef struct tRedMenu // instance data (in RAM, not Flash)
 #         define APPMENU_VISIBLE 1
 #         define APPMENU_USERSCREEN_VISIBLE 2
 #         define APPMENU_VISIBLE_UNTIL_KEY_RELEASED 3
-  uint8_t redraw;
+  uint8_t redraw;       // flag is a (full-screen) redraw is necessary: 0=no, 1=yes
   uint8_t depth;        // current 'depth' into the menu, 0 = top level,
                         // also acts like a 'stack pointer' into 
   uint8_t vert_scroll_pos; // index into pItems[] of the topmost visible entry
@@ -94,12 +97,15 @@ typedef struct tRedMenu // instance data (in RAM, not Flash)
   char sz40EditBuf[41]; // also used "offline" while editing, for direct input
            // via keyboard (or even Morse code ?), because this is easier than
            // adding or subtracting powers of 2, 10, or 16 to iEditValue ...
-  int     value_chksum; // crude 'Fletcher' checksum over all currently visible 
+  int  value_chksum; // crude 'Fletcher' checksum over all currently visible 
            // values (strings and numbers) to check if a screen update is necessary.
            // (If the cable between CPU and display didn't emit QRM, we'd simply
            //  redraw the screen periodically. But try this on an FM channel
            //  with a rubber-duck antenna: "buzzz, buzzz, pfft, pfft, pfft" ! )
-           
+  int  dialog_field_index;  // general storage for dialogs and similar gadgets,
+           //  first used in color_picker.c to select RED, GREEN or BLUE component
+
+         
   // Anything that doesn't necessarily need to be in RAM should be in Flash (ROM).
   // Here's a pointer to the currently active items:
   // The following should be: menu_item_t         *pItems; 
@@ -170,9 +176,11 @@ typedef struct tAppMenuItem
   // function can also access the item's "menu id", to simplify things. 
   int (*callback)(app_menu_t *pMenu, struct tAppMenuItem *pMenuItem, int event, int param );
   // Possible values for 'event' in the above callback:
-# define APPMENU_EVT_CHECK_VISIBILITY 0 // result: AM_RESULT_OK or AM_RESULT_INVISIBLE
 # define APPMENU_EVT_PAINT      0 // this menu item is just about to be 'painted'.
-                                  // Can be used to update 'dynamic content', etc.
+         // Can be used to update 'dynamic content', etc, or for custom drawing.
+         // If the callback function paints the screen itself ("custom screen"),
+         // it must return AM_RESULT_OCCUPY_SCREEN on each APPMENU_EVT_PAINT,
+         // as long as it wants to 'remain visible' . Example: color_picker.c .
 # define APPMENU_EVT_ENTER      1 // operator has pressed ENTER while this item was focused.
          // Often used to prepare items shown in a SUBMENU.
          // Callback may return AM_RESULT_ERROR to prevent 'entering'
@@ -200,7 +208,8 @@ int my_wcslen( wchar_t *wide_string ); // kludge because there was no wcslen()
 void Menu_OnKey( uint8_t key); // called on keypress from some interrupt handler
 int  Menu_IsVisible(void);     // 1=currently visible (open), 0=not open; don't intercept keys
 int  Menu_GetItemIndex(void);  // used by the Morse narrator (narrator.c) to detect "changes"
-int  Menu_DrawIfVisible(int caller); // Paints the 'red button menu' 
+void Menu_GetColours( int sel_flags, uint16_t *pFgColor, uint16_t *pBgColor );
+int  Menu_DrawIfVisible(int caller); // Paints the 'application menu' 
    // into the framebuffer. Must only be called from a DISPLAY task !
    // Returns 0 when invisible, 1 when visible (used in various hooks).
    // For debugging, the "caller" is passed in as an argument:
@@ -213,6 +222,12 @@ int  Menu_DrawIfVisible(int caller); // Paints the 'red button menu'
 
 char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value);
 void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue );
+
+void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ); // [in] pMenu->iEditValue [out] *pItem->pvValue
+
+
+// menu callback functions implemented in external modules:
+extern int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int param ); // color_picker.c
 
 #if( CONFIG_MORSE_OUTPUT )
 void Menu_ReportItemInMorseCode(int morse_request); // used internally and by the Morse narrator

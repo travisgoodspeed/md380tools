@@ -36,7 +36,7 @@
 #define LCD_OPT_FONT_8x16  (LCD_OPT_FONT_8x8|LCD_OPT_DOUBLE_HEIGHT)
 #define LCD_OPT_FONT_16x16 (LCD_OPT_FONT_8x8|LCD_OPT_DOUBLE_WIDTH|LCD_OPT_DOUBLE_HEIGHT)
 #define LCD_OPT_FONT_12x24 (LCD_OPT_FONT_6x12|LCD_OPT_DOUBLE_WIDTH|LCD_OPT_DOUBLE_HEIGHT)
-                           // other combinations are possible but not very useful
+#define LCD_OPT_CLEAR_EOL 0x10 // for LCD_DrawStringAt() : fill until end-of-line with background colour
 
 
 //---------------------------------------------------------------------------
@@ -88,6 +88,8 @@ int LCD_GetColorDifference( uint16_t color1, uint16_t color2 );
 //---------------------------------------------------------------------------
 // Prototypes for MID-LEVEL LCD driver functions (text output, etc)
 //---------------------------------------------------------------------------
+
+int LCD_GetFontHeight( int font_options );
 
 int LCD_GetTextWidth( int font_options, char *pszText );
 
