@@ -9,6 +9,8 @@
 
 #include "config.h"
 
+#if (CONFIG_APP_MENU) // "colour picker" only available along with app_menu.c
+
 #include <stm32f4xx.h>
 #include <string.h>
 #include "lcd_driver.h"   // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
@@ -169,3 +171,5 @@ int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int par
    } // end switch( event )
   return AM_RESULT_OCCUPY_SCREEN; // "processed the event HERE; keep the screen occupied"
 } // end am_cbk_ColorTest()
+
+#endif // CONFIG_APP_MENU ?

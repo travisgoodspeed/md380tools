@@ -1623,11 +1623,11 @@ void create_menu_entry_set_tg_screen_store(void)
     uint32_t new_tx_id = 0;
     wchar_t *bf;
 
-#if 0
+# if 0
     printf("your enter: ");
     printhex2((char *) md380_menu_edit_buf, 14);
     printf("\n");
-#endif
+# endif
 
     bf = md380_menu_edit_buf;
     while (*bf != 0) {
@@ -1639,9 +1639,9 @@ void create_menu_entry_set_tg_screen_store(void)
         return;
     }
 
-#if 0
+# if 0
     printf("\n%d\n", new_tx_id);
-#endif
+# endif
 
     contact.id_l = new_tx_id & 0xFF ;
     contact.id_m = (new_tx_id>>8) & 0xFF ;
@@ -1658,10 +1658,10 @@ void create_menu_entry_set_tg_screen_store(void)
     md380_menu_id = md380_menu_id - 1; // exit menu to the proper level (#708) 
     md380_menu_depth = md380_menu_depth - 1;
 
-#ifdef CONFIG_MENU
+# ifdef CONFIG_MENU
     md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
-#endif
-#endif
+# endif
+#endif // D13_020, S13_020, ..(?)
 }
 
 void create_menu_entry_set_tg_screen(void)
@@ -1690,11 +1690,11 @@ void create_menu_entry_set_tg_screen(void)
    current_tg = (current_tg<<8) + (int) contact.id_l;
 
    nchars = uli2w(current_tg, md380_menu_edit_buf);
-#if 0
+#  if 0
     printf("\ncreate_menu_entry_set_tg_screen %x %d \n", md380_menu_edit_buf, nchars);
     printhex2((char *) md380_menu_edit_buf, 14);
     printf("\n");
-#endif
+#  endif
 
     md380_menu_0x2001d3ed = 8; // max char
     md380_menu_0x2001d3ee = nchars; //  startpos cursor
@@ -1709,23 +1709,23 @@ void create_menu_entry_set_tg_screen(void)
     menu_mem->unknown_00 = 0;
     menu_mem->unknown_01 = 0;
 
-#ifdef CONFIG_MENU
+#  ifdef CONFIG_MENU
     md380_create_menu_entry(md380_menu_id, wt_set_tg_id, MKTHUMB(create_menu_entry_set_tg_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
-#endif
-#endif
+#  endif
+#endif // D13_020, S13_020, ..(?)
 }
 
 void create_menu_entry_addl_functions_screen(void)
 {
     mn_submenu_init(wt_addl_func);
     
-#if 0
+#  if 0
     register uint32_t * sp asm("sp");
     for (int i = 0; i < 20; i++) {
         printf("%d : 0x%x\n", i, sp[i]);
     }
     //printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
-#endif    
+#  endif    
     PRINTRET();
     PRINT("create_menu_entry_addl_functions_screen\n");
 
@@ -1745,9 +1745,9 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_config_reset, mn_config_reset);
 
     mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
-#if( CONFIG_MORSE_OUTPUT )
+#  if( CONFIG_MORSE_OUTPUT )
     mn_submenu_add(wt_morse_menu, create_menu_entry_morse_screen);
-#endif   
+#  endif   
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
@@ -1774,17 +1774,17 @@ void create_menu_utilies_hook(void)
 #ifdef CONFIG_MENU
     md380_create_menu_entry(8, md380_wt_programradio, MKTHUMB(md380_menu_entry_programradio), MKTHUMB(md380_menu_entry_back), 0x8a, 0, enabled);
 
-#ifdef FW_D13_020
+#  ifdef FW_D13_020
     md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
-#else
+#  else
     if( menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
         md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     } else {
         md380_create_menu_entry(9, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     }
-#endif
+#  endif
 
-#endif
+#endif // CONFIG_MENU ?
 
 }
 
