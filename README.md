@@ -1,8 +1,9 @@
-#MD380 USB Tools
+# MD380 USB Tools #
 
 by Travis Goodspeed, KK4VCZ
 
-#More documentation#
+# More documentation #
+
 * [Make targets](docs/make.md)
 * [md380-tool/md380-dfu](docs/md380tool.md)
 * [Jenkins](docs/JenkinsBuilder.md)
@@ -41,7 +42,7 @@ Development Tools:
 [![Build Status](https://travis-ci.org/travisgoodspeed/md380tools.svg?branch=master)](https://travis-ci.org/travisgoodspeed/md380tools)
 
 
-##Supported Hardware##
+## Supported Hardware ##
 
 The patched firmware is known to work on the following devices:
 
@@ -60,7 +61,7 @@ Both types of vocoder (old and new vocoder radios) are supported.
 The DMR MARC user's database required a 16 MByte SPI Flash memory chip.
 In some VHF Radios is only an 1 MByte SPI Flash installed.
 
-##Known models##
+## Known models ##
 
 | Name | vocoder | GPS | exp FW | original FW |
 |---------|-----|---|---------|---------|
@@ -73,7 +74,7 @@ In some VHF Radios is only an 1 MByte SPI Flash installed.
   * RT3 = MD-380 (old)
   * RT8 = MD-390G
 
-###The md380tools have D13.020 as basic now.###
+### The md380tools have D13.020 as basic now. ###
 
 <strike>
 to build the "old" d02.32 version
@@ -88,7 +89,7 @@ to write the DMR MARC user's database to SPI Flash memory. This works only
 with Radios that have 16 MByte SPI Flash memory chip installed.
 </strike>
 
-##License:##
+## License: ##
 
 The majority of this software is licensed in exchange for two liters
 of India Pale Ale, to be delivered at a neighborly bar, preferably one
@@ -103,7 +104,7 @@ Tytera's firmware is of unknown license and is not included in this
 repository.  We use a heap-less printf library under the BSD license.
 
 
-##Specifications:##
+## Specifications: ##
 
 * The MD380 uses a custom variant of DFU that isn't quite compatible
   with the spec.  Their code seems to be forked from an STMicro
@@ -115,7 +116,7 @@ repository.  We use a heap-less printf library under the BSD license.
   
 
 
-##Requirements:##
+## Requirements: ##
 
 * Python 2.7 or newer:
   http://www.python.org
@@ -130,7 +131,7 @@ This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
 
-###Preparation of build environment###
+### Preparation of build environment ###
 
 * [Debian](docs/debian.md)
 * [Ubuntu](docs/ubuntu.md)
@@ -140,7 +141,7 @@ is under development for Android.
 * [Windows](docs/windows.md)
 * [MacOS](docs/macos.md)
 
-###Additional steps for linux based installations###
+### Additional steps for linux based installations ###
 
 ```
 git clone https://github.com/travisgoodspeed/md380tools.git
@@ -149,7 +150,7 @@ sudo cp 99-md380.rules /etc/udev/rules.d/
 ```
 (The 99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.)
 
-###Flash updated firmware for linux based installations###
+### Flash updated firmware for linux based installations ###
 
 Turn on radio in DFU mode to begin firmware update with USB cable:
 * insert cable into USB.
@@ -167,7 +168,7 @@ git pull
 make flash_S13
 ```
 
-###Flash updated users database for linux based installations###
+### Flash updated users database for linux based installations ###
 
 Turn radio normally on to begin database loading with USB cable
 
@@ -176,18 +177,18 @@ For European users:
 make updatedb_eur flashdb
 ```
 Note: for European users it is probably illegal to use the other method for updating, due to privacy laws.
-(this is not legal advice, please consult your lawyer to be sure).
+(This is no legal advice, please consult your lawyer to be sure.)
 
 For the rest of the world:
 ```
 make updatedb flashdb
 ```
 
-(The users.csv file located in the db directory must be refreshed this way, 
-with "make updatedb", otherwise it will continue using any already-existing 
-users.csv file when running "make flashdb" )
+(The `users.csv` file located in the db directory must be refreshed this way, 
+with `make updatedb`, otherwise it will continue using any already-existing 
+`users.csv` file when running `make flashdb`.)
 
-##Convenient Usage:##
+## Convenient Usage: ##
 
 Anything with `md380-tool` requires a recent version of our patched
 firmware.  You can check your version in Menu/Utilities/Radio
@@ -199,7 +200,7 @@ To dump the recent dmesg log:
 
     md380-tool dmesg
 
-##Firmware Compilation##
+## Firmware Compilation ##
 
 This archive does not ship with firmware.  Instead it grabs firmware
 from the Internet, decrypts it, and applies patches to that revision.
@@ -211,11 +212,11 @@ and a Windows flashing tool will then appear in
 with `make clean flash`, after starting the recovery bootloader by
 holding PTT and the button above it during a radio reboot.
 
-##Windows Firmware Installation##
+## Windows Firmware Installation ##
 
 You can install any of these patched firmware files into your MD380 by
 using the respective .bin file with the Tytera Windows firmware
-upgrade tool, "upgrade.exe", available inside their firmware upgrade
+upgrade tool, `upgrade.exe`, available inside their firmware upgrade
 downloads. Here are the steps:
 
 * Turn off your MD380 using the volume knob.
@@ -225,14 +226,14 @@ downloads. Here are the steps:
 * Turn on your MD380 using the volume knob.
 * Release the buttons on the radio.
 * The status LED should be on and alternating between red and green, indicating you're in flash upgrade mode.
-* Start the Tytera "Upgrade.exe" program.
+* Start the Tytera `Upgrade.exe` program.
 * Click "Open Update File" and choose one of the .bin files produced from the process above.
 * Click "Download Update File" and wait for the flash update process to finish. It takes less than a minute.
 * Turn off your MD380 using the volume knob.
 * Disconnect the USB cable from your MD380 and host computer.
 * Turn the MD380 back on, and you should see the "PoC||GTFO" welcome screen. You're running patched firmware!
 
-##Chirp Driver:##
+## Chirp Driver: ##
 
 Also included is a partial driver for the MD380 in Chirp.  This driver
 doesn't yet support the essential DMR features, but it does handle
@@ -246,7 +247,7 @@ changes, you can load the image back in by running `md380-dfu write
 foo.img`.
 
 
-##More Info##
+## More Info ##
 
 Some articles:
 * Jailbreaking the MD380, PoC||GTFO 10:8 ([pocorgtfo10.pdf](https://archive.org/details/pocorgtfo10) page 76.) by Travis Goodspeed
@@ -257,6 +258,7 @@ https://github.com/pchickey/md380-re
 
 
 ## Customization ##
+
 Temponary not avaible, see https://github.com/travisgoodspeed/md380tools/issues/221
 
 
