@@ -44,6 +44,43 @@ native firmware, as well as extensions to the USB protocol.
   sure how to grab raw audio, which is passed through the AMBE+
   emulator instead of the DMR stack code.
 
+##Optional Headers and Modules##
+
+The use of these optional headers and modules (listed below) is 
+controlled via `config.h`. Some depend on others, for example the
+alternative menu isn't possible without the alternative (faster)
+LCD driver, etc.
+
+* `lcd_driver.c / .h` contains an alternative LCD driver, designed for
+  speed and simplicity. Drawing characters into the framebuffer is much
+  faster than with the original 'gfx' functions, because this driver
+  copies pixels data into the framebuffer *without* sending
+  the graphic coordinate *for each pixel* (a nice feature of the LCD
+  controller completely ignored by Tytera's graphic functions). 
+
+* `app_menu.c / .h` uses the alternative LCD driver to implement an own,
+  simpler menu which already shows the current value without the need
+  to enter a sub-dialog, screen.
+  The user can open this alternative menu by pressing the red 'BACK'
+  button on the main screen (where the 'BACK'-button had no function).
+
+* `font_8_8.c` is an old but simple bitmap font with 256 characters,
+  8 x 8 pixels per character, from *Codepage 437*. It contains some 
+  western diacritics (which Tytera doesn't have), and the ancient 
+  'line drawing characters' that allow drawing alert boxes and similar
+  with a single via 'printf' (here: LCD_PrintfAt) call.
+  
+* `narrator.c / .h` can read out menus, channel names, zones, etc in Morse
+  code for visually impaired hams. Requires `irq_handlers.c` to generate
+  the tones in Morse code.
+
+* `irq_handlers.c / .h` once contained multiple interrupt handlers,
+  but (at the time of this writing) only hooks into the SysTick 
+  interrupt handler.
+  Polls keys for app_menu, generates Morse output for the 'Narrator',
+  and can optionally dim the display backlight. 
+
+
 ##USB Protocol##
 
 The normal Tytera firmware implements something much like the USB
