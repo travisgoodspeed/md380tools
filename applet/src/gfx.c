@@ -17,6 +17,7 @@
 #include "netmon.h"
 #include "debug.h"
 #include "etsi.h"		// 2017-02-18 added for talker alias usage
+#include "lastheard.h"
 
 #include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
 
@@ -213,11 +214,11 @@ void print_time_hook(char *log)
     for (int i = 0; i < 9; i++) {
         if( wide_time[i] == '\0' )
             break;
-	if ( log == 'l' ) {
+	if ( log[0] == 'l' ) {
 		lastheard_putch(wide_time[i]);
-	} else if ( log == 'c' ) {
+	} else if ( log[0] == 'c' ) {
 		clog_putch(wide_time[i]);
-	} else if ( log == 's' ) {
+	} else if ( log[0] == 's' ) {
 		slog_putch(wide_time[i]);
 	}
     }

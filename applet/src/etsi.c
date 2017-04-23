@@ -3,9 +3,10 @@
  * 
  */
 
-#define DEBUG
-
+#include <string.h>
 #include "etsi.h"
+
+#define DEBUG
 #include "debug.h"
 
 struct TAContext taContext;

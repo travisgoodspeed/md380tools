@@ -10,6 +10,9 @@
 extern "C" {
 #endif
 
+extern void lastheard_putch( char c );
+extern void clog_putch( char c );
+extern void slog_putch( char c );
 
 inline int is_lastheard_enabled()
 {
