@@ -16,8 +16,9 @@
 #include "console.h"
 #include "netmon.h"
 #include "debug.h"
+#include "etsi.h"	     // 2017-02-18 added for talker alias usage
 #include "lastheard.h" // reduce number of warnings - use function prototypes
-#include "app_menu.h" // optional 'application' menu, activated by red BACK-button
+#include "app_menu.h"  // optional 'application' menu, activated by red BACK-button
           // When visible, some gfx-calls must be disabled via our hooks
           // to prevent interference from Tytera's "gfx" (similar as for Netmon)
 
