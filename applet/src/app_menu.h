@@ -30,14 +30,14 @@
 #define AM_RESULT_OK    1 // general 'ok' (callback function 'did something').
 #define AM_RESULT_ERROR 2 // general error
 #define AM_RESULT_INVISIBLE 3 // special return value for APPMENU_EVT_CHECK_VISIBILITY
-#define AM_RESULT_OCCUPY_SCREEN 4 // for APPMENU_EVT_ENTER and APPMENU_EVT_PAINT:
+#define AM_RESULT_OCCUPY_SCREEN 16 // for APPMENU_EVT_ENTER and APPMENU_EVT_PAINT:
         // "the whatever-it-is (callback) now owns the screen, and doesn't want
         //  anyone else to paint into the framebuffer" .
         // Instead of the default paint procedure, Menu_DrawIfVisible()
         //  will repeatedly invoke the callback with event=APPMENU_EVT_PAINT,
         //  as long as the callback function returns AM_RESULT_OCCUPY_SCREEN .
         // Simple example in am_cbk_ColorTest() .
-#define AM_RESULT_EXIT_AND_RELEASE_SCREEN 5 // returned by menu callback
+#define AM_RESULT_EXIT_AND_RELEASE_SCREEN 17 // returned by menu callback
         // to release the 'occupied' screen, and return control to the menu.
         // Simple example in am_cbk_ColorPicker() .
 
@@ -61,7 +61,7 @@ typedef struct tRMStringTable
 } am_stringtable_t; 
 
 
-typedef struct tRedMenu // instance data (in RAM, not Flash)
+typedef struct tAppMenu // instance data (in RAM, not Flash)
 { uint8_t visible;      // 0=no, 1=menu visible, 2="screen occupied by painting callback":
 #         define APPMENU_OFF     0
 #         define APPMENU_VISIBLE 1
@@ -164,7 +164,7 @@ typedef struct tAppMenuItem
 
   int opt_value; // factor for display, bitmask, or stepwidth when inc/decrementing
 
-  void *pvValue; // optional pointer to a 'value' (variable). NULL for fixed strings.
+  void *pvValue; // optional pointer to a 'value' (variable). NULL if there's none.
   int iMinValue; // min value accepted for inc/dec or numeric input
   int iMaxValue; // max value accepted for inc/dec or numeric input .
 
@@ -173,7 +173,9 @@ typedef struct tAppMenuItem
   // Address of a menu-item-specific callback. Because some items may
   // share the same callback (especially array-like items), the address
   // of the menu_item_t is passed to the callback. Thus the callback-
-  // function can also access the item's "menu id", to simplify things. 
+  // function can access anything in the menu *and* the item, to simplify things. 
+  // For simple menu items (even with a value, referenced via pointer),
+  // it's not necessary to implement the following callback function at all.
   int (*callback)(app_menu_t *pMenu, struct tAppMenuItem *pMenuItem, int event, int param );
   // Possible values for 'event' in the above callback:
 # define APPMENU_EVT_PAINT      0 // this menu item is just about to be 'painted'.
@@ -181,13 +183,16 @@ typedef struct tAppMenuItem
          // If the callback function paints the screen itself ("custom screen"),
          // it must return AM_RESULT_OCCUPY_SCREEN on each APPMENU_EVT_PAINT,
          // as long as it wants to 'remain visible' . Example: color_picker.c .
-# define APPMENU_EVT_ENTER      1 // operator has pressed ENTER while this item was focused.
+# define APPMENU_EVT_GET_VALUE  1 // let the callback function provide the 'display'
+         // value. Only needs to be implemented if *pvValue isn't always 
+         // "up-to-date", for example
+# define APPMENU_EVT_ENTER      2 // operator has pressed ENTER while this item was focused.
          // Often used to prepare items shown in a SUBMENU.
          // Callback may return AM_RESULT_ERROR to prevent 'entering'
          // or being edited (even if menu_item_t.options contains APPMENU_OPT_EDITABLE) 
-# define APPMENU_EVT_EXIT       2 // sent to focused item when pressing EXIT ("Back")
-# define APPMENU_EVT_BEGIN_EDIT 3 // beginning to edit (allows to modify min/max range for editing, etc)
-# define APPMENU_EVT_EDIT       4 // sent WHILE editing (after each edit value modification)
+# define APPMENU_EVT_EXIT       3 // sent to focused item when pressing EXIT ("Back")
+# define APPMENU_EVT_BEGIN_EDIT 4 // beginning to edit (allows to modify min/max range for editing, etc)
+# define APPMENU_EVT_EDIT       5 // sent WHILE editing (after each edit value modification)
 # define APPMENU_EVT_END_EDIT   6 // stopped editing (just an "info", there's no way to intercept "end of editing")
                  // "END_EDIT" comes in two flavours : 
                  // with param = 1, it means "finished, write back the result",
@@ -229,6 +234,7 @@ void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ); // [in] pMenu-
 
 // menu callback functions implemented in external modules:
 extern int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int param ); // color_picker.c
+extern int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int param); // amenu_set_talkgroup.c
 
 #if( CONFIG_MORSE_OUTPUT )
 void Menu_ReportItemInMorseCode(int morse_request); // used internally and by the Morse narrator

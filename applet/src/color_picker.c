@@ -1,7 +1,7 @@
 // File:    md380tools/applet/src/color_picker.c
 // Author:  Wolf (DL4YHF) [initial version] 
 //
-// Date:    2017-04-17
+// Date:    2017-04-23
 //  Implements a simple 'colour picker' dialog for the app-menu.
 //  For details and usage, see applet/src/app_menu.c .
 //  Written as a simple example for simple dialog screens
@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#if (CONFIG_APP_MENU) // "colour picker" only available along with app_menu.c
+#if (CONFIG_APP_MENU) // this module is only available along with app_menu.c ... 
 
 #include <stm32f4xx.h>
 #include <string.h>
@@ -69,7 +69,8 @@ static void ColorPicker_Draw(app_menu_t *pMenu, menu_item_t *pItem)
   //   until the end-of-line, end-of-string, or next ASCII control character.
   cp = Menu_GetParamsFromItemText( (char*)pItem->pszText, NULL,NULL,NULL ); // skip formatting info
   if( cp != NULL )
-   { LCD_PrintfAt( 0, y, color[0], color[1], LCD_OPT_FONT_8x8, "\t%s\r", cp );
+   { LCD_PrintfAt( 0, y, color[0], color[1], LCD_OPT_FONT_8x8, "\t%s  %04X\r",
+        cp/*menu item name*/, (int)pMenu->iEditValue/*colour as shown in the menu*/ );
      y = LCD_pos_y; // recommended: store LCD_pos_y immediately after printing.
    }
   // Split the colour into red, green, blue; each ranging from 0 to 255 :
@@ -133,7 +134,9 @@ int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int par
      case APPMENU_EVT_ENTER : // just ENTERED the dialog 
         // (by pressing ENTER in a menu, with an item using this callback function)
         // Typically used to prepare items shown in a SUBMENU. 
-        pMenu->dialog_field_index = 0;  // begin with the first 'dialog field', here: RED component
+        if( pMenu->dialog_field_index<0 || pMenu->dialog_field_index>2 )
+         { pMenu->dialog_field_index = 0; // begin with the first 'dialog field', here: RED component
+         }
         return AM_RESULT_OCCUPY_SCREEN; // "occupy" the screen (framebuffer), owned by this dialog now
      case APPMENU_EVT_KEY: // keyboard event (only sent to callbacks that occupied the screen)
         switch( (char)param ) // here: message parameter = keyboard code (ASCII)

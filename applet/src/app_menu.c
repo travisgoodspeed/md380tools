@@ -88,8 +88,6 @@ int  Menu_ReadIntFromPtr( void *pvValue, int data_type );
 
 // Prototypes and forward references for some menu items :
 int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
-int am_cbk_Backlt(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
-int am_cbk_Morse(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
 const menu_item_t am_Setup[]; // referenced from main menu
 const am_stringtable_t am_stringtab_opmode2[]; // for gui_opmode2
 const am_stringtable_t am_stringtab_255Auto[];
@@ -154,16 +152,16 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
   { "[2 Morse output]Mode", DTYPE_UNS8,
         APPMENU_OPT_EDITABLE|APPMENU_OPT_BITMASK,
             NARRATOR_MODE_OFF|NARRATOR_MODE_ENABLED|NARRATOR_MODE_VERBOSE, // <- here: bitmask !
-        &global_addl_config.narrator_mode,0,9, am_stringtab_narrator_modes,am_cbk_Morse },  
+        &global_addl_config.narrator_mode,0,9, am_stringtab_narrator_modes,NULL },  
   { "Speed/WPM",        DTYPE_UNS8, 
         APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE, 0, 
-        &global_addl_config.cw_speed_WPM,10,60, NULL,am_cbk_Morse },  
+        &global_addl_config.cw_speed_WPM,10,60,     NULL,NULL },  
   { "Pitch/Hz",         DTYPE_UNS8, 
         APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE|APPMENU_OPT_FACTOR,10, 
-        &global_addl_config.cw_pitch_10Hz,200,2000,NULL,am_cbk_Morse },  
+        &global_addl_config.cw_pitch_10Hz,200,2000, NULL,NULL },  
   { "Volume",           DTYPE_UNS8, 
         APPMENU_OPT_EDITABLE|APPMENU_OPT_IMM_UPDATE, 0, 
-        &global_addl_config.cw_volume,0,100,   am_stringtab_255Auto, am_cbk_Morse },
+        &global_addl_config.cw_volume,0,100, am_stringtab_255Auto,NULL },
 
   // { "Text__max__13", data_type,  options,opt_value,
   //     pvValue,iMinValue,iMaxValue, string table, callback }
@@ -241,6 +239,7 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
   // Note: If a menu item's parameter value is connected to
   // a string table (like this), the only values that can be
   // selected in the menu are those from the table - no integers.
+  { 0, NULL }
 };
 
 //---------------------------------------------------------------------------
@@ -675,10 +674,10 @@ void IntToDecHexBinString(
         break;
      case 16:
         if( nDigits>0 )
-         { sprintf( sz7Format+1, "%dX", nDigits );
+         { sprintf( sz7Format+1, "0%dX", nDigits ); // note the leading ZERO
          }
         else
-         { strcpy(  sz7Format+1, "%X" );
+         { strcpy(  sz7Format+1, "%X" ); // note the absence of a leading zero
          }
         break;
      default:  // whatever the intention was, it's not supported here yet:
@@ -1086,17 +1085,18 @@ int Menu_DrawIfVisible(int caller)
      if( (pMenu->visible==APPMENU_VISIBLE) || (c=='B') )
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
-              green_led_timer = 20;   // <- poor man's debugging
+              // green_led_timer = 20;   // <- poor man's debugging
               // To simplify the implementation of some dialog screens
               // (e.g. color_picker.c), update pMenu->iEditValue already
-              // BEFORE invoking the callback with event=APPMENU_EVT_ENTER :
+              // BEFORE invoking the callback with event=APPMENU_EVT_ENTER,
+              // but only if the item is NOT in "edit mode" yet:
               pItem = Menu_GetFocusedItem(pMenu);
-              if( pItem != NULL )
+              if( (pItem != NULL ) && (pMenu->edit_mode==APPMENU_EDIT_OFF) )  
                { pMenu->iEditValue= pMenu->iValueBeforeEditing 
                   = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
                }
               Menu_OnEnterKey(pMenu);
-              break;
+              break; // end case < green "Menu", aka "Confirm"-key >
            case 'B' :  // red "Back"-key : 
               // red_led_timer  = 20;    // <- poor man's debugging 
               if( pMenu->visible == APPMENU_OFF ) // not visible yet..
@@ -1421,7 +1421,9 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
   n = pMenu->iEditValue;  // to avoid confusion: this is the DISPLAY value,
                           // not the 'raw, unscaled' value !
   i = pItem->opt_value;   // this 'option value' serves multiple purposes..
-  if( i != 0 ) // .. but only if nonzero (to avoid nonsense or endless loops):
+  old = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type ); 
+                          // if pvValue==NULL,  old = 0. That's ok
+  if( i != 0 ) // .. but only if nonzero :
    {
      if( pItem->options & APPMENU_OPT_FACTOR )
       { n /= i; 
@@ -1436,17 +1438,16 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
         // So convert BACK by bitwise shifting LEFT here, until the LSBit is in bit 0:
         if( pItem->options & APPMENU_OPT_BITMASK_R )
          { while( !(i & 1) ) // back from "right-aligned" display value to original..
-            { i >>= 1;
-              n <<= 1;
+            { i >>= 1; // option value : shifted RIGHT until the first 'one' is in bit 0
+              n <<= 1; // edit value   : shifted LEFT, back into the "original" position
             } // after this loop, the least significant bit is in bit 0 (mask 1)
          }
-        n &= pItem->opt_value; // all 'foreign' bits in n are zero now...
-        // The byte/word/dword/int that pvValue points to may contain bits
-        // that must NOT be modified here, so get those bits, and bitwise OR them:
-        old = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
-        n |= (old & ~pItem->opt_value); // leave all bits that are NOT set in opt_value unchanged
+        n &= pItem->opt_value; // all 'foreign' bits in n are zero now.
+        // But the byte/word/dword/int that pvValue points to may contain 
+        // a few bits that must NOT be modified here. Thus:
+        n |= (old & ~pItem->opt_value); 
         // Phew. Enough of this bit-fiddling :)
-      }
+      } // enf if < value bitwise ANDed with a bitmask > ?
    } // end if < "option value" nonzero >
 
   // If the edited value is a member of global_addl_config, save it in Flash LATER.
@@ -1457,7 +1458,7 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
    { pMenu->save_on_exit = TRUE;
    }
 
-  // Write back the inversely scaled 'edit value' :
+  // Write back the inversely scaled 'edit value' (n) :
   Menu_WriteIntToPtr( n, pItem->pvValue, pItem->data_type );
 
 
@@ -1494,8 +1495,8 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
    }
   i = (int)i64;
 #if( CONFIG_MORSE_OUTPUT )
-  if( pMenu->iEditValue != i ) // value was modified..
-   { // .. report this in Morse code (the VALUE only, not the entire line) ?
+  if( pMenu->iEditValue != i )
+   { // report modified value in Morse code (VALUE only, not the leading text)
      pMenu->morse_request |= AMENU_MORSE_REQUEST_ITEM_VALUE;
    }
 #endif // CONFIG_MORSE_OUTPUT ?
@@ -1517,7 +1518,7 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
 
 //---------------------------------------------------------------------------
 void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ) // API !
-{ // Must not invoke a callback, because this function MAY BE called from a callback.
+{ // Must not invoke a callback, because this function MAY BE called FROM a callback.
   if( pItem != NULL )
    { Menu_WriteBackEditedValue(pMenu, pItem);
    }
@@ -1625,17 +1626,6 @@ int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param
   return AM_RESULT_NONE; // "proceed as if there was NO callback function"
 } // end am_cbk_ColorTest()
 
-//---------------------------------------------------------------------------
-int am_cbk_Backlt(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
-{
-  return AM_RESULT_NONE; // "proceed as if there was NO callback function"
-} // end am_cbk_Backlt()
-
-//---------------------------------------------------------------------------
-int am_cbk_Morse(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
-{
-  return AM_RESULT_NONE; // "proceed as if there was NO callback function"
-} // end am_cbk_Morse()
 
 #if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
