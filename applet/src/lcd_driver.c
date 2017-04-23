@@ -15,16 +15,18 @@
 //      SRCS += font_8_8.o
 //  
 
-
 #include "config.h"
 
 #include <stm32f4xx.h>
 #include <stdint.h>
-#include "printf.h"
-#include "dmesg.h"
+#include "printf.h"       // Kustaa Nyholm's tinyprintf (printf.c)
 #include "md380.h"
 #include "irq_handlers.h" // hardware-specific stuff like "LCD_CS_LOW", etc
 #include "lcd_driver.h"   // constants + API prototypes for the *alternative* LCD driver (no "gfx")
+
+// Regardless of the command line, let the compiler show ALL warnings from here on:
+#pragma GCC diagnostic warning "-Wall"
+
 
 extern const uint8_t font_8_8[256*8]; // extra font with 256 characters from 'codepage 437'
 
@@ -47,6 +49,8 @@ extern const uint8_t font_8_8[256*8]; // extra font with 256 characters from 'co
 //---------------------------------------------------------------------------
 
 uint8_t LCD_b12Temp[12]; // small RAM buffer for a self-defined character
+int LCD_pos_x, LCD_pos_y; // last graphic text output position, 
+              // set by LCD_DrawStringAt() and LCD_PrintfAt() .
 
 //---------------------------------------------------------------------------
 __attribute__ ((noinline)) void LCD_WriteCommand( uint8_t bCommand )
@@ -294,24 +298,35 @@ void LCD_ColorGradientTest(void)
 } // end LCD_ColorGradientTest()
 
 //---------------------------------------------------------------------------
-void LCD_NativeColorToRGB( uint16_t native_color, 
-       uint8_t *pbRed, uint8_t *pbGreen, uint8_t *pbBlue )
+uint32_t LCD_NativeColorToRGB( uint16_t native_color )
   // Converts a 'native' colour (in the display's hardware-specific format)
   // into red, green, and blue component; each ranging from 0 to ~~255 .
 {
-  *pbRed  = (native_color & 0x001F) << 3; // don't care about the LSBits being zero now..
-  *pbGreen= (native_color & 0x07E0) >> 3;
-  *pbBlue = (native_color & 0xF800) >> 8; // simple, but keep this bit-fiddling in one place
+  rgb_quad_t rgb;
+  int i;
+  i = (native_color & LCD_COLOR_RED) >> LCD_COLORBIT0_RED; // -> 0..31 (5 'red bits' only)
+  i = (255*i) / 31;
+  rgb.s.r = (uint8_t)i; 
+  i = (native_color & LCD_COLOR_GREEN)>> LCD_COLORBIT0_GREEN; // -> 0..63 (6 'green bits')
+  i = (255*i) / 63;
+  rgb.s.g = (uint8_t)i;
+  i = (native_color & LCD_COLOR_BLUE) >> LCD_COLORBIT0_BLUE; // -> 0..31 (5 'blue bits')
+  i = (255*i) / 31;
+  rgb.s.b = (uint8_t)i;
+  rgb.s.a = 0; // clear bits 31..24 in the returned DWORD (nowadays known as uint32_t)
+  return rgb.u32;
 } // end LCD_NativeColorToRGB()
 
 //---------------------------------------------------------------------------
-uint16_t LCD_RGBToNativeColor(uint8_t red, uint8_t green, uint8_t blue )
+uint16_t LCD_RGBToNativeColor( uint32_t u32RGB )
   // Converts an RGB mix (red,green,blue ranging from 0 to 255)
   // into the LCD controller's hardware specific format (here: BGR565).
 {
-  return ((uint16_t)(red  & 0xF8) >> 3)  // red  : move bits 7..3 into b 4..0 
-       | ((uint16_t)(green& 0xFC) << 3)  // green: move bits 7..2 into b 10..5
-       | ((uint16_t)(blue & 0xF8) << 8); // blue : move bits 7..3 into b 15..11
+  rgb_quad_t rgb;
+  rgb.u32 = u32RGB;
+  return ((uint16_t)(rgb.s.r & 0xF8) >> 3)  // red  : move bits 7..3 into b 4..0 
+       | ((uint16_t)(rgb.s.g & 0xFC) << 3)  // green: move bits 7..2 into b 10..5
+       | ((uint16_t)(rgb.s.b & 0xF8) << 8); // blue : move bits 7..3 into b 15..11
 } // end LCD_RGBToNativeColor()
 
 //---------------------------------------------------------------------------
@@ -320,18 +335,31 @@ int LCD_GetColorDifference( uint16_t color1, uint16_t color2 )
   // Colours are split into R,G,B (range 0..255 each), 
   // then absolute differences added. 
   // Theoretic maximum 3*255, here slightly less (doesn't matter).
-{ uint8_t two_rgbs[6];
+{ rgb_quad_t rgb[2];
   int delta_r, delta_g, delta_b;
-  LCD_NativeColorToRGB( color1, two_rgbs+0, two_rgbs+1, two_rgbs+2 );
-  LCD_NativeColorToRGB( color2, two_rgbs+3, two_rgbs+4, two_rgbs+5 );
-  delta_r = (int)two_rgbs[0] - (int)two_rgbs[3];
-  delta_g = (int)two_rgbs[1] - (int)two_rgbs[4];
-  delta_b = (int)two_rgbs[2] - (int)two_rgbs[5];
+  rgb[0].u32 = LCD_NativeColorToRGB( color1 );
+  rgb[1].u32 = LCD_NativeColorToRGB( color2 );
+  delta_r = (int)rgb[0].s.r - (int)rgb[1].s.r;
+  delta_g = (int)rgb[0].s.g - (int)rgb[1].s.g;
+  delta_b = (int)rgb[0].s.b - (int)rgb[1].s.b;
   if( delta_r<0) delta_r = -delta_r;  // abs() may be a code-space-hogging macro..
   if( delta_g<0) delta_g = -delta_g;  // .. and there are already TOO MANY dependencies here
   if( delta_b<0) delta_b = -delta_b;
   return delta_r + delta_g + delta_b;
 } // end LCD_GetColorDifference()
+
+//---------------------------------------------------------------------------
+uint16_t LCD_GetGoodContrastTextColor( uint16_t backgnd_color )
+  // Returns either LCD_COLOR_BLACK or LCD_COLOR_WHITE,
+  // whichever gives the best contrast for text output
+  // using given background colour. First used in color_picker.c .
+{
+  rgb_quad_t rgb;
+  rgb.u32 = LCD_NativeColorToRGB( backgnd_color );
+  if( ((int)rgb.s.r + (int)rgb.s.g + (int)rgb.s.b/2 ) > 333 )
+       return LCD_COLOR_BLACK;
+  else return LCD_COLOR_WHITE;
+} 
 
 //---------------------------------------------------------------------------
 uint8_t *LCD_GetFontPixelPtr_8x8( uint8_t c)
@@ -451,25 +479,30 @@ int LCD_GetFontHeight( int font_options )
 } // end LCD_GetFontHeight()
 
 //---------------------------------------------------------------------------
+int LCD_GetCharWidth( int font_options, char c )
+{
+  int width = ( font_options & LCD_OPT_FONT_8x8 ) ? 8 : 6;
+  // As long as all fonts supported HERE are fixed-width, 
+  // ignore the character code ('c')  without a warning :
+  (void)c;
+
+  if( font_options & LCD_OPT_DOUBLE_WIDTH )
+   {  width *= 2;
+   }
+  return width;
+} // end LCD_GetCharWidth()
+
+//---------------------------------------------------------------------------
 int LCD_GetTextWidth( int font_options, char *pszText )
 { 
-  // As long as only FIXED-WIDTH fonts are supported, the calculation is trivial:
-  int text_width=0, font_width = ( font_options & LCD_OPT_FONT_8x8 ) ? 8 : 6;
-  if( font_options & LCD_OPT_DOUBLE_WIDTH )
-   {  font_width *= 2;
-   }
+  int text_width = 0;
   if( pszText != NULL )
-   { // In future (when PROPORTIONAL fonts shall be supported), this gets tricky..
-     while(*pszText)
-      { // if < something special >
-        //    text_width += width_of_that_special_character;
-        // else ...
-        text_width += font_width;
-        ++pszText;
+   { while(*pszText)
+      { text_width += LCD_GetCharWidth(font_options, *(pszText++) );
       }
    }
   else // special service for lazy callers: NULL = "average width of ONE character"
-   { text_width = font_width;
+   { text_width = LCD_GetCharWidth(font_options, 'A' );
    }
   return text_width;
 } // end LCD_GetTextWidth()
@@ -559,22 +592,76 @@ int LCD_DrawCharAt( // lowest level of 'text output' into the framebuffer
 int LCD_DrawStringAt(char *cp, int x, int y, 
                       uint16_t fg_color, uint16_t bg_color,
                       int options ) // [in] LCD_OPT_xyz (bitwise combined)
-  // Draws a zero-terminated ASCII string. 
+  // Draws a zero-terminated ASCII string. Context-free and SIMPLE . 
   // Returns the graphic coordinate (x) to print the next character .
-  // Can optionally fill the end of the text line with the background colour
-  // (bitflag LCD_OPT_CLEAR_EOL in options), to avoid having to clear 
-  // the entire line (or even the whole screen) before drawing text. 
+  // For multi-line output (with '\r' or '\n' in the string),
+  //     the NEXT line for printing is stored in LCD_pos_y .
+  // ASCII control characters with special functions :
+  //   \n (new line) : wrap into the next line, without clearing the rest
+  //   \r (carriage return) : similar, but if the text before the '\r'
+  //                   didn't fill a line on the screen, the rest will
+  //                   be filled with the background colour 
+  //      (can eliminate the need for "clear screen" before printing, etc)
+  //   \t (horizontal tab) : doesn't print a 'tab' but horizontally 
+  //                   CENTERS the remaining text in the current line
 {
-  while( *cp )
-   { x = LCD_DrawCharAt( *cp++, x, y, fg_color, bg_color, options );
-   }
-  if( options & LCD_OPT_CLEAR_EOL )
-   { if( x < (LCD_SCREEN_WIDTH-1) )
-      { LCD_FillRect( x, y, LCD_SCREEN_WIDTH-1, y+LCD_GetFontHeight(options)-1, bg_color );
+  int left_margin  = x;
+  int right_margin = LCD_SCREEN_WIDTH-1;
+  int fh = LCD_GetFontHeight(options);
+  int w;
+  unsigned char c;
+  unsigned char *cp2;
+  while( (c=*cp++) != 0 )
+   { switch(c)
+      { case '\r' :  // carriage return : almost the same as 'new line', but..
+           // as a service for flicker-free output, CLEARS ALL UNTIL THE END
+           // OF THE CURRENT LINE, so clearing the screen is unnecessary.
+           LCD_FillRect( x, y, right_margin, y+fh-1, bg_color );
+           // NO BREAK HERE !           
+        case '\n' :  // new line WITHOUT clearing the rest of the current line
+           x = left_margin;
+           y += fh;
+           break;
+        case '\t' :  // horizontally CENTER the text in the rest of the line
+           w = 0; // measure the width UNTIL THE NEXT CONTROL CHARACTER:
+           cp2 = (unsigned char*)cp;
+           while( (c=*cp2++) >= 32 )
+            { w += LCD_GetCharWidth( options, c );
+            }
+           w = (right_margin - x - w) / 2; // "-> half remaining width"
+           if( w>0 )
+            { LCD_FillRect( x, y, x+w-1, y+fh-1, bg_color );
+              x += w;
+            }
+           break;
+        default   :  // anything should be 'printable' :
+           x = LCD_DrawCharAt( c, x, y, fg_color, bg_color, options );
+           break;
       }
    }
+  // Store the new "output cursor position" (graphic coordinate).
+  // Especially 'y' may help to fill a screen line-by-line,
+  // because 'x' (incremented to the postion for the next char)
+  // is the return value anyway.
+  LCD_pos_x = x;
+  LCD_pos_y = y;
   return x;
 } // end LCD_DrawStringAt()
+
+//---------------------------------------------------------------------------
+int LCD_PrintfAt( int x, int y, uint16_t fg_color, uint16_t bg_color,
+                   int options, char *fmt, ... )
+  // Almost the same as LCD_DrawStringAt, also "context-free",
+  // but with all printf-goodies supported by tinyprintf .
+{
+  char sz80[84];  // maximum OUTPUT length (after "printing to string") is 80 chars !
+  va_list va;
+  va_start(va, fmt);
+  va_snprintf(sz80, 80, fmt, va );    
+  va_end(va);      
+  return LCD_DrawStringAt( sz80, x, y, fg_color, bg_color, options );
+} // end LCD_DrawStringAt()
+
 
 
 /* EOF < md380tools/applet/src/lcd_driver.c > */

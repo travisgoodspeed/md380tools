@@ -34,7 +34,7 @@
 #include "version.h"
 #include "printf.h"
 #include "spiflash.h"
-#include "addl_config.h"
+#include "addl_config.h"  // some customizeable colours in global_addl_config
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
@@ -94,6 +94,7 @@ const menu_item_t am_Setup[]; // referenced from main menu
 const am_stringtable_t am_stringtab_opmode2[]; // for gui_opmode2
 const am_stringtable_t am_stringtab_255Auto[];
 const am_stringtable_t am_stringtab_narrator_modes[];
+const am_stringtable_t am_stringtab_color_names[];
 
 //---------------------------------------------------------------------------
 // Alternative 'main' menu, opened with the RED 'BACK'-button :
@@ -170,17 +171,17 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
   // but when pressing ENTER on one of these icons, the callback shows
   // a simple 'colour picker' dialog where the colour can be modified:
   { "[3 Colours;h4]foregnd", DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
-        &global_addl_config.fg_color,0,0,   NULL,   am_cbk_ColorPicker },
+        &global_addl_config.fg_color,0,0, am_stringtab_color_names, am_cbk_ColorPicker },
   { "[h4]backgnd",          DTYPE_UNS16,  APPMENU_OPT_NONE, 0, 
-        &global_addl_config.bg_color,0,0,   NULL,   am_cbk_ColorPicker },
+        &global_addl_config.bg_color,0,0, am_stringtab_color_names, am_cbk_ColorPicker },
   { "[h4]sel/nav fg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
-        &global_addl_config.sel_fg_color,0,0, NULL, am_cbk_ColorPicker },
+        &global_addl_config.sel_fg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker },
   { "[h4]sel/nav bg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
-        &global_addl_config.sel_bg_color,0,0, NULL, am_cbk_ColorPicker },
+        &global_addl_config.sel_bg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker },
   { "[h4]editor fg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
-        &global_addl_config.edit_fg_color,0,0, NULL, am_cbk_ColorPicker},
+        &global_addl_config.edit_fg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker},
   { "[h4]editor bg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
-        &global_addl_config.edit_fg_color,0,0, NULL, am_cbk_ColorPicker},
+        &global_addl_config.edit_bg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker},
 
 
   // { "Text__max__13", data_type,  options,opt_value,
@@ -213,6 +214,20 @@ const am_stringtable_t am_stringtab_opmode2[] =
   { OPM2_MENU,      "menu" },
   { 0,              NULL   } // <- marks the end of a string table
 };
+
+const am_stringtable_t am_stringtab_color_names[] =
+{
+  { LCD_COLOR_BLACK, "black" },
+  { LCD_COLOR_BLUE,  "blue"  },
+  { LCD_COLOR_GREEN, "green" },
+  { LCD_COLOR_RED,   "red"   },
+  { LCD_COLOR_YELLOW,"yellow"},
+  { LCD_COLOR_CYAN,  "cyan"  },
+  { LCD_COLOR_PURPLE,"purple"},
+  { LCD_COLOR_WHITE, "white" },
+  { 0, NULL }
+};
+
 
 const am_stringtable_t am_stringtab_255Auto[] = 
 { { 255, "auto" },
@@ -253,6 +268,24 @@ void Menu_Open(app_menu_t *pMenu)
   pMenu->num_items = Menu_GetNumItems( pMenu->pItems );
   pMenu->visible = APPMENU_VISIBLE; 
   pMenu->redraw  = TRUE;
+
+
+  // If the app-menu has never been opened (or after "config reset"), the customizeable colours
+  // will not be set (all zero). If all colours are zero (or equal), use defaults:
+  if( LCD_GetColorDifference( global_addl_config.fg_color, global_addl_config.bg_color ) < 32 )
+   {  global_addl_config.fg_color = LCD_COLOR_BLACK;
+      global_addl_config.bg_color = LCD_COLOR_WHITE;
+   }
+  if((LCD_GetColorDifference(global_addl_config.sel_fg_color,global_addl_config.sel_bg_color) < 32 )
+   ||(LCD_GetColorDifference(global_addl_config.sel_bg_color,global_addl_config.bg_color) < 32) )
+   {  global_addl_config.sel_fg_color = LCD_COLOR_WHITE;
+      global_addl_config.sel_bg_color = LCD_COLOR_BLUE;
+   }
+  if((LCD_GetColorDifference(global_addl_config.edit_fg_color,global_addl_config.edit_bg_color) < 32 )
+   ||(LCD_GetColorDifference(global_addl_config.edit_bg_color,global_addl_config.bg_color) < 32) )
+   {  global_addl_config.edit_fg_color = LCD_COLOR_WHITE;
+      global_addl_config.edit_bg_color = LCD_COLOR_RED;
+   }
 } // end Menu_Open()
 
 //---------------------------------------------------------------------------
@@ -286,7 +319,7 @@ void Menu_Close(app_menu_t *pMenu)
      // is compared with 'channel_num' (@0x2001e8c1 in D13.020) .
      // Existing channel numbers are 1 to 16, so :
      channel_num = 0;  // <- kludge to force re-drawing the idle screen
-     // (very ugly, but none of the other "tricks" listed above actually worked)
+     // (ugly but none of the other tricks actually worked)
    } // end else <exiting into the "main screen">
 } // end Menu_Close()
 
@@ -660,7 +693,9 @@ void IntToDecHexBinString(
 //---------------------------------------------------------------------------
 char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDigits, char **cppHotkey )
   // Returns a pointer to the first "plain text" character 
-  // after the list of printing options in squared brackets
+  // after the list of printing options in squared brackets.
+  // All outputs are optional (piNumBase, piFixedDigits, cppHotkey may be NULL).
+  // Thus usable to skip the 'non-printable' characters at the begin.
 {
   int num_base = 10;    // default: decimal numeric output
   int fixed_digits = 0; // default: no FIXED number of digits

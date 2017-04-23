@@ -16,39 +16,43 @@
 
 
 // Colour values for the internally used 16-bit "BGR565" format :
-// BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 .
-// (don't waste space and time converting from 'true colour', which the LCD doesn't support) .
-// Traditionally, programming languages use AE, so do we, thus "LCD_COLOR..", not "_COLOUR":
+// BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 :
+#define LCD_COLORBIT0_RED   0
+#define LCD_COLORBIT0_GREEN 5
+#define LCD_COLORBIT0_BLUE  11
 #define LCD_COLOR_WHITE 0xFFFF
 #define LCD_COLOR_BLACK 0x0000
 #define LCD_COLOR_BLUE  0xF800
 #define LCD_COLOR_GREEN 0x07E0
 #define LCD_COLOR_RED   0x001F
+#define LCD_COLOR_YELLOW (LCD_COLOR_RED|LCD_COLOR_GREEN)
+#define LCD_COLOR_CYAN   (LCD_COLOR_BLUE|LCD_COLOR_GREEN)
+#define LCD_COLOR_PURPLE (LCD_COLOR_RED|LCD_COLOR_BLUE)
 #define LCD_COLOR_MD380_BKGND_BLUE 0xFC03 // BGR565-equivalent of Tytera's blue background for the main screen
 
 
 // Bitwise combineable 'options' for some text drawing functions:
-#define LCD_OPT_NORMAL_OUTPUT 0x00 // "nothing special" (opaque, default font)
+#define LCD_OPT_NORMAL_OUTPUT 0x00 // "nothing special" (use default font, not magnified)
 #define LCD_OPT_FONT_6x12     0x00 // use 6x12 pixel font
 #define LCD_OPT_FONT_8x8      0x01 // use 8x8 pixel font
 #define LCD_OPT_DOUBLE_WIDTH  0x02 // double-width character output
 #define LCD_OPT_DOUBLE_HEIGHT 0x04 // double-height character output
+#define LCD_OPT_RESERVED_FONT 0x08 // reserved for a future font, possibly "proportional"
 #define LCD_OPT_FONT_8x16  (LCD_OPT_FONT_8x8|LCD_OPT_DOUBLE_HEIGHT)
 #define LCD_OPT_FONT_16x16 (LCD_OPT_FONT_8x8|LCD_OPT_DOUBLE_WIDTH|LCD_OPT_DOUBLE_HEIGHT)
+#define LCD_OPT_FONT_12x12 (LCD_OPT_FONT_6x12|LCD_OPT_DOUBLE_WIDTH)
 #define LCD_OPT_FONT_12x24 (LCD_OPT_FONT_6x12|LCD_OPT_DOUBLE_WIDTH|LCD_OPT_DOUBLE_HEIGHT)
-#define LCD_OPT_CLEAR_EOL 0x10 // for LCD_DrawStringAt() : fill until end-of-line with background colour
-
 
 //---------------------------------------------------------------------------
-// Global vars - the ultimate minimum, there's not much RAM to waste !
-// The low-level LCD functions also do NOT use fancy structs, objects,
+// Global vars - use a few as possible, there's not much RAM to waste !
+// The LOW-level LCD functions also do NOT use fancy structs, objects,
 //     "graphic contexts", "handles", to keep the footprint low.
 // Everything a function needs to know is passed in through the argument list,
 //     i.e. only occupies a few bytes on the stack.
 //---------------------------------------------------------------------------
 
-extern uint8_t LCD_b12Temp[12]; // small RAM buffer for a single, self-defined character
-
+extern uint8_t LCD_b12Temp[12];  // small RAM buffer for a single, self-defined character
+extern int LCD_pos_x, LCD_pos_y; // graphic coord, updated after printing
 
 //---------------------------------------------------------------------------
 // Prototypes for LOW-LEVEL LCD driver functions 
@@ -76,21 +80,37 @@ uint8_t *LCD_GetFontPixelPtr_6x12( uint8_t c);
   // Retrieves the address of a character's font bitmap, 6 * 12 pixels .
   // Rarely used by the application, but required by LCD_DrawCharAt() .
 
-void LCD_NativeColorToRGB( uint16_t native_colour, 
-       /*out:*/ uint8_t *pbRed, uint8_t *pbGreen, uint8_t *pbBlue );
-uint16_t LCD_RGBToNativeColor(uint8_t red, uint8_t green, uint8_t blue );
+uint32_t LCD_NativeColorToRGB( uint16_t native_colour );
+uint16_t LCD_RGBToNativeColor( uint32_t u32RGB );
+  // The structure of the 32-bit RGB combination (3 * 8 colour bits),
+  // used by LCD_NativeColorToRGB() + LCD_RGBToNativeColor() 
+  // can be described by this union (for convenience):
+typedef union T_RGB_Quad
+{ uint32_t u32;  // "all in one DWORD", compatible with 6-digit "hex codes"
+  struct
+   { uint8_t b; // blue component, 0..255
+     // (least significant byte for "hex-code"-compatibility on little endian system.
+     //  rgb_quad_t.u32 = 0xFF0000 shall be the same as "#ff0000" = PURE RED, not BLUE) 
+     uint8_t g; // green component, 0..255
+     uint8_t r; // red component, 0..255
+     uint8_t a; // alignment dummy (no "alpha" channel here)
+   } s;
+  uint8_t ba[4]; // the same as a 4-byte array (for processing in loops)
+          // Beware, here: ba[0] = least significant byte = BLUE component !
+} rgb_quad_t;
 
   // Crude measure for the "similarity" of two colour values.
   // First used in app_menu.c to find out if two colours are
   // "different enough" to be used as back- and foreground colours.
 int LCD_GetColorDifference( uint16_t color1, uint16_t color2 );
+uint16_t LCD_GetGoodContrastTextColor( uint16_t backgnd_color );
 
 //---------------------------------------------------------------------------
 // Prototypes for MID-LEVEL LCD driver functions (text output, etc)
 //---------------------------------------------------------------------------
 
-int LCD_GetFontHeight( int font_options );
-
+int LCD_GetFontHeight(int font_options );
+int LCD_GetCharWidth( int font_options, char c );
 int LCD_GetTextWidth( int font_options, char *pszText );
 
 int LCD_DrawCharAt( // lowest level of 'text output' into the framebuffer
@@ -106,6 +126,11 @@ int LCD_DrawStringAt(char *cp, int x, int y,
         int options ); // [in] LCD_OPT_xyz (bitwise combined)
   // Draws a zero-terminated ASCII string. 
   // Returns the graphic coordinate (x) to print the next character .
+
+int LCD_PrintfAt( int x, int y, uint16_t fg_color, uint16_t bg_color,
+                   int options, char *fmt, ... );
+  // Almost the same as LCD_DrawStringAt, completely "context-free",
+  // but with all printf-goodies supported by tinyprintf .
 
 
 /* EOF < md380tools/applet/src/lcd_driver.h > */

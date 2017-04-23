@@ -220,6 +220,7 @@ int  Menu_DrawIfVisible(int caller); // Paints the 'application menu'
 #  define AM_CALLER_RX_SCREEN_BLUE_HOOK 5
 #  define AM_CALLER_RTC_TIMER           6
 
+char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDigits, char **cppHotkey );
 char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value);
 void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue );
 
