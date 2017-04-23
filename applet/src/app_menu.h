@@ -1,6 +1,6 @@
 // File:    md380tools/applet/src/app_menu.h
 // Authors: Wolf (DL4YHF) [initial version], .. (?) 
-// Date:    2017-03-31 
+// Date:    2017-04-23 
 //  Implements a simple menu opened with the red BACK button,
 //             along with all required low-level graphic functions.
 //  Module prefix 'am_' for "application menu" or "alternative menu" .
@@ -183,9 +183,10 @@ typedef struct tAppMenuItem
          // If the callback function paints the screen itself ("custom screen"),
          // it must return AM_RESULT_OCCUPY_SCREEN on each APPMENU_EVT_PAINT,
          // as long as it wants to 'remain visible' . Example: color_picker.c .
-# define APPMENU_EVT_GET_VALUE  1 // let the callback function provide the 'display'
-         // value. Only needs to be implemented if *pvValue isn't always 
-         // "up-to-date", for example
+# define APPMENU_EVT_GET_VALUE  1 // let the callback function provide the 'display' value.
+         // ONLY CALLED IF menu_item_t.pvValue is NULL, and only for numeric displays !
+         // The callback returns the to-be-displayed value instead of a result code.
+         //
 # define APPMENU_EVT_ENTER      2 // operator has pressed ENTER while this item was focused.
          // Often used to prepare items shown in a SUBMENU.
          // Callback may return AM_RESULT_ERROR to prevent 'entering'
@@ -194,9 +195,9 @@ typedef struct tAppMenuItem
 # define APPMENU_EVT_BEGIN_EDIT 4 // beginning to edit (allows to modify min/max range for editing, etc)
 # define APPMENU_EVT_EDIT       5 // sent WHILE editing (after each edit value modification)
 # define APPMENU_EVT_END_EDIT   6 // stopped editing (just an "info", there's no way to intercept "end of editing")
-                 // "END_EDIT" comes in two flavours : 
-                 // with param = 1, it means "finished, write back the result",
-                 // with param = 0, it means "aborted, discard whatever was entered".
+         // "END_EDIT" comes in two flavours : 
+         // with param = 1, it means "finished, write back the result", e.g. pMenu->iEditValue
+         // with param = 0, it means "aborted, discard whatever was entered".
 # define APPMENU_EVT_KEY        7 // keyboard event (only sent to callbacks that occupied the screen)
 } menu_item_t;
 
@@ -210,6 +211,7 @@ int my_wcslen( wchar_t *wide_string ); // kludge because there was no wcslen()
 
 // application-menu "API" (and interface to the keyboard handler, etc)
  
+void Menu_Open( app_menu_t *pMenu, menu_item_t *pItems, char *cpJumpToItem); 
 void Menu_OnKey( uint8_t key); // called on keypress from some interrupt handler
 int  Menu_IsVisible(void);     // 1=currently visible (open), 0=not open; don't intercept keys
 int  Menu_GetItemIndex(void);  // used by the Morse narrator (narrator.c) to detect "changes"
@@ -234,7 +236,7 @@ void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ); // [in] pMenu-
 
 // menu callback functions implemented in external modules:
 extern int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int param ); // color_picker.c
-extern int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int param); // amenu_set_talkgroup.c
+extern int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int param); // amenu_set_tg.c
 
 #if( CONFIG_MORSE_OUTPUT )
 void Menu_ReportItemInMorseCode(int morse_request); // used internally and by the Morse narrator

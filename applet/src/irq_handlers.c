@@ -1027,8 +1027,8 @@ char KeyRowColToASCII(uint16_t kb_row_col)
 
 #if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature ...
 //---------------------------------------------------------------------------
-static void PollKeysForRedMenu(void)
-  // Non-intrusive polling of keys for the 'red menu' (activated 
+static void PollKeysForAppMenu(void)
+  // Non-intrusive polling of keys for the 'app menu' (activated 
   //  by pressing the red 'BACK'-button),
   // when that button isn't used to control Tytera's own 'geen' menu.
   // Called approximately once every 24 milliseconds from SysTick_Handler(), 
@@ -1045,10 +1045,12 @@ static void PollKeysForRedMenu(void)
   // So use 'kb_row_col_pressed' (16 bit) instead . Seems to be the
   // lowest level of polling the keyboard matrix without rolling our own.
   // 
-  // Our own ("red") menu must not interfere with Tyter's "green" menu,
+  // Our own ("app-") menu must not interfere with Tytera's "green" menu,
   // where the red "BACK"-button switches back from any submenu to the
-  // parent, and from the main menu to the main screen:
-  if( gui_opmode2 == OPM2_MENU )
+  // parent, and from the main menu to the main screen.
+  // Only if the app-menu is already open (possibly kicked open via sidekey),
+  // ignore gui_opmode2 and pass keyboard events to our own app-menu.
+  if( (gui_opmode2 == OPM2_MENU ) && (!Menu_IsVisible()) )
    { // keyboard focus currently on Tytera's 'green' menu 
      // -> ignore kb_row_col_pressed until the key was released
      green_menu_countdown = 200/*ms*/ / 24; 
@@ -1086,7 +1088,7 @@ static void PollKeysForRedMenu(void)
       }
    } 
   prev_key = key;
-} // end PollKeysForRedMenu()
+} // end PollKeysForAppMenu()
 #endif // CONFIG_APP_MENU ?
 
 
@@ -1264,7 +1266,7 @@ void SysTick_Handler(void)
      // depending on the value defined as CONFIG_APP_MENU in config.h:
      if( (oldSysTickCounter & 0x0F) == 1 ) // .. on every 16-th SysTick
       { // (but not in the same interrupt as PollAnalogInputs)
-        PollKeysForRedMenu(); // non-intrusive polling of keys for the 
+        PollKeysForAppMenu(); // non-intrusive polling of keys for the 
         // 'red menu' (menu activated by pressing the red 'BACK'-button,
         // when that button isn't used to control Tytera's own menu).
       }

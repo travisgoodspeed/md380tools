@@ -2,7 +2,7 @@
 // Author:  Wolf (DL4YHF) [initial version] 
 //          Please don't poison this soucecode with TAB characters . 
 //
-// Date:    2017-04-17
+// Date:    2017-04-23
 //  Implements a simple menu opened with the red BACK button,
 //             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
@@ -18,6 +18,7 @@
 //      SRCS += lcd_driver.o
 //      SRCS += font_8_8.o
 //      SRCS += color_picker.o
+//      SRCS += amenu_set_tg.o
 //  
 //  2. #define CONFIG_APP_MENU 1  in  md380tools/applet/config.h  .
 
@@ -110,9 +111,8 @@ const menu_item_t am_Main[] =
    // DMR-"talkgroup", -"reflector", current_channel_info, 
    // and how all this sticks together in the original firmware.
    // See (old) menu.c : create_menu_entry_set_tg_screen_store() .
-   
-  { "TkGr",             DTYPE_NONE, APPMENU_OPT_NONE,0, 
-         NULL,0,0,                  NULL,         NULL     },
+  { "TkGrp",            DTYPE_INTEGER, APPMENU_OPT_EDITABLE,0, 
+         NULL/*pvValue*/,0/*min*/,0x00FFFFFF/*max:24 bit*/, NULL,am_cbk_SetTalkgroup},
   { "[1]Test/Setup",       DTYPE_SUBMENU, APPMENU_OPT_NONE,0, 
    // |__ hotkey to get here quickly (press RED BUTTON followed by this key)
      (void*)am_Setup,0,0,           NULL,         NULL     },
@@ -165,9 +165,9 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
 
   // { "Text__max__13", data_type,  options,opt_value,
   //     pvValue,iMinValue,iMaxValue, string table, callback }
-  // In the following items, the colour values are shown in short HEX format [h4],
-  // but when pressing ENTER on one of these icons, the callback shows
-  // a simple 'colour picker' dialog where the colour can be modified:
+  // In the items below, colour values are shown in short HEX format [h4].
+  // When ENTERING one of these items, the 'colour picker' takes over control,
+  // where an own palette can be created (unfortunately no effect on the normal screen).
   { "[3 Colours;h4]foregnd", DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
         &global_addl_config.fg_color,0,0, am_stringtab_color_names, am_cbk_ColorPicker },
   { "[h4]backgnd",          DTYPE_UNS16,  APPMENU_OPT_NONE, 0, 
@@ -180,7 +180,6 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
         &global_addl_config.edit_fg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker},
   { "[h4]editor bg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
         &global_addl_config.edit_bg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker},
-
 
   // { "Text__max__13", data_type,  options,opt_value,
   //     pvValue,iMinValue,iMaxValue, string table, callback }
@@ -260,14 +259,42 @@ int Menu_GetNumItems( menu_item_t *pItems )
 } 
 
 //---------------------------------------------------------------------------
-void Menu_Open(app_menu_t *pMenu)
+void Menu_Open(
+        app_menu_t  *pMenu,  // [in] menu instance data in RAM, NULL for "main menu instance" 
+        menu_item_t *pItems, // [in] address of the first item in ROM, NULL for "main"
+        char *cpJumpToItem)  // [in] optional name (item text) to "jump to" .
+                             //        (special service for programmabe sidebuttons)
 {
+  int i,n;
+  char *cp;
+  menu_item_t *pItem;
+  if( pMenu == NULL )
+   {  pMenu = &AppMenu; // per default, use "main" instance (which in 2017-04 was THE ONLY one)
+   }
+  if( pItems == NULL )
+   {  pItems = (menu_item_t*)am_Main; // per default, use the "main" menu items (array in ROM)
+   }
   memset( pMenu, 0, sizeof( app_menu_t ) );
-  pMenu->pItems  = (void*)am_Main; // VERY unfortunately, this cast is necessary
+  pMenu->pItems  = (void*)pItems; // VERY unfortunately, this cast is necessary
   pMenu->num_items = Menu_GetNumItems( pMenu->pItems );
+  // Special service for programmable sidebutton to open the menu
+  //         with a certain item already selected (e.g. "TkGrp" ):
+  if( cpJumpToItem != NULL )
+   { n = strlen( cpJumpToItem );
+     for(i=0; i<pMenu->num_items; ++i)
+      { pItem = &((menu_item_t*)pMenu->pItems)[i];
+        cp = (char*)pItem->pszText;
+        if( cp != NULL )
+         { // Skip the "output formatting options" at the begin of the item text:
+           cp = Menu_GetParamsFromItemText( cp, NULL, NULL, NULL );
+           if( strncmp( cpJumpToItem, cp, n) == 0 )
+            { pMenu->item_index = (uint8_t)i;
+            }
+         }
+      }
+   } // end if < jump to a certain item, identified by the MENU ITEM TEXT > ?
   pMenu->visible = APPMENU_VISIBLE; 
   pMenu->redraw  = TRUE;
-
 
   // If the app-menu has never been opened (or after "config reset"), the customizeable colours
   // will not be set (all zero). If all colours are zero (or equal), use defaults:
@@ -412,7 +439,7 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
    }
   while( item_index <= imax )
    { pItem = &((menu_item_t *)pMenu->pItems)[item_index++];
-     if( pItem->pvValue )
+     if( pItem->pvValue ) // directly readable value (via pointer) ?
       { switch( pItem->data_type )
          { case DTYPE_STRING : // the 'value' is a good old "C"-string (8 bit) .
               // If they had used glorious UTF-8 encoding this would work for anything,
@@ -434,12 +461,37 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
               break;
          }
       } // end if < item displaying a "value" -> include it in the hash >
+     else // even without a "value pointer", menu items can display a value..
+      { if( pItem->callback ) // .. delivered via callback on APPMENU_EVT_GET_VALUE
+         { value = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
+           checksum = Fletcher32( checksum, (uint16_t *)&value, sizeof(int)/sizeof(uint16_t) );
+         }
+      } // end else < menu item with pvValue==NULL > 
    } // end for < all CURRENTLY VISIBLE items >
   if( pMenu->value_chksum != checksum )
    {  pMenu->value_chksum =  checksum;
       pMenu->redraw = TRUE;  
    }
 } // end Menu_CheckDynamicValues()
+
+
+//---------------------------------------------------------------------------
+int MenuItem_HasValue(menu_item_t *pItem ) // TRUE=yes (item has a "displayable value"), FALSE=no.
+{ if( pItem != NULL )
+   { if( (pItem->data_type==DTYPE_NONE) || (pItem->data_type==DTYPE_SUBMENU) )
+      { return FALSE;
+      }
+     else if( pItem->pvValue )
+      { return TRUE;
+      }
+     else // even without a "value pointer", menu items can display a value..
+     if( pItem->callback ) // .. delivered via callback on APPMENU_EVT_GET_VALUE
+      { return TRUE;
+      }
+   }
+  // Arrived here ? The menu item doesn't seem to have a displayable "value" 
+  return FALSE; 
+}
 
 
 //---------------------------------------------------------------------------
@@ -767,33 +819,36 @@ void Menu_ItemValueToString( menu_item_t *pItem,  int iValue, char *sz40Dest )
   int num_base,fixed_digits;
   char *cp;
 
-  sz40Dest[0] = '\0';
-  if( pItem->pvValue != NULL )
-   { 
-     Menu_GetParamsFromItemText( (char*)pItem->pszText, &num_base, &fixed_digits, NULL );
+  // if none of the methods below delivers a value, the result is an empty string:
+  sz40Dest[0] = '\0';    
 
-     switch( pItem->data_type )
-      { case DTYPE_STRING : // normal string with 8 bits/char (any encoding)
-           strlcpy( sz40Dest, pItem->pvValue, 20 );
-           break;
-        case DTYPE_WSTRING: // "wide"-string.. eeek.. ever heard of UTF-8 ?
-           // We don't really support this 'wide string' madness here. 
-           // All characters in the 'wide string' are treated as if they were 8-bit !
-           // Fortunately neither zone- nor channel names are Chinese :)
-           wide_to_C_string( (wchar_t*)pItem->pvValue, sz40Dest, 40 );
-           break;
-        case DTYPE_SUBMENU:
-           break;
-        default : 
-           cp = Menu_FindInStringTable( pItem->pStringTable, iValue );
-           if( cp ) 
-            { strlcpy( sz40Dest, cp, 40 );
-            }
-           else // don't show string from table but numeric value:
-            { IntToDecHexBinString( iValue, num_base, fixed_digits, sz40Dest );
-            }
-           break;
-      }
+  Menu_GetParamsFromItemText( (char*)pItem->pszText, &num_base, &fixed_digits, NULL );
+  switch( pItem->data_type )
+   { case DTYPE_STRING : // normal string with 8 bits/char (any encoding)
+        if( pItem->pvValue != NULL )
+         { strlcpy( sz40Dest, pItem->pvValue, 20 );
+         }
+        break;
+     case DTYPE_WSTRING: // "wide"-string.. eeek.. ever heard of UTF-8 ?
+        // We don't really support this 'wide string' madness here. 
+        // All characters in the 'wide string' are treated as if they were 8-bit !
+        // Fortunately neither zone- nor channel names are Chinese :)
+        if( pItem->pvValue != NULL )
+         { wide_to_C_string( (wchar_t*)pItem->pvValue, sz40Dest, 40 );
+         }
+        break;
+     case DTYPE_SUBMENU:
+     case DTYPE_NONE: // without a data type, a menu item shows no value
+        break;
+     default : 
+        cp = Menu_FindInStringTable( pItem->pStringTable, iValue );
+        if( cp ) 
+         { strlcpy( sz40Dest, cp, 40 );
+         }
+        else // don't show string from table but numeric value:
+         { IntToDecHexBinString( iValue, num_base, fixed_digits, sz40Dest );
+         }
+        break;
    }
 } // end Menu_ItemValueToString()
 
@@ -888,12 +943,22 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
          }
         // Convert the optional 'value' into a string,
         //  to find the length (in characters) for right-aligned output:
+        n = 0;  // if anything else (below) fails, show "zero"
         if( editing )
          { n = pMenu->iEditValue;
          }
-        else
-         { n = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
-           n = Menu_ScaleItemValue( pItem, n );
+        else // not editing, so get an up-to-date value for the display:
+         { if( pItem->pvValue != NULL ) // .. if possible, via pointer
+            { n = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
+              n = Menu_ScaleItemValue( pItem, n );
+            }
+           else // even without a "value pointer", menu items can display a value..
+            { // .. delivered via callback on APPMENU_EVT_GET_VALUE
+              n = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
+              // Note: If the CALLBACK delivers the display value,
+              //       we don't try to scale it here.
+              // Menu_InvokeCallback() 'does no harm' if there's no callback at all.
+            } // end else < menu item with pvValue==NULL > 
          }
         Menu_ItemValueToString( pItem, n, sz40Temp );
         n = strlen( sz40Temp ); // number of characters occupied by the "value" 
@@ -1092,15 +1157,20 @@ int Menu_DrawIfVisible(int caller)
               // but only if the item is NOT in "edit mode" yet:
               pItem = Menu_GetFocusedItem(pMenu);
               if( (pItem != NULL ) && (pMenu->edit_mode==APPMENU_EDIT_OFF) )  
-               { pMenu->iEditValue= pMenu->iValueBeforeEditing 
-                  = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+               { if( pItem->pvValue )
+                  { pMenu->iEditValue= pMenu->iValueBeforeEditing 
+                      = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+                  }
+                 else // even menu items without a "value pointer" may have something editable:
+                  { pMenu->iEditValue= Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
+                  }
                }
               Menu_OnEnterKey(pMenu);
               break; // end case < green "Menu", aka "Confirm"-key >
            case 'B' :  // red "Back"-key : 
               // red_led_timer  = 20;    // <- poor man's debugging 
               if( pMenu->visible == APPMENU_OFF ) // not visible yet..
-               { Menu_Open( pMenu );
+               { Menu_Open( pMenu, NULL, NULL );  // so open the default menu (items)
                  pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                  // Read out the entire screen in Morse code ? Too chatty.
                  // If necessary, the user can "walk through the lines"
@@ -1292,7 +1362,13 @@ int Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
       { cbk_result = pItem->callback( pMenu, pItem, event, param );
         // Check a few result codes immediately.. kind of "common default handler",
         // to simplify the implementation of dialog screens and similar gadgets
-        // (for example, the 'colour picker' dialog in applet/src/color_picker.c) :
+        // (for example, the 'colour picker' dialog in applet/src/color_picker.c).
+        // But there's one exception :
+        if( event==APPMENU_EVT_GET_VALUE ) // for the "get value" event,
+         { return cbk_result; // the return value is the to-be-displayed value,
+           // not a result- or error code. First used for the talkgroup display/editor .
+           // APPMENU_EVT_GET_VALUE is only used if pItem->pvValue is NULL .
+         }
         switch( cbk_result )
          { case AM_RESULT_EXIT_AND_RELEASE_SCREEN :
               // The whatever-it-is ("dialog screen"?) wants to be closed,
@@ -1351,7 +1427,7 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
       } 
  
      // Open a submenu (without the need for a callback) ? 
-     if( (pItem->data_type==DTYPE_SUBMENU) &&(pItem->pvValue != NULL) )
+     if( (pItem->data_type==DTYPE_SUBMENU) && (pItem->pvValue != NULL) )
       { Menu_EnterSubmenu( pMenu, (menu_item_t*)pItem->pvValue );
       } // end if < entry to a SUB-MENU >
      else // Return to the parent menu, or to the radio's "main screen" ?
@@ -1362,7 +1438,7 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
          } 
       }
      else // begin or end editing ?
-     if( (pItem->options & APPMENU_OPT_EDITABLE ) && (pItem->pvValue!=NULL) )
+     if( (pItem->options & APPMENU_OPT_EDITABLE ) && MenuItem_HasValue(pItem) )
       { if( pMenu->edit_mode != APPMENU_EDIT_OFF) 
          {  // was editing -> finish input ("write back")
             Menu_FinishEditing( pMenu, pItem ); // [in] pMenu->iEditValue [out] *pItem->pvValue 
@@ -1378,13 +1454,18 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
 
 //---------------------------------------------------------------------------
 void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem )
-  // Must NOT be invoked from a callback, because callback is invoke FROM here
+  // Must NOT be invoked from a callback, because callbacks are invoked FROM here
 { int cbk_result;
-  if( (pItem->options & APPMENU_OPT_EDITABLE ) && (pItem->pvValue!=NULL) )
+  if( (pItem->options & APPMENU_OPT_EDITABLE ) && MenuItem_HasValue(pItem) )
    { // Copy the 'current' value into the internal storage,
      //  for both integer and string types :
-     pMenu->iEditValue= pMenu->iValueBeforeEditing 
-       = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+     if( pItem->pvValue != NULL )
+      { pMenu->iEditValue= pMenu->iValueBeforeEditing 
+          = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+      }
+     else // even menu items without a "value pointer" may have an editable value:
+      { pMenu->iEditValue= Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
+      }
      pMenu->edit_mode = APPMENU_EDIT_INC_DEC; // suggest to use simple "increment/decrement"-editing via CURSOR KEYS (!)
         // setting edit_mode also "disconnects" the displayed value from pItem->pvValue
      Menu_ItemValueToString( pItem, pMenu->iEditValue, pMenu->sz40EditBuf );
@@ -1664,15 +1745,18 @@ void Menu_ReportItemInMorseCode(
            MorseGen_AppendChar( '\x10' ); // SPACE + back to the normal CW pitch
          }
         // Convert the optional 'value' into a string, here for Morse output:
-        if( (pItem->pvValue != NULL) 
-         && (pItem->data_type != DTYPE_SUBMENU) 
+        if( MenuItem_HasValue(pItem) 
          && (morse_request & AMENU_MORSE_REQUEST_ITEM_VALUE) )
          { if( pMenu->edit_mode != APPMENU_EDIT_OFF )
             { n = pMenu->iEditValue;
             }
-           else
+           else // not editing, so report the CURRENT (momentary) value:
+           if( pItem->pvValue != NULL )
             { n = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
               n = Menu_ScaleItemValue( pItem, n );
+            }
+           else
+            { n = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
             }
            Menu_ItemValueToString( pItem, n, sz40 );
            MorseGen_AppendString( sz40 );

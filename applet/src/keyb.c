@@ -236,6 +236,12 @@ void evaluate_sidekey( int button_function) // This is where new functions for s
       //                   called from task 'biglist_pollsubsys_maybe', when the
       //                   shared keyboard/LCD interface is configured to poll the keyboard,
       //                   not to 'drive the display'. See the monster-disassembly.
+      // If available, open the 'alternative menu' (aka 'app menu'), and tell it
+      // to jump to the item labelled 'TkGrp' (short for Set Talkgroup):
+#    if (CONFIG_APP_MENU)       // optional feature - see config.h 
+      Menu_Open( NULL/*default instance*/, NULL/*main items*/, "TkGrp"/*cpJumpToItem*/ );   
+#    endif
+
       break;
 #  if( CONFIG_MORSE_OUTPUT )    // optional feature - see config.h 
     case 0x52 : // starts the 'Morse narrator' via programmable button ("on request")
