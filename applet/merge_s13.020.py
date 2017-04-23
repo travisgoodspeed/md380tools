@@ -29,8 +29,14 @@ class Symbols(object):
                     self.addresses[name] = int(adr, 16)
                     self.names[int(adr, 16)] = name
             except IndexError:
-                pass
-
+                pass;
+              
+    def try_getadr(self,name): # DL4YHF 2017-01, used to CHECK if a symbol exists
+        try:                   # to perform patches for 'optional' C functions 
+            return self.addresses[name];
+        except KeyError:
+            return None;
+          
     def getadr(self, name):
         return self.addresses[name]
 
@@ -675,8 +681,10 @@ if __name__ == '__main__':
     # keyboard
     merger.hookbl(0x0804fa12, sapplet.getadr("kb_handler_hook"))
 
-    #    merger.hookbl(0x08047628,sapplet.getadr("f_4520_hook"));
+    #Change TIM12 IRQ Handler to new one
+    merger.setword(0x0800c0ec, sapplet.getadr("New_TIM12_IRQHandler")+1);
 
+    #    merger.hookbl(0x08047628,sapplet.getadr("f_4520_hook"));
     #    merger.hookbl(0x0802cca8,sapplet.getadr("dummy"));
     #    merger.hookbl(0x0802ccb4,sapplet.getadr("dummy"));
 
@@ -685,7 +693,39 @@ if __name__ == '__main__':
         sys.argv[1],
         index))
 
+
+    # DL4YHF : We don't know here if the PWM'ed backlight, and thus
+    #  SysTick_Handler() shall be included (depends on config.h) .
+    # IF   the applet's symbol table contains a function named 'SysTick_Handler',
+    # THEN patch its address, MADE ODD to indicate Thumb-code, into the
+    # interrupt-vector-table as explained in applet/src/irq_handlers.c :
+    # ex: new_adr = sapplet.getadr("SysTick_Handler"); # threw an exception when "not found" :(
+    new_adr = sapplet.try_getadr("SysTick_Handler");
+    if new_adr != None:
+        vect_adr = 0x800C03C;  # address inside the VT for SysTick_Handler
+        exp_adr  = 0x8094d5b;  # expected 'old' content of the above VT entry
+        old_adr  = merger.getword(vect_adr); # original content of the VT entry
+        new_adr |= 0x0000001;  # Thumb flag for new content in the VT
+        if( old_adr == exp_adr ) :
+           print("Patching SysTick_Handler in VT addr 0x%08x," % vect_adr)
+           print("  old value in vector table = 0x%08x," % old_adr)
+           print("   expected in vector table = 0x%08x," % exp_adr)
+           print("  new value in vector table = 0x%08x." % new_adr)
+           merger.setword( vect_adr, new_adr, old_adr);
+           print("  SysTick_Handler successfully patched.")
+        else:
+           print("Cannot patch SysTick_Handler() !")
+    else:
+           print("No SysTick_Handler() found in the symbol table. Building firmware without.")
+
+    print("Merging %s into %s at %08x" % (
+          sys.argv[2],
+          sys.argv[1],
+          index));
+    
+
     i = 0
+    
     for b in bapplet:
         merger.setbyte(index + i, bapplet[i])
         i += 1

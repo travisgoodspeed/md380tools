@@ -21,16 +21,15 @@ extern int ambe_outbuffer, wav_inbuffer0, wav_inbuffer1, ambe_en_mystery;
 */
 void decode_amb_file(char *infilename,
 		     char *outfilename){
-  if(!infilename || !outfilename){
-    printf("Missing input or output filename.\n");
-    exit(1);
-  }
 
-  //Open amb for reading.
-  int ambfd=open(infilename,0);
-  //Open wav for writing.
-  int wavfd=creat(outfilename,0666);
-
+  int ambfd=STDIN_FILENO;
+  int wavfd=STDOUT_FILENO;
+    
+  if (infilename)
+    ambfd=open(infilename,0);
+  
+  if (outfilename)
+    wavfd=creat(outfilename,0666);
 
   //FIXME These are unique to 2.032 firmware; should be symbols instead.
   short *ambe=(short*) &ambe_inbuffer; //0x20011c8e;
@@ -55,7 +54,7 @@ void decode_amb_file(char *infilename,
   while(8==read(ambfd,packed,8)){
     frame++;
     if(packed[0]!=0){
-      fprintf(stderr,"Warning: Frame %d has a bad status.\b",
+      fprintf(stderr,"Warning: Frame %d has a bad status.\n",
 	      frame);
     }
 
@@ -129,15 +128,14 @@ int ambe_encode_thing2(short *bitbuffer,
 
 void encode_wav_file(char *infilename,
 		     char *outfilename){
-  if(!infilename || !outfilename){
-    printf("Missing input or output filename.\n");
-    exit(1);
-  }
 
-  //Open wav for reading.
-  int wavfd=open(infilename,0);
-  //Open amb for writing.
-  int ambfd=creat(outfilename,0666);
+  int wavfd=STDIN_FILENO;
+  int ambfd=STDOUT_FILENO;
+
+  if (infilename)
+    wavfd=open(infilename,0);
+  if (outfilename)
+    ambfd=creat(outfilename,0666);
 
   unsigned char packed[8]; //8 byte frames.
   short ambe_test[50];
