@@ -50,6 +50,7 @@ void F_294_replacement(uint16_t value) {
 }
 
 #if defined(FW_D13_020)
+# define CAN_BEEP 1
 void bp_set_freq(uint16_t value);
 
 void bp_sempost();
@@ -60,7 +61,7 @@ void bp_tone_off();
 extern uint8_t bp_2001e8a7 ;
 
 #else
-
+# define CAN_BEEP 0
 #define bp_set_freq(x) /*nop*/
 #define bp_sempost()
 #define bp_sempost2()
@@ -85,6 +86,7 @@ void beep9()
     bp_sempost2();
 }
 
+#if (CAN_BEEP) // only implement when called, to avoid 'blabla defined but never used' 
 static void start()
 {
     bp_sempost();
@@ -118,12 +120,14 @@ static void stop()
 {
     bp_sempost2();
 }
+#endif // CAN_BEEP ?
+
 
 void bp_beep(uint8_t code)
 {
     PRINT("bp_beep: %d\n", code);
     
-#if defined(FW_D13_020) 
+#if (CAN_BEEP) 
     start();
     
     for(int i=0;i<code;i++) {
@@ -132,7 +136,7 @@ void bp_beep(uint8_t code)
     }
     
     stop();
-#endif    
+#endif // can beep ?    
 }
 
 void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
@@ -160,9 +164,9 @@ void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     }
 }
 
-static uint8_t beep_msg ; // it cannot live on the stack.
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
+static uint8_t beep_msg ; // it cannot live on the stack.
 
 void bp_send_beep( uint8_t beep )
 {

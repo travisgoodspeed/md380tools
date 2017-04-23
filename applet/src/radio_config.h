@@ -37,7 +37,9 @@ struct radio_config2 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
 void rc_write_radio_config_to_flash();
 #else
-#warning please consider adding symbols.    
+# ifdef COMPILING_MAIN_C // only show this warning when compiling MAIN.C :
+#   warning please consider adding symbols.
+# endif
 #define rc_write_radio_config_to_flash() /*nop*/
 #endif
 

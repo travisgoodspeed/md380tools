@@ -10,6 +10,7 @@
 #include "tooldfu.h"
 #include "printf.h"
 #include "string.h"
+#include "wchar.h" // <- YHF 2017-04 defeat warning "implicit declaration of function 'wcscmp' " (+ wscpy, etc etc pp)
 #include "dmr.h"
 #include "gfx.h"
 #include "radiostate.h"
@@ -33,9 +34,9 @@ uint8_t ch_new = 0 ;
 uint8_t call_start_state = 0;
 uint8_t previous_call_state = 0;
 
-wchar_t curr_channel[20];			// current channel name
-wchar_t sh_last_channel[20];			// last channel name sh log
-wchar_t ch_last_channel[20];			// last channel name ch log
+wchar_t curr_channel[20];    // current channel name
+wchar_t sh_last_channel[20]; // last channel name sh log
+wchar_t ch_last_channel[20]; // last channel name ch log
 
 char progress_info[] = { "|/-\\" } ;
 int progress = 0 ;
@@ -45,7 +46,7 @@ int progress = 0 ;
 #endif
 /* uint16_t *cntr2 = (void*)0x2001e844 ;*/
 
-#if defined(FW_D13_020) || defined(FW_S13_020)	
+#if defined(FW_D13_020) || defined(FW_S13_020)  
     extern uint16_t m_cntr2 ;
 #endif
 
@@ -110,7 +111,7 @@ void print_vce()
 
 void print_smeter()
 {
-#if defined(FW_D13_020) || defined(FW_S13_020)	
+#if defined(FW_D13_020) || defined(FW_S13_020)  
     extern uint8_t smeter_rssi ;
     con_printf("rssi:%d\n", smeter_rssi );
 #endif
@@ -201,7 +202,7 @@ void netmon1_update()
 #ifdef FW_S13_020
     {
         // only valid when transmitting or receiving.
-        uint32_t *recv = (void*)0x2001e6b4 ;			// needs to be confirmed!
+        uint32_t *recv = (void*)0x2001e6b4 ;       // needs to be confirmed!
         con_printf("%d\n", *recv); 
     }
 #endif     
@@ -271,14 +272,15 @@ void netmon4_update()
     lastheard_draw_poll();
 
     int src;
-    static int lh_cnt = 0 ;			// lastheard line counter 
-    char log = 'l';
+    static int lh_cnt = 0;    // lastheard line counter (set but not used anywhere ?)
+    char log = 'l';           // note: this is a char. Not a string. See print_time_hook()...
 
     if ( nm_started == 0 ) {
         lastheard_printf("Netmon 4 - Lastheard ====\n");
-        nm_started = 1;				// flag for restart of LH list
-        lh_cnt = 1;				// reset lh counter 
-    }	
+        nm_started = 1;       // flag for restart of LH list
+        lh_cnt = 1;           // reset lh counter 
+        (void)lh_cnt;         // not used anywhere. reduce the number of warnings. YHF 2017-04
+    } 
 
     char mode = ' ' ;
     if( rst_voice_active != previous_call_state && rst_voice_active)
@@ -297,12 +299,15 @@ void netmon4_update()
         src = rst_src;
         user_t usr;
    
+        // Also here, the formatting was destroyed by different people using different tab settings.
+        // Fixed by KILLING ALL TABS again (replaced by spaces, wonder how long this will last..)
         if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
             call_start_state = 0;
-	    rx_new = 1;				// set status to new for netmon5
-	    ch_new = 1;				// set status to new for netmon6
+            rx_new = 1;            // set status to new for netmon5
+            ch_new = 1;            // set status to new for netmon6
             //lastheard_printf("%d",lh_cnt++);
- 	    print_time_hook(log);
+            print_time_hook(log);  // note: print_time_hook seemed to expected a "char *" (before 2017-04-17) !
+                      
             if( usr_find_by_dmrid(&usr, src) == 0 ) {
                 lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
             } else {
@@ -327,74 +332,75 @@ void netmon5_update()
     slog_draw_poll();
     
     int src;
-    int cmp_res;				// compare result returncode (0= channel not changed)
+    // int cmp_res;           // compare result returncode (0= channel not changed)
+    //       |_ "declared but never used" - away with it !
 
-    extern wchar_t channel_name[20] ;		// read current channel name from external  
-    static int sl_cnt = 0 ;			// lastheard line counter
-    static int cp_cnt = 1 ;			// lastheard channel page counter
+    extern wchar_t channel_name[20] ;     // read current channel name from external  
+    static int sl_cnt = 0 ;         // lastheard line counter
+    static int cp_cnt = 1 ;         // lastheard channel page counter
     char slog = 's';
 
     if ( nm_started5 == 0 ) {
-	slog_printf("Netmon 5 LH Channel =========\n");
-	nm_started5 = 1;				// flag for restart of LH list
-	sl_cnt++;				// reset lh counter 
-    }	
+       slog_printf("Netmon 5 LH Channel =========\n");
+       nm_started5 = 1;           // flag for restart of LH list
+       sl_cnt++;            // reset lh counter 
+    } 
 
     char mode = ' ' ;
     if( rst_voice_active ) {
-        if( rst_mycall ) {
-            mode = '*' ; // on my tg            
+       if( rst_mycall ) {
+           mode = '*' ; // on my tg            
         } else {
             mode = '<' ; // on other tg
-        }
-    src = rst_src;
-    user_t usr;
+       }
+       src = rst_src;
+       user_t usr;
 
-    if( ( src != 0 ) && ( rx_new == 1 ) ) {
+       // Formatting was broken due to used of differently configured tabs - fixed 2017-04-17 by KILLING ALL TABS
+       if( ( src != 0 ) && ( rx_new == 1 ) ) {
+          for (int i = 0; i < 20; i++)
+           {
+             curr_channel[i] = channel_name[i];
+             if (channel_name[i] == '\0')
+                break;
+           }
 
-	for (int i = 0; i < 20; i++)
-	   {
-	      curr_channel[i] = channel_name[i];
-		if (channel_name[i] == '\0')
-		break;
-	   }
+          if ( (wcscmp(sh_last_channel, curr_channel) != 0)  || (sl_cnt >= 9) ) {       // compare channel_name with last_channel from latest rx
 
-	if ( (wcscmp(sh_last_channel, curr_channel) != 0)  || (sl_cnt >= 9) ) {			// compare channel_name with last_channel from latest rx
+             if (sl_cnt >= 9 ) {
+                slog_printf(">>:%S #%d <<< \n", curr_channel, cp_cnt); // show page # on new log pages
+                sl_cnt = 0;                      // reset sl_cnt at end of screen
+                cp_cnt++;                        // increment lh page count
+             } else {
+                slog_printf("cn:%S ---------------\n", curr_channel);  // show divider line when channel changes 
+             }
+             wcscpy(sh_last_channel, curr_channel);
+             sl_cnt++;
+           }
 
-		if (sl_cnt >= 9 ) {
-			slog_printf(">>:%S #%d <<< \n", curr_channel, cp_cnt);			// show page # on new log pages
-			sl_cnt = 0;								// reset sl_cnt at end of screen
-			cp_cnt++;								// increment lh page count
-		} else {
-			slog_printf("cn:%S ---------------\n", curr_channel);			// show divider line when channel changes	
-		}
-		wcscpy(sh_last_channel, curr_channel);
-		sl_cnt++;
-	}
+          print_time_hook(slog);
 
-        print_time_hook(slog);
-
-	// loookup source ID in user database to show callsign instead of ID
-        if( usr_find_by_dmrid(&usr, src) == 0 ) {
-		// lookup destination ID in user database for status requests etc.
-        	if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
-        		slog_printf("=%d->%s %c\n", src, usr.callsign, mode);
-	        } else 	{
-		        slog_printf("=%d->%d %c\n", src, rst_dst, mode);
-		}
-	} else {
-            slog_printf("=%s->", usr.callsign);
-        	if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
-        		slog_printf("%s %c\n", usr.callsign, mode);
-	        } else 	{
-		        slog_printf("%d %c\n", rst_dst, mode);
-		}
-        }
-	rx_new = 0 ;				// call handled, wait until new voice call status received
-	ch_new = 1 ;				// status for netmon6
-	sl_cnt++;
-     }
-    }
+          // loookup source ID in user database to show callsign instead of ID
+          if( usr_find_by_dmrid(&usr, src) == 0 ) {
+             // lookup destination ID in user database for status requests etc.
+             if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+                 slog_printf("=%d->%s %c\n", src, usr.callsign, mode);
+             } else    {
+                 slog_printf("=%d->%d %c\n", src, rst_dst, mode);
+             }
+          } else {
+             slog_printf("=%s->", usr.callsign);
+             if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+                 slog_printf("%s %c\n", usr.callsign, mode);
+             } else    {
+                 slog_printf("%d %c\n", rst_dst, mode);
+             }
+          }
+        rx_new = 0 ;            // call handled, wait until new voice call status received
+        ch_new = 1 ;            // status for netmon6
+        sl_cnt++;
+      }
+    } // end if( rst_voice_active )(?)
 #else
     slog_printf("No lastheard available\n");    
 #endif 
@@ -407,40 +413,42 @@ void netmon6_update()
 #if defined(FW_D13_020) || defined(FW_S13_020)
     clog_draw_poll();
     
-    int src;
-    int cmp_res;				// compare result returncode (0= channel not changed)
+    // int src;
+    // int cmp_res;           // compare result returncode (0= channel not changed)
+    //       |_ "declared but never used" - away with it !
 
-    extern wchar_t channel_name[20] ;		// read current channel name from external  
-    static int ch_cnt = 0 ;			// lastheard line counter
-    static int cp_cnt = 1 ;			// lastheard channel page counter
+    extern wchar_t channel_name[20] ;     // read current channel name from external  
+    static int ch_cnt = 0 ;         // lastheard line counter
+    // static int cp_cnt = 1 ;         // lastheard channel page counter
+             //     |___ "set but never used" .. removed to reduce number of warnings
     char clog = 'c';
 
     if ( nm_started6 == 0 ) {
-	clog_printf("Netmon 6 RX channel ========\n");
-	nm_started6 = 1;				// flag for restart of LH list
-	ch_cnt = 1;				// reset lh counter 
-    }	
+       clog_printf("Netmon 6 RX channel ========\n");
+       nm_started6 = 1;           // flag for restart of LH list
+       ch_cnt = 1;          // reset lh counter 
+    } 
 
-    src = rst_src;
+    // src = rst_src; // ?? - set but not used. 
 
     //if( ( src != 0 ) && ( ch_new == 1 ) ) {
     if( ch_new == 1 ) {
 
-	for (int i = 0; i < 20; i++)
-	   {
-	      curr_channel[i] = channel_name[i];
-		if (channel_name[i] == '\0')
-		break;
-	   }
+       for (int i = 0; i < 20; i++)
+        {
+           curr_channel[i] = channel_name[i];
+           if (channel_name[i] == '\0')
+            break;
+        }
 
-	if (wcscmp(ch_last_channel, curr_channel) != 0)  {			// compare channel_name with last_channel from latest rx
-	        print_time_hook(clog);
-		clog_printf("-%02d:%S \n", ch_cnt, curr_channel);			// show divider line when channel changes	
-		wcscpy(ch_last_channel, curr_channel);
-		ch_cnt++;
-		}
-	ch_new = 0 ;				// call handled, wait until new voice call status received
-     }
+      if (wcscmp(ch_last_channel, curr_channel) != 0) { // compare channel_name with last_channel from latest rx
+          print_time_hook(clog);
+          clog_printf("-%02d:%S \n", ch_cnt, curr_channel);        // show divider line when channel changes 
+          wcscpy(ch_last_channel, curr_channel);
+          ch_cnt++;
+       }
+      ch_new = 0 ;  // call handled, wait until new voice call status received
+    }
 #else
     clog_printf("No channellog available\n");    
 #endif 

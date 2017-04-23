@@ -26,8 +26,13 @@ inline int is_slog_enabled()
     return 1 ;
 }
 
+void lastheard_putch( char c );  // <- 2017-04-17 .. called without a proper prototype, aka "implicit declaration". Always a bad thing.
 void lastheard_printf(const char *fmt, ...);
+
+void slog_putch( char c );  // <- "warning: implicit declaration of function 'slog_putch'" . No, thanks.
 void slog_printf(const char *fmt, ...);
+
+void clog_putch( char c );  // <- "warning: implicit declaration of function 'clog_putch'" . Nevermore !
 void clog_printf(const char *fmt, ...);
 
 // lastheard

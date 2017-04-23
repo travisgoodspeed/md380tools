@@ -23,6 +23,12 @@ extern uint8_t      currently_selected_menu_entry;
 extern wchar_t *mn_editbuffer_poi;
 
 
+/* Don't call functions without a complete prototype, e.g. from keyb.c . */
+/* See also (more menu functions) : md380.h !                            */
+
+void create_menu_entry_set_tg_screen(void);
+
+
 #ifdef __cplusplus
 }
 #endif

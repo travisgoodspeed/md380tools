@@ -102,6 +102,7 @@ void cfg_load()
 #else
     global_addl_config.netmon = 0 ;
 #endif
+
 }
 
 void cfg_save()
@@ -139,5 +140,8 @@ void init_global_addl_config_hook(void)
 
 //#ifdef CONFIG_MENU
     md380_create_main_menu_entry();
+    // Ex: warning: implicit declaration of function 'md380_create_main_menu_entry'  .
+    //  Indeed. Cured 2017-04-17 by fixing a typo in md380.h" .
+    //  ( md380_create_main_meny_entry(void) -> md380_create_main_menu_entry ) .
 //#endif    
 }

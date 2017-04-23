@@ -53,7 +53,13 @@ SRCS += lastheard.o
 SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
-SRCS += irq_handlers.o # DL4YHF 2017-01-06
+SRCS += irq_handlers.o
+SRCS += narrator.o
+SRCS += lcd_driver.o
+SRCS += font_8_8.o
+SRCS += app_menu.o
+SRCS += color_picker.o
+SRCS += amenu_set_tg.o
 SRCS += timer.o
 
 ifdef INC_DISPFLIP

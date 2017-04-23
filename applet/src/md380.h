@@ -101,7 +101,11 @@ void        OS_EXIT_CRITICAL(int);
 void*   main_menu(void *);     // menu exec
 
 void*   md380_menu_entry_back(void);
-void*   md380_create_main_meny_entry(void);
+// ex: void* md380_create_main_meny_entry(void); // ??? 
+extern void  md380_create_main_menu_entry(void); // !!!
+   // (The return value is "void", NOT a "void*", because none of the callers
+   //  in the original firmware does anything with the value in R0
+   //  after calling md380_create_main_menu_entry() . )
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
