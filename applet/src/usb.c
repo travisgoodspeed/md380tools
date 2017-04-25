@@ -242,9 +242,13 @@ int usb_dnld_hook(){
     case TDFU_SYSLOG:
       syslog_dump_dmesg();
       break;
+
+    case TDFU_EXEC:
+      execshellcode(md380_packet+5);
+      break;
     
     default:
-      printf("Unhandled DFU packet type 0x%02x.\n",md380_packet[0]);
+      printf("Unhandled DFU packet type 0x%02x.\n", md380_packet[0]);
     }
     
     md380_thingy2[0]=0;
@@ -261,6 +265,23 @@ int usb_dnld_hook(){
      */
     return usb_dnld_handle();
   }
+}
+
+//! This executes shellcode from the provided address.
+int execshellcode(int (*functionPtr)(int)){
+  uint32_t res;
+  uint8_t* bytes=(uint8_t*) (((int) functionPtr)-1);
+  
+  printf("Executing shellcode from 0x%08x: \n\n",
+	 (int) functionPtr);
+
+  for(int i=0;i<32;i++)
+    printf("%02x ",bytes[i]);
+
+  
+  res=functionPtr(0xdeadbeef);
+  printf("\nres=0x%08x\n",res);
+  return res;
 }
 
 

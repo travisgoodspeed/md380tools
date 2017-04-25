@@ -97,6 +97,24 @@ class Tool(DFU):
             return False
         return True
 
+    def parsehex(self, string):
+        """Parses hex bytes."""
+        parsed="";
+        for word in string.split():
+            parsed=parsed+chr(int(word,16));
+        return parsed;
+    def execute(self, shellcode):
+        """Executes a short chunk of Thumb2 shellcode on 32-bit aligned memory."""
+        cmd = 0x20 #TDFU_EXEC
+
+        #Pad to a full word.
+        cmdstr = (chr(cmd)+"   "+shellcode);
+        
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0,
+                                   cmdstr)
+        self.get_status()
+        time.sleep(0.1)
+        
     def peek(self, adr, size):
         """Returns so many bytes from an address."""
         self.set_address(adr)
@@ -353,7 +371,7 @@ class Tool(DFU):
 
 def dmesg(dfu):
     """Prints the dmesg log from main memory."""
-    # dfu.drawtext("Dumping dmesg",160,50);
+    #dfu.drawtext("Dumping dmesg",160,50);
     print(dfu.getdmesg())
 
 
@@ -654,6 +672,9 @@ Dumps all the inbound and outbound text messages.
 Dumps all the keys.
     md380-tool keys
 
+Execute a chunk of shellcode as a function.
+    md380-tool exec "70 47"
+
 Prints the SPI Flash Type.
     md380-tool spiflashid
 Dump all of flash memory.
@@ -761,7 +782,11 @@ def main():
                 dfu = init_dfu()
                 dfu.custom(int(sys.argv[2], 16))
                 dmesg(dfu)
-
+            elif sys.argv[1] == 'exec' or sys.argv[1] == 'execute' :
+                dfu = init_dfu()
+                dfu.execute(dfu.parsehex(sys.argv[2]));
+                #dmesg(dfu);
+                
         elif len(sys.argv) == 4:
             if sys.argv[1] == 'spiflashwrite':
                 filename = sys.argv[2]

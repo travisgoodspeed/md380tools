@@ -27,6 +27,8 @@ fetching the raw buffer.
 #define TDFU_C5000_WRITEREG 0x10 //u8 reg, u8 val
 #define TDFU_C5000_READREG  0x11 //u8 register
 
+//Dangerous commands.
+#define TDFU_EXEC  0x20
 
 //Graphics Commands
 #define TDFU_PRINT 0x80 //(u8 x, u8 y, wchar_t str[])
