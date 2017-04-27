@@ -163,4 +163,3 @@ extern struct TAContext talkerAlias;
 #endif
 
 #endif /* ETSI_H */
-

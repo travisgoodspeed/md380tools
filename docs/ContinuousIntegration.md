@@ -1,7 +1,8 @@
 How we (pre-)release usable MD380 Experimental Firmware
 ====
 
-### TLDR
+### TL;DR
+
 To provide tested, usable, experimental firmware initiated by [Travis](https://www.qrz.com/db/KK4VCZ) for the Tytera MD380 DMR handheld radio we've created a small CI (Continous Integration) system. This system picks up authored changes to the experimental firmware code and builds pre-releases of firmware. Together with a note of changes and accompanying CSV-files, containing ID's and names of HAMs, this is published at a second Github location.
 Our release master, [PA3MET](https://www.qrz.com/db/PA3MET), ensures field-tests of the firmware have been completed and than releases the firmware to [this Github-page](https://github.com/roelandjansen/md380tools/releases/latest). While still **experimental**, HAMs can relatively safe install and test new features added by the developers. ***Installing the firmware is at your own risk***
 

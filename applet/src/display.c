@@ -22,6 +22,7 @@
 #include "netmon.h"
 #include "radiostate.h"
 #include "unclear.h"
+#include "etsi.h"
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -188,7 +189,7 @@ void draw_rx_screen(unsigned int bg_color)
 {
     int dst;
     int src;
-    int grp ;
+    int grp;
     
     int primask = OS_ENTER_CRITICAL(); // for form sake
 //    dst = g_dst;
@@ -220,6 +221,68 @@ void draw_rx_screen(unsigned int bg_color)
     }
     
     int y_index = RX_POPUP_Y_START;
+    int scr_row = RX_POPUP_Y_START;
+
+    if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
+    {
+    	if( grp ) {
+   	     gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> TG %d", src, dst );        
+ 	   } else {
+ 	       gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> %d", src, dst );
+ 	   }
+	    scr_row += GFX_FONT_SMALL_HEIGHT ;
+
+	    gfx_select_font(gfx_font_norm);
+
+ 	   if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
+ 	   {    
+		gfx_printf_pos2(RX_POPUP_X_START, scr_row, 10, "%s", talkerAlias.text );
+ 	        scr_row += GFX_FONT_NORML_HEIGHT; // previous line was in big font
+ 	   } else {
+		gfx_printf_pos2(RX_POPUP_X_START, scr_row, 10, "DMRID: %d", src );
+		scr_row += GFX_FONT_NORML_HEIGHT; // previous line was in big font
+ 	   }
+
+	   gfx_select_font(gfx_font_small);
+
+	   switch( global_addl_config.userscsv ) {
+	        case 0 :
+		gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: CPS mode");
+            	break ;
+	   
+		case 1 :
+		gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: UserDB mode");
+            	break ;
+
+	        case 2 :
+		if ( talkerAlias.length > 0 )  {
+			gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: TalkerAlias");
+		} else {
+			gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: TA not rcvd!");
+		}
+            	break ;
+
+	        case 3 :
+		gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: TA/DB mode");
+            	break ;
+	   }
+	   scr_row += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
+
+
+           gfx_select_font(gfx_font_small);
+           gfx_puts_pos(RX_POPUP_X_START, scr_row, "------------------------");
+           scr_row += GFX_FONT_SMALL_HEIGHT ;
+
+	   if( global_addl_config.userscsv == 3 )	// 3 = TA & DB
+	   {
+   	        gfx_printf_pos(RX_POPUP_X_START, scr_row, "%s %s", usr.callsign, usr.firstname );
+		scr_row += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
+
+		gfx_puts_pos(RX_POPUP_X_START, scr_row, usr.country );
+		scr_row += GFX_FONT_SMALL_HEIGHT ;
+ 	   }
+
+    } else {	
     
     gfx_select_font(gfx_font_small);
     if( grp ) {
@@ -234,7 +297,13 @@ void draw_rx_screen(unsigned int bg_color)
     y_index += GFX_FONT_NORML_HEIGHT; // previous line was in big font
     
     gfx_select_font(gfx_font_small);
-    gfx_puts_pos(RX_POPUP_X_START, y_index, usr.name );
+
+    if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
+    {	
+	gfx_puts_pos(RX_POPUP_X_START, y_index, talkerAlias.text );
+    } else {
+	gfx_puts_pos(RX_POPUP_X_START, y_index, usr.name );
+    }
     y_index += GFX_FONT_SMALL_HEIGHT ; // previous line was in small font
 
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.place );
@@ -245,10 +314,81 @@ void draw_rx_screen(unsigned int bg_color)
     
     gfx_puts_pos(RX_POPUP_X_START, y_index, usr.country );
     y_index += GFX_FONT_SMALL_HEIGHT ;
+    }
     
     gfx_select_font(gfx_font_norm);
     gfx_set_fg_color(0xff8032);
-    gfx_set_bg_color(0xff000000);
+    gfx_set_bg_color(0xff0000);
+}
+
+void draw_ta_screen(unsigned int bg_color)
+{
+    int dst;
+    int src;
+    int grp ;
+    
+    int primask = OS_ENTER_CRITICAL(); // for form sake
+    int scr_row = RX_POPUP_Y_START;
+    
+    dst = rst_dst ;
+    src = rst_src ;
+    grp = rst_grp ;
+    
+    OS_EXIT_CRITICAL(primask);
+ 
+    // clear screen
+    gfx_set_fg_color(bg_color);
+    gfx_blockfill(0, 16, MAX_X, MAX_Y); 
+
+    gfx_set_bg_color(bg_color);
+    gfx_set_fg_color(0x000000);
+    gfx_select_font(gfx_font_small);
+
+    user_t usr ;
+    
+    gfx_select_font(gfx_font_small);
+    if( grp ) {
+        gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> TG %d", src, dst );        
+    } else {
+        gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> %d", src, dst );
+    }
+    scr_row += GFX_FONT_SMALL_HEIGHT ;
+
+    gfx_select_font(gfx_font_norm);
+
+    if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
+    {
+	gfx_printf_pos2(RX_POPUP_X_START, scr_row, 10, "%s", talkerAlias.text );
+        scr_row += GFX_FONT_NORML_HEIGHT;
+    } else {
+	gfx_printf_pos2(RX_POPUP_X_START, scr_row, 10, "DMRID: %d", src );
+	scr_row += GFX_FONT_NORML_HEIGHT;
+    }
+
+    gfx_select_font(gfx_font_small);
+    if ( talkerAlias.length > 0 )  {
+	gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: TalkerAlias");
+    } else {
+	gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: TA not rcvd!");
+    }
+
+    scr_row += GFX_FONT_SMALL_HEIGHT ;
+    gfx_select_font(gfx_font_small);
+    gfx_puts_pos(RX_POPUP_X_START, scr_row, "------------------------");
+    scr_row += GFX_FONT_SMALL_HEIGHT ;
+
+    if( usr_find_by_dmrid(&usr,src) == 1 || usr_find_by_dmrid(&usr,src) == 3 )
+    {
+        gfx_printf_pos(RX_POPUP_X_START, scr_row, "%s %s", usr.callsign, usr.firstname );
+	scr_row += GFX_FONT_SMALL_HEIGHT ;
+
+	gfx_puts_pos(RX_POPUP_X_START, scr_row, usr.country );
+	scr_row += GFX_FONT_SMALL_HEIGHT ;
+    }
+    
+    gfx_select_font(gfx_font_norm);
+    gfx_set_fg_color(0xff8032);
+    gfx_set_bg_color(0xff0000);
 }
 
 /*
@@ -281,9 +421,7 @@ void draw_statusline_hook( uint32_t r0 )
 
 void draw_alt_statusline()
 {
-    int dst;
     int src;
-    int grp;
 
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);
@@ -302,13 +440,23 @@ void draw_alt_statusline()
     src = rst_src;
     
     if( src == 0 ) {
-        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:");
-    } else {    
-        if( usr_find_by_dmrid(&usr, src) == 0 ) {
-            gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
-        } else {
-            gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
-        }	
+	if ( global_addl_config.datef == 5 )
+	{
+	        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:");
+	} else {
+	        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA:");
+	}
+    } else {
+	if ( global_addl_config.datef == 6 && talkerAlias.length > 0 )				// 2017-02-18 show talker alias in status if rcvd valid
+	{
+		gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA: %s", talkerAlias.text);
+	} else {										// 2017-02-18 otherwise show lastheard in status line
+	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
+        	} else {
+        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
+	        }	
+	}
     }
     
     gfx_set_fg_color(0);
@@ -322,7 +470,7 @@ void draw_datetime_row_hook()
     if( is_netmon_visible() ) {
         return ;
     }
-    if( is_statusline_visible() ) {
+    if( is_statusline_visible() || global_addl_config.datef == 6 ) {
         draw_alt_statusline();
         return ; 
     }

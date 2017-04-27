@@ -690,7 +690,10 @@ void SysTick_Handler(void)
   // vector table, and the address of the original handler must be known
   // because we also call the original handler from here.
 {
+  #if( CONFIG_DIMMED_LIGHT )
   uint32_t dw;
+  #endif // CONFIG_DIMMED_LIGHT
+
   uint32_t oldSysTickCounter = IRQ_dwSysTickCounter++; 
     // this local copy is more efficient to read than the global variable,
     // because the C compiler needs to load addresses of global variables
@@ -861,3 +864,4 @@ void SysTick_Handler(void)
 
 
 /* EOF < irq_handlers.c > .  Leave an empty line after this. */
+

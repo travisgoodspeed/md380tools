@@ -55,22 +55,16 @@ of the originally exported .ppm file; gimp et al. discard it):
 To flash the Ham-DMR UserDB to SPI Flash. **Works only on radios
 with 16MByte SPI-Flash.**
 
-    generate the upload file
-
+* generate the upload file
        wc -c < db/users.csv > data ; cat db/users.csv >> data
-
-    program to flash with: (very experimental)
-
+* program to flash with: (very experimental)
        md380-tool spiflashwrite data 0x100000
-
-
-    or (all steps included): (very experimental)
-
+* or (all steps included): (very experimental)
        make flashdb
 
 After successfully flashing, the radio will be restarted.
 
-##Flashing on Linux Notes##
+## Flashing on Linux Notes ##
 
 To check the type / size of SPI-Flash
 
