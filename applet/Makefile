@@ -59,6 +59,7 @@ SRCS += lcd_driver.o
 SRCS += font_8_8.o
 SRCS += app_menu.o
 SRCS += color_picker.o
+SRCS += amenu_utils.o
 SRCS += amenu_set_tg.o
 SRCS += timer.o
 

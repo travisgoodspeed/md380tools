@@ -7,7 +7,7 @@
 
 #include "etsi.h"
 #include "debug.h"
-#include "string.h"  // defeat warning: implicit declaration of function 'memset'
+#include <string.h>
 
 struct TAContext taContext;
 struct TAContext talkerAlias;

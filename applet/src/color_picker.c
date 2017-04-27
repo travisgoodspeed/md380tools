@@ -4,17 +4,15 @@
 // Date:    2017-04-23
 //  Implements a simple 'colour picker' dialog for the app-menu.
 //  For details and usage, see applet/src/app_menu.c .
-//  Written as a simple example for simple dialog screens
-//  and to customize the colours used for the app-menu itself.
 
 #include "config.h"
 
-#if (CONFIG_APP_MENU) // this module is only available along with app_menu.c ... 
+#if (CONFIG_APP_MENU) // only available in combination with app_menu.c
 
-#include <stm32f4xx.h>
+#include <stm32f4xx.h>  // <- fancy stuff, 'uint8_t', etc. I miss my BYTE .... ..
 #include <string.h>
-#include "lcd_driver.h"   // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
-#include "app_menu.h"     // 'simple' alternative menu activated by red BACK-button
+#include "lcd_driver.h" // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
+#include "app_menu.h"   // 'simple' alternative menu activated by red BACK-button
 
 
 //---------------------------------------------------------------------------
@@ -35,11 +33,7 @@ static void ColorPicker_DrawBargraph(int y1, int y2, int index, int value)
      default: wColor = LCD_COLOR_BLUE;  break;
    }
 
-  // Erasing the (black) background FIRST, 
-  // and drawing the red, green, or blue backgraph AFTERWARDS
-  // causes minor flickering when a cursor key (with autorepeat)
-  // forces frequent screen updates. But it was temptingly simple, so:
-  LCD_FillRect( x1, y1, x2, y2, LCD_COLOR_BLACK ); // erase background
+  LCD_FillRect( x1, y1, x2, y2, LCD_COLOR_BLACK ); // erase background (moderate flicker..)
   LCD_FillRect( x1+w3, y, x2-w3, y2, wColor );     // draw foreground (poor example)
 
   
@@ -104,7 +98,7 @@ static void ColorPicker_Draw(app_menu_t *pMenu, menu_item_t *pItem)
 
 //---------------------------------------------------------------------------
 static void ColorPicker_IncDec(app_menu_t *pMenu, int delta )
-{
+{ // Called when modifying one of the 3 colour components
   rgb_quad_t rgb;
   int n, iField = pMenu->dialog_field_index;
   rgb.u32 = LCD_NativeColorToRGB( (uint16_t)pMenu->iEditValue ); 
@@ -116,7 +110,6 @@ static void ColorPicker_IncDec(app_menu_t *pMenu, int delta )
      rgb.ba[2-iField] = n; // 2-iField because .ba[0] is BLUE, not RED
      pMenu->iEditValue = LCD_RGBToNativeColor( rgb.u32 ); 
    }
-
 } // end ColorPicker_IncDec()
 
 

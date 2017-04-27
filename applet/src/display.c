@@ -438,9 +438,7 @@ void draw_statusline_hook( uint32_t r0 )
 
 void draw_alt_statusline()
 {
-    // int dst; // unused ?
     int src;
-    // int grp; // unused ?
 
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);

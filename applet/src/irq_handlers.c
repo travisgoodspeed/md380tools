@@ -1038,6 +1038,7 @@ static void PollKeysForAppMenu(void)
 {
   static uint8_t green_menu_countdown=0;
   static uint8_t autorepeat_countdown=0;
+  static uint8_t longpress_countdown=0;
   static uint16_t prev_key;
   uint16_t key = kb_row_col_pressed; 
   // 'kb_keycode' is useless here because it doesn't return to zero 
@@ -1052,7 +1053,12 @@ static void PollKeysForAppMenu(void)
   // ignore gui_opmode2 and pass keyboard events to our own app-menu.
   if( (gui_opmode2 == OPM2_MENU ) && (!Menu_IsVisible()) )
    { // keyboard focus currently on Tytera's 'green' menu 
-     // -> ignore kb_row_col_pressed until the key was released
+     // -> ignore kb_row_col_pressed until the key was released .
+     // But because the screen sometimes froze when trying to 
+     //   force redrawing the "idle" screen by setting
+     //   gui_opmode2=OPM2_MENU; gui_opmode1=SCR_MODE_IDLE|0x80 ),
+     // holding down the red 'BACK' button pressed for a second
+     // will always activate the alternative 'app menu' .
      green_menu_countdown = 200/*ms*/ / 24; 
    }
   else // keyboard focus not on Tytera's ('green') menu...
@@ -1068,21 +1074,36 @@ static void PollKeysForAppMenu(void)
          { green_menu_countdown = 200/*ms*/ / 24; // ignore keypress for another 200 ms
          }
       }
-     else // "green menu" countdown expired, guess the alternative menu may process this key..
-      { if( prev_key==0 && key!=0 )
-         { Menu_OnKey( KeyRowColToASCII(key) ); 
-           // no fancy FIFO but a simple 1-level buffer.
-           // Consumed in another task or thread, see app_menu.c 
-           autorepeat_countdown = 500/*ms*/ / 24; // <- autorepeat DELAY
+   }
+  // Independent keyboard polling for the alternative menu.. and maybe others
+  if( prev_key==0 && key!=0 )
+   { if( green_menu_countdown == 0)
+      { Menu_OnKey( KeyRowColToASCII(key) ); 
+      }
+     // no fancy FIFO but a simple 1-level buffer.
+     // Consumed in another task or thread, see app_menu.c 
+     autorepeat_countdown = 500/*ms*/ / 24; // <- autorepeat DELAY
+     longpress_countdown = 2000/*ms*/ / 24;
+   }
+  else // no CHANGE in the keyboard matrix, but maybe...
+   { if( key!=0 )
+      { if(  longpress_countdown > 0 )
+         { --longpress_countdown;
          }
-        else // no CHANGE in the keyboard matrix, but maybe...
-        if( key==0x0012 || key==0x0022 ) // cursor key still pressed ?
-         { if(  autorepeat_countdown > 0 )
-            { --autorepeat_countdown;
-            }
-           else // send the same key again, prevents rubbing the paint off..  
-            { autorepeat_countdown = 130/*ms*/ / 24; // 1 / "autorepeat RATE"
-              Menu_OnKey( KeyRowColToASCII(key) );
+      }
+     if( key==0x0012 || key==0x0022 ) // cursor key still pressed ?
+      { if(  autorepeat_countdown > 0 )
+         { --autorepeat_countdown;
+         }
+        else // send the same key again, prevents rubbing the paint off..  
+         { autorepeat_countdown = 130/*ms*/ / 24; // 1 / "autorepeat RATE"
+           Menu_OnKey( KeyRowColToASCII(key) );
+         }   
+      }
+     if( key==0x0402 )               // red 'BACK' key..
+      { if( longpress_countdown==1 ) // ..pressed for a "long" time..
+         { if( ! Menu_IsVisible() )  // ... so enter the alternative menu regardless of "gui_opmode2" & Co !
+            { Menu_OnKey( KeyRowColToASCII(key) ); 
             }
          }
       }

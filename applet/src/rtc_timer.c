@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "netmon.h"
 #include "syslog.h"
+#include "irq_handlers.h" // green_led_timer, red_led_timer (for debugging)
 #include "narrator.h" // tells channel, zone, and menu in Morse code
 #include "app_menu.h" // optional 'application' menu, activated by red BACK-button.
 
@@ -103,6 +104,8 @@ extern void f_4315_hook()
 
 void rx_screen_blue_hook(char *bmp, int x, int y)
 {
+  // green_led_timer = 5; // rx_screen_blue_hook() called ? very short pulse with the green LED !
+
     netmon_update();
 
 #if( CONFIG_MORSE_OUTPUT ) 
@@ -117,11 +120,11 @@ void rx_screen_blue_hook(char *bmp, int x, int y)
 
 #ifdef CONFIG_GRAPHICS
     if( global_addl_config.userscsv > 0 && !is_menu_visible() ) {
-   if( global_addl_config.userscsv == 2) {
+      if( global_addl_config.userscsv == 2) {
            draw_rx_screen(0xff8032);      // ta
-   } else {
+      } else {
            draw_rx_screen(0xff8032);
-   }
+      }
     } else {
         gfx_drawbmp(bmp, x, y);
     }

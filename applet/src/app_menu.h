@@ -79,6 +79,8 @@ typedef struct tAppMenu // instance data (in RAM, not Flash)
 #         define APPMENU_EDIT_INC_DEC 1 // whole field selected, increment/decrement value via cursor keys
 #         define APPMENU_EDIT_OVERWRT 2 // only one digit selected ('cursor'), digit from keyboard OVERWRITES
 #         define APPMENU_EDIT_INSERT  3 // similar, but digit from keyboard is INSERTED into the string
+  int8_t new_edit_mode; // when non-negative, "request to switch to a different edit mode",
+           // may be set in any thread, polled and reset (to -1) in Menu_DrawIfVisible() when done.
   uint8_t edit_length;  // current length of the VALUE when *editing*
   uint8_t cursor_pos;   // edit digit position, 0..edit_length-1
   uint8_t save_on_exit; // flag set if any member of global_addl_config was edited
@@ -94,7 +96,7 @@ typedef struct tAppMenu // instance data (in RAM, not Flash)
            //
   int  iValueBeforeEditing; // original value before editing; required for 'undo'
            //
-  char sz40EditBuf[41]; // also used "offline" while editing, for direct input
+  char sz40EditBuf[44]; // also used "offline" while editing, for direct input
            // via keyboard (or even Morse code ?), because this is easier than
            // adding or subtracting powers of 2, 10, or 16 to iEditValue ...
   int  value_chksum; // crude 'Fletcher' checksum over all currently visible 
@@ -204,15 +206,28 @@ typedef struct tAppMenuItem
 
 typedef int (*am_callback_t)(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
 
-// Helper functions to deal with those bloody 'wide' strings, etc..
-int wide_to_C_string( wchar_t *wide_string, char *c_string, int maxlen );
-int my_wcslen( wchar_t *wide_string ); // kludge because there was no wcslen() 
+// 'Utility' functions for the application menu, implemented in amenu_utils.c :
+BOOL Menu_IsFormatStringDelimiter( char c );
+int  Menu_ParseDecimal( char **ppszSource );
+int  Menu_HexDigitToInt( char c );
+int  Menu_ParseHex( char **ppszSource );
+int  Menu_ParseBinary( char **ppszSource );
+char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDigits, char **cppHotkey );
+void IntToDecHexBinString( int iValue, int num_base, int nDigits, char *psz40Dest);
+int  MenuItem_HasValue(menu_item_t *pItem );
+int  Menu_GetNumItems( menu_item_t *pItems );
+void Menu_GetColours( int sel_flags, uint16_t *pFgColor, uint16_t *pBgColor );
+char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value);
+int  Menu_ReadIntFromPtr( void *pvValue, int data_type );
+void Menu_WriteIntToPtr( int iValue, void *pvValue, int data_type );
+void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue );
+int  Fletcher32( uint32_t prev_sum, uint16_t *pwData, int nWords );
+int  wide_to_C_string( wchar_t *wide_string, char *c_string, int maxlen );
 
 
-// application-menu "API" (and interface to the keyboard handler, etc)
- 
-void Menu_Open( app_menu_t *pMenu, menu_item_t *pItems, char *cpJumpToItem); 
-void Menu_OnKey( uint8_t key); // called on keypress from some interrupt handler
+// Application-menu "API" (and interface to the keyboard handler, etc), in app_menu.c :
+void Menu_Open( app_menu_t *pMenu, menu_item_t *pItems, char *cpJumpToItem, int edit_mode); 
+void Menu_OnKey( uint8_t key); // called on keypress from some interrupt handler .
 int  Menu_IsVisible(void);     // 1=currently visible (open), 0=not open; don't intercept keys
 int  Menu_GetItemIndex(void);  // used by the Morse narrator (narrator.c) to detect "changes"
 void Menu_GetColours( int sel_flags, uint16_t *pFgColor, uint16_t *pBgColor );
@@ -227,16 +242,11 @@ int  Menu_DrawIfVisible(int caller); // Paints the 'application menu'
 #  define AM_CALLER_RX_SCREEN_BLUE_HOOK 5
 #  define AM_CALLER_RTC_TIMER           6
 
-char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDigits, char **cppHotkey );
-char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value);
-void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue );
-
 void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ); // [in] pMenu->iEditValue [out] *pItem->pvValue
 
 
 // menu callback functions implemented in external modules:
 extern int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int param ); // color_picker.c
-extern int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int param); // amenu_set_tg.c
 
 #if( CONFIG_MORSE_OUTPUT )
 void Menu_ReportItemInMorseCode(int morse_request); // used internally and by the Morse narrator

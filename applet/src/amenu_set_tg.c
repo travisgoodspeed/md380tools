@@ -14,11 +14,15 @@
 
 #include <stm32f4xx.h>
 #include <string.h>
+#include "irq_handlers.h" // green_led_timer, red_led_timer (for debugging)
 #include "lcd_driver.h"   // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
 #include "app_menu.h"     // 'simple' alternative menu activated by red BACK-button
 #include "codeplug.h"     // struct 'contact' contains the current talkgroup number
 #include "printf.h"       // Kustaa Nyholm's tinyprintf (printf.c, snprintfw)
+#include "amenu_set_tg.h" // header for THIS module (to check prototypes,etc)
 
+int     ad_hoc_talkgroup = 0; // "temporarily wanted" talkgroup, entered by user in the alternative menu
+uint8_t ad_hoc_tg_channel= 0; // current channel number when the above TG had been set
 
 //---------------------------------------------------------------------------
 int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
@@ -52,6 +56,14 @@ int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
            // > write entered tg to the contact name 
            // > so that it is dislayed on the monitor1 screen
            snprintfw( contact.name, 16, "TG %d*", pMenu->iEditValue ); // (#708)
+           // Because the original firmware will overwrite 'contact' when leaving
+           // the alternative menu (by setting channel_num = 0 to redraw the idle screen
+           // even when tuned to a BUSY FM CHANNEL), also store the "wanted" TG here:
+           ad_hoc_talkgroup = pMenu->iEditValue;
+           // The above TG shall only be used as long as we're on the same channel.
+           // When QSYing via rotary knob, the TG for the new channel shall be taken
+           // from the codeplug again. So remember the channel FOR WHICH THE TG WAS SET:
+           ad_hoc_tg_channel = channel_num;
          } // end if < FINISHED (not ABORTED) editing >
         return AM_RESULT_OK; // "event was processed HERE"
      default: // all other events are not handled here (let the sender handle them)
@@ -59,6 +71,41 @@ int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
    } // end switch( event )
   return AM_RESULT_NONE; // "proceed as if there was NO callback function"
 } // end am_cbk_SetTalkgroup()
+
+//---------------------------------------------------------------------------
+void CheckTalkgroupAfterChannelSwitch(void)
+  // Called from somewhere (display task?) after a channel-switch,
+  // including the transition of channel_num = 0 -> channel_num from channel knob.
+{
+  red_led_timer = 5; // detected a transition in channel_num ? very short pulse with the red LED !
+  if( channel_num==0 )  // still on the "dummy channel" to force redrawing the 'idle' screen ?
+   { // Don't modify anything here. Tytera is just going to overwrite the "wanted" talkgroup !
+   }
+  else if( channel_num == ad_hoc_tg_channel )
+   { // When on THIS channel, should we be on the 'ad-hoc entered' talkgroup ? 
+     if( ad_hoc_talkgroup <= 0 ) // ... no 'wanted' talkgroup so don't modify 'contact' 
+      {
+      }
+     else // switch back to the "wanted" talkgroup, set by user / alternative menu:
+      {
+        contact.id_l =  ad_hoc_talkgroup & 0xFF ;
+        contact.id_m = (ad_hoc_talkgroup>>8) & 0xFF ;
+        contact.id_h = (ad_hoc_talkgroup>>16) & 0xFF ;
+        contact.type = CONTACT_GROUP; // now the "contact" is a "talkgroup", not a "user"(-ID) !
+        snprintfw( contact.name, 16, "TG %d*", ad_hoc_talkgroup ); // (trick from PR #708)
+      }
+   }
+  else // channel_num != 0,  but *NOT* on the channel for which the "ad-hoc talkgroup" was entered,
+   { // e.g. operator switched to different channel. 
+     // Keep the ad-hoc talkgroup or "discard" it now ? Consider this:
+     //  - Meet on Timeslot 1 (e.g. nationwide), then "QSY" to Timeslot 2, 
+     //    and enter an ad-hoc TALKGROUP number for that channel (with TS2).
+     //    Something doesn't work as planned so rapidly want the "original" TG (from codeplug) back.
+     //    Intuitively switch to A DIFFERENT channel and back, to invoke the "original" TG.
+     ad_hoc_tg_channel = 0; // FORGET the *channel* with the ad-hoc TG, but not the ad-hoc TG itself,
+     // so we can quickly recall it via app-menu in "up-down"-edit mode.
+   }
+} // end CheckTalkgroupAfterChannelSwitch()
 
 
 #endif // CONFIG_APP_MENU ?

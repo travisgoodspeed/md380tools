@@ -71,8 +71,7 @@ void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);
 
-// ex: void print_time_hook(void);  parameter 'log' used to print info from netmon.c 
-void print_time_hook(char log);   
+void print_time_hook(const char log);   
 
 typedef struct gfx_pal {
   long   ncol;

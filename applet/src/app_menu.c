@@ -15,15 +15,18 @@
 //    
 //  1. Add the following lines in applet/Makefile (after SRCS += narrator.o) :
 //      SRCS += app_menu.o 
+//      SRCS += amenu_utils.o
+//      SRCS += amenu_set_tg.o
+//      SRCS += color_picker.o
 //      SRCS += lcd_driver.o
 //      SRCS += font_8_8.o
-//      SRCS += color_picker.o
-//      SRCS += amenu_set_tg.o
 //  
 //  2. #define CONFIG_APP_MENU 1  in  md380tools/applet/config.h  .
 
-
 #include "config.h"
+
+#if (CONFIG_APP_MENU) // <- this condition ends near end of file.. compile as dummy when not opted-in in config.h
+
 
 #include <stm32f4xx.h>
 #include <string.h>
@@ -35,24 +38,25 @@
 #include "version.h"
 #include "printf.h"
 #include "spiflash.h"
-#include "addl_config.h"  // some customizeable colours in global_addl_config
+#include "addl_config.h"  // customizeable colours stored in global_addl_config
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
 #include "keyb.h"
-#include "menu.h"         // currently_selected_menu_entry / currently_focused_item_index ?
 #include "display.h"      // gui_opmode_x, OPM2_MENU, etc
 #include "netmon.h"       // is_netmon_visible(), etc
+#include "unclear.h"      // radio_status_1, etc (displayed here to find out what they do)
 #include "codeplug.h"     // zone_name[], etc (mostly unknown for old firmware)
 #include "console.h"      // text screen buffer for Netmon (may be displayed through the 'app menu', too)
 #include "irq_handlers.h" // low-level beep generator (mainly used for Morse output)
 #include "narrator.h"     // announces channel, zone, and maybe current menu selection in Morse code
 #include "lcd_driver.h"   // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
 #include "app_menu.h"     // 'simple' alternative menu activated by red BACK-button
+#include "amenu_set_tg.h" // helper to set a new talkgroup ad-hoc (and keep it!) 
 
 
 // Variables used by the 'app menu' :
-#if (CONFIG_APP_MENU)
+
 uint8_t am_key;   // one-level keyboard buffer, fed by irq_handlers.c
 
 // For shortest code, put everything inside a SMALL struct, and reference it
@@ -67,24 +71,29 @@ struct
   uint8_t vert_scroll_pos;
 } submenu_stack[APPMENU_STACKSIZE];
 
+// Not direcly related with the 'application menu', but used by it
+// to keep the 'wanted talkgroup' even after switching back to the
+// idle screen (or normal main screen, or whatever..) by setting
+// channel_num = 0 in Menu_Close() :
+uint8_t Menu_old_channel_num = 0;
+
 
 //---------------------------------------------------------------------------
-// Internal 'forward' references (not 'static', who knows if....) 
+// Internal 'forward' references (not 'static', though..) 
 int  Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iTextLineNr);
 int  Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey );
-BOOL Menu_IsFormatStringDelimiter( char c );
-int  Menu_ParseDecimal( char **ppszSource );
 BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c);
+BOOL Menu_ProcessEditKey(app_menu_t *pMenu, char c);
+void Menu_UpdateEditValueIfNotEditingYet(app_menu_t *pMenu, menu_item_t *pItem);
 void Menu_OnEnterKey(app_menu_t *pMenu);
 void Menu_OnExitKey(app_menu_t *pMenu);
-void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem );
+void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem, uint8_t edit_mode );
 void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem );
 void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta );
 void Menu_PushSubmenuToStack(app_menu_t *pMenu);
 BOOL Menu_PopSubmenuFromStack(app_menu_t *pMenu);
 menu_item_t *Menu_GetFocusedItem(app_menu_t *pMenu);
 int  Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int param);
-int  Menu_ReadIntFromPtr( void *pvValue, int data_type );
 
 
 // Prototypes and forward references for some menu items :
@@ -118,12 +127,6 @@ const menu_item_t am_Main[] =
      (void*)am_Setup,0,0,           NULL,         NULL     },
   { "Exit",             DTYPE_NONE, APPMENU_OPT_BACK,0,
          NULL,0,0,                  NULL,         NULL     },
-  // (an extra "Exit to main screen" may be redundant here, 
-  //  and didn't work really well because Tytera's menu immediately
-  //  popped up when pressing the green 'Enter' key in THIS menu.
-  //  Alternative: Press the RED key to leave this alternative menu (sic!).
-  //  One fine day, we may find a more reliable way to intercept keys
-  //  than the current stuff in keyb.c : kb_handler_hook() ... )
 
   // End of the list marked by "all zeroes" :
   { NULL, 0/*dt*/, 0/*opt*/, 0/*ov*/, NULL/*pValue*/, 0,0, NULL, NULL }
@@ -189,6 +192,18 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
         &gui_opmode2,0,0,      am_stringtab_opmode2, NULL },
   { "[b8]opmode1",      DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &gui_opmode1,0,0,          NULL,         NULL     },
+  { "[b8]opmode3",      DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &gui_opmode3,0,0,          NULL,         NULL     },
+#if defined(FW_D13_020) || defined(FW_S13_020)
+  { "[b8]radio_s0",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &radio_status_1.m0,0,0,    NULL,         NULL     },
+  { "[b8]radio_s1",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &radio_status_1.m1,0,0,    NULL,         NULL     },
+  { "[b8]radio_s2",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &radio_status_1.m2,0,0,    NULL,         NULL     },
+  { "[b8]radio_s3",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
+        &radio_status_1.m3,0,0,    NULL,         NULL     },
+#endif
   { "Colour test",      DTYPE_NONE, APPMENU_OPT_NONE,0, 
         NULL,0,0,                  NULL, am_cbk_ColorTest },
   { "Setup:Back",       DTYPE_NONE, APPMENU_OPT_BACK,0,
@@ -247,23 +262,11 @@ void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
 }
 
 //---------------------------------------------------------------------------
-int Menu_GetNumItems( menu_item_t *pItems )
-{ int nItems = 0;
-  if( pItems )
-   { while( pItems->pszText != NULL )
-      { ++nItems;
-        ++pItems;
-      } 
-   }
-  return nItems;
-} 
-
-//---------------------------------------------------------------------------
 void Menu_Open(
         app_menu_t  *pMenu,  // [in] menu instance data in RAM, NULL for "main menu instance" 
         menu_item_t *pItems, // [in] address of the first item in ROM, NULL for "main"
-        char *cpJumpToItem)  // [in] optional name (item text) to "jump to" .
-                             //        (special service for programmabe sidebuttons)
+        char *cpJumpToItem,  // [in] optional name (item text) to "jump to" (for programmable side buttons) .
+        int  edit_mode)      // [in] new edit mode, e.g. APPMENU_EDIT_OFF. Negative: don't modify.
 {
   int i,n;
   char *cp;
@@ -293,6 +296,12 @@ void Menu_Open(
          }
       }
    } // end if < jump to a certain item, identified by the MENU ITEM TEXT > ?
+  if( edit_mode >= 0 )
+   { pMenu->new_edit_mode = (uint8_t)edit_mode;
+   }
+  else
+   { pMenu->new_edit_mode = -1;
+   }
   pMenu->visible = APPMENU_VISIBLE; 
   pMenu->redraw  = TRUE;
 
@@ -327,28 +336,34 @@ void Menu_Close(app_menu_t *pMenu)
    } // end if < trying to exit but a key is still pressed >
   else // green MENU key not pressed, so the normal main screen should appear..
    {
-     // The original firmware didn't COMPLETELY redraw it's own 'main screen'
-     // now, because it's not aware of the display been hijacked temporarily.
-     LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOR_MD380_BKGND_BLUE ); 
-     // Calling display_idle_screen() from here would be asking for trouble. 
-     // Better let the ugly monster 'f_4225()' (@0x801fe5c) decide what
-     // to draw. 
-     // ex: gui_opmode2 = OPM2_IDLE; // this did NOT convince Tytera to redraw the "idle"-screen
-     // ex: from keyb.c(!) : "cause transient -> switch back to idle screen"
-     // ex:   gui_opmode2 = OPM2_MENU ;
-     // ex:   gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
-     // The above "trick" from keyb.c didn't work. Instead the display locked up,
-     // so not even the 'app menu' was usable anymore.
-     // The only way to bring the normal idle screen back was to turn the
-     // channel knob (ummm..sounds familiar from a problem with Netmon).
-     // The value returned by 'Read_Channel_Switch_maybe' (@0x0804fd24 in D13.020)
-     // is compared with 'channel_num' (@0x2001e8c1 in D13.020) .
-     // Existing channel numbers are 1 to 16, so :
-     channel_num = 0;  // <- kludge to force re-drawing the idle screen
-     // (ugly but none of the other tricks actually worked)
+     if( pMenu->visible != APPMENU_OFF ) // avoid to 'close this twice'
+      { pMenu->visible = APPMENU_OFF;
+        // The original firmware didn't COMPLETELY redraw it's own 'main screen'
+        // now, because it's not aware of the display been hijacked temporarily.
+        LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOR_MD380_BKGND_BLUE ); 
+        // Calling display_idle_screen() from here would be asking for trouble. 
+#      if(0) // the following SOMETIMES worked, 
+        // but often the display froze until turning the channel knob (similar in Netmon,
+        //  almost always happens on a *BUSY* channel in FM, when Tytera is ashamed
+        //  of the QRM from the display cable, and decides NOT to draw anything. Ugh.. )
+        // From keyb.c(!) : > "cause transient -> switch back to idle screen"
+        gui_opmode2 = OPM2_MENU ;
+        gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
+#      endif // try the "opmode1 + 2" trick to redraw the idle screen ? 
+#      if( 1 )
+        if( channel_num != 0 )
+         {  Menu_old_channel_num = channel_num;
+         }
+        channel_num = 0;  // <- kludge to force re-drawing the idle screen
+        // (worked reliably to redraw the idle screen COMPLETELY,
+        //  even on a busy FM channel where other tricks failed,
+        //  BUT setting channel_num = 0 caused the firmware to RE-LOAD
+        //  a lot of channel-depending defaults, including contact.id_l/m/h, 
+        //  thus resetting the TG number entered manually in amenu_set_tg.c )
+#      endif // force redrawing the idle screen via channel_num ?
+      } // end if < app-menu *was* really visible >
    } // end else <exiting into the "main screen">
 } // end Menu_Close()
-
 
 //---------------------------------------------------------------------------
 int Menu_IsVisible(void)
@@ -359,7 +374,6 @@ int Menu_IsVisible(void)
   //  Pressing the "green key" first opens Tytera's menu.
   //  Pressing the "red key" first opens this 'app menu'.
 } // end Menu_IsVisible() .
-
 
 //---------------------------------------------------------------------------
 static void Menu_CheckVertScrollPos(app_menu_t *pMenu)
@@ -382,48 +396,6 @@ static void Menu_CheckVertScrollPos(app_menu_t *pMenu)
    }
 } // end Menu_CheckVertScrollPos()
 
-//---------------------------------------------------------------------------
-__attribute__ ((noinline)) int Fletcher32( uint32_t prev_sum, uint16_t *pwData, int nWords ) 
-{ // Kind of block checksum inspired by 'Fletcher32', but it doesn't matter much..
-  //  .. as long as if it gives a different result when A FEW BITS in the input change.
-  //  Used by the menu to find out if it needs to redraw itself, when the VALUES
-  //  currently displayed on the menu screen have been modified *anywhere* .
-  uint32_t sum1 = prev_sum;
-  uint32_t sum2 = prev_sum >> 16;
-  while( nWords-- ) 
-   {
-     sum1 = (sum1 + *(pwData++)) % 0xFFFF;  
-     sum2 = (sum2 + sum1) % 0xFFFF;
-   }
-  return (sum2 << 16) | sum1;
-}
-
-//---------------------------------------------------------------------------
-int wide_to_C_string( wchar_t *wide_string, char *c_string, int maxlen )
-  // Notes:
-  //  * If the source (wide_string) exceeds the capacity
-  //    of c_string, the latter will be truncated.
-  //    Unlike the seriously mis-named "strncpy", the destination
-  //    is ALWAYS terminated with a zero - it's a classic "C"-string.
-  //  * For safety, maxlen is considered the SIZE of a char-array,
-  //    and because the trailing zero is part of that array,
-  //    the maximum payload with maxlen=40 will be 39 (!) characters.
-  //  * If maxlen is 0 (or even negative), c_string isn't modified.
-  //  * If maxlen is 1, c_string will be '\0' !
-  //  * This function returns the NUMBER OF CHARACTERS copied,
-  //    not including the trailing zero.
-{ int n_chars_copied = 0;
-  if( maxlen>0 )
-   { while( *wide_string && (maxlen>1/*!!*/) )
-      { *(c_string++) = (char)(*(wide_string++));
-        --maxlen;
-        ++n_chars_copied;
-      }
-     *c_string = '\0'; // ALWAYS terminate C-strings with a trailing zero !
-   }
-  return n_chars_copied;
-} // end wide_to_C_string()
-
 
 //---------------------------------------------------------------------------
 static void Menu_CheckDynamicValues(app_menu_t *pMenu)
@@ -442,18 +414,11 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
      if( pItem->pvValue ) // directly readable value (via pointer) ?
       { switch( pItem->data_type )
          { case DTYPE_STRING : // the 'value' is a good old "C"-string (8 bit) .
-              // If they had used glorious UTF-8 encoding this would work for anything,
-              // but they didn't - see DTYPE_WSTRING below.
               checksum = Fletcher32( checksum, (uint16_t *)pItem->pvValue, (strlen((char*)pItem->pvValue)+1) / 2 );
-              // Depending on the string length, Mr Fletcher may look at the trailing zero or not.
-              // For this purpose(!), it doesn't matter. 
+              // Depending on the string length, Mr Fletcher may look at the trailing zero or not. Doesn't matter here.
               break;   
            case DTYPE_WSTRING: // the 'value' is wasteful "wide" string
-              // Like it or not, must support this stuff because Tytera
-              // uses wide strings for channel-, zone-, "contact"-, 
-              // and possibly some other names which may change "in the background".
               checksum = Fletcher32( checksum, (uint16_t *)pItem->pvValue, wcslen((wchar_t*)pItem->pvValue) );
-              // btw "wcslen" was used elsewhere, so don't bother using that bulk here.
               break;
            default: // anything else should be convertable into an INTEGER: 
               value = Menu_ReadIntFromPtr( pItem->pvValue, pItem->data_type );
@@ -476,342 +441,6 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
 
 
 //---------------------------------------------------------------------------
-int MenuItem_HasValue(menu_item_t *pItem ) // TRUE=yes (item has a "displayable value"), FALSE=no.
-{ if( pItem != NULL )
-   { if( (pItem->data_type==DTYPE_NONE) || (pItem->data_type==DTYPE_SUBMENU) )
-      { return FALSE;
-      }
-     else if( pItem->pvValue )
-      { return TRUE;
-      }
-     else // even without a "value pointer", menu items can display a value..
-     if( pItem->callback ) // .. delivered via callback on APPMENU_EVT_GET_VALUE
-      { return TRUE;
-      }
-   }
-  // Arrived here ? The menu item doesn't seem to have a displayable "value" 
-  return FALSE; 
-}
-
-
-//---------------------------------------------------------------------------
-void Menu_GetColours( int sel_flags, uint16_t *pFgColor, uint16_t *pBgColor )
-{ 
-  uint16_t fg_color, bg_color;
-
-  if( sel_flags & SEL_FLAG_CURSOR ) // "edit cursor" or the field subject to "inc/dec-editing"
-   { fg_color = global_addl_config.edit_fg_color;
-     bg_color = global_addl_config.edit_bg_color;
-   }
-  else if( sel_flags & SEL_FLAG_FOCUSED ) 
-   { fg_color = global_addl_config.sel_fg_color;
-     bg_color = global_addl_config.sel_bg_color;
-   }
-  else // neither the edit cursor nor not marked : 
-   { fg_color = global_addl_config.fg_color;
-     bg_color = global_addl_config.bg_color;
-   }
-
-  if( LCD_GetColorDifference( fg_color, bg_color ) < 10 )
-   { // difference too small -> discard customized colours to make the menu "readable" again
-     // Imitate Tytera's menu colours instead :
-     if( sel_flags & SEL_FLAG_CURSOR ) // "edit cursor" or the field subject to "inc/dec-editing"
-      { fg_color = LCD_COLOR_WHITE;
-        bg_color = LCD_COLOR_BLUE;
-      }
-     else if( sel_flags & SEL_FLAG_FOCUSED ) 
-      { fg_color = LCD_COLOR_WHITE;
-        bg_color = LCD_COLOR_RED;
-      }
-     else // neither the edit cursor nor not marked : 
-      { fg_color = LCD_COLOR_BLACK;
-        bg_color = LCD_COLOR_WHITE;
-      }
-   }
-  *pFgColor = fg_color;
-  *pBgColor = bg_color;
-} // end Menu_GetColours()
-
-//---------------------------------------------------------------------------
-char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value)
-  // Returns the address of a string if 'value' was found,
-  // otherwise returns NULL.
-{
-  if( pTable )
-   { while( pTable->pszText != NULL )
-      { if( pTable->value == value )
-         { return pTable->pszText;
-         }
-        ++pTable;
-      }
-   }
-  return NULL;
-} // end Menu_FindInStringTable()
-
-//---------------------------------------------------------------------------
-int Menu_ReadIntFromPtr( void *pvValue, int data_type )
-{
-  if(pvValue==NULL)  // safety first !
-   { return 0;
-   }
-  switch( data_type )
-   { case DTYPE_NONE   /*0*/ :
-        break;  
-     case DTYPE_BOOL   /*1*/ :
-        break;  
-     case DTYPE_INT8   /*2*/ :  
-        return *(int8_t*)pvValue;  
-     case DTYPE_INT16  /*3*/ :  
-        return *(int16_t*)pvValue;  
-     case DTYPE_INTEGER/*4*/ :
-        return *(int*)pvValue;  
-     case DTYPE_UNS8   /*5*/ :
-        return *(uint8_t*)pvValue;  
-     case DTYPE_UNS16  /*6*/ :  
-        return *(uint16_t*)pvValue;  
-     case DTYPE_UNS32  /*7*/ :
-        return *(uint32_t*)pvValue;  
-     case DTYPE_FLOAT  /*8*/ :
-        return (int)(*(float*)pvValue);  
-     case DTYPE_STRING /*9*/ : // dare to PARSE A STRING here ?
-        break;
-     case DTYPE_WSTRING/*10*/: // "wide"-string: let this nonsense die, use UTF-8 instead !
-        // (unfortunately Tytera uses this RAM-wasting garbage for zone_name[], etc)
-        break;
-   }
-  return 0;
-} // Menu_ReadIntFromPtr()
-
-//---------------------------------------------------------------------------
-void Menu_WriteIntToPtr( int iValue, void *pvValue, int data_type )
-{
-  if(pvValue==NULL)  // safety first !
-   { return;
-   }
-  switch( data_type )
-   { case DTYPE_NONE   /*0*/ :
-        break;  
-     case DTYPE_BOOL   /*1*/ :
-        break;  
-     case DTYPE_INT8   /*2*/ :  
-        *(int8_t*)pvValue = (int8_t)iValue;
-        break;  
-     case DTYPE_INT16  /*3*/ :  
-        *(int16_t*)pvValue = (int16_t)iValue;
-        break;  
-     case DTYPE_INTEGER/*4*/ :
-        *(int*)pvValue = (int)iValue;
-        break;  
-     case DTYPE_UNS8   /*5*/ :
-        *(uint8_t*)pvValue = (uint8_t)iValue;
-        break;  
-     case DTYPE_UNS16  /*6*/ :  
-        *(uint16_t*)pvValue = (uint16_t)iValue;
-        break;  
-     case DTYPE_UNS32  /*7*/ :
-        *(uint32_t*)pvValue = (uint32_t)iValue;
-        break;  
-     case DTYPE_FLOAT  /*8*/ :
-        *(float*)pvValue = (float)iValue;
-        break;  
-     case DTYPE_STRING /*9*/ :
-     case DTYPE_WSTRING/*10*/: // string types not supported HERE
-        break;
-   }
-} // end Menu_WriteIntToPtr()
-
-//---------------------------------------------------------------------------
-void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue )
-{
-  int min=0, max=0;
-  switch( data_type )
-   { case DTYPE_NONE   /*0*/ :
-        break;  
-     case DTYPE_BOOL   /*1*/ :
-        max = 1;
-        break;  
-     case DTYPE_INT8   /*2*/ :  
-        min = -128;
-        max = 127;
-        break;  
-     case DTYPE_INT16  /*3*/ :  
-        min = -32768;
-        max = 32767;
-        break;  
-     case DTYPE_INTEGER/*4*/ :
-        min = INT_MIN;
-        max = INT_MAX;
-        break;  
-     case DTYPE_UNS8   /*5*/ :
-        max = 255;
-        break;  
-     case DTYPE_UNS16  /*6*/ :  
-        max = 65535;
-        break;  
-     case DTYPE_UNS32  /*7*/ :
-     // max = 0xFFFFFFFF; // dilemma.. this wouldn't work with SIGNED 32 BIT INTEGERS !
-        max = INT_MAX; // better than a MAX LIMIT of "-1" (=0xFFFFFFFF)..
-        break;  
-     case DTYPE_FLOAT  /*8*/ : // permitted value range cannot be expressed with an int..
-        min = INT_MIN;
-        max = INT_MAX;
-        break;  
-     case DTYPE_STRING /*9*/ :
-     case DTYPE_WSTRING/*10*/: // string types not supported HERE
-        break;
-   }
-  if( piMinValue != NULL )
-   { *piMinValue = min;
-   }
-  if( piMaxValue != NULL )
-   { *piMaxValue = max;
-   }
-} // end Menu_GetMinMaxForDataType()
-
-
-//---------------------------------------------------------------------------
-void IntToBinaryString(
-        int iValue,      // [in] value to be converted
-        int nDigits,     // [in] number of fixed digits, 
-                         //      0=variable length without leading zeroes
-        char *psz40Dest) // [out] string, expect up to 33(!) bytes
-  // Converts an integer into a binary representation (string).
-  // Beware: nDigits=0 means 'as many digits as necessary'.
-  //         For a 32-bit integer, the destination string may
-  //         be up to 32 characters long, plus one byte for the trailing zero !
-{
-  int iBitNr;
-  if( nDigits <= 0 )
-   { nDigits = 32;  // begin testing for nonzero bits at the MSB (31)
-     while( nDigits>1 && (iValue & (1<<(nDigits-1)))==0 )
-      { --nDigits;  // eliminate trailing zeroes 
-      }
-   }
-  for( iBitNr=nDigits-1; iBitNr>=0; --iBitNr )
-   { if( iValue & (1<<iBitNr) )
-      { *psz40Dest++ = '1';
-      }
-     else
-      { *psz40Dest++ = '0';
-      }
-   }
-  *psz40Dest = '\0'; // never forget the trailing zero in a "C"-string !
-} // end IntToBinaryString()
-
-//---------------------------------------------------------------------------
-void IntToDecHexBinString(
-        int iValue,      // [in] value to be converted
-        int num_base,    // [in] 2=binary, 10=decimal, 16=hex
-        int nDigits,     // [in] number of fixed digits, 
-                         //      0=variable length without leading zeroes
-        char *psz40Dest) // [out] string, expect up to 33(!) bytes
-  // Converts an integer into a binary representation (string).
-  // Beware: nDigits=0 means 'as many digits as necessary'.
-  //         For a 32-bit integer, the binary representation (string) may
-  //         be up to 32 characters long, plus one byte for the trailing zero !
-  //   Thus, for safety, psz40Dest should be a buffer with up to 40 characters.
-{
-  char sz7Format[8] = "%d";
-  switch( num_base )
-   { case 2: // binary: not supported by printf.c : sprintf() -> tfp_format() 
-        IntToBinaryString( iValue, nDigits, psz40Dest );
-        return;
-     case 10:
-        if( nDigits>0 )
-         { sprintf( sz7Format+1, "%dd", nDigits );
-         }
-        else
-         { // default ("%d") already set
-         }
-        break;
-     case 16:
-        if( nDigits>0 )
-         { sprintf( sz7Format+1, "0%dX", nDigits ); // note the leading ZERO
-         }
-        else
-         { strcpy(  sz7Format+1, "%X" ); // note the absence of a leading zero
-         }
-        break;
-     default:  // whatever the intention was, it's not supported here yet:
-        sprintf( psz40Dest, "?base%d?", num_base );
-        return;
-   }
-  // Arrived here ? Should be something supported by the
-  //      small-footprint implementation of sprintf in printf.c  !
-  sprintf( psz40Dest, sz7Format, iValue );
-} // end IntToDecHexBinString()
-
-//---------------------------------------------------------------------------
-char *Menu_GetParamsFromItemText( char *pszText, int *piNumBase, int *piFixedDigits, char **cppHotkey )
-  // Returns a pointer to the first "plain text" character 
-  // after the list of printing options in squared brackets.
-  // All outputs are optional (piNumBase, piFixedDigits, cppHotkey may be NULL).
-  // Thus usable to skip the 'non-printable' characters at the begin.
-{
-  int num_base = 10;    // default: decimal numeric output
-  int fixed_digits = 0; // default: no FIXED number of digits
-
-  if( cppHotkey != NULL )
-   { *cppHotkey = NULL;
-   }
-  if( (pszText!=NULL) && (*pszText == '[') ) // begin of a headline / hotkey indicator ?
-   { ++pszText; 
-     if( *pszText>='0' && *pszText<='9' ) // Digit -> Hotkey !
-      { if( cppHotkey != NULL )
-         { *cppHotkey = pszText;
-         }
-        // skip hotkey (with optional text for the 'separator line') :
-        while( !Menu_IsFormatStringDelimiter( *pszText ) ) 
-         { ++pszText;
-         }
-        if( *pszText!='\0' && *pszText!=']' ) // Skip delimiter after hotkey name ?
-         { ++pszText;  // e.g. comma or semicolon
-         }
-      } 
-     // After the hotkey, parse optional parameters .
-     // Examples for formatting- and output options :
-     //  [b]  = binary with as many digits as necessary
-     //  [b8] = binary with 8 digits (fixed)
-     //  [d3] = decimal with 3 digits
-     //  [h8] = hexadecimal with 8 digits, but no hex prefix ("0x")
-     //  [5h4] = item invokable via hotkey '5', with 4-digit hex display
-     //  [5 Chapter Five;h4] = first item in "Chapter Five", 
-     //          invokable via hotkey '5', with 4-digit hex display
-     while( !Menu_IsFormatStringDelimiter( *pszText ) )
-      { switch( *pszText++ )
-         { case 'b': // [b] = binary display (for the value) ..
-              num_base = 2; 
-              fixed_digits = Menu_ParseDecimal( &pszText ); // FIXED number of digits ?
-              break;
-           case 'd': // [d] = decimal display with a fixed number of digits
-              num_base = 10; 
-              fixed_digits = Menu_ParseDecimal( &pszText );
-              break;
-           case 'h': // [d] = hex display with a fixed number of digits, no prefix
-              num_base = 16; 
-              fixed_digits = Menu_ParseDecimal( &pszText );
-              break;
-           default:  // "normal" character (not a delimiter) : just skip and ignore
-              break;
-         }
-      } 
-     if( *pszText == ']' ) // what began with a '[' *should* end with a ']' ..
-      { ++pszText; 
-      }
-   } // end if < fixed menu text beginning with '[' >
-
-  if( piNumBase != NULL )  // pass back optional outputs
-   { *piNumBase = num_base;
-   }
-  if( piFixedDigits != NULL )
-   { *piFixedDigits = fixed_digits;
-   }
-  return pszText; // returns a pointer to the first "plain text" character 
-                  // after the list of printing options in squared brackets.
-
-} // end Menu_GetParamsFromItemText()
-
-//---------------------------------------------------------------------------
 void Menu_ItemValueToString( menu_item_t *pItem,  int iValue, char *sz40Dest )
   // For simplicity (and to keep the code size low), the destination buffer
   // should be large enough for 40 characters . Thus sz40Dest .
@@ -830,9 +459,6 @@ void Menu_ItemValueToString( menu_item_t *pItem,  int iValue, char *sz40Dest )
          }
         break;
      case DTYPE_WSTRING: // "wide"-string.. eeek.. ever heard of UTF-8 ?
-        // We don't really support this 'wide string' madness here. 
-        // All characters in the 'wide string' are treated as if they were 8-bit !
-        // Fortunately neither zone- nor channel names are Chinese :)
         if( pItem->pvValue != NULL )
          { wide_to_C_string( (wchar_t*)pItem->pvValue, sz40Dest, 40 );
          }
@@ -853,33 +479,6 @@ void Menu_ItemValueToString( menu_item_t *pItem,  int iValue, char *sz40Dest )
 } // end Menu_ItemValueToString()
 
 //---------------------------------------------------------------------------
-BOOL Menu_IsFormatStringDelimiter( char c )
-  // Part of a very simple parser for a optional format specifications
-  // in menu_item_t.pszText .
-  // Notes:
-  //  - the trailing zero is also considered a 'delimiter' here !
-  //  - space is NOT a delimiter because it may be used in separator labels. 
-{ return (c<' ' || c==',' || c==';' || c=='}' || c==']' );
-}
-
-//---------------------------------------------------------------------------
-int Menu_ParseDecimal( char **ppszSource )
-  // Returns ZERO if there's nothing to parse. KISS.
-{ char *cp = *ppszSource;
-  int iValue = 0;
-  int iSign  = 1;
-  if( *cp=='-' )
-   { ++cp;
-     iSign = -1;
-   }
-  while( *cp>='0' && *cp<='9' )
-   { iValue = 10*iValue + (*(cp++)-'0');
-   }
-  *ppszSource = cp; // pass back the INCREMENTED 'source pointer'
-  return iValue * iSign;
-}
-
-//---------------------------------------------------------------------------
 int Menu_ScaleItemValue( menu_item_t *pItem, int n )
 { int i = pItem->opt_value; // this 'option value' serves multiple purposes..
   if( i != 0 ) // .. but only if nonzero (to avoid nonsense or endless loops):
@@ -892,8 +491,6 @@ int Menu_ScaleItemValue( menu_item_t *pItem, int n )
               n >>= 1;
             } // after this loop, the least significant bit is in bit 0 (mask 1)
          }
-        // Note: this bit-fiddling happens BEFORE looking up 
-        //  the value in the string table a few lines below !
       }
      if( pItem->options & APPMENU_OPT_FACTOR )
       { n *= pItem->opt_value; 
@@ -905,6 +502,7 @@ int Menu_ScaleItemValue( menu_item_t *pItem, int n )
 
 //---------------------------------------------------------------------------
 int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
+  // Draws a "line of text with a menu item" into the framebuffer
 {
   int x=0,i,n;
   int text_height_pixels = 2 * LCD_FONT_HEIGHT;
@@ -955,12 +553,25 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
            else // even without a "value pointer", menu items can display a value..
             { // .. delivered via callback on APPMENU_EVT_GET_VALUE
               n = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
-              // Note: If the CALLBACK delivers the display value,
-              //       we don't try to scale it here.
-              // Menu_InvokeCallback() 'does no harm' if there's no callback at all.
+              // If the CALLBACK delivers the display value, don't scale it here.
             } // end else < menu item with pvValue==NULL > 
          }
-        Menu_ItemValueToString( pItem, n, sz40Temp );
+        if( editing && (  (pMenu->edit_mode == APPMENU_EDIT_INSERT)
+                       || (pMenu->edit_mode == APPMENU_EDIT_OVERWRT) ) )
+         { // In these 'direct' editing modes, numbers are also edited AS STRINGS, so:
+           strlcpy( sz40Temp, pMenu->sz40EditBuf, 25 ); // do NOT update from iEditValue !
+           // Limit to 25 characters for the display (160 pixels / 6 = ~~26, minus one space)
+           // To mark the cursor also when it's at the end of the edit-string,
+           // append a space, which can be highlighted in the loop further below :
+           n = strnlen( sz40Temp, 25 ); // number of characters occupied by the "value"
+           if( n<25 )
+            { sz40Temp[n++] = ' ';
+              sz40Temp[n] = '\0';
+            }
+         }
+        else
+         { Menu_ItemValueToString( pItem, n, sz40Temp );
+         }
         n = strlen( sz40Temp ); // number of characters occupied by the "value" 
 
         // If there's leading text, emit it (left-aligned) and find out the length:
@@ -980,24 +591,30 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
          { font_nr &= ~LCD_OPT_DOUBLE_WIDTH; // switch from 12(?) to 6(?) pixel wide characters
          }
  
-        // Fill the gap between LEFT-aligned text and RIGHT-aligned value:
-        n = LCD_SCREEN_WIDTH - 3 - LCD_GetTextWidth( font_nr, sz40Temp );
-                    //         |___ spare because the rightmost ~~3 pixels
-                    //              are obstructed by the plastic enclosure
-        LimitInteger( &n, 0, LCD_SCREEN_WIDTH-8 ); 
-        if( n >= x )  // if there's no gap, don't try to fill it...
-         { LCD_FillRect( x,y, n-1/*x2*/, y+text_height_pixels-1/*y2*/, bg_color );
+        if( editing && ( (pMenu->edit_mode == APPMENU_EDIT_OVERWRT)
+                      || (pMenu->edit_mode==APPMENU_EDIT_INSERT) ) )
+         { // In edit mode 'OVERWRITE' or 'INSERT', the increasing string length
+           // of the normally RIGHT-aligned value would cause a left-scrolling effect.  
+           // To avoid this, use a single space as separator, and left-aligned value:
+           x = LCD_DrawCharAt( ' ', x, y, fg_color, bg_color, font_nr );
          }
-        x = n; // graphic position for drawing the right-aligned 'value'
+        else // not editing at all, or in simple 'inc/dec'-editing mode:
+         {
+           // Fill the gap between LEFT-aligned text and RIGHT-aligned value
+           n = LCD_SCREEN_WIDTH - 3 - LCD_GetTextWidth( font_nr, sz40Temp );
+                       //         |___ spare because the rightmost ~~3 pixels
+                       //              are obstructed by the plastic enclosure
+           LimitInteger( &n, 0, LCD_SCREEN_WIDTH-8 ); 
+           if( n >= x )  // if there's no gap, don't try to fill it...
+            { LCD_FillRect( x,y, n-1/*x2*/, y+text_height_pixels-1/*y2*/, bg_color );
+            }
+           x = n; // graphic position for drawing the right-aligned 'value'
+         }
 
         // Draw the 'value', char by char, using different colours 
         //  to mark the edit cursor or the selection bar :
         cp = sz40Temp;
-        if( editing ) // THIS item is currently being edited ..
-         { // save the length for HORIZONTAL cursor control:
-           pMenu->edit_length = strlen( sz40Temp );
-         }
-        i  = 0;
+        i  = 0; // character counter to mark the cursor position
         while( ((c=*cp++)!=0) && (x<(LCD_SCREEN_WIDTH-6) ) )
          { sel_flags &= ~SEL_FLAG_CURSOR;
            if( editing ) // THIS item is currently being edited ..
@@ -1005,7 +622,7 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
               if( pMenu->edit_mode == APPMENU_EDIT_INC_DEC )
                { sel_flags |= SEL_FLAG_CURSOR; // increment/decrement applies to the entire field
                }
-              else if( i == pMenu->cursor_pos )
+              else if( i == pMenu->cursor_pos ) // direct typing mode: only a single digit marked
                { sel_flags |= SEL_FLAG_CURSOR;
                }
               else
@@ -1047,14 +664,7 @@ int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
   int x = 0;
   uint16_t fg_color, bg_color;
 
-  // At the moment (2017-04), this is more or less a 'design study' .
-  // It may get replaced anytime, if there's a nicer way of indicating
-  // a new section, topic, paragraph, etc, and the presence of a hotkey.
-  // The general idea is to have a fairly 'flat' menu structure, not
-  // as deeply nested as Tytera's menu. Hopefully these menus remain shorter
-  // than Android's 'cogwheel' menu (connections, my device, options, ...).
-  // The screen is barely WIDE enough to item text + item value,
-  // so the basic idea was to show hotkey number and 'chapter header'
+  // The basic idea was to show hotkey number and 'chapter header'
   // along with a horizontal rule, e.g. :
   //
   // [ 1 Radio >--------
@@ -1089,7 +699,7 @@ int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
 
 //---------------------------------------------------------------------------
 int Menu_DrawIfVisible(int caller)
-  // When visible(!), paints the 'app menu' into the framebuffer.
+  // When visible(!), paints the entire 'app menu' into the framebuffer.
   //      Also processes pending keyboard events (from its own buffer).
   //      Called from various 'display-update' hook functions .
   // [in] caller : tells which of the half dozen of hooked functions
@@ -1103,17 +713,17 @@ int Menu_DrawIfVisible(int caller)
   int y,iTextLineNr;
   uint16_t fg_color, bg_color;
 
+  if( Menu_old_channel_num != channel_num ) // defeat the trouble in amenu_set_tg :
+   { Menu_old_channel_num = channel_num; // Tytera may have overwritten struct contact..
+     CheckTalkgroupAfterChannelSwitch(); // so fill in the AD-HOC edited talkgroup again ?
+   }
+
   if( pMenu->visible==APPMENU_VISIBLE_UNTIL_KEY_RELEASED )
    { // Menu "almost closed" but still visible until releasing the last key.
      // The following is a kludge to prevent opening Tytera's "green key menu"
      // on the same keystroke that was used here to CLOSE the "red key menu".
      if( kb_row_col_pressed == 0 )
-      { 
-        LCD_FillRect( 0,0, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, LCD_COLOR_MD380_BKGND_BLUE ); 
-        pMenu->visible = APPMENU_OFF; // now "really closed",
-        // and Menu_IsVisible() returns FALSE for half a dozen of hooks 
-        // (allows the original firmware to use the framebuffer again)
-        channel_num = 0; // kludge explained in Menu_Close() to update idle screen
+      { Menu_Close(pMenu);
       }
      return pMenu->visible != APPMENU_OFF;
    }
@@ -1127,11 +737,7 @@ int Menu_DrawIfVisible(int caller)
      // Output in Morse code can only start if this stopwatch expires. Avoids excessive chatter.
      StartStopwatch( &pMenu->morse_stopwatch );
      if(pMenu->visible==APPMENU_VISIBLE)
-      { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any)
-        // (if the operator presses a key, he knows what's going on,
-        //  and doesn't want a continuously chattering radio. 
-        //  At least not when the APPLICATION MENU is visible, but not
-        //  a function launched from here. Thus the check for APPMENU_VISIBLE)
+      { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any) 
       }
 #   endif 
      // Reload Tytera's "backlight_timer" here, because their own control doesn't work now:
@@ -1150,35 +756,24 @@ int Menu_DrawIfVisible(int caller)
      if( (pMenu->visible==APPMENU_VISIBLE) || (c=='B') )
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
-              // green_led_timer = 20;   // <- poor man's debugging
-              // To simplify the implementation of some dialog screens
-              // (e.g. color_picker.c), update pMenu->iEditValue already
-              // BEFORE invoking the callback with event=APPMENU_EVT_ENTER,
-              // but only if the item is NOT in "edit mode" yet:
-              pItem = Menu_GetFocusedItem(pMenu);
-              if( (pItem != NULL ) && (pMenu->edit_mode==APPMENU_EDIT_OFF) )  
-               { if( pItem->pvValue )
-                  { pMenu->iEditValue= pMenu->iValueBeforeEditing 
-                      = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
-                  }
-                 else // even menu items without a "value pointer" may have something editable:
-                  { pMenu->iEditValue= Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
-                  }
-               }
               Menu_OnEnterKey(pMenu);
               break; // end case < green "Menu", aka "Confirm"-key >
            case 'B' :  // red "Back"-key : 
               // red_led_timer  = 20;    // <- poor man's debugging 
               if( pMenu->visible == APPMENU_OFF ) // not visible yet..
-               { Menu_Open( pMenu, NULL, NULL );  // so open the default menu (items)
+               { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
                  pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
-                 // Read out the entire screen in Morse code ? Too chatty.
-                 // If necessary, the user can "walk through the lines"
-                 // with the cursor keys to *hear* what's in the list.
                }
               else // already in the app menu: treat the RED KEY like "BACK",
                {   // "Exit", "Escape", or "Delete" ?
-                 Menu_OnExitKey(pMenu);
+                 if( ( (pMenu->edit_mode==APPMENU_EDIT_OVERWRT)
+                     ||(pMenu->edit_mode==APPMENU_EDIT_INSERT) )
+                    && (pMenu->edit_length > 0 ) )
+                  { Menu_ProcessEditKey(pMenu, 0x08/*backspace (ASCII)*/ );
+                  }
+                 else
+                  { Menu_OnExitKey(pMenu);
+                  }
                }
               break;
            case 'U' :  // cursor UP : navigate towards the FIRST item ...
@@ -1188,7 +783,7 @@ int Menu_DrawIfVisible(int caller)
                      break;
                   case APPMENU_EDIT_OVERWRT:
                   case APPMENU_EDIT_INSERT :
-                     // Similar as in Tytera firmware: cursor "UP" key moves edit cursor LEFT
+                     // Similar as in Tytera firmware: cursor "UP" key moves the edit cursor LEFT
                      if( pMenu->cursor_pos > 0 )
                       { --pMenu->cursor_pos;
                       }
@@ -1201,7 +796,6 @@ int Menu_DrawIfVisible(int caller)
                       }
                }
               pMenu->redraw = TRUE;
-              // ex: green_led_timer = 20; // <- poor man's debugging
               break;
            case 'D' :  // cursor DOWN: navigate towards the LAST item
               switch( pMenu->edit_mode ) // ... or increment value when editing
@@ -1210,8 +804,9 @@ int Menu_DrawIfVisible(int caller)
                      break;
                   case APPMENU_EDIT_OVERWRT:
                   case APPMENU_EDIT_INSERT :
-                     // Similar as in Tytera firmware: cursor "DOWN" key moves edit cursor RIGHT
-                     if( pMenu->cursor_pos < (pMenu->edit_length-1) )
+                     // Similar as in Tytera firmware: cursor "DOWN" key moves edit cursor RIGHT.
+                     // To APPEND chars to the string, cursor_pos <= edit_length is ok : 
+                     if( pMenu->cursor_pos < pMenu->edit_length )
                       { ++pMenu->cursor_pos;
                       }
                      break;
@@ -1223,13 +818,12 @@ int Menu_DrawIfVisible(int caller)
                      break;
                }
               pMenu->redraw = TRUE;
-              // ex: green_led_timer = 20; // <- poor man's debugging
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
               if( pMenu->edit_mode != APPMENU_EDIT_OFF )
-               {
+               { Menu_ProcessEditKey(pMenu, c);
                }
-              else
+              else // NOT editing -> numeric keys used as hotkeys for quick navigation
                { Menu_ProcessHotkey(pMenu, c);
                }
               break;
@@ -1241,7 +835,18 @@ int Menu_DrawIfVisible(int caller)
    } // end if < keyboard-"event" for the App Menu > ? 
 
 
-  // After the keyboard processing: Draw the 'App Menu' into the framebuffer ?
+  // Start editing 'on request' from a programmable hotkey (e.g. edit talkgroup) ?
+  if( pMenu->new_edit_mode >= 0 ) 
+   { pItem = Menu_GetFocusedItem(pMenu);
+     if( pItem != NULL ) 
+      { Menu_UpdateEditValueIfNotEditingYet(pMenu, pItem); // *pItem->pvValue -> pMenu->iEditValue (?)
+        Menu_BeginEditing( pMenu, pItem, (uint8_t)pMenu->new_edit_mode );
+      }
+     pMenu->new_edit_mode = -1; 
+   } // end if( pMenu->new_edit_mode >= 0 )
+
+
+  // After keyboard processing, etc: Draw the 'App Menu' into the framebuffer ?
   if( pMenu->visible == APPMENU_VISIBLE ) 
    { // got here approx 9 times per second...
      // To keep the QRM radiated from the LCD cable low, only redraw the screen
@@ -1259,11 +864,9 @@ int Menu_DrawIfVisible(int caller)
         while( y < (LCD_SCREEN_HEIGHT-LCD_FONT_HEIGHT) )
          { y = Menu_DrawLineWithItem( pMenu, y, iTextLineNr++ );
          }
-        // If the graphic output cursor (y) didn't reach the end,
-        // clear up to the bottom of the screen:
+        // If the output cursor (y) didn't reach the end, clear the rest of the screen:
         Menu_GetColours( SEL_FLAG_NONE, &fg_color, &bg_color );
         LCD_FillRect( 0, y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, bg_color );
-        // LED_GREEN_OFF; // <- end of the speed test with o'scope and photodiode
       } // end if( pMenu->redraw ) 
    } // end if < "app menu" visible >
   else if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // some 'user screen' visible ?
@@ -1288,10 +891,7 @@ int Menu_DrawIfVisible(int caller)
       }
    }
 # endif 
-
-
   return pMenu->visible != APPMENU_OFF;
-
 } // end Menu_DrawIfVisible()
 
 
@@ -1406,6 +1006,20 @@ BOOL Menu_EnterSubmenu(app_menu_t *pMenu, menu_item_t *pItems )
 
 
 //---------------------------------------------------------------------------
+void Menu_UpdateEditValueIfNotEditingYet(app_menu_t *pMenu, menu_item_t *pItem)
+{
+  if( (pItem != NULL ) && (pMenu->edit_mode==APPMENU_EDIT_OFF) )  
+   { if( pItem->pvValue )
+      { pMenu->iEditValue= pMenu->iValueBeforeEditing 
+         = Menu_ScaleItemValue(pItem,Menu_ReadIntFromPtr(pItem->pvValue,pItem->data_type));
+      }
+     else // even menu items without a "value pointer" may have something editable:
+      { pMenu->iEditValue= Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
+      }
+   }
+}
+
+//---------------------------------------------------------------------------
 void Menu_OnEnterKey(app_menu_t *pMenu)
   // Called when the 'App Menu' is already opened, 
   //  when pressing the equivalent of an ENTER-key.
@@ -1413,7 +1027,10 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
   int cbk_result;
   menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
   if( pItem ) 
-   { // If the currently focused item has a callback function,
+   { 
+     Menu_UpdateEditValueIfNotEditingYet(pMenu, pItem); // *pItem->pvValue -> pMenu->iEditValue (?)
+
+     // If the currently focused item has a callback function,
      // invoke that function to let the callback do whatever it wants:
      cbk_result = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_ENTER, 0 );
      switch( cbk_result )
@@ -1441,22 +1058,22 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
      if( (pItem->options & APPMENU_OPT_EDITABLE ) && MenuItem_HasValue(pItem) )
       { if( pMenu->edit_mode != APPMENU_EDIT_OFF) 
          {  // was editing -> finish input ("write back")
-            Menu_FinishEditing( pMenu, pItem ); // [in] pMenu->iEditValue [out] *pItem->pvValue 
+            Menu_FinishEditing( pMenu, pItem ); // [in] pMenu->iEditValue/EditBuffer, [out] *pItem->pvValue 
             // If there's a callback function, inform it that we're not editing anymore:
             Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 1/*finish, not abort*/ );
          }
-        else // begin editing: copy current value to edit buffer (string or int)
-         {  Menu_BeginEditing( pMenu, pItem );
+        else // begin editing with the simple "increment/decrement"-mode (up/down keys)
+         {  Menu_BeginEditing( pMenu, pItem, APPMENU_EDIT_INC_DEC ); 
          }
       } // end if < editable > ?
    }
 } // end Menu_OnEnterKey()
 
 //---------------------------------------------------------------------------
-void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem )
+void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem, uint8_t edit_mode )
   // Must NOT be invoked from a callback, because callbacks are invoked FROM here
 { int cbk_result;
-  if( (pItem->options & APPMENU_OPT_EDITABLE ) && MenuItem_HasValue(pItem) )
+  if( (edit_mode!=APPMENU_EDIT_OFF) && (pItem->options & APPMENU_OPT_EDITABLE ) && MenuItem_HasValue(pItem) )
    { // Copy the 'current' value into the internal storage,
      //  for both integer and string types :
      if( pItem->pvValue != NULL )
@@ -1466,7 +1083,7 @@ void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem )
      else // even menu items without a "value pointer" may have an editable value:
       { pMenu->iEditValue= Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_GET_VALUE, 0/*param*/ );
       }
-     pMenu->edit_mode = APPMENU_EDIT_INC_DEC; // suggest to use simple "increment/decrement"-editing via CURSOR KEYS (!)
+     pMenu->edit_mode = edit_mode; 
         // setting edit_mode also "disconnects" the displayed value from pItem->pvValue
      Menu_ItemValueToString( pItem, pMenu->iEditValue, pMenu->sz40EditBuf );
      pMenu->iMinValue = pItem->iMinValue; // min/max-range copied from menu_item_t...
@@ -1496,9 +1113,31 @@ void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem )
 
 //---------------------------------------------------------------------------
 void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
-{ int i,n,old;
-  // Since callbacks are not required for normal configuation parameters,
-  // scale (inversely) and write back the current edit value via pointer .
+{ int i,n,old,num_base,fixed_digits;
+  char *cp;
+
+  // In 'overwrite / insert' editing mode, the edit buffer (a string) is used.
+  // In 'increment / decrement' editing mode, the new value is already in pMenu->iEditValue.
+  if( (pMenu->edit_mode == APPMENU_EDIT_OVERWRT) || (pMenu->edit_mode==APPMENU_EDIT_INSERT) ) 
+   { // Parse pMenu->sz40EditBuf .. which format, decimal, hex, bin ?
+     Menu_GetParamsFromItemText( (char*)pItem->pszText, &num_base, &fixed_digits, NULL );
+     cp = pMenu->sz40EditBuf;  // source for parsing = edit buffer
+     switch( num_base )
+      { case 10: 
+           pMenu->iEditValue = Menu_ParseDecimal( &cp );  
+           break;
+        case 16: 
+           pMenu->iEditValue = Menu_ParseHex( &cp );  
+           break;
+        case 2:   // very exotic, but supported for DISPLAY so support editing this, too
+           pMenu->iEditValue = Menu_ParseBinary( &cp );  
+           break;
+        default:  // Anything else ? no, thanks.
+           break;
+      } 
+   } // end if < edit modes 'overwrite' or 'insert' ? >
+
+  // Inversely scale and write back the current edit value via pointer .
   n = pMenu->iEditValue;  // to avoid confusion: this is the DISPLAY value,
                           // not the 'raw, unscaled' value !
   i = pItem->opt_value;   // this 'option value' serves multiple purposes..
@@ -1542,7 +1181,6 @@ void Menu_WriteBackEditedValue( app_menu_t *pMenu, menu_item_t *pItem )
   // Write back the inversely scaled 'edit value' (n) :
   Menu_WriteIntToPtr( n, pItem->pvValue, pItem->data_type );
 
-
 } // end Menu_WriteBackEditedValue() 
 
 //---------------------------------------------------------------------------
@@ -1553,8 +1191,8 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
   menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
   // If the edited value is NUMERIC, really increment/decrement THE VALUE
   // (not characters in a string). This way, the min/max limits can be 
-  // easily checked while editing, and depending on the numeric based,
-  // "editing" is in facting adding or subtracting a power of two, ten, or sixteen.
+  // easily checked while editing, and depending on the base (2,10,16),
+  // "editing" is in facting adding or subtracting a power of the base.
   if(pItem!=NULL) 
    { if(pItem->options & APPMENU_OPT_FACTOR)
       { if( pItem->opt_value != 0 )
@@ -1596,6 +1234,89 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
    }
 } // end Menu_OnIncDecEdit()
 
+//---------------------------------------------------------------------------
+void Menu_UpdateEditLengthAndSetCursorPos( app_menu_t *pMenu, int cursor_pos )
+{
+  pMenu->edit_length = strnlen( pMenu->sz40EditBuf, 39 );
+  if( cursor_pos < 0 )  // don't set a "new" cursor position but LIMIT to valid range:
+   {  cursor_pos = pMenu->cursor_pos;
+   }
+  // zero-based cursor_pos = string length means "append char to string" ! 
+  LimitInteger( &cursor_pos, 0, pMenu->edit_length ); 
+  pMenu->cursor_pos = (uint8_t)cursor_pos;
+}
+
+//---------------------------------------------------------------------------
+BOOL Menu_ProcessEditKey(app_menu_t *pMenu, char c)
+  // Keyboard processing when the menu is in 'direct editing mode':
+  //  - cursor up/down used to move the cursor LEFT/RIGHT
+  //  - numeric keys '0'..'9' insert or overwrite something in sz40EditBuf,
+  //  - for data type DTYPE_STRING or DTYPE_WSTRING, alphanumeric input
+  //     similar to Tytera's 'Write Message' editor may be possible (one day)
+  //  - ENTER finishes input (not processed here but in Menu_OnEnterKey() )
+  //  - BACK-spacing when the field is empty (-> nothing to delete) aborts editing
+{
+  int i,n;
+  menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
+  if( pItem==NULL )
+   { return FALSE; // cannot process the key as "edit key" !
+   } 
+  if( pMenu->edit_mode == APPMENU_EDIT_INC_DEC )
+   { if( c>='0' && c<='9' ) 
+      { // Switch from 'inc/dec' editing mode to 'direct input':
+        // For simplicity, numbers are also edited AS STRINGS, thus:
+        if( pItem->data_type!=DTYPE_STRING && pItem->data_type!=DTYPE_WSTRING )
+         { Menu_ItemValueToString( pItem, pMenu->iEditValue, pMenu->sz40EditBuf );
+         }
+        Menu_UpdateEditLengthAndSetCursorPos( pMenu, 0/*new cursor position*/ );
+        pMenu->edit_mode = APPMENU_EDIT_OVERWRT;
+        // The key just pressed ('0'..'9') will immediately overwrite the FIRST DIGIT
+        // (unlike in Tytera's menu, where the initial cursor position is at the string's end).
+      }
+   }
+  Menu_UpdateEditLengthAndSetCursorPos( pMenu, -1 ); // update edit_length, limit cursor_pos
+  // At this point, pMenu->cursor_pos is always a valid array index into pMenu->sz40EditBuf,
+  // and pMenu->edit_length (0..39) contains the LENGTH of that C-string .
+  // pMenu->sz40EditBuf[] is a bit longer than necessary, so setting
+  // pMenu->sz40EditBuf[pMenu->edit_length+1] to zero (C string terminator) is ok.
+  if( c>='0' && c<='9' )  // INSERT or OVERWRITE with these 'direct input' characters ? 
+   { if( pMenu->edit_mode == APPMENU_EDIT_OVERWRT )
+      { pMenu->sz40EditBuf[pMenu->cursor_pos++] = c; 
+        if( pMenu->cursor_pos >= pMenu->edit_length ) // string may have "grown", so terminate it
+         { pMenu->sz40EditBuf[pMenu->cursor_pos] = '\0';
+         }
+        red_led_timer = 50; // red flash -> keypress in edit mode "overwrite"
+      }
+     else if( pMenu->edit_mode == APPMENU_EDIT_INSERT )
+      { n = pMenu->edit_length;
+        for( i=n+1/*include trailing zero when copying*/; i>pMenu->cursor_pos; --i)
+         { pMenu->sz40EditBuf[i] = pMenu->sz40EditBuf[i-2];
+         }
+        pMenu->sz40EditBuf[pMenu->cursor_pos++] = c; 
+        green_led_timer = 50; // green flash -> keypress in edit mode "insert"
+      }
+     Menu_UpdateEditLengthAndSetCursorPos( pMenu, -1 ); // update edit_length, limit cursor_pos (again)
+     return TRUE;
+   } // end if < insertable character for the string >
+  else if( c==0x08 ) // ~~~ BACKSPACE ? (translated from "red back key")
+   { // In "OVERWRITE" mode, the cursor appears like a selected character,
+     // and "back" actually DELETES the selected character - not the left neighbour.
+     // Only when the cursor is at the end of the string, it behaves like backspace,
+     // and 'eats the string from right to left' .
+     i = pMenu->cursor_pos;
+     if( (i>0) && (i>=pMenu->edit_length) ) 
+      { // cursor at the end of the string (where there's nothing to delete)
+        --i; //  behave like backspace (with cursor movement)
+        pMenu->cursor_pos = (uint8_t)i;
+      }
+     while(i<pMenu->edit_length) // DELETE (does not move the cursor)
+      { pMenu->sz40EditBuf[i] = pMenu->sz40EditBuf[i+1];
+        ++i;
+      }
+     Menu_UpdateEditLengthAndSetCursorPos( pMenu, -1 ); // update edit_length, limit cursor_pos
+   }
+  return FALSE;
+} // end Menu_ProcessEditKey()
 
 //---------------------------------------------------------------------------
 void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ) // API !
@@ -1616,11 +1337,7 @@ void Menu_AbortEditing( app_menu_t *pMenu, menu_item_t *pItem )
        { // The value has been edited.. need to "undo" this ?
          if( pItem->options & APPMENU_OPT_IMM_UPDATE ) // yes..  
           { pMenu->iEditValue = pMenu->iValueBeforeEditing;
-            Menu_WriteBackEditedValue( pMenu, pItem ); // "undo" editing,
-            // after the 'immediately updated' value was already active
-            // but the operator didn't like it (e.g. CW speed or pitch,
-            // or the display is unreadable now because colour or brightness
-            // has been screwed up).
+            Menu_WriteBackEditedValue( pMenu, pItem ); // "undo"
           }
        }
       Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 0/* abort, not "finish" */ );
@@ -1632,8 +1349,8 @@ void Menu_AbortEditing( app_menu_t *pMenu, menu_item_t *pItem )
 //---------------------------------------------------------------------------
 void Menu_OnExitKey(app_menu_t *pMenu)
   // Called when the 'App Menu' is already opened, 
-  //  when pressing the equivalent of an EXIT-, ESCAPE- or DELETE-key.
-  //  (here, that key is actually the red "back" key..)
+  //  when pressing the EXIT-key.
+  // (here, that's the red "back" key, when not used as BACKSPACE)
 {
   int cbk_result;
   menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
@@ -1685,11 +1402,6 @@ BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c)
   return FALSE;
 
 } // end Menu_ProcessHotkey()
-
-//---------------------------------------------------------------------------
-void Menu_LimitEditedValue( app_menu_t *pMenu )
-{
-}
 
 
 //---------------------------------------------------------------------------

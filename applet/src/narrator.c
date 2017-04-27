@@ -711,8 +711,8 @@ uint8_t get_current_channel_number(void) // 0..15; bit 7 set when unprogrammed
   // How to retrieve the current channel, and how to tell if it's PROGRAMMED ?
   // In md380.h, there was only an address of 'channelnum', and only for D002.032 .
   // In netmon.c, there was a well-hidden external 'channel_num' (2017-02-20).
-  // The D13.020 firmware sets at address 0x0804fd70 (see disassembly).
-  // For D02.032, the address will be different. Thus:
+  // The D13.020 firmware sets the number at address 0x0804fd70 (see disassembly).
+  // For S13.020, the address will be different. Thus:
 #if defined(FW_D13_020) || defined(FW_S13_020)
   chn_nr = channel_num;           // read the current channel from a global variable
 #else
