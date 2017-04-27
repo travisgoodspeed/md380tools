@@ -4,9 +4,9 @@
 
 ### Raspberry Pi Debian Jessie: ###
 
-Tested on 2016-05-10-raspbian-jessie by IZ2XBZ:
-
-    sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
+Tested on 2016-05-10-raspbian-jessie by IZ2XBZ
+```
+sudo apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 \
              libnewlib-arm-none-eabi make curl
 
 Tested on 2017-03-02-raspbian-jessie by YT5ZEC (dragstor):    

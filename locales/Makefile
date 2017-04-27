@@ -1,5 +1,5 @@
 
-all: localize hu it de es
+all: localize hu it de es sr
 clean:
 	rm -f localize *.bin *.img
 
@@ -21,6 +21,8 @@ es: localize applet
 	cat strings.txt | ./localize es ../applet/merged.img D013.020-es.img
 	make D013.020-es.bin
 
+sr: localize applet
+	cat strings.txt | ./localize sr ../applet/merged.img D013.020-sr.img
 
 flash-hu: hu
 	../md380-dfu upgrade D013.020-hu.bin
@@ -33,6 +35,10 @@ flash-de: de
 
 flash-es: es
 	../md380-dfu upgrade D013.020-es.bin
+	
+flash-sr: sr
+	../md380-dfu upgrade D013.020-sr.bin
+	
 
 %.bin: %.img
 	../md380-fw --wrap $< $@
