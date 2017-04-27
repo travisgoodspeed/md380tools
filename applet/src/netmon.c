@@ -22,6 +22,7 @@
 #include "unclear.h"
 #include "usersdb.h"
 #include "etsi.h"
+#include <wchar.h>
 
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
@@ -271,13 +272,11 @@ void netmon4_update()
     lastheard_draw_poll();
 
     int src;
-    static int lh_cnt = 0 ;			// lastheard line counter 
     char log = 'l';
 
     if ( nm_started == 0 ) {
         lastheard_printf("Netmon 4 - Lastheard ====\n");
         nm_started = 1;				// flag for restart of LH list
-        lh_cnt = 1;				// reset lh counter 
     }	
 
     char mode = ' ' ;
@@ -299,10 +298,9 @@ void netmon4_update()
    
         if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
             call_start_state = 0;
-	    rx_new = 1;				// set status to new for netmon5
-	    ch_new = 1;				// set status to new for netmon6
-            //lastheard_printf("%d",lh_cnt++);
- 	    print_time_hook(log);
+            rx_new = 1;				// set status to new for netmon5
+            ch_new = 1;				// set status to new for netmon6
+            print_time_hook(log);
             if( usr_find_by_dmrid(&usr, src) == 0 ) {
                 lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
             } else {
@@ -327,7 +325,6 @@ void netmon5_update()
     slog_draw_poll();
     
     int src;
-    int cmp_res;				// compare result returncode (0= channel not changed)
 
     extern wchar_t channel_name[20] ;		// read current channel name from external  
     static int sl_cnt = 0 ;			// lastheard line counter
@@ -407,12 +404,8 @@ void netmon6_update()
 #if defined(FW_D13_020) || defined(FW_S13_020)
     clog_draw_poll();
     
-    int src;
-    int cmp_res;				// compare result returncode (0= channel not changed)
-
     extern wchar_t channel_name[20] ;		// read current channel name from external  
     static int ch_cnt = 0 ;			// lastheard line counter
-    static int cp_cnt = 1 ;			// lastheard channel page counter
     char clog = 'c';
 
     if ( nm_started6 == 0 ) {
@@ -421,9 +414,6 @@ void netmon6_update()
 	ch_cnt = 1;				// reset lh counter 
     }	
 
-    src = rst_src;
-
-    //if( ( src != 0 ) && ( ch_new == 1 ) ) {
     if( ch_new == 1 ) {
 
 	for (int i = 0; i < 20; i++)

@@ -7,6 +7,7 @@
 
 #include "etsi.h"
 #include "debug.h"
+#include <string.h>
 
 struct TAContext taContext;
 struct TAContext talkerAlias;

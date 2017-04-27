@@ -101,7 +101,7 @@ void        OS_EXIT_CRITICAL(int);
 void*   main_menu(void *);     // menu exec
 
 void*   md380_menu_entry_back(void);
-void*   md380_create_main_meny_entry(void);
+void*   md380_create_main_menu_entry(void);
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled

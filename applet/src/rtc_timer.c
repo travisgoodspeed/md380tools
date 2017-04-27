@@ -129,7 +129,7 @@ extern void gui_control_hook( int r0 );
 void f_4520_hook()
 {
         {
-            uint32_t *p = 0x2001e6bc ;
+            uint32_t *p = (uint32_t *) 0x2001e6bc;
 //            *p = 0x00080001 ;
             *p = 0x0 ;
         }

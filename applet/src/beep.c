@@ -85,6 +85,7 @@ void beep9()
     bp_sempost2();
 }
 
+#if defined(FW_D13_020)
 static void start()
 {
     bp_sempost();
@@ -118,6 +119,7 @@ static void stop()
 {
     bp_sempost2();
 }
+#endif
 
 void bp_beep(uint8_t code)
 {
@@ -160,9 +162,9 @@ void * beep_OSMboxPend_hook(OS_EVENT *pevent, uint32_t timeout, int8_t *perr)
     }
 }
 
-static uint8_t beep_msg ; // it cannot live on the stack.
-
 #if defined(FW_D13_020) || defined(FW_S13_020)
+
+static uint8_t beep_msg ; // it cannot live on the stack.
 
 void bp_send_beep( uint8_t beep )
 {

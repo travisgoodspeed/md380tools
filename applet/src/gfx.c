@@ -16,6 +16,7 @@
 #include "console.h"      // defines option CONFIG_DIMMED_LIGHT (0 or 1) since 2017-01-07
 #include "netmon.h"
 #include "debug.h"
+#include "lastheard.h"
 #include "etsi.h"		// 2017-02-18 added for talker alias usage
 
 #include "irq_handlers.h" // First used for the 'dimmed backlight', using SysTick_Handler() . Details in *.c .
@@ -193,7 +194,7 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
-void print_time_hook(char *log)
+void print_time_hook(const char log)
 {
     if( is_netmon_visible() ) {
         return;

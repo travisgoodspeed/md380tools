@@ -253,7 +253,7 @@ void create_menu_entry_rev(int menuid, const wchar_t * label , void (*green_key)
 
 }
 
-uint8_t index_of(uint8_t value, uint8_t arr[], uint8_t len)
+uint8_t index_of(uint8_t value, const uint8_t arr[], uint8_t len)
 {
     uint8_t i = 0;
     while(i < len)
