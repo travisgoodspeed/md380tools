@@ -53,6 +53,7 @@
 #include "lcd_driver.h"   // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
 #include "app_menu.h"     // 'simple' alternative menu activated by red BACK-button
 #include "amenu_set_tg.h" // helper to set a new talkgroup ad-hoc (and keep it!) 
+#include "amenu_hexmon.h" // tiny hex-monitor to watch RAM contents 
 
 
 // Variables used by the 'app menu' :
@@ -186,7 +187,9 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
 
   // { "Text__max__13", data_type,  options,opt_value,
   //     pvValue,iMinValue,iMaxValue, string table, callback }
-  { "[4 Test/Debug]bl_timer",   DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
+  { "[4 Test/Debug;h8]HexMon", DTYPE_UNS32, APPMENU_OPT_EDITABLE,0,
+        &HexMon_u32StartAddress,0,0,  NULL, am_cbk_HexMon },
+  { "bl_timer",   DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
         &backlight_timer,0,0,      NULL,         NULL     },
   { "opmode2",          DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &gui_opmode2,0,0,      am_stringtab_opmode2, NULL },
@@ -980,6 +983,11 @@ int Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
                  pMenu->redraw  = TRUE; // ... redraw menu a.s.a.p.
                }
               break; 
+           case AM_RESULT_OCCUPY_SCREEN: // the callback has 'occupied' the screen,
+              // and doesn't want anyone to paint to the framebuffer 
+              // until it agrees to give the screen back:
+              pMenu->visible = APPMENU_USERSCREEN_VISIBLE;
+              break;
            default:  // no special action required here
               break; 
          } // end switch < callback-result >
@@ -1033,15 +1041,9 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
      // If the currently focused item has a callback function,
      // invoke that function to let the callback do whatever it wants:
      cbk_result = Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_ENTER, 0 );
-     switch( cbk_result )
-      { case AM_RESULT_ERROR: // callback disagrees to 'enter' this item !
-           return;
-        case AM_RESULT_OCCUPY_SCREEN: // the callback has 'occupied' the screen,
-           // and doesn't want anyone to paint to the framebuffer 
-           // until it agrees to give the screen back:
-           pMenu->visible = APPMENU_USERSCREEN_VISIBLE;
-           break;
-      } 
+     if( cbk_result==AM_RESULT_ERROR ) // callback disagrees to 'enter' this item !
+      { return;
+      }
  
      // Open a submenu (without the need for a callback) ? 
      if( (pItem->data_type==DTYPE_SUBMENU) && (pItem->pvValue != NULL) )

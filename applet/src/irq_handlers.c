@@ -106,6 +106,9 @@ typedef struct tMorseGenerator
 #  define MORSE_GEN_STOP_ANTI_POP  9 // opening 'Anti-Pop' switch (to stop output)
 #  define MORSE_GEN_STOP_AUDIO_PA 10 // shutting down audio PA (with 'Anti-Pop')
 #  define MORSE_GEN_PASSIVE_NOT_MUTED 11 // "should be passive but couldn't turn off the PA yet"
+                          // (even in this state, channel scanning should be paused
+                          //  because it causes a terrible noise in the speaker
+                          //  whenever the audio PA is enabled. See 
    uint8_t  u8ShiftReg;   // shift register. MSbit first, 0=dot, 1=dash.
    uint8_t  u8NrElements; // number of elements (dots and dashes) remaining
    uint16_t u16Timer;     // countdown timer, decrements in 1.5 ms - steps.
@@ -515,6 +518,27 @@ int IsRxAudioMuted(void) // returns 1 when RX-audio is muted ("no RX signal")
    { return 0; // the Morse generator must not turn off the audio-PA  now !
    }
 } // IsRxAudioMuted()
+
+//---------------------------------------------------------------------------
+int MayScanChannels(void) // returns 1 when channels MAY be scanned
+  // (because the Morse generator, or whatever in OUR part of the firmware, 
+  //  doesn't "occupy" the audio PA. 
+  //  Scanning WHILE the PA is active creates a horrible noise in the speaker)
+{
+
+#if( CONFIG_MORSE_OUTPUT )
+  if( morse_generator.u8State != MORSE_GEN_PASSIVE )
+   { // "Morse generator is active so please DON'T scan channels now"
+     // (that's the easy part. The difficult part is how to convince the
+     //  Tytera firmware *NOT* to scan when this function returns FALSE)
+     return FALSE; 
+   }
+#endif // CONFIG_MORSE_OUTPUT ?
+
+  // Arrived here ? "No objections" (against channel scanning)
+  return TRUE;   // "may scan channels" 
+
+} // MayScanChannels()
 
 
 #if( CONFIG_MORSE_OUTPUT )

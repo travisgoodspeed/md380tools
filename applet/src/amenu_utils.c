@@ -336,9 +336,21 @@ char *Menu_FindInStringTable( const am_stringtable_t *pTable, int value)
 //---------------------------------------------------------------------------
 int Menu_ReadIntFromPtr( void *pvValue, int data_type )
 {
-  if(pvValue==NULL)  // safety first !
+  if(pvValue==NULL)  
    { return 0;
    }
+  // When called from the simple hex monitor (amenu_hexmon.c) with an address
+  // just above the end of the internal RAM ( > 0x2001FFF ), the radio RE-BOOTED,
+  // most likely due to an access violation / unhandled exception. 
+  // To prevent crashing, refuse to read from the following address ranges:
+  if( (pvValue>=(void*)0x20020000 && pvValue<=(void*)0x40000000) // gap between RAM and SFRs
+    ||(pvValue>=(void*)0x10010000 && pvValue<=(void*)0x1FFEFFFF) // "reserved" between CCM & OTP/System
+    ||(pvValue>=(void*)0x08100000 && pvValue<=(void*)0x0FFFFFFF) // "reserved" between CCM & Flash
+    ||(pvValue>=(void*)0x00100000 && pvValue<=(void*)0x07FFFFFF) // "reserved" between aliased Flash & Flash
+    )
+   { return -1;  // indicates an illegal address when reading a BYTE ("uint8_t")
+   }
+
   switch( data_type )
    { case DTYPE_NONE   /*0*/ :
         break;  
