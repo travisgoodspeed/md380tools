@@ -156,7 +156,7 @@ int am_cbk_HexMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
             { HexMon_Draw(pMenu, pItem); 
             }
            HexMon_u32Checksum = checksum;
-           return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied' as long as we need
+           return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied'
          }
         break;
      case APPMENU_EVT_KEY : // own keyboard control only if the screen is owned by HexMon : 
@@ -181,7 +181,7 @@ int am_cbk_HexMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
                   }
                  break;
             } // end switch < key >
-           return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied' as long as we need
+           return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied'
          }
         break;
      default: // all other events are not handled here (let the sender handle them)

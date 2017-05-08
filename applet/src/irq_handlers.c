@@ -275,8 +275,11 @@ void StartStopwatch( uint32_t *pu32Stopwatch )
   // To determine the elapsed time in milliseconds,
   // call ReadStopwatch_ms() with the same 'stopwatch address'
   // as often as you like.
-{
-  *pu32Stopwatch = IRQ_dwSysTickCounter;
+{ uint32_t t = IRQ_dwSysTickCounter;
+  if( t == 0 ) // avoid zero, because zero means 'stopped' 
+   {  t = 1;   // (this causes an additional, neglectable delay of 1.5 ms)
+   }
+  *pu32Stopwatch = t;
 }
 
 //---------------------------------------------------------------------------
@@ -286,10 +289,18 @@ int ReadStopwatch_ms( uint32_t *pu32Stopwatch )
   // You can have as many stopwatches running at the same time
   // as permitted by the amount of RAM. A "running stopwatch" doesn't
   // consume any CPU time. ReadStopwatch_ms() does NOT stop anything.
-{
-  int32_t diff = (int32_t)(IRQ_dwSysTickCounter - *pu32Stopwatch);
+{ uint32_t diff, t;
+
+  if( *pu32Stopwatch == 0 )  // the time measured by a 'stopped' stopwatch is ZERO
+   { return 0;
+   }
+  t = IRQ_dwSysTickCounter;  // tick counter, increments every 1.5 millseconds
+  if( t == 0 ) // avoid zero, because zero means 'stopped' (used in app_menu.c)
+   {  t = 1;   // (this causes an additional, neglectable delay of 1.5 ms)
+   }
+  diff = (int32_t)( t - *pu32Stopwatch);
   // The magic of two's complement makes sure the difference
-  // is even correct if the tick counter runs over from 0xFFFFFFFF 
+  // is even correct if the tick counter (t) runs over from 0xFFFFFFFF 
   // to 0x00000000 between starting and reading the 'stopwatch' .
   // If the difference is NEGATIVE here, the time-difference must
   // have been *very* large (2^31 * 1.5 ms = ca. 37 days) :
@@ -1202,31 +1213,17 @@ void SysTick_Handler(void)
            && ( (GPIOE->MODER & (3<<(PINPOS_E_TX*2)) ) == (1<<(PINPOS_E_TX*2)) )
            && ( (GPIOE->MODER & (3<<(PINPOS_E_RX*2)) ) == (1<<(PINPOS_E_RX*2)) )
           )
-         { // Ok, from here on, we can safely (?) drive the GPIOs .
-#         if(0) // TEST: How long does it take until Tytera turns the BL on ?
-           // Turn on the GREEN 'RX' LED to find out if/when we get here .
-           // Test result: Tytera turns the BL on ~~1 sec after power-on .
-           // Turned the BL on very early (in the 1st SysTick)  -> CRASH !
-           dw = oldSysTickCounter & 0x1F; // flickering, dimmed green LED
-           if( dw==0x00 )   // Note: MOST of the time, Tytera drives this LED,
-            { LED_GREEN_ON; // so it could still act as a squelch indicator !
-            }
-           if( dw==0x01 )    
-            { LED_GREEN_OFF;  
-            }
-#         endif // TEST ?
-
-           // Did the firmware turn the backlight on (for the 1st time) ?  
+         { // Did the firmware turn the backlight on (for the 1st time) ?  
            if( GPIOC->ODR & (1<<6) ) // backlight-bit in Output Data Register set ?
             { // Yes; guess it's ok to "take over" backlight control now .
               InitDimming();  // switch from GPIO- to UART-generated PWM
               IRQ_dwSysTickCounter  = 1; // almost restart timer (to ramp up brightness)
               may_turn_on_backlight = 1; // start dimming in the next interrupt
-            } // end if < backlight turned ON (by original firmware) >
-         }   // end if < GPIO_C.6 configured as OUTPUT >
-      }     // end if < GPIO_C supplied with a peripheral clock >
-   }       // end if < may NOT turn on the backlight yet >   
-  else    // may control the backlight now ... "normal operation" ?
+            }
+         }
+      }
+   }    // end if < may NOT turn on the backlight yet >   
+  else // may control the backlight now ... "normal operation" ?
    { 
      if( oldSysTickCounter <= 6000/* x 1.5 ms*/ )
       { dw = oldSysTickCounter / 128; // brightness ramps up during init
@@ -1234,29 +1231,20 @@ void SysTick_Handler(void)
       }
      else  // not "shortly after power-on", but during normal operation ...
       {
-        if( intensity==0 )   // backlight intensities not configured ? ('0' means take proper default)
-         { if( md380_radio_config.backlight_time == 0 )  // backlight 'always on' ?
-            { intensity= 0x99; // 'hum.free' default : always on with MAX brightness (no PWM)
-            }
-           else // backlight-timeout nonzero ->
-            { intensity= 0x90; // 'hum-free' default (without overwriting global_addl_config in an interrupt!)
-              // lower nibble = brightness when idle, upper nibble = brightness when active.
-            }
-         }          
-       
-#    if(0) // not usable in 2017-01, see gfx.c ... so far just a future plan :
-        if( GFX_backlight_on ) 
-#    else  // as long as gfx.c:lcd_background_led() isn't called, GFX_backlight_on is useless, 
-           // so use Tytera's "backlight_timer" instead:
-        if( backlight_timer>0)
-#    endif // < how to find out if the backlight is currently "low" (dimmed) or "high" (more intense) ?
-         { intensity >>= 4;  // intensity level for the RADIO-ACTIVE state in the upper 4 nibbles of this BYTE
-           if(intensity < 1)
-            { intensity = 1; // when "active", the backlight shouldn't be completely off (happened after cfg-reset)
+        if( (backlight_timer>0) || (md380_radio_config.backlight_time==0) )
+         { // If the backlight time is ZERO, use the 'radio-active' setting ("backlight level HI")
+           intensity >>= 4;  // RADIO-ACTIVE state : use the upper 4 nibbles of this BYTE
+           // When "active", the backlight shouldn't be completely off, so..
+           if(intensity < 1) // invalid setting for the RADIO-ACTIVE state ?
+            { intensity = 9; // 'hum-free' default : MAX brightness (no PWM) 
             }
          } // end if < backlight should be "on" (active state) > 
+        else // "passive" state (no keypress for a long time), *AND* backlight_time nonzero :
+         { // backlight may be off. It will be turned on when pressing a key.
+           // Nothing to do here . intensity=0 is ok .
+         }
         intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
-      } // <normal operation>
+      } // <normal operation, configurable backlight>
 
      if( ! (RCC->APB2ENR & RCC_APB2ENR_USART6EN) ) // oops.. USART6 has been de-initialized ?!
       { InitDimming();   

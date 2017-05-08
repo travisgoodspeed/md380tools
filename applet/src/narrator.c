@@ -138,7 +138,8 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
    { i = -1;
 #   if (CONFIG_APP_MENU)
      if( Menu_IsVisible() ) // <- things are MUCH easier in the "alternative" menu 
-      { // .. and there's nothing to do HERE, because app_menu.c will send Morse by itself
+      { // .. and there's nothing to do HERE, because app_menu.c will start
+        // sending Morse code by itself (autonomously) .
       }
      else // umm.. not in "our" (alternative) menu but in Tytera's 
 #   endif // CONFIG_APP_MENU ?
@@ -589,8 +590,8 @@ int get_focused_menu_item_index(void) // negative when NOT in a menu !
 
   // For the Morse "narrator", it's important to report the
   //     CURRENTLY FOCUSED item (menu/submenu/check-or-radio-button), 
-  //     i.e. the line with dark blue background, controlled 
-  //     via cursor up/down keys (maybe with autorepeat one fine day).
+  //     i.e. the line with dark blue background in the ORIGINAL Menu,  
+  //     controlled via cursor up/down keys.
   // So how to find that info, which md380_menu_entry_selected doesn't provide ?
   // 
   // * 'md380_menu_entry_selected' doesn't care about which item
@@ -674,7 +675,7 @@ wchar_t *get_menu_item_text(int itemIndex) // may return NULL when invalid !
   //                  -1 to retrieve only the CURRENTLY SELECTED item's text.
 {
   int i, nItems, nVisible;
-  menu_t *pMenu = (menu_t*)get_current_menu();
+  menu_t *pMenu = (menu_t*)get_current_menu(); // <- for the "original" menu
   menu_entry_t *pItem;
   if( itemIndex < 0 )
    {  itemIndex = get_focused_menu_item_index();

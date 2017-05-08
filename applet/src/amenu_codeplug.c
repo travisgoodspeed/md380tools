@@ -105,6 +105,7 @@ BOOL ZoneList_SetZoneByIndex( int index )  // [in] zero-based zone index
 #  else // try something else because the above didn't work...
 
 #  endif // (old,new) ?
+
    } // end if < valid array index for the zone list >
   return FALSE;
 
@@ -139,6 +140,9 @@ static void ZoneList_OnEnter(app_menu_t *pMenu, menu_item_t *pItem)
   // Begin navigating through the list at the currently active zone:
   if( pSL->current_item >= 0 )
    {  pSL->focused_item = pSL->current_item;
+#    if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
+      pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+#    endif
    }
 
 } // end ZoneList_OnEnter()
@@ -160,7 +164,7 @@ static void ZoneList_Draw(app_menu_t *pMenu, menu_item_t *pItem)
   ScrollList_AutoScroll( pSL ); // modify pSL->scroll_pos to make the FOCUSED item visible
   dc.font = LCD_OPT_FONT_12x24;
   LCD_Printf( &dc, "\tZone %d/%d\r", (int)(pSL->focused_item+1), (int)pSL->num_items );
-  LCD_HorzLine( dc.x1, dc.y++, dc.x2, dc.fg_color ); // 'spacer' between title and scrolling list
+  LCD_HorzLine( dc.x1, dc.y++, dc.x2, dc.fg_color ); // spacer between title and scrolling list
   LCD_HorzLine( dc.x1, dc.y++, dc.x2, dc.bg_color );
   i = pSL->scroll_pos;   // zero-based array index of the topmost VISIBLE item
   n_visible_items = 0;   // find out how many items fit on the screen
@@ -177,6 +181,12 @@ static void ZoneList_Draw(app_menu_t *pMenu, menu_item_t *pItem)
       }
      if( i == pSL->focused_item )
       { sel_flags = SEL_FLAG_FOCUSED;
+#      if( CONFIG_MORSE_OUTPUT )
+        // Announcement of the CURRENTLY FOCUSED item for the Morse generator:
+        sprintf( pMenu->sz40MorseTextFromFocusedLine, "\x09zone %d\x10%s",i+1, sz20  );
+        //  '\x09' = space and lower pitch (kind of 'highlight'), 
+        //  '\x10' = space and back to the normal CW pitch (tone).
+#      endif
       }
      else if( i == pSL->current_item ) // this is the CURRENTLY ACTIVE zone :
       { sel_flags = SEL_FLAG_CURRENT;  // additional highlighting (besides the selected button)
@@ -232,21 +242,34 @@ int am_cbk_ZoneList(app_menu_t *pMenu, menu_item_t *pItem, int event, int param 
   else if( event==APPMENU_EVT_KEY ) // some other key pressed while focused..
    { switch( (char)param ) // here: message parameter = keyboard code (ASCII)
       {
-        case 'M' :  // green "Menu" key : kind of ENTER. But here, EXIT ;)
+        case 'M' :  // green "Menu" key : kind of ENTER. But here, "apply & return" .
            if( pSL->focused_item>=0 )
             { ZoneList_SetZoneByIndex( pSL->focused_item );
+              // The above command switched to the new zone, and probably set
+              // channel_num = 0 to 'politely ask' the original firmware to 
+              // reload whever is necessary from the codeplug (SPI-Flash). 
+              // It's unknown when exactly that happens (possibly in another task). 
+              // To update the CHANNEL NAME from the *new* zone in our menu, 
+              // let a few hundred milliseconds pass before redrawing the screen:
+              StartStopwatch( &pMenu->stopwatch_late_redraw );
             }
            return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
-        case 'B' :  // red "Back"-key : return from this screen.
+        case 'B' :  // red "Back"-key : return from this screen, discard changes.
            return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
         case 'U' :  // cursor UP
            if(  pSL->focused_item > 0 )
             { --pSL->focused_item;
+#            if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
+              pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+#            endif
             }
            break;
         case 'D' :  // cursor DOWN
            if(  pSL->focused_item < (pSL->num_items-1) )
             { ++pSL->focused_item;
+#            if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
+              pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+#            endif
             }
            break;
         default:    // Other keys .. editing or treat as a hotkey ?

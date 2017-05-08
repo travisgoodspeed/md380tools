@@ -604,8 +604,11 @@ void LCD_InitContext( lcd_context_t *pContext )
 
 //---------------------------------------------------------------------------
 int LCD_DrawString( lcd_context_t *pContext, char *cp )
-  // Draws a zero-terminated ASCII string. Designed to be  SIMPLE . 
-  // Returns the graphic coordinate (x) to print the next character .
+  // Draws a zero-terminated ASCII string. Should be simple but versatile. 
+  //  [in]  pContext, especially pContext->x,y = graphic output cursor .
+  //        pContext->x1,x1,x2,y2 = clipping area (planned) .
+  //  [out] pContext->x,y = graphic coordinate for the NEXT output .
+  //        Return value : horizontal position for the next character (x).
   // For multi-line output (with '\r' or '\n' in the string),
   //     the NEXT line for printing is stored in pContext->y .
   // ASCII control characters with special functions :
