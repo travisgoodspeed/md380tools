@@ -11,6 +11,10 @@
 #include "md380.h"
 #include "display.h"
 
+#define CONSOLE_Y_SIZE   10 // in console.c: #define Y_SIZE   10 (but not exposed in .h)
+#define CONSOLE_MAX_XPOS 27 // in console.c: #define MAX_XPOS 27 (but not exposed in .h)  
+extern char con_buf[CONSOLE_Y_SIZE][CONSOLE_MAX_XPOS+1]; // +1 for terminating 0 every line.
+
 #ifdef __cplusplus
 extern "C" {
 #endif

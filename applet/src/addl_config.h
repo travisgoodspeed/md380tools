@@ -33,6 +33,22 @@ typedef struct addl_config {
     char bootline1[10];
     char bootline2[10];
     uint8_t backlight_intensities; // lower nibble = backlight intensity during IDLE,  upper nibble = backlight intensity during ACTIVITY
+    uint8_t narrator_mode; // Mode / verbosity for CW output. See narrator.c .
+    uint8_t cw_pitch_10Hz; // 'CW pitch' in TEN HERTZ units, to fit in a BYTE.
+    uint8_t cw_volume;    // output 'volume' (PWM duty cycle) for CW messages. 
+      //  0..100 [%] for fixed volume, or BEEP_VOLUME_AUTO to control via pot:
+#     define BEEP_VOLUME_AUTO 255
+    uint8_t cw_speed_WPM;  // CW output speed,  measured in words per minute .
+    uint16_t fg_color;  // foreground (text) colour for own menus, and maybe console screens too
+    uint16_t bg_color;  // normal background colour, also customizeable in app_menu.c ...
+    uint16_t sel_fg_color;  // fg colour to mark the selection- or navigation bar
+    uint16_t sel_bg_color;  // bg colour to mark the selection- or navigation bar
+    uint16_t edit_fg_color; // fg colour of a cell in "edit mode" (or, single char for the CURSOR)
+    uint16_t edit_bg_color; // fg colour of a cell in "edit mode" (or, single char for the CURSOR)
+       // The above 16-bit colours use the display's native 'BGR565'-format,
+       // as used for the 'alternative' menu and the alternative LCD driver:
+       // BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 .
+
 } addl_config_t ;
 
 #define CPO_BL1 0x1
