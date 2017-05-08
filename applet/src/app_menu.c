@@ -2,7 +2,7 @@
 // Author:  Wolf (DL4YHF) [initial version] 
 //          Please don't poison this soucecode with TAB characters . 
 //
-// Date:    2017-04-29
+// Date:    2017-05-06
 //  Implements a simple menu opened with the red BACK button,
 //             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
@@ -17,6 +17,7 @@
 //      SRCS += app_menu.o 
 //      SRCS += amenu_utils.o
 //      SRCS += amenu_set_tg.o
+//      SRCS += amenu_codeplug.o
 //      SRCS += color_picker.o
 //      SRCS += lcd_driver.o
 //      SRCS += font_8_8.o
@@ -43,27 +44,32 @@
 #include "syslog.h"
 #include "usersdb.h"
 #include "keyb.h"
-#include "display.h"      // gui_opmode_x, OPM2_MENU, etc
+#include "display.h"      // old display functions (using the original firmware)
 #include "netmon.h"       // is_netmon_visible(), etc
 #include "unclear.h"      // radio_status_1, etc (displayed here to find out what they do)
 #include "codeplug.h"     // zone_name[], etc (mostly unknown for old firmware)
 #include "console.h"      // text screen buffer for Netmon (may be displayed through the 'app menu', too)
-#include "irq_handlers.h" // low-level beep generator (mainly used for Morse output)
+#include "irq_handlers.h" // backlight PWM, timers, Morse generator
 #include "narrator.h"     // announces channel, zone, and maybe current menu selection in Morse code
 #include "lcd_driver.h"   // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
 #include "app_menu.h"     // 'simple' alternative menu activated by red BACK-button
 #include "amenu_codeplug.h" // codeplug-related displays, e.g. zone list, etc
 #include "amenu_set_tg.h" // helper to set a new talkgroup ad-hoc (and keep it!) 
-#include "amenu_hexmon.h" // tiny hex-monitor to watch RAM-, internal Flash-, and SPI-flash contents 
+#include "amenu_hexmon.h" // hex-monitor to watch RAM-, internal Flash-, and SPI-flash contents 
 
+#if( ! CONFIG_MORSE_OUTPUT )
+#  error "No 'app menu' without Morse output !" 
+   // The 'application menu' was developed to simplify using the radio for visually impaired hams.
+   // Thus it's impossible (or at least DISADVISED) to remove support of the Morse output here. 
+   // Short: Don't use one without the other.
+#endif 
 
 // Variables used by the 'app menu' :
 
-uint8_t am_key;   // one-level keyboard buffer, fed by irq_handlers.c
+static uint8_t  am_key;              // one-level keyboard buffer
+static uint32_t backlight_stopwatch; // SysTick-based stopwatch for the backlight
 
-uint8_t am_multitasking_error = 0;
-
-// For shortest code, put everything inside a SMALL struct, and reference it
+// For short code, put everything inside a SMALL struct, and reference it
 // whereever possible via a pointer in a LOCAL variable:
 app_menu_t AppMenu;  // data for a single instance of the 'application menu'
 
@@ -75,11 +81,8 @@ struct
   uint8_t vert_scroll_pos;
 } submenu_stack[APPMENU_STACKSIZE];
 
-// Not direcly related with the 'application menu', but used by it
-// to keep the 'wanted talkgroup' even after switching back to the
-// idle screen (or normal main screen, or whatever..) by setting
-// channel_num = 0 in Menu_Close() :
-uint8_t Menu_old_channel_num = 0;
+uint8_t Menu_old_channel_num = 0; // to defeat trouble with 'ad-hoc' TALKGROUPS
+        // when setting channel_num=0 to force screen update in Menu_Close()
 
 
 //---------------------------------------------------------------------------
@@ -100,7 +103,7 @@ menu_item_t *Menu_GetFocusedItem(app_menu_t *pMenu);
 int  Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int param);
 
 
-// Prototypes and forward references for some menu items :
+// Callback function prototypes and forward references for a few menu items :
 int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
 const menu_item_t am_Setup[]; // referenced from main menu
 const am_stringtable_t am_stringtab_opmode2[]; // for gui_opmode2
@@ -175,17 +178,19 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
   // In the items below, colour values are shown in short HEX format [h4].
   // When ENTERING one of these items, the 'colour picker' takes over control,
   // where an own palette can be created (unfortunately no effect on the normal screen).
-  { "[3 Colours;h4]foregnd", DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
+  { "[3 Colours;h4]Colour Scheme", DTYPE_NONE, APPMENU_OPT_NONE, 0, 
+         NULL,0,0,                  NULL, am_cbk_ColorSchemes },
+  { "[h4]Foregnd", DTYPE_UNS16, APPMENU_OPT_NONE, 0, 
         &global_addl_config.fg_color,0,0, am_stringtab_color_names, am_cbk_ColorPicker },
-  { "[h4]backgnd",          DTYPE_UNS16,  APPMENU_OPT_NONE, 0, 
+  { "[h4]Backgnd",          DTYPE_UNS16,  APPMENU_OPT_NONE, 0, 
         &global_addl_config.bg_color,0,0, am_stringtab_color_names, am_cbk_ColorPicker },
-  { "[h4]sel/nav fg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+  { "[h4]Sel/nav fg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
         &global_addl_config.sel_fg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker },
-  { "[h4]sel/nav bg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+  { "[h4]Sel/nav bg",       DTYPE_UNS16, APPMENU_OPT_NONE,0, 
         &global_addl_config.sel_bg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker },
-  { "[h4]editor fg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+  { "[h4]Editor fg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
         &global_addl_config.edit_fg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker},
-  { "[h4]editor bg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
+  { "[h4]Editor bg",        DTYPE_UNS16, APPMENU_OPT_NONE,0, 
         &global_addl_config.edit_bg_color,0,0, am_stringtab_color_names,am_cbk_ColorPicker},
 
   // { "Text__max__13", data_type,  options,opt_value,
@@ -210,8 +215,6 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
   { "[b8]radio_s3",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &radio_status_1.m3,0,0,    NULL,         NULL     },
 #endif
-  { "mtask_error",      DTYPE_UNS8, APPMENU_OPT_NONE, 0, 
-        &am_multitasking_error,0,0, NULL,        NULL     },
   { "Colour test",      DTYPE_NONE, APPMENU_OPT_NONE,0, 
         NULL,0,0,                  NULL, am_cbk_ColorTest },
   { "Setup:Back",       DTYPE_NONE, APPMENU_OPT_BACK,0,
@@ -285,8 +288,8 @@ void Menu_Open(
   if( pItems == NULL )
    {  pItems = (menu_item_t*)am_Main; // per default, use the "main" menu items (array in ROM)
    }
-  memset( pMenu, 0, sizeof( app_menu_t ) );
-  pMenu->pItems  = (void*)pItems; // VERY unfortunately, this cast is necessary
+  memset( pMenu, 0, sizeof( app_menu_t ) ); // also STOPS the menu's stopwatches
+  pMenu->pItems  = (void*)pItems;
   pMenu->num_items = Menu_GetNumItems( pMenu->pItems );
   // Special service for programmable sidebutton to open the menu
   //         with a certain item already selected (e.g. "TkGrp" ):
@@ -312,8 +315,8 @@ void Menu_Open(
    }
   pMenu->visible = APPMENU_VISIBLE; 
   pMenu->redraw  = TRUE;
-  StartStopwatch( &pMenu->stopwatch ); // start timer for the next periodic screen update
-
+  StartStopwatch( &pMenu->stopwatch );    // start timer for the next periodic screen update
+  StartStopwatch( &backlight_stopwatch ); // start timer for periodically decrementing backlight_timer
 
   // If the app-menu has never been opened (or after "config reset"), the customizeable colours
   // will not be set (all zero). If all colours are zero (or equal), use defaults:
@@ -446,11 +449,7 @@ static void Menu_CheckDynamicValues(app_menu_t *pMenu)
   if( pMenu->value_chksum != checksum )
    {  pMenu->value_chksum =  checksum;
       pMenu->redraw = TRUE;  
-      red_led_timer = 50;
-   }
-  else
-   {
-      green_led_timer = 2;
+      // red_led_timer = 50;
    }
 
 } // end Menu_CheckDynamicValues()
@@ -608,18 +607,16 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
          }
  
         if( editing && ( (pMenu->edit_mode == APPMENU_EDIT_OVERWRT)
-                      || (pMenu->edit_mode==APPMENU_EDIT_INSERT) ) )
-         { // In edit mode 'OVERWRITE' or 'INSERT', the increasing string length
-           // of the normally RIGHT-aligned value would cause a left-scrolling effect.  
-           // To avoid this, use a single space as separator, and left-aligned value:
+                      || (pMenu->edit_mode == APPMENU_EDIT_INSERT) ) )
+         { // In edit modes 'OVERWRITE' or 'INSERT', use a single space as separator,
+           // and left-aligned value. Avoids horizontal scrolling when the length increases.
            x = LCD_DrawCharAt( ' ', x, y, fg_color, bg_color, font_nr );
          }
-        else // not editing at all, or in simple 'inc/dec'-editing mode:
+        else // not editing at all, or in 'inc/dec'-editing mode:
          {
            // Fill the gap between LEFT-aligned text and RIGHT-aligned value
            n = LCD_SCREEN_WIDTH - 3 - LCD_GetTextWidth( font_nr, sz40Temp );
-                       //         |___ spare because the rightmost ~~3 pixels
-                       //              are obstructed by the plastic enclosure
+                       //         |___ spare for the right margin
            LimitInteger( &n, 0, LCD_SCREEN_WIDTH-8 ); 
            if( n >= x )  // if there's no gap, don't try to fill it...
             { LCD_FillRect( x,y, n-1/*x2*/, y+text_height_pixels-1/*y2*/, bg_color );
@@ -627,8 +624,7 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
            x = n; // graphic position for drawing the right-aligned 'value'
          }
 
-        // Draw the 'value', char by char, using different colours 
-        //  to mark the edit cursor or the selection bar :
+        // Draw the 'value', using different colours to mark the cursor or nav-bar :
         cp = sz40Temp;
         i  = 0; // character counter to mark the cursor position
         while( ((c=*cp++)!=0) && (x<(LCD_SCREEN_WIDTH-6) ) )
@@ -645,12 +641,12 @@ int Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iLineNr)
                { sel_flags &= ~SEL_FLAG_CURSOR;
                }
               Menu_GetColours( sel_flags, &fg_color, &bg_color );
-            } // end if < "editing", not just "navigating" >
+            } // end if < editing >
            x = LCD_DrawCharAt( c, x, y, fg_color, bg_color, font_nr );
-           ++i; // character index and limiting counter
-         } // end while < more characters to print > 
-      }
-   } // end if < items exist >
+           ++i;
+         } // end while < more characters > 
+      } // end if < valid item index >
+   } // end if( pMenu->pItems != NULL )
 
   // If the graphic output cursor (x) didn't reach the end,
   // clear up to the end of the current text line:
@@ -715,7 +711,7 @@ int Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey )
 
 //---------------------------------------------------------------------------
 int Menu_DrawIfVisible(int caller)
-  // When visible(!), paints the entire 'app menu' into the framebuffer.
+  // When visible(!), paints the 'alternative menu' into the framebuffer.
   //      Also processes pending keyboard events (from its own buffer).
   //      Called from various 'display-update' hook functions .
   // [in] caller : tells which of the half dozen of hooked functions
@@ -732,14 +728,13 @@ int Menu_DrawIfVisible(int caller)
   static int busy_from_caller = 0; // <- only for debugging (suspected re-entrant calls from multiple tasks)
 
   if( busy_from_caller != 0 ) // oops... this shouldn't happen; two tasks are trampling on me !
-   { am_multitasking_error = (uint8_t)( busy_from_caller + 10 * caller);
+   { // ex: multitasking_error = (uint8_t)( busy_from_caller + 10 * caller);
    }
   busy_from_caller = caller;
 
-
   if( Menu_old_channel_num != channel_num ) // defeat the trouble in amenu_set_tg :
    { Menu_old_channel_num = channel_num; // Tytera may have overwritten struct contact..
-     CheckTalkgroupAfterChannelSwitch(); // so fill in the AD-HOC edited talkgroup again ?
+     CheckTalkgroupAfterChannelSwitch(); // so switch to the AD-HOC talkgroup again ?
    }
 
   if( pMenu->visible==APPMENU_VISIBLE_UNTIL_KEY_RELEASED )
@@ -757,19 +752,18 @@ int Menu_DrawIfVisible(int caller)
   c = am_key;  
   if( c ) 
    { am_key=0; // remove key from this buffer
-#   if( CONFIG_MORSE_OUTPUT )
-     // Restart the "stopwatch" for delayed Morse output, for example after modifying a value.
+
+     // Restart the timer for delayed Morse output, for example after modifying a value.
      // Output in Morse code can only start if this stopwatch expires. Avoids excessive chatter.
      StartStopwatch( &pMenu->morse_stopwatch );
-     if(pMenu->visible==APPMENU_VISIBLE)
-      { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any) 
+     if(pMenu->visible!=APPMENU_OFF)
+      { MorseGen_ClearTxBuffer(); // abort ongoing Morse transmission (if any) on keypress 
       }
-#   endif 
+
      // Reload Tytera's "backlight_timer" here, because their own control doesn't work now:
-     backlight_timer = md380_radio_config.backlight_time * 500; 
+     backlight_timer = md380_radio_config.backlight_time * 500; // unit: 10-millisecond steps 
      if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE )
-      { // screen and keyboard occupied by a 'user screen' 
-        // -> try to pass on keyboard events to whatever-it-is : 
+      { // screen and keyboard occupied by a 'user screen' -> pass on keyboard events to it: 
         y = Menu_InvokeCallback( pMenu, Menu_GetFocusedItem(pMenu), APPMENU_EVT_KEY, c );
         if( y != AM_RESULT_OCCUPY_SCREEN )
          { // framebuffer no longer occupied by the callback, so back to the 'app menu':
@@ -787,6 +781,8 @@ int Menu_DrawIfVisible(int caller)
               // red_led_timer  = 20;    // <- poor man's debugging 
               if( pMenu->visible == APPMENU_OFF ) // not visible yet..
                { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
+                 StartStopwatch( &pMenu->morse_stopwatch ); 
+                 // Reporting the first item in Morse code later (when morse_stopwatch expires): 
                  pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                }
               else // already in the app menu: treat the RED KEY like "BACK",
@@ -874,6 +870,7 @@ int Menu_DrawIfVisible(int caller)
   // After keyboard processing, etc: Draw the 'App Menu' into the framebuffer ?
   if( pMenu->visible == APPMENU_VISIBLE ) 
    { // got here approx 9 times per second...
+
      // To keep the QRM radiated from the LCD cable low, only redraw the screen
      // if necessary, and with a LIMITED refresh rate. 
      if( age_of_last_update > 20/*ms*/ )
@@ -881,7 +878,15 @@ int Menu_DrawIfVisible(int caller)
         // which require redrawing the screen even without a keypress. Check for those:
         Menu_CheckDynamicValues( pMenu ); // sets pMenu->redraw if something changes
       }
-     if( pMenu->redraw || (age_of_last_update>500/*ms*/) )
+     if( pMenu->stopwatch_late_redraw != 0 )   // stopwatch for a 'late redraw' running ?
+      { if( ReadStopwatch_ms( &pMenu->stopwatch_late_redraw ) > 500/*ms*/ )
+         { // guess the original firmware has updated what may be displayed now,
+           // for example the CHANNEL NAME after switching to a DIFFERENT ZONE :
+           pMenu->redraw = TRUE;
+           pMenu->stopwatch_late_redraw = 0;  // stop until there's the need for a 'late redraw' again
+         }
+      }
+     if( pMenu->redraw )
       { // LED_GREEN_ON; // for speed test (connect a scope to the green LED)
         Menu_CheckVertScrollPos(pMenu); // make sure item-index is valid and 'in view'
         pMenu->redraw = FALSE;
@@ -908,7 +913,6 @@ int Menu_DrawIfVisible(int caller)
       }
    }
 
-# if( CONFIG_MORSE_OUTPUT )
   // If a request to report the edited value in Morse code, AND some time has passed
   // since the last modification (via cursor up/down), start sending the value:
   if( global_addl_config.narrator_mode & NARRATOR_MODE_ENABLED )
@@ -917,10 +921,28 @@ int Menu_DrawIfVisible(int caller)
         if( pMenu->morse_request != 0 )
          {  Menu_ReportItemInMorseCode( pMenu->morse_request );
             pMenu->morse_request = 0; // "done" (Morse output started)
+          //red_led_timer = 50; // debug: just started Morse output from the app-menu
          }
       }
    }
-# endif
+
+  // TYTERA's backlight_timer would be decremented once every 10 ms if we were 
+  // on their main screen. If we aren't (but in the app-menu or on a user-screen
+  // opened from there), decrement backlight_timer here .
+  // The calling interval of Menu_DrawIfVisible() is completely unknown,
+  // so use a SysTick-based 'stopwatch' to decrement backlight_timer EVERY SECOND (!).
+  // This is sufficient because the lowest possible backlight time (except zero) is 5 seconds.
+  if( pMenu->visible != APPMENU_OFF ) 
+   {
+     if( ReadStopwatch_ms( &backlight_stopwatch ) > 1000/*ms*/ )
+      { StartStopwatch( &backlight_stopwatch );
+        y = (int)backlight_timer - 100; // another second is over, i.e. 100 10-ms-steps
+        if( y<0 )
+         {  y=0;  // backlight timer expired (the rest happens in irq_handlers.c) 
+         }
+        backlight_timer = (uint16_t)y; // write back to Tytera's backlight timer
+      }
+   }
 
   busy_from_caller = 0;
   return pMenu->visible != APPMENU_OFF;
@@ -1010,6 +1032,9 @@ int Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
                  // so do that here, and prepare redrawing the entire screen (menu):
                  pMenu->visible = APPMENU_VISIBLE;
                  pMenu->redraw  = TRUE; // ... redraw menu a.s.a.p.
+                 StartStopwatch( &pMenu->morse_stopwatch ); 
+                 // Reporting the first item in Morse code later (when morse_stopwatch expires): 
+                 pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                }
               break; 
            case AM_RESULT_OCCUPY_SCREEN: // the callback has 'occupied' the screen,
@@ -1077,10 +1102,14 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
      // Open a submenu (without the need for a callback) ? 
      if( (pItem->data_type==DTYPE_SUBMENU) && (pItem->pvValue != NULL) )
       { Menu_EnterSubmenu( pMenu, (menu_item_t*)pItem->pvValue );
+        pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
       } // end if < entry to a SUB-MENU >
      else // Return to the parent menu, or to the radio's "main screen" ?
      if( pItem->options == APPMENU_OPT_BACK )
-      { if( ! Menu_PopSubmenuFromStack(pMenu) ) 
+      { if( Menu_PopSubmenuFromStack(pMenu) ) 
+         { pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+         }
+        else
          { // Cannot return from a SUB-MENU so return to the MAIN SCREEN:
            Menu_Close(pMenu);
          } 
@@ -1092,9 +1121,13 @@ void Menu_OnEnterKey(app_menu_t *pMenu)
             Menu_FinishEditing( pMenu, pItem ); // [in] pMenu->iEditValue/EditBuffer, [out] *pItem->pvValue 
             // If there's a callback function, inform it that we're not editing anymore:
             Menu_InvokeCallback( pMenu, pItem, APPMENU_EVT_END_EDIT, 1/*finish, not abort*/ );
+            // For the visually impaired operator, report the new (edited?) value again ?
+            pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
          }
         else // begin editing with the simple "increment/decrement"-mode (up/down keys)
-         {  Menu_BeginEditing( pMenu, pItem, APPMENU_EDIT_INC_DEC ); 
+         {  Menu_BeginEditing( pMenu, pItem, APPMENU_EDIT_INC_DEC );
+            // Inform the visually impaired operator about editing... but how ?
+            // ToDo: Send the ITEM TEXT, the (old) VALUE, followed by a QUESTION MARK (asking for "input") ?
          }
       } // end if < editable > ?
    }
@@ -1244,12 +1277,10 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
    { i64 = pMenu->iMaxValue; 
    }
   i = (int)i64;
-#if( CONFIG_MORSE_OUTPUT )
   if( pMenu->iEditValue != i )
    { // report modified value in Morse code (VALUE only, not the leading text)
      pMenu->morse_request |= AMENU_MORSE_REQUEST_ITEM_VALUE;
    }
-#endif // CONFIG_MORSE_OUTPUT ?
   pMenu->iEditValue = i;
   
   if( pItem != NULL ) // "write back" immediately ?
@@ -1279,15 +1310,7 @@ void Menu_UpdateEditLengthAndSetCursorPos( app_menu_t *pMenu, int cursor_pos )
 
 //---------------------------------------------------------------------------
 BOOL Menu_ProcessEditKey(app_menu_t *pMenu, char c)
-  // Keyboard processing when the menu is in 'direct editing mode':
-  //  - cursor up/down used to move the cursor LEFT/RIGHT
-  //  - numeric keys '0'..'9' insert or overwrite something in sz40EditBuf,
-  //  - 'hashtag/arrow-pointing-up'-key increments character under the cursor
-  //      (kludge for hexadecimal input, to replace keys 'A' to 'F'),
-  //  - for data type DTYPE_STRING or DTYPE_WSTRING, alphanumeric input
-  //     similar to Tytera's 'Write Message' editor may be possible (one day)
-  //  - ENTER finishes input (not processed here but in Menu_OnEnterKey() )
-  //  - BACK-spacing when the field is empty (-> nothing to delete) aborts editing
+  // Keyboard processing when the menu is in 'value editing mode'
 {
   int i,n,num_base,fixed_digits;
   unsigned char c2;
@@ -1320,7 +1343,6 @@ BOOL Menu_ProcessEditKey(app_menu_t *pMenu, char c)
         if( pMenu->cursor_pos >= pMenu->edit_length ) // string may have "grown", so terminate it
          { pMenu->sz40EditBuf[pMenu->cursor_pos] = '\0';
          }
-        // red_led_timer = 50; // red flash -> keypress in edit mode "overwrite"
       }
      else if( pMenu->edit_mode == APPMENU_EDIT_INSERT )
       { n = pMenu->edit_length;
@@ -1423,7 +1445,7 @@ void Menu_AbortEditing( app_menu_t *pMenu, menu_item_t *pItem )
   if( pMenu->edit_mode )
    {  
       if( pMenu->iEditValue != pMenu->iValueBeforeEditing )
-       { // The value has been edited.. need to "undo" this ?
+       { // value was modified .. need to "undo" this ?
          if( pItem->options & APPMENU_OPT_IMM_UPDATE ) // yes..  
           { pMenu->iEditValue = pMenu->iValueBeforeEditing;
             Menu_WriteBackEditedValue( pMenu, pItem ); // "undo"
@@ -1437,9 +1459,7 @@ void Menu_AbortEditing( app_menu_t *pMenu, menu_item_t *pItem )
 
 //---------------------------------------------------------------------------
 void Menu_OnExitKey(app_menu_t *pMenu)
-  // Called when the 'App Menu' is already opened, 
-  //  when pressing the EXIT-key.
-  // (here, that's the red "back" key, when not used as BACKSPACE)
+  // Exit/Back/Escape key pressed when the 'App Menu' was already open.
 {
   int cbk_result;
   menu_item_t *pItem = Menu_GetFocusedItem(pMenu);
@@ -1450,9 +1470,7 @@ void Menu_OnExitKey(app_menu_t *pMenu)
      switch( cbk_result )
       { case AM_RESULT_ERROR: // callback disagrees to 'exit' from this item !?
            return;
-        case AM_RESULT_OCCUPY_SCREEN: // the callback has 'occupied' the screen,
-           // and doesn't want anyone to paint to the framebuffer 
-           // until it agrees to give the screen back:
+        case AM_RESULT_OCCUPY_SCREEN: // the callback has 'occupied' the screen
            pMenu->visible = APPMENU_USERSCREEN_VISIBLE;
            return;
         default:
@@ -1463,11 +1481,13 @@ void Menu_OnExitKey(app_menu_t *pMenu)
   // Exit FROM WHAT (abort editing or return from submenu) ?
   if( pMenu->edit_mode != APPMENU_EDIT_OFF ) // abort editing (don't apply the edited value)
    { Menu_AbortEditing( pMenu, pItem );
+     pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
    }
-  else
-  if( ! Menu_PopSubmenuFromStack(pMenu) ) 
-   { // Cannot return from a SUB-MENU so return to the MAIN SCREEN:
-     Menu_Close(pMenu);
+  else if( Menu_PopSubmenuFromStack(pMenu) ) 
+   { pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+   }
+  else // Cannot return from a SUB-MENU so return to the MAIN SCREEN:
+   { Menu_Close(pMenu);
    } 
 
 } // end Menu_OnExitKey()
@@ -1495,7 +1515,7 @@ BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c)
 
 //---------------------------------------------------------------------------
 int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
-{
+{ // Simple example for a 'user screen' opened from the application menu
   if( event==APPMENU_EVT_ENTER ) // pressed ENTER (to launch the colour test) ?
    { LCD_ColorGradientTest(); // only draw the colour test pattern ONCE...
      return AM_RESULT_OCCUPY_SCREEN; // screen now 'occupied' by the colour test screen
@@ -1509,7 +1529,6 @@ int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param
 } // end am_cbk_ColorTest()
 
 
-#if( CONFIG_MORSE_OUTPUT )
 //---------------------------------------------------------------------------
 int  Menu_GetItemIndex(void)
 { // used by the Morse narrator (narrator.c) to detect "changes"
@@ -1517,9 +1536,17 @@ int  Menu_GetItemIndex(void)
   if( pMenu->visible==APPMENU_VISIBLE )
    { return pMenu->item_index;
    }
-  else
-   { return -1;
+  else if( pMenu->visible==APPMENU_USERSCREEN_VISIBLE ) 
+   { // Currently showing a 'user' screen, e.g. the alternative ZONE list.
+     // For any 'user screen' that uses pMenu->scroll_list,
+     // the index of the currently FOCUSED item can be taken from here:
+     if( ( pMenu->scroll_list.focused_item >= 0 )
+       &&( pMenu->scroll_list.focused_item < pMenu->scroll_list.num_items) )
+      { return pMenu->scroll_list.focused_item;
+      }
    }
+  // Arrived here ? No chance to retrieve the index of the currently FOCUSED item.
+  return -1;
 } 
 
 //---------------------------------------------------------------------------
@@ -1563,8 +1590,15 @@ void Menu_ReportItemInMorseCode(
            MorseGen_AppendString( sz40 );
          }
       }
-   }
+   } // end if( pMenu->visible==APPMENU_VISIBLE )
+  else if( pMenu->visible==APPMENU_USERSCREEN_VISIBLE ) 
+   { // Currently showing one of the 'user' screens, including zone list, etc.
+     // If the 'user screen' has assembled a string for Morse output, send it:
+     if( (pMenu->sz40MorseTextFromFocusedLine[0] != 0 )
+      && (morse_request & AMENU_MORSE_REQUEST_ITEM_TEXT) )
+      { MorseGen_AppendString( pMenu->sz40MorseTextFromFocusedLine );
+      }
+   } // if( pMenu->visible==APPMENU_USERSCREEN_VISIBLE )
 } // end Menu_ReportItemInMorseCode()
-#endif  // CONFIG_MORSE_OUTPUT ?
 
 #endif // CONFIG_APP_MENU ?

@@ -31,8 +31,7 @@
 #define AM_RESULT_ERROR 2 // general error
 #define AM_RESULT_INVISIBLE 3 // special return value for APPMENU_EVT_CHECK_VISIBILITY
 #define AM_RESULT_OCCUPY_SCREEN 16 // for APPMENU_EVT_ENTER and APPMENU_EVT_PAINT:
-        // "the whatever-it-is (callback) now owns the screen, and doesn't want
-        //  anyone else to paint into the framebuffer" .
+        // "the callback now owns the screen, no-one else should paint anything".
         // Instead of the default paint procedure, Menu_DrawIfVisible()
         //  will repeatedly invoke the callback with event=APPMENU_EVT_PAINT,
         //  as long as the callback function returns AM_RESULT_OCCUPY_SCREEN .
@@ -83,7 +82,7 @@ typedef struct tAppMenu // instance data (in RAM, not Flash)
 #         define APPMENU_VISIBLE 1
 #         define APPMENU_USERSCREEN_VISIBLE 2
 #         define APPMENU_VISIBLE_UNTIL_KEY_RELEASED 3
-  uint8_t redraw;       // flag is a (full-screen) redraw is necessary: 0=no, 1=yes
+  uint8_t redraw;       // flag is a (full-screen) redraw is necessary: 0=no, 1=yes (immediately)
   uint8_t depth;        // current 'depth' into the menu, 0 = top level,
                         // also acts like a 'stack pointer' into 
   uint8_t vert_scroll_pos; // index into pItems[] of the topmost visible entry
@@ -122,10 +121,12 @@ typedef struct tAppMenu // instance data (in RAM, not Flash)
            //  with a rubber-duck antenna: "buzzz, buzzz, pfft, pfft, pfft" ! )
   int  dialog_field_index;  // general storage for dialogs and similar gadgets,
            //  first used in color_picker.c to select RED, GREEN or BLUE component
-  uint32_t stopwatch; // stopwatch to limit the screen-update-rate / QRM reduction
+  uint32_t stopwatch;       // stopwatch (timer) to limit the screen-update-rate / QRM reduction
+  uint32_t stopwatch_late_redraw;    // stopwatch for a 'delayed' full-screen update (see amenu_codeplug.c)
   scroll_list_control_t scroll_list; // control data for a scrollable list, e.g. Zones
+  char sz40MorseTextFromFocusedLine[44]; // plain text for Morse output from the currently focused line
          
-  // Anything that doesn't necessarily need to be in RAM should be in Flash (ROM).
+  // Anything that doesn't need to be in RAM should be in Flash (ROM).
   // Here's a pointer to the currently active items:
   // The following should be: menu_item_t         *pItems; 
   //             or at least: struct tAppMenuItem *pItems;
@@ -239,6 +240,7 @@ int  Menu_ReadIntFromPtr( void *pvValue, int data_type );
 void Menu_WriteIntToPtr( int iValue, void *pvValue, int data_type );
 void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue );
 uint16_t CRC16( uint16_t u16CRC, uint16_t *pwData, int nWords );
+int  safe_stringcopy( char *pszSource, char *pszDest, int iSizeOfDest );
 int  wide_to_C_string( wchar_t *wide_string, char *c_string, int maxlen );
 int  wide_strnlen( wchar_t *wide_string, int maxlen );
 
@@ -269,6 +271,7 @@ void Menu_FinishEditing( app_menu_t *pMenu, menu_item_t *pItem ); // [in] pMenu-
 
 // menu callback functions implemented in external modules:
 extern int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int param ); // color_picker.c
+extern int am_cbk_ColorSchemes(app_menu_t *pMenu, menu_item_t *pItem, int event, int param ); // "   "   "
 
 #if( CONFIG_MORSE_OUTPUT )
 void Menu_ReportItemInMorseCode(int morse_request); // used internally and by the Morse narrator

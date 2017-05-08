@@ -9,10 +9,11 @@
 
 #if (CONFIG_APP_MENU) // only available in combination with app_menu.c
 
-#include <stm32f4xx.h>  // <- fancy stuff, 'uint8_t', etc. I miss my BYTE .... ..
+#include <stm32f4xx.h>   // <- fancy stuff, 'uint8_t', etc. I miss my BYTE .... ..
 #include <string.h>
-#include "lcd_driver.h" // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
-#include "app_menu.h"   // 'simple' alternative menu activated by red BACK-button
+#include "lcd_driver.h"  // alternative LCD driver (DL4YHF), doesn't depend on 'gfx'
+#include "app_menu.h"    // 'simple' alternative menu activated by red BACK-button
+#include "addl_config.h" // customizeable menu colours stored in global_addl_config
 
 
 //---------------------------------------------------------------------------
@@ -129,7 +130,7 @@ int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int par
         if( pMenu->redraw )   // .. because the screen MUST be redrawn (e.g. "first call")
          { ColorPicker_Draw(pMenu, pItem); 
          }
-        return AM_RESULT_OCCUPY_SCREEN; // prevent drawing the "normal" menu screen
+        return AM_RESULT_OCCUPY_SCREEN;
      case APPMENU_EVT_ENTER : // just ENTERED the dialog 
         // (by pressing ENTER in a menu, with an item using this callback function)
         // Typically used to prepare items shown in a SUBMENU. 
@@ -148,10 +149,10 @@ int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int par
            case 'B' :  // red "Back"-key : close this dialog...
               // .. without writing back the edited colour into pItem->pvValue: 
               return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
-           case 'U' :  // cursor UP : inc currently selected colour component (R,G,B)
+           case 'U' :  // cursor UP : inc selected component (R,G,B)
               ColorPicker_IncDec( pMenu, 1/*delta*/ );
               break;
-           case 'D' :  // cursor DOWN: dec currently selected colour component (R,G,B)
+           case 'D' :  // cursor DOWN: dec selected component (R,G,B)
               ColorPicker_IncDec( pMenu, -1/*delta*/ );
               break;
            case '1' :
@@ -172,6 +173,165 @@ int am_cbk_ColorPicker(app_menu_t *pMenu, menu_item_t *pItem, int event, int par
         return AM_RESULT_NONE; // "proceed as if there was NO callback function"
    } // end switch( event )
   return AM_RESULT_OCCUPY_SCREEN; // "processed the event HERE; keep the screen occupied"
-} // end am_cbk_ColorTest()
+} // end am_cbk_ColorPicker()
+
+//---------------------------------------------------------------------------
+// 'pre-defined' colour palettes, composed with the above 'colour picker' 
+//---------------------------------------------------------------------------
+
+typedef struct tColorScheme
+{ const char *pszName;     // descriptive name of the palette, e.g. "Cappucino" 
+  uint16_t fg_color;       // normal text colour (used when neither selected/marked nor editing)
+  uint16_t bg_color;       // normal background colour
+  uint16_t sel_fg_color;   // colours used for the 'navigation' bar / selected items
+  uint16_t sel_bg_color;
+  uint16_t edit_fg_color;  // colours used for the 'edit cursor' (or the entired field in inc/dec edit mode)
+  uint16_t edit_bg_color;
+} color_scheme_t;
+
+const color_scheme_t color_schemes[] = 
+{ // name              fg_color bg_color sel_fg  sel_bg  edit_fg  edit_bg
+  { "Black on white",  0x0000,  0xFFFF,  0xFFFF, 0xF800, 0xFFFF,  0x001F },
+  { "Cappucino",       0x000D,  0x3C3F,  0x027F, 0x0192, 0x6DBF,  0x019F },
+  { "Cobalt",          0xEE11,  0x38C3,  0x5DFF, 0x5A04, 0x06FF,  0x9940 },
+  { "Greenhouse",      0x1FF1,  0x0100,  0x03E6, 0x6FE0, 0x0AA0,  0x2604 }
+
+};
+
+//---------------------------------------------------------------------------
+static void ColorSchemes_Draw(app_menu_t *pMenu, menu_item_t *pItem)
+  // Draws the 'Color Scheme' (aka 'palette') sample/selection screen. 
+  // 
+{ int i;
+  lcd_context_t dc;
+  char cMarker;
+  scroll_list_control_t *pSL = &pMenu->scroll_list;
+  const color_scheme_t *pScheme, *pCurrScheme;
+
+  // Draw the COMPLETE screen, without clearing it initially to avoid flicker
+  LCD_InitContext( &dc ); // init context for 'full screen', no clipping
+  if( pSL->focused_item>=0 && pSL->focused_item<pSL->num_items )
+   { // use the currently focused colour scheme to draw the title
+     pCurrScheme = &color_schemes[pSL->focused_item];
+   }
+  else // use the first scheme ('Tytera-like') for the title
+   { pCurrScheme = &color_schemes[0];
+   }
+  dc.fg_color = pCurrScheme->fg_color; 
+  dc.bg_color = pCurrScheme->bg_color;
+  ScrollList_AutoScroll( pSL ); // modify pSL->scroll_pos to make the FOCUSED item visible
+  dc.font = LCD_OPT_FONT_12x24;
+  LCD_Printf( &dc, "\tColour Scheme\r" ); // '\t'=horz. center, '\r' = clear to end of line, then enter next line
+  LCD_HorzLine( dc.x1, dc.y++, dc.x2, dc.fg_color ); // spacer below title
+  LCD_HorzLine( dc.x1, dc.y++, dc.x2, dc.bg_color );
+  i = pSL->scroll_pos;
+  while( (dc.y <= (LCD_SCREEN_HEIGHT-2*16)) && (i<pSL->num_items) )
+   { pScheme = &color_schemes[i];
+     cMarker = (i==pSL->focused_item) ? 0x1A : 0x20; // codepage 437: arrow pointing right, or space
+     dc.x = 0;
+     dc.font = LCD_OPT_FONT_8x16;
+     dc.fg_color = pScheme->fg_color;
+     dc.bg_color = pScheme->bg_color;
+     LCD_Printf( &dc, "%c %d %s\r", cMarker, i+1, pScheme->pszName );
+     dc.fg_color = pScheme->sel_fg_color;
+     dc.bg_color = pScheme->sel_bg_color;
+     LCD_Printf( &dc, "%c   navigate ", cMarker );
+     dc.fg_color = pScheme->edit_fg_color;
+     dc.bg_color = pScheme->edit_bg_color;
+     LCD_Printf( &dc, " edit\r" );
+     i++;
+   } 
+  // If necessary, fill the rest of the screen (at the bottom) with the background colour:
+  LCD_FillRect( 0, dc.y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, pCurrScheme->bg_color );
+  pMenu->redraw = FALSE;    // "done" (screen has been redrawn).. except:
+} // ColorSchemes_Draw()
+
+
+//---------------------------------------------------------------------------
+int am_cbk_ColorSchemes(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
+  // Callback function, invoked from the "app menu" framework to select a colour palette.
+{
+  scroll_list_control_t *pSL = &pMenu->scroll_list;
+  addl_config_t *pCfg = &global_addl_config;
+  const color_scheme_t *pScheme;
+  int i;
+
+  // what happened, why did the menu framework call us ?
+  if( event==APPMENU_EVT_ENTER ) // pressed ENTER (just entered this screen) ?
+   { ScrollList_Init( pSL ); // set all struct members to defaults 
+     pSL->num_items    = sizeof(color_schemes) / sizeof(color_schemes[0]);
+     pSL->current_item = 0;  // default selection if no match below.
+     // if the currently used colour scheme is in the table, select it:
+     for(i=0; i<pSL->num_items; ++i ) 
+      { pScheme = &color_schemes[i];
+        if( (pCfg->fg_color      == pScheme->fg_color)
+         && (pCfg->bg_color      == pScheme->bg_color)
+         && (pCfg->sel_fg_color  == pScheme->sel_fg_color)
+         && (pCfg->sel_bg_color  == pScheme->sel_bg_color)
+         && (pCfg->edit_fg_color == pScheme->edit_fg_color)
+         && (pCfg->edit_bg_color == pScheme->edit_bg_color) )
+         { pSL->current_item = pSL->focused_item = i;
+         }
+      }
+     pSL->n_visible_items = 3;
+     return AM_RESULT_OCCUPY_SCREEN; // occupy the entire screen (not just a single line)
+   }
+  else if(event==APPMENU_EVT_PAINT) // someone wants us to paint into the framebuffer
+   { // To minimize QRM from the display cable, only redraw when necessary (no "dynamic" content here):
+     if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // only if HexMon already 'occupied' the screen !
+      { if( pMenu->redraw )
+         { pMenu->redraw = FALSE;
+           ColorSchemes_Draw(pMenu, pItem);
+         }
+        return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied' 
+      }
+   }
+  else if( event==APPMENU_EVT_KEY ) // some other key pressed while focused..
+   { switch( (char)param ) // here: message parameter = keyboard code (ASCII)
+      {
+        case 'M' :  // green "Menu" key : kind of ENTER. Here, "apply & return" .
+           if( pSL->focused_item>=0 && pSL->focused_item<(sizeof(color_schemes) / sizeof(color_schemes[0])) )
+            { pScheme = &color_schemes[pSL->focused_item];
+              global_addl_config.fg_color      = pScheme->fg_color;
+              global_addl_config.bg_color      = pScheme->bg_color;
+              global_addl_config.sel_fg_color  = pScheme->sel_fg_color;
+              global_addl_config.sel_bg_color  = pScheme->sel_bg_color;
+              global_addl_config.edit_fg_color = pScheme->edit_fg_color;
+              global_addl_config.edit_bg_color = pScheme->edit_bg_color;
+              pMenu->save_on_exit = TRUE; // don't save in SPI-flash here yet, but when returning from the app-menu
+            }
+           return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
+        case 'B' :  // red "Back"-key : return from this screen, discard changes.
+           return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
+        case 'U' :  // cursor UP
+           if(  pSL->focused_item > 0 )
+            { --pSL->focused_item;
+#            if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
+              pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+#            endif
+            }
+           break;
+        case 'D' :  // cursor DOWN
+           if(  pSL->focused_item < (pSL->num_items-1) )
+            { ++pSL->focused_item;
+#            if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
+              pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+#            endif
+            }
+           break;
+        default:    // Other keys .. editing or treat as a hotkey ?
+           break;
+      } // end switch < key >
+     pMenu->redraw = TRUE;
+
+   } // end if < keyboard event >
+  if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // screen already 'occupied' ?
+   { return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied' 
+   }
+  else
+   { return AM_RESULT_NONE; // "proceed as if there was NO callback function"
+   }
+} // end am_cbk_ColorSchemes()
+
 
 #endif // CONFIG_APP_MENU ?

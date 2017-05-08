@@ -465,6 +465,26 @@ void Menu_GetMinMaxForDataType( int data_type, int *piMinValue, int *piMaxValue 
    }
 } // end Menu_GetMinMaxForDataType()
 
+//---------------------------------------------------------------------------
+int safe_stringcopy( char *pszSource, char *pszDest, int iSizeOfDest )
+  // Unlike the often-misunderstood strncpy(), only copies as many characters
+  // as present in the SOURCE, and only as many as the destination can accept.
+  // The output (c_string) is ALWAYS zero-terminated, unless iSizeOfDest is zero.
+  // The destination string may be TRUNCATED to iSizeOfDest-1(!) characters .
+  // Note the sequence of arguments : Copy FROM, TO;  not TO, FROM !
+  // Returns the number of characters copied, NOT including the trailing zero.
+{ int n_chars_copied = 0;
+  if( iSizeOfDest>0 )
+   { while( *pszSource && (iSizeOfDest>1/*!!*/) )
+      { *(pszDest++) = *(pszSource++);
+        --iSizeOfDest;
+        ++n_chars_copied;
+      }
+     *pszDest = '\0'; // ALWAYS terminate C-strings with a trailing zero !
+   }
+  return n_chars_copied;
+} // end safe_stringcopy()
+
 
 //---------------------------------------------------------------------------
 int wide_strnlen( wchar_t *wide_string, int maxlen )
@@ -478,15 +498,15 @@ int wide_strnlen( wchar_t *wide_string, int maxlen )
 }
 
 //---------------------------------------------------------------------------
-int wide_to_C_string( wchar_t *wide_string, char *c_string, int maxlen )
+int wide_to_C_string( wchar_t *wide_string, char *c_string, int iSizeOfDest )
   // Converts a wasteful 'wide' string into a good old C string .
   // Returns the NUMBER OF CHARACTERS copied, not including the trailing zero.
-  // The output (c_string) is ALWAYS zero-terminated, unless maxlen is zero. 
+  // The output (c_string) is ALWAYS zero-terminated, unless iSizeOfDest is zero. 
 { int n_chars_copied = 0;
-  if( maxlen>0 )
-   { while( *wide_string && (maxlen>1/*!!*/) )
+  if( iSizeOfDest>0 )
+   { while( *wide_string && (iSizeOfDest>1/*!!*/) )
       { *(c_string++) = (char)(*(wide_string++));
-        --maxlen;
+        --iSizeOfDest;
         ++n_chars_copied;
       }
      *c_string = '\0'; // ALWAYS terminate C-strings with a trailing zero !
