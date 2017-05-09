@@ -58,3 +58,4 @@ $(DLDIR)/%: | $(DLDIR)
 	@which curl >>/dev/null #Check that we have curl.
 	@-echo $(FIRMWARE_URL) \=\> $@
 	@curl -s -f -L $(FIRMWARE_URL) -o $@
+	@test $$(find $@ -size +0c) || (rm -f $@ && echo "FATAL ERROR: $@ downloaded as a zero byte file" && false)
