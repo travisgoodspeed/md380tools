@@ -35,6 +35,7 @@ uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
 // 8 = rearm
 // 0 = none pressed
 
+
 #if defined(FW_D13_020) || defined(FW_S13_020)
 inline int get_main_mode()
 {
@@ -116,70 +117,70 @@ void handle_hotkey( int keycode )
     reset_backlight();
     
     switch( keycode ) {
-        case 0 :
-	    clog_redraw();
+        case KC_0 :
+            clog_redraw();
             switch_to_screen(6);
             break ;
-        case 1 :
+        case KC_1 :
             sms_test();
             break ;
-        case 2 :
-	    slog_redraw();
+        case KC_2 :
+            slog_redraw();
             switch_to_screen(5);
             break ;
-        case 3 :
+        case KC_3 :
             copy_dst_to_contact();
             break ;
-        case 4 :
-	    lastheard_redraw();
+        case KC_4 :
+            lastheard_redraw();
             switch_to_screen(4);
             break ;
-        case 5 :
+        case KC_5 :
             syslog_clear();
-	    lastheard_clear();
-	    slog_clear();
-	    clog_clear();
-	    nm_started = 0;	// reset nm_start flag used for some display handling
-	    nm_started5 = 0;	// reset nm_start flag used for some display handling
-	    nm_started6 = 0;	// reset nm_start flag used for some display handling
+            lastheard_clear();
+            slog_clear();
+            clog_clear();
+            nm_started = 0;	// reset nm_start flag used for some display handling
+            nm_started5 = 0;	// reset nm_start flag used for some display handling
+            nm_started6 = 0;	// reset nm_start flag used for some display handling
             break ;
-        case 6 :
-        {
-            static int cnt = 0 ;
-            syslog_printf("=dump %d=\n",cnt++);
-        }
+        case KC_6 :
+            {
+                static int cnt = 0 ;
+                syslog_printf("=dump %d=\n",cnt++);
+            }
             syslog_dump_dmesg();
             break ;
-        case 7 :
+        case KC_7 :
             bp_send_beep(BEEP_TEST_1);
             nm_screen = 0 ;
             // cause transient.
             gui_opmode2 = OPM2_MENU ;
             gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
             break ;
-        case 8 :
+        case KC_8 :
             bp_send_beep(BEEP_TEST_2);
             switch_to_screen(1);
             break ;
-        case 9 :
+        case KC_9 :
             bp_send_beep(BEEP_TEST_3);
             switch_to_screen(2);
             break ;
-        case 11 :
+        case KC_UP :
             //gui_control(1);
             //bp_send_beep(BEEP_9);
             //beep_event_probe++ ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
-        case 12 :
+        case KC_DOWN :
             //gui_control(241);
             //bp_send_beep(BEEP_25);
             //beep_event_probe-- ;
             //sms_test2(beep_event_probe);
             //mb_send_beep(beep_event_probe);
             break ;
-        case 15 :
+        case KC_OCTOTHORPE :
             syslog_redraw();
             switch_to_screen(3);
             break ;
@@ -261,22 +262,22 @@ inline int is_intercept_allowed()
     }
 }
 
-inline int is_intercepted_keycode( int kc )
+inline int is_intercepted_keycode( uint8_t kc )
 {
     switch( kc ) {
-        case 0 :
-        case 1 :
-        case 2 :
-        case 3 :
-        case 4 :
-        case 5 :
-        case 6 :
-        case 7 :
-        case 8 :
-        case 9 :
-        case 11 :
-        case 12 :
-        case 15 :
+        case KC_0 :
+        case KC_1 :
+        case KC_2 :
+        case KC_3 :
+        case KC_4 :
+        case KC_5 :
+        case KC_6 :
+        case KC_7 :
+        case KC_8 :
+        case KC_9 :
+        case KC_UP :
+        case KC_DOWN :
+        case KC_OCTOTHORPE :
             return 1 ;
         default:
             return 0 ;
@@ -300,7 +301,7 @@ void kb_handler_hook()
     // allow calling of menu during qso.
     // not working correctly.
     if( global_addl_config.experimental ) {
-        if( (kp & 2) == 2 ) {
+        if( (kp & 3) == 3 ) {
             if( gui_opmode2 != OPM2_MENU ) {
                 gui_opmode2 = OPM2_MENU ;
                 gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
