@@ -12,6 +12,24 @@
 extern "C" {
 #endif
 
+typedef enum {
+	KC_0 = 0,
+	KC_1 = 1,
+	KC_2 = 2,
+	KC_3 = 3,
+	KC_4 = 4,
+	KC_5 = 5,
+	KC_6 = 6,
+	KC_7 = 7,
+	KC_8 = 8,
+	KC_9 = 9,
+	KC_MENU = 10,
+	KC_UP = 11,
+	KC_DOWN = 12,
+	KC_BACK = 13,
+	KC_ASTERISK = 14,
+	KC_OCTOTHORPE = 15
+} keycode_t;
 
 void f_4101();
 
