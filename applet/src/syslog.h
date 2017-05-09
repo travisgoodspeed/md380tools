@@ -36,6 +36,7 @@ void syslog_clear();
 void syslog_redraw();
 void syslog_draw_poll();
 
+
 #ifdef __cplusplus
 }
 #endif
