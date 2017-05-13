@@ -7,3 +7,8 @@ themes:
 
 server: themes
 	hugo server --buildDrafts
+
+site:
+	hugo
+	#Results are in public/
+
