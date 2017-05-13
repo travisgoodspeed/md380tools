@@ -1,6 +1,7 @@
 
+.PHONY: themes
 
-all: themes site
+all: site
 
 themes:
 	make -C themes all
@@ -8,7 +9,9 @@ themes:
 server: themes
 	hugo server --buildDrafts
 
-site:
+site: themes
 	hugo
 	#Results are in public/
 
+clean:
+	rm -rf public
