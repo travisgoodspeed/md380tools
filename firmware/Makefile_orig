@@ -9,6 +9,8 @@
 # to identify accidental corruption.  Anyone causing intentional
 # corruption is politely asked to ensure that their joke is funny.
 
+include ../curl.mak
+
 DLDIR = dl
 BINDIR = bin
 UNWRAPDIR = unwrapped
@@ -57,5 +59,5 @@ $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 $(DLDIR)/%: | $(DLDIR)
 	@which curl >>/dev/null #Check that we have curl.
 	@-echo $(FIRMWARE_URL) \=\> $@
-	@curl -s -f -L $(FIRMWARE_URL) -o $@
+	@curl $(CURL_FLAGS) $(FIRMWARE_URL) -o $@
 	@test $$(find $@ -size +0c) || (rm -f $@ && echo "FATAL ERROR: $@ downloaded as a zero byte file" && false)
