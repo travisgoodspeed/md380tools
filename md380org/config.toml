@@ -1,7 +1,7 @@
 baseURL = "https://md380.org/"
 languageCode = "en-us"
 title = "MD380.org"
-theme = "docdock"
+theme = "hugo-theme-docdock"
 
 [output]
 home = [ "HTML", "RSS", "JSON" ]
