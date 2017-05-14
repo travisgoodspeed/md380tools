@@ -68,9 +68,13 @@
 #define LCD_CS_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select LOW*/
 #define LCD_CS_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select HIGH*/
 
+extern uint8_t boot_flags; // bitwise combination of the following flags:
+#define BOOT_FLAG_INIT_BACKLIGHT  0x01 // initialized backlight (GPIO) ?
+#define BOOT_FLAG_LOADED_CONFIG   0x02 // called init_global_addl_config_hook() ?
+#define BOOT_FLAG_DREW_STATUSLINE 0x04 // called draw_statusline_hook() ?
+#define BOOT_FLAG_POLLED_KEYBOARD 0x08 // polled the keyboard at least once ?
 
-extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
-//   (note: GFX_backlight_on is useless, as long as no-one calls gfx.c : 
+extern volatile uint32_t IRQ_dwSysTickCounter; // Incremented each 1.5 ms
 
 extern uint8_t kb_backlight; // flag to disable the backlight via sidekey (in keyb.c)
 
@@ -82,7 +86,8 @@ extern uint8_t  volume_pot_percent; // audio volume potentiometer position [%]
 
 extern uint16_t battery_voltage_mV; // battery voltage [millivolts]
 
-
+extern uint16_t keypress_timer_ms; // measures key-down time in MILLISECONDS 
+extern uint8_t  keypress_ascii;    // code of the currently pressed key, 0 = none
 
 void StartStopwatch( uint32_t *pu32Stopwatch );   // details and usage in *.c 
 int  ReadStopwatch_ms( uint32_t *pu32Stopwatch );
