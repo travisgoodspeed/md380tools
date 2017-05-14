@@ -1,3 +1,4 @@
+include ../curl.mak
 
 .PHONY: all update clean
 
@@ -31,26 +32,26 @@ dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 	
 dmrmarc.tmp:
-	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
+	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
 	
 reflector.tmp:
-	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
+	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 		
 special.tmp:
 	python2 get_special_IDs.py
 	
 users.json:
-	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
+	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
 
 repeaters.json:
-	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=json&header=0' >$@
+	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=json&header=0' >$@
 
 repeaters.csv:
-	curl -L --retry 5 --max-time 20 --retry-delay 1 -f 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=csv&header=0' | perl -pe 's,<BR/>,,' >$@
+	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=csv&header=0' | perl -pe 's,<BR/>,,' >$@
 
 # not used
 bmgroups.json:
-	curl -L -f 'https://brandmeister.network/dist/js/bm/groups.js' >$@
+	curl $(CURL_FLAGS) 'https://brandmeister.network/dist/js/bm/groups.js' >$@
 	
 
 ci: clean all
