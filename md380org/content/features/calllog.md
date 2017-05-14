@@ -16,3 +16,4 @@ MD380Tools has your back with the CallLog feature, which displays a
 scrolling list of all recent callsigns or DMR IDs.  Just press 4 to
 call up the log, and press 7 to return to the standard desktop.
 
+![calllog](/features/calllog.jpg)
