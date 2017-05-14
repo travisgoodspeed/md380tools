@@ -120,7 +120,7 @@
 			rollingLinks: false,
 
 			// Hides the address bar on mobile devices
-			hideAddressBar: true,
+			hideAddressBar: false,
 
 			// Opens links in an iframe preview overlay
 			previewLinks: false,
@@ -308,7 +308,7 @@
 		extend( config, query );
 
 		// Hide the address bar in mobile browsers
-		hideAddressBar();
+		//hideAddressBar();
 
 		// Loads the dependencies and continues to #start() once done
 		load();
