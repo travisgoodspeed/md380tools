@@ -22,6 +22,7 @@
 # define FALSE 0
 #endif
 
+
 //---------------------------------------------------------------------------
 // Defines for the alternative 'App Menu' :
 
@@ -114,7 +115,7 @@ typedef struct tAppMenu // instance data (in RAM, not Flash)
   char sz40EditBuf[44]; // also used "offline" while editing, for direct input
            // via keyboard (or even Morse code ?), because this is easier than
            // adding or subtracting powers of 2, 10, or 16 to iEditValue ...
-  int  value_chksum; // 'Fletcher'-checksum over all currently visible 
+  int  value_chksum; // checksum (CRC16) over all currently visible 
            // values (strings and numbers) to check if a screen update is necessary.
            // (If the cable between CPU and display didn't emit QRM, we'd simply
            //  redraw the screen periodically. But try this on an FM channel
