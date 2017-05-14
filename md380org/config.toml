@@ -22,3 +22,9 @@ identifier = "ds"
 url = "https://github.com/travisgoodspeed/md380tools"
 weight = 1
 
+[[menu.shortcuts]]
+name = "DL4YHF's RT3 Page"
+identifier = "dl4yhf"
+url = "http://www.qsl.net/dl4yhf/RT3/index.html"
+weight = 2
+
