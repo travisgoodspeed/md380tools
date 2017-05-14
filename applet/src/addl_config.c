@@ -15,6 +15,7 @@
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
+#include "irq_handlers.h"  // boot_flags, BOOT_FLAG_LOADED_CONFIG defined here
 
 addl_config_t global_addl_config;
 
@@ -140,4 +141,6 @@ void init_global_addl_config_hook(void)
 //#ifdef CONFIG_MENU
     md380_create_main_menu_entry();
 //#endif    
+
+    boot_flags |= BOOT_FLAG_LOADED_CONFIG;
 }

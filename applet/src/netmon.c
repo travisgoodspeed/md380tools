@@ -17,12 +17,18 @@
 #include "lastheard.h"
 #include "console.h"
 #include "radio_config.h"
-#include "console.h"
+#include "config.h"
 #include "codeplug.h"
 #include "unclear.h"
 #include "usersdb.h"
 #include "etsi.h"
 #include <wchar.h>
+
+#if (CONFIG_APP_MENU)
+# include "app_menu.h"     // alternative menu, with faster text display
+# include "lcd_driver.h"   // alternative LCD driver, less QRM, faster 
+# include "irq_handlers.h" // stopwatch for periodic framebuffer updates 
+#endif // CONFIG_APP_MENU ?
 
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
@@ -333,7 +339,7 @@ void netmon5_update()
 
     if ( nm_started5 == 0 ) {
         slog_printf("Netmon 5 LH Channel =========\n");
-        nm_started5 = 1;                                // flag for restart of LH list
+        nm_started5 = 1;                        // flag for restart of LH list
         sl_cnt++;                               // reset lh counter 
     }   
 
@@ -419,7 +425,7 @@ void netmon6_update()
         for (int i = 0; i < 20; i++)
            {
               curr_channel[i] = channel_name[i];
-                if (channel_name[i] == '\0')
+              if (channel_name[i] == '\0')
                 break;
            }
 
@@ -428,7 +434,7 @@ void netmon6_update()
                 clog_printf("-%02d:%S \n", ch_cnt, curr_channel);  // show divider line when channel changes       
                 wcscpy(ch_last_channel, curr_channel);
                 ch_cnt++;
-                }
+          }
         ch_new = 0 ;                            // call handled, wait until new voice call status received
      }
 #else
@@ -473,3 +479,165 @@ void netmon_update()
             return ;
     }
 }
+
+
+#if (CONFIG_APP_MENU)
+//---------------------------------------------------------------------------
+// Interface between various Netmon screens and the alternative 'app menu' .
+// Netmon4,5,6 seem to have extra character-buffers in RAM,
+// and use individual printf-functions to fill them:
+//    Netmon4 -> lastheard_printf() -> char lastheard_buf[LASTHEARD_SIZE];
+//    Netmon5 -> slog_printf()      -> char slog_buf[SLOG_SIZE];
+//               slog_draw_poll() :  copies slog_buf[] to con_buf[][];  
+//    Netmon6 -> clog_printf()      -> char clog_buf[CLOG_SIZE];
+// So, with some trickery, lastheard.c and most of the netmon functions
+// don't need to be modified to show the netmon-screens in the app-menu.
+//---------------------------------------------------------------------------
+static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
+  // Draws the emulated 'text console' into the framebuffer,
+  // using the alternative LCD driver (much faster than Tytera's).
+{ int con_x, con_y;
+  lcd_context_t dc;
+  char sz40[44];
+  char *cp;
+  int checksum;
+  static uint32_t stopwatch_for_update = 0;
+
+  // Let the 'netmon*_update()' functions print into the console buffer:
+  switch( netmon_screen )
+   { case 1:
+        netmon1_update(); // beautifully simple .. only prints into con_buf[][],
+        // but causes QRM due to the rotating thing in the upper left corner
+        // (try this with a rubber-duck antenna on an FM channel with squelch open)
+        break;
+     case 2 :
+        netmon2_update(); // also simply prints into con_buf[][]
+        break;
+     case 3 :
+        syslog_redraw();  // motivate syslog_draw_poll() to do something
+        netmon3_update(); // -> syslog_draw_poll() : syslog_buf[] -> con_buf[][]
+        break;
+     case 4 :
+        lastheard_redraw(); // convince lastheard_draw_poll(?) to do something
+        netmon4_update(); // -> lastheard_draw_poll(?), 
+        break;
+     case 5 :
+        netmon4_update(); // required for what (possibly 'collects data') ?
+        netmon6_update(); // ...
+        slog_redraw();    // convince slog_draw_poll() to do something
+        netmon5_update(); // netmon5_update() -> slog_draw_poll() -> con_clrscr(), ...
+        break;
+     case 6 :
+        clog_redraw();    // set flag for netmon6_update() to do something
+        netmon4_update(); // seems to "acquire" something for other screens, too.
+        netmon6_update(); // netmon6_update() -> clog_draw_poll() -> con_clrscr(), ...
+        break;
+     default:
+        con_clrscr();
+        con_printf("n/a - press another digit");
+        break;
+   }
+
+  // At this point, the requested netmon screen should have been printed
+  // into the console text buffer ( char con_buf[][] ) .
+  // Because updating the framebuffer causes QRM (emitted from the display cable),
+  // check if the contents of con_buf[][] have been modified:
+  checksum = 0xFFFF; // seed for CRC
+  for( con_y=0; con_y<CONSOLE_Y_SIZE; con_y++ )
+   { checksum = CRC16( checksum, (uint16_t*)con_buf[con_y], CONSOLE_MAX_XPOS );
+   }
+  if( pMenu->value_chksum != checksum )
+   {  pMenu->value_chksum =  checksum;
+      pMenu->redraw = TRUE;  
+   }
+
+  if( pMenu->redraw || (ReadStopwatch_ms(&stopwatch_for_update)>1000/*ms*/) )
+   { // Draw the console into the framebuffer, using the alternative LCD
+     // driver (much faster than Tytera's). Use the alternative menu's colour scheme.
+     // To avoid flicker, DO NOT clear the framebuffer before drawing !
+     LCD_InitContext( &dc ); // init context for 'full screen', no clipping
+     Menu_GetColours( SEL_FLAG_NONE, &dc.fg_color, &dc.bg_color );
+
+     dc.font = LCD_OPT_FONT_8x8;
+     LCD_Printf( &dc, "\tNetmon %d\r", netmon_screen ); 
+     dc.font = LCD_OPT_FONT_6x12;
+     con_y = 0;
+     while( (con_y<CONSOLE_Y_SIZE) && (dc.y<LCD_SCREEN_HEIGHT) )
+      { cp = con_buf[con_y++]; // copy the next line from the console buffer
+        con_x = 0;
+        while( (con_x<CONSOLE_MAX_XPOS) && (con_x<40) )
+         { if(*cp==0)
+            { break;
+            }
+           sz40[con_x++] = *cp++;
+         }
+        sz40[con_x] = '\0';
+        dc.x = 0;
+        LCD_Printf( &dc, "%s\r", sz40 ); // unlike '\n', '\r' clears the rest of the line
+      } 
+     // If necessary, clear the rest of the screen (at the bottom) :
+     LCD_FillRect( 0, dc.y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, dc.bg_color );
+     pMenu->redraw = FALSE;    // "done" (screen has been redrawn)
+     StartStopwatch( &stopwatch_for_update ); // occasional periodic update,
+                               // because CRC16 hash isn't bullet-proof.
+   }
+} // end NetMon_Draw() [using the app-menu's LCD driver]
+
+
+//---------------------------------------------------------------------------
+int am_cbk_NetMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
+  // Callback function, invoked from the "app menu" framework 
+  // to paint ONE of the SIX (?) netmon screens into the LCD framebuffer.
+{
+  switch( event ) // what happened, why did the menu framework call us ?
+   { case APPMENU_EVT_ENTER: // operator wants to 'enter' one of the netmon screens
+        pMenu->dialog_field_index = 1;  // 'netmon1' always worked, so enter it by default
+        return AM_RESULT_OCCUPY_SCREEN;
+     case APPMENU_EVT_EXIT :  // operator wants to exit from the netmon screen
+        return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
+     case APPMENU_EVT_PAINT : // paint into the framebuffer here ?
+        if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // only if HexMon already 'occupied' the screen !
+         { // To minimize QRM from the display cable, only redraw the screen
+           // if the content of the 'console' has been modified.
+           // But to calculate a CRC for the console screen, 
+           // the netmon-screen-specific buffer must be copied (printed)
+           // into con_buf[][] first. Then, let NetMon_Draw() decide
+           // if it's really necessary to 'send pixels over the cable'.
+           // Only if pMenu->redraw is TRUE at this point, it MUST draw
+           // the screen into the LCD framebuffer.
+           NetMon_Draw( pMenu, pMenu->dialog_field_index/*netmon_screen*/ );
+           return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied'
+         }
+        break;
+     case APPMENU_EVT_KEY : // own keyboard control only if the screen is owned by HexMon : 
+        if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // only if HexMon already 'occupied' the screen !
+         { switch( (char)param ) // here: message parameter = keyboard code (ASCII)
+            {
+              case 'M' :  // green "Menu" key : kind of ENTER. But here, EXIT ;)
+              case 'B' :  // red "Back"-key : return from this screen.
+                 return AM_RESULT_EXIT_AND_RELEASE_SCREEN;
+              case 'U' :  // cursor UP : here "page up"
+                 pMenu->redraw = TRUE;
+                 break;
+              case 'D' :  // cursor DOWN: here "page down"
+                 pMenu->redraw = TRUE;
+                 break;
+              default:    // Other keys : switch between different netmon screens
+                 if( param>='0' && param<='9' )
+                  { pMenu->dialog_field_index = param-'0'; // here: "screen number"
+                    pMenu->redraw = TRUE;
+                  }
+                 break;
+            } // end switch < key >
+           return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied'
+         }
+        break;
+     default: // all other events are not handled here (let the sender handle them)
+        break;
+   } // end switch( event )
+  return AM_RESULT_NONE; // "proceed as if there was NO callback function"
+} // end am_cbk_NetMon()
+
+
+
+#endif // CONFIG_APP_MENU ?
