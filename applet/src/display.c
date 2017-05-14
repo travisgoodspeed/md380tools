@@ -24,6 +24,8 @@
 #include "unclear.h"
 #include "etsi.h"
 #include "app_menu.h"
+#include "syslog.h"        // LOGB()
+#include "irq_handlers.h"  // boot_flags, BOOT_FLAG_DREW_STATUSLINE
 
 
 char eye_paltab[] = {
@@ -415,6 +417,10 @@ int main(void)
 
 void draw_statusline_hook( uint32_t r0 )
 {
+   if( ! (boot_flags & BOOT_FLAG_DREW_STATUSLINE) )
+    { LOGB("draw_statusline\n");
+    }
+   boot_flags |= BOOT_FLAG_DREW_STATUSLINE;
 
 # if (CONFIG_APP_MENU)
     // If the screen is occupied by the optional 'red button menu', 
