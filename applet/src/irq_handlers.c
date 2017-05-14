@@ -2,8 +2,6 @@
     \brief Own interrupt handler(s), used for optional dimmed backlight
      and the low-level Morse code generator with audio output.
 
-  Module prefix "IRQ_", except for IRQ handlers (e.g. "SysTick_Handler").
-
   Drives the MD380's backlight LEDs with a PWMed backlight,
   intensity depending on 'idle' / 'active', configurable in menu.c . 
 
@@ -84,10 +82,15 @@ typedef void (*void_func_ptr)(void);
 #define SPKR_SWITCH_OFF GPIOB->BSRRL=(1<<PINPOS_B_SPK_C) /* speaker off*/
 #define IS_SPKR_SWITCH_ON ((GPIOB->ODR&(1<<PINPOS_B_SPK_C))==0) /*check spkr switch*/
 
+
+uint8_t boot_flags = 0; // 0 : none of the 'essential' functions has been called yet
+
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
-#if( CONFIG_DIMMED_LIGHT )
- static uint8_t may_turn_on_backlight = 0; // ok to turn on the backlight ? 0=no, 1=yes
-#endif // CONFIG_DIMMED_LIGHT ?
+
+uint16_t keypress_timer_ms = 0; // measures key-down time in MILLISECONDS 
+uint8_t  keypress_ascii = 0;    // code of the currently pressed key, 0 = none .
+                // intended to detect certain 'very long pressed keys' anywhere,
+                // e.g.in app_menu.c : CheckLongKeypressToActivateMorse() .
 
 #if( CONFIG_MORSE_OUTPUT )
 typedef struct tMorseGenerator
@@ -1015,7 +1018,7 @@ static void PollAnalogInputs(void)
 //---------------------------------------------------------------------------
 char KeyRowColToASCII(uint16_t kb_row_col)
 { // Converts a hardware-specific keyboard code into a character.
-  // Implemented 2017-03-31 for the alternative 'red menu' .
+  // Implemented 2017-03-31 for the alternative menu .
   //   [in]  16-bit "row/column" combination shown below
   //   [out] simple 8-bit character also shown in the table:
   //       (lower case letters are reserved for Morse input)
@@ -1075,7 +1078,7 @@ static void PollKeysForAppMenu(void)
   static uint8_t autorepeat_countdown=0;
   static uint8_t longpress_countdown=0;
   static uint16_t prev_key;
-  uint16_t key = kb_row_col_pressed; 
+  uint8_t key = KeyRowColToASCII( kb_row_col_pressed ); 
   // 'kb_keycode' is useless here because it doesn't return to zero 
   // when releasing a key.
   // So use 'kb_row_col_pressed' (16 bit) instead . Seems to be the
@@ -1113,37 +1116,46 @@ static void PollKeysForAppMenu(void)
   // Independent keyboard polling for the alternative menu.. and maybe others
   if( prev_key==0 && key!=0 )
    { if( green_menu_countdown == 0)
-      { Menu_OnKey( KeyRowColToASCII(key) ); 
+      { Menu_OnKey( key ); 
       }
      // no fancy FIFO but a simple 1-level buffer.
      // Consumed in another task or thread, see app_menu.c 
      autorepeat_countdown = 500/*ms*/ / 24; // <- autorepeat DELAY
      longpress_countdown = 2000/*ms*/ / 24;
+     keypress_timer_ms = 1; 
    }
   else // no CHANGE in the keyboard matrix, but maybe...
    { if( key!=0 )
       { if(  longpress_countdown > 0 )
          { --longpress_countdown;
          }
+        if( keypress_timer_ms < (65535-24) )
+         {  keypress_timer_ms += 24;
+         }
       }
-     if( key==0x0012 || key==0x0022 || key==0x0202 ) // 'auto-repeatable' key still pressed ?
+     else
+      { keypress_timer_ms = 0;
+      }
+     if( key=='U' || key=='D' || key=='#' ) // 'auto-repeatable' key still pressed ?
       { if(  autorepeat_countdown > 0 )
          { --autorepeat_countdown;
          }
         else // send the same key again, prevents rubbing the paint off..  
          { autorepeat_countdown = 130/*ms*/ / 24; // 1 / "autorepeat RATE"
-           Menu_OnKey( KeyRowColToASCII(key) );
+           Menu_OnKey( key );
          }   
       }
-     if( key==0x0402 )               // red 'BACK' key..
+     if( key=='B' )    // red 'BACK' key..
       { if( longpress_countdown==1 ) // ..pressed for a "long" time..
          { if( ! Menu_IsVisible() )  // ... so enter the alternative menu regardless of "gui_opmode2" & Co !
-            { Menu_OnKey( KeyRowColToASCII(key) ); 
+            { Menu_OnKey( key ); 
             }
          }
       }
    } 
   prev_key = key;
+  keypress_ascii = key;  // also store ASCII in global var, can be polled anywhere
+
 } // end PollKeysForAppMenu()
 #endif // CONFIG_APP_MENU ?
 
@@ -1157,10 +1169,7 @@ void SysTick_Handler(void)
   // vector table, and the address of the original handler must be known
   // because we also call the original handler from here.
 {
-#if( CONFIG_DIMMED_LIGHT )
-  uint32_t dw;
-#endif
-  uint32_t oldSysTickCounter = IRQ_dwSysTickCounter++; 
+  uint32_t oldSysTickCounter = IRQ_dwSysTickCounter; 
     // this local copy is more efficient to read than the global variable,
     // because the C compiler needs to load addresses of global variables
     // from the literal pool. 
@@ -1188,22 +1197,8 @@ void SysTick_Handler(void)
 
    } // end if < 1st call of SysTick_Handler >
 
-  if(red_led_timer) // <- rarely used, only hijack the red LED for TESTING !
-   { LED_RED_ON;    // "debug signal 1" : short, single flash with the RED LED
-     if( (--red_led_timer) == 0 ) // only in the moment this timer expires,
-      { LED_RED_OFF;              // turn the red (TX-) LED off again .
-      } // note: almost "no" time is wasted in SysTick_Handler when timer=0 .
-   }
-  if( green_led_timer ) // same for the green (RX-) LED : ONLY USE FOR TESTING
-   { LED_GREEN_ON; // "debug signal 2": short, single flash with the GREEN LED
-     if( (--green_led_timer) == 0 )
-      { LED_GREEN_OFF;
-      }
-   }
-
-#if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight (here, via GPIO, or PWM-from-UART) ?
   // "Wait" until the original firmware turns on the backlight:
-  if( ! may_turn_on_backlight ) 
+  if( ! (boot_flags & BOOT_FLAG_INIT_BACKLIGHT) ) 
    { // Did the original firmware turn on the backlight ? 
      // First of all, did it turn on the peripheral clocks for GPIO A..E ?
 #    define RCC_AHB1ENR_GPIO_A_to_E (RCC_AHB1ENR_GPIOAEN|RCC_AHB1ENR_GPIOBEN|RCC_AHB1ENR_GPIOCEN|RCC_AHB1ENR_GPIODEN|RCC_AHB1ENR_GPIOEEN)
@@ -1216,36 +1211,63 @@ void SysTick_Handler(void)
          { // Did the firmware turn the backlight on (for the 1st time) ?  
            if( GPIOC->ODR & (1<<6) ) // backlight-bit in Output Data Register set ?
             { // Yes; guess it's ok to "take over" backlight control now .
+#            if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight ?
               InitDimming();  // switch from GPIO- to UART-generated PWM
-              IRQ_dwSysTickCounter  = 1; // almost restart timer (to ramp up brightness)
-              may_turn_on_backlight = 1; // start dimming in the next interrupt
+#            endif
+              LOGB("gpio initialized\n");
+              boot_flags |= BOOT_FLAG_INIT_BACKLIGHT; // may start dimming now
             }
          }
       }
-   }    // end if < may NOT turn on the backlight yet >   
-  else // may control the backlight now ... "normal operation" ?
-   { 
-     if( oldSysTickCounter <= 6000/* x 1.5 ms*/ )
-      { dw = oldSysTickCounter / 128; // brightness ramps up during init
-        intensity = (dw<9) ? dw : 9;  // ... from 0 to 9 (=max brightness)
-      }
-     else  // not "shortly after power-on", but during normal operation ...
-      {
-        if( (backlight_timer>0) || (md380_radio_config.backlight_time==0) )
-         { // If the backlight time is ZERO, use the 'radio-active' setting ("backlight level HI")
-           intensity >>= 4;  // RADIO-ACTIVE state : use the upper 4 nibbles of this BYTE
-           // When "active", the backlight shouldn't be completely off, so..
-           if(intensity < 1) // invalid setting for the RADIO-ACTIVE state ?
-            { intensity = 9; // 'hum-free' default : MAX brightness (no PWM) 
-            }
-         } // end if < backlight should be "on" (active state) > 
-        else // "passive" state (no keypress for a long time), *AND* backlight_time nonzero :
-         { // backlight may be off. It will be turned on when pressing a key.
-           // Nothing to do here . intensity=0 is ok .
-         }
-        intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
-      } // <normal operation, configurable backlight>
+   }    // end if < backlight (GPIO) not initialized yet ? >   
 
+  if( (boot_flags & ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
+                 != ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
+   { // As long as the original firmware is still "booting",
+     // we cannot poll the keyboard, and should not drive the display.
+     // Don't increment IRQ_dwSysTickCounter yet, because it is polled
+     // in several modules to do 'something shortly after power-on',
+     // for example check for a long keypress to activate Morse output.
+     IRQ_dwSysTickCounter = 1;
+   }
+  else // all necessary functions have been called - "open for business" ?
+   { IRQ_dwSysTickCounter++;
+     if(red_led_timer) // <- rarely used, only hijack the red LED for TESTING !
+      { LED_RED_ON;    // "debug signal 1" : short, single flash with the RED LED
+        if( (--red_led_timer) == 0 ) // only in the moment this timer expires,
+         { LED_RED_OFF;              // turn the red (TX-) LED off again .
+         } // note: almost "no" time is wasted in SysTick_Handler when timer=0 .
+      }
+     if( green_led_timer ) // same for the green (RX-) LED : ONLY USE FOR TESTING  
+      { LED_GREEN_ON; // "debug signal 2": short, single flash with the GREEN LED
+        if( (--green_led_timer) == 0 )
+         { LED_GREEN_OFF;
+         }
+      }
+
+     if( oldSysTickCounter > 200 ) // multiplexed keyboard-polling should be finished now,
+      { boot_flags |= BOOT_FLAG_POLLED_KEYBOARD; // and kb_row_col_pressed should be valid
+        // (important to check for 'keys pressed during power-on')
+      }
+
+
+     // 2017-05-14 : Removed the brightness 'ramp-up' test. 
+     // The 9 intensity levels can now be tested in app_menu.c in inc/dec edit mode.
+#   if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight ?
+     if( (backlight_timer>0) || (md380_radio_config.backlight_time==0) )
+      { // If the backlight time is ZERO, use the 'radio-active' setting ("backlight level HI")
+        intensity >>= 4;  // RADIO-ACTIVE state : use the upper 4 nibbles of this BYTE
+        // When "active", the backlight shouldn't be completely off, so..
+        if(intensity < 1) // invalid setting for the RADIO-ACTIVE state ?
+         { intensity = 9; // 'hum-free' default : MAX brightness (no PWM) 
+         }
+      } // end if < backlight should be "on" (active state) > 
+     else // "passive" state (no keypress for a long time), *AND* backlight_time nonzero :
+      { // backlight may be off. It will be turned on when pressing a key.
+        // Nothing to do here . intensity=0 is ok .
+      }
+     intensity &= 0x0F;   // 4-bit value, but only steps 0..9 are really used
+ 
      if( ! (RCC->APB2ENR & RCC_APB2ENR_USART6EN) ) // oops.. USART6 has been de-initialized ?!
       { InitDimming();   
       }
@@ -1287,11 +1309,9 @@ void SysTick_Handler(void)
               break;
          } // end switch( curr_intensity )
       }   // end else < backlight not completely dark >
-   }     // may_turn_on_backlight ? 
-#endif  // CONFIG_DIMMED_LIGHT ?
+#   endif  // CONFIG_DIMMED_LIGHT ?
 
-  if( oldSysTickCounter > 3000 )
-   { // Some seconds after power-on, begin to poll analog inputs...
+     // Poll analog inputs...
      if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
       { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
       }
@@ -1304,14 +1324,15 @@ void SysTick_Handler(void)
         // when that button isn't used to control Tytera's own menu).
       }
 #   endif // CONFIG_APP_MENU ?
-   } // end if( oldSysTickCounter > 6000 )
 
-#if( CONFIG_MORSE_OUTPUT ) // Morse output (optional, since 2017-02-19) ?
-  if( morse_generator.u8State != MORSE_GEN_PASSIVE )
-   { // Only spend time on this when active !
-     MorseGen_OnTimerTick( &morse_generator );
-   }
-#endif  // CONFIG_MORSE_OUTPUT ?
+#   if( CONFIG_MORSE_OUTPUT ) // Morse output (optional, since 2017-02-19) ?
+     if( morse_generator.u8State != MORSE_GEN_PASSIVE )
+      { // Only spend time on this when active !
+        MorseGen_OnTimerTick( &morse_generator );
+      }
+#   endif  // CONFIG_MORSE_OUTPUT ?
+   } // end if < all necessary bits in boot_flags set > ?
+ 
 
   // Restore original interrupt (enable-) status. Don't blindly re-enable it !
   if( ! irq_was_disabled ) // don't enable IRQs if they were DISABLED on entry
