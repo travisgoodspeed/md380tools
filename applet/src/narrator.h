@@ -53,13 +53,13 @@ typedef struct tNarrator // instance data.
 
   uint8_t to_do; // what "to do" for the narrator ? bitwise combineable flags..
 # define NARRATOR_PASSIVE      0x00 // nothing else to tell / everything 'done'
-# define NARRATOR_REPORT_CHANNEL 0x01 // report current channel name / number
-# define NARRATOR_REPORT_ZONE    0x02 // report current zone (on main screen)
-# define NARRATOR_REPORT_BATTERY 0x04 // report whatever the battery icon does..
-# define NARRATOR_REPORT_TITLE   0x08 // report title of the current menu
-# define NARRATOR_REPORT_MENU    0x10 // report currently focused menu item
-# define NARRATOR_READ_CONSOLE   0x20 // read out Console/Netmon screen
-# define NARRATOR_APPEND_DEBUG_1 0x80 // append something.. only for debugging
+# define NARRATOR_REPORT_CHANNEL_NAME   0x01 // report current channel name
+# define NARRATOR_REPORT_CHANNEL_NUMBER 0x02 // report current channel number
+# define NARRATOR_REPORT_ZONE    0x04 // report current zone (on main screen)
+# define NARRATOR_REPORT_BATTERY 0x08 // report whatever the battery icon does..
+# define NARRATOR_REPORT_TITLE   0x10 // report title of the current menu
+# define NARRATOR_REPORT_MENU    0x20 // report currently focused menu item
+# define NARRATOR_READ_CONSOLE   0x40 // read out Console/Netmon screen
 
   uint8_t item_index; // menu item index when reading the ENTIRE menu,
                       // or line number when reading console/netmon.

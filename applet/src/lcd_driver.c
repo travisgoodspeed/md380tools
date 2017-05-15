@@ -666,12 +666,12 @@ int LCD_Printf( lcd_context_t *pContext, char *fmt, ... )
   // Almost the same as LCD_DrawString,
   // but with all goodies supported by tinyprintf .
 {
-  char sz80[84];  // maximum OUTPUT length (after "printing to string") is 80 chars !
+  char sz127[128];
   va_list va;
   va_start(va, fmt);
-  va_snprintf(sz80, 80, fmt, va );    
+  va_snprintf(sz127, 127, fmt, va );    
   va_end(va);      
-  return LCD_DrawString( pContext, sz80 );
+  return LCD_DrawString( pContext, sz127 );
 } // end LCD_Printf()
 
 

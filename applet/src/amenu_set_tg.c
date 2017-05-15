@@ -64,6 +64,7 @@ int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
            // When QSYing via rotary knob, the TG for the new channel shall be taken
            // from the codeplug again. So remember the channel FOR WHICH THE TG WAS SET:
            ad_hoc_tg_channel = channel_num;
+           CheckTalkgroupAfterChannelSwitch(); // ad_hoc_talkgroup -> contact.xyz
          } // end if < FINISHED (not ABORTED) editing >
         return AM_RESULT_OK; // "event was processed HERE"
      default: // all other events are not handled here (let the sender handle them)
@@ -73,7 +74,7 @@ int am_cbk_SetTalkgroup(app_menu_t *pMenu, menu_item_t *pItem, int event, int pa
 } // end am_cbk_SetTalkgroup()
 
 //---------------------------------------------------------------------------
-void CheckTalkgroupAfterChannelSwitch(void)
+void CheckTalkgroupAfterChannelSwitch(void) // [in] ad_hoc_tg_channel,ad_hoc_talkgroup; [out] contact.xyz
   // Called from somewhere (display task?) after a channel-switch,
   // including the transition of channel_num = 0 -> channel_num from channel knob.
 {

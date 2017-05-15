@@ -29,11 +29,15 @@
 
 /*
  Revision history (latest entry first) :
+ 2017-05-14 : Bugfix for sidekey-activated message (channel-name,zone-name,voltage):
+            Now gives a 'full report' in narrator_start_talking()
+            regardless of global_addl_config.narrator_mode.
+
  2017-03-01, DL4YHF : Added non-intrusive methods to report
             the current channel, menu title, selected item.  
             Reading out the COMPLETE menu ("almost the full screen")
-            is possible, but takes long. Some brainstorming:
-   - the CURRENTLY selected item (text line) could be
+            is possible, but takes long. 
+   - the CURRENTLY selected item (text line) can be
      'narrated' in a slightly higher pitch than normal text.
    - the Morse generator (running in the background)
      needs to change audio frequency in the gaps between
@@ -81,7 +85,7 @@ T_Narrator Narrator;  // a single CW narrator, aka "storyteller" instance
 wchar_t narrator_temp_wstring[10];
 
 // internal 'forward' references :
-static void report_channel(void);
+static void report_channel(int name_or_number);
 static void report_zone(void);
 static void report_menu_title(void);
 static void report_menu_item(void);
@@ -160,7 +164,12 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
               pNarrator->to_do |= NARRATOR_REPORT_MENU;
             }   // end if < just entered the MENU >
            else // seems we RETURNED from the main menu to the 'main screen'
-            { pNarrator->to_do = NARRATOR_REPORT_CHANNEL;
+            { if(Narrator.mode & NARRATOR_MODE_VERBOSE)
+               { pNarrator->to_do = NARRATOR_REPORT_CHANNEL_NAME;
+               }
+              else
+               { pNarrator->to_do = NARRATOR_REPORT_CHANNEL_NUMBER;
+               }
             }
            pNarrator->focused_item_index = i; // set new values to detect..
            pNarrator->current_menu = pMenu;   // ..the NEXT menu-related change
@@ -174,9 +183,15 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
          {  pNarrator->channel_number =  u8Temp;
             MorseGen_ClearTxBuffer();
             StartStopwatch( &pNarrator->stopwatch );   // also here, don't "start talking" immediately
-            pNarrator->to_do = NARRATOR_REPORT_CHANNEL; 
+            if(Narrator.mode & NARRATOR_MODE_VERBOSE)
+             { pNarrator->to_do = NARRATOR_REPORT_CHANNEL_NAME;
+             }
+            else
+             { pNarrator->to_do = NARRATOR_REPORT_CHANNEL_NUMBER;
+             }
             // Also report the zone here ? Unnecessary in most cases.
-            // So use a sidekey to 'request' a full report, including the zone.
+            // The sidekey can be used for that, if really necessary;
+            // but the app-menu has a Morse-friendly Zone list.
          }
       }
    } // end if( pNarrator->mode & NARRATOR_MODE_ENABLED )
@@ -192,11 +207,11 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
       { // (don't wait for the buffer to run empty, avoid gaps,
         //  we don't know how frequently this function is called)
         // What to send next (ordered by priority) ?
-        if( pNarrator->to_do & NARRATOR_REPORT_CHANNEL ) 
+        if( pNarrator->to_do & (NARRATOR_REPORT_CHANNEL_NAME | NARRATOR_REPORT_CHANNEL_NUMBER )  ) 
          { // report the current channel (highest prio)
            MorseGen_AppendChar(' '); // short gap instead of a "line break" ..
-           report_channel();         // followed by channel name or -number
-           pNarrator->to_do &= ~NARRATOR_REPORT_CHANNEL; // "done" !
+           report_channel(pNarrator->to_do); // followed by channel name or -number
+           pNarrator->to_do &= ~(NARRATOR_REPORT_CHANNEL_NAME | NARRATOR_REPORT_CHANNEL_NUMBER); // "done" !
          } 
 
         if( pNarrator->to_do & NARRATOR_REPORT_ZONE ) 
@@ -227,16 +242,6 @@ void narrate(void) // "tell a story", in german: "erzähle!", "lies vor!"
         if( pNarrator->to_do & NARRATOR_REPORT_BATTERY )
          { report_battery_voltage();
            pNarrator->to_do &= ~NARRATOR_REPORT_BATTERY;
-         }
-
-        if( pNarrator->to_do & NARRATOR_APPEND_DEBUG_1 )
-         { // lowest priority :
-           // report index of the currently selected menu item ?
-           MorseGen_AppendString(" sel ");
-           MorseGen_AppendDecimal( md380_menu_entry_selected );
-           MorseGen_AppendString(" foc ");
-           MorseGen_AppendDecimal( get_focused_menu_item_index() ); // "-1" when NOT in a menu
-           pNarrator->to_do &= ~NARRATOR_APPEND_DEBUG_1; // done
          }
 
       } // end if < enough space in the TX-buffer for another line >
@@ -279,16 +284,9 @@ void narrator_start_talking(void) // called on programmed sidekey from keyb.c
    { start_reading_console(); 
    }
   else // none of the above, so tell what's on the 'main' screen
-   { pNarrator->to_do = NARRATOR_REPORT_CHANNEL | NARRATOR_REPORT_ZONE;
-     if( pNarrator->mode & NARRATOR_MODE_VERBOSE )
-      { pNarrator->to_do |= NARRATOR_REPORT_BATTERY;
-      }
+   { pNarrator->to_do = NARRATOR_REPORT_CHANNEL_NAME | NARRATOR_REPORT_ZONE | NARRATOR_REPORT_BATTERY;
    }
-
-  if( pNarrator->mode & NARRATOR_MODE_TEST ) // "debug output" in Morse code ?
-   { pNarrator->to_do |= NARRATOR_APPEND_DEBUG_1;
-   }
-
+  StartStopwatch(&pNarrator->stopwatch); // let a few ms pass before we start 
 } // end narrator_start_talking()
 
 
@@ -306,15 +304,15 @@ void narrator_repeat(void) // called on another programmed sidekey
    }
   else // currently NOT in a menu -> must be the 'main screen'
    { pNarrator->channel_number = get_current_channel_number();  
-     pNarrator->to_do = NARRATOR_REPORT_CHANNEL; // "short story" : only report the CHANNEL 
+     pNarrator->to_do = NARRATOR_REPORT_CHANNEL_NAME; // only report the CHANNEL 
    }
 } // end narrator_repeat()
 
 //---------------------------------------------------------------------------
-static void report_channel(void)
+static void report_channel(int name_or_number)
 {
   // Report the channel NUMBER (short) or NAME (verbose) ?
-  if( (Narrator.mode & NARRATOR_MODE_VERBOSE)
+  if( (name_or_number & NARRATOR_REPORT_CHANNEL_NAME )
     &&( !(Narrator.channel_number&0x80) ) ) // suppress name when UNPROGRAMMED
    { // Report the CHANNEL NAME, not just the number.
      // In the D13.020 disassembly, somewhere near 'draw_channel_label',

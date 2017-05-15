@@ -2,14 +2,16 @@
 // Author:  Wolf (DL4YHF) [initial version] 
 //          Please don't poison this soucecode with TAB characters . 
 //
-// Date:    2017-05-06
+// Date:    2017-05-12
 //  Implements a simple menu opened with the red BACK button,
 //             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
 //  Module prefix 'am_' for "Application Menu" .
-//  Added 2017-03-31 for the Morse output for visually impaired hams,
+//  Initially written for the Morse output for visually impaired hams,
 //  because strings in 'our own' menu can be sent out much easier
 //  than with the original menu by Tytera (opened via green 'MENU' button).
+//  Later adapted to invoke some other screens (Netmon, etc),
+//  and to show temporary (timed) messages without the original gfx functions.
 // 
 // To include these functions in the patched firmware:
 //    
@@ -59,14 +61,12 @@
 
 #if( ! CONFIG_MORSE_OUTPUT )
 #  error "No 'app menu' without Morse output !" 
-   // The 'application menu' was developed to simplify using the radio for visually impaired hams.
-   // Thus it's impossible (or at least DISADVISED) to remove support of the Morse output here. 
-   // Short: Don't use one without the other.
 #endif 
 
 // Variables used by the 'app menu' :
 
 static uint8_t  am_key;              // one-level keyboard buffer
+static uint8_t  morse_activation_pending = TRUE;
 static uint32_t backlight_stopwatch; // SysTick-based stopwatch for the backlight
 
 // For short code, put everything inside a SMALL struct, and reference it
@@ -86,12 +86,13 @@ uint8_t Menu_old_channel_num = 0; // to defeat trouble with 'ad-hoc' TALKGROUPS
 
 
 //---------------------------------------------------------------------------
-// Internal 'forward' references (not 'static', though..) 
+// Internal 'forward' references
 int  Menu_DrawLineWithItem(app_menu_t *pMenu, int y, int iTextLineNr);
 int  Menu_DrawSeparatorWithHotkey(app_menu_t *pMenu, int y, char *cpHotkey );
 BOOL Menu_ProcessHotkey(app_menu_t *pMenu, char c);
 BOOL Menu_ProcessEditKey(app_menu_t *pMenu, char c);
 void Menu_UpdateEditValueIfNotEditingYet(app_menu_t *pMenu, menu_item_t *pItem);
+void Menu_UpdateEditLengthAndSetCursorPos(app_menu_t *pMenu, int cursor_pos );
 void Menu_OnEnterKey(app_menu_t *pMenu);
 void Menu_OnExitKey(app_menu_t *pMenu);
 void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem, uint8_t edit_mode );
@@ -101,10 +102,12 @@ void Menu_PushSubmenuToStack(app_menu_t *pMenu);
 BOOL Menu_PopSubmenuFromStack(app_menu_t *pMenu);
 menu_item_t *Menu_GetFocusedItem(app_menu_t *pMenu);
 int  Menu_InvokeCallback(app_menu_t *pMenu, menu_item_t *pItem, int event, int param);
+BOOL Menu_CheckLongKeypressToActivateMorse(app_menu_t *pMenu);
 
 
 // Callback function prototypes and forward references for a few menu items :
 int am_cbk_ColorTest(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
+int am_cbk_NetMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param );
 const menu_item_t am_Setup[]; // referenced from main menu
 const am_stringtable_t am_stringtab_opmode2[]; // for gui_opmode2
 const am_stringtable_t am_stringtab_255Auto[];
@@ -132,6 +135,8 @@ const menu_item_t am_Main[] =
   { "[1]Test/Setup",       DTYPE_SUBMENU, APPMENU_OPT_NONE,0, 
    // |__ hotkey to get here quickly (press RED BUTTON followed by this key)
      (void*)am_Setup,0,0,           NULL,         NULL     },
+  { "Netmon",           DTYPE_NONE, APPMENU_OPT_NONE,0, 
+         NULL,0,0,                  NULL,     am_cbk_NetMon},
   { "Exit",             DTYPE_NONE, APPMENU_OPT_BACK,0,
          NULL,0,0,                  NULL,         NULL     },
 
@@ -205,7 +210,10 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
         &gui_opmode1,0,0,          NULL,         NULL     },
   { "[b8]opmode3",      DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &gui_opmode3,0,0,          NULL,         NULL     },
-#if defined(FW_D13_020) || defined(FW_S13_020)
+  { "[h8]SysTicks",     DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // notice the increased QRM when this item..
+      (void*)&IRQ_dwSysTickCounter,0,0, NULL,    NULL     }, // is scrolled into view (->rapid updates)
+
+#if (0) && ( defined(FW_D13_020) || defined(FW_S13_020) ) // removed 2017-05-12 because Netmon1 can show these:
   { "[b8]radio_s0",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &radio_status_1.m0,0,0,    NULL,         NULL     },
   { "[b8]radio_s1",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
@@ -725,16 +733,29 @@ int Menu_DrawIfVisible(int caller)
   int y,iTextLineNr;
   int age_of_last_update = ReadStopwatch_ms( &pMenu->stopwatch );
   uint16_t fg_color, bg_color;
-  static int busy_from_caller = 0; // <- only for debugging (suspected re-entrant calls from multiple tasks)
 
-  if( busy_from_caller != 0 ) // oops... this shouldn't happen; two tasks are trampling on me !
-   { // ex: multitasking_error = (uint8_t)( busy_from_caller + 10 * caller);
-   }
-  busy_from_caller = caller;
 
   if( Menu_old_channel_num != channel_num ) // defeat the trouble in amenu_set_tg :
    { Menu_old_channel_num = channel_num; // Tytera may have overwritten struct contact..
      CheckTalkgroupAfterChannelSwitch(); // so switch to the AD-HOC talkgroup again ?
+   }
+
+  // The following really doesn't belong here, but Menu_DrawIfVisible()
+  // returns early from half a dozen of "hooked gfx stuff", and since
+  // the Netmon screens (text console) can be viewed from this menu,
+  // allow some of the netmon*_update() functions to *COLLECT DATA* in
+  // their own, static buffers. See netmon.c : netmon6_update() for example.
+  if( (caller==AM_CALLER_F_4315_HOOK)
+   && (global_addl_config.netmon != 0) )
+   { netmon_update(); // replaces the call from f_4315_hook(), whatever that is
+   }
+
+  // Special service for visually impaired operators:
+  //   Holding down the red button for some seconds after power-on 
+  //   activates Morse output with 'reasonable defaults' .
+  // While showing the 'Activate Morse' screen, suppress normal display:
+  if( Menu_CheckLongKeypressToActivateMorse(pMenu) )
+   { return TRUE; // suppress the normal display
    }
 
   if( pMenu->visible==APPMENU_VISIBLE_UNTIL_KEY_RELEASED )
@@ -744,7 +765,6 @@ int Menu_DrawIfVisible(int caller)
      if( kb_row_col_pressed == 0 )
       { Menu_Close(pMenu);
       }
-     busy_from_caller = 0;
      return pMenu->visible != APPMENU_OFF;
    }
 
@@ -819,11 +839,11 @@ int Menu_DrawIfVisible(int caller)
               pMenu->redraw = TRUE;
               break;
            case 'D' :  // cursor DOWN: navigate towards the LAST item
-              switch( pMenu->edit_mode ) // ... or decrement value when editing
+              switch( pMenu->edit_mode ) // ... or decrement value in inc/dec editing mode
                {  case APPMENU_EDIT_INC_DEC:
                      Menu_OnIncDecEdit( pMenu, -1 ); 
                      break;
-                  case APPMENU_EDIT_OVERWRT:
+                  case APPMENU_EDIT_OVERWRT: // ... or move cursor RIGHT in 'direct input' editing mode
                   case APPMENU_EDIT_INSERT :
                      // Similar as in Tytera firmware: cursor "DOWN" key moves edit cursor RIGHT.
                      // To APPEND chars to the string, cursor_pos <= edit_length is ok : 
@@ -944,7 +964,6 @@ int Menu_DrawIfVisible(int caller)
       }
    }
 
-  busy_from_caller = 0;
   return pMenu->visible != APPMENU_OFF;
 } // end Menu_DrawIfVisible()
 
@@ -1150,6 +1169,8 @@ void Menu_BeginEditing( app_menu_t *pMenu, menu_item_t *pItem, uint8_t edit_mode
      pMenu->edit_mode = edit_mode; 
         // setting edit_mode also "disconnects" the displayed value from pItem->pvValue
      Menu_ItemValueToString( pItem, pMenu->iEditValue, pMenu->sz40EditBuf );
+     Menu_UpdateEditLengthAndSetCursorPos( pMenu, -1/*keep old cursor position if valid*/ );
+
      pMenu->iMinValue = pItem->iMinValue; // min/max-range copied from menu_item_t...
      pMenu->iMaxValue = pItem->iMaxValue; // the callback below may override these !
      if( pMenu->iMinValue==0 && pMenu->iMaxValue==0 ) // if min/max-range not specified..
@@ -1298,6 +1319,8 @@ void Menu_OnIncDecEdit( app_menu_t *pMenu, int delta )
 
 //---------------------------------------------------------------------------
 void Menu_UpdateEditLengthAndSetCursorPos( app_menu_t *pMenu, int cursor_pos )
+  // [in]  pMenu->sz40EditBuf
+  // [out] pMenu->edit_length, pMenu->cursor_pos (limited to valid range)
 {
   pMenu->edit_length = strnlen( pMenu->sz40EditBuf, 39 );
   if( cursor_pos < 0 )  // don't set a "new" cursor position but LIMIT to valid range:
@@ -1549,6 +1572,7 @@ int  Menu_GetItemIndex(void)
   return -1;
 } 
 
+
 //---------------------------------------------------------------------------
 void Menu_ReportItemInMorseCode( 
         int morse_request ) // [in] bitcombination of AM_MORSE_REQUEST_.. 
@@ -1600,5 +1624,61 @@ void Menu_ReportItemInMorseCode(
       }
    } // if( pMenu->visible==APPMENU_USERSCREEN_VISIBLE )
 } // end Menu_ReportItemInMorseCode()
+
+
+//---------------------------------------------------------------------------
+BOOL Menu_CheckLongKeypressToActivateMorse(app_menu_t *pMenu)
+{ // Checks for a 'very long' press of the red 'Back' key.
+  // Allows visually impaired operators to activate the Morse output
+  // without seeing anything on the screen, by holding that key
+  // pressed while turning on the radio until the first Morse code is heard.
+  lcd_context_t dc;
+# define WAITING_TIME_MS 5000
+  int ms_left = WAITING_TIME_MS - keypress_timer_ms; 
+  int x,y;
+
+  if( !morse_activation_pending )    // decision already made
+   { return FALSE;
+   }
+  if( !(boot_flags & BOOT_FLAG_POLLED_KEYBOARD) )
+   { return FALSE; // too early, Tytera's part of the firmware may not have polled the keyboard yet
+   }
+
+  if( keypress_ascii != 'B' ) // red 'Back' key NOT pressed anymore ?
+   {  morse_activation_pending = FALSE; // operator made his decision
+      LOGB("morse output: %d\n", (int)global_addl_config.narrator_mode );
+      Menu_Close( pMenu );
+      return FALSE; // screen not updated here so allow normal display
+   }
+  // Arrived here: 'Back' button still pressed; show some info:
+  LCD_InitContext( &dc ); // init display context for 'full screen', no clipping
+  Menu_GetColours( SEL_FLAG_NONE, &dc.fg_color, &dc.bg_color );
+  dc.font = LCD_OPT_FONT_8x16;
+  pMenu->visible = APPMENU_VISIBLE;
+  if( ms_left <= 0 ) // Interval expired ? Enable morse output with defaults:
+   { global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE;
+     global_addl_config.cw_pitch_10Hz = 65;
+     global_addl_config.cw_volume     = 10;  // CW audible even if vol-pot at zero
+     global_addl_config.cw_speed_WPM  = 18;
+     LCD_Printf( &dc, "\tMorse Defaults set.\r\r Adjust parameters"\
+                      "\r in the setup menu.\r\r Release key now.\r" );
+     LCD_FillRect( 0, dc.y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, dc.bg_color );
+     morse_activation_pending = FALSE; // operator made his decision
+     LOGB("morse output: default\n");
+     pMenu->save_on_exit = TRUE; 
+     Menu_Close(pMenu);  // Narrator starts talking, blind OM releases the key
+     return FALSE;  
+   }
+  else // show 'progress bar' while waiting for the operator's decision
+   { LCD_Printf( &dc, "\tSet Morse Defaults ?\r\r Hold red key down\r to confirm.\r\r" ); 
+     x = LCD_SCREEN_WIDTH - 1 - ms_left / (WAITING_TIME_MS/LCD_SCREEN_WIDTH); 
+     LimitInteger( &x, 2, LCD_SCREEN_WIDTH-3 );
+     y = dc.y + 19;
+     LCD_FillRect( 0, dc.y, x, y, dc.fg_color ); 
+     LCD_FillRect( x, dc.y, LCD_SCREEN_WIDTH-1, y, dc.bg_color );
+     LCD_FillRect( 0, y+1,  LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, dc.bg_color );
+     return TRUE; 
+   }
+}
 
 #endif // CONFIG_APP_MENU ?

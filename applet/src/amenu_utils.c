@@ -587,6 +587,11 @@ uint16_t CRC16( uint16_t u16CRC,  // [in] "seed" or CRC from previous block
 # define K 0x8000 /* K = 2^(h-1), h=s=16   */
 # define s 16
   uint16_t A, C;
+  if( (uint32_t)pwData & 1 ) // source pointer must be aligned to 16-bit..
+   { // If it's not, avoid crashing with an access violation, and cheat a "bit":
+     pwData = (uint16_t*)( ((uint32_t)pwData+1) & ~1); // "round up" to next even address..
+     --nWords; // .. and punish the caller by omitting ONE 16-bit word
+   }
   while( nWords-- )
    {
      A = u16CRC ^ *pwData++;
