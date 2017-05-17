@@ -261,18 +261,22 @@ int am_cbk_ZoneList(app_menu_t *pMenu, menu_item_t *pItem, int event, int param 
         case 'U' :  // cursor UP
            if(  pSL->focused_item > 0 )
             { --pSL->focused_item;
+            } else // Wrap around top
+            { pSL->focused_item = (pSL->num_items-1);
+            }
 #            if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
               pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
 #            endif
-            }
            break;
         case 'D' :  // cursor DOWN
            if(  pSL->focused_item < (pSL->num_items-1) )
             { ++pSL->focused_item;
+            } else // Wrap around bottom
+            { pSL->focused_item = 0;
+            }
 #            if( CONFIG_MORSE_OUTPUT ) // autonomously report the first item in Morse code:
               pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
 #            endif
-            }
            break;
         default:    // Other keys .. editing or treat as a hotkey ?
            break;
