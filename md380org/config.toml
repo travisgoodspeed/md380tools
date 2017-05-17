@@ -5,7 +5,7 @@ theme = "hugo-theme-docdock"
 
 
 [params]
-editURL = "https://github.com/vjeantet/hugo-theme-docdock/edit/master/exampleSite/content/"
+editURL = "https://github.com/travisgoodspeed/md380tools/edit/master/md380org/content/"
 noHomeIcon = false # default is false
 noSearch = true # default is false
 showVisitedLinks = false # default is false

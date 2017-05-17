@@ -834,6 +834,10 @@ int Menu_DrawIfVisible(int caller)
                       { --pMenu->item_index; 
                         // If no other keystrokes follow, and if Morse output is enabled,..:
                         pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+                      } else {
+                        // Wrap around top of menu
+                        pMenu->item_index = pMenu->num_items - 1;
+                        pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                       }
                }
               pMenu->redraw = TRUE;
@@ -854,6 +858,10 @@ int Menu_DrawIfVisible(int caller)
                   default: // not "editing" but "navigating" ... 
                      if(pMenu->item_index < (pMenu->num_items-1) )  
                       { ++pMenu->item_index;
+                        pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+                      } else {
+                        // Wrap around bottom of menu
+                        pMenu->item_index = 0;
                         pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                       }
                      break;
