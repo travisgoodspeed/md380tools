@@ -1660,8 +1660,8 @@ BOOL Menu_CheckLongKeypressToActivateMorse(app_menu_t *pMenu)
      global_addl_config.cw_pitch_10Hz = 65;
      global_addl_config.cw_volume     = 10;  // CW audible even if vol-pot at zero
      global_addl_config.cw_speed_WPM  = 18;
-     LCD_Printf( &dc, "\tMorse Defaults set.\r\r Adjust parameters"\
-                      "\r in the setup menu.\r\r Release key now.\r" );
+     LCD_Printf( &dc, "\tMorse Defaults set.\r\r Adjust parameters\r" );
+     LCD_Printf( &dc, " in the setup menu.\r\r Release key now.\r" );
      LCD_FillRect( 0, dc.y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, dc.bg_color );
      morse_activation_pending = FALSE; // operator made his decision
      LOGB("morse output: default\n");

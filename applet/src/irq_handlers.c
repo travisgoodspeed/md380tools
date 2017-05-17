@@ -1253,6 +1253,11 @@ void SysTick_Handler(void)
 
      // 2017-05-14 : Removed the brightness 'ramp-up' test. 
      // The 9 intensity levels can now be tested in app_menu.c in inc/dec edit mode.
+     // 2017-05-16, reported by KD4Z (not reproducable here yet when compiling on MinGW - DL4YHF) :
+     //  >  Red button no longer opens new menu, and sometimes 
+     //  >  leaves display in full white condition. 
+     //  >  Also, the Backlight will not turn off, 
+     //  >  no matter what settings/timings you choose.
 #   if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight ?
      if( (backlight_timer>0) || (md380_radio_config.backlight_time==0) )
       { // If the backlight time is ZERO, use the 'radio-active' setting ("backlight level HI")
@@ -1280,7 +1285,7 @@ void SysTick_Handler(void)
      // > the TX pin is at high level.   (YHF: .. which would turn the backlight ON)
      // Thus, when sending NOTHING, the backlight will have MAXIMUM brightness,
      //  -> UART transmit data register must be continuously 'flooded' with data.
-     if( intensity == 0 || kb_backlight )  // backlight shall be COMPLETELY DARK ->
+     if( (intensity==0) || kb_backlight )  // backlight shall be COMPLETELY DARK ->
       { // Reconfigure PC6 as 'GPIO' to turn the backlight COMPLETELY off .
         // Two bits in "MODER" per pin : 00bin for GPI,  01bin for GPO, 10bin for 'alternate function mode'.
         GPIOC->MODER = (GPIOC->MODER & ~( 3 << (6/*pin*/ * 2))) |  ( 1 << (6/*pin*/ * 2) ) ;
