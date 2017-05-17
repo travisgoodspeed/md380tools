@@ -348,7 +348,11 @@ void kb_handler_hook()
         }
     }
 
+#if (CONFIG_APP_MENU)
+    if( is_intercept_allowed() && !Menu_IsVisible() ) {
+#else
     if( is_intercept_allowed() ) {
+#endif
         if( is_intercepted_keycode(kc) ) {
             if( (kp & 2) == 2 ) {
                 kb_keypressed = 8 ;
