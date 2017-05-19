@@ -72,7 +72,9 @@ extern uint8_t boot_flags; // bitwise combination of the following flags:
 #define BOOT_FLAG_INIT_BACKLIGHT  0x01 // initialized backlight (GPIO) ?
 #define BOOT_FLAG_LOADED_CONFIG   0x02 // called init_global_addl_config_hook() ?
 #define BOOT_FLAG_DREW_STATUSLINE 0x04 // called draw_statusline_hook() ?
-#define BOOT_FLAG_POLLED_KEYBOARD 0x08 // polled the keyboard at least once ?
+#define BOOT_FLAG_OPEN_FOR_BUSINESS 0x08 // set when it's ok to open the app-menu
+#define BOOT_FLAG_FIRST_KEY_POLLED  0x10 // set when keyboard variables are valid
+#define BOOT_FLAG_FIRST_KEY_PRESSED 0x20 // set when kb_row_col_pressed was nonzero for the first time
 
 extern volatile uint32_t IRQ_dwSysTickCounter; // Incremented each 1.5 ms
 
