@@ -9,6 +9,17 @@
   used to output the text assembled by the 'narrator' (narrator.c) .  
   
   Details may still be at www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
+  Latest modifications:
+    2017-05-19, DL4YHF : When building the firmware in KD4Z's VM,
+             the patched binary executable wasn't the same as when compiled
+             on another Debian (64-bit) system, and also not the same
+             as when compiled on Windows. The different 'runtime behaviour'
+             caused problems that are hopefully fixed with the new
+             'boot_flags'. Basically, boot_flags is a bitwise combination
+             to find out when we are 'open for business', instead of relying
+             on a certain number of SysTick-interrupts before activating
+             the backlight-PWM, polling keys for the new alternative menu,
+             etc.
     
  To include the 'dimmed backlight' feature in the patched firmware:
     
@@ -86,11 +97,16 @@ typedef void (*void_func_ptr)(void);
 uint8_t boot_flags = 0; // 0 : none of the 'essential' functions has been called yet
 
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
+volatile uint32_t IRQ_dwSysTicksAtBoot = 0; // snapshot of IRQ_dwSysTickCounter when 'essential' boot_flags were first set
+         // (Allows estimating the time spent initialising the firmware.
+         //  Added 2017-05-17 when suspecting problems with SysTick/Dimming/Red Key in KD4Z-VM .
+         //  See 'early signs of life' printed via LOGB(), along with a timestamp) 
 
 uint16_t keypress_timer_ms = 0; // measures key-down time in MILLISECONDS 
 uint8_t  keypress_ascii = 0;    // code of the currently pressed key, 0 = none .
-                // intended to detect certain 'very long pressed keys' anywhere,
-                // e.g.in app_menu.c : CheckLongKeypressToActivateMorse() .
+uint8_t  keypress_ascii_at_power_on = 0; // snapshot of keypress_ascii at power-on
+                // (only valid if boot_flags.BOOT_FLAG_FIRST_KEY_POLLED is set)
+
 
 #if( CONFIG_MORSE_OUTPUT )
 typedef struct tMorseGenerator
@@ -214,15 +230,9 @@ uint32_t volume_pot_lp;      // internal, for digital lowpass
 
 #if( CONFIG_DIMMED_LIGHT )
 static void InitDimming(void)
-{ // Since 2017-02-16, called from SysTick_Handler() when Tytera's firmware(!)
-  // has initialized the hardware, waited until the power supply is stable, 
-  // and turned on the backlight via GPIO port register for the first time.
-  // Only THEN, it's definitely safe to draw the current for the backlight !
-  // (when turning on the backlight "too early", the CPU seemed to reset itself
-  //  in some radios. The CPU possibly starts to run before the power supply
-  //  can provide the full current. By "waiting" until the original firmware 
-  //  turns on the backlight for the first time (polled in SysTick_Handler),
-  //  there should be no risk of drawing too much current too early.
+{ // Called from SysTick_Handler() when Tytera's firmware(!) has initialized 
+  // the hardware. When turning on the backlight "too early", the CPU seemed 
+  // to reset itself in some radios, or the dimming didn't work at all.
   
   USART_TypeDef *pUSART = USART6; // load the UART's base address (save code space)
 
@@ -1065,50 +1075,48 @@ char KeyRowColToASCII(uint16_t kb_row_col)
 
 #if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature ...
 //---------------------------------------------------------------------------
-static void PollKeysForAppMenu(void)
+static void PollKeys(void)
   // Non-intrusive polling of keys for the 'app menu' (activated 
-  //  by pressing the red 'BACK'-button),
+  //   by pressing the red 'BACK'-button),
   // when that button isn't used to control Tytera's own 'geen' menu.
+  //   [in]  kb_row_col_pressed  (updated by Tytera's keyboard matrix scan)
+  //   [out] keypress_ascii and the keyboard-buffer for the app-menu .
   // Called approximately once every 24 milliseconds from SysTick_Handler(), 
-  // so don't call anything else from here (especially nothing in
-  // the original firmware, unless you know exactly what you're doing).
+  // so don't call anything in the 'original firmware' from here.
   // Only peek at a few locations in RAM, and carefully set some others.
 {
   static uint8_t green_menu_countdown=0;
   static uint8_t autorepeat_countdown=0;
   static uint8_t longpress_countdown=0;
+  static uint8_t key_init_countdown=10;
   static uint16_t prev_key;
   uint8_t key = KeyRowColToASCII( kb_row_col_pressed ); 
   // 'kb_keycode' is useless here because it doesn't return to zero 
   // when releasing a key.
   // So use 'kb_row_col_pressed' (16 bit) instead . Seems to be the
   // lowest level of polling the keyboard matrix without rolling our own.
-  // 
+  //
   // Our own ("app-") menu must not interfere with Tytera's "green" menu,
   // where the red "BACK"-button switches back from any submenu to the
   // parent, and from the main menu to the main screen.
-  // Only if the app-menu is already open (possibly kicked open via sidekey),
-  // ignore gui_opmode2 and pass keyboard events to our own app-menu.
+  // Only if the app-menu is already open, ignore gui_opmode2 
+  // and pass keyboard events to our own app-menu.
   if( (gui_opmode2 == OPM2_MENU ) && (!Menu_IsVisible()) )
-   { // keyboard focus currently on Tytera's 'green' menu 
-     // -> ignore kb_row_col_pressed until the key was released .
-     // But because the screen sometimes froze when trying to 
-     //   force redrawing the "idle" screen by setting
-     //   gui_opmode2=OPM2_MENU; gui_opmode1=SCR_MODE_IDLE|0x80 ),
-     // holding down the red 'BACK' button pressed for a second
-     // will always activate the alternative 'app menu' .
-     green_menu_countdown = 200/*ms*/ / 24; 
+   { // keyboard focus currently on Tytera's 'green key' menu 
+     // -> ignore kb_row_col_pressed until the key was released,
+     green_menu_countdown = 200/*ms*/ / 24; // allow 200 ms to pass
+          // .. reason below
    }
   else // keyboard focus not on Tytera's ('green') menu...
    {   // so is it "our" key now ?  Not necessarily !
      // Tytera's menu already quits when PRESSING the red button,
      // so just because the red button is PRESSED doesn't mean 
-     // the operator wants to open our 'red menu'.  Thus:
+     // the operator wants to open the alternative menu.  Thus:
      if( green_menu_countdown > 0 )
       { if( key==0 )
          { --green_menu_countdown;
          }
-        else // guess the RED BUTTON is still pressed after leaving the GREEN-button-menu
+        else // key still pressed after leaving the GREEN-button-menu ->
          { green_menu_countdown = 200/*ms*/ / 24; // ignore keypress for another 200 ms
          }
       }
@@ -1129,11 +1137,11 @@ static void PollKeysForAppMenu(void)
       { if(  longpress_countdown > 0 )
          { --longpress_countdown;
          }
-        if( keypress_timer_ms < (65535-24) )
+        if( keypress_timer_ms < (65535-24) ) // avoid 16-bit timer overflow
          {  keypress_timer_ms += 24;
          }
       }
-     else
+     else // NO key pressed  ->
       { keypress_timer_ms = 0;
       }
      if( key=='U' || key=='D' || key=='#' ) // 'auto-repeatable' key still pressed ?
@@ -1146,9 +1154,11 @@ static void PollKeysForAppMenu(void)
          }   
       }
      if( key=='B' )    // red 'BACK' key..
-      { if( longpress_countdown==1 ) // ..pressed for a "long" time..
-         { if( ! Menu_IsVisible() )  // ... so enter the alternative menu regardless of "gui_opmode2" & Co !
+      { if( longpress_countdown==1 ) // pressed for a "long" time (2 s) ?
+         { if( ! Menu_IsVisible() )  // enter the alternative menu regardless of "gui_opmode2" & Co !
             { Menu_OnKey( key ); 
+              // 2017-05-18 : Not even the "long-press trick" worked 
+              //         when compiled in KD4Z VM / 32-bit Debian ?!
             }
          }
       }
@@ -1156,7 +1166,18 @@ static void PollKeysForAppMenu(void)
   prev_key = key;
   keypress_ascii = key;  // also store ASCII in global var, can be polled anywhere
 
-} // end PollKeysForAppMenu()
+  if( key_init_countdown>0 ) // here shortly after power-on ..
+   { --key_init_countdown;
+     if( key_init_countdown==0 ) // been polling the keyboard for ~ 200 ms..
+      { // the first multiplexed keyboard-polling cycle should be complete
+        // (see test with BOOT_FLAG_FIRST_KEY_PRESSED, this happens suprisingly LATE)
+        boot_flags |= BOOT_FLAG_FIRST_KEY_POLLED;
+        keypress_ascii_at_power_on = keypress_ascii; // save for later (0 when no key pressed)
+        LOGB("t=%d: keys polled (%c)\n", 
+             (int)IRQ_dwSysTickCounter, (char)keypress_ascii_at_power_on );
+      }
+   } // key_init_countdown ?
+} // end PollKeys()
 #endif // CONFIG_APP_MENU ?
 
 
@@ -1169,11 +1190,11 @@ void SysTick_Handler(void)
   // vector table, and the address of the original handler must be known
   // because we also call the original handler from here.
 {
-  uint32_t oldSysTickCounter = IRQ_dwSysTickCounter; 
+  uint32_t oldSysTickCounter = IRQ_dwSysTickCounter++; 
     // this local copy is more efficient to read than the global variable,
     // because the C compiler needs to load addresses of global variables
     // from the literal pool. 
-    // Save code space, we may be running short of it one day !
+  int tdiff; // time difference, measured in 1.5 ms SysTick intervals
 
 #if( CONFIG_DIMMED_LIGHT ) // simple GPIO "bit banging", min PWM pulse with = one 'SysTick' period. 
   // [in] global_addl_config.backlight_intensities : configurable in applet/src/menu.c
@@ -1214,24 +1235,42 @@ void SysTick_Handler(void)
 #            if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight ?
               InitDimming();  // switch from GPIO- to UART-generated PWM
 #            endif
-              LOGB("gpio initialized\n");
+              LOGB("t=%d: gpio init\n", (int)IRQ_dwSysTickCounter ); // 334 SysTicks after power-on
               boot_flags |= BOOT_FLAG_INIT_BACKLIGHT; // may start dimming now
             }
          }
       }
    }    // end if < backlight (GPIO) not initialized yet ? >   
 
+  // TEST: When does Tytera start polling the keyboard, and update kb_row_col_pressed ? 
+  if( (kb_row_col_pressed!=0) && !(boot_flags & BOOT_FLAG_FIRST_KEY_PRESSED) )
+   { boot_flags |= BOOT_FLAG_FIRST_KEY_PRESSED;
+     LOGB("t=%d: first key=%X\n", (int)IRQ_dwSysTickCounter, (int)kb_row_col_pressed );
+     // Test result: First key detected 4432 SysTicks after power-on .
+     // That's over 6 seconds. Explains why polling keys EARLY didn't work.
+   } // end < keyboard-polling-test >
+
   if( (boot_flags & ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
                  != ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
    { // As long as the original firmware is still "booting",
      // we cannot poll the keyboard, and should not drive the display.
-     // Don't increment IRQ_dwSysTickCounter yet, because it is polled
-     // in several modules to do 'something shortly after power-on',
-     // for example check for a long keypress to activate Morse output.
-     IRQ_dwSysTickCounter = 1;
+     IRQ_dwSysTicksAtBoot = IRQ_dwSysTickCounter;
+     tdiff = 0;
    }
-  else // all necessary functions have been called - "open for business" ?
-   { IRQ_dwSysTickCounter++;
+  else // all necessary functions have been called - really "open for business" ?
+   { tdiff = (int)IRQ_dwSysTickCounter - (int)IRQ_dwSysTicksAtBoot;
+     if( tdiff>300 ) // Wait for a few hundred milliseconds more, AFTER ...
+      { // - Tytera's part of the firmware initialized the backlight (GPIO),
+        // - init_global_addl_config_hook() has been called at least once,
+        // - draw_statusline_hook() has been called at least once.
+        IRQ_dwSysTicksAtBoot = IRQ_dwSysTickCounter;
+        boot_flags |= BOOT_FLAG_OPEN_FOR_BUSINESS; // Without this flag,
+        // the alternative 'app menu' (aka 'red button menu') will not interfere,
+        // and not intercept anything. Maybe useful if the firmware 'crashes late':
+        // Quickly press the GREEN KEY after power-on to open Tytera's menu,
+        // and if anything else fails, select MD380Tools/Config Reset to clear
+        // global_addl_config back to defaults (i.e. fill with zeroes).
+      } 
      if(red_led_timer) // <- rarely used, only hijack the red LED for TESTING !
       { LED_RED_ON;    // "debug signal 1" : short, single flash with the RED LED
         if( (--red_led_timer) == 0 ) // only in the moment this timer expires,
@@ -1244,16 +1283,25 @@ void SysTick_Handler(void)
          { LED_GREEN_OFF;
          }
       }
+   }
 
-     if( oldSysTickCounter > 200 ) // multiplexed keyboard-polling should be finished now,
-      { boot_flags |= BOOT_FLAG_POLLED_KEYBOARD; // and kb_row_col_pressed should be valid
-        // (important to check for 'keys pressed during power-on')
+#if(1) // kludge to find out if THIS SysTick_Handler is called at all (2017-05-18)
+  if( (oldSysTickCounter > 5000)   // allow Tytera to initialize everything
+    &&(oldSysTickCounter < 20000)) // .. but don't annoy user with endlessly flashing green LED
+   { if( (uint8_t)oldSysTickCounter == 0 )
+      { LED_GREEN_ON;  // barely visible "green flash" every 384 milliseconds
       }
+     if( (uint8_t)oldSysTickCounter == 1 )
+      { LED_GREEN_OFF;
+      }
+   }
+#endif
 
-
-     // 2017-05-14 : Removed the brightness 'ramp-up' test. 
-     // The 9 intensity levels can now be tested in app_menu.c in inc/dec edit mode.
-     // 2017-05-16, reported by KD4Z (not reproducable here yet when compiling on MinGW - DL4YHF) :
+  if( boot_flags & BOOT_FLAG_OPEN_FOR_BUSINESS )
+   { // 2017-05-14 : Removed the brightness 'ramp-up' test. 
+     //   The 9 intensity levels can now be tested in app_menu.c in inc/dec edit mode.
+     // 2017-05-16, reported by KD4Z (this only happened when compiling in the VM,
+     // and still the binary file is different when compiled elsewhere - strange !!)
      //  >  Red button no longer opens new menu, and sometimes 
      //  >  leaves display in full white condition. 
      //  >  Also, the Backlight will not turn off, 
@@ -1316,17 +1364,14 @@ void SysTick_Handler(void)
       }   // end else < backlight not completely dark >
 #   endif  // CONFIG_DIMMED_LIGHT ?
 
-     // Poll analog inputs...
+     // Poll analog inputs
      if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
       { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
       }
-#   if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature, 
-     // depending on the value defined as CONFIG_APP_MENU in config.h:
+#   if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // Poll keys ?
      if( (oldSysTickCounter & 0x0F) == 1 ) // .. on every 16-th SysTick
       { // (but not in the same interrupt as PollAnalogInputs)
-        PollKeysForAppMenu(); // non-intrusive polling of keys for the 
-        // 'red menu' (menu activated by pressing the red 'BACK'-button,
-        // when that button isn't used to control Tytera's own menu).
+        PollKeys(); // non-intrusive polling of keys, with autorepeat
       }
 #   endif // CONFIG_APP_MENU ?
 

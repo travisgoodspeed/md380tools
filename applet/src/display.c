@@ -418,7 +418,7 @@ int main(void)
 void draw_statusline_hook( uint32_t r0 )
 {
    if( ! (boot_flags & BOOT_FLAG_DREW_STATUSLINE) )
-    { LOGB("draw_statusline\n");
+    { LOGB("t=%d: draw_stat\n", (int)IRQ_dwSysTickCounter ); // 4383(!) SysTicks after power-on
     }
    boot_flags |= BOOT_FLAG_DREW_STATUSLINE;
 

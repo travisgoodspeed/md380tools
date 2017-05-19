@@ -1,6 +1,6 @@
 // File:    md380tools/applet/src/app_menu.c
 // Author:  Wolf (DL4YHF) [initial version] 
-//          Please don't poison this soucecode with TAB characters . 
+//          Please don't poison this sourcecode with TAB characters . 
 //
 // Date:    2017-05-12
 //  Implements a simple menu opened with the red BACK button,
@@ -277,7 +277,10 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
 
 //---------------------------------------------------------------------------
 void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
-{ am_key = key;
+{ 
+  if( boot_flags & BOOT_FLAG_FIRST_KEY_POLLED ) // ignore 'early keystrokes'
+   { am_key = key;
+   }
 }
 
 //---------------------------------------------------------------------------
@@ -734,6 +737,12 @@ int Menu_DrawIfVisible(int caller)
   int age_of_last_update = ReadStopwatch_ms( &pMenu->stopwatch );
   uint16_t fg_color, bg_color;
 
+
+  if( ! (boot_flags & BOOT_FLAG_OPEN_FOR_BUSINESS) )
+   { // Bail out if not all 'essential functions' have been called yet.
+     // See notes on BOOT_FLAG_OPEN_FOR_BUSINESS in irq_handlers.c .
+     return FALSE;
+   }
 
   if( Menu_old_channel_num != channel_num ) // defeat the trouble in amenu_set_tg :
    { Menu_old_channel_num = channel_num; // Tytera may have overwritten struct contact..
@@ -1648,13 +1657,19 @@ BOOL Menu_CheckLongKeypressToActivateMorse(app_menu_t *pMenu)
   if( !morse_activation_pending )    // decision already made
    { return FALSE;
    }
-  if( !(boot_flags & BOOT_FLAG_POLLED_KEYBOARD) )
-   { return FALSE; // too early, Tytera's part of the firmware may not have polled the keyboard yet
+  if( !(boot_flags & BOOT_FLAG_FIRST_KEY_POLLED) ) 
+   { return FALSE; // too early, see details in irq_handlers.c
+     // (it took several seconds after power-on until Tytera started polling the keyboard,
+     //  so as long at BOOT_FLAG_FIRST_KEY_POLLED isn't set,
+     //  keypress_ascii = 0 is meaningless: It COULD be "no key pressed",
+     //  or it COULD BE "a key may be pressed but Tytera's firmware didn't poll it yet)
    }
 
   if( keypress_ascii != 'B' ) // red 'Back' key NOT pressed anymore ?
    {  morse_activation_pending = FALSE; // operator made his decision
-      LOGB("morse output: %d\n", (int)global_addl_config.narrator_mode );
+      LOGB("t=%d: morse output: %d\n",  // got here 362 SysTicks after power-on
+           (int)IRQ_dwSysTickCounter,   // (one SysTick = 1.5 ms)
+           (int)global_addl_config.narrator_mode );
       Menu_Close( pMenu );
       return FALSE; // screen not updated here so allow normal display
    }
@@ -1672,7 +1687,7 @@ BOOL Menu_CheckLongKeypressToActivateMorse(app_menu_t *pMenu)
      LCD_Printf( &dc, " in the setup menu.\r\r Release key now.\r" );
      LCD_FillRect( 0, dc.y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, dc.bg_color );
      morse_activation_pending = FALSE; // operator made his decision
-     LOGB("morse output: default\n");
+     LOGB("t=%d: morse output: ON\n",(int)IRQ_dwSysTickCounter);
      pMenu->save_on_exit = TRUE; 
      Menu_Close(pMenu);  // Narrator starts talking, blind OM releases the key
      return FALSE;  
