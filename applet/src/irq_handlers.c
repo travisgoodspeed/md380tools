@@ -12,14 +12,13 @@
   Latest modifications:
     2017-05-19, DL4YHF : When building the firmware in KD4Z's VM,
              the patched binary executable wasn't the same as when compiled
-             on another Debian (64-bit) system, and also not the same
-             as when compiled on Windows. The different 'runtime behaviour'
-             caused problems that are hopefully fixed with the new
-             'boot_flags'. Basically, boot_flags is a bitwise combination
-             to find out when we are 'open for business', instead of relying
-             on a certain number of SysTick-interrupts before activating
-             the backlight-PWM, polling keys for the new alternative menu,
-             etc.
+             on another Debian (64-bit) system, or when compiled on Windows. 
+             The different 'runtime behaviour' caused problems that are 
+             hopefully fixed with new 'boot_flags', defined in irq_handlers.h .
+      These boot_flags disable certain function calls shortly after power-on, 
+      and are used here to declare ourselves 'open for business', instead of 
+      simply letting some time pass before activating the backlight-PWM, 
+      the keyboard polling for the new alternative ('red button') menu, etc. 
     
  To include the 'dimmed backlight' feature in the patched firmware:
     
@@ -1242,6 +1241,7 @@ void SysTick_Handler(void)
       }
    }    // end if < backlight (GPIO) not initialized yet ? >   
 
+#if( CAN_POLL_KEYS )
   // TEST: When does Tytera start polling the keyboard, and update kb_row_col_pressed ? 
   if( (kb_row_col_pressed!=0) && !(boot_flags & BOOT_FLAG_FIRST_KEY_PRESSED) )
    { boot_flags |= BOOT_FLAG_FIRST_KEY_PRESSED;
@@ -1249,6 +1249,7 @@ void SysTick_Handler(void)
      // Test result: First key detected 4432 SysTicks after power-on .
      // That's over 6 seconds. Explains why polling keys EARLY didn't work.
    } // end < keyboard-polling-test >
+#endif // CAN_POLL_KEYS ?
 
   if( (boot_flags & ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
                  != ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
