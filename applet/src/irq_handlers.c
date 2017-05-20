@@ -1254,9 +1254,14 @@ void SysTick_Handler(void)
   if( (boot_flags & ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
                  != ( BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE ) )
    { // As long as the original firmware is still "booting",
-     // we cannot poll the keyboard, and should not drive the display.
+     // we cannot poll the keyboard, and should not drive the display....
      IRQ_dwSysTicksAtBoot = IRQ_dwSysTickCounter;
      tdiff = 0;
+     // .... but when compiled in the KD4Z VM, something was missing,
+     //      possibly an improperly hooked function (hook not called), so:
+     if( IRQ_dwSysTickCounter > 6000 )  // <- very ugly kludge (2017-05-20)
+      { boot_flags |= (BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE); // heavens, no !
+      }
    }
   else // all necessary functions have been called - really "open for business" ?
    { tdiff = (int)IRQ_dwSysTickCounter - (int)IRQ_dwSysTicksAtBoot;

@@ -420,7 +420,7 @@ void draw_statusline_hook( uint32_t r0 )
    if( ! (boot_flags & BOOT_FLAG_DREW_STATUSLINE) )
     { LOGB("t=%d: draw_stat\n", (int)IRQ_dwSysTickCounter ); // 4383(!) SysTicks after power-on
     }
-   boot_flags |= BOOT_FLAG_DREW_STATUSLINE;
+   boot_flags |= BOOT_FLAG_DREW_STATUSLINE; // important for SysTick_Handler to know when we're "open for business" !
 
 # if (CONFIG_APP_MENU)
     // If the screen is occupied by the optional 'red button menu', 
