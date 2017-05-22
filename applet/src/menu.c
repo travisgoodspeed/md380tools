@@ -70,6 +70,10 @@ const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
+const static wchar_t wt_micgain[]               = L"Mic gain";
+const static wchar_t wt_micgain_3db[]           = L"3db Gain";
+const static wchar_t wt_micgain_6db[]           = L"6db Gain";
+
 
 const static wchar_t wt_backlight_menu[]   = L"Backlight";
 
@@ -462,6 +466,40 @@ void create_menu_entry_demo_screen(void)
     mn_submenu_finalize();
 }
 
+
+void create_menu_entry_micgain_6db_screen(void)
+{
+    mn_create_single_timed_ack(wt_micgain, wt_micgain_6db);
+    global_addl_config.mic_gain = 2;
+    cfg_save();
+}
+
+void create_menu_entry_micgain_3db_screen(void)
+{
+    mn_create_single_timed_ack(wt_micgain, wt_micgain_3db);
+    global_addl_config.mic_gain = 1;
+    cfg_save();
+}
+
+void create_menu_entry_micgain_disable_screen(void)
+{
+    mn_create_single_timed_ack(wt_micgain, wt_disable);
+    global_addl_config.mic_gain = 0;
+    cfg_save();
+}
+
+void create_menu_entry_micgain_screen(void)
+{
+	mn_submenu_init(wt_micgain);
+
+	md380_menu_entry_selected = global_addl_config.mic_gain;
+	mn_submenu_add(wt_demoscr_disable, create_menu_entry_micgain_disable_screen);
+	mn_submenu_add(wt_micgain_3db, create_menu_entry_micgain_3db_screen);
+	mn_submenu_add(wt_micgain_6db, create_menu_entry_micgain_6db_screen);
+
+	mn_submenu_finalize();
+}
+
 void mn_cp_override_off(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_manual);
@@ -782,7 +820,7 @@ void create_menu_entry_datef_screen(void)
 
 
 //==========================================================================================================//
-// main(?) menu: showcall - select callsign display method
+// main menu: showcall - select callsign display method
 //==========================================================================================================//
 
 void create_menu_entry_showcall_screen(void)
@@ -1726,25 +1764,54 @@ void create_menu_entry_addl_functions_screen(void)
     PRINTRET();
     PRINT("create_menu_entry_addl_functions_screen\n");
 
+//==================================================================//
+//  MD380Tools - Menu order (often used functions top and bottom!)
+//  --------------------------------------------------------------
+//   1 M. RogerBeep
+//   2 Boot Options
+//   3 Date Format
+//   4 Show Calls 
+//   ---------------
+//   5 USB logging 
+//   6 Promiscous
+//   7 Edit DMR-ID
+//   8 Morse output
+//   ---------------
+//   9 Config Reset
+//  10 Experimental
+//  11 Mic bargraph
+//  12 Mic gain
+//   ---------------
+//  13 Side Buttons 
+//  14 Backlight
+//  15 Set Talkgroup
+//  16 CoPl Override
+//  17 Dev Only
+//==================================================================//
+
+// page 1
     mn_submenu_add_98(wt_rbeep, create_menu_entry_rbeep_screen);
     mn_submenu_add(wt_bootopts, create_menu_entry_bootopts_screen);
     mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
     mn_submenu_add_98(wt_showcall, create_menu_entry_showcall_screen);
+// page 2
     mn_submenu_add_98(wt_debug, create_menu_entry_debug_screen);
     mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
     mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
-    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1); // Brad's PR#708 already in use here (DL4YHF, since 2017-03)
-    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
-    mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
-    mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
-    
-    mn_submenu_add_98(wt_config_reset, mn_config_reset);
 
-    mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
 #  if( CONFIG_MORSE_OUTPUT )
     mn_submenu_add(wt_morse_menu, create_menu_entry_morse_screen);
 #  endif   
+// page 3
+    mn_submenu_add_98(wt_config_reset, mn_config_reset);
+    mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
+    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
+    mn_submenu_add_98(wt_micgain, create_menu_entry_micgain_screen);
+// page 4
+    mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
+    mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
+    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1);
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     

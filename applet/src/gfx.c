@@ -202,7 +202,7 @@ void print_date_hook(void)
 
 void print_time_hook(const char log)
 {
-    if( is_netmon_visible() ) {
+    if( is_netmon_visible() && nm_screen < 4 ) {							// 2017-05-21 fix missing timestamp output for netmon4,5,6
         return;
     }
     wchar_t wide_time[9];

@@ -35,6 +35,7 @@ uint8_t nm_started = 0 ;
 uint8_t nm_started5 = 0 ;
 uint8_t nm_started6 = 0 ;
 uint8_t rx_voice = 0 ;
+uint8_t lh_new = 0 ;
 uint8_t rx_new = 0 ;
 uint8_t ch_new = 0 ;
 uint8_t call_start_state = 0;
@@ -276,7 +277,7 @@ void netmon4_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     lastheard_draw_poll();
-
+    lastheard_redraw();	
     int src;
     char log = 'l';
 
@@ -286,14 +287,14 @@ void netmon4_update()
     }   
 
     char mode = ' ' ;
-    if( rst_voice_active != previous_call_state && rst_voice_active)
+    if( (rst_voice_active != previous_call_state)  && ( rst_voice_active) )
     {
         call_start_state = 1;
         talkerAlias.displayed = 0;
     }
     previous_call_state = rst_voice_active;
 
-    if( rst_voice_active ) {
+    if( ( rst_voice_active ) || (lh_new == 1) ){
         if( rst_mycall ) {
             mode = '*' ; // on my tg            
         } else {
@@ -304,9 +305,12 @@ void netmon4_update()
    
         if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
             call_start_state = 0;
+            lh_new = 0;                         // reset status for netmon4
             rx_new = 1;                         // set status to new for netmon5
             ch_new = 1;                         // set status to new for netmon6
+
             print_time_hook(log);
+
             if( usr_find_by_dmrid(&usr, src) == 0 ) {
                 lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
             } else {
@@ -329,13 +333,13 @@ void netmon5_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     slog_draw_poll();
-    
+    slog_redraw();	
     int src;
+    char slog = 's';
 
     extern wchar_t channel_name[20] ;           // read current channel name from external  
     static int sl_cnt = 0 ;                     // lastheard line counter
     static int cp_cnt = 1 ;                     // lastheard channel page counter
-    char slog = 's';
 
     if ( nm_started5 == 0 ) {
         slog_printf("Netmon 5 LH Channel =========\n");
@@ -395,6 +399,7 @@ void netmon5_update()
         }
         rx_new = 0 ; // call handled, wait until new voice call status received
         ch_new = 1 ; // status for netmon6
+	lh_new = 0 ; // status helper for netmon4
         sl_cnt++;
      }
     }
@@ -409,10 +414,11 @@ void netmon6_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     clog_draw_poll();
+    clog_redraw();	
+    char clog = 'c';
     
     extern wchar_t channel_name[20] ;           // read current channel name from external  
     static int ch_cnt = 0 ;                     // lastheard line counter
-    char clog = 'c';
 
     if ( nm_started6 == 0 ) {
         clog_printf("Netmon 6 RX channel ========\n");
@@ -446,8 +452,8 @@ void netmon_update()
 {
     if( !is_netmon_visible() ) {
         netmon6_update();
-        netmon4_update();
         netmon5_update();
+        netmon4_update();
         return ;
     }
     
@@ -461,20 +467,25 @@ void netmon_update()
             netmon2_update();
             return ;
         case 3 :
+	    syslog_redraw();	
             netmon3_update();
             return ;
         case 4 :
+	    //lastheard_redraw();	
             netmon6_update();
+            netmon5_update();
             netmon4_update();
             return ;
         case 5 :
+	    //slog_redraw();	
             netmon4_update();
             netmon6_update();
             netmon5_update();
             return ;
         case 6 :
+	    //clog_redraw();	
             netmon4_update();
-            //netmon5_update();
+            netmon5_update();
             netmon6_update();
             return ;
     }

@@ -48,7 +48,7 @@ typedef struct addl_config {
        // The above 16-bit colours use the display's native 'BGR565'-format,
        // as used for the 'alternative' menu and the alternative LCD driver:
        // BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 .
-
+    uint8_t mic_gain; // 0=Disabled, 1=2db dgain, 2=6db gain
 } addl_config_t ;
 
 #define CPO_BL1 0x1
