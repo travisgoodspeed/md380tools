@@ -78,6 +78,10 @@ extern uint8_t boot_flags; // bitwise combination of the following flags:
 
 extern volatile uint32_t IRQ_dwSysTickCounter; // Incremented each 1.5 ms
 
+
+extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
+//   (note: GFX_backlight_on is useless, as long as no-one calls gfx.c : 
+
 extern uint8_t kb_backlight; // flag to disable the backlight via sidekey (in keyb.c)
 
 extern uint8_t red_led_timer;   // 'countdown' timer, in 1.5 ms steps, to turn

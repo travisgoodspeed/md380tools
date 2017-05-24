@@ -24,6 +24,9 @@
 # define CONFIG_MORSE_OUTPUT 1 // Morse output ? 0 or undef'd=no, 1=yes
 # define CONFIG_APP_MENU 1 // Alternative 'application menu' ? 0=no, 1=yes
 #endif
+/* Support keyb layout of Tytera MD446 (details see irq_handler.c)
+   this unit has a reduced keypad with 6 keys */
+# define CONFIG_MD446 0 // MD446 enable 0 or undef'd=no, 1=yes
 
 /* Uncomment this to print AMBE frames for decoding with DSD.  You
    probable want this instead of AMBECORRECTEDPRINT or

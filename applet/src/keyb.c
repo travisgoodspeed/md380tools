@@ -9,6 +9,7 @@
 
 #include "keyb.h"
 
+#include "md380.h"
 #include "debug.h"
 #include "netmon.h"
 #include "mbox.h"
@@ -321,9 +322,51 @@ inline int is_intercepted_keycode( uint8_t kc )
             return 0 ;
     }    
 }
+
+inline int is_intercepted_keycode2(uint8_t kc)
+{
+	switch (kc) {
+	
+	case 20:
+	case 21:
+	case 13: //end call
+		return 1;
+	default:
+		return 0;
+	}
+}
 #endif
 
 extern void kb_handler();
+
+static int nextKey = -1;
+
+void kb_handle(int key) {
+	int kp = kb_keypressed;
+	int kc = key;
+
+	if (is_intercept_allowed()) {
+		if (is_intercepted_keycode2(kc)) {
+			//if ((kp & 2) == 2) {
+				//kb_keypressed = 8;
+				handle_hotkey(kc);
+				return;
+			//}
+		}
+	}
+
+#if CONFIG_MD446
+	if (key == 11 || key == 2) {
+		kb_keycode = key;
+		kb_keypressed = 2;
+	}
+#else
+	if (key == 11 || key == 12) {
+		kb_keycode = key;
+		kb_keypressed = 2;
+	}
+#endif
+}
 
 void kb_handler_hook()
 {
@@ -334,9 +377,74 @@ void kb_handler_hook()
     kb_handler();
 
     trace_keyb(1);
+
+	//Menu_OnKey(KeyRowColToASCII(kb_row_col_pressed));
+
+	if (nextKey > 0) {
+		kb_keypressed = 2;
+		kb_keycode = nextKey;
+		nextKey = -1;
+	}
     
     int kp = kb_keypressed ;
     int kc = kb_keycode ;
+
+/* ================================================================================= */
+/*     Tytera MD-446 Layout - supported since 20170524                               */
+/* ================================================================================= */
+  //    ___________________________    
+  //   | 'M'ENU | cursor | 'B'ACK |   __
+  //   |(green) |  up, U | (red)  |     \  mirrored to left 3 cols of
+  //   | 0x0022 | 0x0012 | 0x000A |   __/  default MD380/MD390 layout
+  //   |--------+--------+--------|   __  
+  //   |  'P1'  | cursor |  'P2'  |     |
+  //   |    3   |  dn, D |    1   |     |  only P1 up/DN P2
+  //   | 0x0024 | 0x0014 | 0x000C |     |  
+  //   |________|________|________|   --
+  //  
+	
+
+#if CONFIG_MD446					// to support MD-446 set CONFIG_MD446 in config.h
+    switch( kc ) {
+        case 10 :
+		if (kb_row_col_pressed == 0x000A)	// the MD-446 layout is something weird, so it needs some rewrites of keycodes!!!
+		{
+			kb_keycode = 13;		// if the RedKey (key-10) was pressed, we need rewrite to RedKey function (kc=13)
+			kc = 13;			// RedKey - NEVER change this!!
+		}
+		else
+		{
+			kb_keycode = 10;		// if we got kc=10 not from 0x000A, this was rewrite result of GreenKey (key-12)
+			kc = 10;			// NEVER change this!!
+		}
+		break;
+        case 12 :					// if GreenKey (keycode=12) was pressed, we need to rewrite it to GreenKey function (kc=10)
+		kb_keycode = 10;			// GreenKey - NEVER change this!!
+		kc = 10;				// GreenKey - NEVER change this!!
+        	break ;
+        case 11 :
+		kc = 11;				// Cursor up - NEVER change this!!
+        	break ;
+        case 3 :
+		kc = 15;					// define your preferred P1 function: 0=Netmon6 2=Netmon5 4=Netmon4 8=Netmon1 9=Netmon2 15=Netmon3
+        	break ;	
+        case 2 :
+		kb_keycode = 12;			// Cursor down - is also used for quick menu access!
+		kc = 4;					// Cursor down - NEVER change this!!
+        	break ;
+        case 1 :
+		kc = 7;					// exit from Netmon screens
+        	break ;
+    } 
+
+#endif
+/* ================================================================================= */
+
+	if (kc == 20 || kc == 21) {
+		kb_keypressed = 8;
+		return;
+	}
+
     // allow calling of menu during qso.
     // not working correctly.
     if( global_addl_config.experimental ) {

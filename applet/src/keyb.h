@@ -51,6 +51,7 @@ extern uint8_t kb_bot_side_key_press_time;
 extern uint8_t kb_side_key_max_time;
 
 void evaluate_sidekey(int);
+void kb_handle(int);
 #else
 # define CAN_POLL_KEYS 0  /* 0 : cannot poll keys for this firmware yet */
 #endif
