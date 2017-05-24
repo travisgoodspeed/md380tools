@@ -426,11 +426,11 @@ void kb_handler_hook()
 		kc = 11;				// Cursor up - NEVER change this!!
         	break ;
         case 3 :
-		kc = 15;					// define your preferred P1 function: 0=Netmon6 2=Netmon5 4=Netmon4 8=Netmon1 9=Netmon2 15=Netmon3
+		kc = 4;					// define your preferred P1 function: 0=Netmon6 2=Netmon5 4=Netmon4 8=Netmon1 9=Netmon2 15=Netmon3
         	break ;	
         case 2 :
 		kb_keycode = 12;			// Cursor down - is also used for quick menu access!
-		kc = 4;					// Cursor down - NEVER change this!!
+		kc = 12;				// Cursor down - NEVER change this!!
         	break ;
         case 1 :
 		kc = 7;					// exit from Netmon screens
