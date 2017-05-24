@@ -655,7 +655,7 @@ def flashgetid(dfu):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
             size=16*1024*1024;          
     else:
-            sys.stdout.write("Unkown SPI Flash - please report\n");
+            sys.stdout.write("Unknown SPI Flash - please report\n");
     return size;
 
 def flashdump(dfu,filename):

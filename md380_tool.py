@@ -431,7 +431,7 @@ def flashgetid(dfu):
     elif buf[0] == 0x70 and buf[1] == 0xf1 and buf[2] == 0x01:
         sys.stdout.write("Bad LibUSB connection.  Please see the advice from N6YN at https://github.com/travisgoodspeed/md380tools/issues/186\n")
     else:
-        sys.stdout.write("Unkown SPI Flash - please report\n")
+        sys.stdout.write("Unknown SPI Flash - please report\n")
     return size
 
 
