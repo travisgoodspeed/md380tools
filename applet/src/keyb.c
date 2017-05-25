@@ -341,6 +341,7 @@ extern void kb_handler();
 
 static int nextKey = -1;
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
 void kb_handle(int key) {
 	int kp = kb_keypressed;
 	int kc = key;
@@ -367,6 +368,7 @@ void kb_handle(int key) {
 	}
 #endif
 }
+#endif
 
 void kb_handler_hook()
 {
