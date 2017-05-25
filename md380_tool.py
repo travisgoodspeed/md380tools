@@ -79,6 +79,11 @@ class Tool(DFU):
     """Client class for extra features patched into the MD380's firmware.
     None of this will work with the official firmware, of course."""
 
+    def __init__(self, device, alt):
+        super(Tool, self).__init__(device, alt)
+        # We need to read the manufacturer string to hook the added USB functions
+        device.manufacturer
+
     def drawtext(self, str, a, b):
         """Sends a new MD380 command to draw text on the screen.."""
         cmd = 0x80  # Drawtext
@@ -431,7 +436,7 @@ def flashgetid(dfu):
     elif buf[0] == 0x70 and buf[1] == 0xf1 and buf[2] == 0x01:
         sys.stdout.write("Bad LibUSB connection.  Please see the advice from N6YN at https://github.com/travisgoodspeed/md380tools/issues/186\n")
     else:
-        sys.stdout.write("Unkown SPI Flash - please report\n")
+        sys.stdout.write("Unknown SPI Flash - please report\n")
     return size
 
 

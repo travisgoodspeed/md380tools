@@ -16,9 +16,11 @@ from DFU import DFU, State, Request
 import time # the PEP8 dictator said only one module per import. Bleah.
 import sys
 import struct
+#import msvcrt # why the heck doesn't Python have a SIMPLE, PORTABLE 'conio' ?!
 import usb.core
 from collections import namedtuple
 import json
+
 # The tricky thing is that *THREE* different applications all show up
 # as this same VID/PID pair.
 #
@@ -33,38 +35,81 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
     0xE000ED08L: "VTOR",  # Vector Table Offset Register, part of the SCB, PM0214 Rev5 page 220
     0xE000ED00L: "SCB",   # System Control Block, with CPUID[0], ICSR[4], VTOR[8], AIRCR[12], .... PM0214 pg 220.
     0x40026000L: "DMA1",  # first DMA unit, register offsets in RM0090 Rev7 pages 332 .. 335
-    0x40026010L: "DMA1_S0CR",
-    0x40026028L: "DMA1_S1CR",
-    0x40026040L: "DMA1_S2CR", # one of the USED streams in D013.020
-    0x40026044L: "DMA1_S2NDTR", # RM0090 Rev7 page 333 ...
-    0x40026048L: "DMA1_S2PAR",
-    0x4002604CL: "DMA1_S2M0AR",
-    0x40026050L: "DMA1_S2M1AR",
-    0x40026054L: "DMA1_S2FCR",
-    0x40026058L: "DMA1_S3CR",
-    0x40026078L: "DMA1_S4CR",
-    0x40026088L: "DMA1_S5CR", # another of the USED streams in D013.020
-    0x4002608CL: "DMA1_S5NDTR", # RM0090 Rev7 page 334
-    0x40026090L: "DMA1_S5PAR",
-    0x40026094L: "DMA1_S5M0AR",
-    0x40026098L: "DMA1_S5M1AR",
-    0x4002609CL: "DMA1_S5FCR",
-    0x400260A0L: "DMA1_S6CR",
-    0x400260B8L: "DMA1_S7CR",
+    0x40026004L: "DMA1HISR",
+    0x40026008L: "DMA1LIFCR",
+    0x4002600CL: "DMA1HIFCR",   
+    0x40026010L: "DMA1S0CR",
+    0x40026028L: "DMA1S1CR",
+    0x40026040L: "DMA1S2CR", # one of the USED streams in D013.020
+    0x40026044L: "DMA1S2NDTR",
+    0x40026048L: "DMA1S2PAR",
+    0x4002604CL: "DMA1S2M0AR",
+    0x40026050L: "DMA1S2M1AR",
+    0x40026054L: "DMA1S2FCR",
+    0x40026058L: "DMA1S3CR",
+    0x40026078L: "DMA1S4CR",
+    0x40026088L: "DMA1S5CR", # another of the USED streams in D013.020
+    0x4002608CL: "DMA1S5NDTR",
+    0x40026090L: "DMA1S5PAR",
+    0x40026094L: "DMA1S5M0AR",
+    0x40026098L: "DMA1S5M1AR",
+    0x4002609CL: "DMA1S5FCR",
+    0x400260A0L: "DMA1S6CR",
+    0x400260B8L: "DMA1S7CR",
+
     0x40026400L: "DMA2",  # second DMA unit (each DMA has registers at offsets 0x00..0xCC)
-    0x40026410L: "DMA2_S0CR",
-    0x40026428L: "DMA2_S1CR",
-    0x40026440L: "DMA2_S2CR",
-    0x40026458L: "DMA2_S3CR", # another of the USED streams in D013.020
-    0x4002645CL: "DMA2_S3NDTR", # RM0090 Rev7 page 334
-    0x40026460L: "DMA2_S3PAR",
-    0x40026464L: "DMA2_S3M0AR",
-    0x40026468L: "DMA2_S3M1AR",
-    0x4002646CL: "DMA2_S3FCR",
-    0x40026478L: "DMA2_S4CR",
-    0x40026488L: "DMA2_S5CR", # another of the USED streams in D013.020
-    0x400264A0L: "DMA2_S6CR",
-    0x400264B8L: "DMA2_S7CR",
+    0x40026404L: "DMA2HISR",
+    0x40026408L: "DMA2LIFCR",
+    0x4002640CL: "DMA2HIFCR",   
+    0x40026410L: "DMA2S0CR",
+    0x40026414L: "DMA2S0NDTR",
+    0x40026418L: "DMA2S0PAR",
+    0x4002641CL: "DMA2S0M0AR",
+    0x40026420L: "DMA2S0M1AR",
+    0x40026424L: "DMA2S0FCR",
+    0x40026428L: "DMA2S1CR",
+    0x4002642CL: "DMA2S1NDTR",
+    0x40026430L: "DMA2S1PAR",
+    0x40026434L: "DMA2S1M0AR",
+    0x40026438L: "DMA2S1M1AR",
+    0x4002643CL: "DMA2S1FCR",
+    0x40026440L: "DMA2S2CR",
+    0x40026444L: "DMA2S2NDTR",
+    0x40026448L: "DMA2S2PAR",
+    0x4002644CL: "DMA2S2M0AR",
+    0x40026450L: "DMA2S2M1AR",
+    0x40026454L: "DMA2S2FCR",
+    0x40026458L: "DMA2S3CR", # another of the USED streams in D013.020
+    0x4002645CL: "DMA2S3NDTR", # RM0090 Rev13 page 333 : number of data items to transfer
+    0x40026460L: "DMA2S3PAR",
+    0x40026464L: "DMA2S3M0AR",
+    0x40026468L: "DMA2S3M1AR",
+    0x4002646CL: "DMA2S3FCR",
+    0x40026470L: "DMA2S4CR",
+    0x40026474L: "DMA2S4NDTR",
+    0x40026478L: "DMA2S4PAR",
+    0x4002647CL: "DMA2S4M0AR",
+    0x40026480L: "DMA2S4M1AR",
+    0x40026484L: "DMA2S4FCR",
+    0x40026488L: "DMA2S5CR", # another of the USED streams in D013.020
+    0x4002648CL: "DMA2S5NDTR",
+    0x40026490L: "DMA2S5PAR",
+    0x40026494L: "DMA2S5M0AR",
+    0x40026498L: "DMA2S5M1AR",
+    0x4002649CL: "DMA2S5FCR",
+    0x400264A0L: "DMA2S6CR",
+    0x400264A4L: "DMA2S6NDTR",
+    0x400264A8L: "DMA2S6PAR",
+    0x400264ACL: "DMA2S6M0AR",
+    0x400264B0L: "DMA2S6M1AR",
+    0x400264B4L: "DMA2S6FCR",
+    0x400264B8L: "DMA2S7CR",
+    0x400264BCL: "DMA2S7NDTR",
+    0x400264C0L: "DMA2S7PAR",
+    0x400264C4L: "DMA2S7M0AR",
+    0x400264C8L: "DMA2S7M1AR",
+    0x400264CCL: "DMA2S7FCR",
+
     # GPIO register offsets: 0x00="MODER", 0x10="IDR", 0x14="ODR", 0x20="AFRL", etc
     0x40020000L: "GPIOA", # .. with PA8="Save", PA1="Batt", PA0="TX LED", PA3="VOX", PA7="POW_C", ..
     0x40020004L:  "PA_OTYPE",0x40020008L:"PA_OSPEED", 0x4002000CL:"PA_PUPD",
@@ -81,13 +126,30 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
     0x40020C00L: "GPIOD", # .. with PD3="K3" ("Key 3" .. what's that ? )
     0x40020C04L:  "PD_OTYPE",0x40020C08L:"PD_OSPEED", 0x40020C0CL:"PD_PUPD",
     0x40020C10L:  "PD_IDR",  0x40020C14L:"PD_ODR",    0x40020C18L:"PD_BSRR", 
-    0x4002081CL:  "PD_LCKR", 0x40020C20L:"PD_AFRL",   0x40020C24L:"PD_AFRH",
+    0x40020C1CL:  "PD_LCKR", 0x40020C20L:"PD_AFRL",   0x40020C24L:"PD_AFRH",
     0x40021000L: "GPIOE", # .. with RX_LED, TX_LED, FSMC, PTT, etc..
     0x40021004L:  "PE_OTYPE",0x40021008L:"PE_OSPEED", 0x4002100CL:"PE_PUPD",
     0x40021010L:  "PE_IDR",  0x40021014L:"PE_ODR",    0x40021018L:"PE_BSRR", 
     0x4002101CL:  "PE_LCKR", 0x40021020L:"PE_AFRL",   0x40021024L:"PE_AFRH",
 
     0x40011400L: "USART6",# abused by DL4YHF to generate PWM(!) on PC6 = USART6_TX. offsets in RM0090 Rev7 page 1002 .
+    0x40012000L: "ADC1",  0x40012004L: "A1CR1", 0x40012008L: "A1CR2", 0x4001200CL: "A1SM1",
+    0x40012010L: "A1SM2", 0x40012014L: "A1OF1", 0x40012018L: "A1OF2", 0x4001201CL: "A1OF3",
+    0x40012020L: "A1OF4", 0x40012024L: "A1HTR", 0x40012028L: "A1LTR", 0x4001202CL: "A1SQ1",
+    0x40012030L: "A1SQ2", 0x40012034L: "A1SQ3", 0x40012038L: "A1JSQ", 0x4001203CL: "A1JD1",
+    0x40012040L: "A1JD2", 0x40012044L: "A1JD3", 0x40012048L: "A1JD4", 0x4001204CL: "A1DAT",
+    0x40012100L: "ADC2",  0x40012104L: "A2CR1", 0x40012108L: "A2CR2", 0x4001210CL: "A2SM1",
+    0x40012110L: "A2SM2", 0x40012114L: "A2OF1", 0x40012118L: "A2OF2", 0x4001211CL: "A2OF3",
+    0x40012120L: "A2OF4", 0x40012124L: "A2HTR", 0x40012128L: "A2LTR", 0x4001212CL: "A2SQ1",
+    0x40012130L: "A2SQ2", 0x40012134L: "A2SQ3", 0x40012138L: "A2JSQ", 0x4001213CL: "A2JD1",
+    0x40012140L: "A2JD2", 0x40012144L: "A2JD3", 0x40012148L: "A2JD4", 0x4001214CL: "A2DAT",
+    0x40012200L: "ADC3",  0x40012204L: "A3CR1", 0x40012208L: "A3CR2", 0x4001220CL: "A3SM1",
+    0x40012210L: "A3SM2", 0x40012214L: "A3OF1", 0x40012218L: "A3OF2", 0x4001221CL: "A3OF3",
+    0x40012220L: "A3OF4", 0x40012224L: "A3HTR", 0x40012228L: "A3LTR", 0x4001222CL: "A3SQ1",
+    0x40012230L: "A3SQ2", 0x40012234L: "A3SQ3", 0x40012238L: "A3JSQ", 0x4001223CL: "A3JD1",
+    0x40012240L: "A3JD2", 0x40012244L: "A3JD3", 0x40012248L: "A3JD4", 0x4001224CL: "A3DAT",
+    0x40012300L: "ADCCSR",0x40012304L: "ADCCCR",0x40012308L: "ADCCDR",
+
     0x40023800L: "RCC",   # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405
     0x40023824L: "RCC_APB2RSTR", # APB2 peripheral ReSeT Register. Bit 5 controls USART6. RM0090 Rev7 page 236 .
     0x40023844L: "RCC_APB2ENR",  # APB2 peripheral clock ENable Register. Bit 5 controls USART6. RM0090 Rev7 page 246 .
@@ -103,10 +165,15 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
 
 }
 
-class UsersDB():
+def NonBlockingGetKey():
+    if msvcrt.kbhit():
+       return msvcrt.getch()
+    else:
+       return 0
+
+class UsersDB:
     """List of registered DMR-MARC users."""
-    users = {} # the PEP8 dictator wants exactly whitespace around operators. Heavens, no.
-               # He also wanted one blank line before a 'def'. Agreed.
+    users = {}
 
     def __init__(self, filename=None):
         """Loads the database."""
@@ -148,6 +215,11 @@ class Tool(DFU):
     """Client class for extra features patched into the MD380's firmware.
     None of this will work with the official firmware, of course."""
     
+    def __init__(self, device, alt):
+        super(Tool, self).__init__(device, alt)
+        # We need to read the manufacturer string to hook the added USB functions
+        device.manufacturer
+
     def drawtext(self,str,a,b):
         """Sends a new MD380 command to draw text on the screen.."""
         cmd=0x80 #Drawtext
@@ -435,6 +507,8 @@ def hexdump(dfu,address,length=512):
     i=0
     cbuf=""
     for b in buf:
+        if i%16==0:
+            sys.stdout.write("%08X: "%(adr+i))
         sys.stdout.write("%02x "%b)
         i=i+1
         if(b > 32 and b < 127 ):
@@ -448,17 +522,54 @@ def hexdump(dfu,address,length=512):
         elif i%8==0:
             sys.stdout.write(" ")
 
+def ascdump(dfu,address,length=1024):
+    """Dumps 8-bit chars from memory to the screen"""
+    adr=address
+    buf=dfu.peek(adr,length)
+    i=0
+    cbuf=""
+    for b in buf:
+        if i%64==0:
+            sys.stdout.write("%08X: "%(adr+i))
+        i=i+1
+        if(b==0):
+            cbuf = cbuf + '~'
+        elif(b >= 32 and b < 127 ):
+            cbuf = cbuf + chr(b)
+        else:
+            cbuf = cbuf + "."
+        if i%64==0:
+            sys.stdout.write( cbuf )
+            sys.stdout.write("\n")
+            cbuf=""
 
-def hexwatch(dfu,address):
-    """Dumps from memory to the screen"""
+
+def hexwatch(dfu,address,length=16):
+    """Live hex display"""
     adr=ParseHexOrRegName(address)
     while True:
-        hexdump(dfu,adr,16)
-        time.sleep(0.05)
+        hexdump(dfu,adr,length)
+        sys.stdout.flush() # required for mingw and similar shells
+        if length<=16 :
+           time.sleep(0.05)
+        else:
+           time.sleep(0.2) # non-Pythonic. I know. Who cares ?
+
+def ascwatch(dfu,address,length=2048):
+    """Live ASCII display (8 bit chars)"""
+    adr=ParseHexOrRegName(address)
+    while True:
+        sys.stdout.write("\n")
+        ascdump(dfu,adr,length)
+        sys.stdout.flush() # required for mingw and similar shells
+        if length<=64 :
+           time.sleep(0.05)
+        else:
+           time.sleep(0.2) # non-Pythonic. I know. Who cares ?
 
 
 def ParseHexOrRegName(address):
-    if address in sfr_addresses.values(): # there must be a more elegant way than this..
+    if address in sfr_addresses.values():
         return sfr_addresses.keys()[sfr_addresses.values().index(address)]
     else:
         return int(address,16)
@@ -469,7 +580,7 @@ def ShowRegNameIfKnown(address):
         sys.stdout.write(' ; '+ sfr_addresses[address] )
 
 
-def hexdump32(dfu,address,length=512):
+def hexdump32(dfu,address,length=512,bytesPerLine=16):
     """Dumps 32-bit hex values to the screen"""
     adr=ParseHexOrRegName(address)
     buf=dfu.peek(adr,length+3)
@@ -478,7 +589,7 @@ def hexdump32(dfu,address,length=512):
     cbuf=""
     names=""
     while i<length:
-        if i%16==0:
+        if i%bytesPerLine==0:
             if know_name: # if at least one address is a known SFR, show them
                sys.stdout.write("("+names+")")
             sys.stdout.write("\n%08X: "%(adr+i))
@@ -491,12 +602,24 @@ def hexdump32(dfu,address,length=512):
             names = names+sfr_addresses[adr+i]
         else:
             names = names+"?"
-        if i%16 < 12:
+        if i%bytesPerLine < (bytesPerLine-4):
             names = names+","
         i=i+4
     if know_name: # if known, show SFR names for the last line
         sys.stdout.write("("+names+")")
 
+def hexwatch32(dfu,address,length=32,bytesPerLine=16):
+    """Continously samples/displays 32-bit words"""
+    if bytesPerLine>length:
+       bytesPerLine=length
+    while True:
+        hexdump32(dfu,address,length,bytesPerLine)
+        sys.stdout.flush() # required for mingw and similar shells
+        if length<=4:
+           time.sleep(0.05)
+        else:
+           time.sleep(0.2)
+        # Simple keyboard control ? Hopeless without bulky or non-portable crap !
 
 def bindump32(dfu,address,length=256):
     """Dumps 32-bit binary values to the screen"""
@@ -537,7 +660,7 @@ def flashgetid(dfu):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
             size=16*1024*1024;          
     else:
-            sys.stdout.write("Unkown SPI Flash - please report\n");
+            sys.stdout.write("Unknown SPI Flash - please report\n");
     return size;
 
 def flashdump(dfu,filename):
@@ -628,6 +751,7 @@ def rssi(dfu):
         rssil=dfu.c5000peek(0x44);
         rssi=(rssih<<8)|rssil;
         print "%04x" % rssi;
+        sys.stdout.flush() # required for mingw and similar shells
         time.sleep(0.25);
 def messages(dfu):
     """Prints all the SMS messages."""
@@ -856,6 +980,14 @@ def main():
                 print "Watching memory at %s." % sys.argv[2]
                 dfu=init_dfu()
                 hexwatch(dfu,sys.argv[2])
+            elif sys.argv[1] == 'hexwatch32':
+                print "Watching 32-bit words at %s." % sys.argv[2]
+                dfu=init_dfu()
+                hexwatch32(dfu,sys.argv[2])
+            elif sys.argv[1] == 'ascwatch':
+                print "Watching 8-bit strings at %s." % sys.argv[2]
+                dfu=init_dfu()
+                ascwatch(dfu,sys.argv[2])
             elif sys.argv[1] == 'lookup':
                 print users.getusername(int(sys.argv[2]))
             elif sys.argv[1] == 'readword':
@@ -885,9 +1017,21 @@ def main():
             elif sys.argv[1] == 'c5write':   # DL4YHF 2016-12
                 dfu = init_dfu()
                 c5write(dfu, int(sys.argv[2],16), int(sys.argv[3],16))
+            elif sys.argv[1] == 'hexwatch':  # DL4YHF 2017-03 (with customized 'len')
+                print "Watching memory at %s." % sys.argv[2]
+                dfu=init_dfu()
+                hexwatch(dfu,sys.argv[2], int(sys.argv[3]) )
             elif sys.argv[1] == 'hexdump32': # DL4YHF 2017-01
                 dfu=init_dfu()
                 hexdump32(dfu,sys.argv[2], int(sys.argv[3]) )
+            elif sys.argv[1] == 'hexwatch32': # DL4YHF 2017-03
+                print "Watching 32-bit words at %s." % sys.argv[2]
+                dfu=init_dfu()
+                hexwatch32(dfu,sys.argv[2], int(sys.argv[3]))
+            elif sys.argv[1] == 'ascwatch':
+                print "Watching 8-bit strings at %s." % sys.argv[2]
+                dfu=init_dfu()
+                ascwatch(dfu,sys.argv[2], int(sys.argv[3]))
             elif sys.argv[1] == 'bindump32': # DL4YHF 2017-01
                 dfu=init_dfu()
                 bindump32(dfu,sys.argv[2], int(sys.argv[3]) )

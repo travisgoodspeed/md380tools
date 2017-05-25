@@ -1,7 +1,7 @@
 
 RELEASE=dist/md380tools-`date "+%Y-%m-%d"`
 
-.PHONY: dist
+.PHONY: dist all
 
 all: image_D13
 
@@ -129,6 +129,9 @@ dist:
 	cp *.py 99-md380.rules md380-dfu md380-tool $(RELEASE)/python/
 #Clean out some gunk
 	rm -rf $(RELEASE)/__MACOSX
+#Add the latest database
+	make -C db clean all
+	cp db/stripped.csv $(RELEASE)/callerid.csv
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
 
@@ -139,7 +142,7 @@ dbg:
 	@echo MAKE: '${MAKE}'
 	@echo ________
 	@echo AWK version
-	-awk -V
+	-awk -Wversion 2>/dev/null || awk --version
 	@echo ________
 	@echo Make version
 	make -v

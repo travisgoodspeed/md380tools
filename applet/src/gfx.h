@@ -71,9 +71,10 @@ void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);
 
+void print_time_hook(const char log);   
 
 typedef struct gfx_pal {
-  long	ncol;
+  long   ncol;
   long  someb; 
   const char * palptr;
   } gfx_pal;
@@ -133,7 +134,7 @@ extern gfx_info_t gfx_info ;
 
 void gfx_drawchar( uint8_t c );
 #else 
-#warning TODO: define gfx_info 
+# define _WARN_ONCE_ // ex: #warning TODO: define gfx_info  (ONE such warning is enough)
 #endif
 
 /**
@@ -153,14 +154,14 @@ void gfx_drawtext2_hook(wchar_t *str, int x, int y, int xlen);
 void gfx_drawtext7(const char *str, int x, int y); // firmware
 #else
 #define gfx_drawtext7(p1,p2,p3) /* nop */
-#warning please consider finding symbol.
+# define _WARN_ONCE_ // ex: #warning TODO: please consider finding symbol (ONE such warning is enough)
 #endif    
 
 #if defined(FW_D13_020) 
 void gfx_drawtext10(wchar_t *str, int x1, int y1, int x2, int y2); // firmware
 #else
 #define gfx_drawtext10(p1,p2,p3,p4,p5) /* nop */
-#warning please consider finding symbol.
+# define _WARN_ONCE_ // ex: #warning TODO: please consider finding symbol (ONE such warning is enough)
 #endif    
 
 extern uint32_t gfx_font_small[];
@@ -168,3 +169,9 @@ extern uint32_t gfx_font_norm[];
 
 uint32_t gfx_get_fg_color(void);
 
+#ifdef _WARN_ONCE_ // Cleanup Superfluous Warnings, issue #704 . Here: only show ONE warning, if any:
+# ifdef COMPILING_MAIN_C
+#  warning TODO: please consider finding symbol(s); there may be more than one of these...
+   // (still this warning was displayed dozens of times when making 'image_D02' ..)
+# endif // compiling MAIN.C ?
+#endif // WARN ?

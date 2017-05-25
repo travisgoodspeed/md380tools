@@ -22,6 +22,8 @@ extern uint8_t      currently_selected_menu_entry;
 /* mn_editbuffer_poi / md380_menu_0x20001114 */
 extern wchar_t *mn_editbuffer_poi;
 
+void create_menu_entry_set_tg_screen(void); // always use function prototypes
+
 
 #ifdef __cplusplus
 }

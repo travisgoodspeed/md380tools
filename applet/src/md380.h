@@ -56,26 +56,26 @@ int usb_dnld_handle();
 
 
 // This is the target address of the Application's DFU engine.
-extern char *	md380_dfutargetadr;
-extern char * 	md380_dfu_target_adr[]; // same as md380_dfutargetadr TODO: fix
-extern char   	md380_packet[];
-extern int    	md380_packetlen[];
-extern int    	md380_blockadr[];
-extern char   	md380_dfu_state[];
-extern char   	md380_thingy2[];
-extern char   	md380_usbstring[];
+extern char *   md380_dfutargetadr;
+extern char *   md380_dfu_target_adr[]; // same as md380_dfutargetadr TODO: fix
+extern char     md380_packet[];
+extern int      md380_packetlen[];
+extern int      md380_blockadr[];
+extern char     md380_dfu_state[];
+extern char     md380_thingy2[];
+extern char     md380_usbstring[];
 
 // title for menus, version in info screen
-extern wchar_t 	print_buffer[];
+extern wchar_t  print_buffer[];
 
 uint8_t md380_spi_sendrecv(INT8U data); // SPI1
 
 // md380_i2c // stolen from ../../lib/src/peripherals/stm32f4xx_i2c.c
-void	md380_I2C_GenerateSTART(I2C_TypeDef* I2Cx, FunctionalState NewState);
-void	md380_I2C_GenerateSTOP(I2C_TypeDef* I2Cx, FunctionalState NewState);
-uint8_t	md380_I2C_ReceiveData(I2C_TypeDef* I2Cx);
-void	md380_I2C_Send7bitAddress(I2C_TypeDef* I2Cx, uint8_t Address, uint8_t I2C_Direction);
-void 	md380_I2C_SendData(I2C_TypeDef* I2Cx, uint8_t Data);
+void    md380_I2C_GenerateSTART(I2C_TypeDef* I2Cx, FunctionalState NewState);
+void    md380_I2C_GenerateSTOP(I2C_TypeDef* I2Cx, FunctionalState NewState);
+uint8_t md380_I2C_ReceiveData(I2C_TypeDef* I2Cx);
+void    md380_I2C_Send7bitAddress(I2C_TypeDef* I2Cx, uint8_t Address, uint8_t I2C_Direction);
+void    md380_I2C_SendData(I2C_TypeDef* I2Cx, uint8_t Data);
 
 
 //! Function that handles uC/OS-II settings
@@ -101,7 +101,7 @@ void        OS_EXIT_CRITICAL(int);
 void*   main_menu(void *);     // menu exec
 
 void*   md380_menu_entry_back(void);
-void*   md380_create_main_meny_entry(void);
+void    md380_create_main_menu_entry(void); // doesn't return anything (no 'void*')
 
 // create one new menu entry
 // menu_id (count from mainmenu 0), wt_menu_text, *()green key, *() red key, ?, ?, enabled
@@ -123,7 +123,7 @@ uint8_t   md380_menu_depth;
 uint8_t   md380_menu_entry_selected;
 uint8_t   md380_menu_id;
 
-extern wchar_t	  	md380_wt_programradio[];  // menutext <- menu_entry_programradio
+extern wchar_t          md380_wt_programradio[];  // menutext <- menu_entry_programradio
 
 //! program_radio_unprohibited (menu entry) ... bulding site is an struct
 extern uint8_t md380_program_radio_unprohibited[];
@@ -151,13 +151,13 @@ char* aes_cipher(char *pkt);
 // md380 ambe2+
 //! Unknown AMBE2+ thing.
 int ambe_encode_thing(char *a1, int a2, int *a3, int a4,
-		      short a5, short a6, short a7, int a8);
+                      short a5, short a6, short a7, int a8);
 //! Decodes an AMBE2+ frame into bits.
 int ambe_unpack(int a1, int a2, char length, int a4);
 
 //! Populates the audio buffer.
 int ambe_decode_wav(int *a1, signed int eighty, char *bitbuffer,
-		    int a4, short a5, short a6, int a7);
+                    int a4, short a5, short a6, int a7);
 
 
 void md380_Write_Command_2display(uint8_t data);

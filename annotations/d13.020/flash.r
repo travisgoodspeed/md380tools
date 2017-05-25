@@ -212,6 +212,519 @@ af+ 0x8090370 80 usb_dfu_write
 af+ 0x80903c0 54 usb_dfu_read
 af+ 0x809662e 34 usb_serialnumber
 
+af+ 0x8094270 98 HandlerForDMA2_Stream3
+f VectorTable 0x188 @ 0x0800C000
+s VectorTable # wind back to the VT and annotate it for the listing..
+CC STM32F405 exception- and interrupt vector table
+Cd 0x188 # RM0090 page 372 shows last vector of STM32F405 at VT-offset 0x0184, thus 0x0188 bytes
+# Read the addresses of certain interrupt handlers
+#      directly from the vector table, to annotate them below.
+s (VectorTable+0x04) # seek_addr = VectorTable+4 = address of the RESET HANDLER
+s `pxw 4~[1]`      # seek_addr = *(DWORD*)(seek_addr)
+s- 1 # seek_addr -= 1,  should be the 'real' (EVEN) handler address now
+af+ $$ 8 Reset_Handler
+s (VectorTable+0x08) # seek_addr = VectorTable + offs(NMI_Handler)
+s `pxw 4~[1]`
+s- 1
+f NMI_Handler
+s (VectorTable+0x0C) # HardFault.. etc etc
+s `pxw 4~[1]`
+s- 1
+f HardFault_Handler
+s (VectorTable+0x10) # MemManage..
+s `pxw 4~[1]`
+s- 1
+f MemManage
+#af+ $$ 4 MemManage
+
+s (VectorTable+0x14) # BusFault..
+s `pxw 4~[1]`
+s- 1
+f BusFault_Handler
+#af+ $$ 4 BusFault_Handler
+
+s (VectorTable+0x18) # UsageFault..
+s `pxw 4~[1]`
+s- 1
+f UsageFault_Handler
+#af+ $$ 8 UsageFault_Handler
+
+s (VectorTable+0x2C) # SVC_Handler.. (syscall via 'SWI' = Soft Ware Interrupt)
+s `pxw 4~[1]`
+s- 1
+f SVC_Handler
+#af+ $$ 8 SVC_Handler
+
+s (VectorTable+0x30) # DebugMon_Handler..
+s `pxw 4~[1]`
+s- 1
+f DebugMon_Handler
+#af+ $$ 8 DebugMon_Handler
+
+s (VectorTable+0x38) # PendSV_Handler..
+s `pxw 4~[1]`
+s- 1
+#f PendSV_Handler # had an invalid address in the VT so don't try to disassemble
+#af+ $$ 8 PendSV_Handler
+
+s (VectorTable+0x3C) # seek_addr = VectorTable+4*15 = address of SysTick_Handler
+s `pxw 4~[1]`      # seek_addr = *(DWORD*)(seek_addr);
+s- 1               # seek_addr -= 1;  should be the 'real' handler address now
+f SysTick_Handler  # SysTick_Handler = seek_addr (as a "flag")
+#af+ $$ 0x20 SysTick_Handler
+
+s (VectorTable+0x40) # WWDG_Handler.. (gefensterter Wachhund)
+s `pxw 4~[1]`
+s- 1
+#f WWDG_IRQHandler
+af+ $$ 4 WWDG_IRQHandler
+
+s (VectorTable+0x44) # PVD_Handler..
+s `pxw 4~[1]`
+s- 1
+#f PVD_IRQHandler
+af+ $$ 4 PVD_IRQHandler
+
+s (VectorTable+0x48) # TAMP_STAMP_Handler.. (tampern und stampfen, sehr schön)
+s `pxw 4~[1]`
+s- 1
+#f TAMP_STAMP_IRQHandler
+af+ $$ 4 TAMP_STAMP_IRQHandler
+
+s (VectorTable+0x4C) # RTC_WKUP_Handler..
+s `pxw 4~[1]`
+s- 1
+f RTC_WKUP_IRQHandler
+#af+ $$ 56 RTC_WKUP_IRQHandler
+
+s (VectorTable+0x50) # FLASH_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f FLASH_IRQHandler
+af+ $$ 4 FLASH_IRQHandler
+
+s (VectorTable+0x54) # RCC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f RCC_IRQHandler
+af+ $$ 4 RCC_IRQHandler
+
+s (VectorTable+0x58) # EXTI0_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f EXTI0_IRQHandler
+#af+ $$ 4 EXTI0_IRQHandler
+
+s (VectorTable+0x5C) # EXTI1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f EXTI1_IRQHandler
+#af+ $$ 4 EXTI1_IRQHandler
+
+s (VectorTable+0x60) # EXTI2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f EXTI2_IRQHandler
+#af+ $$ 4 EXTI2_IRQHandler
+
+s (VectorTable+0x64) # EXTI3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f EXTI3_IRQHandler
+#af+ $$ 4 EXTI3_IRQHandler
+
+s (VectorTable+0x68) # EXTI4_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f EXTI4_IRQHandler
+af+ $$ 4 EXTI4_IRQHandler
+
+s (VectorTable+0x6C) # DMA1_Stream0_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream0_IRQHandler
+af+ $$ 4 DMA1_Stream0_IRQHandler
+
+s (VectorTable+0x70) # DMA1_Stream1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream1_IRQHandler
+af+ $$ 4 DMA1_Stream1_IRQHandler # just a dummy
+
+s (VectorTable+0x74) # DMA1_Stream2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream2_IRQHandler
+af+ $$ 8 DMA1_Stream2_IRQHandler # NO DUMMY !
+
+s (VectorTable+0x78) # DMA1_Stream3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream3_IRQHandler
+af+ $$ 4 DMA1_Stream3_IRQHandler
+
+s (VectorTable+0x7C) # DMA1_Stream4_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream4_IRQHandler
+af+ $$ 4 DMA1_Stream4_IRQHandler
+
+s (VectorTable+0x80) # DMA1_Stream5_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream5_IRQHandler
+af+ $$ 8 DMA1_Stream5_IRQHandler # NO DUMMY !
+
+s (VectorTable+0x84) # DMA1_Stream6_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream6_IRQHandler
+af+ $$ 4 DMA1_Stream6_IRQHandler
+
+s (VectorTable+0x88) # ADC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f ADC_IRQHandler # had an invalid address so don't try to disassemble
+#af+ $$ 4 ADC_IRQHandler
+
+s (VectorTable+0x8C) # CAN1_TX_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f CAN1_TX_IRQHandler
+#af+ $$ 4 CAN1_TX_IRQHandler
+
+s (VectorTable+0x90) # CAN1_RX0_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f CAN1_RX0_IRQHandler
+#af+ $$ 4 CAN1_RX0_IRQHandler
+
+s (VectorTable+0x94) # CAN1_RX1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f CAN1_RX1_IRQHandler
+#af+ $$ 4 CAN1_RX1_IRQHandler
+
+s (VectorTable+0x98) # CAN1_SCE_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f CAN1_SCE_IRQHandler
+#af+ $$ 4 CAN1_SCE_IRQHandler
+
+s (VectorTable+0x9C) # EXTI9_5_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f EXTI9_5_IRQHandler
+af+ $$ 4 EXTI9_5_IRQHandler
+
+s (VectorTable+0xA0) # TIM1_BRK_TIM9_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM1_BRK_TIM9_IRQHandler
+af+ $$ 4 TIM1_BRK_TIM9_IRQHandler
+
+s (VectorTable+0xA4) # TIM1_UP_TIM10_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM1_UP_TIM10_IRQHandler
+af+ $$ 4 TIM1_UP_TIM10_IRQHandler
+
+s (VectorTable+0xA8) # TIM1_TRG_COM_TIM11_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM1_TRG_COM_TIM11_IRQHandler
+af+ $$ 4 TIM1_TRG_COM_TIM11_IRQHandler
+
+s (VectorTable+0xAC) # TIM1_CC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM1_CC_IRQHandler
+af+ $$ 4 TIM1_CC_IRQHandler
+
+s (VectorTable+0xB0) # TIM2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ (0xDDE-0xD5E) TIM2_IRQHandler # NOT a dummy !
+
+s (VectorTable+0xB4) # TIM3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f TIM3_IRQHandler
+#af+ $$ 8 TIM3_IRQHandler
+
+s (VectorTable+0xB8) # TIM4_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f TIM4_IRQHandler
+#af+ $$ 8 TIM4_IRQHandler
+
+s (VectorTable+0xBC) # I2C1_EV_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f I2C1_EV_IRQHandler
+af+ $$ 4 I2C1_EV_IRQHandler
+
+s (VectorTable+0xC0) # I2C1_ER_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f I2C1_ER_IRQHandler
+af+ $$ 4 I2C1_ER_IRQHandler
+
+s (VectorTable+0xC4) # I2C2_EV_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f I2C2_EV_IRQHandler
+af+ $$ 4 I2C2_EV_IRQHandler
+
+s (VectorTable+0xC8) # I2C2_ER_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f I2C2_ER_IRQHandler
+af+ $$ 4 I2C2_ER_IRQHandler
+
+s (VectorTable+0xCC) # SPI1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f SPI1_IRQHandler
+af+ $$ 4 SPI1_IRQHandler
+
+s (VectorTable+0xD0) # SPI2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f SPI2_IRQHandler
+af+ $$ 4 SPI2_IRQHandler
+
+s (VectorTable+0xD4) # USART1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f USART1_IRQHandler
+af+ $$ 4 USART1_IRQHandler
+
+s (VectorTable+0xD8) # USART2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f USART2_IRQHandler
+af+ $$ 4 USART2_IRQHandler
+
+s (VectorTable+0xDC) # USART3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f USART3_IRQHandler
+af+ $$ 4 USART3_IRQHandler
+
+s (VectorTable+0xE0) # EXTI15_10_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f EXTI15_10_IRQHandler
+af+ $$ 4 EXTI15_10_IRQHandler
+
+s (VectorTable+0xE4) # RTC_Alarm_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f RTC_Alarm_IRQHandler
+af+ $$ 4 RTC_Alarm_IRQHandler
+
+s (VectorTable+0xE8) # OTG_FS_WKUP_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f OTG_FS_WKUP_IRQHandler
+#af+ $$ 4 OTG_FS_WKUP_IRQHandler
+
+s (VectorTable+0xEC) # TIM8_BRK_TIM12_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM8_BRK_TIM12_IRQHandler
+af+ $$ 4 TIM8_BRK_TIM12_IRQHandler
+
+s (VectorTable+0xF0) # TIM8_UP_TIM13_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f TIM8_UP_TIM13_IRQHandler
+#af+ $$ 4 TIM8_UP_TIM13_IRQHandler
+
+s (VectorTable+0xF4) # TIM8_TRG_COM_TIM14_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM8_TRG_COM_TIM14_IRQHandler
+af+ $$ 4 TIM8_TRG_COM_TIM14_IRQHandler
+
+s (VectorTable+0xF8) # TIM8_CC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f TIM8_CC_IRQHandler
+af+ $$ 4 TIM8_CC_IRQHandler
+
+s (VectorTable+0xFC) # DMA1_Stream7_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DMA1_Stream7_IRQHandler
+af+ $$ 4 DMA1_Stream7_IRQHandler
+
+s (VectorTable+0x0100) # FSMC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f FSMC_IRQHandler
+af+ $$ 4 FSMC_IRQHandler
+
+s (VectorTable+0x104) # SDIO_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f SDIO_IRQHandler
+af+ $$ 4 SDIO_IRQHandler
+
+s (VectorTable+0x108) # TIM5_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f TIM5_IRQHandler
+#af+ $$ 4 TIM5_IRQHandler
+
+s (VectorTable+0x10C) # SPI3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f SPI3_IRQHandler
+af+ $$ 8 SPI3_IRQHandler # NOT a dummy !
+
+s (VectorTable+0x110) # USART4_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f USART4_IRQHandler
+af+ $$ 4 USART4_IRQHandler
+
+s (VectorTable+0x114) # USART5_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f USART5_IRQHandler
+af+ $$ 4 USART5_IRQHandler
+
+s (VectorTable+0x118) # TIM6_DAC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f TIM6_DAC_IRQHandler
+#af+ $$ 4 TIM6_DAC_IRQHandler
+
+s (VectorTable+0x11C) # TIM7_DAC_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+f TIM7_DAC_IRQHandler
+#af+ $$ 4 TIM7_DAC_IRQHandler
+
+s (VectorTable+0x120) # DMA2_Stream0_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream0_IRQHandler
+
+s (VectorTable+0x124) # DMA2_Stream1_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream1_IRQHandler # just a dummy
+
+s (VectorTable+0x128) # DMA2_Stream2_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream2_IRQHandler
+
+s (VectorTable+0x12C) # DMA2_Stream3_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ (0x2d2-0x270) DMA2_Stream3_IRQHandler # NO dummy !
+
+s (VectorTable+0x130) # DMA2_Stream4_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream4_IRQHandler
+
+#omitted : ETH, CAN,
+
+s (VectorTable+0x14C) # OTG_FS_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f OTG_FS_IRQHandler
+af+ $$ (0x8093F88-0x8093F70) OTG_FS_IRQHandler
+
+s (VectorTable+0x150) # DMA2_Stream5_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream5_IRQHandler
+
+s (VectorTable+0x154) # DMA2_Stream6_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream6_IRQHandler
+
+s (VectorTable+0x158) # DMA2_Stream7_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+af+ $$ 4 DMA2_Stream7_IRQHandler
+
+
+s (VectorTable+0x15C) # USART6_IRQHandler.. not used by Tytera, abused for backlight-PWM by DL4YHF
+s `pxw 4~[1]`
+s- 1
+#f USART6_IRQHandler
+af+ $$ 4 USART6_IRQHandler
+
+s (VectorTable+0x160) # I2C3_EV_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f I2C3_EV_IRQHandler
+af+ $$ 4 I2C3_EV_IRQHandler
+
+s (VectorTable+0x164) # I2C3_ER_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f I2C3_ER_IRQHandler
+af+ $$ 4 I2C3_ER_IRQHandler
+
+s (VectorTable+0x168) # OTG_HS_EP1_OUT_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f OTG_HS_EP1_OUT_IRQHandler
+af+ $$ 4 OTG_HS_EP1_OUT_IRQHandler
+
+s (VectorTable+0x16C) # OTG_HS_EP1_IN_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f OTG_HS_EP1_IN_IRQHandler
+af+ $$ 4 OTG_HS_EP1_IN_IRQHandler
+
+s (VectorTable+0x170) # OTG_HS_WKUP_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f OTG_HS_WKUP_IRQHandler
+af+ $$ 4 OTG_HS_WKUP_IRQHandler
+
+s (VectorTable+0x174) # OTG_HS_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f OTG_HS_IRQHandler
+af+ $$ 4 OTG_HS_IRQHandler
+
+s (VectorTable+0x178) # DCMI_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f DCMI_IRQHandler
+af+ $$ 4 DCMI_IRQHandler
+
+s (VectorTable+0x17C) # CRYP_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f CRYP_IRQHandler
+af+ $$ 4 CRYP_IRQHandler
+
+s (VectorTable+0x180) # HASH_RNG_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f HASH_RNG_IRQHandler
+af+ $$ 4 HASH_RNG_IRQHandler
+
+s (VectorTable+0x184) # FPU_IRQHandler..
+s `pxw 4~[1]`
+s- 1
+#f FPU_IRQHandler
+af+ $$ 4 FPU_IRQHandler
+# Phew. And those weren't even ALL interrupts yet !
+
+
 
 f menu_entry_back_1 @ 0x800fc85
 

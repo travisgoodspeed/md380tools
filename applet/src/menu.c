@@ -24,8 +24,8 @@
 #include "util.h"
 #include "printf.h"
 #include "keyb.h"
-
-#include "config.h"  // need to know CONFIG_DIMMED_LIGHT (defined in config.h since 2017-01-03)
+#include "codeplug.h"
+#include "narrator.h" // optional: reads out channel, zone, menu in Morse code.
 
 const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
@@ -42,7 +42,7 @@ const static wchar_t wt_demoscr_enable[]    = L"Enable";
 const static wchar_t wt_demoscr_disable[]   = L"Disable";
 const static wchar_t wt_splash[]            = L"Splash Mode";
 
-const static wchar_t wt_showcall[]          = L"Show Calls";		// was UsersCSV / enable / disable now added Talker Alias
+const static wchar_t wt_showcall[]          = L"Show Calls";      // was UsersCSV / enable / disable now added Talker Alias
 const static wchar_t wt_fromcps[]            = L"CPS only";
 const static wchar_t wt_usercsv[]           = L"User DB";
 const static wchar_t wt_talkalias[]         = L"Talk Alias";
@@ -54,15 +54,15 @@ const static wchar_t wt_datef_italy[]       = L"DD/MM/YYYY";
 const static wchar_t wt_datef_american[]    = L"MM/DD/YYYY";
 const static wchar_t wt_datef_iso[]         = L"YYYY-MM-DD";
 const static wchar_t wt_datef_alt[]         = L"Lastheard ";
-const static wchar_t wt_datef_talias[]      = L"Talker Alias";		// added Talker Alias 
+const static wchar_t wt_datef_talias[]      = L"Talker Alias";    // added Talker Alias 
 
 const static wchar_t wt_promtg[]            = L"Promiscuous";
 const static wchar_t wt_edit[]              = L"Edit";
 const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
+const static wchar_t wt_set_tg_id[]         = L"Set Talkgroup"; // brad's PR #708 
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
-
 
 const static wchar_t wt_backlight[]         = L"Backlight Tmr";
 const static wchar_t wt_blunchanged[]       = L"Unchanged";
@@ -72,10 +72,15 @@ const static wchar_t wt_bl60[]              = L"60 sec";
 
 
 const static wchar_t wt_backlight_menu[]   = L"Backlight";
-#ifndef  CONFIG_DIMMED_LIGHT    // want 'dimmed backlight', two adjustable intensities ?
-# define CONFIG_DIMMED_LIGHT 0  // guess not (unless defined AS ONE in config.h)
+
+#ifndef  CONFIG_DIMMED_LIGHT   // Dimmed backlight ?
+# define CONFIG_DIMMED_LIGHT 0 // only if defined > 0 in config.h
 #endif
-#if( CONFIG_DIMMED_LIGHT ) // support pulse-width modulated backlight ?
+#ifndef  CONFIG_MORSE_OUTPUT   // Morse output for visually impaired hams ?
+# define CONFIG_MORSE_OUTPUT 0 // only if defined > 0 in config.h
+#endif
+
+#if( CONFIG_DIMMED_LIGHT )
 const static wchar_t wt_bl_intensity_lo[]   = L"Level Low";
 const static wchar_t wt_bl_intensity_hi[]   = L"Level High";
 #define NUM_BACKLIGHT_INTENSITIES 10 /* number of intensity steps (0..9) for the menu */
@@ -124,9 +129,20 @@ const static wchar_t wt_button_man_dial[]   = L"Manual Dial";
 const static wchar_t wt_button_lone_work[]  = L"Lone wk On/Off";
 const static wchar_t wt_button_1750_hz[]    = L"1750hz Tone";
 const static wchar_t wt_button_bklt_en[]    = L"Toggle bklight";
+const static wchar_t wt_button_set_tg[]     = L"Set Talkgroup";
+#if( CONFIG_MORSE_OUTPUT )
+const static wchar_t wt_button_narrator[]   = L"Morse Narrator";
+const static wchar_t wt_button_cw_repeat[]  = L"Morse Repeat";
+#endif
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
-                   	   	   	   	   	   	       0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
-											   0x1f, 0x26, 0x50};
+                                               0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
+                                               0x1f, 0x26, 0x50, 0x51
+#                                            if( CONFIG_MORSE_OUTPUT )
+                                              ,0x52 // starts the 'Morse narrator' via programmable button
+                                              ,0x53 // repeats the last 'Morse announcement'  "  "  "
+#                                            endif
+                                              };
+
 uint8_t button_selected = 0;
 uint8_t button_function = 0;
 
@@ -258,8 +274,8 @@ uint8_t index_of(uint8_t value, uint8_t arr[], uint8_t len)
     uint8_t i = 0;
     while(i < len)
     {
-    	if (arr[i] == value) return i;
-    	i++;
+      if (arr[i] == value) return i;
+      i++;
     }
 
     return 0;
@@ -766,7 +782,7 @@ void create_menu_entry_datef_screen(void)
 
 
 //==========================================================================================================//
-// main menu: showcall - select callsign display method
+// main(?) menu: showcall - select callsign display method
 //==========================================================================================================//
 
 void create_menu_entry_showcall_screen(void)
@@ -896,16 +912,7 @@ void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, b
 {
     mn_submenu_init(wt_backlight);
 
-    if ( md380_radio_config.backlight_time == 12 ) {
-        md380_menu_entry_selected = 2;
-    } else if ( md380_radio_config.backlight_time == 6 ) {
-        md380_menu_entry_selected = 1;
-    } else {
-        md380_menu_entry_selected = 0;
-    }
-    
-
-    switch( md380_radio_config.backlight_time ) // inspired by fix stargo0's fix #674 
+    switch( md380_radio_config.backlight_time ) // inspired by stargo0's fix #674 
      { // (fixes the selection of the current backlight-time in the menu)
        case 1 /* times 5sec */ : md380_menu_entry_selected = 1; break;
        case 6 /* times 5sec */ : md380_menu_entry_selected = 2; break;
@@ -945,8 +952,12 @@ void mn_backlight_intens( int intensity ) // common 'menu handler' for all <NUM_
         global_addl_config.backlight_intensities |= ((uint8_t)intensity << 4);
         break;
    }
-  // the upper 4 bits must never be ZERO, to avoid 'complete darkness' of the display when ACTIVE :
-  global_addl_config.backlight_intensities |= 0x10; 
+  // The upper 4 bits must never be ZERO, to avoid 'complete darkness' of the display when ACTIVE .
+  // Because in some radios, the PWM caused audible hum, use max brightness per default:
+  // 2017-04-17 : Put this important note back in. Please don't remove this !
+  if( !(global_addl_config.backlight_intensities & 0xF0) )
+   {    global_addl_config.backlight_intensities |= 0xF0;
+   }
   cfg_save();
   
 } // end mn_backlight_intens()
@@ -964,7 +975,7 @@ void mn_backlight_intens_7(void) {  mn_backlight_intens(7); }
 void mn_backlight_intens_8(void) {  mn_backlight_intens(8); }
 void mn_backlight_intens_9(void) {  mn_backlight_intens(9); }
 
-tMenuFunctionPtr nm_backlight_intensity_funcs[ NUM_BACKLIGHT_INTENSITIES ] =
+tMenuFunctionPtr mn_backlight_intensity_funcs[ NUM_BACKLIGHT_INTENSITIES ] =
  { mn_backlight_intens_0, mn_backlight_intens_1, mn_backlight_intens_2, mn_backlight_intens_3, mn_backlight_intens_4,
    mn_backlight_intens_5, mn_backlight_intens_6, mn_backlight_intens_7, mn_backlight_intens_8, mn_backlight_intens_9 
  };
@@ -980,7 +991,7 @@ void mn_backlight_lo(void)  // configure LOW backlight intensity (used when "idl
   md380_menu_entry_selected = i;       // <- always a zero-based item index
   mn_submenu_init(wt_bl_intensity_lo);
   for(i=0; i<NUM_BACKLIGHT_INTENSITIES; ++i)
-   { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
+   { mn_submenu_add(wt_bl_intensity[i], mn_backlight_intensity_funcs[i] );
    }
   mn_submenu_finalize();
 }
@@ -1000,7 +1011,7 @@ void mn_backlight_hi(void)  // configure HIGH backlight intensity (used when "ac
   md380_menu_entry_selected = i;       // <- always a zero-based item index
   mn_submenu_init(wt_bl_intensity_hi);
   for(i=1/*!!*/; i<NUM_BACKLIGHT_INTENSITIES; ++i)
-   { mn_submenu_add(wt_bl_intensity[i], nm_backlight_intensity_funcs[i] );
+   { mn_submenu_add(wt_bl_intensity[i], mn_backlight_intensity_funcs[i] );
    }
   mn_submenu_finalize();
 }
@@ -1010,30 +1021,30 @@ void mn_backlight_hi(void)  // configure HIGH backlight intensity (used when "ac
 #if defined(FW_D13_020) || defined(FW_S13_020)
 void set_sidebutton_function(const wchar_t *label)
 {
-	button_function = button_functions[currently_selected_menu_entry];
+   button_function = button_functions[currently_selected_menu_entry];
 
-	switch ( button_selected ) {
-		case 0:
-			top_side_button_pressed_function = button_function;
-			md380_spiflash_write(&button_function, 0x2102, 1);
-			mn_create_single_timed_ack(wt_button_top_press,label);
-			break;
-		case 1:
-			bottom_side_button_pressed_function = button_function;
-			md380_spiflash_write(&button_function, 0x2104, 1);
-			mn_create_single_timed_ack(wt_button_bot_press,label);
-			break;
-		case 2:
-			top_side_button_held_function = button_function;
-			md380_spiflash_write(&button_function, 0x2103, 1);
-			mn_create_single_timed_ack(wt_button_top_held,label);
-			break;
-		case 3:
-			bottom_side_button_held_function = button_function;
-			md380_spiflash_write(&button_function, 0x2105, 1);
-			mn_create_single_timed_ack(wt_button_bot_held,label);
-			break;
-	}
+   switch ( button_selected ) {
+      case 0:
+         top_side_button_pressed_function = button_function;
+         md380_spiflash_write(&button_function, 0x2102, 1);
+         mn_create_single_timed_ack(wt_button_top_press,label);
+         break;
+      case 1:
+         bottom_side_button_pressed_function = button_function;
+         md380_spiflash_write(&button_function, 0x2104, 1);
+         mn_create_single_timed_ack(wt_button_bot_press,label);
+         break;
+      case 2:
+         top_side_button_held_function = button_function;
+         md380_spiflash_write(&button_function, 0x2103, 1);
+         mn_create_single_timed_ack(wt_button_top_held,label);
+         break;
+      case 3:
+         bottom_side_button_held_function = button_function;
+         md380_spiflash_write(&button_function, 0x2105, 1);
+         mn_create_single_timed_ack(wt_button_bot_held,label);
+         break;
+   }
 }
 
 void nm_button_unassigned() { set_sidebutton_function(wt_button_unassigned); }
@@ -1061,58 +1072,69 @@ void nm_button_man_dial() { set_sidebutton_function(wt_button_man_dial); }
 void nm_button_lone_work() { set_sidebutton_function(wt_button_lone_work); }
 void nm_button_1750_hz() { set_sidebutton_function(wt_button_1750_hz); }
 void nm_button_bklt_en() { set_sidebutton_function(wt_button_bklt_en); }
+void nm_button_set_tg()  { set_sidebutton_function(wt_button_set_tg);  }
+#if( CONFIG_MORSE_OUTPUT )
+ void nm_button_narrator() { set_sidebutton_function(wt_button_narrator); }
+ void nm_button_cw_repeat(){ set_sidebutton_function(wt_button_cw_repeat); }
+#endif
 
 void select_sidebutton_function_screen(void)
 {
-	button_selected = currently_selected_menu_entry;
+   button_selected = currently_selected_menu_entry;
 
-	switch ( button_selected ) {
-		case 0:
-			md380_menu_entry_selected = index_of(top_side_button_pressed_function, button_functions,  sizeof(button_functions));
-			mn_submenu_init(wt_button_top_press);
-			break;
-		case 1:
-			md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, button_functions, sizeof(button_functions));
-			mn_submenu_init(wt_button_bot_press);
-			break;
-		case 2:
-			md380_menu_entry_selected = index_of(top_side_button_held_function, button_functions, sizeof(button_functions));
-			mn_submenu_init(wt_button_top_held);
-			break;
-		case 3:
-			md380_menu_entry_selected = index_of(bottom_side_button_held_function, button_functions, sizeof(button_functions));
-			mn_submenu_init(wt_button_bot_held);
-			break;
-	}
+   switch ( button_selected ) {
+      case 0:
+         md380_menu_entry_selected = index_of(top_side_button_pressed_function, (uint8_t*)button_functions,  sizeof(button_functions));
+         // cast to (uint8_t*) to eliminate several 'const' warnings
+         mn_submenu_init(wt_button_top_press);
+         break;
+      case 1:
+         md380_menu_entry_selected = index_of(bottom_side_button_pressed_function, (uint8_t*)button_functions, sizeof(button_functions));
+         mn_submenu_init(wt_button_bot_press);
+         break;
+      case 2:
+         md380_menu_entry_selected = index_of(top_side_button_held_function, (uint8_t*)button_functions, sizeof(button_functions));
+         mn_submenu_init(wt_button_top_held);
+         break;
+      case 3:
+         md380_menu_entry_selected = index_of(bottom_side_button_held_function, (uint8_t*)button_functions, sizeof(button_functions));
+         mn_submenu_init(wt_button_bot_held);
+         break;
+   }
 
 
-	mn_submenu_add(wt_button_unassigned, nm_button_unassigned);
-	mn_submenu_add(wt_button_alert_tone, nm_button_alert_tone);
-	mn_submenu_add(wt_button_emerg_on, nm_button_emerg_on);
-	mn_submenu_add(wt_button_emerg_off, nm_button_emerg_off);
-	mn_submenu_add(wt_button_power, nm_button_power);
-	mn_submenu_add(wt_button_monitor, nm_button_monitor);
-	mn_submenu_add(wt_button_nuisance, nm_button_nuisance);
-	mn_submenu_add(wt_button_ot1, nm_button_ot1);
-	mn_submenu_add(wt_button_ot2, nm_button_ot2);
-	mn_submenu_add(wt_button_ot3, nm_button_ot3);
-	mn_submenu_add(wt_button_ot4, nm_button_ot4);
-	mn_submenu_add(wt_button_ot5, nm_button_ot5);
-	mn_submenu_add(wt_button_ot6, nm_button_ot6);
-	mn_submenu_add(wt_button_rep_talk, nm_button_rep_talk);
-	mn_submenu_add(wt_button_scan, nm_button_scan);
-	mn_submenu_add(wt_button_squelch, nm_button_squelch);
-	mn_submenu_add(wt_button_privacy, nm_button_privacy);
-	mn_submenu_add(wt_button_vox, nm_button_vox);
-	mn_submenu_add(wt_button_zone, nm_button_zone);
-	mn_submenu_add(wt_button_zone_tog, nm_button_zone_tog);
-	mn_submenu_add(wt_button_bat_ind, nm_button_bat_ind);
-	mn_submenu_add(wt_button_man_dial, nm_button_man_dial);
-	mn_submenu_add(wt_button_lone_work, nm_button_lone_work);
-	mn_submenu_add(wt_button_1750_hz, nm_button_1750_hz);
-	mn_submenu_add(wt_button_bklt_en, nm_button_bklt_en);
+   mn_submenu_add(wt_button_unassigned, nm_button_unassigned);
+   mn_submenu_add(wt_button_alert_tone, nm_button_alert_tone);
+   mn_submenu_add(wt_button_emerg_on, nm_button_emerg_on);
+   mn_submenu_add(wt_button_emerg_off, nm_button_emerg_off);
+   mn_submenu_add(wt_button_power, nm_button_power);
+   mn_submenu_add(wt_button_monitor, nm_button_monitor);
+   mn_submenu_add(wt_button_nuisance, nm_button_nuisance);
+   mn_submenu_add(wt_button_ot1, nm_button_ot1);
+   mn_submenu_add(wt_button_ot2, nm_button_ot2);
+   mn_submenu_add(wt_button_ot3, nm_button_ot3);
+   mn_submenu_add(wt_button_ot4, nm_button_ot4);
+   mn_submenu_add(wt_button_ot5, nm_button_ot5);
+   mn_submenu_add(wt_button_ot6, nm_button_ot6);
+   mn_submenu_add(wt_button_rep_talk, nm_button_rep_talk);
+   mn_submenu_add(wt_button_scan, nm_button_scan);
+   mn_submenu_add(wt_button_squelch, nm_button_squelch);
+   mn_submenu_add(wt_button_privacy, nm_button_privacy);
+   mn_submenu_add(wt_button_vox, nm_button_vox);
+   mn_submenu_add(wt_button_zone, nm_button_zone);
+   mn_submenu_add(wt_button_zone_tog, nm_button_zone_tog);
+   mn_submenu_add(wt_button_bat_ind, nm_button_bat_ind);
+   mn_submenu_add(wt_button_man_dial, nm_button_man_dial);
+   mn_submenu_add(wt_button_lone_work, nm_button_lone_work);
+   mn_submenu_add(wt_button_1750_hz, nm_button_1750_hz);
+   mn_submenu_add(wt_button_bklt_en, nm_button_bklt_en);
+   mn_submenu_add(wt_button_set_tg,  nm_button_set_tg );
+# if( CONFIG_MORSE_OUTPUT )
+   mn_submenu_add(wt_button_narrator,nm_button_narrator);
+   mn_submenu_add(wt_button_cw_repeat,nm_button_cw_repeat);
+# endif
 
-	mn_submenu_finalize();
+   mn_submenu_finalize();
 }
 #else
 #warning Side Buttons not supported on D02 firmware
@@ -1122,7 +1144,7 @@ void create_menu_entry_sidebutton_screen(void)
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
 
-	md380_menu_entry_selected = 0;
+   md380_menu_entry_selected = 0;
     mn_submenu_init(wt_sidebutton_menu);
 
     mn_submenu_add_98(wt_button_top_press, select_sidebutton_function_screen);
@@ -1138,8 +1160,8 @@ void create_menu_entry_sidebutton_screen(void)
 void create_menu_entry_backlight_screen(void)
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
-	md380_menu_entry_selected = 0;
-	mn_submenu_init(wt_backlight_menu);
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_backlight_menu);
 
 
 #  if( CONFIG_DIMMED_LIGHT )    // *optional* feature since 2017-01-08 - see config.h
@@ -1151,11 +1173,271 @@ void create_menu_entry_backlight_screen(void)
 #endif
 }
 
+#if( CONFIG_MORSE_OUTPUT )  // *optional* feature since 2017 - see config.h
+//-------------------------------------------------------------
+// CW output for visually impaired hams ?
+// Morse code generator in irq_handlers.c, 'narrator' in narrator.c .
+// Configuration are 4 bytes in md380_radio_config, NOT in the codeplug.
+const static wchar_t wt_morse_menu[] = L"Morse output";
+const static wchar_t wt_morse_mode[] = L"Mode";   // ex: "Mode/verbosity" (too verbose :)
+const static wchar_t wt_off[]      = L"off";
+const static wchar_t wt_short[]    = L"short";
+const static wchar_t wt_verbose[]  = L"verbose";
+const static wchar_t wt_test[]     = L"test/DevOnly";
+const static wchar_t wt_cw_speed[] = L"Speed [WPM]";
+const static wchar_t wt_15[]       = L"15";
+const static wchar_t wt_18[]       = L"18";
+const static wchar_t wt_22[]       = L"22";
+const static wchar_t wt_30[]       = L"30";
+const static wchar_t wt_35[]       = L"35";
+const static wchar_t wt_40[]       = L"40";
+const static wchar_t wt_cw_pitch[] = L"CW pitch [Hz]";
+const static wchar_t wt_400[]      = L"400";
+const static wchar_t wt_650[]      = L"650";
+const static wchar_t wt_800[]      = L"800";
+const static wchar_t wt_cw_volume[]= L"CW volume";
+const static wchar_t wt_low[]      = L"low";
+const static wchar_t wt_medium[]   = L"medium";
+const static wchar_t wt_high[]     = L"high";
+const static wchar_t wt_auto[]     = L"auto";
+
+void mn_morse_mode_off(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_off);
+   // ex: global_addl_config.narrator_mode = NARRATOR_MODE_OFF; 
+   // Since Mr Narrator can be started via prog'able sidekey,
+   // leave the 'verbosity' flag unchanged, clear TEST mode,
+   // disable the AUTOMATIC start of the narrator (e.g. channel knob),
+   // so the *requested* announcement can be short or verbose.
+   global_addl_config.narrator_mode &= ~(NARRATOR_MODE_ENABLED|NARRATOR_MODE_TEST);
+   cfg_save();
+}
+
+void mn_morse_mode_short(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_short);
+   global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED;
+   cfg_save();
+}
+
+void mn_morse_mode_verbose(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_verbose);
+   global_addl_config.narrator_mode = NARRATOR_MODE_ENABLED | NARRATOR_MODE_VERBOSE; 
+   cfg_save();
+}
+
+void mn_morse_mode_test(void)
+{  
+   mn_create_single_timed_ack(wt_morse_mode, wt_test);
+   global_addl_config.narrator_mode |= NARRATOR_MODE_ENABLED | NARRATOR_MODE_TEST;
+   // Don't modify the "VERBOSE"-flag here. To have both 'test' AND 
+   //  'verbose' mode, first select 'verbose',  then select 'test' mode.
+   // Details about the narrator and his configuration in narrator.c .
+   cfg_save();
+}
+
+void mn_morse_mode(void)  // CW output mode : off / short / verbose / test ?
+{
+    if( global_addl_config.narrator_mode & NARRATOR_MODE_TEST )
+     { md380_menu_entry_selected = 3;
+     }
+    else if( (global_addl_config.narrator_mode & (NARRATOR_MODE_VERBOSE|NARRATOR_MODE_ENABLED) )
+                                              == (NARRATOR_MODE_VERBOSE|NARRATOR_MODE_ENABLED) )
+     { md380_menu_entry_selected = 2;
+     }
+    else if( global_addl_config.narrator_mode & NARRATOR_MODE_ENABLED )
+     { md380_menu_entry_selected = 1;
+     }
+    else // neither "TEST", "VERBOSE", "NORMAL", or any combination...
+     { md380_menu_entry_selected = 0; // .. so *automatic* Morse output is OFF
+     }
+    mn_submenu_init(wt_morse_mode);
+    mn_submenu_add(wt_off,    mn_morse_mode_off );      // no morse output at all
+    mn_submenu_add(wt_short,  mn_morse_mode_short );    // channel NUMBERS, short output
+    mn_submenu_add(wt_verbose,mn_morse_mode_verbose );  // channel NAMES, longer output
+    mn_submenu_add(wt_test,   mn_morse_mode_test );     // signal any state transition in CW
+    mn_submenu_finalize();
+}
+
+void mn_cw_pitch_400(void)
+{  
+   mn_create_single_timed_ack(wt_cw_pitch, wt_400);
+   global_addl_config.cw_pitch_10Hz = 40; // 400 Hz
+   cfg_save();
+}
+
+void mn_cw_pitch_650(void)
+{  
+   mn_create_single_timed_ack(wt_cw_pitch, wt_650);
+   global_addl_config.cw_pitch_10Hz = 65; // 650 Hz
+   cfg_save();
+}
+
+void mn_cw_pitch_800(void)
+{  
+   mn_create_single_timed_ack(wt_cw_pitch, wt_800);
+   global_addl_config.cw_pitch_10Hz = 80; // 800 Hz
+   cfg_save();
+}
+
+void mn_cw_pitch(void)  // CW pitch : stored in 10-Hz unit in global_addl_config
+{  // A DECIMAL input field would be too clumsy with this dreadful API,
+   // so for the moment, only offer a few 'tone frequencies' here.
+   // A wider choice of values (entered directly, without this clumsiness)
+   // is possible through DL4YHF's "alternative" menu - see app_menu.c .
+   // The PWM'ed rectangular wave is rich in harmonics,
+   // thus even 400 Hz is well audible in the speaker.
+   // Note: To fit in a byte, the unit for storage is 10 Hz.
+    if( global_addl_config.cw_pitch_10Hz < 50 ) 
+     { md380_menu_entry_selected = 0; // 400 Hz
+     }
+    else if( global_addl_config.cw_pitch_10Hz < 70 ) 
+     { md380_menu_entry_selected = 1; // 650 Hz
+     }
+    else
+     { md380_menu_entry_selected = 2; // 800 Hz
+     }
+    mn_submenu_init(wt_cw_pitch);
+    mn_submenu_add(wt_400, mn_cw_pitch_400 );
+    mn_submenu_add(wt_650, mn_cw_pitch_650 );
+    mn_submenu_add(wt_800, mn_cw_pitch_800 );
+    mn_submenu_finalize();
+}
+
+void mn_cw_volume_low(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_low);
+   global_addl_config.cw_volume = 5; // unit: "percent of maximum"
+   cfg_save();
+}
+
+void mn_cw_volume_medium(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_medium);
+   global_addl_config.cw_volume = 10; 
+   cfg_save();
+}
+
+void mn_cw_volume_high(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_high);
+   global_addl_config.cw_volume = 20; // %, NOT affected by the pot !
+   cfg_save();
+}
+
+void mn_cw_volume_auto(void)
+{  
+   mn_create_single_timed_ack(wt_cw_volume, wt_auto);
+   global_addl_config.cw_volume = BEEP_VOLUME_AUTO; // "try to follow the audio volume pot"
+   cfg_save();
+}
+
+void mn_cw_volume(void) 
+{  // Also here, a simple DECIMAL input field would be nice to have...
+   // since 2017-04, that's possible through applet/src/app_menu.c .
+    if( global_addl_config.cw_volume <= 5 ) 
+     { md380_menu_entry_selected = 0; // "low" (on a very unscientific scale)
+     }
+    else if( global_addl_config.cw_volume < 20 ) 
+     { md380_menu_entry_selected = 1; // "medium"
+     }
+    else if( global_addl_config.cw_volume == BEEP_VOLUME_AUTO ) 
+     { md380_menu_entry_selected = 3; // "auto[matic]"
+     }
+    else
+     { md380_menu_entry_selected = 2; // "high"
+     }
+    mn_submenu_init(wt_cw_volume);
+    mn_submenu_add(wt_low,    mn_cw_volume_low    );
+    mn_submenu_add(wt_medium, mn_cw_volume_medium );
+    mn_submenu_add(wt_high,   mn_cw_volume_high   );
+    mn_submenu_add(wt_auto,   mn_cw_volume_auto   );
+    mn_submenu_finalize();
+}
+
+void mn_cw_speed_15WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_15 );
+   global_addl_config.cw_speed_WPM = 15;
+   cfg_save();
+}
+
+void mn_cw_speed_18WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_18 );
+   global_addl_config.cw_speed_WPM = 18;
+   cfg_save();
+}
+
+void mn_cw_speed_22WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_22 );
+   global_addl_config.cw_speed_WPM = 22;
+   cfg_save();
+}
+
+void mn_cw_speed_30WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_30 );
+   global_addl_config.cw_speed_WPM = 30;
+   cfg_save();
+}
+
+void mn_cw_speed_35WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_35 );
+   global_addl_config.cw_speed_WPM = 35;
+   cfg_save();
+}
+
+void mn_cw_speed_40WPM(void)
+{  
+   mn_create_single_timed_ack(wt_cw_speed, wt_40 );
+   global_addl_config.cw_speed_WPM = 40;
+   cfg_save();
+}
+
+void mn_cw_speed(void) 
+{
+   // An easier method, without this nested "submenu-madness" is possible
+   // via applet/src/app_menu.c (direct decimal input of the value in WPM).
+   switch( global_addl_config.cw_speed_WPM )
+    { case 15: md380_menu_entry_selected = 0; break; // for beginners
+      case 18: md380_menu_entry_selected = 1; break;
+      case 22: md380_menu_entry_selected = 2; break; // for advanced
+      case 30: md380_menu_entry_selected = 3; break;
+      case 35: md380_menu_entry_selected = 4; break; // for freaks
+      case 40: md380_menu_entry_selected = 5; break; // for complete nuts 
+      default: md380_menu_entry_selected = 2; break; // meaningful default ?
+      // wrong md380_menu_entry_selected makes the menu crash !
+    }
+   mn_submenu_init(wt_cw_speed);
+   mn_submenu_add(wt_15, mn_cw_speed_15WPM );
+   mn_submenu_add(wt_18, mn_cw_speed_18WPM );
+   mn_submenu_add(wt_22, mn_cw_speed_22WPM );
+   mn_submenu_add(wt_30, mn_cw_speed_30WPM );
+   mn_submenu_add(wt_35, mn_cw_speed_35WPM );
+   mn_submenu_add(wt_40, mn_cw_speed_40WPM );
+   mn_submenu_finalize();
+}
+
+void create_menu_entry_morse_screen(void)
+{
+    md380_menu_entry_selected = 0;
+    mn_submenu_init(wt_morse_menu);
+    mn_submenu_add_98(wt_morse_mode,mn_morse_mode); // disable, short, verbose output ?
+    mn_submenu_add_98(wt_cw_speed,  mn_cw_speed  ); // morse output speed in WPM
+    mn_submenu_add_98(wt_cw_pitch,  mn_cw_pitch  ); // audio frequency in Hertz
+    mn_submenu_add_98(wt_cw_volume, mn_cw_volume ); // speaker output volume (pot has no effect)
+    mn_submenu_finalize2();
+}
+#endif // CONFIG_MORSE_OUTPUT ?
 
 
 void mn_config_reset2()
 {
-    mn_create_single_timed_ack(wt_backlight,wt_config_reset_doit);
+    mn_create_single_timed_ack(wt_config_reset,wt_config_reset_doit);
 
     memset( &global_addl_config, 0, sizeof(global_addl_config) );
     
@@ -1298,7 +1580,7 @@ void create_menu_entry_edit_dmr_id_screen(void)
 
 
 
-    // clear retrun buffer //  see 0x08012a98
+    // clear return buffer //  see 0x08012a98
     // TODO: is wchar_t (16 bits))
     for (i = 0; i < 0x11; i++) {
         p = (uint8_t *) mn_editbuffer_poi;
@@ -1332,17 +1614,115 @@ void create_menu_entry_edit_dmr_id_screen(void)
 #endif
 }
 
+void create_menu_entry_set_tg_screen_store(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    uint32_t new_tx_id = 0;
+    wchar_t *bf;
+
+# if 0
+    printf("your enter: ");
+    printhex2((char *) md380_menu_edit_buf, 14);
+    printf("\n");
+# endif
+
+    bf = md380_menu_edit_buf;
+    while (*bf != 0) {
+        new_tx_id *= 10;
+        new_tx_id += (*bf++) - '0';
+    }
+
+    if ( new_tx_id > 0xffffff ) {
+        return;
+    }
+
+# if 0
+    printf("\n%d\n", new_tx_id);
+# endif
+
+    contact.id_l = new_tx_id & 0xFF ;
+    contact.id_m = (new_tx_id>>8) & 0xFF ;
+    contact.id_h = (new_tx_id>>16) & 0xFF ;
+    contact.type = CONTACT_GROUP ;
+
+    wchar_t *p = (void*)contact.name; // write entered tg to the contact name 
+                             // so that it is dislayed on the monitor1 screen
+    snprintfw( p, 16, "TG %d*", new_tx_id ); // (#708)
+
+    extern void draw_zone_channel(); // TODO.
+    draw_zone_channel();
+
+    md380_menu_id = md380_menu_id - 1; // exit menu to the proper level (#708) 
+    md380_menu_depth = md380_menu_depth - 1;
+
+# ifdef CONFIG_MENU
+    md380_create_menu_entry(md380_menu_id, md380_menu_edit_buf, MKTHUMB(md380_menu_entry_back), MKTHUMB(md380_menu_entry_back), 6, 1, 1);
+# endif
+#endif // D13_020, S13_020, ..(?)
+}
+
+void create_menu_entry_set_tg_screen(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+   menu_t *menu_mem;
+   uint8_t i;
+   uint8_t *p;
+   uint32_t nchars;
+   int current_tg = 0;
+
+   md380_menu_0x2001d3c1 = md380_menu_0x200011e4;
+   mn_editbuffer_poi = md380_menu_edit_buf;
+
+   // clear return buffer //  see 0x08012a98
+   // TODO: is wchar_t (16 bits))
+   for (i = 0; i < 0x11; i++) {
+      p = (uint8_t *) mn_editbuffer_poi;
+      p = p + i;
+      *p = 0;
+   }
+
+   // load current tg into edit buffer (#708) :
+   current_tg = (int) contact.id_h ;
+   current_tg = (current_tg<<8) + (int) contact.id_m;
+   current_tg = (current_tg<<8) + (int) contact.id_l;
+
+   nchars = uli2w(current_tg, md380_menu_edit_buf);
+#  if 0
+    printf("\ncreate_menu_entry_set_tg_screen %x %d \n", md380_menu_edit_buf, nchars);
+    printhex2((char *) md380_menu_edit_buf, 14);
+    printf("\n");
+#  endif
+
+    md380_menu_0x2001d3ed = 8; // max char
+    md380_menu_0x2001d3ee = nchars; //  startpos cursor
+    md380_menu_0x2001d3ef = nchars; //  startpos cursor
+    md380_menu_0x2001d3f0 = 3; // 3 = numerical input
+    md380_menu_0x2001d3f1 = 0;
+    md380_menu_0x2001d3f4 = 0;
+    menu_mem = get_menu_stackpoi();
+    menu_mem->menu_title = wt_set_tg_id;
+    menu_mem->entries = &md380_menu_mem_base[md380_menu_id];
+    menu_mem->numberof_menu_entries = 1;
+    menu_mem->unknown_00 = 0;
+    menu_mem->unknown_01 = 0;
+
+#  ifdef CONFIG_MENU
+    md380_create_menu_entry(md380_menu_id, wt_set_tg_id, MKTHUMB(create_menu_entry_set_tg_screen_store), MKTHUMB(md380_menu_numerical_input), 0x81, 0, 1);
+#  endif
+#endif // D13_020, S13_020, ..(?)
+}
+
 void create_menu_entry_addl_functions_screen(void)
 {
     mn_submenu_init(wt_addl_func);
     
-#if 0
+#  if 0
     register uint32_t * sp asm("sp");
     for (int i = 0; i < 20; i++) {
         printf("%d : 0x%x\n", i, sp[i]);
     }
     //printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
-#endif    
+#  endif    
     PRINTRET();
     PRINT("create_menu_entry_addl_functions_screen\n");
 
@@ -1354,6 +1734,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
     mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
+    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1); // Brad's PR#708 already in use here (DL4YHF, since 2017-03)
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
@@ -1361,7 +1742,9 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_config_reset, mn_config_reset);
 
     mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
-    
+#  if( CONFIG_MORSE_OUTPUT )
+    mn_submenu_add(wt_morse_menu, create_menu_entry_morse_screen);
+#  endif   
     mn_submenu_add_98(wt_cp_override, mn_cp_override);    
     mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
     
@@ -1388,17 +1771,17 @@ void create_menu_utilies_hook(void)
 #ifdef CONFIG_MENU
     md380_create_menu_entry(8, md380_wt_programradio, MKTHUMB(md380_menu_entry_programradio), MKTHUMB(md380_menu_entry_back), 0x8a, 0, enabled);
 
-#ifdef FW_D13_020
+#  ifdef FW_D13_020
     md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
-#else
+#  else
     if( menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
         md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     } else {
         md380_create_menu_entry(9, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     }
-#endif
+#  endif
 
-#endif
+#endif // CONFIG_MENU ?
 
 }
 
@@ -1424,11 +1807,11 @@ void *main_menu_hook(void *menu){
     menustruct=(void*) *((int*)menu + 2);
 
     printf("Menu struct: @0x%08x\n",
-	   menustruct);
+      menustruct);
     printf("Item %5d/%5d selected. %s\n",
-	   (int) *((unsigned short*) (menustruct+0x42)),
-	   (int) *((unsigned short*)menustruct),
-	   "test");
+      (int) *((unsigned short*) (menustruct+0x42)),
+      (int) *((unsigned short*)menustruct),
+      "test");
 
 
     //printhex(*((int*) menu+2),128);

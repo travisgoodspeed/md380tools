@@ -15,6 +15,7 @@
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
+#include "irq_handlers.h"  // boot_flags, BOOT_FLAG_LOADED_CONFIG defined here
 
 addl_config_t global_addl_config;
 
@@ -75,7 +76,7 @@ void cfg_load()
     memcpy(&global_addl_config,&tmp,tmp.length);
     
     // range limit
-    R(global_addl_config.userscsv,3);			// 2017-02-19	0-disable 1-userscsv 2-talkeralias 3-both
+    R(global_addl_config.userscsv,3);   // 2017-02-19   0-disable 1-userscsv 2-talkeralias 3-both
     R(global_addl_config.micbargraph,1);
     R(global_addl_config.debug,1);
     R(global_addl_config.rbeep,1);
@@ -133,11 +134,13 @@ void cfg_set_radio_name()
 
 void init_global_addl_config_hook(void)
 {
-    LOGB("booting\n");
-    
+    LOGB("t=%d: booting\n", (int)IRQ_dwSysTickCounter ); // 362 SysTicks after power-on
+   
     cfg_load();
 
 //#ifdef CONFIG_MENU
     md380_create_main_menu_entry();
 //#endif    
+
+    boot_flags |= BOOT_FLAG_LOADED_CONFIG;
 }

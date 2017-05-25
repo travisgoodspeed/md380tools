@@ -7,6 +7,7 @@
 
 #include "etsi.h"
 #include "debug.h"
+#include <string.h>
 
 struct TAContext taContext;
 struct TAContext talkerAlias;
@@ -56,7 +57,7 @@ inline const char* get_ta_type_str(uint8_t taFormat)
             return "16bit utf";
             break;
         default :
-            return "unkown"; 
+            return "unknown";
             break;
     }
 }

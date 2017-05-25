@@ -1,0 +1,30 @@
+baseURL = "https://md380.org/"
+languageCode = "en-us"
+title = "MD380.org"
+theme = "hugo-theme-docdock"
+
+
+[params]
+editURL = "https://github.com/travisgoodspeed/md380tools/edit/master/md380org/content/"
+noHomeIcon = false # default is false
+noSearch = true # default is false
+showVisitedLinks = false # default is false
+unfoldedMenus = ["Features"] # set menu identifiers which should be displayed unfolded  
+
+
+[output]
+home = [ "HTML", "RSS", "JSON" ]
+
+[[menu.shortcuts]]
+pre = "<h3>More</h3>"
+name = "<i class='fa fa-github'></i> Github repo"
+identifier = "ds"
+url = "https://github.com/travisgoodspeed/md380tools"
+weight = 1
+
+[[menu.shortcuts]]
+name = "DL4YHF's RT3 Page"
+identifier = "dl4yhf"
+url = "http://www.qsl.net/dl4yhf/RT3/index.html"
+weight = 2
+

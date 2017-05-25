@@ -74,6 +74,16 @@ version.h
 /annotations/d13.020/listing.txt
 /annotations/d13.020/listing.htm
 
+# blhooks program
+/hooks/blhook
+
+# leaflet stuff
+/leaflet/leaflet.aux
+/leaflet/leaflet.pdf
+
+# locales stuff
+/locales/localize
+
 # user/repeater lists
 /db/users.csv
 /db/repeaters.csv
@@ -85,3 +95,7 @@ version.h
 
 # firmware downloads
 firmware/dl
+
+# temporary symbols output
+/symbols/symbols_*
+/symbols/symgrate

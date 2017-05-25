@@ -23,6 +23,10 @@
 #include "radiostate.h"
 #include "unclear.h"
 #include "etsi.h"
+#include "app_menu.h"
+#include "syslog.h"        // LOGB()
+#include "irq_handlers.h"  // boot_flags, BOOT_FLAG_DREW_STATUSLINE
+
 
 char eye_paltab[] = {
     0xd7, 0xd8, 0xd6, 0x00, 0x88, 0x8a, 0x85, 0x00, 0xe1, 0xe2, 0xe0, 0x00, 0xff, 0xff, 0xff, 0x00,
@@ -391,6 +395,7 @@ void draw_ta_screen(unsigned int bg_color)
     gfx_set_bg_color(0xff0000);
 }
 
+
 /*
 #include <stdlib.h>
 
@@ -412,6 +417,25 @@ int main(void)
 
 void draw_statusline_hook( uint32_t r0 )
 {
+   if( ! (boot_flags & BOOT_FLAG_DREW_STATUSLINE) )
+    { LOGB("t=%d: draw_stat\n", (int)IRQ_dwSysTickCounter ); // 4383(!) SysTicks after power-on
+    }
+   boot_flags |= BOOT_FLAG_DREW_STATUSLINE; // important for SysTick_Handler to know when we're "open for business" !
+
+# if (CONFIG_APP_MENU)
+    // If the screen is occupied by the optional 'red button menu', 
+    // update or even redraw it completely:
+    if( Menu_DrawIfVisible(AM_CALLER_STATUSLINE_HOOK) )  
+     { return; // the menu covers the entire screen, so don't draw anything else
+     }
+    // NOTE: draw_statusline_hook() isn't called when the squelch
+    //       is 'open' in FM, i.e. when the channel is BUSY .
+    // Of course we don't want to be tyrannized by the radio like that.
+    // It's THE OPERATOR'S decision what to do and when to invoke the menu,
+    // not the radio's. 
+    // Fixed by also calling Menu_DrawIfVisible() from other places .
+# endif // CONFIG_APP_MENU ?
+
     if( is_netmon_visible() ) {
         con_redraw();
         return ;
@@ -421,9 +445,7 @@ void draw_statusline_hook( uint32_t r0 )
 
 void draw_alt_statusline()
 {
-    int dst;
     int src;
-    int grp;
 
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);
@@ -468,6 +490,15 @@ void draw_alt_statusline()
 
 void draw_datetime_row_hook()
 {
+# if (CONFIG_APP_MENU)
+    // If the screen is occupied by the optional 'red button menu', 
+    // update or even redraw it completely:
+    if( Menu_DrawIfVisible(AM_CALLER_DATETIME_HOOK) )  
+     { return; // the menu covers the entire screen, so don't draw anything else
+     }
+# endif
+
+
 #if defined(FW_D13_020) || defined(FW_S13_020)
     if( is_netmon_visible() ) {
         return ;
