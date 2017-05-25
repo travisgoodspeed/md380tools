@@ -19,8 +19,9 @@
 #define CONFIG_DMR
 #define CONFIG_MENU
 #define CONFIG_AES
-#ifndef FW_D02_032  // when trying to compile for 'FW_D02_032', 'backlight_timer' was unknown :(
-# define CONFIG_DIMMED_LIGHT 1 // PWMed 'dimmable backlight' ? 0 or undefined = no, 1 = yes
+#ifndef FW_D02_032  // Not for very old firmware (missing hooks..):
+# define CONFIG_DIMMED_LIGHT 1 // Dimmable backlight ? 0 or undef'd=no, 1=yes
+# define CONFIG_MORSE_OUTPUT 0 // Morse output ? 0 or undef'd=no, 1=yes
 #endif
 
 /* Uncomment this to print AMBE frames for decoding with DSD.  You

@@ -129,9 +129,37 @@ inline uint8_t get_flco( lc_t *lc )
     return lc->pf_flco & 0x3f ;
 }
 
+struct TAHeader
+{
+  uint8_t code;
+  uint8_t feature;
+  uint8_t options;
+  char text[6]; 
+};
+
+struct TABlock
+{
+  uint8_t code;
+  uint8_t feature;
+  char text[7]; 
+};
+
+struct TAContext
+{
+  uint8_t format;
+  uint8_t length;
+  uint8_t blocks;
+  uint8_t marked;
+  uint8_t displayed;
+  uint32_t src;
+  char text[28];
+};
+
+struct TAContext taContext;
+extern struct TAContext talkerAlias;
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* ETSI_H */
-

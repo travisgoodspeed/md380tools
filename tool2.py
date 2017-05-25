@@ -65,13 +65,42 @@ sfr_addresses = { # tiny subset of special function registers in an STM32F4
     0x40026488L: "DMA2_S5CR", # another of the USED streams in D013.020
     0x400264A0L: "DMA2_S6CR",
     0x400264B8L: "DMA2_S7CR",
-    0x40020800L: "GPIOC", # register offsets in RM0090 Rev7 page 284 .  Offset 0x00="MODER", 0x20="AFRL", etc
+    # GPIO register offsets: 0x00="MODER", 0x10="IDR", 0x14="ODR", 0x20="AFRL", etc
     0x40020000L: "GPIOA", # .. with PA8="Save", PA1="Batt", PA0="TX LED", PA3="VOX", PA7="POW_C", ..
+    0x40020004L:  "PA_OTYPE",0x40020008L:"PA_OSPEED", 0x4002000CL:"PA_PUPD",
+    0x40020010L:  "PA_IDR",  0x40020014L:"PA_ODR",    0x40020018L:"PA_BSRR", 
+    0x4002001CL:  "PA_LCKR", 0x40020020L:"PA_AFRL",   0x40020024L:"PC_AFRH",
+    0x40020400L: "GPIOB", # .. with PB8='anti-pop' switch for speaker, PB9=audio PA power switch, ..
+    0x40020404L:  "PB_OTYPE",0x40020408L:"PB_OSPEED", 0x4002040CL:"PB_PUPD",
+    0x40020410L:  "PB_IDR",  0x40020414L:"PB_ODR",    0x40020418L:"PB_BSRR", 
+    0x4002041CL:  "PB_LCKR", 0x40020420L:"PB_AFRL",   0x40020424L:"PB_AFRH",
+    0x40020800L: "GPIOC", # .. with PC8="Beep", offset0 = "MODER", ..
+    0x40020804L:  "PC_OTYPE",0x40020808L:"PC_OSPEED", 0x4002080CL:"PC_PUPD",
+    0x40020810L:  "PC_IDR",  0x40020814L:"PC_ODR",    0x40020818L:"PC_BSRR", 
+    0x4002081CL:  "PC_LCKR", 0x40020820L:"PC_AFRL",   0x40020824L:"PC_AFRH",
+    0x40020C00L: "GPIOD", # .. with PD3="K3" ("Key 3" .. what's that ? )
+    0x40020C04L:  "PD_OTYPE",0x40020C08L:"PD_OSPEED", 0x40020C0CL:"PD_PUPD",
+    0x40020C10L:  "PD_IDR",  0x40020C14L:"PD_ODR",    0x40020C18L:"PD_BSRR", 
+    0x4002081CL:  "PD_LCKR", 0x40020C20L:"PD_AFRL",   0x40020C24L:"PD_AFRH",
+    0x40021000L: "GPIOE", # .. with RX_LED, TX_LED, FSMC, PTT, etc..
+    0x40021004L:  "PE_OTYPE",0x40021008L:"PE_OSPEED", 0x4002100CL:"PE_PUPD",
+    0x40021010L:  "PE_IDR",  0x40021014L:"PE_ODR",    0x40021018L:"PE_BSRR", 
+    0x4002101CL:  "PE_LCKR", 0x40021020L:"PE_AFRL",   0x40021024L:"PE_AFRH",
+
     0x40011400L: "USART6",# abused by DL4YHF to generate PWM(!) on PC6 = USART6_TX. offsets in RM0090 Rev7 page 1002 .
     0x40023800L: "RCC",   # RCC = Reset and Clock Control, RM0090 Rev7 page 363(!) for STM32F405
     0x40023824L: "RCC_APB2RSTR", # APB2 peripheral ReSeT Register. Bit 5 controls USART6. RM0090 Rev7 page 236 .
     0x40023844L: "RCC_APB2ENR",  # APB2 peripheral clock ENable Register. Bit 5 controls USART6. RM0090 Rev7 page 246 .
-    0x40001800L: "TIM12"  # register offsets in RM0090 Rev7 page 667 .
+    0x40001800L: "TIM12", # register offsets in RM0090 Rev13 page 672 .
+    0x40010400L: "TIM8",  # added 2017-02-19 to develop the Morse generator . RM0090 Rev13 page 588 . 
+    0x40010404L:"T8CR2",  0x40010408L:"T8SMCR", 0x4001040CL:"T8DIER", 
+    0x40010410L:"T8SR",   0x40010414L:"T8EGR",  0x40010418L:"T8CCMR1",
+    0x4001041CL:"T8CCMR2",0x40010420L:"T8CCER", 0x40010424L:"T8CNT",
+    0x40010428L:"T8PSC",  0x4001042CL:"T8ARR",  0x40010430L:"T8RCR",
+    0x40010434L:"T8CCR1", 0x40010438L:"T8CCR2", 0x4001043CL:"T8CCR3",
+    0x40010440L:"T8CCR4", 0x40010444L:"T8BDTR", 0x40010448L:"T8DCR",
+    0x4001044CL:"T8DMAR"
+
 }
 
 class UsersDB():
@@ -401,7 +430,7 @@ def coredump(dfu,filename):
 
 def hexdump(dfu,address,length=512):
     """Dumps from memory to the screen"""
-    adr=int(address,16)
+    adr=address
     buf=dfu.peek(adr,length)
     i=0
     cbuf=""
@@ -422,13 +451,14 @@ def hexdump(dfu,address,length=512):
 
 def hexwatch(dfu,address):
     """Dumps from memory to the screen"""
+    adr=ParseHexOrRegName(address)
     while True:
-        hexdump(dfu,address,16)
+        hexdump(dfu,adr,16)
         time.sleep(0.05)
 
 
 def ParseHexOrRegName(address):
-    if address in sfr_addresses.values(): # there must be a more elegant of (ab)using a 'dict' like this:
+    if address in sfr_addresses.values(): # there must be a more elegant way than this..
         return sfr_addresses.keys()[sfr_addresses.values().index(address)]
     else:
         return int(address,16)
@@ -444,13 +474,28 @@ def hexdump32(dfu,address,length=512):
     adr=ParseHexOrRegName(address)
     buf=dfu.peek(adr,length+3)
     i=0
+    know_name=0;
     cbuf=""
+    names=""
     while i<length:
         if i%16==0:
+            if know_name: # if at least one address is a known SFR, show them
+               sys.stdout.write("("+names+")")
             sys.stdout.write("\n%08X: "%(adr+i))
+            know_name=0
+            names=""
         dw = buf[i] | (buf[i+1]<<8) | (buf[i+2]<<16) | (buf[i+3]<<24)
         sys.stdout.write("%08X "%dw)
+        if (adr+i) in sfr_addresses:
+            know_name=1
+            names = names+sfr_addresses[adr+i]
+        else:
+            names = names+"?"
+        if i%16 < 12:
+            names = names+","
         i=i+4
+    if know_name: # if known, show SFR names for the last line
+        sys.stdout.write("("+names+")")
 
 
 def bindump32(dfu,address,length=256):
@@ -794,8 +839,9 @@ def main():
                 coredump(dfu,sys.argv[2]);
             elif sys.argv[1] == 'hexdump':
                 print "Dumping memory from %s." % sys.argv[2];
+                adr=ParseHexOrRegName(sys.argv[2])
                 dfu=init_dfu();
-                hexdump(dfu,sys.argv[2]);
+                hexdump(dfu,adr);
             elif sys.argv[1] == 'hexdump32':
                 dfu=init_dfu();
                 hexdump32(dfu,sys.argv[2]);
@@ -807,7 +853,7 @@ def main():
                 dfu=init_dfu()
                 ramdump(dfu,sys.argv[2],sys.argv[3])
             elif sys.argv[1] == 'hexwatch':
-                print "Dumping memory from %s." % sys.argv[2]
+                print "Watching memory at %s." % sys.argv[2]
                 dfu=init_dfu()
                 hexwatch(dfu,sys.argv[2])
             elif sys.argv[1] == 'lookup':

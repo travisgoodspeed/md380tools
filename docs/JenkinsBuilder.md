@@ -10,7 +10,7 @@ FAQ:
 Prepare
 ====
 
-Have a Jenkins installation somewhere (what, no details -> no just google that, learn how jenkins works)! Not being mean, but Jenkins is too much to discuss, althouh configuration of the job will be explained!
+Have a Jenkins installation somewhere (what, no details -> no just google that, learn how Jenkins works)! Not being mean, but Jenkins is too much to discuss, although configuration of the job will be explained!
 
 Ensure Jenkins :
  - has a private SSH key present. Copy it's public key somewhere you can grab it for the 'install' part.
@@ -76,7 +76,7 @@ make clean && make
 cd db ; make clean && make all
 ```
 
-Builder 2 (and yes is it ugly but working
+Builder 2 (and yes is it ugly but working)
 ```
 export SHORT_GIT_COMMIT=`echo ${GIT_COMMIT} | cut -c 1-7`
 export FILE=experiment-${SHORT_GIT_COMMIT}-${BUILD_NUMBER}-`date +%Y%m%d%H%M%S`.bin

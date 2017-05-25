@@ -22,6 +22,11 @@
 
 #include <stdint.h>
 
+uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
+// Other keyboard-related variables belong to the original firmware,
+// e.g. kb_keypressed, address defined in symbols_d13.020 (etc).
+
+
 // Values for kp
 // 1 = pressed
 // 2 = release within timeout
@@ -111,8 +116,16 @@ void handle_hotkey( int keycode )
     reset_backlight();
     
     switch( keycode ) {
+        case 0 :
+	    clog_redraw();
+            switch_to_screen(6);
+            break ;
         case 1 :
             sms_test();
+            break ;
+        case 2 :
+	    slog_redraw();
+            switch_to_screen(5);
             break ;
         case 3 :
             copy_dst_to_contact();
@@ -124,7 +137,11 @@ void handle_hotkey( int keycode )
         case 5 :
             syslog_clear();
 	    lastheard_clear();
-	    nm_started = 0;// reset nm_start flag used for some display handling
+	    slog_clear();
+	    clog_clear();
+	    nm_started = 0;	// reset nm_start flag used for some display handling
+	    nm_started5 = 0;	// reset nm_start flag used for some display handling
+	    nm_started6 = 0;	// reset nm_start flag used for some display handling
             break ;
         case 6 :
         {
@@ -194,7 +211,11 @@ void evaluate_sidekey ( int button_function)							//This is where new functions
 	switch ( button_function ) {										//We will start at 0x50 to avoid conflicting with any added functions by Tytera.
 		case 0x50 :														//Toggle backlight enable pin to input/output. Disables backlight completely.
 		{
-			GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+			#if (CONFIG_DIMMED_LIGHT) // If backlight dimmer is enabled, we will use that instead.
+				kb_backlight ^= 0x01; // flag for SysTick_Handler() to turn backlight off completely
+			#else
+				GPIOC->MODER = GPIOC->MODER ^ (((uint32_t)0x01) << 12);
+            #endif
 			reset_backlight();
 			break;
 		}
@@ -243,7 +264,9 @@ inline int is_intercept_allowed()
 inline int is_intercepted_keycode( int kc )
 {
     switch( kc ) {
+        case 0 :
         case 1 :
+        case 2 :
         case 3 :
         case 4 :
         case 5 :

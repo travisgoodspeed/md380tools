@@ -142,11 +142,6 @@ void boot_splash_set_bottomline(void)
 
 void splash_hook_handler(void)
 {
-
-   IRQ_Init(); // Prepare everything that may be used in SysTick_Handler(),
-   // including the optional dimmable backlight (and future interrupt handlers) .
-   // Note: splash_hook_handler() was *not* called with 'Menu'..'Utilities'
-   //  'Radio Settings'..'Intro Screen' set to 'Picture', not 'Char String' !
   
     if( global_addl_config.boot_demo == 0 ) {
         demo();
@@ -174,9 +169,6 @@ void splash_hook_handler(void)
    initialized in the stock firmware.
 */
 int main(void) {
-
-  // Too early to call IRQ_Init() here, because Tytera's own init function
-  // seems to perform a 'reset' (via RCC) on most on-chip peripherals !
 
   dmesg_init();
   

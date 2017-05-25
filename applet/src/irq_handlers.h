@@ -5,12 +5,12 @@
 //           for example for the software PWMed 'dimmed backlight'.
 //   Module prefix : "IRQ_" .
 
-#ifndef  CONFIG_DIMMED_LIGHT    // want to have a 'dimmed, permanent backlight' ?
-# define CONFIG_DIMMED_LIGHT 0  // guess not (otherwise CONFIG_DIMMED_LIGHT would have been defined AS ONE in config.h)
+#ifndef  CONFIG_DIMMED_LIGHT   // want 'dimmable backlight' ?
+# define CONFIG_DIMMED_LIGHT 0 // guess not (else set CONFIG_DIMMED_LIGHT=1 in config.h)
 #endif
 
-#ifndef  BYTE
-# define BYTE uint8_t /* formerly kown as 'unsigned char' (for stoneage C compilers). 'uint8_t' was unknwon here. */
+#ifndef  CONFIG_MORSE_OUTPUT   // want output in Morse code ?
+# define CONFIG_MORSE_OUTPUT 0 // guess not (else set CONFIG_MORSE_OUTPUT=1 in config.h)
 #endif
 
 // Offsets into the STM32's vector table. These may be defined somewhere else, but WB didn't find anything like this.
@@ -44,6 +44,9 @@
 extern uint8_t GFX_backlight_on; // 0="off" (low intensity), 1="on" (high intensity) 
 //   (note: GFX_backlight_on is useless, as long as no-one calls gfx.c : 
 
-void IRQ_Init(void); // details in the implementaion ( irq_handlers.c )
+extern uint8_t kb_backlight; // flag to disable the backlight via sidekey (in keyb.c)
 
+#if( CONFIG_MORSE_OUTPUT )
+int MorseGen_AppendString( char *pszText, int iMaxLen ); // API to send 8-bit strings in Morse code
+#endif // CONFIG_MORSE_OUTPUT ?
 
