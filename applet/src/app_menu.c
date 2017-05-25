@@ -212,7 +212,12 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
         &gui_opmode3,0,0,          NULL,         NULL     },
   { "[h8]SysTicks",     DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // notice the increased QRM when this item..
       (void*)&IRQ_dwSysTickCounter,0,0, NULL,    NULL     }, // is scrolled into view (->rapid updates)
-
+#if (1)
+  { "Core Clk",         DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // aka "HCLK", important for FMSC timing params
+      (void*)&SystemCoreClock, 0,0, NULL,         NULL  }, // confirmed: SystemCoreClock = 168 MHz .
+  { "[h8]FSMC(1)",      DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // register with LCD bus timing bits..
+      (void*)&FSMC_Bank1->BTCR[1], 0,0, NULL,     NULL  }, // original value: 0x10100233; details in lcd_driver.c 
+#endif
 #if (0) && ( defined(FW_D13_020) || defined(FW_S13_020) ) // removed 2017-05-12 because Netmon1 can show these:
   { "[b8]radio_s0",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &radio_status_1.m0,0,0,    NULL,         NULL     },
@@ -345,6 +350,12 @@ void Menu_Open(
    {  global_addl_config.edit_fg_color = LCD_COLOR_WHITE;
       global_addl_config.edit_bg_color = LCD_COLOR_RED;
    }
+
+  StartStopwatch( &pMenu->morse_stopwatch ); 
+  // Reporting the first item in Morse code later (when morse_stopwatch expires): 
+  pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+
+
 } // end Menu_Open()
 
 //---------------------------------------------------------------------------
@@ -801,20 +812,19 @@ int Menu_DrawIfVisible(int caller)
          }
       }
      else
-     if( (pMenu->visible==APPMENU_VISIBLE) || (c=='B') )
+     if( (pMenu->visible==APPMENU_VISIBLE) || (c==APPMENU_ACTIVATION_KEY) )
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
               Menu_OnEnterKey(pMenu);
               break; // end case < green "Menu", aka "Confirm"-key >
            case 'B' :  // red "Back"-key : 
               // red_led_timer  = 20;    // <- poor man's debugging 
+#            if( 'B' == APPMENU_ACTIVATION_KEY )  // <- author's choice: app-menu opened via RED KEY (thus the old name 'red key menu')
               if( pMenu->visible == APPMENU_OFF ) // not visible yet..
                { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
-                 StartStopwatch( &pMenu->morse_stopwatch ); 
-                 // Reporting the first item in Morse code later (when morse_stopwatch expires): 
-                 pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                }
               else // already in the app menu: treat the RED KEY like "BACK",
+#            endif // 'B' == APPMENU_ACTIVATION_KEY ?
                {   // "Exit", "Escape", or "Delete" ?
                  if( ( (pMenu->edit_mode==APPMENU_EDIT_OVERWRT)
                      ||(pMenu->edit_mode==APPMENU_EDIT_INSERT) )
@@ -878,6 +888,12 @@ int Menu_DrawIfVisible(int caller)
               pMenu->redraw = TRUE;
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
+#            if(  '#' == APPMENU_ACTIVATION_KEY ) // <- KG5RKI preference: app-menu opened via hash key (aka 'white arrow up')
+              if(('#'==c) && (pMenu->visible == APPMENU_OFF ) ) // menu not visible yet..
+               { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
+               }
+              else // already in the app menu: treat the RED KEY like "BACK",
+#            endif // '#' == APPMENU_ACTIVATION_KEY ?
               if( pMenu->edit_mode != APPMENU_EDIT_OFF )
                { Menu_ProcessEditKey(pMenu, c);
                }

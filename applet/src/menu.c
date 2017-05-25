@@ -929,7 +929,7 @@ void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, b
 }
 
 
-#if( CONFIG_DIMMED_LIGHT ) // Setup for pulse-width modulated backlight ? (DL4YHF 2017-01-08)
+#if( CONFIG_DIMMED_LIGHT ) // Setup for pulse-width modulated backlight ?
 typedef void(*tMenuFunctionPtr)(void);
 static uint8_t bIntensityMenuIndex; // 0 = modifying "backlight intensity low" (used during idle time),
                                     // 1 = modifying "backlight intensity high" (used when 'radio active').
@@ -1285,7 +1285,7 @@ void mn_cw_pitch(void)  // CW pitch : stored in 10-Hz unit in global_addl_config
 {  // A DECIMAL input field would be too clumsy with this dreadful API,
    // so for the moment, only offer a few 'tone frequencies' here.
    // A wider choice of values (entered directly, without this clumsiness)
-   // is possible through DL4YHF's "alternative" menu - see app_menu.c .
+   // is possible through the "alternative" menu - see app_menu.c .
    // The PWM'ed rectangular wave is rich in harmonics,
    // thus even 400 Hz is well audible in the speaker.
    // Note: To fit in a byte, the unit for storage is 10 Hz.
@@ -1734,7 +1734,7 @@ void create_menu_entry_addl_functions_screen(void)
     mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
     mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
     mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
-    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1); // Brad's PR#708 already in use here (DL4YHF, since 2017-03)
+    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1); // PR#708
     mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
     mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
     mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);

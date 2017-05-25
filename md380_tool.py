@@ -79,6 +79,11 @@ class Tool(DFU):
     """Client class for extra features patched into the MD380's firmware.
     None of this will work with the official firmware, of course."""
 
+    def __init__(self, device, alt):
+        super(Tool, self).__init__(device, alt)
+        # We need to read the manufacturer string to hook the added USB functions
+        device.manufacturer
+
     def drawtext(self, str, a, b):
         """Sends a new MD380 command to draw text on the screen.."""
         cmd = 0x80  # Drawtext
@@ -96,6 +101,23 @@ class Tool(DFU):
             print("Failed to send custom %02x %02x." % (a, b))
             return False
         return True
+
+    def read_framebuf_line(self, y):
+        """Reads a single line of pixels from the framebuffer."""
+        # the firmware can do better (up to 32*16 pixels)
+        # this is just a simple test .. DL4YHF 2017-05-20
+        cmdstr = (chr(0x84) + # TDFU_READ_FRAMEBUFFER
+                  chr(0) +    # x1 (x1,y1) = tile's upper left corner
+                  chr(y) +    # y1
+                  chr(159) +  # x2 (x2,y2) = tile's lower right corner
+                  chr(y)      # y2 
+                  )
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
+        self.get_status()  # this changes state
+        status = self.get_status()  # this gets the status
+        # read 160 pixels per line * 2 bytes per pixel :
+        return self.upload(1, 320, 0)
+
 
     def peek(self, adr, size):
         """Returns so many bytes from an address."""
@@ -374,6 +396,20 @@ def coredump(dfu, filename):
             buf = dfu.peek(adr, 1024)
             f.write(buf)
         f.close()
+
+def screenshot(dfu, filename="screenshot.bmp"):
+    """Reads the LCD framebuffer"""
+    with open(filename, 'wb') as f:
+      for y in xrange(0,128):  
+        buf = dfu.read_framebuf_line(y)
+        # 160 pixels per line, two bytes per pixel,
+        # framebuffer pixel format (BGR565) explained
+        # in applet/src/lcd_driver.c .
+        # For a start, just dump to binary file.
+        # Bit-fiddling isn't Monty's strong side.
+        f.write(buf)
+      f.close()
+
 
 
 def hexdump(dfu, address, length=512):
@@ -761,6 +797,9 @@ def main():
                 dfu = init_dfu()
                 dfu.custom(int(sys.argv[2], 16))
                 dmesg(dfu)
+            elif sys.argv[1] == 'screenshot':
+                dfu = init_dfu()
+                screenshot(dfu, sys.argv[2])
 
         elif len(sys.argv) == 4:
             if sys.argv[1] == 'spiflashwrite':

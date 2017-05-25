@@ -77,8 +77,8 @@ void switch_to_screen( int scr )
     // cause transient -> switch back to idle screen.
     gui_opmode2 = OPM2_MENU ;
     gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
-      // (DL4YHF: this was unreliable in certain situations,
-      //          see notes in src/app_menu.c : Menu_Close() )
+      // ( this was unreliable in certain situations,
+      //   see notes in src/app_menu.c : Menu_Close() )
     
     nm_screen = scr ;
 }

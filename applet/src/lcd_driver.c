@@ -1,12 +1,25 @@
 // File:    md380tools/applet/src/lcd_driver.c
-// Author:  Wolf (DL4YHF) [initial version] 
+// Author:  Wolf (DL4YHF) [initial version]
 // Date:    2017-04-14 
 //  Implements a simple LCD driver for ST7735-compatible controllers,
 //             tailored for Retevis RT3 / Tytera MD380 / etc .
-//  Works much better (!) than the stock driver in the original firmware
-//             as far as speed and QRM(!) from the display cable is concerned.
-//  Written for the 'alternative setup menu', but no dependcies from that,
-//  thus may also be used to replace the 'console' display for Netmon & Co.
+//    * Less QRM from the display cable and improved speed by making 
+//      use of the row/column-auto-increment feature (see LCD_SetOutputRect)
+//    * Most functions here use the framebuffer's native 16-bit colour format,
+//      BGR565 : Bit     15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
+//               Content B4 B3 B2 B1 B0 G5 G4 G3 G2 G1 G0 R4 R3 R2 R1 R0
+//                       |____________| |_______________| |____________|
+//                       32 BLUE levels   64 GREEN levels  32 RED levels
+//      To convert between the above colour format and the 'true colour' format
+//      used by old, use LCD_NativeColorToRGB() + LCD_RGBToNativeColor() .
+//    * Due to RAM size, this driver doesn't provide double buffering.
+//      Anything drawn into the framebuffer is immediately visible. 
+//      To avoid flicker, do not erase the background before "printing".
+//      Use opaque text output, let LCD_Printf() clear the rest of any
+//      text line you print into, and finally clear anything between the 
+//      last printed character until the bottom of the screen.
+//      See flicker-free example in app_menu.c : Menu_DrawIfVisible() .
+//      
 // 
 // To include this alternative LCD driver in the patched firmware,
 //   add the following lines in applet/Makefile :
@@ -42,25 +55,28 @@ extern const uint8_t font_8_8[256*8]; // extra font with 256 characters from 'co
 //   except for the 8-bit bus interface ("FSMC") and a few registers
 //   in the LCD controller initialized by the original firmware .
 //
-// Note: Do NOT erase the screen (or portions of it) before drawing
-//   into the framebuffer. That would cause an annoying flicker,
-//   because this LCD controller doesn't support double buffering.
-//   In other words, we always "paint" directly into the CURRENTLY
-//   VISIBLE image - and painting isn't spectacularly fast !
+// See notes at the top of this file about how to avoid flicker .
+//
 //---------------------------------------------------------------------------
 
 uint8_t LCD_b12Temp[12]; // small RAM buffer for a self-defined character
 
 //---------------------------------------------------------------------------
 __attribute__ ((noinline)) void LCD_WriteCommand( uint8_t bCommand )
-  // I/O address taken from DL4YHF's dissassembly, @0x803352c in D13.020 .
+  // I/O address of FSMC, see 0x803352c in D13.020 .
 { *(volatile uint8_t*)0x60000000 = bCommand;
 }
 
 //---------------------------------------------------------------------------
 __attribute__ ((noinline)) void LCD_WriteData( uint8_t bData )
-  // I/O address taken from DL4YHF's dissassembly, @0x8033534 in D13.020 .
+  // Write data via FSMC, see 0x8033534 in D13.020 .
 { *(volatile uint8_t*)0x60040000 = bData; // one address bit controls "REGISTER SELECT"
+}
+
+//---------------------------------------------------------------------------
+__attribute__ ((noinline)) uint8_t LCD_ReadData( void )
+  // Read data via FSMC, see 0x803353a in D13.020 .
+{ return  *(volatile uint8_t*)0x60040000;
 }
 
 //---------------------------------------------------------------------------
@@ -81,6 +97,7 @@ __attribute__ ((noinline)) void LCD_WritePixels( uint16_t wColor, int nRepeats )
      // more pixels will be emitted into the same output rectangle
    }
 } // end LCD_WritePixels()
+
 
 //---------------------------------------------------------------------------
 __attribute__ ((noinline)) int IsAddressInFlash( uint32_t u32Addr )
@@ -111,7 +128,7 @@ __attribute__ ((noinline)) void LimitInteger( int *piValue, int min, int max)
 
 
 //---------------------------------------------------------------------------
-int LCD_SetOutputRect( int x1, int y1, int x2, int y2 )
+int LCD_SetOutputRect( int x1, int y1, int x2, int y2, int read_or_write )
   // Sets the coordinates before writing a rectangular area of pixels.
   // Returns the NUMBER OF PIXELS which must be sent to the controller
   // after setting the rectangle (used at least in  ) .
@@ -144,8 +161,8 @@ int LCD_SetOutputRect( int x1, int y1, int x2, int y2 )
 #endif
 
 
-  LCD_CS_LOW;   // Activate LCD chip select
-  LCD_ShortDelay();
+  LCD_CS_LOW;               // Activate LCD chip select
+  LCD_ShortDelay();         // chip-select-setup time for WRITE : 15 ns (ST7735 DS V2.1 page 22)  
   LCD_WriteCommand( 0x2A ); // ST7735 DS V2.1 page 100 : "CASET" ....
     // ... but beware: 'columns' and 'rows' from the ST7735's 
     //     point of view must be swapped, because the display initialisation
@@ -175,16 +192,18 @@ int LCD_SetOutputRect( int x1, int y1, int x2, int y2 )
   LCD_WriteData((uint8_t)(raset_ye>>8)); // 3rd param: "YE15..YE8" ("Y-end",   hi)
   LCD_WriteData((uint8_t) raset_ye    ); // 4th param: "YE7 ..YE0" ("Y-end",   lo)
 
-  LCD_WriteCommand( 0x2C ); // ST7735 DS V2.1 page 104 : "RAMWR" / "Memory Write"
+  if( read_or_write == LCD_WRITE_PIXELS ) // want to WRITE TO or READ FROM the framebuffer ?
+   { LCD_WriteCommand( 0x2C ); // ST7735 DS V2.1 page 104 : "RAMWR" / "Memory Write"
+   }
+  else // don't WRITE but READ pixels from the LCD controller's framebuffer : 
+   { LCD_WriteCommand( 0x2E ); // ST7735 DS V2.1 page 105 : "RAMRD" / "Memory Read"
+   }
 
   // Do NOT de-assert LCD_CS here .. reason below !
   return (1+x2-x1) * (1+y2-y1);
   // The LCD controller now expects as many 16-bit pixel data
-  //     for the current drawing area as calculated above .
-  // The ST7735 has an auto-incrementing pointer, which
-  // eliminates the need to send the "output coordinate" for each
-  // pixel of a filled block, bitmap image, or character.
-  // But the Tytera firmware seems to ignore this important feature.
+  //     transfers as calculated above (for read or write) .
+
 } // end LCD_SetOutputRect()
 
 //---------------------------------------------------------------------------
@@ -205,9 +224,8 @@ void LCD_SetPixelAt( int x, int y, uint16_t wColor )
   //               |<--------------- 1.93 us --------------->|
   //                   ->| |<- t_WR_low ~ 70ns             
   //             
-  LCD_CS_LOW;  // Activate LCD chip select
-  asm("NOP");  // (a) pro-forma delay between falling edge on LCD_CS 
-               //     and the first low-active LCD_WR .
+  LCD_CS_LOW;        // Activate LCD chip select
+  LCD_ShortDelay();  // chip-select-setup time for WRITE : 15 ns (ST7735 DS V2.1 page 22)  
   LCD_WriteCommand( 0x2A ); // (1) ST7735 DS V2.1 page 100 : "CASET" ....
     // ... but there's something strange in Tytera's firmware,
     //     for reasons only they will now :
@@ -252,7 +270,7 @@ void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
   //  (or whatever the original name was), because the rectangle coordinates
   // are only sent to the display controller ONCE, instead of sending 
   // a new coordinate for each stupid pixel (which is what the original FW did):
-  nPixels = LCD_SetOutputRect( x1, y1, x2, y2 );  // send rectangle coordinates only ONCE
+  nPixels = LCD_SetOutputRect( x1, y1, x2, y2, LCD_WRITE_PIXELS );
   if( nPixels<=0 ) // something wrong with the coordinates
    { return;
    }
@@ -265,6 +283,147 @@ void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
   // Without this, there were occasional erratic pixels on the screen during update.
   LCD_CS_HIGH; // de-assert LCD chip select (Tytera does this after EVERY pixel. We don't.)
 } // end LCD_FillRect()
+
+
+//---------------------------------------------------------------------------
+int LCD_CopyRectFromFramebuffer( // Reads a rectangular area of pixels :
+        int x1, int y1,  // [in] pixel coordinate of upper left corner
+        int x2, int y2,  // [in] pixel coordinate of lower right corner
+        uint8_t *pbDest, // [out] buffer, must accept two bytes per pixel
+        int sizeof_dest) // [in] sizeof(pbDest), for safety checks 
+  // When successful, returns THE NUMBER OF BYTES (!) actually placed in pbDest.
+  //      Returns zero or a negative value when unable to do that,
+  //      e.g. sizeof_dest too low, LCD-data-bus is "occupied", or whatever.
+  //     
+{
+  int nBytes, nPixels;
+  rgb_quad_t rgb;
+
+  // Before sending any command to the LCD controller, check the buffer size:
+  nBytes = 2 * (1+x2-x1) * (1+y2-y1); // for pre-check..
+  if( (nBytes<=0) || (nBytes>sizeof_dest) ) // something wrong, bail out
+   { return -1;
+   }
+
+  // Buffer size looks ok, so tell the LCD controller to "start reading".
+  // Simply reading pixels in the same 16-bit format as in LCD_WritePixels()
+  // didn't work (only produced zeros). Reason possibly in ST7735 DS V2.1,
+  // page 104:
+  // > The Command 3Ah should be set to 66h when reading pixel data 
+  // > from frame memory. Please check the LUT in chapter 9.17 ... 
+  // Let's try this, even though 0x66 sets some undefined bits in "COLMOD" :
+  LCD_CS_LOW;        // Activate LCD chip select
+  LCD_ShortDelay();  // chip-select-setup time for WRITE : 15 ns (ST7735 DS V2.1 page 22),
+                     // chip-select-setup time for "READ FM"(guess FM = "From Memory"?) : 350 ns 
+    // Note: LCD_SetOutputRect() also activates LCD_CS, and (important!) KEEPS IT SET .
+  LCD_WriteCommand( 0x3A ); // (1) ST7735 DS V2.1 page 115 : "COLMOD" : Interface Pixel Format
+  LCD_WriteData( 0x66 ); // 110bin in bits 2..0 switches to 18-bit/pixel, but what are bits 5+6 ?
+#define L_WRITE_TEST 1
+#if( L_WRITE_TEST )
+  nPixels = LCD_SetOutputRect( x1, y1, x2, y2, LCD_WRITE_PIXELS ); 
+#else
+  nPixels = LCD_SetOutputRect( x1, y1, x2, y2, LCD_READ_PIXELS ); 
+#endif
+  // Before READING from the LCD controller's framebuffer, slow down the
+  // read-accesses in the STM32's FSMC control registers. 
+  // The ST7735 datasheet, V2.1 page 22, mentions parameter 'TRCFM':
+  //  > TRCFM = "Read cycle (FM)" = 450 ns. May have to slow down the CPU,
+  //    or even modify the FSMC timing registers to get this running properly.
+  //  > TRDHFM = "Control pulse H duration (FM)" = min. 150 ns.
+  //  > TRDLFM = "Control pulse L duration (FM)" = min. 150 ns.
+  //  > TRATFM = "Read access time (FrameMemory)" = max  40 ns.
+  // 
+  // Simplified timing diagram from the LCD controller's point of view:
+  // 
+  //                   |<-------- TRCFM -------->|
+  //                    |<-TRDLFM->| |<-TRDHFM->| 
+  //            _______              ____________          _________
+  //  /LCD_READ        \____________/            \________/
+  //                           _________           _________
+  //   LCD_DATA --------------<__valid__>---------<__valid__>----
+  //      
+  //                    |<---->| 
+  //                     "TRATFM" (Read access time) : max 40 ns
+  //                     (between falling edge on /LCD_READ and read data valid)             
+  // These parameters apply to 'read from frame memory', much SLOWER than writing.
+  // On the STM32F's side (FSMC = "Flexible Static Memory Controller"), the 
+  //  READ-control output (LCD_RD) is on PD4. PD4 is already configured as FSMC_NOE
+  //  by the original firmware (see http://www.qsl.net/dl4yhf/RT3/md380_hw.html#display ).
+  //  The timing of the low-active 'NOE' ( low-active output_enable) is shown in ST's
+  //  "RM0090", chapter 36.5.4, "NOR Flash/PSRAM controller asynchronous transactions".
+  //  Sitronix' "TRDLFM" appears to be the sum of the STM32's "ADDSET" + "DATAST" times.
+  //   "ADDSET" = Address setup time = bits  3..0 in FSMC_BTRx ,
+  //   "DATAST" = Data setup time    = bits 15..8 in FSMC_BTRx . 
+  //  FSMC control registers begin   at 0xA0000000, 
+  //  LCD is accessed like NOR-Flash at 0x60000000 ("FSMC memory bank 1"),
+  //  thus the 'x' in 'FSMC_BTRx' is '1' here. FSMC_BTR1 is at 0xA0000004.
+  //  A few FSMC registers read out from an MD380 ...
+  //   FSMC_BCR1 :    0x0000145B   (chip-select control register at 0xA0000000) 
+  //                    |      '-------------------------,
+  //               = 0000 0000 0000 0000  0001 0100 0101 1011
+  //                                         |        \| \|||_ Memory bank enabled 
+  //                                         |         |  ||__ Address/data MULTIPLEXED ?!
+  //                                        Write      |  |__ "MTYP"=10bin= NOR Flash 
+  //                                        Enabled    |_____ "MWID"=01bin= 16 bits ?!
+  //
+  //
+  //   FSMC_BTR1 :    0x10100233   (chip-select timing registers at 0xA0000004) 
+  //                        \|||______________________ bits 3..0  = 'ADDSET' = address setup duration
+  //                         ||_______________________ bits 7..4  = 'ADDHLD' = address hold duration
+  //                         |________________________ bits 15..8 = 'DATAST' = data-phase duration
+  //                                   The above timing register settings are measured in 'HCLK's .
+  //                                   One 'HCLK' cycle = 1 / (168 MHz) = circa 6 nanoseconds .
+  // 
+  // -> to comply with the ST7735's READ-timing, 
+  //        'ADDSET' (during which /LCD_RD is HIGH=passive) >= 150 ns, was : 3 * 6 ns (too short)
+  //        'DATAST' (during which /LCD_RD is LOW =active ) >= 150 ns, was : 2 * 6 ns (too short)
+  //        STM32F samples 8-bit data at the rising edge of /LCD_RD -> no problem with "TRATFM" <= 40ns.
+  // Since ST's register names in their header files are rarely the same as in their datasheets:
+  //   RM0090 "FSMC_BTR1" (@0xA0000004) is "FSMC_Bank1->BTCR[1]" in stm32f4xx.h 
+  FSMC_Bank1->BTCR[1] = 0x101004AA;  // original value was 0x10100233 (not ok for READING from ST7735)
+  //                          \|||___ address setup : ca. 10 * 6 ns (original: 3 * 6 ns)
+  //                           ||____ address hold  : ca. 10 * 6 ns (original: 3 * 6 ns)
+  //                           |_____ data phase duration: 4 * 6 ns (original: 2 * 6 ns)
+  while( nPixels-- )
+   { // In 18-bit "interface pixel format", read 3 bytes per pixel:
+     //        Format explained in ST7735 DS V2.1, page 115 .
+#   if( L_WRITE_TEST ) // instead of READING, WRITE pixels to the framebuffer (18-bit-test)
+     // Test to find out if the "18-bit colour format" works as expected (it's B,G,R; not R,G,B)
+     LCD_WriteData((nPixels<80)?255-3*nPixels:0);  // 6 bit BLUE  (bits 1..0 unused)
+     LCD_WriteData((nPixels>80)?3*(nPixels-80):0); // 6 bit GREEN (bits 1..0 unused)
+     LCD_WriteData(y1*2);                          // 6 bit RED   (bits 1..0 unused)
+#   else
+     rgb.s.r = LCD_ReadData();  // 6 bit RED   (bits 1..0 unused)
+     rgb.s.g = LCD_ReadData();  // 6 bit GREEN (bits 1..0 unused)
+     rgb.s.b = LCD_ReadData();  // 6 bit BLUE  (bits 1..0 unused)
+#   endif // L_WRITE_TEST ?
+
+     // Convert pseudo-24-bit RGB into BGR565 (65k colours),
+     //   and store 2 bytes per pixel in the buffer:   
+     rgb.u32 = LCD_RGBToNativeColor( rgb.u32 );
+     *pbDest++ = rgb.ba[0]; // lower byte of 16-bit colour 
+     *pbDest++ = rgb.ba[1]; // upper byte of 16-bit colour
+   }
+  FSMC_Bank1->BTCR[1] = 0x10100233; // original FSMC timing from Tytera firmware
+  LCD_ShortDelay();
+
+  // Switch back to 16-bit interface pixel format. ST7735 DS V2.1 page 115 :
+  // > The Command 3Ah should be set at 55h when writing 16-bit/pixel data ..
+  LCD_WriteCommand( 0x3A ); // "COLMOD" : Interface Pixel Format
+  LCD_WriteData( 0x55 );    // back from 18-bit to 16-bit format
+    // (In the MD380 the LCD interface is only 8 bit wide.
+    //  ST7735 DS V2.1 page 40 shows how "18-bit pixels" would travel
+    //  over an 8-bit parallel interface. Too wasteful, 65k colours are enough.
+    //  Who wants to waste an extra BYTE to have RGB
+    //  Thus switching back to "16-bit pixels" here. Also used by Tytera's 'gfx'.)
+
+  LCD_ShortDelay(); // short delay before de-selecting the LCD controller .
+  LCD_CS_HIGH; // de-assert LCD chip select (never forget !)
+ 
+  return nBytes; // <- number of BYTES actually placed in the caller's buffer
+
+} // end LCD_CopyRectFromFramebuffer()
+
 
 //---------------------------------------------------------------------------
 void LCD_HorzLine( // Draws a thin horizontal line ..
@@ -563,7 +722,7 @@ int LCD_DrawCharAt( // lowest level of 'text output' into the framebuffer
   // use an important feature of the LCD controller (ST7735 or similar) :
   // Only set the drawing rectangle ONCE, instead of sending a new coordinate
   // to the display for each pixel (which wasted time and caused avoidable QRM):
-  if( LCD_SetOutputRect( x, y, x2, y2 ) <= 0 ) 
+  if( LCD_SetOutputRect( x, y, x2, y2, LCD_WRITE_PIXELS ) <= 0 )
    { return x; // something wrong with the graphic coordinates 
    }
 

@@ -10,15 +10,9 @@
   
   Details may still be at www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
   Latest modifications:
-    2017-05-19, DL4YHF : When building the firmware in KD4Z's VM,
-             the patched binary executable wasn't the same as when compiled
-             on another Debian (64-bit) system, or when compiled on Windows. 
-             The different 'runtime behaviour' caused problems that are 
-             hopefully fixed with new 'boot_flags', defined in irq_handlers.h .
-      These boot_flags disable certain function calls shortly after power-on, 
-      and are used here to declare ourselves 'open for business', instead of 
-      simply letting some time pass before activating the backlight-PWM, 
-      the keyboard polling for the new alternative ('red button') menu, etc. 
+    2017-05-20, DL4YHF : Added boot_flags to find out when 'open for business',
+          and a temporary fix, caused by an outdated display.c in a VM somewhere,
+          which didn't set boot_flags.BOOT_FLAG_DREW_STATUSLINE. Issue #755 .
     
  To include the 'dimmed backlight' feature in the patched firmware:
     
@@ -93,27 +87,25 @@ typedef void (*void_func_ptr)(void);
 #define IS_SPKR_SWITCH_ON ((GPIOB->ODR&(1<<PINPOS_B_SPK_C))==0) /*check spkr switch*/
 
 
-uint8_t boot_flags = 0; // 0 : none of the 'essential' functions has been called yet
+uint8_t boot_flags = 0; // 0 : none of the 'essential' functions has been called yet,
+         // later: bitwise ORed flags from irq_handlers.h, e.g BOOT_FLAG_OPEN_FOR_BUSINESS
 
 volatile uint32_t IRQ_dwSysTickCounter = 0; // Incremented each 1.5 ms. Rolls over from FFFFFFFF to 0 after 74 days
 volatile uint32_t IRQ_dwSysTicksAtBoot = 0; // snapshot of IRQ_dwSysTickCounter when 'essential' boot_flags were first set
-         // (Allows estimating the time spent initialising the firmware.
-         //  Added 2017-05-17 when suspecting problems with SysTick/Dimming/Red Key in KD4Z-VM .
-         //  See 'early signs of life' printed via LOGB(), along with a timestamp) 
 
 uint16_t keypress_timer_ms = 0; // measures key-down time in MILLISECONDS 
 uint8_t  keypress_ascii = 0;    // code of the currently pressed key, 0 = none .
 uint8_t  keypress_ascii_at_power_on = 0; // snapshot of keypress_ascii at power-on
-                // (only valid if boot_flags.BOOT_FLAG_FIRST_KEY_POLLED is set)
-
+                // (only valid if boot_flags.BOOT_FLAG_FIRST_KEY_POLLED is set.
+                //  To avoid dozens of '#ifs', these variables exist even if 
+                //  they are never updated, e.g. in D002.032-based firmware. )
 
 #if( CONFIG_MORSE_OUTPUT )
 typedef struct tMorseGenerator
  { uint8_t u8State; // state machine to generate Morse output:
 #    define MORSE_GEN_PASSIVE 0 // not active, waiting for start
 #    define MORSE_GEN_START   1 // request to start output
-   // All other states (below) must be considered 'volatile',
-   // because the timer interrupt may switch u8State anytime:
+   // All other states (below) must be considered 'volatile':
 #  define MORSE_GEN_START_AP_OPEN  2 // waiting for 'Anti-Pop' switch to open (!)
 #  define MORSE_GEN_START_AUDIO_PA 3 // waiting for audio PA to start
 #  define MORSE_GEN_START_AP_CLOSE 4 // waiting for 'Anti-Pop' switch to close
@@ -126,7 +118,7 @@ typedef struct tMorseGenerator
 #  define MORSE_GEN_PASSIVE_NOT_MUTED 11 // "should be passive but couldn't turn off the PA yet"
                           // (even in this state, channel scanning should be paused
                           //  because it causes a terrible noise in the speaker
-                          //  whenever the audio PA is enabled. See 
+                          //  whenever the audio PA is enabled. No easy fix yet...)
    uint8_t  u8ShiftReg;   // shift register. MSbit first, 0=dot, 1=dash.
    uint8_t  u8NrElements; // number of elements (dots and dashes) remaining
    uint16_t u16Timer;     // countdown timer, decrements in 1.5 ms - steps.
@@ -347,11 +339,6 @@ void BeepStart( int freq_Hz, int volume )
    {  volume = volume_pot_percent;
    }
 
- 
-  // To find out how *Tytera* generate their beep tones,
-  // the GPIO_C registers were inspected and analysed.
-  // Results at www.qsl.net/dl4yhf/RT3/md380_hw.html#CPU_ports  .
-  // 
   RCC->APB2ENR |= RCC_APB2ENR_TIM8EN; // provide a peripheral clock
 
   // Configure Mr Beep's pin as output for TIMER8, PWM-channel :
@@ -1156,8 +1143,6 @@ static void PollKeys(void)
       { if( longpress_countdown==1 ) // pressed for a "long" time (2 s) ?
          { if( ! Menu_IsVisible() )  // enter the alternative menu regardless of "gui_opmode2" & Co !
             { Menu_OnKey( key ); 
-              // 2017-05-18 : Not even the "long-press trick" worked 
-              //         when compiled in KD4Z VM / 32-bit Debian ?!
             }
          }
       }
@@ -1257,10 +1242,8 @@ void SysTick_Handler(void)
      // we cannot poll the keyboard, and should not drive the display....
      IRQ_dwSysTicksAtBoot = IRQ_dwSysTickCounter;
      tdiff = 0;
-     // .... but when compiled in the KD4Z VM, something was missing,
-     //      possibly an improperly hooked function (hook not called), so:
-     if( IRQ_dwSysTickCounter > 6000 )  // <- very ugly kludge (2017-05-20)
-      { boot_flags |= (BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE); // heavens, no !
+     if( IRQ_dwSysTickCounter > 6000 )  // <- kludge for VM (2017-05-20), pending for deletion
+      { boot_flags |= (BOOT_FLAG_INIT_BACKLIGHT | BOOT_FLAG_LOADED_CONFIG | BOOT_FLAG_DREW_STATUSLINE);
       }
    }
   else // all necessary functions have been called - really "open for business" ?
@@ -1306,12 +1289,6 @@ void SysTick_Handler(void)
   if( boot_flags & BOOT_FLAG_OPEN_FOR_BUSINESS )
    { // 2017-05-14 : Removed the brightness 'ramp-up' test. 
      //   The 9 intensity levels can now be tested in app_menu.c in inc/dec edit mode.
-     // 2017-05-16, reported by KD4Z (this only happened when compiling in the VM,
-     // and still the binary file is different when compiled elsewhere - strange !!)
-     //  >  Red button no longer opens new menu, and sometimes 
-     //  >  leaves display in full white condition. 
-     //  >  Also, the Backlight will not turn off, 
-     //  >  no matter what settings/timings you choose.
 #   if( CONFIG_DIMMED_LIGHT ) // Support dimmed backlight ?
      if( (backlight_timer>0) || (md380_radio_config.backlight_time==0) )
       { // If the backlight time is ZERO, use the 'radio-active' setting ("backlight level HI")

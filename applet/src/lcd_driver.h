@@ -96,7 +96,12 @@ extern uint8_t LCD_b12Temp[12];  // small RAM buffer for a single, self-defined 
 
 void LCD_WritePixels( uint16_t wColor, int nRepeats );
 void LimitInteger( int *piValue, int min, int max);
-int  LCD_SetOutputRect( int x1, int y1, int x2, int y2 );
+int  LCD_SetOutputRect( int x1, int y1, int x2, int y2, int read_or_write );
+        // parameter 'read_or_write' may be one of the following :
+#       define LCD_WRITE_PIXELS 0 // in most cases : WRITE pixels INTO the framebuffer
+#       define LCD_READ_PIXELS  1 // for screenshot: READ pixels FROM the framebuffer
+
+ 
 void LCD_SetPixelAt( int x, int y, uint16_t wColor ); // inefficient.. avoid if possible 
 
 void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
@@ -107,6 +112,9 @@ void LCD_HorzLine( int x1, int y, int x2, uint16_t wColor );
 
 void LCD_ColorGradientTest(void); // Fills the framebuffer with a 
   // 2D color gradient. Used for testing .. details in lcd_driver.c .
+
+int LCD_CopyRectFromFramebuffer( // Reads a rectangular area of pixels
+        int x1, int y1, int x2, int y2, uint8_t *pbDest, int sizeof_dest);
 
 uint8_t *LCD_GetFontPixelPtr_8x8( uint8_t c);
   // Retrieves the address of a character's font bitmap, 8 * 8 pixels .
