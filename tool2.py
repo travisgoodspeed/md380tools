@@ -1009,7 +1009,7 @@ def main():
                    dfu=init_dfu()
                    spiflashwrite(dfu,sys.argv[2],adr)
                 else:
-                   print "address to low"
+                   print "address too low"
             if sys.argv[1] == 'dump':
                 print "Dumping memory from %s." % sys.argv[3]
                 dfu=init_dfu()
