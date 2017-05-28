@@ -4,22 +4,22 @@ clean:
 	rm -f localize *.bin *.img
 
 applet:
-	cd ../applet && ${MAKE}
+	cd ../applet && "${MAKE}"
 hu: localize applet
 	cat strings.txt | ./localize hu ../applet/merged.img D013.020-hu.img
-	${MAKE} D013.020-hu.bin
+	"${MAKE}" D013.020-hu.bin
 
 it: localize applet
 	cat strings.txt | ./localize it ../applet/merged.img D013.020-it.img
-	${MAKE} D013.020-it.bin
+	"${MAKE}" D013.020-it.bin
 
 de: localize applet
 	cat strings.txt | ./localize de ../applet/merged.img D013.020-de.img
-	${MAKE} D013.020-de.bin
+	"${MAKE}" D013.020-de.bin
 
 es: localize applet
 	cat strings.txt | ./localize es ../applet/merged.img D013.020-es.img
-	${MAKE} D013.020-es.bin
+	"${MAKE}" D013.020-es.bin
 
 sr: localize applet
 	cat strings.txt | ./localize sr ../applet/merged.img D013.020-sr.img

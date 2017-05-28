@@ -4,7 +4,7 @@
 all: site
 
 themes:
-	${MAKE} -C themes all
+	"${MAKE}" -C themes all
 
 server: themes
 	hugo server --buildDrafts

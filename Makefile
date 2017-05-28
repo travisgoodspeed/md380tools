@@ -130,7 +130,7 @@ dist:
 #Clean out some gunk
 	rm -rf $(RELEASE)/__MACOSX
 #Add the latest database
-	${MAKE} -C db clean all
+	"${MAKE}" -C db clean all
 	cp db/stripped.csv $(RELEASE)/callerid.csv
 #Zip it up for distribution.
 	zip -r $(RELEASE).zip $(RELEASE)
@@ -145,7 +145,7 @@ dbg:
 	-awk -Wversion 2>/dev/null || awk --version
 	@echo ________
 	@echo Make version
-	${MAKE} -v
+	"${MAKE}" -v
 	@echo ________
 
 ci: dbg clean 
