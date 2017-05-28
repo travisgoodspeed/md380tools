@@ -8,7 +8,7 @@ clean:
 	rm -f *.tmp *.img
 	
 orig.img: 
-	make -C ../../firmware unwrapped/D013.020.img
+	"${MAKE}" -C ../../firmware unwrapped/D013.020.img
 	cp ../../firmware/unwrapped/D013.020.img orig.img
     
 	
