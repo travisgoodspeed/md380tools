@@ -218,10 +218,10 @@ void draw_rx_screen(unsigned int bg_color)
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
         usr.callsign = "ID unknown" ;
         usr.firstname = "" ;
-        usr.name = "No entry in" ;
-        usr.place = "your users.csv" ;
-        usr.state = "see README.md" ;
-        usr.country = "on Github" ;
+        usr.name = "" ;
+        usr.place = "" ;
+        usr.state = "" ;
+        usr.country = "" ;
     }
     
     int y_index = RX_POPUP_Y_START;
@@ -466,7 +466,7 @@ void draw_alt_statusline()
     if( src == 0 ) {
 	if ( global_addl_config.datef == 5 )
 	{
-	        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:");
+	        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "LH:");
 	} else {
 	        gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA:");
 	}
@@ -476,9 +476,9 @@ void draw_alt_statusline()
 		gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA: %s", talkerAlias.text);
 	} else {										// 2017-02-18 otherwise show lastheard in status line
 	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
-        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
+        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "LH:%d->%d %c", src, rst_dst, mode);
         	} else {
-        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
+        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "LH:%s->%d %c", usr.callsign, rst_dst, mode);
 	        }	
 	}
     }
