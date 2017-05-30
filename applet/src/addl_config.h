@@ -64,5 +64,6 @@ void cfg_fix_radioname();
 void cfg_set_radio_name();
 
 void cfg_save();
+void set_keyb();
 
 #endif
