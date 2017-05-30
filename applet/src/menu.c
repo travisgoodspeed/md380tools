@@ -738,7 +738,9 @@ void create_menu_entry_keyb_mode_legacy_screen(void)
     mn_create_single_timed_ack(wt_keyb_mode,wt_keyb_legacy);
     global_addl_config.keyb_mode = 0;
     cfg_save();
+#if defined(FW_D13_020) || defined(FW_S13_020)
     set_keyb(global_addl_config.keyb_mode);
+#endif
 }
 
 void create_menu_entry_keyb_mode_modern_screen(void)
@@ -746,7 +748,9 @@ void create_menu_entry_keyb_mode_modern_screen(void)
     mn_create_single_timed_ack(wt_keyb_mode,wt_keyb_modern);
     global_addl_config.keyb_mode = 1;
     cfg_save();
+#if defined(FW_D13_020) || defined(FW_S13_020)
     set_keyb(global_addl_config.keyb_mode);
+#endif
 }
 
 void create_menu_entry_keyb_mode_MD446_screen(void)
@@ -754,7 +758,9 @@ void create_menu_entry_keyb_mode_MD446_screen(void)
     mn_create_single_timed_ack(wt_keyb_mode,wt_keyb_MD446);
     global_addl_config.keyb_mode = 2;
     cfg_save();
+#if defined(FW_D13_020) || defined(FW_S13_020)
     set_keyb(global_addl_config.keyb_mode);
+#endif
 }
 
 void create_menu_entry_keyb_mode_dev_screen(void)
@@ -762,7 +768,9 @@ void create_menu_entry_keyb_mode_dev_screen(void)
     mn_create_single_timed_ack(wt_keyb_mode,wt_keyb_dev);
     global_addl_config.keyb_mode = 3;
     cfg_save();
+#if defined(FW_D13_020) || defined(FW_S13_020)
     set_keyb(global_addl_config.keyb_mode);
+#endif
 }
 
 //==========================================================================================================//

@@ -138,7 +138,9 @@ void init_global_addl_config_hook(void)
     LOGB("t=%d: booting\n", (int)IRQ_dwSysTickCounter ); // 362 SysTicks after power-on
    
     cfg_load();
+#if defined(FW_D13_020) || defined(FW_S13_020)
     set_keyb(global_addl_config.keyb_mode);
+#endif
 
 //#ifdef CONFIG_MENU
     md380_create_main_menu_entry();
