@@ -49,6 +49,7 @@ typedef struct addl_config {
        // as used for the 'alternative' menu and the alternative LCD driver:
        // BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 .
     uint8_t mic_gain; // 0=Disabled, 1=2db dgain, 2=6db gain
+    uint8_t keyb_mode; // Keyboad layout/mode 0=legacy, 1=modern, 2=MD446, 3=developer
 } addl_config_t ;
 
 #define CPO_BL1 0x1

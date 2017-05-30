@@ -471,19 +471,16 @@ void netmon_update()
             netmon3_update();
             return ;
         case 4 :
-	    //lastheard_redraw();	
             netmon6_update();
             netmon5_update();
             netmon4_update();
             return ;
         case 5 :
-	    //slog_redraw();	
             netmon4_update();
             netmon6_update();
             netmon5_update();
             return ;
         case 6 :
-	    //clog_redraw();	
             netmon4_update();
             netmon5_update();
             netmon6_update();

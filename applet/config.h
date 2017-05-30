@@ -26,7 +26,8 @@
 #endif
 /* Support keyb layout of Tytera MD446 (details see irq_handler.c)
    this unit has a reduced keypad with 6 keys */
-# define CONFIG_MD446 0 // MD446 enable 0 or undef'd=no, 1=yes
+/* # define CONFIG_MD446 0 // MD446 enable 0 or undef'd=no, 1=yes
+   now unused */
 
 /* Uncomment this to print AMBE frames for decoding with DSD.  You
    probable want this instead of AMBECORRECTEDPRINT or

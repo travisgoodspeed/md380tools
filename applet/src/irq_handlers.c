@@ -1057,7 +1057,7 @@ char KeyRowColToASCII(uint16_t kb_row_col)
   //   | 0x0024 | 0x0014 | 0x000C |     |  
   //   |________|________|________|   --
   //  
-#if( CONFIG_MD446 )
+ if ( global_addl_config.keyb_mode == 2) {		// support for MD-446 keyb layout
   switch( kb_row_col ) // sorted by switch-value for shortest code..
    { case 0x000A : return 'B'; // 'back' aka 'red button'
      case 0x0012 : return 'U'; // cursor up
@@ -1072,7 +1072,7 @@ char KeyRowColToASCII(uint16_t kb_row_col)
      case 0x002A : return 'X'; // eXit all menus and sub-menus
      default     : return  0;
    }
-#else
+ } else {
   switch( kb_row_col ) // sorted by switch-value for shortest code..
    { case 0x000A : return 'M'; // Green 'Menu' key (which usually opens TYTERA's menu)
      case 0x000C : return '1';
@@ -1095,7 +1095,7 @@ char KeyRowColToASCII(uint16_t kb_row_col)
      case 0x040A : return 'X'; // eXit all menus and sub-menus
      default     : return  0;
    }
-#endif
+ }
 
 } // end KeyRowColToASCII()
 #endif // CAN_POLL_KEYS ?
@@ -1104,21 +1104,21 @@ char KeyRowColToASCII(uint16_t kb_row_col)
   //---------------------------------------------------------------------------
 int KeyRowColToVal(uint16_t kb_row_col)
 { 
-#if( CONFIG_MD446 )
+ if ( global_addl_config.keyb_mode == 2) {		// support for MD-446 keyb layout
 	switch (kb_row_col) // sorted by switch-value for shortest code..
 	{
-	case 0x000A: return 13; // 'back' aka 'red button'
-	case 0x000C: return 4; // P2
-	case 0x0012: return 11; // cursor up
-	case 0x0014: return 14;  // cursor down
+	case 0x000A: return 13;	// 'back' aka 'red button'
+	case 0x000C: return 4;	// P2
+	case 0x0012: return 11;	// cursor up
+	case 0x0014: return 14;	// cursor down
 	case 0x0022: return 30; // Green 'Menu' key
-	case 0x0024: return 7; // P1
+	case 0x0024: return 7;	// P1
 		// kb_row_col_pressed also supports a few COMBINATIONS:
 		//   MENU+BACK (simultaneously pressed) : 0x040A
 	case 0x002A: return 55; // eXit all menus and sub-menus
 	default: return 0;
 	}
-#else
+ } else {
 	switch (kb_row_col) // sorted by switch-value for shortest code..
 	{
 	case 0x000A: return 30; // Green 'Menu' key (which usually opens TYTERA's menu)
@@ -1142,7 +1142,7 @@ int KeyRowColToVal(uint16_t kb_row_col)
 	case 0x040A: return 55; // eXit all menus and sub-menus
 	default: return 0;
 	}
-#endif
+ }
 } // end KeyRowColToASCII()
 #endif // CAN_POLL_KEYS ?
 
@@ -1342,8 +1342,6 @@ static void PollKeysForScroll(void)
 
 } // end PollKeysForScroll()
 
-
-
 #endif // CONFIG_APP_MENU ?
 
 
@@ -1539,31 +1537,29 @@ void SysTick_Handler(void)
 
   if( oldSysTickCounter > 3000 )
    { // Some seconds after power-on, begin to poll analog inputs...
-     if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTiein spiegelverkehrte Ausschnitt der 3 Keysck
-      { PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
-      }
-#   if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // Poll keys ?
-     if( (oldSysTickCounter & 0x0F) == 1 ) // .. on every 16-th SysTick
-      { // (but not in the same interrupt as PollAnalogInputs)
-        PollKeys(); // non-intrusive polling of keys, with autorepeat
-      }
-	 if ((oldSysTickCounter & 0x6F) == 1) // .. on every 16-th SysTick
-	 { // (but not in the same interrupt as PollAnalogInputs)
-
-		 PollKeysForScroll(); // non-intrusive polling of keys for the 
-							   // 'red menu' (menu activated by pressing the red 'BACK'-button,
-							   // when that button isn't used to control Tytera's own menu).
-	 }
-
-#   endif // CONFIG_APP_MENU ?
+	if( (oldSysTickCounter & 0x0F) == 0 ) // .. on every 16-th SysTick
+	{ PollAnalogInputs(); // -> battery_voltage_mV, volume_pot_pos 
+	}
+#if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // Poll keys ?
+	if( (oldSysTickCounter & 0x0F) == 1 ) // .. on every 16-th SysTick
+	{ // (but not in the same interrupt as PollAnalogInputs)
+	PollKeys(); // non-intrusive polling of keys, with autorepeat
+	}
+	if ((oldSysTickCounter & 0x6F) == 1) // .. on every 111-th SysTick
+	{ // (but not in the same interrupt as PollAnalogInputs)
+	PollKeysForScroll(); 	// non-intrusive polling of keys for the 
+				// 'red menu' (menu activated by pressing the red 'BACK'-button,
+			   	// when that button isn't used to control Tytera's own menu).
+	}
+#endif // CONFIG_APP_MENU ?
    } // end if( oldSysTickCounter > 6000 )
 
-#   if( CONFIG_MORSE_OUTPUT ) // Morse output (optional, since 2017-02-19) ?
+#if( CONFIG_MORSE_OUTPUT ) // Morse output (optional, since 2017-02-19) ?
      if( morse_generator.u8State != MORSE_GEN_PASSIVE )
       { // Only spend time on this when active !
         MorseGen_OnTimerTick( &morse_generator );
       }
-#   endif  // CONFIG_MORSE_OUTPUT ?
+#endif  // CONFIG_MORSE_OUTPUT ?
    } // end if < all necessary bits in boot_flags set > ?
  
 

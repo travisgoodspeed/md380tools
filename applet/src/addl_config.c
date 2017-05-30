@@ -85,6 +85,7 @@ void cfg_load()
 //    R(global_addl_config.boot_splash,0); // unused
     R(global_addl_config.netmon,3);
     R(global_addl_config.datef,6);
+    R(global_addl_config.keyb_mode,3);	// 2017-05-25	0-legacy, 1-modern, 2-MD446, 3-develop
 
     // restore dmrid
     if( ( global_addl_config.cp_override & CPO_DMR ) == CPO_DMR ) {
@@ -137,6 +138,7 @@ void init_global_addl_config_hook(void)
     LOGB("t=%d: booting\n", (int)IRQ_dwSysTickCounter ); // 362 SysTicks after power-on
    
     cfg_load();
+    set_keyb(global_addl_config.keyb_mode);
 
 //#ifdef CONFIG_MENU
     md380_create_main_menu_entry();
