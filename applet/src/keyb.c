@@ -494,9 +494,10 @@ inline int is_intercepted_keycode2(uint8_t kc)
 
 extern void kb_handler();
 
-static int nextKey = -1;
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
+static int nextKey = -1;
+
 void kb_handle(int key) {
 	int kp = kb_keypressed;
 	int kc = key;
