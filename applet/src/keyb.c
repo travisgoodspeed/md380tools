@@ -499,18 +499,13 @@ extern void kb_handler();
 static int nextKey = -1;
 
 void kb_handle(int key) {
-	int kp = kb_keypressed;
+
 	int kc = key;
-
-
 
 	if (is_intercept_allowed()) {
 		if (is_intercepted_keycode2(kc)) {
-			//if ((kp & 2) == 2) {
-				//kb_keypressed = 8;
 				handle_hotkey(kc);
 				return;
-			//}
 		}
 	}
 
@@ -519,19 +514,6 @@ void kb_handle(int key) {
 		kb_keycode = key;
 		kb_keypressed = 2;
 	}
-
-/*
-if ( global_addl_config.keyb_mode == 2) {		// support for MD-446 keyb layout
-		if (key == 11 || key == 2) {
-			kb_keycode = key;
-			kb_keypressed = 2;
-		}
-	} else {
-		if (key == 11 || key == 12) {
-			kb_keycode = key;
-			kb_keypressed = 2;
-		}
-	}*/
 }
 #endif
 
