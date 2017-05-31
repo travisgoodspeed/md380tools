@@ -447,10 +447,10 @@ void findcc(){
   con_printf("Color Code Scan ============");
   int cc;
   c5000_spi0_readreg(0x52, &cc); // working thx to phr3ak
-  if( (cc>>4) >= 0 && (cc>>4) <= 16){
-    con_printf("\nActive CC: %d", cc>>4); // no noise filtering yet
+  if( (cc>>4) >= 0 && (cc>>4) <= 16 && (radio_status_1.m3 == 3)){
+    con_printf("\nActive CC: %d", cc>>4);
   } else {
-    con_printf("no CC detected");
+    con_printf("\nno CC detected");
   }
 }
 
