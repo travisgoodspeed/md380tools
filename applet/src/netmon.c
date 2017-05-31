@@ -442,37 +442,16 @@ void netmon6_update()
 #endif
 }
 
-char cc=0,ccfound=42;
-
 void findcc(){
   con_clrscr();
   con_printf("Color Code Scan ============");
-  char *findcc_buf;
-  c5000_spi0_readreg(0x52, findcc_buf);
-  con_printf("\nFound CC: %x %x %x %x", findcc_buf[0], findcc_buf[1], findcc_buf[2], findcc_buf[3]);
-
-  /*int findcc_buf;
-
-  if(cc<=15){
-    cc += 1;
+  int cc;
+  c5000_spi0_readreg(0x52, &cc); // working thx to phr3ak
+  if( (cc>>4) >= 0 && (cc>>4) <= 16){
+    con_printf("\nActive CC: %d", cc>>4); // no noise filtering yet
   } else {
-    cc=0;
+    con_printf("no CC detected");
   }
-
-  c5000_spi0_writereg(0x1f, (cc & 0xf) << 4);
-  c5000_spi0_readreg(0x0d, findcc_buf);
-
-  con_printf("\nTrying CC: %d", cc);
-
-  if((findcc_buf & 0x10) || ccfound != 42){
-    ccfound=cc;
-    con_printf("\nFound CC: %d", ccfound);
-    //con_printf(findcc_buf & 0x10);
-  } else {
-    //con_printf("Trying CC: %d", cc);
-  }
-  */
-
 }
 
 void netmon_update()
