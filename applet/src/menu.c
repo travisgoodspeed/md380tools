@@ -26,12 +26,28 @@
 #include "keyb.h"
 #include "codeplug.h"
 #include "narrator.h" // optional: reads out channel, zone, menu in Morse code.
+// Main menu name
+const static wchar_t wt_main_menu[]         = L"MD380Tools";	// MD380Tools menu name
+const static wchar_t wt_main_menutxt[]      = L"MD380Tools 2.0";// MD380Tools menu header
+// Main menu entries 
+const static wchar_t wt_main_display[]      = L"Display";	// main menu 1 - display options
+const static wchar_t wt_main_keyb[]         = L"Keyboard";	// main menu 2 - keyboard options
+const static wchar_t wt_main_radio[]        = L"Radio";		// main menu 3 - radio options
+const static wchar_t wt_main_dmr[]          = L"DMR";		// main menu 4 - dmr settings
+const static wchar_t wt_main_tones[]        = L"Tones";		// main menu 5 - tone settings
+const static wchar_t wt_main_dev[]          = L"Developer";	// main menu 6 - developer menu
+// Sub menu header
+const static wchar_t wt_disp_menu[]         = L"Display Setup";	// sub menu 1 header title
+const static wchar_t wt_keyb_menu[]         = L"Keyboard Setup";// sub menu 2 header title
+const static wchar_t wt_radio_menu[]        = L"Radio Setup";	// sub menu 3 header title
+const static wchar_t wt_dmr_menu[]          = L"DMR Setup";	// sub menu 4 header title
+const static wchar_t wt_tones_menu[]        = L"Tones/Audio";	// sub menu 5 header title
+const static wchar_t wt_dev_menu[]          = L"Developer";	// sub menu 6 header title
 
-const static wchar_t wt_addl_func[]         = L"MD380Tools";
 const static wchar_t wt_datef[]             = L"Date format";
 const static wchar_t wt_debug[]             = L"USB logging";
-//const static wchar_t wt_netmon[]            = L"NetMon";
-const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
+const static wchar_t wt_netmon[]            = L"NetMonitor";
+//const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
 const static wchar_t wt_disable[]           = L"Disable";
 const static wchar_t wt_enable[]            = L"Enable";
 const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
@@ -48,7 +64,6 @@ const static wchar_t wt_usercsv[]           = L"User DB";
 const static wchar_t wt_talkalias[]         = L"Talk Alias";
 const static wchar_t wt_ta_user[]           = L"TA & UserDB";
 
-const static wchar_t wt_keyb_menu[]         = L"Keyb setting";	// main menu - setup side buttons and keyb layout mode
 const static wchar_t wt_keyb_mode[]         = L"Keyb Mode";     // keyb setup - select for different layout and radio models
 const static wchar_t wt_keyb_legacy[]       = L"Legacy";	// Tradiotionally layout of first MD380Tools firmware 
 const static wchar_t wt_keyb_modern[]       = L"Modern";	// Modern keyb layout, reordered functions, special keys right column
@@ -1274,24 +1289,6 @@ void create_menu_entry_sidebutton_screen(void)
 #endif
 }
 
-//==========================================================================================================//
-// main menu: Keyb Setup - Keyboard relevant settings and assignments
-//==========================================================================================================//
-
-void create_menu_entry_keyboard_screen(void)
-{
-#if defined(FW_D13_020) || defined(FW_S13_020)
-
-   md380_menu_entry_selected = 0;
-   mn_submenu_init(wt_keyb_menu);
-
-   mn_submenu_add_98(wt_keyb_mode, create_menu_entry_keybmode_screen);
-   mn_submenu_add_98(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
-
-   mn_submenu_finalize2();
-#endif
-}
-
 void create_menu_entry_backlight_screen(void)
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
@@ -1847,9 +1844,176 @@ void create_menu_entry_set_tg_screen(void)
 #endif // D13_020, S13_020, ..(?)
 }
 
-void create_menu_entry_addl_functions_screen(void)
+//==========================================================================================================//
+// main menu 1: Display - Display relevant settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_display(void)
 {
-    mn_submenu_init(wt_addl_func);
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_disp_menu);
+
+   mn_submenu_add_98(wt_backlight_menu, create_menu_entry_backlight_screen);
+   mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
+   mn_submenu_add_98(wt_showcall, create_menu_entry_showcall_screen);
+   mn_submenu_add_98(wt_bootopts, create_menu_entry_bootopts_screen);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// main menu 2: Keyboard - Keyboard relevant settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_keyboard(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_keyb_menu);
+
+   mn_submenu_add_98(wt_keyb_mode, create_menu_entry_keybmode_screen);
+   mn_submenu_add_98(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// main menu 3: Radio - Radio relevant settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_radio(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_radio_menu);
+
+   mn_submenu_add_98(wt_backlight_menu, create_menu_entry_backlight_screen);
+   mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
+   mn_submenu_add_98(wt_micgain, create_menu_entry_micgain_screen);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// main menu 4: DMR Setup - DMR relevant settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_dmr(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_dmr_menu);
+
+   mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1);
+   mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
+   mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
+   mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// main menu 5: Tones - Tones and audio feedback functions
+//==========================================================================================================//
+
+void create_menu_entry_tones(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_tones_menu);
+
+    mn_submenu_add_98(wt_rbeep, create_menu_entry_rbeep_screen);
+#  if( CONFIG_MORSE_OUTPUT )
+    mn_submenu_add_98(wt_morse_menu, create_menu_entry_morse_screen);
+#  endif
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// main menu 6: Developer - Developer relevant and other settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_dev(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_dev_menu);
+
+   mn_submenu_add_98(wt_debug, create_menu_entry_debug_screen);
+   mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
+   mn_submenu_add_98(wt_cp_override, mn_cp_override); 
+   mn_submenu_add_98(wt_config_reset, mn_config_reset);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// MD380Tools - Main menu - Caution: the main menu is limited to max. 16 + 1 entries!!
+//==========================================================================================================//
+//  
+//   1 Display
+//	   !
+//	   +--- 1 Backlight
+//	   +--- 2 Statusline  
+//	   +--- 3 Show Calls 
+//	   +--- 4 Boot Options
+//
+//   2 Keyboard
+//	   !
+//	   +--- 1 Keyb mode
+//	   +--- 2 Side Buttons
+//
+//   3 Radio
+//	   !
+//	   +--- 1 Backlight		--> also in 1-1, may be removed here later
+//	   +--- 2 Mic bargraph
+//	   +--- 3 Mic gain
+//
+//   4 DMR Setup
+//	   !
+//	   +--- 1 Adhoc Talkgrp
+//	   +--- 2 Netmonitor		--> new mode required for this!
+//	   +--- 3 Promiscous
+//	   +--- 4 Edit DMR-ID
+// 
+//   5 Tones
+//	   !
+//	   +--- 1 Morse output
+//	   +--- 2 M. RogerBeep
+//
+//   6 Developer
+//	   !
+//	   +--- 1 USB logging 
+//	   +--- 2 Experimental
+//	   +--- 3 CoPl Override
+//	   +--- 4 Config Reset
+//	   +--- 5 Dev Only
+//
+//==================================================================//
+
+void create_main_md380tools_screen(void)
+{
+    mn_submenu_init(wt_main_menutxt);
     
 #  if 0
     register uint32_t * sp asm("sp");
@@ -1859,64 +2023,19 @@ void create_menu_entry_addl_functions_screen(void)
     //printf( "f menucall.%s 0 0x%x\n", lbl2, (sp[15] - 1 - 4) );
 #  endif    
     PRINTRET();
-    PRINT("create_menu_entry_addl_functions_screen\n");
+    PRINT("create_main_menu_screen\n");
 
-//==================================================================//
-//  MD380Tools - Menu order (often used functions top and bottom!)
-//  --------------------------------------------------------------
-//  Caution: the menu is limited to max. 17 entries!!
-//
-//   1 M. RogerBeep
-//   2 Boot Options
-//   3 Date Format
-//   4 Show Calls 
-//   ---------------
-//   5 Keyb setup
-//   6 USB logging 
-//   7 Promiscuous
-//   8 Edit DMR-ID
-//   ---------------
-//   9 Morse output
-//  10 Config Reset
-//  11 Experimental
-//  11 Mic bargraph
-//  12 Mic gain
-//   ---------------
-//  13 Side Buttons 
-//  14 Backlight
-//  15 Set Talkgroup
-//  16 CoPl Override
-//  17 Dev Only
-//==================================================================//
+    mn_submenu_add_98(wt_main_display, create_menu_entry_display);
+    mn_submenu_add_98(wt_main_keyb, create_menu_entry_keyboard);
+    mn_submenu_add_98(wt_main_radio, create_menu_entry_radio);
+    mn_submenu_add_98(wt_main_dmr, create_menu_entry_dmr);
+    mn_submenu_add_98(wt_main_tones, create_menu_entry_tones);
+    mn_submenu_add_98(wt_main_dev, create_menu_entry_dev);    
 
-// first page - MD380Tools - cursor down
-    mn_submenu_add_98(wt_rbeep, create_menu_entry_rbeep_screen);
-    mn_submenu_add(wt_bootopts, create_menu_entry_bootopts_screen);
-    mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
-    mn_submenu_add_98(wt_showcall, create_menu_entry_showcall_screen);
-// setup pages - further functions
-//    mn_submenu_add_98(wt_keyb_setup, create_menu_entry_keybmode_screen);
-    mn_submenu_add(wt_keyb_menu, create_menu_entry_keyboard_screen);
-    mn_submenu_add_98(wt_debug, create_menu_entry_debug_screen);
-    mn_submenu_add_98(wt_promtg, create_menu_entry_promtg_screen);
-    mn_submenu_add_8a(wt_edit, create_menu_entry_edit_screen, 0); // disable this menu entry - no function jet
-    mn_submenu_add_8a(wt_edit_dmr_id, create_menu_entry_edit_dmr_id_screen, 1);
-#  if( CONFIG_MORSE_OUTPUT )
-    mn_submenu_add(wt_morse_menu, create_menu_entry_morse_screen);
-#  endif
-    mn_submenu_add_98(wt_config_reset, mn_config_reset);
-    mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
-    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
-    mn_submenu_add_98(wt_micgain, create_menu_entry_micgain_screen);
-//    mn_submenu_add(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
-// last page - MD380Tools - cursor up 
-    mn_submenu_add(wt_backlight_menu, create_menu_entry_backlight_screen);
-    mn_submenu_add_8a(wt_set_tg_id, create_menu_entry_set_tg_screen, 1);
-    mn_submenu_add_98(wt_cp_override, mn_cp_override);    
-    mn_submenu_add_98(wt_netmon, create_menu_entry_netmon_screen);
-    
     mn_submenu_finalize2();
 }
+
+//==========================================================================================================//
 
 void create_menu_utilies_hook(void)
 {
@@ -1939,12 +2058,12 @@ void create_menu_utilies_hook(void)
     md380_create_menu_entry(8, md380_wt_programradio, MKTHUMB(md380_menu_entry_programradio), MKTHUMB(md380_menu_entry_back), 0x8a, 0, enabled);
 
 #  ifdef FW_D13_020
-    md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
+    md380_create_menu_entry(11, wt_main_menu, MKTHUMB(create_main_md380tools_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
 #  else
     if( menu_mem->numberof_menu_entries == 6 ) { // d13.020 has hidden gps entrys on this menu
-        md380_create_menu_entry(11, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
+        md380_create_menu_entry(11, wt_main_menu, MKTHUMB(create_main_md380tools_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     } else {
-        md380_create_menu_entry(9, wt_addl_func, MKTHUMB(create_menu_entry_addl_functions_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
+        md380_create_menu_entry(9, wt_main_menu, MKTHUMB(create_main_md380tools_screen), MKTHUMB(md380_menu_entry_back), 0x8a, 0, 1);
     }
 #  endif
 
