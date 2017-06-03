@@ -10,6 +10,7 @@
 #include "tooldfu.h"
 #include "printf.h"
 #include "string.h"
+#include "dmesg.h"
 #include "dmr.h"
 #include "gfx.h"
 #include "radiostate.h"
@@ -448,16 +449,25 @@ void netmon6_update()
 #endif
 }
 
-void findcc(){
+void findcc()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
   con_clrscr();
   con_printf("Netmon CC Scan =============");
-  int cc;
-  c5000_spi0_readreg(0x52, &cc); 
+  int cc = 0;
+
+  c5000_spi0_readreg(0x52, dmesg_tx_buf);
+  cc = *dmesg_tx_buf;	
+ 
   if( (cc>>4) >= 0 && (cc>>4) <= 16 && (radio_status_1.m3 == 3)){
     con_printf("\nActive CC: %d", cc>>4);
   } else {
     con_printf("\nNo CC detected");
   }
+#else
+    clog_printf("No CC scan available\n");
+#endif
+
 }
 
 void netmon_update()
