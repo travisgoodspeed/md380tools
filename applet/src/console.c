@@ -84,7 +84,7 @@ static void con_addchar( char c )
 {
     // intentional non-wrap.
     if( con_xpos >= MAX_XPOS ) {
-        return ;
+        con_nl();
     }
     if( con_ypos >= Y_SIZE ) {
         return ;        
