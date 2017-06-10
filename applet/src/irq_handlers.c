@@ -7,7 +7,9 @@
 
   Also contains a simple Morse code generator (with 'audio modulator'),
   used to output the text assembled by the 'narrator' (narrator.c) .  
-  
+
+  Please don't poison this sourcecode with TAB characters .   
+
   Details may still be at www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
   Latest modifications:
     2017-05-20, DL4YHF : Added boot_flags to find out when 'open for business',
@@ -235,7 +237,7 @@ static void InitDimming(void)
   GPIOC->MODER  /*4002800*/ = ( GPIOC->MODER & ~(3 << (PINPOS_C_BL * 2) ) ) |  (2/*ALT*/ << (PINPOS_C_BL * 2) );
   
   // Two bits in "OSPEEDR" per pin : 00bin for the 'lowest speed', to cause the lowest possible RFI                                  
-  GPIOC->OSPEEDR/*4002808*/ &= ~(3 << (PINPOS_C_BL * 2) );  // RM0090 Rev7 page 283
+  GPIOC->OSPEEDR/*4002808*/ &= ~(3 << (PINPOS_C_BL * 2) );  // RM0090 Rev13 page 284
   
   // One bit per pin in "OTYPER" to select open drain or push/pull output mode:
   GPIOC->OTYPER /*4002804*/ &= ~(1<<PINPOS_C_BL);  // RM0090 Rev13 page 279 : Low for push-pull
