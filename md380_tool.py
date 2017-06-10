@@ -82,7 +82,8 @@ class Tool(DFU):
     def __init__(self, device, alt):
         super(Tool, self).__init__(device, alt)
         # We need to read the manufacturer string to hook the added USB functions
-        device.manufacturer
+        # Some systems (Raspian Jessie) don't have this property
+        getattr(device, "manufacturer")
 
     def drawtext(self, str, a, b):
         """Sends a new MD380 command to draw text on the screen.."""
@@ -104,20 +105,25 @@ class Tool(DFU):
 
     def read_framebuf_line(self, y):
         """Reads a single line of pixels from the framebuffer."""
-        # the firmware can do better (up to 32*16 pixels)
-        # this is just a simple test .. DL4YHF 2017-05-20
-        cmdstr = (chr(0x84) + # TDFU_READ_FRAMEBUFFER
+        # simple test - the firmware can also send larger tiles.
+        nloops = 0
+        while nloops<3:
+           cmdstr = (chr(0x84) + # TDFU_READ_FRAMEBUFFER
                   chr(0) +    # x1 (x1,y1) = tile's upper left corner
                   chr(y) +    # y1
                   chr(159) +  # x2 (x2,y2) = tile's lower right corner
                   chr(y)      # y2 
                   )
-        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
-        self.get_status()  # this changes state
-        status = self.get_status()  # this gets the status
-        # read 160 pixels per line * 2 bytes per pixel :
-        return self.upload(1, 320, 0)
-
+           self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr)
+           self.get_status()  # this changes state
+           status = self.get_status()  # this gets the status
+           # read 5-byte header (echo of cmdstr) followed by 
+           # 160 pixels per line * 3 bytes per pixel (BLUE,GREEN,RED):
+           rd_result = self.upload(1, 160*3+5, 0);
+           if rd_result[4] == y:  # y2 ok -> got the expected response
+             return rd_result[5:]
+           nloops = nloops+1
+        return "" # error -> empty result
 
     def peek(self, adr, size):
         """Returns so many bytes from an address."""
@@ -400,14 +406,31 @@ def coredump(dfu, filename):
 def screenshot(dfu, filename="screenshot.bmp"):
     """Reads the LCD framebuffer"""
     with open(filename, 'wb') as f:
-      for y in xrange(0,128):  
+      # Write a simple, hard-coded bitmap file header
+      #  (14 byte "file header" + 40 byte "info block" + 3*160*128 byte "data",
+      #   total size = 0x0000F036 bytes. Here written in little endian format: 
+      f.write( "BM" + chr(0x36)+chr(0xF0)+chr(0x00)+chr(0x00) 
+                    + chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00)
+                    + chr( 54 )+chr(0x00)+chr(0x00)+chr(0x00) )
+      # Next: Write the "bitmap info header". Keep it simple, use 40 bytes.
+      f.write( chr( 40 )+chr(0x00)+chr(0x00)+chr(0x00) ) # sizeof(BITMAPINFOHEADER)
+      f.write( chr( 160)+chr(0x00)+chr(0x00)+chr(0x00) ) # width (pixel)
+      f.write( chr( 128)+chr(0x00)+chr(0x00)+chr(0x00) ) # height (pixel)
+      f.write( chr( 1  )+chr(0x00) ) # number of bitplanes (anachronism)
+      f.write( chr( 24 )+chr(0x00) ) # number of bits per pixel
+      f.write( chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00) ) # no compression
+      f.write( chr(0x00)+chr(0xA0)+chr(0x00)+chr(0x00) ) # sizeof(pixel data)
+      f.write( chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00) ) # X pixel per meter
+      f.write( chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00) ) # P pixel per meter
+      f.write( chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00) ) # no colour palette
+      f.write( chr(0x00)+chr(0x00)+chr(0x00)+chr(0x00) ) # number of colours "used" : 0 = all
+      # Write image data with 160 pixels per line, 3 bytes per pixel.
+      # For a start, just dump the pixels to the file unmodified.
+      y = 127; # bmp files begin with the 'bottom line' (y=127)
+      while y>=0:  
         buf = dfu.read_framebuf_line(y)
-        # 160 pixels per line, two bytes per pixel,
-        # framebuffer pixel format (BGR565) explained
-        # in applet/src/lcd_driver.c .
-        # For a start, just dump to binary file.
-        # Bit-fiddling isn't Monty's strong side.
         f.write(buf)
+        y = y-1;
       f.close()
 
 
@@ -762,6 +785,9 @@ def main():
             elif sys.argv[1] == "calibration":
                 dfu = init_dfu()
                 parse_calibration(dfu)
+            elif sys.argv[1] == 'screenshot':
+                dfu = init_dfu()
+                screenshot(dfu)
 
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
