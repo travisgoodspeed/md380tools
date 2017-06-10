@@ -284,24 +284,28 @@ int usb_dnld_hook(){
       break;
 
 #if(CONFIG_APP_MENU)
-    case TDFU_READ_FRAMEBUFFER: 
+    case TDFU_READ_FRAMEBUFFER_24BPP: // read a tile with 24-bit RGB from the framebuffer.
        // Re-uses the dmesg tx buffer. If the app-menu's LCD driver is available,
        // this command reads out the LCD framebuffer in sufficiently small chunks ("tiles").
-       // Maximum size per tile = 32 * 16 pixels * 2 byte/pixel = 1024 bytes = DMESG_SIZE .
-       // 160 pixels (x) / 32 pixels per tile = 5 tiles per screen horizontally,
-       // 128 pixels (y) / 16 pixels per tile = 8 tile per screen vertically,
-       // 5 * 8 = 40 tiles to read the entire framebuffer via USB .
+       // 160 pixels (x) / 16 pixels per tile = 10 tiles per screen horizontally,
+       // 128 pixels (y) / 16 pixels per tile =  8 tile per screen vertically,
+       // 10 * 8 = 80 tiles to read the entire framebuffer via USB .
        *md380_dfu_target_adr=dmesg_tx_buf; // dmesg_tx_buf = (char*)DMESG_START = 0x2001F700
-       if( 0 < LCD_CopyRectFromFramebuffer(
+       if( 0 < LCD_CopyRectFromFramebuffer_RGB(
                 *((uint8_t*)(md380_packet+1)), // [in] x1 (tile start coord)
                 *((uint8_t*)(md380_packet+2)), // [in] y1
                 *((uint8_t*)(md380_packet+3)), // [in] x2 (tile end coord)
                 *((uint8_t*)(md380_packet+4)), // [in] y2
-                (uint8_t *)dmesg_tx_buf, // destination buffer, TWO bytes per pixel
+                (uint8_t *)dmesg_tx_buf+5, // destination buffer, with rect-coords followed by 3 bytes per pixel
                     DMESG_SIZE ) ) // [in] sizeof_dest, for sanity check
         { // Positive value returned LCD_CopyRectFromFramebuffer() : "ok" !
+          dmesg_tx_buf[0] = md380_packet[0]; // echo command byte
+          dmesg_tx_buf[1] = md380_packet[1]; // echo parameters ..
+          dmesg_tx_buf[2] = md380_packet[2]; // .. so the client can request
+          dmesg_tx_buf[3] = md380_packet[3]; //    retransmission if a packet got lost
+          dmesg_tx_buf[4] = md380_packet[4]; // last parameter: y2
           // Beware, the pixels in each tile will are 'rotated and mirrored'.
-          // The screenshot-taking utility must take care of this,
+          // The screenshot utility must take care of this,
           // or only read one line of pixels at a time (i.e. y1=y2) .
           green_led_timer = 32;  // short flash with the green LED : OK 
         }
