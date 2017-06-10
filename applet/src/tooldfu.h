@@ -32,4 +32,5 @@ fetching the raw buffer.
 #define TDFU_PRINT 0x80 //(u8 x, u8 y, wchar_t str[])
 #define TDFU_BOX   0x81 //(u8 x, u8 y, u8 xp, u8 yp)
 
-#define TDFU_READ_FRAMEBUFFER 0x84 // (u8 x1, u8 y1, u8 x2, u8 y2) max tile size = 512 pixels = 1 kByte
+// Framebuffer transfer commands
+#define TDFU_READ_FRAMEBUFFER_24BPP 0x84 // (u8 x1, u8 y1, u8 x2, u8 y2)
