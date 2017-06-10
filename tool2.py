@@ -224,11 +224,11 @@ class UsersDB:
 class Tool(DFU):
     """Client class for extra features patched into the MD380's firmware.
     None of this will work with the official firmware, of course."""
-
+    
     def __init__(self, device, alt):
         super(Tool, self).__init__(device, alt)
         # We need to read the manufacturer string to hook the added USB functions
-        # Some systems (Raspian Jessie) don't have this property (device.manufacturer)
+        # Some systems (Raspian Jessie) don't have this property
         getattr(device, "manufacturer")
 
     def drawtext(self,str,a,b):
@@ -671,7 +671,7 @@ def flashgetid(dfu):
             sys.stdout.write("W25Q128FV 16MByte maybe\n");
             size=16*1024*1024;          
     else:
-            sys.stdout.write("Unkown SPI Flash - please report\n");
+            sys.stdout.write("Unknown SPI Flash - please report\n");
     return size;
 
 def flashdump(dfu,filename):
@@ -1020,7 +1020,7 @@ def main():
                    dfu=init_dfu()
                    spiflashwrite(dfu,sys.argv[2],adr)
                 else:
-                   print "address to low"
+                   print "address too low"
             if sys.argv[1] == 'dump':
                 print "Dumping memory from %s." % sys.argv[3]
                 dfu=init_dfu()
