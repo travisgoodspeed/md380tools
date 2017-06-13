@@ -134,7 +134,8 @@ extern void gui_control( int r0 );
 
 void handle_hotkey( int keycode )
 {
-    PRINT("handle hotkey: %d\n", keycode );
+    if (global_addl_config.devmode_level != 0) 	
+	PRINT("handle hotkey: %d\n", keycode );
     
     reset_backlight();
   
@@ -263,13 +264,16 @@ void evaluate_sidekey( int button_function) // This is where new functions for s
 
 void trace_keyb(int sw)
 {
-    static uint8_t old_kp = -1 ;
-    uint8_t kp = kb_keypressed ;
+	if (global_addl_config.devmode_level > 2)
+	{
+		static uint8_t old_kp = -1 ;
+		uint8_t kp = kb_keypressed ;
     
-    if( old_kp != kp ) {
-        PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_row_col_pressed, kb_keycode );
-        old_kp = kp ;
-    }
+		if( old_kp != kp ) {
+		PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_row_col_pressed, kb_keycode );
+		old_kp = kp ;
+    		}
+	}
 }
 
 void set_keyb(int keyb_mode)
