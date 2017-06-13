@@ -312,12 +312,24 @@ void netmon4_update()
 
             print_time_hook(log);
 
-            if( usr_find_by_dmrid(&usr, src) == 0 ) {
-                lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
-            } else {
-                lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
-            }
+	// loookup source ID in user database to show callsign instead of ID
+	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+			// lookup destination ID in user database for status requests etc.
+	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+				lastheard_printf("=%d->%s %c\n", src, usr.callsign, mode);
+	                } else  {
+				lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
+	                }
+	        } else {
+	            lastheard_printf("=%s->", usr.callsign);
+	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+				lastheard_printf("%s %c\n", usr.callsign, mode);
+	                } else  {
+				lastheard_printf("%d %c\n", rst_dst, mode);
+			}
+		}
         }
+
         if ( global_addl_config.userscsv > 1 && (talkerAlias.displayed != 1 && talkerAlias.length > 0) )
         {
             talkerAlias.displayed = 1;
