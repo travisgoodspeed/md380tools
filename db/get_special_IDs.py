@@ -17,6 +17,8 @@ try:
 except ImportError:
     from urllib.request import Request, urlopen  # Py3
 
+from ssl import SSLError, CertificateError
+
 bm_master = Request("http://registry.dstar.su/api/node.php")
 
 try:
@@ -45,6 +47,10 @@ for idx, item in enumerate(data):
         print("Could not talk to master server in " + item['Country'] + "!\n")
     except socket.timeout:
         print("Socket Timeout...\n")
+    except SSLError as e:
+        print("SSL Error\n")
+    except CertificateError as e:
+        print("SSL Certificate Error\n")
     else:
         # Improved error handling for socket errors - MW0MWZ
         try:
