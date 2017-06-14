@@ -36,14 +36,12 @@ extern "C" {
 extern char hrc5000_reg[];
 extern char *hrc5000_register;
 
-#if defined(FW_D13_020) || defined(FW_S13_020)
 void hrc5000_check(void);
 void hrc5000_fm_set(void);
 void hrc5000_fm_read(void);
 void hrc5000_fm_reset(void);
 void hrc5000_dev_set(void);
 void hrc5000_dev_read(void);
-#endif
 
 void hrc5000_buffer_init(void);
 void hrc5000_buffer_flush(void);
