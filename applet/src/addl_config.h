@@ -74,6 +74,6 @@ void cfg_set_radio_name();
 void cfg_save();
 void set_keyb();
 void hrc5000_buffer_flush();				
-void hrc5000_fm_set();
+//void hrc5000_fm_set();
 
 #endif
