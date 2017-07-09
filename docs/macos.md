@@ -8,6 +8,7 @@
     brew upgrade
     brew install binutils libusb
     brew cask install gcc-arm-embedded # This is where you get the ARM cross-compiling stuff
+    sudo easy_install pip
     sudo pip2 install pyusb
 
 #### Fix the environment statements: ####
