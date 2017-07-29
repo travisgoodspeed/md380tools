@@ -34,6 +34,9 @@ image_S13:
 original_D13: 
 	"${MAKE}" -C firmware unwrapped/D013.020.img
 
+original_D13.34: 
+	"${MAKE}" -C firmware unwrapped/D013.034.img
+
 original_S13: 
 	"${MAKE}" -C firmware unwrapped/S013.020.img
 
@@ -45,6 +48,9 @@ original_D03:
 
 flash_original_D13: original_D13
 	./md380-dfu upgrade firmware/bin/D013.020.bin
+
+flash_original_D13.34: original_D13.34
+	./md380-dfu upgrade firmware/bin/D013.034.bin
 
 flash_original_S13: original_S13
 	./md380-dfu upgrade firmware/bin/S013.020.bin
