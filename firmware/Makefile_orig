@@ -49,12 +49,12 @@ $(UNWRAPDIR)/%.img: $(BINDIR)/%.bin | $(UNWRAPDIR)
 $(BINDIR)/%.bin: $(DLDIR)/%.zip | $(BINDIR)
 	unzip -p $< "$(FIRMWARE_ZIPPATH)" >$@
 	@test $$(find $@ -size $(FIRMWARE_FILESIZE)c) || (rm -f $@ && echo "$@: filesize mismatch" && false)
-	@test $$(sha256sum $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) || $$(shasum -a 256 $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
+	@test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
 
 $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 	cp $< $@
 	@test $$(find $@ -size $(FIRMWARE_FILESIZE)c) || (rm -f $@ && echo "$@: filesize mismatch" && false)
-	@test $$(sha256sum $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) || $$(shasum -a 256 $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) ||(rm -f $@ && echo "$@: SHA256 mismatch" && false)
+	@test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
 
 $(DLDIR)/%: | $(DLDIR)
 	@which curl >>/dev/null #Check that we have curl.
