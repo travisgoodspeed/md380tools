@@ -16,11 +16,7 @@
 #include "syslog.h"
 #include "usersdb.h"
 #include "irq_handlers.h" 	// boot_flags, BOOT_FLAG_LOADED_CONFIG defined here
-<<<<<<< HEAD
-//#include "system_hrc5000.h"	// set HRC5000 FM register during startup to config values
-=======
 #include "system_hrc5000.h"	// set HRC5000 FM register during startup to config values
->>>>>>> b077c0d52bc67e86bc7583ce1aa1fd9084ca11de
 
 addl_config_t global_addl_config;
 
@@ -81,13 +77,13 @@ void cfg_load()
     memcpy(&global_addl_config,&tmp,tmp.length);
     
     // range limit
-    R(global_addl_config.userscsv,3);   // 2017-02-19   0-disable 1-userscsv 2-talkeralias 3-both
+    R(global_addl_config.userscsv,3);   	// 2017-02-19   0-disable 1-userscsv 2-talkeralias 3-both
     R(global_addl_config.micbargraph,1);
     R(global_addl_config.debug,1);
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
     R(global_addl_config.boot_demo,1);
-//    R(global_addl_config.boot_splash,0); // unused
+//    R(global_addl_config.boot_splash,0); 	// unused
     R(global_addl_config.netmon,3);
     R(global_addl_config.datef,6);
     R(global_addl_config.fm_bpf,1);
@@ -153,13 +149,8 @@ void init_global_addl_config_hook(void)
     cfg_load();
 #if defined(FW_D13_020) || defined(FW_S13_020)
     set_keyb(global_addl_config.keyb_mode);		// set keyboard to correct mode selected in config menu
-<<<<<<< HEAD
-//    hrc5000_buffer_flush();				
-//    hrc5000_fm_set();					// set HRC5000 FM register during startup to config settings
-=======
     hrc5000_buffer_flush();				
     hrc5000_fm_set();					// set HRC5000 FM register during startup to config settings
->>>>>>> b077c0d52bc67e86bc7583ce1aa1fd9084ca11de
 #endif
 
 //#ifdef CONFIG_MENU

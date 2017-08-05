@@ -57,7 +57,7 @@ typedef struct addl_config {
     uint8_t fm_mode;		// 0x00-0xFF current register value of FM mode
     uint8_t keyb_mode;  	// Keyboad layout/mode 0=legacy, 1=modern, 2=MD446, 3=developer
     uint8_t scroll_mode;  	// Keyboad scroll 0=off, 1=fast, 2=slow
-    uint8_t devmode_level;	// Developer mode 0-off, 1-show FM options, 2-extended USB, 3-hide menu #1,#2,#5
+    uint8_t devmode_level;	// Developer level 0-off, 1-show FM options, 2-extended USB, 3-hide menu #1,#2,#5
 } addl_config_t ;
 
 #define CPO_BL1 0x1
