@@ -1278,7 +1278,12 @@ static void PollKeysForScroll(void)
 	// parent, and from the main menu to the main screen:
 
 	if (KeyRowColToVal(key) != 11 && KeyRowColToVal(key) != 12) {
-		autorepeat_countdown = 500/*ms*/ / 12;
+//		autorepeat_countdown = 500/*ms*/ / 12;
+		if (global_addl_config.scroll_mode == 1) {
+			autorepeat_countdown = 500/*ms*/ / 24; // 1 / "autorepeat RATE"
+		} else {
+			autorepeat_countdown = 960/*ms*/ / 24; // 1 / "autorepeat RATE"
+		}
 	}
 
 	if (gui_opmode2 == OPM2_MENU)
@@ -1287,7 +1292,11 @@ static void PollKeysForScroll(void)
 		green_menu_countdown = 200/*ms*/ / 24;
 		if (KeyRowColToVal(key) == 11 || KeyRowColToVal(key) == 12) {
 			kb_handle(KeyRowColToVal(key));
-			autorepeat_countdown = 500/*ms*/ / 12;
+			if (global_addl_config.scroll_mode == 1) {
+				autorepeat_countdown = 500/*ms*/ / 12; // 1 / "autorepeat RATE" was 12!
+			} else {
+				autorepeat_countdown = 960/*ms*/ / 12; // 1 / "autorepeat RATE" was 12!
+			}
 		}
 
 	}
@@ -1300,12 +1309,18 @@ static void PollKeysForScroll(void)
 		{
 			if (key == 0)
 			{
-				autorepeat_countdown = 500/*ms*/ / 12;
-				--green_menu_countdown;
+				if (global_addl_config.scroll_mode == 1) {
+					autorepeat_countdown = 500/*ms*/ / 12;
+					--green_menu_countdown;
+				} else {
+					autorepeat_countdown = 960/*ms*/ / 12;
+					--green_menu_countdown;
+				}
 			}
 			else // guess the RED BUTTON is still pressed after leaving the GREEN-button-menu
 			{
-				green_menu_countdown = 200/*ms*/ / 24; // ignore keypress for another 200 ms
+				//green_menu_countdown = 200/*ms*/ / 24; // ignore keypress for another 200 ms
+				green_menu_countdown = 500/*ms*/ / 12; // ignore keypress for another 200 ms
 			}
 		}
 		else // "green menu" countdown expired, guess the alternative menu may process this key..
@@ -1321,6 +1336,8 @@ static void PollKeysForScroll(void)
 			}
 			else // no CHANGE in the keyboard matrix, but maybe...
 				if (key == 0x0012 || key == 0x0022) // cursor key still pressed ?
+				//if( key=='U' || key=='D')
+				//if (KeyRowColToVal(key) == 11 || KeyRowColToVal(key) == 12)
 				{
 					if (autorepeat_countdown > 0)
 					{
@@ -1328,8 +1345,13 @@ static void PollKeysForScroll(void)
 					}
 					else // send the same key again, prevents rubbing the paint off..  
 					{
-						autorepeat_countdown = 80/*ms*/ / 24; // 1 / "autorepeat RATE"
-
+						if (global_addl_config.scroll_mode == 1) {
+							//autorepeat_countdown = 120/*ms*/ / 24; // 1 / "autorepeat RATE"
+							autorepeat_countdown = 500/*ms*/ / 12; // 1 / "autorepeat RATE"
+						} else {
+							//autorepeat_countdown = 360/*ms*/ / 24; // 1 / "autorepeat RATE"
+							autorepeat_countdown = 960/*ms*/ / 12; // 1 / "autorepeat RATE"
+						}
 						//Menu_OnKey(KeyRowColToASCII(key));
 						kb_handle(KeyRowColToVal(key));
 
@@ -1545,11 +1567,27 @@ void SysTick_Handler(void)
 	{ // (but not in the same interrupt as PollAnalogInputs)
 	PollKeys(); // non-intrusive polling of keys, with autorepeat
 	}
-	if ((oldSysTickCounter & 0x6F) == 1) // .. on every 111-th SysTick
-	{ // (but not in the same interrupt as PollAnalogInputs)
-	PollKeysForScroll(); 	// non-intrusive polling of keys for the 
-				// 'red menu' (menu activated by pressing the red 'BACK'-button,
-			   	// when that button isn't used to control Tytera's own menu).
+	if (global_addl_config.scroll_mode != 0) { 	// scrolling must be enabled in setup before use
+		switch (global_addl_config.scroll_mode)
+		{
+		case 1:
+		if ((oldSysTickCounter & 0x6F) == 1) 	// .. on every 111-th SysTick
+		{ // (but not in the same interrupt as PollAnalogInputs)
+		PollKeysForScroll(); 	// non-intrusive polling of keys for the 
+					// 'red menu' (menu activated by pressing the red 'BACK'-button,
+				   	// when that button isn't used to control Tytera's own menu).
+		}
+		break;
+		
+		case 2:
+		if ((oldSysTickCounter & 0xFF) == 1) 	// .. on every 255-th SysTick
+		{ // (but not in the same interrupt as PollAnalogInputs)
+		PollKeysForScroll(); 	// non-intrusive polling of keys for the 
+					// 'red menu' (menu activated by pressing the red 'BACK'-button,
+				   	// when that button isn't used to control Tytera's own menu).
+		}
+		break;
+		}
 	}
 #endif // CONFIG_APP_MENU ?
    } // end if( oldSysTickCounter > 6000 )

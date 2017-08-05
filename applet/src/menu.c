@@ -26,6 +26,8 @@
 #include "keyb.h"
 #include "codeplug.h"
 #include "narrator.h" // optional: reads out channel, zone, menu in Morse code.
+#include "system_hrc5000.h"
+
 // Main menu name
 const static wchar_t wt_main_menu[]         = L"MD380Tools";	// MD380Tools menu name
 const static wchar_t wt_main_menutxt[]      = L"MD380Tools 2.0";// MD380Tools menu header
@@ -44,19 +46,13 @@ const static wchar_t wt_dmr_menu[]          = L"DMR Setup";	// sub menu 4 header
 const static wchar_t wt_tones_menu[]        = L"Tones/Audio";	// sub menu 5 header title
 const static wchar_t wt_dev_menu[]          = L"Developer";	// sub menu 6 header title
 
-const static wchar_t wt_datef[]             = L"Date format";
-const static wchar_t wt_debug[]             = L"USB logging";
-const static wchar_t wt_netmon[]            = L"NetMonitor";
-//const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
-const static wchar_t wt_disable[]           = L"Disable";
-const static wchar_t wt_enable[]            = L"Enable";
-const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
+const static wchar_t wt_enable[]            = L"Enable";	// general option used in several menus
+const static wchar_t wt_disable[]           = L"Disable";	// general option used in several menus
 
 const static wchar_t wt_bootopts[]          = L"Boot Options";
 const static wchar_t wt_demoscr[]           = L"Demo Screen";
-const static wchar_t wt_demoscr_enable[]    = L"Enable";
-const static wchar_t wt_demoscr_disable[]   = L"Disable";
 const static wchar_t wt_splash[]            = L"Splash Mode";
+const static wchar_t wt_rbeep[]             = L"M. RogerBeep";
 
 const static wchar_t wt_showcall[]          = L"Show Calls";    // was UsersCSV / enable / disable now added Talker Alias
 const static wchar_t wt_fromcps[]           = L"CPS only";
@@ -70,20 +66,27 @@ const static wchar_t wt_keyb_modern[]       = L"Modern";	// Modern keyb layout, 
 const static wchar_t wt_keyb_MD446[]        = L"MD-446";	// Tytera MD-446 special 6-key layout, no numeric keypad
 const static wchar_t wt_keyb_dev[]          = L"Develop";	// Developer mode
 
+const static wchar_t wt_keyb_scroll[]       = L"Scroll Mode"; 	// scroll mode - enable or disable 
+const static wchar_t wt_scroll_off[]        = L"Scroll Off";	// disable scrolling
+const static wchar_t wt_scroll_fast[]       = L"Scroll Fast";	// enable fast scroll mode
+const static wchar_t wt_scroll_slow[]       = L"Scroll Slow";	// enable slow scroll mode
+
+const static wchar_t wt_datef[]             = L"Date/Status";	// sub menu header title
 const static wchar_t wt_datef_original[]    = L"YYYY/MM/DD";
 const static wchar_t wt_datef_germany[]     = L"DD.MM.YYYY";
 const static wchar_t wt_datef_italy[]       = L"DD/MM/YYYY";
 const static wchar_t wt_datef_american[]    = L"MM/DD/YYYY";
 const static wchar_t wt_datef_iso[]         = L"YYYY-MM-DD";
-const static wchar_t wt_datef_alt[]         = L"Lastheard ";
-const static wchar_t wt_datef_talias[]      = L"Talker Alias";    // added Talker Alias 
+const static wchar_t wt_datef_alt[]         = L"Lastheard ";	// show lastheard in statusline instead of date/time
+const static wchar_t wt_datef_talias[]      = L"Talker Alias";	// show Talker Alias in statusline instead of date/time
 
+const static wchar_t wt_set_tg_id[]         = L"Set Talkgroup";	// brad's PR #708
+const static wchar_t wt_netmon[]            = L"NetMonitor";
 const static wchar_t wt_promtg[]            = L"Promiscuous";
 const static wchar_t wt_edit[]              = L"Edit";
 const static wchar_t wt_edit_dmr_id[]       = L"Edit DMR-ID";
 const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
-const static wchar_t wt_set_tg_id[]         = L"Set Talkgroup"; // brad's PR #708 
-const static wchar_t wt_experimental[]      = L"Experimental";
+
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
 const static wchar_t wt_backlight[]         = L"Backlight Tmr";
@@ -92,9 +95,51 @@ const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
+const static wchar_t wt_fm_bpf[]	    = L"Bandpass Filter";
+const static wchar_t wt_fm_bpf_on[]         = L"FM BPF On";
+const static wchar_t wt_fm_bpf_off[]        = L"FM BPF Off";
+
+const static wchar_t wt_fm_comp[]	    = L"FM Compressor";
+const static wchar_t wt_fm_comp_on[]        = L"Mic Comp. On";
+const static wchar_t wt_fm_comp_off[]       = L"Mic Comp. Off";
+
+const static wchar_t wt_fm_preemp[]	    = L"FM PreEmphasis";
+const static wchar_t wt_fm_preemp_on[]      = L"PreEmph. On";
+const static wchar_t wt_fm_preemp_off[]     = L"PreEmph. Off";
+
+const static wchar_t wt_fm_bw[]		    = L"FM Bandwidth";
+const static wchar_t wt_fm_bw_12kHz[]       = L"12.5kHz";
+const static wchar_t wt_fm_bw_25kHz[]       = L"25.0kHZ";
+
+const static wchar_t wt_fm_options[]	    = L"FM Options";
+const static wchar_t wt_fm_save[]	    = L"Save setup";
+const static wchar_t wt_fm_reset_all[]	    = L"Reset all";
+
+const static wchar_t wt_fm_dev[]	    = L"FM Deviation";
+const static wchar_t wt_fm_dev0[]	    = L"Level -3";
+const static wchar_t wt_fm_dev1[]	    = L"Level -2";
+const static wchar_t wt_fm_dev2[]	    = L"Level -1";
+const static wchar_t wt_fm_dev3[]	    = L"Default";
+const static wchar_t wt_fm_dev4[]	    = L"Level +1";
+const static wchar_t wt_fm_dev5[]	    = L"Level +2";
+const static wchar_t wt_fm_dev6[]	    = L"Level +3";
+
 const static wchar_t wt_micgain[]           = L"Mic gain";
 const static wchar_t wt_micgain_3db[]       = L"3db Gain";
 const static wchar_t wt_micgain_6db[]       = L"6db Gain";
+
+const static wchar_t wt_debug[]             = L"USB logging";
+const static wchar_t wt_experimental[]      = L"Experimental";
+const static wchar_t wt_cp_override[]       = L"CoPl Override";
+//const static wchar_t wt_netmon[]            = L"DevOnly!!"; // for now, later a true submenu.
+const static wchar_t wt_config_reset[]	    = L"Config Reset";
+const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
+
+const static wchar_t wt_dev_mode[]	    = L"DevMode Level";
+const static wchar_t wt_dev_mode0[]	    = L"Standard";	 // devmode_level = 0
+const static wchar_t wt_dev_mode1[]	    = L"Ext. FM setup";	 // devmode_level = 1
+const static wchar_t wt_dev_mode2[]	    = L"USB verbose";	 // devmode_level = 2
+const static wchar_t wt_dev_mode3[]	    = L"Short Menu";	 // devmode_level = 3
 
 
 const static wchar_t wt_backlight_menu[]    = L"Backlight";
@@ -115,15 +160,12 @@ const static wchar_t *wt_bl_intensity[NUM_BACKLIGHT_INTENSITIES] =
    L"5",       L"6",          L"7", L"8",          L"9 (bright)" }; 
 #endif // CONFIG_DIMMED_LIGHT ?
 
-const static wchar_t wt_cp_override[]       = L"CoPl Override";
 const static wchar_t wt_splash_manual[]     = L"Disabled";
 const static wchar_t wt_splash_callid[]     = L"Callsign+DMRID";
 const static wchar_t wt_splash_callname[]   = L"Callsign+Name";
 
 const static wchar_t wt_cp_override_dmrid[] = L"ID Override";
 
-const static wchar_t wt_config_reset[] = L"Config Reset";
-const static wchar_t wt_config_reset_doit[] = L"Config Reset2";
 
 const static wchar_t wt_sidebutton_menu[]   = L"Side Buttons";
 const static wchar_t wt_button_top_press[]  = L"Top Pressed";
@@ -482,12 +524,15 @@ void create_menu_entry_demo_screen(void)
 
     md380_menu_entry_selected = global_addl_config.boot_demo;
 
-    mn_submenu_add(wt_demoscr_enable, create_menu_entry_demo_enable_screen);
-    mn_submenu_add(wt_demoscr_disable, create_menu_entry_demo_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_demo_enable_screen);
+    mn_submenu_add(wt_disable, create_menu_entry_demo_disable_screen);
 
     mn_submenu_finalize();
 }
 
+//==========================================================================================================//
+// options: Mic gain - set mic gain - off/3dB/6dB
+//==========================================================================================================//
 
 void create_menu_entry_micgain_6db_screen(void)
 {
@@ -515,12 +560,158 @@ void create_menu_entry_micgain_screen(void)
 	mn_submenu_init(wt_micgain);
 
 	md380_menu_entry_selected = global_addl_config.mic_gain;
-	mn_submenu_add(wt_demoscr_disable, create_menu_entry_micgain_disable_screen);
+	mn_submenu_add(wt_disable, create_menu_entry_micgain_disable_screen);
 	mn_submenu_add(wt_micgain_3db, create_menu_entry_micgain_3db_screen);
 	mn_submenu_add(wt_micgain_6db, create_menu_entry_micgain_6db_screen);
 
 	mn_submenu_finalize();
 }
+
+//==========================================================================================================//
+// options: FM settings - bandpass/compression/preemphasis/bandwith
+//==========================================================================================================//
+void mn_option_fm_bpf_off(void)
+{
+    mn_create_single_timed_ack(wt_fm_bpf, wt_fm_bpf_off);
+    global_addl_config.fm_bpf = 0;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void mn_option_fm_bpf_on(void)
+{
+    mn_create_single_timed_ack(wt_fm_bpf, wt_fm_bpf_on);
+    global_addl_config.fm_bpf = 1;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void create_menu_fm_bpf(void)
+{
+	mn_submenu_init(wt_fm_bpf);
+
+	md380_menu_entry_selected = global_addl_config.fm_bpf;
+	mn_submenu_add(wt_fm_bpf_off, mn_option_fm_bpf_off);
+	mn_submenu_add(wt_fm_bpf_on, mn_option_fm_bpf_on);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+void mn_option_fm_comp_off(void)
+{
+    mn_create_single_timed_ack(wt_fm_comp, wt_fm_comp_off);
+    global_addl_config.fm_comp = 0;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void mn_option_fm_comp_on(void)
+{
+    mn_create_single_timed_ack(wt_fm_comp, wt_fm_comp_on);
+    global_addl_config.fm_comp = 1;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void create_menu_fm_comp(void)
+{
+	mn_submenu_init(wt_fm_comp);
+
+	md380_menu_entry_selected = global_addl_config.fm_comp;
+	mn_submenu_add(wt_fm_comp_off, mn_option_fm_comp_off);
+	mn_submenu_add(wt_fm_comp_on, mn_option_fm_comp_on);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+void mn_option_fm_preemp_off(void)
+{
+    mn_create_single_timed_ack(wt_fm_preemp, wt_fm_preemp_off);
+    global_addl_config.fm_preemp = 0;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void mn_option_fm_preemp_on(void)
+{
+    mn_create_single_timed_ack(wt_fm_preemp, wt_fm_preemp_on);
+    global_addl_config.fm_preemp = 1;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void create_menu_fm_preemp(void)
+{
+	mn_submenu_init(wt_fm_preemp);
+
+	md380_menu_entry_selected = global_addl_config.fm_preemp;
+	mn_submenu_add(wt_fm_preemp_off, mn_option_fm_preemp_off);
+	mn_submenu_add(wt_fm_preemp_on, mn_option_fm_preemp_on);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+void mn_option_fm_bw_12kHz(void)
+{
+    mn_create_single_timed_ack(wt_fm_bw, wt_fm_bw_12kHz);
+    global_addl_config.fm_bw = 0;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void mn_option_fm_bw_25kHz(void)
+{
+    mn_create_single_timed_ack(wt_fm_bw, wt_fm_bw_25kHz);
+    global_addl_config.fm_bw = 1;
+    global_addl_config.fm_mode = 0xFF;			// set change flag
+    cfg_save();
+}
+
+void create_menu_fm_bw(void)
+{
+	mn_submenu_init(wt_fm_bw);
+
+	md380_menu_entry_selected = global_addl_config.fm_bw;
+	mn_submenu_add(wt_fm_bw_12kHz, mn_option_fm_bw_12kHz);
+	mn_submenu_add(wt_fm_bw_25kHz, mn_option_fm_bw_25kHz);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+void mn_option_fm_save(void)
+{
+    mn_create_single_timed_ack(wt_fm_options, wt_fm_save);
+    hrc5000_fm_read();				// read hrc fm register and log
+
+    cfg_save();
+}
+
+void mn_option_fm_reset_all(void)
+{
+    mn_create_single_timed_ack(wt_fm_options, wt_fm_reset_all);
+
+    global_addl_config.fm_bpf = 1;		// reset bandpass filter to default
+    global_addl_config.fm_comp = 1;		// reset compressor to default
+    global_addl_config.fm_preemp = 1;		// reset pre-emphasis to default
+    global_addl_config.fm_bw = 1;		// reset bandwidth to default
+    global_addl_config.fm_dev = 3;		// reset deviation to default
+
+    cfg_save();
+    hrc5000_fm_reset();				// write default values to register 0x34, 0x35
+}
+
+void create_menu_fm_options(void)
+{
+	mn_submenu_init(wt_fm_options);
+
+	md380_menu_entry_selected = 0;
+	mn_submenu_add(wt_fm_save, mn_option_fm_save);
+	mn_submenu_add(wt_fm_reset_all, mn_option_fm_reset_all);
+
+	mn_submenu_finalize();
+}
+
+//==========================================================================================================//
 
 void mn_cp_override_off(void)
 {
@@ -618,8 +809,8 @@ void mn_cp_override_dmrid_off(void)
 void mn_cp_override_dmrid(void)
 {
     mn_submenu_init(wt_cp_override_dmrid);
-    mn_submenu_add(wt_demoscr_enable, mn_cp_override_dmrid_on);
-    mn_submenu_add(wt_demoscr_disable, mn_cp_override_dmrid_off);
+    mn_submenu_add(wt_enable, mn_cp_override_dmrid_on);
+    mn_submenu_add(wt_disable, mn_cp_override_dmrid_off);
     mn_submenu_finalize();
 }
 
@@ -790,6 +981,124 @@ void create_menu_entry_keyb_mode_dev_screen(void)
 
 //==========================================================================================================//
 
+//==========================================================================================================//
+// submenu: Keyb scrolling - select scroll mode
+//==========================================================================================================//
+
+void menu_entry_scroll_mode_off(void)
+{
+    mn_create_single_timed_ack(wt_keyb_scroll,wt_scroll_off);
+    global_addl_config.scroll_mode = 0;
+    cfg_save();
+}
+
+void menu_entry_scroll_mode_fast(void)
+{
+    mn_create_single_timed_ack(wt_keyb_scroll,wt_scroll_fast);
+    global_addl_config.scroll_mode = 1;
+    cfg_save();
+}
+
+void menu_entry_scroll_mode_slow(void)
+{
+    mn_create_single_timed_ack(wt_keyb_scroll,wt_scroll_slow);
+    global_addl_config.scroll_mode = 2;
+    cfg_save();
+}
+
+//==========================================================================================================//
+
+//==========================================================================================================//
+// submenu: FM deviation setup - select FM modulation level
+//==========================================================================================================//
+
+void mn_option_fm_dev0(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev0);
+    global_addl_config.fm_dev = 0;
+    cfg_save();
+}
+
+void mn_option_fm_dev1(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev1);
+    global_addl_config.fm_dev = 1;
+    cfg_save();
+}
+
+void mn_option_fm_dev2(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev2);
+    global_addl_config.fm_dev = 2;
+    cfg_save();
+}
+
+void mn_option_fm_dev3(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev3);
+    global_addl_config.fm_dev = 3;
+    cfg_save();
+}
+
+void mn_option_fm_dev4(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev4);
+    global_addl_config.fm_dev = 4;
+    cfg_save();
+}
+
+void mn_option_fm_dev5(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev5);
+    global_addl_config.fm_dev = 5;
+    cfg_save();
+}
+
+void mn_option_fm_dev6(void)
+{
+    mn_create_single_timed_ack(wt_fm_dev,wt_fm_dev6);
+    global_addl_config.fm_dev = 6;
+    cfg_save();
+}
+
+
+//==========================================================================================================//
+
+
+//==========================================================================================================//
+// submenu: Developer mode - select developer mode level
+//==========================================================================================================//
+
+void mn_option_dev_mode0(void)
+{
+    mn_create_single_timed_ack(wt_dev_mode,wt_dev_mode0);
+    global_addl_config.devmode_level = 0;
+    cfg_save();
+}
+
+void mn_option_dev_mode1(void)
+{
+    mn_create_single_timed_ack(wt_dev_mode,wt_dev_mode1);
+    global_addl_config.devmode_level = 1;
+    cfg_save();
+}
+
+void mn_option_dev_mode2(void)
+{
+    mn_create_single_timed_ack(wt_dev_mode,wt_dev_mode2);
+    global_addl_config.devmode_level = 2;
+    cfg_save();
+}
+
+void mn_option_dev_mode3(void)
+{
+    mn_create_single_timed_ack(wt_dev_mode,wt_dev_mode3);
+    global_addl_config.devmode_level = 3;
+    cfg_save();
+}
+
+//==========================================================================================================//
+
 void create_menu_entry_experimental_enable_screen(void)
 {
     mn_create_single_timed_ack(wt_experimental,wt_enable);
@@ -926,6 +1235,50 @@ void create_menu_entry_keybmode_screen(void)
 }
 
 //==========================================================================================================//
+
+//==========================================================================================================//
+// sub menu: Keyb scroll mode - Setup keyboard scrolling
+//==========================================================================================================//
+
+void create_menu_entry_scroll_mode(void)
+{
+    mn_submenu_init(wt_keyb_scroll);
+
+    md380_menu_entry_selected = global_addl_config.scroll_mode;
+
+    mn_submenu_add(wt_scroll_off, menu_entry_scroll_mode_off);
+    mn_submenu_add(wt_scroll_fast, menu_entry_scroll_mode_fast);
+    mn_submenu_add(wt_scroll_slow, menu_entry_scroll_mode_slow);
+    
+    mn_submenu_finalize();
+}
+
+//==========================================================================================================//
+
+
+//==========================================================================================================//
+// sub menu: FM Deviation - Setup FM modulation
+//==========================================================================================================//
+
+void create_menu_fm_deviation(void)
+{
+	mn_submenu_init(wt_fm_dev);
+
+	md380_menu_entry_selected = global_addl_config.fm_dev;
+
+	mn_submenu_add(wt_fm_dev0, mn_option_fm_dev0);
+	mn_submenu_add(wt_fm_dev1, mn_option_fm_dev1);
+	mn_submenu_add(wt_fm_dev2, mn_option_fm_dev2);
+	mn_submenu_add(wt_fm_dev3, mn_option_fm_dev3);
+	mn_submenu_add(wt_fm_dev4, mn_option_fm_dev4);
+	mn_submenu_add(wt_fm_dev5, mn_option_fm_dev5);
+	mn_submenu_add(wt_fm_dev6, mn_option_fm_dev6);
+
+	mn_submenu_finalize();
+}
+
+//==========================================================================================================//
+
 
 void create_menu_entry_debug_screen(void)
 {
@@ -1585,6 +1938,33 @@ void mn_config_reset(void)
     mn_submenu_finalize();
 }
 
+//==========================================================================================================//
+// sub menu: Developer mode - select developer mode
+//==========================================================================================================//
+void mn_dev_mode(void)
+{
+	mn_submenu_init(wt_dev_mode);
+
+	md380_menu_entry_selected = global_addl_config.devmode_level;
+
+	mn_submenu_add(wt_dev_mode0, mn_option_dev_mode0);
+	mn_submenu_add(wt_dev_mode1, mn_option_dev_mode1);
+							// the FM setup / deviation level settings are very
+							// experimental features. They will we added to the
+							// radio menu, only if devmode 1 has been selected!
+							
+	if (global_addl_config.devmode_level > 0) {	// show next menu level only if devmode 1 enabled
+		mn_submenu_add(wt_dev_mode2, mn_option_dev_mode2);
+	}
+	if (global_addl_config.devmode_level > 1) {	// show next menu level only if devmode 2 enabled
+		mn_submenu_add(wt_dev_mode3, mn_option_dev_mode3);
+	}
+
+	mn_submenu_finalize();
+}
+//==========================================================================================================//
+
+
 void create_menu_entry_edit_screen_store(void)
 {
 #if 0
@@ -1878,6 +2258,7 @@ void create_menu_entry_keyboard(void)
 
    mn_submenu_add_98(wt_keyb_mode, create_menu_entry_keybmode_screen);
    mn_submenu_add_98(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
+   mn_submenu_add_98(wt_keyb_scroll, create_menu_entry_scroll_mode);
 
    mn_submenu_finalize2();
 #endif
@@ -1894,10 +2275,25 @@ void create_menu_entry_radio(void)
 
    md380_menu_entry_selected = 0;
    mn_submenu_init(wt_radio_menu);
-
+							// for rapid access to the radio menu during development
+							// the first 3 options will be removed from radio menu
+							// when devmode=3 was activated in MD380Tools (menu 4-6-5)
+   if (global_addl_config.devmode_level < 3) {		// DL2MF - remove after development! #################
    mn_submenu_add_98(wt_backlight_menu, create_menu_entry_backlight_screen);
    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
    mn_submenu_add_98(wt_micgain, create_menu_entry_micgain_screen);
+   }
+							// the FM setup / deviation level settings are very
+							// experimental features. They will we added to the
+							// radio menu, only if devmode 1 has been selected!
+   if (global_addl_config.devmode_level > 0) {		// DL2MF - remove after development! #################
+   mn_submenu_add_98(wt_fm_bpf, create_menu_fm_bpf);
+   mn_submenu_add_98(wt_fm_comp, create_menu_fm_comp);
+   mn_submenu_add_98(wt_fm_preemp, create_menu_fm_preemp);
+   mn_submenu_add_98(wt_fm_bw, create_menu_fm_bw);
+   mn_submenu_add_98(wt_fm_dev, create_menu_fm_deviation);
+   mn_submenu_add_98(wt_fm_options, create_menu_fm_options);
+   }
 
    mn_submenu_finalize2();
 #endif
@@ -1961,6 +2357,7 @@ void create_menu_entry_dev(void)
    mn_submenu_add_8a(wt_experimental, create_menu_entry_experimental_screen, 1);
    mn_submenu_add_98(wt_cp_override, mn_cp_override); 
    mn_submenu_add_98(wt_config_reset, mn_config_reset);
+   mn_submenu_add_98(wt_dev_mode, mn_dev_mode);
 
    mn_submenu_finalize2();
 #endif
@@ -2025,11 +2422,15 @@ void create_main_md380tools_screen(void)
     PRINTRET();
     PRINT("create_main_menu_screen\n");
 
+    if (global_addl_config.devmode_level < 3) {		// DL2MF - remove after development! #################
     mn_submenu_add_98(wt_main_display, create_menu_entry_display);
     mn_submenu_add_98(wt_main_keyb, create_menu_entry_keyboard);
+    }
     mn_submenu_add_98(wt_main_radio, create_menu_entry_radio);
     mn_submenu_add_98(wt_main_dmr, create_menu_entry_dmr);
+    if (global_addl_config.devmode_level < 3) {		// DL2MF - remove after development! #################
     mn_submenu_add_98(wt_main_tones, create_menu_entry_tones);
+    }
     mn_submenu_add_98(wt_main_dev, create_menu_entry_dev);    
 
     mn_submenu_finalize2();
