@@ -316,28 +316,16 @@ void netmon4_update()
 	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
 			// lookup destination ID in user database for status requests etc.
 	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
-<<<<<<< HEAD
 				lastheard_printf("=%d->%s %c\n", src, usr.callsign, mode);
 	                } else  {
 				lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
-=======
-	                        lastheard_printf("=%d->%s %c\n", src, usr.callsign, mode);
-	                } else  {
-	                        lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
->>>>>>> b077c0d52bc67e86bc7583ce1aa1fd9084ca11de
 	                }
 	        } else {
 	            lastheard_printf("=%s->", usr.callsign);
 	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
-<<<<<<< HEAD
 				lastheard_printf("%s %c\n", usr.callsign, mode);
 	                } else  {
 				lastheard_printf("%d %c\n", rst_dst, mode);
-=======
-	                        lastheard_printf("%s %c\n", usr.callsign, mode);
-	                } else  {
-	                        lastheard_printf("%d %c\n", rst_dst, mode);
->>>>>>> b077c0d52bc67e86bc7583ce1aa1fd9084ca11de
 			}
 		}
         }
