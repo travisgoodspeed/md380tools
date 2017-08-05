@@ -1,19 +1,20 @@
 #1: FILENAME	2: URL	3:	ZIPPATH	4: FILESIZE	5: SHA256
-D002.024.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v224.zip	TYT-MD-380-Firmware-Upgrade/Upgraded software for newest version.bin	999936	18d0080b41cde2871a4801ea0de1876cb3320c2498f3ea04f89d647b7d722e74
-D002.025.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v225.zip	MD-380-D2/MD-380-D2.25.bin	993792	5d0e5671a2e2ee8d2163325b442448e5494b93bd1a3e48e978ddbee6bcfd5bc5
-D002.026.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v226.zip	TYT-MD-380-Firmware-D002-2/MD-380-D2.26.bin	993792	348f6a6bcddfe80327b5da29a4074fc036bace344891dcf8b7b2b76e7f20b60f
-D002.027.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v227.zip	Firmware as 2.27/MD-380-D2.27.bin	993792	34ffbc629eb198c4c853c8081f441303a488f80eee5818826b3838b6abcf867c
-D002.030.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v230.zip	MD-380-Firmware-v2/MD-380-D2.30.bin	994816	1c903d440e35917e8a16906ccae1cbbd539230a5a3352e3eb896ffc3e96eccc6
-D002.032.zip	https://archive.org/download/TYTMD380FW2/TYT-Tytera-MD-380-FW-v232.zip	Firmware 2.32/MD-380-D2.32(AD).bin	994816	e1a1a11a84d9afd2d2ceed61be8395e32a8034785abd0be0236478f7d8609f43
-D002.034.zip	https://archive.org/download/TYTMD380FW2/TYT-MD380-FW-2-34.zip	TYT-MD380-FW-2-34/MD-380-D2.34.bin	994816	9d9a9599f43ef82caefd9239cec3770cc6b411e47f760fa07c6f22167e26fdfb
-D003.008.zip	https://archive.org/download/TYTMD380FW2/D003.008.zip	D003.008.bin	995840	466a5d6973926de2148f4ff32382e235ed047c2ef27d5ec5683ab9b91b89489d
-D003.020.bin	https://archive.org/download/TYTMD380FW2/TYT-TFT-MD380-D3.20.bin	TYT-TFT-MD380-D3.20.bin	996864	38787da956234f9ec811cae08568f7bdb5f21b4070681ae689a0ba82c845f973
-S003.012.bin	https://archive.org/download/TYTMD380FW2/TYT-GPS-MD390-MD380-S003.012.bin	TYT-GPS-MD390-MD380-S003.012.bin	999936	823439219e82f142ddb707003b6d6affa3993e6dd5bee99771a1f7f883de2046
-D013.009.bin	https://archive.org/download/TYTMD380FW2/D013.009_tytera_walking_dead_firmware_by_ea8cwb.bin	D013.009.bin	994816	d39a718a4730424a04d8f8c982d14a4cd2c63f558ec2d3f18671b6128c1c0ccb
-D013.014.bin	https://archive.org/download/TYTMD380FW2/TYT-Vocoder-MD380-D13.14.bin	TYT-Vocoder-MD380-D13.14.bin	995840	db479b26c0c6aed81e9a3d2f7b2bf7476dfccc401c7bdd8976b321b31b967f42
-D013.020.bin	https://archive.org/download/TYTMD380FW2/TYT-Vocoder-MD380-D13.20.bin	TYT-Vocoder-MD380-D13.20.bin	995840	b92052ea958b15687992cbf796f00a3dbcb33113426def550c32c7dd4e20cd95
-S013.012.bin	https://archive.org/download/TYTMD380FW2/TYT-Vocoder-MD390-S13.12.bin	TYT-Vocoder-MD390-S13.12.bin	998912	c8a98648d01c34ec8dca208eb0fff903ac0c9127a46ed482b7ca8e5755396d3d
-S013.020.bin	https://archive.org/download/TYTMD380FW2/TYT-Vocoder-MD390-S13.20.bin	TYT-Vocoder-MD390-S13.20.bin	999936	5ce02f5f68fcb4d977d3b209d0d3911743ed300ebfb89d583a4a83c10208ed26
-MD280.002.018.bin	https://archive.org/download/TYTMD380FW2/MD280.002.018.bin	MD280.002.018.bin	725504	705facf8a0877a745128f223ae17b4f5ab623694824664ea69942cba9b09690b
-MD446.D003.020.bin	https://archive.org/download/TYTMD380FW2/TYT-TFT-MD446-D3.20.bin	TYT-TFT-MD446-D3.20.bin	996864	9892b2e95da0eee0ec87604007f157f6f9b249a9fb11ba0fc3798e78956e2587
-MD446.D013.020.bin	https://archive.org/download/TYTMD380FW2/TYT-Vocoder-MD446-D13.20.bin	TYT-TFT-MD446-D13.20.bin	995840	6b83a74b72df4b13f74f5ac7ef2472593809055fc252c0aabe4c9eeeef1f115c
+D002.024.zip	https://md380.org/firmware/orig/TYT-Tytera-MD-380-FW-v224.zip	TYT-MD-380-Firmware-Upgrade/Upgraded software for newest version.bin	999936	18d0080b41cde2871a4801ea0de1876cb3320c2498f3ea04f89d647b7d722e74
+D002.025.zip	https://md380.org/firmware/orig/TYT-Tytera-MD-380-FW-v225.zip	MD-380-D2/MD-380-D2.25.bin	993792	5d0e5671a2e2ee8d2163325b442448e5494b93bd1a3e48e978ddbee6bcfd5bc5
+D002.026.zip	https://md380.org/firmware/orig/TYT-Tytera-MD-380-FW-v226.zip	TYT-MD-380-Firmware-D002-2/MD-380-D2.26.bin	993792	348f6a6bcddfe80327b5da29a4074fc036bace344891dcf8b7b2b76e7f20b60f
+D002.027.zip	https://md380.org/firmware/orig/TYT-Tytera-MD-380-FW-v227.zip	Firmware as 2.27/MD-380-D2.27.bin	993792	34ffbc629eb198c4c853c8081f441303a488f80eee5818826b3838b6abcf867c
+D002.030.zip	https://md380.org/firmware/orig/TYT-Tytera-MD-380-FW-v230.zip	MD-380-Firmware-v2/MD-380-D2.30.bin	994816	1c903d440e35917e8a16906ccae1cbbd539230a5a3352e3eb896ffc3e96eccc6
+D002.032.zip	https://md380.org/firmware/orig/TYT-Tytera-MD-380-FW-v232.zip	Firmware 2.32/MD-380-D2.32(AD).bin	994816	e1a1a11a84d9afd2d2ceed61be8395e32a8034785abd0be0236478f7d8609f43
+D002.034.zip	https://md380.org/firmware/orig/TYT-MD380-FW-2-34.zip	TYT-MD380-FW-2-34/MD-380-D2.34.bin	994816	9d9a9599f43ef82caefd9239cec3770cc6b411e47f760fa07c6f22167e26fdfb
+D003.008.zip	https://md380.org/firmware/orig/D003.008.zip	D003.008.bin	995840	466a5d6973926de2148f4ff32382e235ed047c2ef27d5ec5683ab9b91b89489d
+D003.020.bin	https://md380.org/firmware/orig/TYT-TFT-MD380-D3.20.bin	TYT-TFT-MD380-D3.20.bin	996864	38787da956234f9ec811cae08568f7bdb5f21b4070681ae689a0ba82c845f973
+S003.012.bin	https://md380.org/firmware/orig/TYT-GPS-MD390-MD380-S003.012.bin	TYT-GPS-MD390-MD380-S003.012.bin	999936	823439219e82f142ddb707003b6d6affa3993e6dd5bee99771a1f7f883de2046
+D013.009.bin	https://md380.org/firmware/orig/D013.009_tytera_walking_dead_firmware_by_ea8cwb.bin	D013.009.bin	994816	d39a718a4730424a04d8f8c982d14a4cd2c63f558ec2d3f18671b6128c1c0ccb
+D013.014.bin	https://md380.org/firmware/orig/TYT-Vocoder-MD380-D13.14.bin	TYT-Vocoder-MD380-D13.14.bin	995840	db479b26c0c6aed81e9a3d2f7b2bf7476dfccc401c7bdd8976b321b31b967f42
+D013.020.bin	https://md380.org/firmware/orig/TYT-Vocoder-MD380-D13.20.bin	TYT-Vocoder-MD380-D13.20.bin	995840	b92052ea958b15687992cbf796f00a3dbcb33113426def550c32c7dd4e20cd95
+S013.012.bin	https://md380.org/firmware/orig/TYT-Vocoder-MD390-S13.12.bin	TYT-Vocoder-MD390-S13.12.bin	998912	c8a98648d01c34ec8dca208eb0fff903ac0c9127a46ed482b7ca8e5755396d3d
+S013.020.bin	https://md380.org/firmware/orig/TYT-Vocoder-MD390-S13.20.bin	TYT-Vocoder-MD390-S13.20.bin	999936	5ce02f5f68fcb4d977d3b209d0d3911743ed300ebfb89d583a4a83c10208ed26
+MD280.002.018.bin	https://md380.org/firmware/orig/MD280.002.018.bin	MD280.002.018.bin	725504	705facf8a0877a745128f223ae17b4f5ab623694824664ea69942cba9b09690b
+MD446.D003.020.bin	https://md380.org/firmware/orig/TYT-TFT-MD446-D3.20.bin	TYT-TFT-MD446-D3.20.bin	996864	9892b2e95da0eee0ec87604007f157f6f9b249a9fb11ba0fc3798e78956e2587
+MD446.D013.020.bin	https://md380.org/firmware/orig/TYT-Vocoder-MD446-D13.20.bin	TYT-TFT-MD446-D13.20.bin	995840	6b83a74b72df4b13f74f5ac7ef2472593809055fc252c0aabe4c9eeeef1f115c
+D013.034.bin	http://w2fbi.com/files/MD380/D013.034.bin	D013.034.bin	996864	c375de54f172346d3f9aecc73cbfa024e753b482e484765b1a890182cfac157e
