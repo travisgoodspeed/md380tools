@@ -524,8 +524,8 @@ void create_menu_entry_demo_screen(void)
 
     md380_menu_entry_selected = global_addl_config.boot_demo;
 
-    mn_submenu_add(wt_enable, create_menu_entry_demo_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_demo_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_demo_enable_screen);
 
     mn_submenu_finalize();
 }
@@ -809,8 +809,8 @@ void mn_cp_override_dmrid_off(void)
 void mn_cp_override_dmrid(void)
 {
     mn_submenu_init(wt_cp_override_dmrid);
-    mn_submenu_add(wt_enable, mn_cp_override_dmrid_on);
     mn_submenu_add(wt_disable, mn_cp_override_dmrid_off);
+    mn_submenu_add(wt_enable, mn_cp_override_dmrid_on);
     mn_submenu_finalize();
 }
 
@@ -1141,8 +1141,8 @@ void create_menu_entry_promtg_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-    mn_submenu_add(wt_enable, create_menu_entry_promtg_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_promtg_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_promtg_enable_screen);
 
     mn_submenu_finalize();
 }
@@ -1157,8 +1157,8 @@ void create_menu_entry_micbargraph_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-    mn_submenu_add(wt_enable, create_menu_entry_micbargraph_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_micbargraph_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_micbargraph_enable_screen);
     
     mn_submenu_finalize();
 }
@@ -1173,8 +1173,8 @@ void create_menu_entry_rbeep_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-    mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen);
 
     mn_submenu_finalize();
 }
@@ -1290,8 +1290,8 @@ void create_menu_entry_debug_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-    mn_submenu_add(wt_enable, create_menu_entry_debug_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_debug_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_debug_enable_screen);
 
     mn_submenu_finalize();
 }
@@ -1346,8 +1346,8 @@ void create_menu_entry_experimental_screen(void)
         md380_menu_entry_selected = 1;
     }
 
-    mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen);
     mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen);
+    mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen);
 
     mn_submenu_finalize();
 }
