@@ -2278,15 +2278,14 @@ void create_menu_entry_radio(void)
 							// for rapid access to the radio menu during development
 							// the first 3 options will be removed from radio menu
 							// when devmode=3 was activated in MD380Tools (menu 4-6-5)
-   if (global_addl_config.devmode_level < 3) {		// DL2MF - remove after development! #################
+   if (global_addl_config.devmode_level < 3) {		// remove after development! #################
    mn_submenu_add_98(wt_backlight_menu, create_menu_entry_backlight_screen);
    mn_submenu_add_98(wt_micbargraph, create_menu_entry_micbargraph_screen);
    mn_submenu_add_98(wt_micgain, create_menu_entry_micgain_screen);
    }
 							// the FM setup / deviation level settings are very
 							// experimental features. They will we added to the
-							// radio menu, only if devmode 1 has been selected!
-   if (global_addl_config.devmode_level > 0) {		// DL2MF - remove after development! #################
+   if (global_addl_config.devmode_level > 0) {		// radio menu, only if devmode 1 has been selected!
    mn_submenu_add_98(wt_fm_bpf, create_menu_fm_bpf);
    mn_submenu_add_98(wt_fm_comp, create_menu_fm_comp);
    mn_submenu_add_98(wt_fm_preemp, create_menu_fm_preemp);
@@ -2422,13 +2421,13 @@ void create_main_md380tools_screen(void)
     PRINTRET();
     PRINT("create_main_menu_screen\n");
 
-    if (global_addl_config.devmode_level < 3) {		// DL2MF - remove after development! #################
+    if (global_addl_config.devmode_level < 3) {		// #### remove after development! #################
     mn_submenu_add_98(wt_main_display, create_menu_entry_display);
     mn_submenu_add_98(wt_main_keyb, create_menu_entry_keyboard);
     }
     mn_submenu_add_98(wt_main_radio, create_menu_entry_radio);
     mn_submenu_add_98(wt_main_dmr, create_menu_entry_dmr);
-    if (global_addl_config.devmode_level < 3) {		// DL2MF - remove after development! #################
+    if (global_addl_config.devmode_level < 3) {		// #### remove after development! #################
     mn_submenu_add_98(wt_main_tones, create_menu_entry_tones);
     }
     mn_submenu_add_98(wt_main_dev, create_menu_entry_dev);    
