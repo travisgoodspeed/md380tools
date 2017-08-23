@@ -1,6 +1,6 @@
 /*
  *  netmon.c
- * 
+ *
  */
 
 #include "netmon.h"
@@ -10,6 +10,7 @@
 #include "tooldfu.h"
 #include "printf.h"
 #include "string.h"
+#include "dmesg.h"
 #include "dmr.h"
 #include "gfx.h"
 #include "radiostate.h"
@@ -26,8 +27,8 @@
 
 #if (CONFIG_APP_MENU)
 # include "app_menu.h"     // alternative menu, with faster text display
-# include "lcd_driver.h"   // alternative LCD driver, less QRM, faster 
-# include "irq_handlers.h" // stopwatch for periodic framebuffer updates 
+# include "lcd_driver.h"   // alternative LCD driver, less QRM, faster
+# include "irq_handlers.h" // stopwatch for periodic framebuffer updates
 #endif // CONFIG_APP_MENU ?
 
 uint8_t nm_screen = 0 ;
@@ -35,6 +36,7 @@ uint8_t nm_started = 0 ;
 uint8_t nm_started5 = 0 ;
 uint8_t nm_started6 = 0 ;
 uint8_t rx_voice = 0 ;
+uint8_t lh_new = 0 ;
 uint8_t rx_new = 0 ;
 uint8_t ch_new = 0 ;
 uint8_t call_start_state = 0;
@@ -52,7 +54,7 @@ int progress = 0 ;
 #endif
 /* uint16_t *cntr2 = (void*)0x2001e844 ;*/
 
-#if defined(FW_D13_020) || defined(FW_S13_020)  
+#if defined(FW_D13_020) || defined(FW_S13_020)
     extern uint16_t m_cntr2 ;
 #endif
 
@@ -60,22 +62,22 @@ int progress = 0 ;
 uint8_t gui_opmode3 = 0xFF ;
 uint16_t m_cntr2 = 0x00;
 #endif
-    
+
 // mode2
 // 1 idle
 // 2 rx/tx
 // 4 post-rx/tx
 // 10 menu
 
-// mode3 
+// mode3
 // 0 = idle?
 // 3 = unprog channel
 // 5 = block dmr processing?
 
 // radio events (todo fix)
 // 0x01 = nosig
-// 0x02 = sync error? (tx only?) 
-// 0x03 = FM 
+// 0x02 = sync error? (tx only?)
+// 0x03 = FM
 // 0x04 = sync
 // 0x05 = ?
 // 0x07 = idle
@@ -87,7 +89,7 @@ uint16_t m_cntr2 = 0x00;
 uint8_t last_radio_event ;
 //
 
-// beep events 
+// beep events
 // 0x0e negative on ptt
 // 0x0f not programmed channel
 // 0x11 postive on ptt
@@ -117,7 +119,7 @@ void print_vce()
 
 void print_smeter()
 {
-#if defined(FW_D13_020) || defined(FW_S13_020)  
+#if defined(FW_D13_020) || defined(FW_S13_020)
     extern uint8_t smeter_rssi ;
     con_printf("rssi:%d\n", smeter_rssi );
 #endif
@@ -127,26 +129,26 @@ void netmon1_update()
 {
     progress++ ;
     progress %= sizeof( progress_info ) - 1 ;
-    
-    int progress2 = progress ; // sample (thread safe) 
+
+    int progress2 = progress ; // sample (thread safe)
 
     progress2 %=  sizeof( progress_info ) - 1 ;
     char c = progress_info[progress2];
-    
+
     con_clrscr();
-    
-    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, gui_opmode3, m_cntr2 ); 
-    
+
+    con_printf("%c|%02d|%2d|%2d|%4d\n", c, gui_opmode1 & 0x7F, gui_opmode2, gui_opmode3, m_cntr2 );
+
 #if defined(FW_D13_020) || defined(FW_S13_020)
     extern uint8_t channel_num ;
-    con_printf("ch:%d ", channel_num ); 
-    
+    con_printf("ch:%d ", channel_num );
+
     con_printf("zn:%S\n",zone_name);
     con_printf("con:%S\n",contact.name);
-    
+
     extern wchar_t channel_name[] ;
-    con_printf("cn:%S\n",channel_name); 
-#endif   
+    con_printf("cn:%S\n",channel_name);
+#endif
     {
         char *str = "?" ;
         switch( last_radio_event ) {
@@ -163,7 +165,7 @@ void netmon1_update()
                 str = "Out_of_sync" ; // TS 102 361-2 clause p 5.2.1.3.2
                 break ;
             case 0x5 :
-                str = "num5 0x5" ; 
+                str = "num5 0x5" ;
                 break ;
             case 0x7 :
                 str = "RX csbk/idle" ;
@@ -193,29 +195,29 @@ void netmon1_update()
 #if defined(FW_D13_020) || defined(FW_S13_020)
     {
 //        uint8_t *p = (void*)0x2001e5f0 ; // @D13
-        con_printf("st: %2x %2x %2x %2x\n", 
-                radio_status_1.m0, radio_status_1.m1, 
+        con_printf("st: %2x %2x %2x %2x\n",
+                radio_status_1.m0, radio_status_1.m1,
                 radio_status_1.m2, radio_status_1.m3 );
     }
-#endif    
+#endif
 #ifdef FW_D13_020
     {
         // only valid when transmitting or receiving.
         uint32_t *recv = (void*)0x2001e5e4 ;
-        con_printf("%d\n", *recv); 
+        con_printf("%d\n", *recv);
     }
-#endif    
+#endif
 #ifdef FW_S13_020
     {
         // only valid when transmitting or receiving.
         uint32_t *recv = (void*)0x2001e6b4 ;                    // needs to be confirmed!
-        con_printf("%d\n", *recv); 
+        con_printf("%d\n", *recv);
     }
-#endif     
+#endif
 }
 
 void print_bcd( uint8_t bcd )
-{    
+{
     con_printf("%d%d", (bcd>>4)&0xf, bcd&0xf );
 }
 
@@ -233,14 +235,14 @@ void netmon2_update()
     con_clrscr();
 #if defined(FW_D13_020) || defined(FW_S13_020)
     channel_info_t *ci = &current_channel_info ;
-    
+
     {
         con_printf("mde:%02x prv:%02x pow:%02x\n", ci->mode, ci->priv, ci->power );
-        
+
         con_puts("rx:");
         printfreq(&ci->rxf);
         con_nl();
-        
+
         con_puts("tx:");
         printfreq(&ci->txf);
         con_nl();
@@ -254,13 +256,13 @@ void netmon2_update()
     }
 #else
     con_puts("D13 has more\n");
-#endif    
+#endif
     print_hdr();
     print_vce();
-    
+
 //    {
 //        extern uint32_t kb_handler_count ;
-//        extern uint32_t f4225_count ; 
+//        extern uint32_t f4225_count ;
 //
 //        con_printf("%d %d\n", kb_handler_count, f4225_count);
 //    }
@@ -276,43 +278,58 @@ void netmon4_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     lastheard_draw_poll();
-
+    lastheard_redraw();
     int src;
     char log = 'l';
 
     if ( nm_started == 0 ) {
         lastheard_printf("Netmon 4 - Lastheard ====\n");
         nm_started = 1;                         // flag for restart of LH list
-    }   
+    }
 
     char mode = ' ' ;
-    if( rst_voice_active != previous_call_state && rst_voice_active)
+    if( (rst_voice_active != previous_call_state) && ( rst_voice_active) )
     {
         call_start_state = 1;
         talkerAlias.displayed = 0;
     }
     previous_call_state = rst_voice_active;
 
-    if( rst_voice_active ) {
+    if( ( rst_voice_active ) || (lh_new == 1) ){
         if( rst_mycall ) {
-            mode = '*' ; // on my tg            
+            mode = '*' ; // on my tg
         } else {
             mode = '!' ; // on other tg
         }
         src = rst_src;
         user_t usr;
-   
+
         if( ( src != 0 ) && ( rst_flco < 4 ) && call_start_state == 1 ) {
             call_start_state = 0;
+            lh_new = 0;                         // reset status for netmon4
             rx_new = 1;                         // set status to new for netmon5
             ch_new = 1;                         // set status to new for netmon6
+
             print_time_hook(log);
-            if( usr_find_by_dmrid(&usr, src) == 0 ) {
-                lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
-            } else {
-                lastheard_printf("=%s->%d %c\n", usr.callsign, rst_dst, mode);
-            }
+
+	// loookup source ID in user database to show callsign instead of ID
+	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
+			// lookup destination ID in user database for status requests etc.
+	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+				lastheard_printf("=%d->%s %c\n", src, usr.callsign, mode);
+	                } else  {
+				lastheard_printf("=%d->%d %c\n", src, rst_dst, mode);
+	                }
+	        } else {
+	            lastheard_printf("=%s->", usr.callsign);
+	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+				lastheard_printf("%s %c\n", usr.callsign, mode);
+	                } else  {
+				lastheard_printf("%d %c\n", rst_dst, mode);
+			}
+		}
         }
+
         if ( global_addl_config.userscsv > 1 && (talkerAlias.displayed != 1 && talkerAlias.length > 0) )
         {
             talkerAlias.displayed = 1;
@@ -320,8 +337,8 @@ void netmon4_update()
         }
     }
 #else
-    lastheard_printf("No lastheard available\n");    
-#endif 
+    lastheard_printf("No lastheard available\n");
+#endif
 
 }
 
@@ -329,24 +346,24 @@ void netmon5_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     slog_draw_poll();
-    
+    slog_redraw();
     int src;
+    char slog = 's';
 
-    extern wchar_t channel_name[20] ;           // read current channel name from external  
+    extern wchar_t channel_name[20] ;           // read current channel name from external
     static int sl_cnt = 0 ;                     // lastheard line counter
     static int cp_cnt = 1 ;                     // lastheard channel page counter
-    char slog = 's';
 
     if ( nm_started5 == 0 ) {
         slog_printf("Netmon 5 LH Channel =========\n");
         nm_started5 = 1;                        // flag for restart of LH list
-        sl_cnt++;                               // reset lh counter 
+        sl_cnt++;                               // reset lh counter
     }   
 
     char mode = ' ' ;
     if( rst_voice_active ) {
         if( rst_mycall ) {
-            mode = '*' ; // on my tg            
+            mode = '*' ; // on my tg
         } else {
             mode = '<' ; // on other tg
         }
@@ -369,7 +386,7 @@ void netmon5_update()
                         sl_cnt = 0;                                             // reset sl_cnt at end of screen
                         cp_cnt++;                                               // increment lh page count
                 } else {
-                        slog_printf("cn:%S ---------------\n", curr_channel);   // show divider line when channel changes       
+                        slog_printf("cn:%S ---------------\n", curr_channel);   // show divider line when channel changes
                 }
                 wcscpy(sh_last_channel, curr_channel);
                 sl_cnt++;
@@ -395,12 +412,13 @@ void netmon5_update()
         }
         rx_new = 0 ; // call handled, wait until new voice call status received
         ch_new = 1 ; // status for netmon6
+	lh_new = 0 ; // status helper for netmon4
         sl_cnt++;
      }
     }
 #else
-    slog_printf("No lastheard available\n");    
-#endif 
+    slog_printf("No lastheard available\n");
+#endif
 
 }
 
@@ -409,16 +427,17 @@ void netmon6_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
     clog_draw_poll();
-    
+    clog_redraw();
+    char clog = 'c';
+
     extern wchar_t channel_name[20] ;           // read current channel name from external  
     static int ch_cnt = 0 ;                     // lastheard line counter
-    char clog = 'c';
 
     if ( nm_started6 == 0 ) {
         clog_printf("Netmon 6 RX channel ========\n");
         nm_started6 = 1;                        // flag for restart of LH list
         ch_cnt = 1;                             // reset lh counter 
-    }   
+    }
 
     if( ch_new == 1 ) {
 
@@ -431,23 +450,44 @@ void netmon6_update()
 
         if (wcscmp(ch_last_channel, curr_channel) != 0)  {         // compare channel_name with last_channel from latest rx
                 print_time_hook(clog);
-                clog_printf("-%02d:%S \n", ch_cnt, curr_channel);  // show divider line when channel changes       
+                clog_printf("-%02d:%S \n", ch_cnt, curr_channel);  // show divider line when channel changes
                 wcscpy(ch_last_channel, curr_channel);
                 ch_cnt++;
           }
         ch_new = 0 ;                            // call handled, wait until new voice call status received
      }
 #else
-    clog_printf("No channellog available\n");    
-#endif 
+    clog_printf("No channellog available\n");
+#endif
+}
+
+void findcc()
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+  con_clrscr();
+  con_printf("Netmon CC Scan =============");
+  int cc = 0;
+
+  c5000_spi0_readreg(0x52, dmesg_tx_buf);
+  cc = *dmesg_tx_buf;	
+ 
+  if( (cc>>4) >= 0 && (cc>>4) <= 16 && (radio_status_1.m3 == 3)){
+    con_printf("\nActive CC: %d", cc>>4);
+  } else {
+    con_printf("\nNo CC detected");
+  }
+#else
+    clog_printf("No CC scan available\n");
+#endif
+
 }
 
 void netmon_update()
 {
     if( !is_netmon_visible() ) {
         netmon6_update();
-        netmon4_update();
         netmon5_update();
+        netmon4_update();
         return ;
     }
     
@@ -461,10 +501,12 @@ void netmon_update()
             netmon2_update();
             return ;
         case 3 :
+	    syslog_redraw();	
             netmon3_update();
             return ;
         case 4 :
             netmon6_update();
+            netmon5_update();
             netmon4_update();
             return ;
         case 5 :
@@ -474,7 +516,7 @@ void netmon_update()
             return ;
         case 6 :
             netmon4_update();
-            //netmon5_update();
+            netmon5_update();
             netmon6_update();
             return ;
     }
@@ -488,7 +530,7 @@ void netmon_update()
 // and use individual printf-functions to fill them:
 //    Netmon4 -> lastheard_printf() -> char lastheard_buf[LASTHEARD_SIZE];
 //    Netmon5 -> slog_printf()      -> char slog_buf[SLOG_SIZE];
-//               slog_draw_poll() :  copies slog_buf[] to con_buf[][];  
+//               slog_draw_poll() :  copies slog_buf[] to con_buf[][];
 //    Netmon6 -> clog_printf()      -> char clog_buf[CLOG_SIZE];
 // So, with some trickery, lastheard.c and most of the netmon functions
 // don't need to be modified to show the netmon-screens in the app-menu.
@@ -519,7 +561,7 @@ static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
         break;
      case 4 :
         lastheard_redraw(); // convince lastheard_draw_poll(?) to do something
-        netmon4_update(); // -> lastheard_draw_poll(?), 
+        netmon4_update(); // -> lastheard_draw_poll(?),
         break;
      case 5 :
         netmon4_update(); // required for what (possibly 'collects data') ?
@@ -531,6 +573,9 @@ static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
         clog_redraw();    // set flag for netmon6_update() to do something
         netmon4_update(); // seems to "acquire" something for other screens, too.
         netmon6_update(); // netmon6_update() -> clog_draw_poll() -> con_clrscr(), ...
+        break;
+     case 0 :
+        findcc();
         break;
      default:
         con_clrscr();
@@ -548,7 +593,7 @@ static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
    }
   if( pMenu->value_chksum != checksum )
    {  pMenu->value_chksum =  checksum;
-      pMenu->redraw = TRUE;  
+      pMenu->redraw = TRUE;
    }
 
   if( pMenu->redraw || (ReadStopwatch_ms(&stopwatch_for_update)>1000/*ms*/) )
@@ -559,7 +604,7 @@ static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
      Menu_GetColours( SEL_FLAG_NONE, &dc.fg_color, &dc.bg_color );
 
      dc.font = LCD_OPT_FONT_8x8;
-     LCD_Printf( &dc, "\tNetmon %d\r", netmon_screen ); 
+     LCD_Printf( &dc, "\tNetmon %d\r", netmon_screen );
      dc.font = LCD_OPT_FONT_6x12;
      con_y = 0;
      while( (con_y<CONSOLE_Y_SIZE) && (dc.y<LCD_SCREEN_HEIGHT) )
@@ -574,7 +619,7 @@ static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
         sz40[con_x] = '\0';
         dc.x = 0;
         LCD_Printf( &dc, "%s\r", sz40 ); // unlike '\n', '\r' clears the rest of the line
-      } 
+      }
      // If necessary, clear the rest of the screen (at the bottom) :
      LCD_FillRect( 0, dc.y, LCD_SCREEN_WIDTH-1, LCD_SCREEN_HEIGHT-1, dc.bg_color );
      pMenu->redraw = FALSE;    // "done" (screen has been redrawn)
@@ -586,7 +631,7 @@ static void NetMon_Draw(app_menu_t *pMenu, int netmon_screen )
 
 //---------------------------------------------------------------------------
 int am_cbk_NetMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
-  // Callback function, invoked from the "app menu" framework 
+  // Callback function, invoked from the "app menu" framework
   // to paint ONE of the SIX (?) netmon screens into the LCD framebuffer.
 {
   switch( event ) // what happened, why did the menu framework call us ?
@@ -599,7 +644,7 @@ int am_cbk_NetMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
         if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // only if HexMon already 'occupied' the screen !
          { // To minimize QRM from the display cable, only redraw the screen
            // if the content of the 'console' has been modified.
-           // But to calculate a CRC for the console screen, 
+           // But to calculate a CRC for the console screen,
            // the netmon-screen-specific buffer must be copied (printed)
            // into con_buf[][] first. Then, let NetMon_Draw() decide
            // if it's really necessary to 'send pixels over the cable'.
@@ -609,7 +654,7 @@ int am_cbk_NetMon(app_menu_t *pMenu, menu_item_t *pItem, int event, int param )
            return AM_RESULT_OCCUPY_SCREEN; // keep the screen 'occupied'
          }
         break;
-     case APPMENU_EVT_KEY : // own keyboard control only if the screen is owned by HexMon : 
+     case APPMENU_EVT_KEY : // own keyboard control only if the screen is owned by HexMon :
         if( pMenu->visible == APPMENU_USERSCREEN_VISIBLE ) // only if HexMon already 'occupied' the screen !
          { switch( (char)param ) // here: message parameter = keyboard code (ASCII)
             {

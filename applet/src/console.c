@@ -171,7 +171,7 @@ static void con_draw1()
     
     // erase bottom stripe.
     gfx_set_fg_color(bgcolor); 
-    gfx_blockfill(0, MAX_Y-10, MAX_X, MAX_Y); 
+    gfx_blockfill(0, MAX_Y-9, MAX_X, MAX_Y); 		// fix by MAX_Y-9 instead of -10 overwrite of lowest pixel/line in bottom area of netmon screens
     // erase left 1 pixels
     gfx_blockfill(0, 0, LEFT_POS-1, MAX_Y); 
     

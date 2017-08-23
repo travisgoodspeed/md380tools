@@ -278,6 +278,10 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
 //---------------------------------------------------------------------------
 void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
 { 
+  //avoid resetting screen if menu isn't open
+  if (( global_addl_config.keyb_mode == 1 ) && (!Menu_IsVisible() && key == 'B')) {
+	return;
+	}
   if( boot_flags & BOOT_FLAG_FIRST_KEY_POLLED ) // ignore 'early keystrokes'
    { am_key = key;
    }
@@ -801,14 +805,15 @@ int Menu_DrawIfVisible(int caller)
          }
       }
      else
-     if( (pMenu->visible==APPMENU_VISIBLE) || (c=='B') )
+
+     if  (((global_addl_config.keyb_mode == 1) && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B' || c == '#') ))  ||  ((global_addl_config.keyb_mode != 1) && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B')) ))
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
               Menu_OnEnterKey(pMenu);
               break; // end case < green "Menu", aka "Confirm"-key >
-           case 'B' :  // red "Back"-key : 
+           case 'B' :  // red "Back"-key :
               // red_led_timer  = 20;    // <- poor man's debugging 
-              if( pMenu->visible == APPMENU_OFF ) // not visible yet..
+              if( ( pMenu->visible == APPMENU_OFF ) && ( global_addl_config.keyb_mode != 1) ) // not visible yet..
                { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
                  StartStopwatch( &pMenu->morse_stopwatch ); 
                  // Reporting the first item in Morse code later (when morse_stopwatch expires): 
@@ -878,6 +883,14 @@ int Menu_DrawIfVisible(int caller)
               pMenu->redraw = TRUE;
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
+		if (c == '#' && pMenu->visible == APPMENU_OFF && !is_netmon_visible()) { // red "Back"-key : 
+		{
+			Menu_Open(pMenu, NULL, NULL, APPMENU_EDIT_OFF);  // so open the default menu (items)
+			StartStopwatch(&pMenu->morse_stopwatch);
+			// Reporting the first item in Morse code later (when morse_stopwatch expires): 
+			pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+			}
+		}
               if( pMenu->edit_mode != APPMENU_EDIT_OFF )
                { Menu_ProcessEditKey(pMenu, c);
                }
@@ -891,7 +904,6 @@ int Menu_DrawIfVisible(int caller)
          }
       } // end if < "red key" pressed or "red-key-menu" already visible > ?
    } // end if < keyboard-"event" for the App Menu > ? 
-
 
   // Start editing 'on request' from a programmable hotkey (e.g. edit talkgroup) ?
   if( pMenu->new_edit_mode >= 0 ) 

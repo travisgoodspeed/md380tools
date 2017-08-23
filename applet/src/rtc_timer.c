@@ -19,6 +19,7 @@
 #include "usersdb.h"
 #include "display.h"
 #include "dmr.h"
+#include "dmesg.h"
 #include "console.h"
 #include "util.h"
 #include "debug.h"
@@ -27,7 +28,7 @@
 #include "irq_handlers.h"
 #include "narrator.h"
 #include "app_menu.h"
-
+#include "system_hrc5000.h"
  
 //static int flag=0;
 
@@ -276,7 +277,9 @@ void trace_gui_opmode1()
         return ;
     }
     if( old != new ) {
+#if defined CONFIG_KEYBTRACE
         PRINT( "mode1: %d -> %d (%d)\n", old, new, upd );
+#endif
         old = new ;
     }
 }
@@ -286,7 +289,9 @@ void trace_gui_opmode2()
     static int old = -1 ;
     int new = gui_opmode2 ;
     if( old != new ) {
+#if defined CONFIG_KEYBTRACE
         PRINT( "mode2: %d -> %d\n", old, new );
+#endif
         LOGG( "mode2: %d -> %d\n", old, new );
         old = new ;
 #      if( CONFIG_MORSE_OUTPUT ) 
@@ -315,6 +320,8 @@ void trace_gui_opmode3()
 }
 #endif
 
+static int rtc_hook_timer = 0;
+
 void f_4225_hook()
 {
     
@@ -326,6 +333,7 @@ void f_4225_hook()
     
     static int old = -1 ;
     int new = gui_opmode1 & 0x7F ;
+
     if( old != new ) {
         if( gui_opmode2 == OPM2_MENU ) {
             // menu is showing.
@@ -339,13 +347,34 @@ void f_4225_hook()
             old = new ;
         }
     }
-    
+
     if ( global_addl_config.micbargraph == 1 ) {
         if( !is_netmon_visible() ) {
             draw_micbargraph();
         }
     }
-    
+    rtc_hook_timer++;
+	
+    if ( global_addl_config.mic_gain > 0 && rtc_hook_timer==30) {
+	if(global_addl_config.mic_gain==1){
+		c5000_spi0_writereg( 0x0F, 0xD8);
+	}
+	else if(global_addl_config.mic_gain==2){
+		c5000_spi0_writereg( 0x0F, 0xE8);
+	}
+    }
+
+    if ( rtc_hook_timer%150==0 && !IS_PTT_PRESSED) {
+	hrc5000_check();		// check FM registers (BPF, compression, pre-emphasis, bandwith)
+    }
+	
+    if ( rtc_hook_timer%111==0 && !IS_PTT_PRESSED) {
+	hrc5000_dev_set();		// set FM deviation level (default=0, user=1-5)
+    }
+
+    if(rtc_hook_timer >= 200)
+	rtc_hook_timer=0;
+
     netmon_update();
 
 #  if( CONFIG_MORSE_OUTPUT ) 
