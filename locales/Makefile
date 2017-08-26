@@ -1,3 +1,4 @@
+CFLAGS = -g -Wall -std=c11
 
 all: localize hu it de es sr
 clean:
