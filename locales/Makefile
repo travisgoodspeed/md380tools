@@ -26,7 +26,8 @@ sr: localize applet
 	
 fr: localize applet
 	cat strings.txt | ./localize fr ../applet/merged.img D013.020-fr.img
-
+        "${MAKE}" D013.020-fr.bin
+	
 flash-hu: hu
 	../md380-dfu upgrade D013.020-hu.bin
 
