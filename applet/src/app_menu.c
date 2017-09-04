@@ -2,7 +2,7 @@
 // Author:  Wolf (DL4YHF) [initial version] 
 //          Please don't poison this sourcecode with TAB characters . 
 //
-// Date:    2017-05-12
+// Date:    2017-06-24
 //  Implements a simple menu opened with the red BACK button,
 //             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
@@ -65,7 +65,7 @@
 
 // Variables used by the 'app menu' :
 
-static uint8_t  am_key;              // one-level keyboard buffer
+static uint8_t  am_key; // one-level keyboard buffer for the app-menu
 static uint8_t  morse_activation_pending = TRUE;
 static uint32_t backlight_stopwatch; // SysTick-based stopwatch for the backlight
 
@@ -218,6 +218,14 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
   { "[h8]FSMC(1)",      DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // register with LCD bus timing bits..
       (void*)&FSMC_Bank1->BTCR[1], 0,0, NULL,     NULL  }, // original value: 0x10100233; details in lcd_driver.c 
 #endif
+#if (1) // check keyboard and remote control via USB ?
+  { "[h2]kb_keycode",   DTYPE_UNS8,  APPMENU_OPT_NONE, 0,  // TYTERA's own keyboard code (non-ASCII)
+      (void*)&kb_keycode,            0,0, NULL,   NULL  }, //  
+  { "[h2]keypress",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0,  // TYTERA's keyboard processing state
+      (void*)&kb_keypressed,         0,0, NULL,   NULL  }, // 
+  { "[h2]key_remote",   DTYPE_UNS8,  APPMENU_OPT_NONE, 0,  // remote keyboard state (ASCII, received from USB)
+      (void*)&keypress_ascii_remote, 0,0, NULL,   NULL  }, // 
+#endif
 #if (0) && ( defined(FW_D13_020) || defined(FW_S13_020) ) // removed 2017-05-12 because Netmon1 can show these:
   { "[b8]radio_s0",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &radio_status_1.m0,0,0,    NULL,         NULL     },
@@ -282,10 +290,14 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
 
 //---------------------------------------------------------------------------
 void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
+  // [in] ASCII key, not the strange key values in Tytera's firmware .
 { 
   if( boot_flags & BOOT_FLAG_FIRST_KEY_POLLED ) // ignore 'early keystrokes'
    { am_key = key;
    }
+  // DON'T call anything in Tytera's part of the firmware from here,
+  // neither directly nor indirectly (through other functions) ! 
+  // Reason: See irq_handlers.c : PollKeys() .
 }
 
 //---------------------------------------------------------------------------
@@ -366,7 +378,7 @@ void Menu_Close(app_menu_t *pMenu)
       pMenu->save_on_exit = FALSE; // "done"
    }
 
-  if( kb_row_col_pressed ) // some key (especially the green MENU key) still pressed ?
+  if( kb_row_col_pressed || keypress_ascii_remote ) // some key still pressed ?
    { pMenu->visible = APPMENU_VISIBLE_UNTIL_KEY_RELEASED;
    } // end if < trying to exit but a key is still pressed >
   else // green MENU key not pressed, so the normal main screen should appear..

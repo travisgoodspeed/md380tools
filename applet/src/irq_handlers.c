@@ -12,6 +12,8 @@
 
   Details may still be at www.qsl.net/dl4yhf/RT3/md380_fw.html#dimmed_light .
   Latest modifications:
+    2017-06-21, DL4YHF : Keyboard remotely controllable via USB, includes
+          autorepeat, also for the original 'Tytera' menu. 
     2017-05-20, DL4YHF : Added boot_flags to find out when 'open for business',
           and a temporary fix, caused by an outdated display.c in a VM somewhere,
           which didn't set boot_flags.BOOT_FLAG_DREW_STATUSLINE. Issue #755 .
@@ -97,10 +99,14 @@ volatile uint32_t IRQ_dwSysTicksAtBoot = 0; // snapshot of IRQ_dwSysTickCounter 
 
 uint16_t keypress_timer_ms = 0; // measures key-down time in MILLISECONDS 
 uint8_t  keypress_ascii = 0;    // code of the currently pressed key, 0 = none .
+                // Usually updated in irq_handlers.c only, and only for the 
+                // alternative menu. 
 uint8_t  keypress_ascii_at_power_on = 0; // snapshot of keypress_ascii at power-on
                 // (only valid if boot_flags.BOOT_FLAG_FIRST_KEY_POLLED is set.
                 //  To avoid dozens of '#ifs', these variables exist even if 
                 //  they are never updated, e.g. in D002.032-based firmware. )
+uint8_t  keypress_ascii_remote; // for control via remote keyboard (USB).
+                // Merged with the "local" keys in irq_handlers.c:PollKeys() .
 
 #if( CONFIG_MORSE_OUTPUT )
 typedef struct tMorseGenerator
@@ -1015,7 +1021,7 @@ static void PollAnalogInputs(void)
 #if( CAN_POLL_KEYS ) // <- def'd as 0 or 1 in keyb.h, depends on firmware variant, subject to change
 //---------------------------------------------------------------------------
 char KeyRowColToASCII(uint16_t kb_row_col)
-{ // Converts a hardware-specific keyboard code into a character.
+{ // Converts a hardware-specific keyboard code into a character (ASCII) .
   // Implemented 2017-03-31 for the alternative menu .
   //   [in]  16-bit "row/column" combination shown below
   //   [out] simple 8-bit character also shown in the table:
@@ -1035,43 +1041,79 @@ char KeyRowColToASCII(uint16_t kb_row_col)
   //   | 0x0042 | 0x0082 | 0x0102 | 0x0202 |     |
   //   |________|________|________|________|   --
   //  
-  switch( kb_row_col ) // sorted by switch-value for shortest code..
-   { case 0x000A : return 'M'; // Green 'Menu' key (which usually opens TYTERA's menu)
-     case 0x000C : return '1';
-     case 0x0012 : return 'U'; // cursor up
-     case 0x0014 : return '2';
-     case 0x0022 : return 'D'; // cursor down
-     case 0x0024 : return '3';
-     case 0x0042 : return '7';
-     case 0x0044 : return '4';
-     case 0x0082 : return '8';
-     case 0x0084 : return '5';
-     case 0x0102 : return '9';
-     case 0x0104 : return '6';
-     case 0x0202 : return '#';
-     case 0x0204 : return '0';
-     case 0x0402 : return 'B'; // 'back' aka 'red button'
-     case 0x0404 : return '*';
-     // kb_row_col_pressed also supports a few COMBINATIONS:
-     //   MENU+BACK (simultaneously pressed) : 0x040A
-     case 0x040A : return 'X'; // eXit all menus and sub-menus
-     default     : return 0;
-   }
+  if ( global_addl_config.keyb_mode == 2) 
+   { // support for MD-446 keyb layout
+     //   Tytera MD-446 Layout - 20170522 DL2MF
+     //    ___________________________    
+     //   | 'M'ENU | cursor | 'B'ACK |   __
+     //   |(green) |  up, U | (red)  |     \  mirrored to left 3 cols of
+     //   | 0x0022 | 0x0012 | 0x000A |   __/  default MD380/MD390 layout
+     //   |--------+--------+--------|   __  
+     //   |  'P1'  | cursor |  'P2'  |     |
+     //   |    3   |  dn, D |    1   |     |  only P1 up/DN P2
+     //   | 0x0024 | 0x0014 | 0x000C |     |  
+     //   |________|________|________|   --
+     //  
+     switch( kb_row_col ) // sorted by switch-value for shortest code..
+      { case 0x000A : return 'B'; // 'back' aka 'red button'
+        case 0x0012 : return 'U'; // cursor up
+        case 0x0022 : return 'M'; // Green 'Menu' key
+        case 0x000C : return '4'; // P2
+        case 0x0014 : return 'D'; // cursor dn 
+        case 0x0024 : return '7'; // P1
+
+        // kb_row_col_pressed also supports a few COMBINATIONS:
+        //   MENU+BACK (simultaneously pressed) : 0x040A
+        case 0x002A : return 'X'; // eXit all menus and sub-menus
+        default     : return  0;
+      }
+   } 
+  else // not MD-446 but MD380, MD390, RT3, RT8, ..(?) 
+   {
+     switch( kb_row_col ) // sorted by switch-value for shortest code..
+      { case 0x000A : return 'M'; // Green 'Menu' key (which usually opens TYTERA's menu)
+        case 0x000C : return '1';
+        case 0x0012 : return 'U'; // cursor up
+        case 0x0014 : return '2';
+        case 0x0022 : return 'D'; // cursor down
+        case 0x0024 : return '3';
+        case 0x0042 : return '7';
+        case 0x0044 : return '4';
+        case 0x0082 : return '8';
+        case 0x0084 : return '5';
+        case 0x0102 : return '9';
+        case 0x0104 : return '6';
+        case 0x0202 : return '#';
+        case 0x0204 : return '0';
+        case 0x0402 : return 'B'; // 'back' aka 'red button'
+        case 0x0404 : return '*';
+        // kb_row_col_pressed also supports a few COMBINATIONS:
+        //   MENU+BACK (simultaneously pressed) : 0x040A
+        case 0x040A : return 'X'; // eXit all menus and sub-menus
+        default     : return 0;
+      }
+   } // end else < keyboard layout for MD380 > ?
 } // end KeyRowColToASCII()
 #endif // CAN_POLL_KEYS ?
-
 
 #if( CAN_POLL_KEYS && CONFIG_APP_MENU ) // optional feature ...
 //---------------------------------------------------------------------------
 static void PollKeys(void)
-  // Non-intrusive polling of keys for the 'app menu' (activated 
-  //   by pressing the red 'BACK'-button),
-  // when that button isn't used to control Tytera's own 'geen' menu.
-  //   [in]  kb_row_col_pressed  (updated by Tytera's keyboard matrix scan)
+  // Non-intrusive polling of keys for the 'app menu', auto-repeat,
+  //        and remote keyboard control.
+  //   [in]  kb_row_col_pressed  (updated by Tytera's keyboard matrix scan),
+  //         keypress_ascii_remote (remote key received from USB, ASCII) .
   //   [out] keypress_ascii and the keyboard-buffer for the app-menu .
   // Called approximately once every 24 milliseconds from SysTick_Handler(), 
-  // so don't call anything in the 'original firmware' from here.
+  // so don't call anything in the 'original firmware' from here !
+  //    ----------------------------------------------------------
   // Only peek at a few locations in RAM, and carefully set some others.
+  // Again, it's utterly forbidden to call ANYTHING in the original firmware
+  // from here. This also applies to keyb.c:handle_hotkey(), because
+  // handle_hotkey() invokes (or at least invoked) stuff like xyz_redraw(), 
+  // copy_dst_to_contact() -> draw_zone_channel(), etc. 
+  // All those are definitely unsafe to be called from an INTERRUPT HANDLER
+  // like SysTick(). Call those functions from a suitable task, not from here.
 {
   static uint8_t green_menu_countdown=0;
   static uint8_t autorepeat_countdown=0;
@@ -1083,6 +1125,12 @@ static void PollKeys(void)
   // when releasing a key.
   // So use 'kb_row_col_pressed' (16 bit) instead . Seems to be the
   // lowest level of polling the keyboard matrix without rolling our own.
+  // Merge keyboard state from an optional 'remote control' (USB):
+  if( key==0 ) // no "local" key pressed at the moment, but maybe remote ?
+   { key = keypress_ascii_remote; // use 'remote' key if no 'local' key pressed
+     // A first example for remotely controlling the MD380 via USB is in
+     //  md380tools/remote_ctrl.pyw (simple GUI application using wxPython).
+   }
   //
   // Our own ("app-") menu must not interfere with Tytera's "green" menu,
   // where the red "BACK"-button switches back from any submenu to the
@@ -1109,10 +1157,10 @@ static void PollKeys(void)
          }
       }
    }
-  // Independent keyboard polling for the alternative menu.. and maybe others
-  if( prev_key==0 && key!=0 )
+  // Independent keyboard polling for the alternative menu / auto-repeat
+  if( prev_key==0 && key!=0 ) // new key-down event ..
    { if( green_menu_countdown == 0)
-      { Menu_OnKey( key ); 
+      { Menu_OnKey( key ); // <- this is NOT tytera's menu
       }
      // no fancy FIFO but a simple 1-level buffer.
      // Consumed in another task or thread, see app_menu.c 
@@ -1136,7 +1184,7 @@ static void PollKeys(void)
       { if(  autorepeat_countdown > 0 )
          { --autorepeat_countdown;
          }
-        else // send the same key again, prevents rubbing the paint off..  
+        else // send the same key again, repeatedly ..  
          { autorepeat_countdown = 130/*ms*/ / 24; // 1 / "autorepeat RATE"
            Menu_OnKey( key );
          }   

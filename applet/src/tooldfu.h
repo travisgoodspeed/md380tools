@@ -32,5 +32,6 @@ fetching the raw buffer.
 #define TDFU_PRINT 0x80 //(u8 x, u8 y, wchar_t str[])
 #define TDFU_BOX   0x81 //(u8 x, u8 y, u8 xp, u8 yp)
 
-// Framebuffer transfer commands
+// Framebuffer transfer and other 'remote control' commands
 #define TDFU_READ_FRAMEBUFFER_24BPP 0x84 // (u8 x1, u8 y1, u8 x2, u8 y2)
+#define TDFU_REMOTE_KEY_EVENT       0x85 // (u8 ascii, u8 up_down_flag)

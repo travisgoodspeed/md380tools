@@ -28,7 +28,8 @@ typedef enum {
 	KC_DOWN = 12,
 	KC_BACK = 13,
 	KC_ASTERISK = 14,
-	KC_OCTOTHORPE = 15
+	KC_OCTOTHORPE = 15,
+        KC_NO_VALID_KEY = 0xFF // kludge for remote control (not used by Tytera)
 } keycode_t;
 
 void f_4101();
@@ -51,6 +52,10 @@ extern uint8_t kb_bot_side_key_press_time;
 extern uint8_t kb_side_key_max_time;
 
 void evaluate_sidekey(int);
+keycode_t kb_ASCIItoTytera(uint8_t ascii);
+void kb_OnRemoteKeyEvent(uint8_t key_ascii, uint8_t key_down_flag );
+
+
 #else
 # define CAN_POLL_KEYS 0  /* 0 : cannot poll keys for this firmware yet */
 #endif

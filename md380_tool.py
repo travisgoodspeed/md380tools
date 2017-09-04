@@ -121,9 +121,20 @@ class Tool(DFU):
            # 160 pixels per line * 3 bytes per pixel (BLUE,GREEN,RED):
            rd_result = self.upload(1, 160*3+5, 0);
            if rd_result[4] == y:  # y2 ok -> got the expected response
-             return rd_result[5:]
-           nloops = nloops+1
+             return rd_result[5:] # strip the header, return pixel data only
+           nloops = nloops+1 # try again, up to 3 times...
+           time.sleep(0.01)  # about 10 ms later
         return "" # error -> empty result
+
+    def send_keyboard_event(self, key_ascii, pressed_or_released ):
+        """Sends a keyboard event to remotely control an MD380."""
+        cmdstr = ( chr(0x85) + # TDFU_REMOTE_KEY_EVENT
+                   key_ascii + # 2nd arg: single char 'M'(enu), 'U'(p), 'D'(own), 'B'(ack), etc
+                   chr(pressed_or_released) ) # 2nd arg: pressed (1) or released (0)
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, cmdstr )
+        self.get_status()  # this changes state
+        time.sleep(0.05)
+        status = self.get_status()  # this gets the status
 
     def peek(self, adr, size):
         """Returns so many bytes from an address."""

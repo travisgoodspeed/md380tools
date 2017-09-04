@@ -109,8 +109,21 @@ extern const uint8_t font_8_8[256*8]; // extra font with 256 characters from 'co
 #define LCD_CMD_SET_SPI_RDEN 0xfe // Set SPI Read address (and enable)
 #define LCD_CMD_GET_SPI_RDEN 0xff // Get FE A[7:0] parameter
 
+uint8_t LCD_b12Temp[12];  // small RAM buffer for a self-defined character
 
-uint8_t LCD_b12Temp[12]; // small RAM buffer for a self-defined character
+uint8_t LCD_busy = 0; // busy from a drawing operation ? 0=no, >0=yes
+
+//---------------------------------------------------------------------------
+void LCD_EnterCriticalSection(void) // only call from 'API' !
+{ ++LCD_busy;
+}
+
+void LCD_LeaveCriticalSection(void) // only call from 'API' !
+{ if( LCD_busy )
+   { --LCD_busy;
+   }
+}
+
 
 //---------------------------------------------------------------------------
 __attribute__ ((noinline)) void LCD_Delay(int nLoops) 
@@ -346,6 +359,8 @@ void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
         uint16_t wColor) // [in] filling colour (BGR565)
 {
   int nPixels;
+  
+  LCD_EnterCriticalSection();
 
   // This function is MUCH faster than Tytera's 'gfx_blockfill' 
   //  (or whatever the original name was), because the rectangle coordinates
@@ -353,7 +368,8 @@ void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
   // a new coordinate for each stupid pixel (which is what the original FW did):
   nPixels = LCD_SetOutputRect( x1, y1, x2, y2 );  // send rectangle coordinates only ONCE
   if( nPixels<=0 ) // something wrong with the coordinates
-   { return;
+   { LCD_LeaveCriticalSection();
+     return;
    }
 
   LCD_WriteCommand( LCD_CMD_RAMWR ); // aka "Memory Write"
@@ -365,6 +381,7 @@ void LCD_FillRect( // Draws a frame-less, solid, filled rectangle
   LCD_Delay(DLY_500ns); // short delay before de-selecting the LCD controller .
   // Without this, there were occasional erratic pixels on the screen during update.
   LCD_CS_HIGH; // de-assert LCD chip select (Tytera does this after EVERY pixel. We don't.)
+  LCD_LeaveCriticalSection();
 } // end LCD_FillRect()
 
 
@@ -392,6 +409,8 @@ int LCD_CopyRectFromFramebuffer_RGB( // Reads a rectangular area of pixels, 24 b
   if( (nBytes<=0) || (nBytes>sizeof_dest) ) // something wrong, bail out
    { return -1;
    }
+
+  LCD_EnterCriticalSection();
 
   // Buffer size looks ok, so tell the LCD controller to "start reading".
   // Simply reading pixels in the same 16-bit format as in LCD_WritePixels()
@@ -457,6 +476,7 @@ int LCD_CopyRectFromFramebuffer_RGB( // Reads a rectangular area of pixels, 24 b
 
   // back to original settings (FSMC,GPIO) for Tytera's original LCD driver:
 
+  LCD_LeaveCriticalSection();
 
   return nBytes; // <- number of BYTES actually placed in the caller's buffer
 
@@ -704,13 +724,17 @@ int LCD_DrawCharAt( // lowest level of 'text output' into the framebuffer
      font_height = (1+y2-y) / y_zoom;
      y2 = y + y_zoom*font_height-1;
    }
-  
+
+  LCD_EnterCriticalSection();  
+
+
   // Instead of Tytera's 'gfx_drawtext' (or whatever the original name was),
   // use an important feature of the LCD controller (ST7735 or similar) :
   // Only set the drawing rectangle ONCE, instead of sending a new coordinate
   // to the display for each pixel (which wasted time and caused avoidable QRM):
   if( LCD_SetOutputRect( x, y, x2, y2 ) <= 0 ) 
-   { return x; // something wrong with the graphic coordinates 
+   { LCD_LeaveCriticalSection();
+     return x; // something wrong with the graphic coordinates 
    }
   LCD_WriteCommand( LCD_CMD_RAMWR ); // begin writing to framebuffer
 
@@ -734,6 +758,7 @@ int LCD_DrawCharAt( // lowest level of 'text output' into the framebuffer
    }
   LCD_Delay(DLY_500ns); // short delay before de-selecting the LCD controller (see LCD_FillRect)
   LCD_CS_HIGH; // de-assert LCD chip select (Tytera does this after EVERY pixel. We don't.)
+  LCD_LeaveCriticalSection();
   return x2+1; // pixel coord for printing the NEXT character
 } // end LCD_DrawCharAt()
 

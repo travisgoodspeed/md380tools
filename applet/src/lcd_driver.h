@@ -89,6 +89,9 @@ typedef union T_RGB_Quad
 
 extern uint8_t LCD_b12Temp[12];  // small RAM buffer for a single, self-defined character
 
+extern uint8_t LCD_busy; // busy from a drawing operation ? 0=no, >0=yes .
+               // For the application, this flag is read-only . Used by
+               // LCD_EnterCriticalSection() / LCD_LeaveCriticalSection() .
 
 //---------------------------------------------------------------------------
 // Prototypes for LOW-LEVEL LCD driver functions 

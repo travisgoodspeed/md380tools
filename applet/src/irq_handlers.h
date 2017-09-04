@@ -113,10 +113,10 @@ extern uint16_t battery_voltage_mV; // battery voltage [millivolts]
 extern uint16_t keypress_timer_ms; // measures key-down time in MILLISECONDS 
 extern uint8_t  keypress_ascii;    // code of the currently pressed key, 0 = none
 extern uint8_t  keypress_ascii_at_power_on; // snapshot of keypress_ascii at power-on
+extern uint8_t  keypress_ascii_remote; // for control via remote keyboard (USB).
 
 void StartStopwatch( uint32_t *pu32Stopwatch );   // details and usage in *.c 
 int  ReadStopwatch_ms( uint32_t *pu32Stopwatch );
-
 
 #if( CONFIG_MORSE_OUTPUT )
 void MorseGen_ClearTxBuffer(void); // aborts the current Morse transmission (if any)

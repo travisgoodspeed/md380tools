@@ -31,6 +31,7 @@
 #include "syslog.h"
 #include "lcd_driver.h"
 #include "irq_handlers.h"
+#include "keyb.h"
 
 
 int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
@@ -291,38 +292,38 @@ int usb_dnld_hook(){
        // 128 pixels (y) / 16 pixels per tile =  8 tile per screen vertically,
        // 10 * 8 = 80 tiles to read the entire framebuffer via USB .
        *md380_dfu_target_adr=dmesg_tx_buf; // dmesg_tx_buf = (char*)DMESG_START = 0x2001F700
-       if( 0 < LCD_CopyRectFromFramebuffer_RGB(
+       dmesg_tx_buf[0] = md380_packet[0];  // echo command byte
+       dmesg_tx_buf[1] = dmesg_tx_buf[2] = 0xFF; // 'function currently not available'
+       dmesg_tx_buf[3] = dmesg_tx_buf[4] = 0xFF; // invalid coords to indicate problem 
+       if( LCD_busy ) 
+        { // Don't "interrupt" the drawing process, instead let the remote "viewer"
+          // (or screenshot utility) try again a few milliseconds later !
+        }
+       else // LCD controller/driver not busy, try to read pixels from framebuffer:
+        {
+          if( 0 < LCD_CopyRectFromFramebuffer_RGB(
                 *((uint8_t*)(md380_packet+1)), // [in] x1 (tile start coord)
                 *((uint8_t*)(md380_packet+2)), // [in] y1
                 *((uint8_t*)(md380_packet+3)), // [in] x2 (tile end coord)
                 *((uint8_t*)(md380_packet+4)), // [in] y2
                 (uint8_t *)dmesg_tx_buf+5, // destination buffer, with rect-coords followed by 3 bytes per pixel
                     DMESG_SIZE ) ) // [in] sizeof_dest, for sanity check
-        { // Positive value returned LCD_CopyRectFromFramebuffer() : "ok" !
-          dmesg_tx_buf[0] = md380_packet[0]; // echo command byte
-          dmesg_tx_buf[1] = md380_packet[1]; // echo parameters ..
-          dmesg_tx_buf[2] = md380_packet[2]; // .. so the client can request
-          dmesg_tx_buf[3] = md380_packet[3]; //    retransmission if a packet got lost
-          dmesg_tx_buf[4] = md380_packet[4]; // last parameter: y2
-          // Beware, the pixels in each tile will are 'rotated and mirrored'.
-          // The screenshot utility must take care of this,
-          // or only read one line of pixels at a time (i.e. y1=y2) .
-          green_led_timer = 32;  // short flash with the green LED : OK 
+           { // Positive value returned LCD_CopyRectFromFramebuffer() : "ok" !
+             dmesg_tx_buf[1] = md380_packet[1]; // echo parameters ..
+             dmesg_tx_buf[2] = md380_packet[2]; // .. so the client can request
+             dmesg_tx_buf[3] = md380_packet[3]; //    retransmission if a packet got lost
+             dmesg_tx_buf[4] = md380_packet[4]; // last parameter: y2
+           }
         }
-       else // LCD_CopyRectFromFramebuffer() can't deliver pixels, 
-        {   //      either because the requested tile is too large
-            //      or the external memory interface (to the LCD)
-            //      is currently occupied by the keyboard (can this happen?) .
-          red_led_timer = 255;   // long flash with the red LED : ERROR
-          // To indicate the problem while keeping it simple,
-          // put the following 8-byte-pattern in the 'tile buffer' .
-          // The 'remote viewer' or screenshot utility may try again then.
-          // Cast md380packet+1(!) into a pointer to 32-bit as seen further above:
-          *((uint32_t*)(md380_packet+1)) = 0xDEADBEEF; // dead beef ?
-          *((uint32_t*)(md380_packet+5)) = 0xBEEFDEAD; // beef dead ! (no valid pixels)
-         }
        break;
 #endif // app-menu's LCD driver available (to read from framebuffer) ?
+#if( CAN_POLL_KEYS )
+    case TDFU_REMOTE_KEY_EVENT: // process 'remote keyboard' event
+       // [in] md380_packet[1] = ASCII key ('M','U','D','B','0'..'9','*','#')
+       //      md380_packet[2] = key_down_flag (1=pressed, 0=released)
+       kb_OnRemoteKeyEvent( md380_packet[1]/*key_ascii*/, md380_packet[2]/*key_down_flag*/ ); 
+       break;
+#endif // can poll keys ?
     
     default:
       printf("Unhandled DFU packet type 0x%02x.\n",md380_packet[0]);
