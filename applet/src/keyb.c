@@ -9,6 +9,7 @@
 
 #include "keyb.h"
 
+#include "md380.h"
 #include "debug.h"
 #include "netmon.h"
 #include "mbox.h"
@@ -83,6 +84,14 @@ void switch_to_screen( int scr )
     nm_screen = scr ;
 }
 
+void netmon_off()
+{
+            bp_send_beep(BEEP_TEST_1);
+            nm_screen = 0 ;
+            // cause transient.
+            gui_opmode2 = OPM2_MENU ;
+            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
+}
 
 void copy_dst_to_contact()
 { 
@@ -125,30 +134,12 @@ extern void gui_control( int r0 );
 
 void handle_hotkey( int keycode )
 {
-    PRINT("handle hotkey: %d\n", keycode );
+    if (global_addl_config.devmode_level != 0) 	
+	PRINT("handle hotkey: %d\n", keycode );
     
     reset_backlight();
-    
-    switch( keycode ) {
-        case KC_0 :
-            clog_redraw();
-            switch_to_screen(6);
-            break ;
-        case KC_1 :
-            sms_test();
-            break ;
-        case KC_2 :
-            slog_redraw();
-            switch_to_screen(5);
-            break ;
-        case KC_3 :
-            copy_dst_to_contact();
-            break ;
-        case KC_4 :
-            lastheard_redraw();
-            switch_to_screen(4);
-            break ;
-        case KC_5 :
+  
+	if ( (keycode) == (kc_netmon_clear) ) {
             syslog_clear();
             lastheard_clear();
             slog_clear();
@@ -156,48 +147,54 @@ void handle_hotkey( int keycode )
             nm_started = 0;     // reset nm_start flag used for some display handling
             nm_started5 = 0;    // reset nm_start flag used for some display handling
             nm_started6 = 0;    // reset nm_start flag used for some display handling
-            break ;
-        case KC_6 :
-            {
-                static int cnt = 0 ;
-                syslog_printf("=dump %d=\n",cnt++);
-            }
-            syslog_dump_dmesg();
-            break ;
-        case KC_7 :
-            bp_send_beep(BEEP_TEST_1);
-            nm_screen = 0 ;
-            // cause transient.
-            gui_opmode2 = OPM2_MENU ;
-            gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
-            break ;
-        case KC_8 :
+
+	} else if ( (keycode) == (kc_sms_test) ) {
+            sms_test();
+
+	} else if ( (keycode) == (kc_talkgroup) ) {
+	    create_menu_entry_set_tg_screen();
+
+	} else if ( (keycode) == (kc_copy_contact) ) {
+            copy_dst_to_contact();
+
+	} else if ( (keycode) == (kc_netmon1) ) {
             bp_send_beep(BEEP_TEST_2);
             switch_to_screen(1);
-            break ;
-        case KC_9 :
+
+	} else if ( (keycode) == (kc_netmon2) ) {
             bp_send_beep(BEEP_TEST_3);
             switch_to_screen(2);
-            break ;
-        case KC_UP :
-            //gui_control(1);
-            //bp_send_beep(BEEP_9);
-            //beep_event_probe++ ;
-            //sms_test2(beep_event_probe);
-            //mb_send_beep(beep_event_probe);
-            break ;
-        case KC_DOWN :
-            //gui_control(241);
-            //bp_send_beep(BEEP_25);
-            //beep_event_probe-- ;
-            //sms_test2(beep_event_probe);
-            //mb_send_beep(beep_event_probe);
-            break ;
-        case KC_OCTOTHORPE :
+
+	} else if ( (keycode) == (kc_netmon3) ) {
             syslog_redraw();
             switch_to_screen(3);
-            break ;
-    }    
+
+	} else if ( (keycode) == (kc_netmon4) ) {
+            lastheard_redraw();
+            switch_to_screen(4);
+
+	} else if ( (keycode) == (kc_netmon5) ) {
+            slog_redraw();
+            switch_to_screen(5);
+
+	} else if ( (keycode) == (kc_netmon6) ) {
+            clog_redraw();
+            switch_to_screen(6);
+
+	} else if ( (keycode) == (kc_netmon_off) ) {
+	    netmon_off();
+	
+	} else if ( (keycode) == (kc_cursor_up) ) {
+	    return ;	
+
+	} else if ( (keycode) == (kc_cursor_down) ) {
+	    return ;	
+
+	} else if ( (keycode) == (kc_syslog_dump) ) {
+            static int cnt = 0 ;
+            syslog_printf("=dump %d=\n",cnt++);
+            syslog_dump_dmesg();
+	}
 }
 
 void handle_sidekey( int keycode, int keypressed )
@@ -267,14 +264,176 @@ void evaluate_sidekey( int button_function) // This is where new functions for s
 
 void trace_keyb(int sw)
 {
-    static uint8_t old_kp = -1 ;
-    uint8_t kp = kb_keypressed ;
+	if (global_addl_config.devmode_level > 2)
+	{
+		static uint8_t old_kp = -1 ;
+		uint8_t kp = kb_keypressed ;
     
-    if( old_kp != kp ) {
-        PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_row_col_pressed, kb_keycode );
-        old_kp = kp ;
-    }
+		if( old_kp != kp ) {
+		PRINT("kp: %d %02x -> %02x (%04x) (%d)\n", sw, old_kp, kp, kb_row_col_pressed, kb_keycode );
+		old_kp = kp ;
+    		}
+	}
 }
+
+void set_keyb(int keyb_mode)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+//==========================================================================================
+//
+//			MD380Tools supporting now up to 4 different keyb layouts:
+//			0 - legacy (the old standard)
+//			1 - modern (based on the suggestions from DL2MF / PR#663)
+//			2 - MD-446 (reduced keyboard version support by DL2MF)
+//			3 - develop (based on the app-menu layout from DL4YHF)
+//
+// -----------------------------------------------------------------------------------------
+//   Legacy:
+//    ___________________________________    			
+//   | 'M'ENU | cursor | cursor | 'B'ACK |     \  may have to be used
+//   |(green) |  up, U | down,D | (red)  |     /  as 'A'..'D' for DTMF
+//   |--------+--------+--------+--------|
+//   |  '1'   |  '2'   |  '3'   |  '*'   |
+//   | SMS Tst| NetMon5| CopyTG | unused |
+//   |--------+--------+--------+--------|
+//   |  '4'   |  '5'   |  '6'   |  '0'   |
+//   | NetMon4| NetmClr| SysLDmp| NetMon6|
+//   |--------+--------+--------+--------|
+//   |  '7'   |  '8'   |  '9'   |  '#'   |
+//   | NetMOff| NetMon1| NetMon2| NetMon3|
+//   |________|________|________|________|
+//
+//
+// ------------------------------------------------------------------------
+//   Modern:
+//    ___________________________________    			
+//   | 'M'ENU | cursor | cursor | 'B'ACK |     \  may have to be used
+//   |(green) |  up, U | down,D | (red)  |     /  as 'A'..'D' for DTMF
+//   |--------+--------+--------+--------|
+//   |  '1'   |  '2'   |  '3'   |  '*'   |
+//   | SMS Tst| unused | CopyTG | SysLDmp|
+//   |--------+--------+--------+--------|
+//   |  '4'   |  '5'   |  '6'   |  '0'   |
+//   | NetMon4| NetMon5| NetMon6| NetMClr|
+//   |--------+--------+--------+--------|
+//   |  '7'   |  '8'   |  '9'   |  '#'   |
+//   | NetMon1| NetMon2| NetMon3| NetMOff|
+//   |________|________|________|________|
+//
+// ------------------------------------------------------------------------
+//   Develop:
+//    ___________________________________    			
+//   | 'M'ENU | cursor | cursor | 'B'ACK |     \  may have to be used
+//   |(green) |  up, U | down,D | (red)  |     /  as 'A'..'D' for DTMF
+//   |--------+--------+--------+--------|
+//   |  '1'   |  '2'   |  '3'   |  '*'   |
+//   | NetMon1| NetMon2| NetMon3| SysLDmp|
+//   |--------+--------+--------+--------|
+//   |  '4'   |  '5'   |  '6'   |  '0'   |
+//   | NetMon4| NetMon5| NetMon6| NetMClr|
+//   |--------+--------+--------+--------|
+//   |  '7'   |  '8'   |  '9'   |  '#'   |
+//   | SMSTst | unused | CopyTG | NetMOff|
+//   |________|________|________|________|
+//
+// ------------------------------------------------------------------------
+//   Tytera MD-446 Layout - 20170522 DL2MF
+//    ___________________________   __    
+//   | 'M'ENU | cursor | 'B'ACK |     \  mirrored to left 3 cols of
+//   |(green) |   up   | (red)  |   __/  default MD380/MD390 layout
+//   |--------+--------+--------|   __  
+//   |  'P1'  | cursor |  'P2'  |     |  only P1 and P2
+//   | NetM4  | Dn/Mnu | NetMOff|     |  are free configurable  
+//   |________|________|________|   __|
+//  
+//==========================================================================================
+
+	switch (keyb_mode) {		// configurable keyb layout introduced with MD-446 support
+	
+	case 0:		// legacy
+			kc_sms_test = KC_1;
+			kc_copy_contact = KC_3;
+
+			kc_netmon1 = KC_8;
+			kc_netmon2 = KC_9;
+			kc_netmon3 = KC_HASH;
+			kc_netmon4 = KC_4;
+			kc_netmon5 = KC_2;
+			kc_netmon6 = KC_0;
+			kc_netmon_clear = KC_5;
+			kc_netmon_off = KC_7;
+
+			kc_syslog_dump = KC_6;
+			kc_cursor_up = KC_UP;
+			kc_cursor_down = KC_DOWN;
+			kc_greenmenu = KC_MENU;
+			kc_redback = KC_BACK;
+			break ;
+
+	case 1:		// modern
+			kc_sms_test = KC_1;
+			kc_talkgroup = KC_2;
+			kc_copy_contact = KC_3;
+
+			kc_netmon4 = KC_4;
+			kc_netmon5 = KC_5;
+			kc_netmon6 = KC_6;
+			kc_netmon1 = KC_7;
+			kc_netmon2 = KC_8;
+			kc_netmon3 = KC_9;
+			kc_netmon_clear = KC_0;
+			kc_netmon_off = KC_HASH;
+
+			kc_syslog_dump = KC_STAR;
+			kc_cursor_up = KC_UP;
+			kc_cursor_down = KC_DOWN;
+			kc_greenmenu = KC_MENU;
+			kc_redback = KC_BACK;
+			break ;
+
+	case 2:		// MD446
+			kc_netmon1 = KC_7;
+			kc_netmon2 = KC_8;
+			kc_netmon3 = KC_9;
+			kc_netmon4 = KC_4;
+			kc_netmon5 = KC_5;
+			kc_netmon6 = KC_6;
+			kc_netmon_off = KC_HASH;
+
+			kc_cursor_up = KC_UP;
+			kc_cursor_down = KC_DOWN;
+			kc_greenmenu = KC_MENU;
+			kc_redback = KC_BACK;
+			break ;
+
+	case 3:		// develop
+			kc_netmon1 = KC_1;
+			kc_netmon2 = KC_2;
+			kc_netmon3 = KC_3;
+			kc_netmon4 = KC_4;
+			kc_netmon5 = KC_5;
+			kc_netmon6 = KC_6;
+			kc_netmon_clear = KC_0;
+			kc_netmon_off = KC_HASH;
+
+			kc_sms_test = KC_7;
+			kc_talkgroup = KC_8;
+			kc_copy_contact = KC_9;
+
+			kc_syslog_dump = KC_STAR;
+			kc_cursor_up = KC_UP;
+			kc_cursor_down = KC_DOWN;
+			kc_greenmenu = KC_MENU;
+			kc_redback = KC_BACK;
+			break ;
+	}
+
+    LOGB("t=%d: keyb load %d\n", (int)IRQ_dwSysTickCounter, global_addl_config.keyb_mode ); // keyb layout loaded
+#else
+// TODO: keyb support for old firmware
+#endif
+}
+
 
 inline int is_intercept_allowed()
 {
@@ -315,28 +474,137 @@ inline int is_intercepted_keycode( uint8_t kc )
         case KC_9 :
         case KC_UP :
         case KC_DOWN :
-        case KC_OCTOTHORPE :
+        case KC_STAR :
+        case KC_HASH :
             return 1 ;
         default:
             return 0 ;
     }    
 }
+
+inline int is_intercepted_keycode2(uint8_t kc)
+{
+	switch (kc) {
+	
+	case 20:
+	case 21:
+	case 13: //end call
+		return 1;
+	default:
+		return 0;
+	}
+}
 #endif
 
 extern void kb_handler();
+
+
+#if defined(FW_D13_020) || defined(FW_S13_020)
+static int nextKey = -1;
+
+void kb_handle(int key) {
+
+	int kc = key;
+
+	if (is_intercept_allowed()) {
+		if (is_intercepted_keycode2(kc)) {
+				handle_hotkey(kc);
+				return;
+		}
+	}
+
+
+	if ( (key == kc_cursor_up) || (key == kc_cursor_down) ) {
+		kb_keycode = key;
+		kb_keypressed = 2;
+	}
+}
+#endif
 
 void kb_handler_hook()
 {
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
+
     trace_keyb(0);
 
     kb_handler();
 
     trace_keyb(1);
+
+    if (nextKey > 0) {
+	kb_keypressed = 2;
+	kb_keycode = nextKey;
+	nextKey = -1;
+    }
     
     int kp = kb_keypressed ;
     int kc = kb_keycode ;
+
+    if ( global_addl_config.keyb_mode == 2) {	// select keyb support for MD-446 in setup
+   /* ================================================================================= */
+   /*     Tytera MD-446 Layout - supported since 20170524                               */
+   /* ================================================================================= */
+   //    ___________________________    
+   //   | 'M'ENU | cursor | 'B'ACK |   __
+   //   |(green) |  up, U | (red)  |     \  mirrored to left 3 cols of
+   //   | 0x0022 | 0x0012 | 0x000A |   __/  default MD380/MD390 layout
+   //   |--------+--------+--------|   __  
+   //   |  'P1'  | cursor |  'P2'  |     |
+   //   |    3   |  dn, D |    1   |     |  only P1 up/DN P2
+   //   | 0x0024 | 0x0014 | 0x000C |     |  
+   //   |________|________|________|   --
+   //  
+
+    switch( kc ) {
+        case 10 :
+		if (kb_row_col_pressed == 0x000A)	// the MD-446 layout is something weird, so it needs some rewrites of keycodes!!!
+		{
+			kb_keycode = kc_redback;	// if the RedKey (key-10) was pressed, we need rewrite to RedKey function (kc=13)
+			kc = kc_redback;		// RedKey - NEVER change this!!
+		}
+		else
+		{
+			kb_keycode = kc_greenmenu;	// if we got kc=10 not from 0x000A, this was rewrite result of GreenKey (key-12)
+			kc = kc_greenmenu;		// NEVER change this!!
+		}
+		break;
+        case 12 :					// if GreenKey (keycode=12) was pressed, we need to rewrite it to GreenKey function (kc=10)
+		kb_keycode = kc_greenmenu;		// GreenKey - NEVER change this!!
+		kc = kc_greenmenu;			// GreenKey - NEVER change this!!
+        	break ;
+        case 11 :
+		kc = kc_cursor_up;			// Cursor up - NEVER change this!!
+        	break ;
+        case 3 :
+		if( !is_netmon_visible() || kc_lastmode == 0x000C ) {
+			kc = kc_netmon4;		// define your preferred P1 function: 0=Netmon6 2=Netmon5 4=Netmon4 8=Netmon1 9=Netmon2 15=Netmon3
+			kc_lastmode = kb_row_col_pressed;// remember current mode for P1/P2 toggle keys
+		} else {
+			kc = kc_netmon_off;		// exit from Netmon screens
+		}
+        	break ;
+        case 2 :
+		kb_keycode = kc_cursor_down;		// Cursor down - also used for quick menu access!
+		kc = kc_cursor_down;			// Cursor down - NEVER change this!!
+        	break ;
+        case 1 :
+		if( !is_netmon_visible() || kc_lastmode == 0x0024 ) {
+			kc = kc_netmon1;		// define your preferred P1 function: 0=Netmon6 2=Netmon5 4=Netmon4 8=Netmon1 9=Netmon2 15=Netmon3
+			kc_lastmode = kb_row_col_pressed;// remember current mode for P1/P2 toggle keys
+		} else {
+			kc = kc_netmon_off;		// exit from Netmon screens
+		}
+        	break ;	
+   	} 
+    }	// if keyb_mode MD-446
+/* ================================================================================= */
+
+	if (kc == 20 || kc == 21) {
+		kb_keypressed = 8;
+		return;
+	}
+
     // allow calling of menu during qso.
     // not working correctly.
     if( global_addl_config.experimental ) {
@@ -409,8 +677,8 @@ keycode_t kb_ASCIItoTytera(uint8_t ascii)
      case 'B' : return KC_BACK;
      case 'U' : return KC_UP;
      case 'D' : return KC_DOWN;
-     case '*' : return KC_ASTERISK;
-     case '#' : return KC_OCTOTHORPE;
+     case '*' : return KC_STAR; // ex: KC_ASTERISK (?)
+     case '#' : return KC_HASH; // ex: KC_OCTOTHORPE (?)
      default  : return KC_NO_VALID_KEY; // bleah.. cannot use 0x00 for this
    }
 } // end kb_ASCIItoTytera()

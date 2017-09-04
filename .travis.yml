@@ -14,11 +14,11 @@ addons:
 
 compiler:
   - gcc
-  - clang
+#  - clang
 
 os:
   - linux
-  - osx
+#  - osx
 
 matrix:
   exclude:

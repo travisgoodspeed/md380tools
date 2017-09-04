@@ -166,8 +166,8 @@ class MainFrame ( wx.Frame ):
         self.panel = wx.Panel(self, wx.ID_ANY)
 
         # Create the widgets first.. proceed from top to bottom:
-        imgPanel = RemoteScreenPanel(self.panel)
-        keyPanel = RemoteKeyboardPanel(self.panel)
+        self.imgPanel = RemoteScreenPanel(self.panel)
+        keyPanel   = RemoteKeyboardPanel(self.panel)
         captureBtn = wx.Button(self.panel, wx.ID_ANY, 'Capture')
         exitBtn    = wx.Button(self.panel, wx.ID_ANY, 'Exit')
 
@@ -179,7 +179,7 @@ class MainFrame ( wx.Frame ):
         # Let the 'BoxSizers' know what's inside, from top to bottom.
         # mySizer.Add(window, proportion, flag(s), border [, userData] )
         #  border : number of pixels around the widget that's been added
-        imgSizer.Add(imgPanel, 0, wx.ALL, 5)
+        imgSizer.Add(self.imgPanel, 0, wx.ALL, 5)
         btnSizer.Add(captureBtn, 0, wx.ALL, 5)
         btnSizer.Add(exitBtn, 0, wx.ALL, 5)
         topSizer.Add(imgSizer, 0, wx.CENTER)
@@ -194,12 +194,17 @@ class MainFrame ( wx.Frame ):
         self.Bind(wx.EVT_BUTTON, self.OnCapture, captureBtn)
         self.Bind(wx.EVT_BUTTON, self.OnExit, exitBtn)
 
+        # Start capture-file sequence at index ONE
+        self.CaptureIndex = 0
 
     def __del__( self ):
         pass
 
     def OnCapture(self, event):
-        self.Close(True)
+        # Try to save the currently visible bitmap (imgPanel.rgbBmp)
+        # as a file, without asking dumb questions about where to save it.
+        self.CaptureIndex = self.CaptureIndex+1
+        self.imgPanel.rgbBmp.SaveFile('screenshot_'+str(self.CaptureIndex)+'.png', wx.BITMAP_TYPE_PNG)
 
     def OnExit(self, event):
         self.Close(True)

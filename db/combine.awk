@@ -3,6 +3,6 @@
         next
     }
 
-    already[$1] = "x"
+    already[$1] = 0
     print $0
 }

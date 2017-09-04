@@ -400,7 +400,7 @@ int LCD_CopyRectFromFramebuffer_RGB( // Reads a rectangular area of pixels, 24 b
   //  Also compatible with HTML 'hex color' when treated like a 
   //  24-bit integer on little endian machine.
 {
-  int w,h,nBytes, nPixels;
+  int w,h,nBytes,nPixels;
 
   // Before sending any command to the LCD controller, check the buffer size:
   w = 1+x2-x1;
@@ -445,9 +445,11 @@ int LCD_CopyRectFromFramebuffer_RGB( // Reads a rectangular area of pixels, 24 b
      *pbDest++ = LCD_ReadData(); // 8 bit GREEN (bits 1..0 unused)
      *pbDest++ = LCD_ReadData(); // 8 bit RED   (bits 1..0 unused)
    }
-#else // with Tytera's LCD-init, pixels must be rotated and horizontally mirrored:
+#else // with Tytera's LCD-init, pixels must be rotated and horizontally mirrored
+      // by software. Bleah... but that's the way it is: Terrible.
   int x,y;
   uint8_t *pbDest2;
+  (void)nPixels; // suppress warning about 'set but not used'
   for( x=w-1; x>=0; --x) // read pixels from LCD controller
    { pbDest2 = pbDest+3*x + 3 * h;
      for( y=0; y<h; ++y) // .. rotated by 90° and horizontally mirrored

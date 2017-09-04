@@ -1,8 +1,10 @@
 // File:    md380tools/applet/src/app_menu.c
 // Author:  Wolf (DL4YHF) [initial version] 
 //          Please don't poison this sourcecode with TAB characters . 
+//          Please don't poison this sourcecode with TAB characters . 
+//          Please don't poison this sourcecode with TAB characters . Nnngrrrr !
 //
-// Date:    2017-06-24
+// Date:    2017-09-03
 //  Implements a simple menu opened with the red BACK button,
 //             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
@@ -292,6 +294,10 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
 void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
   // [in] ASCII key, not the strange key values in Tytera's firmware .
 { 
+  //avoid resetting screen if menu isn't open
+  if (( global_addl_config.keyb_mode == 1 ) && (!Menu_IsVisible() && key == 'B')) {
+        return;
+        }
   if( boot_flags & BOOT_FLAG_FIRST_KEY_POLLED ) // ignore 'early keystrokes'
    { am_key = key;
    }
@@ -824,19 +830,24 @@ int Menu_DrawIfVisible(int caller)
          }
       }
      else
-     if( (pMenu->visible==APPMENU_VISIBLE) || (c==APPMENU_ACTIVATION_KEY) )
+     // ex: if( (pMenu->visible==APPMENU_VISIBLE) || (c==APPMENU_ACTIVATION_KEY) )
+     // ... omg, this became sooo ugly when the 'keyboard mode' was made configurable:
+     if( ((global_addl_config.keyb_mode == 1)
+           && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B') || (c == '#') ) ) 
+      || ((global_addl_config.keyb_mode != 1)
+           && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B') ) )
+       )
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
               Menu_OnEnterKey(pMenu);
               break; // end case < green "Menu", aka "Confirm"-key >
-           case 'B' :  // red "Back"-key : 
+           case 'B' :  // red "Back"-key :
               // red_led_timer  = 20;    // <- poor man's debugging 
-#            if( 'B' == APPMENU_ACTIVATION_KEY )  // <- author's choice: app-menu opened via RED KEY (thus the old name 'red key menu')
-              if( pMenu->visible == APPMENU_OFF ) // not visible yet..
+              if(  ( pMenu->visible == APPMENU_OFF ) 
+                && ( global_addl_config.keyb_mode != 1) ) // ALTERNATIVE menu not visible yet..
                { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
                }
               else // already in the app menu: treat the RED KEY like "BACK",
-#            endif // 'B' == APPMENU_ACTIVATION_KEY ?
                {   // "Exit", "Escape", or "Delete" ?
                  if( ( (pMenu->edit_mode==APPMENU_EDIT_OVERWRT)
                      ||(pMenu->edit_mode==APPMENU_EDIT_INSERT) )
@@ -900,12 +911,12 @@ int Menu_DrawIfVisible(int caller)
               pMenu->redraw = TRUE;
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
-#            if(  '#' == APPMENU_ACTIVATION_KEY ) // <- KG5RKI preference: app-menu opened via hash key (aka 'white arrow up')
-              if(('#'==c) && (pMenu->visible == APPMENU_OFF ) ) // menu not visible yet..
-               { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
+              // Use the "hash"-key to open the ALTERNATIVE MENU ? 
+              if(  ( pMenu->visible == APPMENU_OFF ) // ALTERNATIVE menu not visible yet.. ?
+                && ( global_addl_config.keyb_mode == 1) // hash-key used to open that menu ? 
+                && !is_netmon_visible() ) // AND screen not occupied by netmon ?
+               { Menu_Open(pMenu, NULL, NULL, APPMENU_EDIT_OFF);  // so open the ALTERNATIVE menu (default items)
                }
-              else // already in the app menu: treat the RED KEY like "BACK",
-#            endif // '#' == APPMENU_ACTIVATION_KEY ?
               if( pMenu->edit_mode != APPMENU_EDIT_OFF )
                { Menu_ProcessEditKey(pMenu, c);
                }
@@ -919,7 +930,6 @@ int Menu_DrawIfVisible(int caller)
          }
       } // end if < "red key" pressed or "red-key-menu" already visible > ?
    } // end if < keyboard-"event" for the App Menu > ? 
-
 
   // Start editing 'on request' from a programmable hotkey (e.g. edit talkgroup) ?
   if( pMenu->new_edit_mode >= 0 ) 

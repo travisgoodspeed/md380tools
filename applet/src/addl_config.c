@@ -15,7 +15,8 @@
 #include "radio_config.h"
 #include "syslog.h"
 #include "usersdb.h"
-#include "irq_handlers.h"  // boot_flags, BOOT_FLAG_LOADED_CONFIG defined here
+#include "irq_handlers.h" 	// boot_flags, BOOT_FLAG_LOADED_CONFIG defined here
+#include "system_hrc5000.h"	// set HRC5000 FM register during startup to config values
 
 addl_config_t global_addl_config;
 
@@ -76,15 +77,24 @@ void cfg_load()
     memcpy(&global_addl_config,&tmp,tmp.length);
     
     // range limit
-    R(global_addl_config.userscsv,3);   // 2017-02-19   0-disable 1-userscsv 2-talkeralias 3-both
+    R(global_addl_config.userscsv,3);   	// 2017-02-19   0-disable 1-userscsv 2-talkeralias 3-both
     R(global_addl_config.micbargraph,1);
     R(global_addl_config.debug,1);
     R(global_addl_config.rbeep,1);
     R(global_addl_config.promtg,1);
     R(global_addl_config.boot_demo,1);
-//    R(global_addl_config.boot_splash,0); // unused
+//    R(global_addl_config.boot_splash,0); 	// unused
     R(global_addl_config.netmon,3);
     R(global_addl_config.datef,6);
+    R(global_addl_config.fm_bpf,1);
+    R(global_addl_config.fm_comp,1);
+    R(global_addl_config.fm_preemp,1);
+    R(global_addl_config.fm_bw,1);
+    R(global_addl_config.fm_dev,6);
+    R(global_addl_config.fm_mode,255);		// 2017-06-07	0x00-0xFF FM Opmode register
+    R(global_addl_config.keyb_mode,3);		// 2017-05-25	0-legacy, 1-modern, 2-MD446, 3-develop
+    R(global_addl_config.scroll_mode,2);  	// 2017-06-10   0=off, 1=fast, 2=slow
+    R(global_addl_config.devmode_level,3);	// 2017-06-06	0-off, 1-show FM options, 2-extended USB logging, 3-hide menus
 
     // restore dmrid
     if( ( global_addl_config.cp_override & CPO_DMR ) == CPO_DMR ) {
@@ -137,6 +147,11 @@ void init_global_addl_config_hook(void)
     LOGB("t=%d: booting\n", (int)IRQ_dwSysTickCounter ); // 362 SysTicks after power-on
    
     cfg_load();
+#if defined(FW_D13_020) || defined(FW_S13_020)
+    set_keyb(global_addl_config.keyb_mode);		// set keyboard to correct mode selected in config menu
+    hrc5000_buffer_flush();				
+    hrc5000_fm_set();					// set HRC5000 FM register during startup to config settings
+#endif
 
 //#ifdef CONFIG_MENU
     md380_create_main_menu_entry();
