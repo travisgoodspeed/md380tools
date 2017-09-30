@@ -15,10 +15,57 @@ extern "C" {
 // The codeplug seems to live in the first 256 kByte of the SPI-Flash.
 // The *.rdt file is *not* an exact image of this part of the Flash !
 // Offsets in the RDT file are a bit higher (549 bytes?) than in SPI-flash.
+#define CODEPLUG_SPIFLASH_ADDR_CHANNEL 0x0001EE00   
+#define CODEPLUG_SIZEOF_CHANNEL_ENTRY 64
+#define CODEPLUG_MAX_CHANNELS   1000
+
+	typedef struct
+	{
+		uint8_t settings[32];
+		wchar_t name[16];
+	} channel_t;
+
+	typedef struct
+	{
+		uint8_t digits[8];
+		char text[16];
+	} frequency_t;
+
+	typedef struct
+	{
+		uint8_t digits[4];
+		char text[16];
+		uint8_t fType;
+		float freq;
+	} tone_t;
+
+	typedef struct
+	{
+		uint8_t bIsDigital;
+		uint8_t CC;
+		uint8_t Slot;
+		uint16_t ContactIndex;
+		uint8_t TOT;
+		uint8_t TOTReKeyDelay;
+		uint8_t EmergencyIndex;
+		uint8_t ScanListIndex;
+		uint8_t GroupListIndex;
+
+		uint8_t AutoScan;
+
+		tone_t DecTone;
+		tone_t EncTone;
+
+		frequency_t rxFreq;
+		frequency_t txFreq;
+
+		char name[16];
+	} channel_easy;
 
 // The first entry in the 'Digital Contacts' lists (e.g. first entry '-All Call-')
 // was as 0x00005F84 in SPI flash, but 0x000061A9 in an RDT file (delta=549 bytes): 
-#define CODEPLUG_SPIFLASH_ADDR_DIGITAL_CONTACT_LIST   0x0000EC20    
+#define CODEPLUG_SPIFLASH_ADDR_DIGITAL_CONTACT_LIST   0x00005F80 
+//#define CODEPLUG_SPIFLASH_ADDR_DIGITAL_CONTACT_LIST   0x0000EC20    
 #define CODEPLUG_SIZEOF_DIGITAL_CONTACT_ENTRY  36
 #define CODEPLUG_MAX_DIGITAL_CONTACT_ENTIES  1000
 
@@ -57,8 +104,15 @@ typedef struct
   uint8_t unknown2_ff;   // in an RT3 with D13.020, also 0xFF here
 } zone_number_t; 
 
+	typedef struct
+	{
+		wchar_t name[16];
+		uint16_t channels[16];
+	} zone_t;
+
 // contact_t.type
 #define CONTACT_GROUP 0xC1
+#define CONTACT_GROUP2 0xE1
 #define CONTACT_USER 0xC2
     
 // 0xfc000000 @ 0x0805031e    
@@ -94,8 +148,13 @@ extern wchar_t zone_name_2[32]; // 64 bytes @ 0x2001e218 in D13.020
 #endif
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
-extern contact_t contact ; 
+	extern contact_t contact ;
+	static int current_TG() {
+		return ((int)contact.id_h << 16) | ((int)contact.id_m << 8) | (int)contact.id_l;
+	}
 #endif
+
+	extern channel_easy current_channel_info_E;
 
 // from pc = 0x080134dc 
 // saved @ 0x1edc0 

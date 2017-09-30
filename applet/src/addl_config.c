@@ -17,6 +17,9 @@
 #include "usersdb.h"
 #include "irq_handlers.h" 	// boot_flags, BOOT_FLAG_LOADED_CONFIG defined here
 #include "system_hrc5000.h"	// set HRC5000 FM register during startup to config values
+#include "app_menu.h"
+//#include "codeplug.h"
+#include "amenu_set_tg.h"
 
 addl_config_t global_addl_config;
 
@@ -95,7 +98,14 @@ void cfg_load()
     R(global_addl_config.keyb_mode,3);		// 2017-05-25	0-legacy, 1-modern, 2-MD446, 3-develop
     R(global_addl_config.scroll_mode,2);  	// 2017-06-10   0=off, 1=fast, 2=slow
     R(global_addl_config.devmode_level,3);	// 2017-06-06	0-off, 1-show FM options, 2-extended USB logging, 3-hide menus
-
+    R(global_addl_config.sms_mode,1);		// 2017-07-23	SMS Mode 0=off, 1=on
+    R(global_addl_config.sms_rpt,1);		// 2017-07-23	RPT SMS 0=off, 1=on
+    R(global_addl_config.sms_wx,2);		// 2017-07-28	WX  SMS 0=off, 1=RPT 2=GPS
+    R(global_addl_config.sms_gps,2);		// 2017-07-28	GPS SMS 0=off, 1=on
+    R(global_addl_config.mode_stat,3);		// 2017-08-08	0=off 1=on 2=CC/gain 3=compact Top statusline with mode/rpt info
+    R(global_addl_config.mode_color,1);		// 2017-08-08	0=off 1=on  Top statusline set different color
+    R(global_addl_config.chan_stat,4);		// 2017-08-08	0=off 1=on 2=rx_freq 3=tx_freq 4=rx_tx channel statusline with TS / TG info
+    R(global_addl_config.chan_color,1);		// 2017-08-08	0=off 1=on  channel statusline set different color
     // restore dmrid
     if( ( global_addl_config.cp_override & CPO_DMR ) == CPO_DMR ) {
         md380_radio_config.dmrid = global_addl_config.dmrid ;
@@ -151,6 +161,7 @@ void init_global_addl_config_hook(void)
     set_keyb(global_addl_config.keyb_mode);		// set keyboard to correct mode selected in config menu
     hrc5000_buffer_flush();				
     hrc5000_fm_set();					// set HRC5000 FM register during startup to config settings
+    CheckTalkgroupAfterChannelSwitch(); 		// read current channel settings at start for advanced statusline
 #endif
 
 //#ifdef CONFIG_MENU

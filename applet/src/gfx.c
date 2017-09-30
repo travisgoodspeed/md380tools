@@ -24,6 +24,7 @@
 // Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
+#include "amenu_set_tg.h"
 
 
 uint8_t GFX_backlight_on=0; // DL4YHF 2017-01-07 : 0="off" (low intensity), 1="on" (high intensity)
@@ -200,6 +201,32 @@ void print_date_hook(void)
 #endif //CONFIG_GRAPHICS
 }
 
+
+void get_RTC_time(char* buffer) {
+
+	wchar_t wide_time[9];
+
+	RTC_TimeTypeDef RTC_TimeStruct;
+	md380_RTC_GetTime(RTC_Format_BCD, &RTC_TimeStruct);
+
+	md380_itow(&wide_time[0], RTC_TimeStruct.RTC_Hours);
+	wide_time[2] = ':';
+	md380_itow(&wide_time[3], RTC_TimeStruct.RTC_Minutes);
+	wide_time[5] = ':';
+	md380_itow(&wide_time[6], RTC_TimeStruct.RTC_Seconds);
+	wide_time[8] = '\0';
+
+	//int b = 0;
+	for (int i = 0; i < 9; i++)
+	{
+		if (wide_time[i] == '\0')
+			break;
+		
+		*buffer = wide_time[i];
+		buffer++;
+	}
+}
+
 void print_time_hook(const char log)
 {
     if( is_netmon_visible() && nm_screen < 4 ) {							// 2017-05-21 fix missing timestamp output for netmon4,5,6
@@ -344,6 +371,9 @@ void gfx_drawtext2_hook(wchar_t *str, int x, int y, int xlen)
     gfx_drawtext2(str, x, y, xlen);
 }
 
+extern void draw_adhoc_statusline(int x, int y, int xlen, int ylen);
+
+int fDrawOncePer = 0;
 void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
 {
 //    PRINTRET();
@@ -365,6 +395,19 @@ void gfx_drawtext4_hook(wchar_t *str, int x, int y, int xlen, int ylen)
             return ;
         }
     }
+
+	/*if (x == D_TEXT_CHANNAME_X && y == D_TEXT_CHANNAME_Y) {
+
+		
+		if (ad_hoc_tg_channel)
+		{
+			//gfx_drawtext4(str, x, y, xlen, ylen);
+			draw_adhoc_statusline(x, y, xlen, ylen);
+			return;
+		}
+	}*/
+	
+	
     
 #if defined(FW_D13_020) || defined(FW_S13_020)
     gfx_drawtext4(str,x,y,xlen,ylen);

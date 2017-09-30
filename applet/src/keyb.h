@@ -71,6 +71,9 @@ uint8_t kc_lastmode;
 void evaluate_sidekey(int);
 void kb_handle(int);
 void set_keyb(int);
+void sms_rpt(void);
+void sms_wx(void);
+void sms_gps(void);
 #else
 # define CAN_POLL_KEYS 0  /* 0 : cannot poll keys for this firmware yet */
 #endif
