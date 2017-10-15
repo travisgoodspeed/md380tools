@@ -19,7 +19,12 @@
 #include "system_hrc5000.h"	// set HRC5000 FM register during startup to config values
 #include "app_menu.h"
 //#include "codeplug.h"
-#include "amenu_set_tg.h"
+
+#if defined(FW_D13_020) || defined(FW_S13_020)
+	#include "amenu_set_tg.h"
+#else
+#warning old firmware
+#endif 
 
 addl_config_t global_addl_config;
 

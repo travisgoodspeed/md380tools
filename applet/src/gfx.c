@@ -24,7 +24,12 @@
 // Needed for LED functions.  Cut dependency.
 #include "stm32f4_discovery.h"
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
-#include "amenu_set_tg.h"
+
+#if defined(FW_D13_020) || defined(FW_S13_020)
+	#include "amenu_set_tg.h"
+#else
+#warning old firmware
+#endif    
 
 
 uint8_t GFX_backlight_on=0; // DL4YHF 2017-01-07 : 0="off" (low intensity), 1="on" (high intensity)

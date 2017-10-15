@@ -16,8 +16,11 @@
 #include "printf.h"
 #include "spiflash.h" // md380_spiflash_read()
 #include "codeplug.h" // codeplug memory addresses, struct- and array-sizes
-#include "amenu_channels.h" // header for THIS module (to check prototypes,etc)
-#include "amenu_codeplug.h"
+#if defined(FW_D13_020) || defined(FW_S13_020)
+	#include "amenu_channels.h" // header for THIS module (to check prototypes,etc)
+	#include "amenu_codeplug.h"
+#endif
+
 #include "syslog.h"
 
 channel_t selChan;
@@ -26,12 +29,14 @@ int selIndex = 0;
 int numChannels = 0;
 contact_t cont;
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
 const am_stringtable_t am_stringtab_onoff[] =
 {
 	{ 0,      "Off" },
 	{ 1,      "On" },
 	{ 0,      NULL } // <- marks the end of a string table
 };
+#endif
 
 /*
 const am_tonetab_t am_tone_num[] =
