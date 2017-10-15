@@ -26,9 +26,7 @@
 #include "usersdb.h"
 #include "util.h"
 #include "spiflash.h"
-
-#include "irq_handlers.h" // Initially written by DL4YHF as a 'playground' with various interrupt handlers .
-                          // Details in applet/src/irq_handlers.c . 
+#include "irq_handlers.h" 
 
 						  
 GPIO_InitTypeDef  GPIO_InitStructure;
