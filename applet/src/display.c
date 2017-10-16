@@ -92,7 +92,11 @@ int intCentibel(long ampli)
 
 void draw_micbargraph()
 {
-    if( gui_opmode2 == OPM2_MENU || Menu_IsVisible() ) {
+    if( gui_opmode2 == OPM2_MENU
+# if (CONFIG_APP_MENU)
+            || Menu_IsVisible()
+#endif
+    ) {
         // case for pressing the PTT during 'Manual Dial' in 'Contacts', or if 'app menu' is visible
         return ;
     }
