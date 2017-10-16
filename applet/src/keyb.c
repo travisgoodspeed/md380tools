@@ -37,7 +37,7 @@ uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
 // e.g. kb_keypressed, address defined in symbols_d13.020 (etc).
 
 
-// Values for kp
+// Values for kp ( / kb_keypressed ? )
 // 1 = pressed
 // 2 = release within timeout
 // 1+2 = pressed during rx
@@ -78,8 +78,8 @@ void switch_to_screen( int scr )
     // cause transient -> switch back to idle screen.
     gui_opmode2 = OPM2_MENU ;
     gui_opmode1 = SCR_MODE_IDLE | 0x80 ;
-      // (DL4YHF: this was unreliable in certain situations,
-      //          see notes in src/app_menu.c : Menu_Close() )
+      // ( this was unreliable in certain situations,
+      //   see notes in src/app_menu.c : Menu_Close() )
     
     nm_screen = scr ;
 }
@@ -655,3 +655,67 @@ void kb_handler_hook()
     return;
 #endif
 }
+
+#if( CAN_POLL_KEYS )
+//---------------------------------------------------------------------------
+keycode_t kb_ASCIItoTytera(uint8_t ascii)
+  // Converts a given 'ASCII' key ('M','U','D','B','0'..'9', '*','#')
+  //   into Tytera's own key code (30, 11, 12, 13,  0(!)..9, 14, 15 ).
+  // Used for REMOTE CONTROL via USB (which uses ASCII characters,
+  //   not the strange 'Tytera' keyboard codes),
+  //   and maybe for auto-repeat in the original menu.
+{ 
+  if( ascii>='0' && ascii<='9' )
+   { return (keycode_t)(ascii-'0');
+     // Not a bug but an annoying feature of Tytera's firmware:
+     // code ZERO doesn't mean 'no key pressed' but 'digit zero' !
+     // (that's why the 'app menu' and the remote control doesn't
+     //  use any of these codes, but upper case ASCII )
+   }
+  switch( ascii )
+   { case 'M' : return KC_MENU;
+     case 'B' : return KC_BACK;
+     case 'U' : return KC_UP;
+     case 'D' : return KC_DOWN;
+     case '*' : return KC_STAR; // ex: KC_ASTERISK (?)
+     case '#' : return KC_HASH; // ex: KC_OCTOTHORPE (?)
+     default  : return KC_NO_VALID_KEY; // bleah.. cannot use 0x00 for this
+   }
+} // end kb_ASCIItoTytera()
+
+//---------------------------------------------------------------------------
+void kb_OnRemoteKeyEvent( uint8_t key_ascii, uint8_t key_down_flag )
+  // Called on reception of a 'remote keyboard event' from USB.C .
+  // [in]  key_ascii : 'M','U','D','B','0'..'9','*','#' (keys on MD380 keyboard),
+  //       key_down_flag : 0 = key not pressed but released, 1 = pressed (down) .
+  // [out] keypress_ascii_remote : for the ALTERNATIVE menu, processed in irq_handlers.c;
+  //       kb_keycode, kb_keypressed : set here to operate TYTERA's menu remotely .
+{
+  // For a simple start, only ONE key may be pressed at a time:
+  if( key_down_flag )
+   { // key has just been PRESSED (on the remote keyboard) :
+     keypress_ascii_remote = key_ascii;
+     // To pass on the 'remote' keyboard event to the original firmware, 
+     // mimick the behaviour of Tytera's own keyboard handler, but 
+     // DO NOT invoke anything in the original firmware to avoid multitasking issues
+     // (the caller may even be an interrupt handler, so be very careful)
+     kb_keycode = kb_ASCIItoTytera(keypress_ascii_remote);
+     // The flags in kb_keypressed are strange. Only setting bit 0 here,
+     // and clearing it on release opened the Tytera menu but nothing else worked.
+     // So, instead of simply setting kb_keypressed = 1 :
+     //     bit 0 : pressed
+     //     bit 1 : release(d?) within timeout
+     //     bit 0+1 : pressed during rx (does this really matter for Tytera's menu ?)
+     //     bit 1+2 : pressed timeout   ?
+     //     bit 3 : rearm
+     kb_keypressed |= 3;
+   }
+  else  // key was RELEASED (remotely) ?
+   { keypress_ascii_remote = 0;
+     kb_keypressed = (kb_keypressed & ~3) | 8/*rearm*/;
+   }
+} // kb_OnRemoteKeyEvent()
+
+
+#endif // CAN_POLL_KEYS ?
+

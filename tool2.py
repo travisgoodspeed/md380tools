@@ -13,7 +13,7 @@
 #    Thus using a different name (tool2.py) for this evil twin.
 
 from DFU import DFU, State, Request
-import time # the PEP8 dictator said only one module per import. Bleah.
+import time
 import sys
 import struct
 #import msvcrt # why the heck doesn't Python have a SIMPLE, PORTABLE 'conio' ?!
@@ -34,6 +34,16 @@ md380_product  = 0xdf11
 sfr_addresses = { # tiny subset of special function registers in an STM32F4
     0xE000ED08L: "VTOR",  # Vector Table Offset Register, part of the SCB, PM0214 Rev5 page 220
     0xE000ED00L: "SCB",   # System Control Block, with CPUID[0], ICSR[4], VTOR[8], AIRCR[12], .... PM0214 pg 220.
+    0xA0000000L: "FSMC",  # Static memory controller, here used as LCD interface 
+    0xA0000004L: "FSMC_BTR1", # names from RM0090 (not from the stupid C header)
+    0xA0000008L: "FSMC_BCR2",
+    0xA000000CL: "FSMC_BTR2",
+    0xA0000010L: "FSMC_BCR3",
+    0xA0000014L: "FSMC_BTR3",
+    0xA0000018L: "FSMC_BCR4",
+    0xA000001CL: "FSMC_BTR4",
+    0xA0000104L: "FSMC_BWTR1",
+    0xA000010CL: "FSMC_BWTR2",
     0x40026000L: "DMA1",  # first DMA unit, register offsets in RM0090 Rev7 pages 332 .. 335
     0x40026004L: "DMA1HISR",
     0x40026008L: "DMA1LIFCR",

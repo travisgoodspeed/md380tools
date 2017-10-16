@@ -64,9 +64,31 @@
 #define LED_RED_OFF   GPIOE->BSRRH=(1<<PINPOS_E_TX) /* turn red LED off */
 #define IS_RED_LED_ON ((GPIOE->ODR&(1<<PINPOS_E_TX))!=0) /* check red LED*/
 #define IS_PTT_PRESSED ((GPIOE->IDR&(1<<PINPOS_E_PTT))==0) /* check PTT */ 
+
+#define PINPOS_D_LCD_RD 4 /* PD4 = LCD_RD (low-active READ from CPU to LCD)  */
+#define PINPOS_D_LCD_WR 5 /* PD5 = LCD_WR (low-active WRITE from CPU to LCD) */
 #define PINPOS_D_LCD_CS 6 /* PD6 = LCD_CS, see md380hw.html#PD6 */
-#define LCD_CS_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select LOW*/
-#define LCD_CS_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select HIGH*/
+#define PINPOS_D_LCD_RS 12  /* PD12 = LCD_RS (register select, aka command/data)*/
+#define PINPOS_D_LCD_RST 13 /* PD13 = LCD_RST (allows the CPU to reset the LCD)*/
+#define PINPOS_D_LCD_D0  14 /* PD14 = LCD_D0 */
+#define PINPOS_D_LCD_D1  15 /* PD15 = LCD_D1 */
+#define PINPOS_D_LCD_D2  0  /* PD0  = LCD_D2 */
+#define PINPOS_D_LCD_D3  1  /* PD1  = LCD_D3 */
+   /* Four of the eight LCD data lines are on another port .. aaargh !! */
+#define PINPOS_E_LCD_D4  7  /* PE7  = LCD_D4 */
+#define PINPOS_E_LCD_D5  8  /* PE8  = LCD_D5 */
+#define PINPOS_E_LCD_D6  9  /* PE9  = LCD_D6 */
+#define PINPOS_E_LCD_D7  10 /* PE10 = LCD_D7 */
+   /* Macros for some bit-banging I/O on the above ports: */
+#define LCD_RD_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_RD) /* LCD-read active   */
+#define LCD_RD_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_RD) /* LCD-read passive  */
+#define LCD_WR_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_WR) /* LCD-write active  */
+#define LCD_WR_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_WR) /* LCD-write passive */
+#define LCD_CS_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select active*/
+#define LCD_CS_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_CS) /* LCD-chip-select passive*/
+#define LCD_RS_LOW    GPIOD->BSRRH=(1<<PINPOS_D_LCD_RS) /* select LCD 'command' (register)*/
+#define LCD_RS_HIGH   GPIOD->BSRRL=(1<<PINPOS_D_LCD_RS) /* select LCD 'data' */
+         //  (Himax : 'DNC' = "Data Not Command" ?)
 
 extern uint8_t boot_flags; // bitwise combination of the following flags:
 #define BOOT_FLAG_INIT_BACKLIGHT  0x01 // initialized backlight (GPIO) ?
@@ -94,10 +116,11 @@ extern uint16_t battery_voltage_mV; // battery voltage [millivolts]
 
 extern uint16_t keypress_timer_ms; // measures key-down time in MILLISECONDS 
 extern uint8_t  keypress_ascii;    // code of the currently pressed key, 0 = none
+extern uint8_t  keypress_ascii_at_power_on; // snapshot of keypress_ascii at power-on
+extern uint8_t  keypress_ascii_remote; // for control via remote keyboard (USB).
 
 void StartStopwatch( uint32_t *pu32Stopwatch );   // details and usage in *.c 
 int  ReadStopwatch_ms( uint32_t *pu32Stopwatch );
-
 
 #if( CONFIG_MORSE_OUTPUT )
 void MorseGen_ClearTxBuffer(void); // aborts the current Morse transmission (if any)
