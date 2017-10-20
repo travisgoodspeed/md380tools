@@ -522,7 +522,7 @@ void create_menu_entry_demo_screen(void)
 {
     mn_submenu_init(wt_demoscr);
 
-    md380_menu_entry_selected = global_addl_config.boot_demo;
+    md380_menu_entry_selected = global_addl_config.boot_demo == 1 ? 0 : 1;
 
     mn_submenu_add(wt_disable, create_menu_entry_demo_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_demo_enable_screen);
