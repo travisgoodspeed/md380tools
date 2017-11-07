@@ -143,7 +143,7 @@ void boot_splash_set_bottomline(void)
 void splash_hook_handler(void)
 {
   
-    if( global_addl_config.boot_demo == 0 ) {
+    if( global_addl_config.boot_demo == 1 ) {
         demo();
     }
     
