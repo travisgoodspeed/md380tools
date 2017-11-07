@@ -73,7 +73,7 @@ typedef union T_RGB_Quad
      uint8_t a; // alignment dummy (no "alpha" channel here)
    } s;
   uint8_t ba[4]; // the same as a 4-byte array (for processing in loops)
-          // Beware, here: ba[0] = least significant byte = BLUE component !
+  // Beware, with Tytera's LCD-init: ba[0] = least significant byte = BLUE component !
 } rgb_quad_t;
 
 
@@ -89,6 +89,9 @@ typedef union T_RGB_Quad
 
 extern uint8_t LCD_b12Temp[12];  // small RAM buffer for a single, self-defined character
 
+extern uint8_t LCD_busy; // busy from a drawing operation ? 0=no, >0=yes .
+               // For the application, this flag is read-only . Used by
+               // LCD_EnterCriticalSection() / LCD_LeaveCriticalSection() .
 
 //---------------------------------------------------------------------------
 // Prototypes for LOW-LEVEL LCD driver functions 
@@ -107,6 +110,14 @@ void LCD_HorzLine( int x1, int y, int x2, uint16_t wColor );
 
 void LCD_ColorGradientTest(void); // Fills the framebuffer with a 
   // 2D color gradient. Used for testing .. details in lcd_driver.c .
+
+int LCD_CopyRectFromFramebuffer_RGB( // Reads a rectangular area of pixels
+        int x1, int y1, int x2, int y2, uint8_t *pbDest, int sizeof_dest);
+  // [out] : 24 bit per pixel, byte order: BLUE, GREEN, RED !
+  //   (Format used when 'Tytera' initialized the display.
+  //    Same sequence as in bitmap files with 24 bpp.
+  //    On a little-endian machine BLUE is in the LSByte.
+  //    Compatible with 'html hex colour codes' : 0x0000FF = BLUE)
 
 uint8_t *LCD_GetFontPixelPtr_8x8( uint8_t c);
   // Retrieves the address of a character's font bitmap, 8 * 8 pixels .

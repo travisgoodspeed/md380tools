@@ -120,7 +120,7 @@ int calcbl(int adr, int target){
   /* The BL instruction is actually two Thumb instructions, with one
      setting the high part of the LR and the other setting the lo part
      while swapping LR and PC. */
-  int hi=0xF000 | ((offset&0xFFF800)>>11);
+  int hi=0xF000 | ((offset&0x3FF800)>>11);
   int lo=0xF800 | (offset&0x7FF);
   
   //Return the pair as a single 32-bit word.

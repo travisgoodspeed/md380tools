@@ -132,7 +132,7 @@ class Merger(object):
         # print("offset=%08x" % offset)
         offset -= 4  # PC points to the next ins.
         offset = (offset >> 1)  # LSBit is ignored.
-        hi = 0xF000 | ((offset & 0xfff800) >> 11)  # Hi address setter, but at lower adr.
+        hi = 0xF000 | ((offset & 0x3ff800) >> 11)  # Hi address setter, but at lower adr.
         lo = 0xF800 | (offset & 0x7ff)  # Low adr setter goes next.
         # print("%04x %04x" % (hi, lo))
         word = ((lo << 16) | hi)

@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
     # Fix some bad grammar
     patcher.setwstring(0x080f9a94,
-                       "No Fix")
+                       "No SatFix")
 
     # Change the manufacturer string. *Never Worked...*
     #    patcher.setstring(0x080f9588,

@@ -26,10 +26,7 @@
 #include "stm32f4xx_conf.h" // again, added because ST didn't put it here ?
 
 
-uint8_t GFX_backlight_on=0; // DL4YHF 2017-01-07 : 0="off" (low intensity), 1="on" (high intensity)
-                            //   (note: GFX_backlight_on is useless as long as no-one calls lcd_background_led() .
-                            //    As long as that's the case, the 'dimmed backlight switcher' 
-                            //    in applet/src/irq_handlers.c polls backlight_timer instead of GFX_backlight_on . )
+uint8_t GFX_backlight_on=0; // not used anywhere ?
 
 //! Draws text at an address by calling back to the MD380 function.
 
@@ -96,10 +93,7 @@ void lcd_background_led(int on)
 { // 2017-01-07 : Never called / no effect ? The backlight seems to be controlled "by Tytera only" (backlight_timer).
 
 #if( CONFIG_DIMMED_LIGHT ) 
-  GFX_backlight_on = on; // DL4YHF 2017-01-07.  Tried to poll this in irq_handlers.c, but didn't work.
-                         // Poll Tytera's 'backlight_timer' instead. Nonzero="bright", zero="dark" . 
-                         // With CONFIG_DIMMED_LIGHT=1, the "Lamp" output (PC6) is usually configured 
-                         // as UART6_TX, and switching it 'as GPIO' has no effect then.                         
+  GFX_backlight_on = on;                       
 #else // ! CONFIG_DIMMED_LIGHT : only completely on or off ...
  
   if (on) 
@@ -202,7 +196,7 @@ void print_date_hook(void)
 
 void print_time_hook(const char log)
 {
-    if( is_netmon_visible() ) {
+    if( is_netmon_visible() && nm_screen < 4 ) {							// 2017-05-21 fix missing timestamp output for netmon4,5,6
         return;
     }
     wchar_t wide_time[9];

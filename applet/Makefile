@@ -54,6 +54,7 @@ SRCS += etsi.o
 SRCS += sms.o
 SRCS += beep.o
 SRCS += irq_handlers.o
+SRCS += system_hrc5000.o
 SRCS += narrator.o
 SRCS += lcd_driver.o
 SRCS += font_8_8.o
