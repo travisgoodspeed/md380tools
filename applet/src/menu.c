@@ -504,7 +504,7 @@ void create_menu_entry_demo_enable_screen(void)
 {
     mn_create_single_timed_ack(wt_demoscr, wt_enable);
 
-    global_addl_config.boot_demo = 0;
+    global_addl_config.boot_demo = 1;
 
     cfg_save();
 }
@@ -513,7 +513,7 @@ void create_menu_entry_demo_disable_screen(void)
 {
     mn_create_single_timed_ack(wt_demoscr, wt_disable);
 
-    global_addl_config.boot_demo = 1;
+    global_addl_config.boot_demo = 0;
 
     cfg_save();
 }
@@ -522,7 +522,7 @@ void create_menu_entry_demo_screen(void)
 {
     mn_submenu_init(wt_demoscr);
 
-    md380_menu_entry_selected = global_addl_config.boot_demo == 1 ? 0 : 1;
+    md380_menu_entry_selected = global_addl_config.boot_demo;
 
     mn_submenu_add(wt_disable, create_menu_entry_demo_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_demo_enable_screen);
@@ -1135,11 +1135,7 @@ void create_menu_entry_promtg_screen(void)
 {
     mn_submenu_init(wt_promtg);
 
-    if( global_addl_config.promtg == 0 ) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = 1;
-    }
+    md380_menu_entry_selected = global_addl_config.promtg;
 
     mn_submenu_add(wt_disable, create_menu_entry_promtg_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_promtg_enable_screen);
@@ -1151,11 +1147,7 @@ void create_menu_entry_micbargraph_screen(void)
 {
     mn_submenu_init(wt_micbargraph);
 
-    if( global_addl_config.micbargraph == 0 ) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = 1;
-    }
+    md380_menu_entry_selected = global_addl_config.micbargraph;
 
     mn_submenu_add(wt_disable, create_menu_entry_micbargraph_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_micbargraph_enable_screen);
@@ -1167,11 +1159,7 @@ void create_menu_entry_rbeep_screen(void)
 {
     mn_submenu_init(wt_rbeep);
 
-    if( global_addl_config.rbeep == 0 ) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = 1;
-    }
+    md380_menu_entry_selected = global_addl_config.rbeep;
 
     mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_rbeep_enable_screen);
@@ -1284,11 +1272,7 @@ void create_menu_entry_debug_screen(void)
 {
     mn_submenu_init(wt_debug);
 
-    if( global_addl_config.debug == 1 ) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = 1;
-    }
+    md380_menu_entry_selected = global_addl_config.debug;
 
     mn_submenu_add(wt_disable, create_menu_entry_debug_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_debug_enable_screen);
@@ -1340,11 +1324,7 @@ void create_menu_entry_experimental_screen(void)
 {
     mn_submenu_init(wt_experimental);
 
-    if( global_addl_config.experimental == 0 ) {
-        md380_menu_entry_selected = 0;
-    } else {
-        md380_menu_entry_selected = 1;
-    }
+    md380_menu_entry_selected = global_addl_config.experimental;
 
     mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen);
     mn_submenu_add(wt_enable, create_menu_entry_experimental_enable_screen);
