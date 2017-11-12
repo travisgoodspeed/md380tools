@@ -92,6 +92,8 @@ const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 const static wchar_t wt_backlight[]         = L"Backlight Tmr";
 const static wchar_t wt_blunchanged[]       = L"Unchanged";
 const static wchar_t wt_bl5[]               = L"5 sec";
+const static wchar_t wt_bl10[]              = L"10 sec";
+const static wchar_t wt_bl15[]              = L"15 sec";
 const static wchar_t wt_bl30[]              = L"30 sec";
 const static wchar_t wt_bl60[]              = L"60 sec";
 
@@ -1359,6 +1361,16 @@ void mn_backlight_5sec()
     mn_backlight_set(1,wt_bl5);     
 }
 
+void mn_backlight_10sec()
+{
+    mn_backlight_set(2,wt_bl10);     
+}
+
+void mn_backlight_15sec()
+{
+    mn_backlight_set(3,wt_bl15);     
+}
+
 void mn_backlight_30sec()
 {
     mn_backlight_set(6,wt_bl30);     
@@ -1376,13 +1388,17 @@ void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, b
     switch( md380_radio_config.backlight_time ) // inspired by stargo0's fix #674 
      { // (fixes the selection of the current backlight-time in the menu)
        case 1 /* times 5sec */ : md380_menu_entry_selected = 1; break;
-       case 6 /* times 5sec */ : md380_menu_entry_selected = 2; break;
-       case 12/* times 5sec */ : md380_menu_entry_selected = 3; break;
+       case 2 /* times 5sec */ : md380_menu_entry_selected = 2; break;
+       case 3 /* times 5sec */ : md380_menu_entry_selected = 3; break;
+       case 6 /* times 5sec */ : md380_menu_entry_selected = 4; break;
+       case 12/* times 5sec */ : md380_menu_entry_selected = 5; break;
        default/* unchanged  */ : md380_menu_entry_selected = 0; break;
      }
     mn_submenu_add(wt_blunchanged, mn_backlight_unchanged);
     mn_submenu_add(wt_bl5,  mn_backlight_5sec );
 
+    mn_submenu_add(wt_bl10, mn_backlight_10sec);
+    mn_submenu_add(wt_bl15, mn_backlight_15sec);
     mn_submenu_add(wt_bl30, mn_backlight_30sec);
     mn_submenu_add(wt_bl60, mn_backlight_60sec);
 
