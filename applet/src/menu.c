@@ -90,7 +90,7 @@ const static wchar_t wt_no_w25q128[]        = L"No W25Q128";
 const static wchar_t wt_micbargraph[]       = L"Mic bargraph";
 
 const static wchar_t wt_backlight[]         = L"Backlight Tmr";
-const static wchar_t wt_blunchanged[]       = L"Unchanged";
+const static wchar_t wt_blalways[]          = L"Always";
 const static wchar_t wt_bl5[]               = L"5 sec";
 const static wchar_t wt_bl10[]              = L"10 sec";
 const static wchar_t wt_bl15[]              = L"15 sec";
@@ -1351,8 +1351,9 @@ void mn_backlight_set(int sec5, const wchar_t *label)
     rc_write_radio_config_to_flash();    
 }
 
-void mn_backlight_unchanged()
+void mn_backlight_always()
 {
+    mn_backlight_set(0,wt_blalways);     
 }
 
 
@@ -1392,9 +1393,9 @@ void mn_backlight(void)  // menu for the backlight-TIME (longer than Tytera's, b
        case 3 /* times 5sec */ : md380_menu_entry_selected = 3; break;
        case 6 /* times 5sec */ : md380_menu_entry_selected = 4; break;
        case 12/* times 5sec */ : md380_menu_entry_selected = 5; break;
-       default/* unchanged  */ : md380_menu_entry_selected = 0; break;
+       default/* always  */    : md380_menu_entry_selected = 0; break;
      }
-    mn_submenu_add(wt_blunchanged, mn_backlight_unchanged);
+    mn_submenu_add(wt_blalways, mn_backlight_always);
     mn_submenu_add(wt_bl5,  mn_backlight_5sec );
 
     mn_submenu_add(wt_bl10, mn_backlight_10sec);
