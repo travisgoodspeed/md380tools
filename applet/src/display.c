@@ -123,8 +123,12 @@ int fDoOnce = 0;
 
 void draw_micbargraph()
 {
-    if( gui_opmode2 == OPM2_MENU ) {
-        // case for pressing the PTT during 'Manual Dial' in 'Contacts'
+    if( gui_opmode2 == OPM2_MENU
+# if (CONFIG_APP_MENU)
+            || Menu_IsVisible()
+#endif
+    ) {
+        // case for pressing the PTT during 'Manual Dial' in 'Contacts', or if 'app menu' is visible
         return ;
     }
     
@@ -465,10 +469,7 @@ void draw_statusline_hook( uint32_t r0 )
      }
     // NOTE: draw_statusline_hook() isn't called when the squelch
     //       is 'open' in FM, i.e. when the channel is BUSY .
-    // Of course we don't want to be tyrannized by the radio like that.
-    // It's THE OPERATOR'S decision what to do and when to invoke the menu,
-    // not the radio's. 
-    // Fixed by also calling Menu_DrawIfVisible() from other places .
+    //       -> call Menu_DrawIfVisible() from other places, too.
 # endif // CONFIG_APP_MENU ?
 
     if( is_netmon_visible() ) {
@@ -831,8 +832,6 @@ void draw_adhoc_statusline()
 void draw_datetime_row_hook()
 {
 # if (CONFIG_APP_MENU)
-    // If the screen is occupied by the optional 'red button menu', 
-    // update or even redraw it completely:
     if( Menu_DrawIfVisible(AM_CALLER_DATETIME_HOOK) )  
      { return; // the menu covers the entire screen, so don't draw anything else
      }

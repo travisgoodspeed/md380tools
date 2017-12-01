@@ -26,6 +26,20 @@
 //---------------------------------------------------------------------------
 // Defines for the alternative 'App Menu' :
 
+// Key to acivtate the 'App Menu' - pick your favourite:
+//  'B' = red 'Back' key in the upper right corner of the keyboard, 
+//        Author's favourite: Press the same key two times
+//        to open the menu, take a glance at the most important parameters
+//        (that are immediately displayed without clumsy submenus), 
+//        and quicky close the menu with the same key again.
+//  '#' = hash key / white arrrow up in the lower right corner.
+//  Note: a LONG press of the 'green key' should be reserved for opening
+//        Tytera's stock menu, even if the stock firmware doesn't want to
+//        because the channel is busy (same annoyance as in other DMR radios).
+#ifndef  APPMENU_ACTIVATION_KEY // if not defined somewhere else (config.h or command line) 
+# define APPMENU_ACTIVATION_KEY 'B'
+#endif
+
 // Result codes for app menu callback functions :
 #define AM_RESULT_NONE  0 // "proceed as if there was NO callback function"
 #define AM_RESULT_OK    1 // general 'ok' (callback function 'did something').

@@ -1,8 +1,10 @@
 // File:    md380tools/applet/src/app_menu.c
 // Author:  Wolf (DL4YHF) [initial version] 
 //          Please don't poison this sourcecode with TAB characters . 
+//          Please don't poison this sourcecode with TAB characters . 
+//          Please don't poison this sourcecode with TAB characters . Nnngrrrr !
 //
-// Date:    2017-05-12
+// Date:    2017-09-03
 //  Implements a simple menu opened with the red BACK button,
 //             which doesn't rely on ANY of Tytera's firmware
 //             functions at all (neither "gfx" nor "menu").
@@ -65,7 +67,7 @@
 
 // Variables used by the 'app menu' :
 
-static uint8_t  am_key;              // one-level keyboard buffer
+static uint8_t  am_key; // one-level keyboard buffer for the app-menu
 static uint8_t  morse_activation_pending = TRUE;
 static uint32_t backlight_stopwatch; // SysTick-based stopwatch for the backlight
 
@@ -212,7 +214,20 @@ const menu_item_t am_Setup[] = // setup menu, nesting level 1 ...
         &gui_opmode3,0,0,          NULL,         NULL     },
   { "[h8]SysTicks",     DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // notice the increased QRM when this item..
       (void*)&IRQ_dwSysTickCounter,0,0, NULL,    NULL     }, // is scrolled into view (->rapid updates)
-
+#if (1)
+  { "Core Clk",         DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // aka "HCLK", important for FMSC timing params
+      (void*)&SystemCoreClock, 0,0, NULL,         NULL  }, // confirmed: SystemCoreClock = 168 MHz .
+  { "[h8]FSMC(1)",      DTYPE_UNS32,  APPMENU_OPT_NONE, 0, // register with LCD bus timing bits..
+      (void*)&FSMC_Bank1->BTCR[1], 0,0, NULL,     NULL  }, // original value: 0x10100233; details in lcd_driver.c 
+#endif
+#if (1) // check keyboard and remote control via USB ?
+  { "[h2]kb_keycode",   DTYPE_UNS8,  APPMENU_OPT_NONE, 0,  // TYTERA's own keyboard code (non-ASCII)
+      (void*)&kb_keycode,            0,0, NULL,   NULL  }, //  
+  { "[h2]keypress",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0,  // TYTERA's keyboard processing state
+      (void*)&kb_keypressed,         0,0, NULL,   NULL  }, // 
+  { "[h2]key_remote",   DTYPE_UNS8,  APPMENU_OPT_NONE, 0,  // remote keyboard state (ASCII, received from USB)
+      (void*)&keypress_ascii_remote, 0,0, NULL,   NULL  }, // 
+#endif
 #if (0) && ( defined(FW_D13_020) || defined(FW_S13_020) ) // removed 2017-05-12 because Netmon1 can show these:
   { "[b8]radio_s0",     DTYPE_UNS8,  APPMENU_OPT_NONE, 0, 
         &radio_status_1.m0,0,0,    NULL,         NULL     },
@@ -277,14 +292,18 @@ const am_stringtable_t am_stringtab_narrator_modes[] =
 
 //---------------------------------------------------------------------------
 void Menu_OnKey( uint8_t key) // called on keypress from some interrupt handler
+  // [in] ASCII key, not the strange key values in Tytera's firmware .
 { 
   //avoid resetting screen if menu isn't open
   if (( global_addl_config.keyb_mode == 1 ) && (!Menu_IsVisible() && key == 'B')) {
-	return;
-	}
+        return;
+        }
   if( boot_flags & BOOT_FLAG_FIRST_KEY_POLLED ) // ignore 'early keystrokes'
    { am_key = key;
    }
+  // DON'T call anything in Tytera's part of the firmware from here,
+  // neither directly nor indirectly (through other functions) ! 
+  // Reason: See irq_handlers.c : PollKeys() .
 }
 
 //---------------------------------------------------------------------------
@@ -349,6 +368,12 @@ void Menu_Open(
    {  global_addl_config.edit_fg_color = LCD_COLOR_WHITE;
       global_addl_config.edit_bg_color = LCD_COLOR_RED;
    }
+
+  StartStopwatch( &pMenu->morse_stopwatch ); 
+  // Reporting the first item in Morse code later (when morse_stopwatch expires): 
+  pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
+
+
 } // end Menu_Open()
 
 //---------------------------------------------------------------------------
@@ -359,7 +384,7 @@ void Menu_Close(app_menu_t *pMenu)
       pMenu->save_on_exit = FALSE; // "done"
    }
 
-  if( kb_row_col_pressed ) // some key (especially the green MENU key) still pressed ?
+  if( kb_row_col_pressed || keypress_ascii_remote ) // some key still pressed ?
    { pMenu->visible = APPMENU_VISIBLE_UNTIL_KEY_RELEASED;
    } // end if < trying to exit but a key is still pressed >
   else // green MENU key not pressed, so the normal main screen should appear..
@@ -805,19 +830,22 @@ int Menu_DrawIfVisible(int caller)
          }
       }
      else
-
-     if  (((global_addl_config.keyb_mode == 1) && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B' || c == '#') ))  ||  ((global_addl_config.keyb_mode != 1) && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B')) ))
+     // ex: if( (pMenu->visible==APPMENU_VISIBLE) || (c==APPMENU_ACTIVATION_KEY) )
+     // ... omg, this became sooo ugly when the 'keyboard mode' was made configurable:
+     if( ((global_addl_config.keyb_mode == 1)
+           && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B') || (c == '#') ) ) 
+      || ((global_addl_config.keyb_mode != 1)
+           && ( (pMenu->visible==APPMENU_VISIBLE) || (c == 'B') ) )
+       )
       { switch(c) // using ASCII characters for simplicity
          { case 'M' :  // green "Menu" key : kind of ENTER
               Menu_OnEnterKey(pMenu);
               break; // end case < green "Menu", aka "Confirm"-key >
            case 'B' :  // red "Back"-key :
               // red_led_timer  = 20;    // <- poor man's debugging 
-              if( ( pMenu->visible == APPMENU_OFF ) && ( global_addl_config.keyb_mode != 1) ) // not visible yet..
+              if(  ( pMenu->visible == APPMENU_OFF ) 
+                && ( global_addl_config.keyb_mode != 1) ) // ALTERNATIVE menu not visible yet..
                { Menu_Open( pMenu, NULL, NULL, APPMENU_EDIT_OFF );  // so open the default menu (items)
-                 StartStopwatch( &pMenu->morse_stopwatch ); 
-                 // Reporting the first item in Morse code later (when morse_stopwatch expires): 
-                 pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
                }
               else // already in the app menu: treat the RED KEY like "BACK",
                {   // "Exit", "Escape", or "Delete" ?
@@ -883,14 +911,12 @@ int Menu_DrawIfVisible(int caller)
               pMenu->redraw = TRUE;
               break;
            default:  // Other keys .. editing or treat as a hotkey ?
-		if (c == '#' && pMenu->visible == APPMENU_OFF && !is_netmon_visible()) { // red "Back"-key : 
-		{
-			Menu_Open(pMenu, NULL, NULL, APPMENU_EDIT_OFF);  // so open the default menu (items)
-			StartStopwatch(&pMenu->morse_stopwatch);
-			// Reporting the first item in Morse code later (when morse_stopwatch expires): 
-			pMenu->morse_request = AMENU_MORSE_REQUEST_ITEM_TEXT | AMENU_MORSE_REQUEST_ITEM_VALUE;
-			}
-		}
+              // Use the "hash"-key to open the ALTERNATIVE MENU ? 
+              if(  ( pMenu->visible == APPMENU_OFF ) // ALTERNATIVE menu not visible yet.. ?
+                && ( global_addl_config.keyb_mode == 1) // hash-key used to open that menu ? 
+                && !is_netmon_visible() ) // AND screen not occupied by netmon ?
+               { Menu_Open(pMenu, NULL, NULL, APPMENU_EDIT_OFF);  // so open the ALTERNATIVE menu (default items)
+               }
               if( pMenu->edit_mode != APPMENU_EDIT_OFF )
                { Menu_ProcessEditKey(pMenu, c);
                }

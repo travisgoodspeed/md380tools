@@ -28,7 +28,8 @@ typedef enum {
 	KC_DOWN = 12,
 	KC_BACK = 13,
 	KC_STAR = 14,
-	KC_HASH = 15
+	KC_HASH = 15,
+        KC_NO_VALID_KEY = 0xFF // kludge for remote control (not used by Tytera)
 } keycode_t;
 
 void f_4101();
@@ -74,6 +75,10 @@ void set_keyb(int);
 void sms_rpt(void);
 void sms_wx(void);
 void sms_gps(void);
+
+keycode_t kb_ASCIItoTytera(uint8_t ascii);
+void kb_OnRemoteKeyEvent(uint8_t key_ascii, uint8_t key_down_flag );
+
 #else
 # define CAN_POLL_KEYS 0  /* 0 : cannot poll keys for this firmware yet */
 #endif
