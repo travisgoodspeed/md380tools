@@ -28,6 +28,6 @@ Install python-usb from backports, the rest from Jessie
 #### Debian Jessie (using python-pip): ####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
-            libusb-1.0 git make curl python-pip unzip make curl
+            libusb-1.0 git python-pip unzip make curl
     pip install pyusb -U # update PyUSB to 1.0
   
