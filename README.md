@@ -128,7 +128,7 @@ repository.  We use a heap-less printf library under the BSD license.
   http://www.python.org
 
 * PyUSB 1.0:  (0.4 does not work.)
-  http://sourceforge.net/apps/mediawiki/pyusb/
+  https://github.com/pyusb/pyusb
 
 * libusb 1.0: (0.4 does not work.)
   http://www.libusb.org/
