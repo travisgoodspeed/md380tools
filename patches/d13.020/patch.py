@@ -42,6 +42,10 @@ if __name__ == '__main__':
 
     # Color Code check
 
+    # remove volume screen
+    patcher.nopout((0x0801FED2))
+    patcher.nopout((0x0801FED2 + 0x2))
+
     # freeing ~200k for code patches
     patcher.ffrange(0x0809aee8, 0x080cf754)
 

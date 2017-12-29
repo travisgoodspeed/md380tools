@@ -115,6 +115,7 @@ selected_contact_name_wstring            = 0x2001cb58 ;
 md380_menu_edit_buf                      = 0x2001cb9a ;
 msg_sms_bdy_prep                         = 0x2001ccbc ;
 zone_name                                = 0x2001cddc ;
+msg_sms_bdy                              = 0x2001cefc ;
 md380_usbstring                          = 0x2001d504 ;
 md380_menu_memory                        = 0x2001d5cc ;
 gps_ringbuf                              = 0x2001d950 ;

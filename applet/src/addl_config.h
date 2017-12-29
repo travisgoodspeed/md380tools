@@ -48,16 +48,25 @@ typedef struct addl_config {
        // The above 16-bit colours use the display's native 'BGR565'-format,
        // as used for the 'alternative' menu and the alternative LCD driver:
        // BLUE component in bits 15..11, GREEN in bits 10..5, RED in bits 4..0 .
-    uint8_t mic_gain;           // 0=Disabled, 1=2db dgain, 2=6db gain
-    uint8_t fm_bpf;             // 0=off, 1=on
-    uint8_t fm_comp;            // 0=off, 1=on
-    uint8_t fm_preemp;          // 0=off, 1=on
-    uint8_t fm_bw;              // 0=12.5kHz, 1=25kHz
-    uint8_t fm_dev;             // 0=default 1-5=user selectable
-    uint8_t fm_mode;            // 0x00-0xFF current register value of FM mode
-    uint8_t keyb_mode;          // Keyboad layout/mode 0=legacy, 1=modern, 2=MD446, 3=developer
-    uint8_t scroll_mode;        // Keyboad scroll 0=off, 1=fast, 2=slow
-    uint8_t devmode_level;      // Developer level 0-off, 1-show FM options, 2-extended USB, 3-hide menu #1,#2,#5
+    uint8_t mic_gain;		// 0=Disabled, 1=2db dgain, 2=6db gain
+    uint8_t fm_bpf;		// 0=off, 1=on
+    uint8_t fm_comp;		// 0=off, 1=on
+    uint8_t fm_preemp;		// 0=off, 1=on
+    uint8_t fm_bw;		// 0=12.5kHz, 1=25kHz
+    uint8_t fm_dev;		// 0=default 1-5=user selectable
+    uint8_t fm_mode;		// 0x00-0xFF current register value of FM mode
+    uint8_t keyb_mode;  	// Keyboad layout/mode 0=legacy, 1=modern, 2=MD446, 3=developer
+    uint8_t scroll_mode;  	// Keyboad scroll 0=off, 1=fast, 2=slow
+    uint8_t devmode_level;	// Developer level 0-off, 1-show FM options, 2-extended USB, 3-hide menu #1,#2,#5
+    uint8_t sms_mode;		// SMS automode 0=off, 1=on
+    uint8_t sms_rpt;		// RPT SMS service 0=off, 1=on
+    uint8_t sms_wx;		// WX SMS service 0=off, 1=RPT 2=GPS
+    uint8_t sms_gps;		// GPS SMS service 0=off, 1=on, 2=auto
+//=== statusline options ==========================================================================================
+    uint8_t mode_stat;		// 0=off 1=on  Top statusline with mode/rpt info
+    uint8_t mode_color;		// 0=off 1=on  Top statusline set different color
+    uint8_t chan_stat;		// 0=off 1=on 2=rx_freq 3=tx_freq channel statusline with TS / TG info
+    uint8_t chan_color;		// 0=off 1=on  channel statusline set different color
 } addl_config_t ;
 
 #define CPO_BL1 0x1

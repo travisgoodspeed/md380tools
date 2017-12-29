@@ -32,19 +32,21 @@
 const static wchar_t wt_main_menu[]         = L"MD380Tools";    // MD380Tools menu name
 const static wchar_t wt_main_menutxt[]      = L"MD380Tools 2.0";// MD380Tools menu header
 // Main menu entries 
-const static wchar_t wt_main_display[]      = L"Display";       // main menu 1 - display options
-const static wchar_t wt_main_keyb[]         = L"Keyboard";      // main menu 2 - keyboard options
-const static wchar_t wt_main_radio[]        = L"Radio";         // main menu 3 - radio options
-const static wchar_t wt_main_dmr[]          = L"DMR";           // main menu 4 - dmr settings
-const static wchar_t wt_main_tones[]        = L"Tones";         // main menu 5 - tone settings
-const static wchar_t wt_main_dev[]          = L"Developer";     // main menu 6 - developer menu
+const static wchar_t wt_main_display[]      = L"Display";	// main menu 1 - display options
+const static wchar_t wt_main_radio[]        = L"Radio";		// main menu 2 - radio options
+const static wchar_t wt_main_dmr[]          = L"DMR Setup";		// main menu 3 - dmr settings
+const static wchar_t wt_main_sms[]          = L"SMS Service";		// main menu 4 - dmr settings
+const static wchar_t wt_main_keyb[]         = L"Keyboard";	// main menu 5 - keyboard options
+const static wchar_t wt_main_tones[]        = L"Tones";		// main menu 6 - tone settings
+const static wchar_t wt_main_dev[]          = L"Developer";	// main menu 7 - developer menu
 // Sub menu header
-const static wchar_t wt_disp_menu[]         = L"Display Setup"; // sub menu 1 header title
-const static wchar_t wt_keyb_menu[]         = L"Keyboard Setup";// sub menu 2 header title
-const static wchar_t wt_radio_menu[]        = L"Radio Setup";   // sub menu 3 header title
-const static wchar_t wt_dmr_menu[]          = L"DMR Setup";     // sub menu 4 header title
-const static wchar_t wt_tones_menu[]        = L"Tones/Audio";   // sub menu 5 header title
-const static wchar_t wt_dev_menu[]          = L"Developer";     // sub menu 6 header title
+const static wchar_t wt_disp_menu[]         = L"Display Setup";	// sub menu 1 header title
+const static wchar_t wt_radio_menu[]        = L"Radio Setup";	// sub menu 2 header title
+const static wchar_t wt_dmr_menu[]          = L"DMR Setup";	// sub menu 3 header title
+const static wchar_t wt_sms_menu[]          = L"SMS Service";	// sub menu 4 header title
+const static wchar_t wt_keyb_menu[]         = L"Keyboard Setup";// sub menu 5 header title
+const static wchar_t wt_tones_menu[]        = L"Tones/Audio";	// sub menu 6 header title
+const static wchar_t wt_dev_menu[]          = L"Developer";	// sub menu 7 header title
 
 const static wchar_t wt_enable[]            = L"Enable";        // general option used in several menus
 const static wchar_t wt_disable[]           = L"Disable";       // general option used in several menus
@@ -59,6 +61,23 @@ const static wchar_t wt_fromcps[]           = L"CPS only";
 const static wchar_t wt_usercsv[]           = L"User DB";
 const static wchar_t wt_talkalias[]         = L"Talk Alias";
 const static wchar_t wt_ta_user[]           = L"TA & UserDB";
+
+const static wchar_t wt_sms_mode[]	    = L"SMS Mode"; 	// SMS mode - enable or disable 
+const static wchar_t wt_sms_off[]	    = L"AutoSMS Off";
+const static wchar_t wt_sms_on[]	    = L"AutoSMS On";
+
+const static wchar_t wt_sms_rpt[]	    = L"RPT Status";
+const static wchar_t wt_sms_rpt_on[]	    = L"RPT SMS On";
+const static wchar_t wt_sms_rpt_off[]	    = L"RPT SMS Off";
+
+const static wchar_t wt_sms_wx[]	    = L"WX Report";
+const static wchar_t wt_sms_wx_off[]	    = L"WX SMS Off";
+const static wchar_t wt_sms_wx_rpt[]	    = L"WX RPT based";
+const static wchar_t wt_sms_wx_gps[]	    = L"WX GPS based";
+
+const static wchar_t wt_sms_gps[]	    = L"GPS Report";
+const static wchar_t wt_sms_gps_on[]	    = L"GPS SMS On";
+const static wchar_t wt_sms_gps_off[]	    = L"GPS SMS Off";
 
 const static wchar_t wt_keyb_mode[]         = L"Keyb Mode";     // keyb setup - select for different layout and radio models
 const static wchar_t wt_keyb_legacy[]       = L"Legacy";        // Tradiotionally layout of first MD380Tools firmware 
@@ -129,6 +148,27 @@ const static wchar_t wt_fm_dev6[]           = L"Level +3";
 const static wchar_t wt_micgain[]           = L"Mic gain";
 const static wchar_t wt_micgain_3db[]       = L"3db Gain";
 const static wchar_t wt_micgain_6db[]       = L"6db Gain";
+
+const static wchar_t wt_radio_status[]	    = L"Mode Display";
+const static wchar_t wt_radio_stat_off[]    = L"Mode/CC Off";
+const static wchar_t wt_radio_stat_on[]     = L"Mode/CC";
+const static wchar_t wt_radio_stat_ext[]    = L"Mode/CC/Mic";
+const static wchar_t wt_radio_stat_comp[]   = L"Mode compact";
+
+const static wchar_t wt_radio_color[]	    = L"Mode Color";
+const static wchar_t wt_radio_color0[]      = L"Standard";
+const static wchar_t wt_radio_color1[]      = L"Highlight";
+
+const static wchar_t wt_ch_status[]	    = L"Channel Info";
+const static wchar_t wt_ch_status_off[]	    = L"CH Info Off";
+const static wchar_t wt_ch_status_dmr[]	    = L"CH Status Info";
+const static wchar_t wt_ch_status_rx[]	    = L"CH RX Info";
+const static wchar_t wt_ch_status_tx[]	    = L"CH TX Info";
+const static wchar_t wt_ch_status_rxtx[]    = L"CH RX/TX Info";
+
+const static wchar_t wt_ch_color[]	    = L"CH Info Color";
+const static wchar_t wt_ch_color0[]	    = L"Standard";
+const static wchar_t wt_ch_color1[]	    = L"Light Blue";
 
 const static wchar_t wt_debug[]             = L"USB logging";
 const static wchar_t wt_experimental[]      = L"Experimental";
@@ -204,6 +244,10 @@ const static wchar_t wt_button_set_tg[]     = L"Set Talkgroup";
 const static wchar_t wt_button_narrator[]   = L"Morse Narrator";
 const static wchar_t wt_button_cw_repeat[]  = L"Morse Repeat";
 #endif
+const static wchar_t wt_button_toggle[]     = L"Screen Toogle";
+const static wchar_t wt_button_micgain[]    = L"Micgain 0/3/6dB";
+const static wchar_t wt_button_promisc[]    = L"Promisc On/Off";
+
 const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a,
                                                0x0b, 0x0c, 0x0d, 0x0e, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e,
                                                0x1f, 0x26, 0x50, 0x51
@@ -211,6 +255,9 @@ const static uint8_t button_functions[]     = {0x00, 0x01, 0x02, 0x03, 0x04, 0x0
                                               ,0x52 // starts the 'Morse narrator' via programmable button
                                               ,0x53 // repeats the last 'Morse announcement'  "  "  "
 #                                            endif
+					      ,0x54 // display mode toggle
+					      ,0x55 // mic gain toggle
+					      ,0x56 // promiscuous mode on/off
                                               };
 
 uint8_t button_selected = 0;
@@ -432,7 +479,7 @@ void mn_submenu_finalize()
 {
     menu_t *menu_mem = get_menu_stackpoi();
     
-    for (int i = 0; i < menu_mem->numberof_menu_entries; i++) { 
+    for (int i = 0; i < menu_mem->numberof_menu_entries; i++) {
         // conflicts with 'selected' icon.
         // no icons.
         md380_menu_mem_base[md380_menu_id + i].off16 = 0;
@@ -715,6 +762,154 @@ void create_menu_fm_options(void)
 
 //==========================================================================================================//
 
+void mn_option_radio_stat_off(void)
+{
+    mn_create_single_timed_ack(wt_radio_status, wt_radio_stat_off);
+    global_addl_config.mode_stat = 0;
+    cfg_save();
+}
+
+void mn_option_radio_stat_on(void)
+{
+    mn_create_single_timed_ack(wt_radio_status, wt_radio_stat_on);
+    global_addl_config.mode_stat = 1;
+    cfg_save();
+}
+
+void mn_option_radio_stat_ext(void)
+{
+    mn_create_single_timed_ack(wt_radio_status, wt_radio_stat_ext);
+    global_addl_config.mode_stat = 2;
+    cfg_save();
+}
+
+void mn_option_radio_stat_comp(void)
+{
+    mn_create_single_timed_ack(wt_radio_status, wt_radio_stat_comp);
+    global_addl_config.mode_stat = 3;
+    cfg_save();
+}
+
+void create_menu_radio_status(void)
+{
+	mn_submenu_init(wt_radio_status);
+
+	md380_menu_entry_selected = global_addl_config.mode_stat;
+	mn_submenu_add(wt_radio_stat_off, mn_option_radio_stat_off);
+	mn_submenu_add(wt_radio_stat_on, mn_option_radio_stat_on);
+	mn_submenu_add(wt_radio_stat_ext, mn_option_radio_stat_ext);
+	mn_submenu_add(wt_radio_stat_comp, mn_option_radio_stat_comp);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+
+void mn_option_radio_color0(void)
+{
+    mn_create_single_timed_ack(wt_radio_color, wt_radio_color0);
+    global_addl_config.mode_color = 0;
+    cfg_save();
+}
+
+void mn_option_radio_color1(void)
+{
+    mn_create_single_timed_ack(wt_radio_color, wt_radio_color1);
+    global_addl_config.mode_color = 1;
+    cfg_save();
+}
+
+void create_menu_radio_color(void)
+{
+	mn_submenu_init(wt_radio_color);
+
+	md380_menu_entry_selected = global_addl_config.mode_color;
+	mn_submenu_add(wt_radio_color0, mn_option_radio_color0);
+	mn_submenu_add(wt_radio_color1, mn_option_radio_color1);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+
+void mn_option_ch_stat_off(void)
+{
+    mn_create_single_timed_ack(wt_ch_status, wt_ch_status_off);
+    global_addl_config.chan_stat = 0;
+    cfg_save();
+}
+
+void mn_option_ch_stat_dmr(void)
+{
+    mn_create_single_timed_ack(wt_ch_status, wt_ch_status_dmr);
+    global_addl_config.chan_stat = 1;
+    cfg_save();
+}
+
+void mn_option_ch_stat_rx(void)
+{
+    mn_create_single_timed_ack(wt_ch_status, wt_ch_status_rx);
+    global_addl_config.chan_stat = 2;
+    cfg_save();
+}
+
+void mn_option_ch_stat_tx(void)
+{
+    mn_create_single_timed_ack(wt_ch_status, wt_ch_status_tx);
+    global_addl_config.chan_stat = 3;
+    cfg_save();
+}
+
+void mn_option_ch_stat_rxtx(void)
+{
+    mn_create_single_timed_ack(wt_ch_status, wt_ch_status_rxtx);
+    global_addl_config.chan_stat = 4;
+    cfg_save();
+}
+
+
+void create_menu_ch_status(void)
+{
+	mn_submenu_init(wt_ch_status);
+
+	md380_menu_entry_selected = global_addl_config.chan_stat;
+	mn_submenu_add(wt_ch_status_off, mn_option_ch_stat_off);
+	mn_submenu_add(wt_ch_status_dmr, mn_option_ch_stat_dmr);
+	mn_submenu_add(wt_ch_status_rx, mn_option_ch_stat_rx);
+	mn_submenu_add(wt_ch_status_tx, mn_option_ch_stat_tx);
+	mn_submenu_add(wt_ch_status_rxtx, mn_option_ch_stat_rxtx);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+
+void mn_option_ch_color0(void)
+{
+    mn_create_single_timed_ack(wt_ch_color, wt_ch_color0);
+    global_addl_config.chan_color = 0;
+    cfg_save();
+}
+
+void mn_option_ch_color1(void)
+{
+    mn_create_single_timed_ack(wt_ch_color, wt_ch_color1);
+    global_addl_config.chan_color = 1;
+    cfg_save();
+}
+
+void create_menu_ch_color(void)
+{
+	mn_submenu_init(wt_ch_color);
+
+	md380_menu_entry_selected = global_addl_config.chan_color;
+	mn_submenu_add(wt_ch_color0, mn_option_ch_color0);
+	mn_submenu_add(wt_ch_color1, mn_option_ch_color1);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+
+
+//==========================================================================================================//
+
 void mn_cp_override_off(void)
 {
     mn_create_single_timed_ack(wt_cp_override, wt_splash_manual);
@@ -983,6 +1178,95 @@ void create_menu_entry_keyb_mode_dev_screen(void)
 
 //==========================================================================================================//
 
+
+
+//==========================================================================================================//
+// submenu: SMS RPT - select messaging mode
+//==========================================================================================================//
+
+void menu_entry_sms_rpt_off(void)
+{
+    mn_create_single_timed_ack(wt_sms_rpt,wt_sms_rpt_off);
+    global_addl_config.sms_rpt = 0;
+    cfg_save();
+}
+
+void menu_entry_sms_rpt_on(void)
+{
+    mn_create_single_timed_ack(wt_sms_rpt,wt_sms_rpt_on);
+    global_addl_config.sms_rpt = 1;
+    cfg_save();
+}
+
+
+//==========================================================================================================//
+// submenu: SMS WX - select messaging mode
+//==========================================================================================================//
+
+void menu_entry_sms_wx_off(void)
+{
+    mn_create_single_timed_ack(wt_sms_wx,wt_sms_wx_off);
+    global_addl_config.sms_wx = 0;
+    cfg_save();
+}
+
+void menu_entry_sms_wx_rpt(void)
+{
+    mn_create_single_timed_ack(wt_sms_wx,wt_sms_wx_rpt);
+    global_addl_config.sms_wx = 1;
+    cfg_save();
+}
+
+
+void menu_entry_sms_wx_gps(void)
+{
+    mn_create_single_timed_ack(wt_sms_wx,wt_sms_wx_gps);
+    global_addl_config.sms_wx = 2;
+    cfg_save();
+}
+
+//==========================================================================================================//
+// submenu: SMS GPS - select messaging mode
+//==========================================================================================================//
+
+void menu_entry_sms_gps_off(void)
+{
+    mn_create_single_timed_ack(wt_sms_gps,wt_sms_gps_off);
+    global_addl_config.sms_gps = 0;
+    cfg_save();
+}
+
+void menu_entry_sms_gps_on(void)
+{
+    mn_create_single_timed_ack(wt_sms_gps,wt_sms_gps_on);
+    global_addl_config.sms_gps = 1;
+    cfg_save();
+}
+
+//==========================================================================================================//
+
+
+//==========================================================================================================//
+// submenu: SMS mode - select messaging mode
+//==========================================================================================================//
+
+void menu_entry_sms_mode_off(void)
+{
+    mn_create_single_timed_ack(wt_sms_mode,wt_sms_off);
+    global_addl_config.sms_mode = 0;
+    cfg_save();
+}
+
+void menu_entry_sms_mode_on(void)
+{
+    mn_create_single_timed_ack(wt_sms_mode,wt_sms_on);
+    global_addl_config.sms_mode = 1;
+    cfg_save();
+}
+
+//==========================================================================================================//
+
+
 //==========================================================================================================//
 // submenu: Keyb scrolling - select scroll mode
 //==========================================================================================================//
@@ -1136,7 +1420,6 @@ void create_menu_entry_debug_disable_screen(void)
 void create_menu_entry_promtg_screen(void)
 {
     mn_submenu_init(wt_promtg);
-
     md380_menu_entry_selected = global_addl_config.promtg;
 
     mn_submenu_add(wt_disable, create_menu_entry_promtg_disable_screen);
@@ -1148,7 +1431,6 @@ void create_menu_entry_promtg_screen(void)
 void create_menu_entry_micbargraph_screen(void)
 {
     mn_submenu_init(wt_micbargraph);
-
     md380_menu_entry_selected = global_addl_config.micbargraph;
 
     mn_submenu_add(wt_disable, create_menu_entry_micbargraph_disable_screen);
@@ -1160,7 +1442,6 @@ void create_menu_entry_micbargraph_screen(void)
 void create_menu_entry_rbeep_screen(void)
 {
     mn_submenu_init(wt_rbeep);
-
     md380_menu_entry_selected = global_addl_config.rbeep;
 
     mn_submenu_add(wt_disable, create_menu_entry_rbeep_disable_screen);
@@ -1204,7 +1485,70 @@ void create_menu_entry_showcall_screen(void)
     
     mn_submenu_finalize();
 }
+//==========================================================================================================//
 
+
+//==========================================================================================================//
+// sub menu: SMS Services - Setup messaging options
+//==========================================================================================================//
+
+void create_menu_entry_sms_rpt(void)
+{
+    mn_submenu_init(wt_sms_rpt);
+
+    md380_menu_entry_selected = global_addl_config.sms_rpt;
+
+    mn_submenu_add(wt_sms_rpt_off, menu_entry_sms_rpt_off);
+    mn_submenu_add(wt_sms_rpt_on, menu_entry_sms_rpt_on);
+    
+    mn_submenu_finalize();
+}
+
+void create_menu_entry_sms_wx(void)
+{
+    mn_submenu_init(wt_sms_wx);
+
+    md380_menu_entry_selected = global_addl_config.sms_wx;
+
+    mn_submenu_add(wt_sms_wx_off, menu_entry_sms_wx_off);
+    mn_submenu_add(wt_sms_wx_rpt, menu_entry_sms_wx_rpt);
+    mn_submenu_add(wt_sms_wx_gps, menu_entry_sms_wx_gps);
+    
+    mn_submenu_finalize();
+}
+
+void create_menu_entry_sms_gps(void)
+{
+    mn_submenu_init(wt_sms_gps);
+
+    md380_menu_entry_selected = global_addl_config.sms_gps;
+
+    mn_submenu_add(wt_sms_gps_off, menu_entry_sms_gps_off);
+    mn_submenu_add(wt_sms_gps_on, menu_entry_sms_gps_on);
+    
+    mn_submenu_finalize();
+}
+
+//==========================================================================================================//
+
+
+//==========================================================================================================//
+// sub menu: SMS Service - Setup messaging options
+//==========================================================================================================//
+
+void create_menu_entry_sms_mode(void)
+{
+    mn_submenu_init(wt_sms_mode);
+
+    md380_menu_entry_selected = global_addl_config.sms_mode;
+
+    mn_submenu_add(wt_sms_off, menu_entry_sms_mode_off);
+    mn_submenu_add(wt_sms_on, menu_entry_sms_mode_on);
+    
+    mn_submenu_finalize();
+}
+
+//==========================================================================================================//
 
 //==========================================================================================================//
 // sub menu: Keyb Mode - Setup keyboard mode
@@ -1325,7 +1669,6 @@ void create_menu_entry_netmon_screen(void)
 void create_menu_entry_experimental_screen(void)
 {
     mn_submenu_init(wt_experimental);
-
     md380_menu_entry_selected = global_addl_config.experimental;
 
     mn_submenu_add(wt_disable, create_menu_entry_experimental_disable_screen);
@@ -1555,6 +1898,9 @@ void nm_button_set_tg()  { set_sidebutton_function(wt_button_set_tg);  }
  void nm_button_narrator() { set_sidebutton_function(wt_button_narrator); }
  void nm_button_cw_repeat(){ set_sidebutton_function(wt_button_cw_repeat); }
 #endif
+void nm_button_toggle()  { set_sidebutton_function(wt_button_toggle);  }
+void nm_button_micgain()  { set_sidebutton_function(wt_button_micgain);  }
+void nm_button_promisc()  { set_sidebutton_function(wt_button_promisc);  }
 
 void select_sidebutton_function_screen(void)
 {
@@ -1611,6 +1957,9 @@ void select_sidebutton_function_screen(void)
    mn_submenu_add(wt_button_narrator,nm_button_narrator);
    mn_submenu_add(wt_button_cw_repeat,nm_button_cw_repeat);
 # endif
+   mn_submenu_add(wt_button_toggle,  nm_button_toggle );
+   mn_submenu_add(wt_button_micgain,  nm_button_micgain );
+   mn_submenu_add(wt_button_promisc,  nm_button_promisc );
 
    mn_submenu_finalize();
 }
@@ -2235,6 +2584,12 @@ void create_menu_entry_display(void)
    mn_submenu_add_98(wt_backlight_menu, create_menu_entry_backlight_screen);
    mn_submenu_add_98(wt_datef, create_menu_entry_datef_screen);
    mn_submenu_add_98(wt_showcall, create_menu_entry_showcall_screen);
+
+   mn_submenu_add_98(wt_radio_status, create_menu_radio_status);
+   mn_submenu_add_98(wt_radio_color, create_menu_radio_color);
+   mn_submenu_add_98(wt_ch_status, create_menu_ch_status);
+   mn_submenu_add_98(wt_ch_color, create_menu_ch_color);
+
    mn_submenu_add_98(wt_bootopts, create_menu_entry_bootopts_screen);
 
    mn_submenu_finalize2();
@@ -2243,27 +2598,7 @@ void create_menu_entry_display(void)
 //==========================================================================================================//
 
 //==========================================================================================================//
-// main menu 2: Keyboard - Keyboard relevant settings and assignments
-//==========================================================================================================//
-
-void create_menu_entry_keyboard(void)
-{
-#if defined(FW_D13_020) || defined(FW_S13_020)
-
-   md380_menu_entry_selected = 0;
-   mn_submenu_init(wt_keyb_menu);
-
-   mn_submenu_add_98(wt_keyb_mode, create_menu_entry_keybmode_screen);
-   mn_submenu_add_98(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
-   mn_submenu_add_98(wt_keyb_scroll, create_menu_entry_scroll_mode);
-
-   mn_submenu_finalize2();
-#endif
-}
-//==========================================================================================================//
-
-//==========================================================================================================//
-// main menu 3: Radio - Radio relevant settings and assignments
+// main menu 2: Radio - Radio relevant settings and assignments
 //==========================================================================================================//
 
 void create_menu_entry_radio(void)
@@ -2297,7 +2632,7 @@ void create_menu_entry_radio(void)
 //==========================================================================================================//
 
 //==========================================================================================================//
-// main menu 4: DMR Setup - DMR relevant settings and assignments
+// main menu 3: DMR Setup - DMR relevant settings and assignments
 //==========================================================================================================//
 
 void create_menu_entry_dmr(void)
@@ -2318,7 +2653,50 @@ void create_menu_entry_dmr(void)
 //==========================================================================================================//
 
 //==========================================================================================================//
-// main menu 5: Tones - Tones and audio feedback functions
+// main menu 4: SMS - Messaging relevant settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_sms(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_sms_menu);
+
+   mn_submenu_add_98(wt_sms_rpt, create_menu_entry_sms_rpt);
+   mn_submenu_add_98(wt_sms_wx, create_menu_entry_sms_wx);
+   mn_submenu_add_98(wt_sms_gps, create_menu_entry_sms_gps);
+//DL2MF   mn_submenu_add_98(wt_sms_mode, create_menu_entry_sms_mode);
+//DL2MF   mn_submenu_add_98(wt_rrs_mode, create_menu_entry_rrs_mode);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+//==========================================================================================================//
+// main menu 5: Keyboard - Keyboard relevant settings and assignments
+//==========================================================================================================//
+
+void create_menu_entry_keyboard(void)
+{
+#if defined(FW_D13_020) || defined(FW_S13_020)
+
+   md380_menu_entry_selected = 0;
+   mn_submenu_init(wt_keyb_menu);
+
+   mn_submenu_add_98(wt_keyb_mode, create_menu_entry_keybmode_screen);
+   mn_submenu_add_98(wt_sidebutton_menu, create_menu_entry_sidebutton_screen);
+   mn_submenu_add_98(wt_keyb_scroll, create_menu_entry_scroll_mode);
+
+   mn_submenu_finalize2();
+#endif
+}
+//==========================================================================================================//
+
+
+//==========================================================================================================//
+// main menu 6: Tones - Tones and audio feedback functions
 //==========================================================================================================//
 
 void create_menu_entry_tones(void)
@@ -2339,7 +2717,7 @@ void create_menu_entry_tones(void)
 //==========================================================================================================//
 
 //==========================================================================================================//
-// main menu 6: Developer - Developer relevant and other settings and assignments
+// main menu 7: Developer - Developer relevant and other settings and assignments
 //==========================================================================================================//
 
 void create_menu_entry_dev(void)
@@ -2371,36 +2749,47 @@ void create_menu_entry_dev(void)
 //         +--- 3 Show Calls 
 //         +--- 4 Boot Options
 //
-//   2 Keyboard
-//         !
-//         +--- 1 Keyb mode
-//         +--- 2 Side Buttons
+//   2 Radio
+//	   !
+//	   +--- 1 Backlight		--> also in 1-1, may be removed here later
+//	   +--- 2 Mic bargraph
+//	   +--- 3 Mic gain
+//	   +--- 4 FM BPF 
+//	   +--- 5 FM Compressor
+//	   +--- 6 FM PreEmphasis
+//	   +--- 7 FM Bandwidth
 //
-//   3 Radio
-//         !
-//         +--- 1 Backlight             --> also in 1-1, may be removed here later
-//         +--- 2 Mic bargraph
-//         +--- 3 Mic gain
-//
-//   4 DMR Setup
-//         !
-//         +--- 1 Adhoc Talkgrp
-//         +--- 2 Netmonitor            --> new mode required for this!
-//         +--- 3 Promiscous
-//         +--- 4 Edit DMR-ID
+//   3 DMR Setup
+//	   !
+//	   +--- 1 Adhoc Talkgrp
+//	   +--- 2 Netmonitor		--> new mode required for this!
+//	   +--- 3 Promiscous
+//	   +--- 4 Edit DMR-ID
 // 
-//   5 Tones
-//         !
-//         +--- 1 Morse output
-//         +--- 2 M. RogerBeep
+//   4 SMS Service
+//	   !
+//	   +--- 1 RPT status		--> also in 1-1, may be removed here later
+//	   +--- 2 WX report
+//	   +--- 3 GPS position
+//	   +--- 4 Setup
 //
-//   6 Developer
-//         !
-//         +--- 1 USB logging 
-//         +--- 2 Experimental
-//         +--- 3 CoPl Override
-//         +--- 4 Config Reset
-//         +--- 5 Dev Only
+//   5 Keyboard
+//	   !
+//	   +--- 1 Keyb mode
+//	   +--- 2 Side Buttons
+//
+//   6 Tones
+//	   !
+//	   +--- 1 Morse output
+//	   +--- 2 M. RogerBeep
+//
+//   7 Developer
+//	   !
+//	   +--- 1 USB logging 
+//	   +--- 2 Experimental
+//	   +--- 3 CoPl Override
+//	   +--- 4 Config Reset
+//	   +--- 5 Dev Only
 //
 //==================================================================//
 
@@ -2418,14 +2807,15 @@ void create_main_md380tools_screen(void)
     PRINTRET();
     PRINT("create_main_menu_screen\n");
 
-    if (global_addl_config.devmode_level < 3) {         // #### remove after development! #################
-      mn_submenu_add_98(wt_main_display, create_menu_entry_display);
-      mn_submenu_add_98(wt_main_keyb, create_menu_entry_keyboard);
+    if (global_addl_config.devmode_level < 3) {		// #### remove after development! #################
+    mn_submenu_add_98(wt_main_display, create_menu_entry_display);
     }
     mn_submenu_add_98(wt_main_radio, create_menu_entry_radio);
     mn_submenu_add_98(wt_main_dmr, create_menu_entry_dmr);
-    if (global_addl_config.devmode_level < 3) {         // #### remove after development! #################
-      mn_submenu_add_98(wt_main_tones, create_menu_entry_tones);
+    mn_submenu_add_98(wt_main_sms, create_menu_entry_sms);
+    if (global_addl_config.devmode_level < 3) {		// #### - remove after development! #################
+    mn_submenu_add_98(wt_main_keyb, create_menu_entry_keyboard);
+    mn_submenu_add_98(wt_main_tones, create_menu_entry_tones);
     }
     mn_submenu_add_98(wt_main_dev, create_menu_entry_dev);    
 

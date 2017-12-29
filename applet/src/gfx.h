@@ -64,14 +64,15 @@ void drawascii(char *ascii, int x, int y);
 //void drawascii2(char *ascii, int x, int y);
 
 void gfx_printf_pos(int x, int y, const char *fmt, ... );
-void gfx_printf_pos2(int x, int y, int ylen, const char*fmt, ... );
+void gfx_printf_pos2(int x, int y, int xlen, const char*fmt, ... );
 void gfx_puts_pos(int x, int y, const char *str);
 
 void green_led(int on);
 void red_led(int on);
 void lcd_background_led(int on);
 
-void print_time_hook(const char log);   
+void print_time_hook(const char log);
+void get_RTC_time(char* buffer);   
 
 typedef struct gfx_pal {
   long   ncol;

@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     # Marks the version as "md380tools"
     patcher.setwstring(0x080d0b6c,
-                       "MD380Tools Ver.")
+                       "MD380Tools 2.0")
 
     # Fix some bad grammar
     patcher.setwstring(0x080f9a94,
@@ -53,6 +53,13 @@ if __name__ == '__main__':
     # Change the device name.
     patcher.setstring(0x080d0eb4,
                       "Patched MD-380/390G")
+
+    # remove volume screen (S13.020 using different address, keep offset in mind!)
+    # patcher.nopout((0x08020D92))
+    # patcher.nopout((0x08020D92 + 0x2))
+    # remove volume screen
+    patcher.nopout((0x0801FED2))
+    patcher.nopout((0x0801FED2 + 0x2))
 
     # freeing ~200k for code patches
     patcher.ffrange(0x0809bda8, 0x80d0614)

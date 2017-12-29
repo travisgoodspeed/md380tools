@@ -15,7 +15,7 @@
 #include "config.h"
 #include "printf.h"
 #include "debug.h"
-#include "codeplug.h"
+//#include "codeplug.h"
 
 void spiflash_read_hook(void *dst, long adr, long len)
 {
