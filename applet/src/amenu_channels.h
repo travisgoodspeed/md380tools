@@ -18,3 +18,4 @@ extern void	ChannelList_OnEnter(app_menu_t *pMenu, menu_item_t *pItem);
 extern BOOL	ChannelList_ReadNameByIndex(int index, channel_t *tChannel);
 extern int	SaveChannel(channel_t* chan, channel_easy* chanE);
 extern int	ParseChannel(channel_t* chan, channel_easy* chanE);
+extern int	readTone(channel_t* chan, tone_t* tone, char fEnc);

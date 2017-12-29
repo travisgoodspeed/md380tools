@@ -20,6 +20,7 @@
 #include "codeplug.h"     // struct 'contact' contains the current talkgroup number
 #include "printf.h"       // Kustaa Nyholm's tinyprintf (printf.c, snprintfw)
 #include "amenu_set_tg.h" // header for THIS module (to check prototypes,etc)
+#include "amenu_channels.h" // header for channel info
 
 int     ad_hoc_talkgroup = 0; // "temporarily wanted" talkgroup, entered by user in the alternative menu
 uint8_t ad_hoc_tg_channel= 0; // current channel number when the above TG had been set
@@ -140,7 +141,6 @@ void CheckTalkgroupAfterChannelSwitch(void) // [in] ad_hoc_tg_channel,ad_hoc_tal
      // so we can quickly recall it via app-menu in "up-down"-edit mode.
 	 fDrawOncePer = 0;
 
-	 
 	 ParseChannel((channel_t*)&current_channel_info, &current_channel_info_E);
 
 	 wchar_t *cn_override_group_prefix = L"TG--";

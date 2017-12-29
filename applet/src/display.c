@@ -27,10 +27,10 @@
 #include "syslog.h"        // LOGB()
 #include "irq_handlers.h"  // boot_flags, BOOT_FLAG_DREW_STATUSLINE
 #include "lcd_driver.h"
-#include "codeplug.h"
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
 	#include "amenu_set_tg.h"
+	#include "codeplug.h"
 #else
 #warning old firmware
 #endif 
@@ -248,9 +248,9 @@ void draw_rx_screen(unsigned int bg_color)
     gfx_set_fg_color(0x000000);
     gfx_select_font(gfx_font_small);
 
-#if defined(FW_D13_020) || defined(FW_S13_020)
-    channel_info_t *ci = &current_channel_info;			// 20170807 - DL2MF added info
-#endif 
+//#if defined(FW_D13_020) || defined(FW_S13_020)
+//    channel_info_t *ci = &current_channel_info;			// 20170807 - DL2MF added info
+//#endif 
 
     user_t usr ;
     
@@ -545,13 +545,13 @@ void draw_adhoc_statusline()
 	char freq_rx[10];
 	char freq_tx[10];
 
-	char ch_mode[3];								// DMR / FM / FM-N / FM-W
-	char ch_wide[2];								// DMR / FM / FM-N / FM-W
-	char ch_rpt[4];									// [-R] / [+R] repeater shift
-	char dmr_cc[2];									// [CC1] color code
-	char dmr_compact[5];								// [1|2| ... CC/TS prefix
+//	char ch_mode[3];								// DMR / FM / FM-N / FM-W
+//	char ch_wide[2];								// DMR / FM / FM-N / FM-W
+//	char ch_rpt[4];									// [-R] / [+R] repeater shift
+//	char dmr_cc[2];									// [CC1] color code
+//	char dmr_compact[5];								// [1|2| ... CC/TS prefix
 	char ch_offset[4];								// repeater offset
-	char ch_tmp[10];								// temp
+//	char ch_tmp[10];								// temp
 //	char ch_cc[1];									// temp CC
 
 	char fm_bw_stat[2];								// |N or |W
@@ -559,10 +559,10 @@ void draw_adhoc_statusline()
 	char fm_sql[3];									// CTS oder DCS
 	char tg_fill[7];								// talkgroup space filler
 
-	char ch_tone_type[1];								// N=none D=DCS 0-9=CTS
-	long ch_rxfreq = 0;
-	long ch_txfreq = 0;
-	float ch_freqoff = 0;
+	char ch_tone_type[2];								// N=none D=DCS 0-9=CTS
+//	long ch_rxfreq = 0;
+//	long ch_txfreq = 0;
+//	float ch_freqoff = 0;
 
 	strncpy(ch_rx, current_channel_info_E.rxFreq.text, 12);				// read RX frequency from codeplug
 	strncpy(ch_tx, current_channel_info_E.txFreq.text, 12);				// read TX frequency from codeplug
@@ -576,12 +576,12 @@ void draw_adhoc_statusline()
 	strncpy(ch_tone_type, current_channel_info_E.EncTone.text, 1);
 	ch_tone_type[1] = '\0';
 
-	ch_rxfreq = atol(ch_rx);
-	ch_txfreq = atol(ch_tx);
+//	ch_rxfreq = atol(ch_rx);
+//	ch_txfreq = atol(ch_tx);
 	//sprintf(ch_rxfreq, ch_rx);
 	//sprintf(ch_txfreq, ch_tx);
 
-	ch_freqoff = ((ch_rxfreq - ch_txfreq) / 100000);
+//	ch_freqoff = ((ch_rxfreq - ch_txfreq) / 100000);
 
 	user_t usr;									// reference user DB
 
@@ -645,7 +645,7 @@ void draw_adhoc_statusline()
 		int ch_ts = current_channel_info_E.Slot;				// current timeslot
 		int tgNum = (ad_hoc_tg_channel ? ad_hoc_talkgroup : current_TG());	// current talkgroup
 		int callType = (ad_hoc_tg_channel ? ad_hoc_call_type : contact.type);	// current calltype
-		sprintf(dmr_cc, ch_cc);
+		//sprintf(dmr_cc, ch_cc);
 
 		// build the top statusline -------------------------------------------------------------------
 		if (global_addl_config.mode_stat != 3) {				// if MODE/CC compact display set in config

@@ -117,7 +117,7 @@ uint8_t  keypress_ascii_remote; // for control via remote keyboard (USB).
                 // Merged with the "local" keys in irq_handlers.c:PollKeys() .
 
 #if( CONFIG_DIMMED_LIGHT )
- static uint8_t may_turn_on_backlight = 0; // ok to turn on the backlight ? 0=no, 1=yes
+ //static uint8_t may_turn_on_backlight = 0; // ok to turn on the backlight ? 0=no, 1=yes
 #endif // CONFIG_DIMMED_LIGHT ?
 
 #if( CONFIG_MORSE_OUTPUT )
@@ -1396,7 +1396,7 @@ void SysTick_Handler(void)
   // because we also call the original handler from here.
 {
 #if( CONFIG_DIMMED_LIGHT )
-  uint32_t dw;
+  //uint32_t dw;
 #endif
   uint32_t oldSysTickCounter = IRQ_dwSysTickCounter++; 
     // this local copy is more efficient to read than the global variable,

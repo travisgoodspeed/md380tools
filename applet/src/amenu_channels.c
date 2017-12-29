@@ -145,7 +145,7 @@ int readFrequency(channel_t* ch, frequency_t* freq, char fRx)
 int readTone(channel_t* chan, tone_t* tone, char fEnc)
 {
 	tone_t tt;
-	if (*(uint16_t*)&chan->settings[(fEnc ? 26 : 24)] == 0xFFFF) {
+	if (*(uint8_t*)&chan->settings[(fEnc ? 26 : 24)] == 0xFFFF) {
 		tone->fType = 0;
 		sprintf(tone->text, "None");
 		return 0;
@@ -174,10 +174,12 @@ int readTone(channel_t* chan, tone_t* tone, char fEnc)
 			break;
 	}
 
-	if (tone->fType == 'C')
+	if (tone->fType == 'C') {
 		tone->freq = ((float)tone->digits[0] * 100.0f) + ((float)tone->digits[1] * 10.0f) + ((float)tone->digits[2] * 1.0f) + ((float)tone->digits[3] * 0.1f);
-	else
+	}
+	else {
 		tone->freq = 0.0f;
+	}
 
 	if (tone->fType != 'C') {
 		sprintf(tone->text, "D%d%d%d%c\0\0", tone->digits[1], tone->digits[2], tone->digits[3], tone->fType);
@@ -225,4 +227,5 @@ int ParseChannel(channel_t* chan, channel_easy* chanE)
 		sprintf(chanE->DecTone.text, "N/A");
 		sprintf(chanE->EncTone.text, "N/A");
 	}
+	return 0;
 }
