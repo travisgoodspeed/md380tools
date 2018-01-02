@@ -497,6 +497,7 @@ void draw_alt_statusline()
     }
 
     user_t usr;
+    user_t dst;
     src = rst_src;
     
     if( src == 0 ) {
@@ -512,9 +513,17 @@ void draw_alt_statusline()
 		gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA: %s", talkerAlias.text);
 	} else {										// 2017-02-18 otherwise show lastheard in status line
 	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
-        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
+	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
+				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%s %c", src, usr.callsign, mode);
+	                } else  {
+        	    		gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
+			}
         	} else {
-        	    gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
+	                if( usr_find_by_dmrid(&dst, rst_dst) != 0 ) {
+				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%s %c", usr.callsign, dst.callsign, mode);
+	                } else  {	
+				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
+			}
 	        }	
 	}
     }
