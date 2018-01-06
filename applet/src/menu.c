@@ -170,6 +170,11 @@ const static wchar_t wt_ch_color[]	    = L"CH Info Color";
 const static wchar_t wt_ch_color0[]	    = L"Standard";
 const static wchar_t wt_ch_color1[]	    = L"Light Blue";
 
+const static wchar_t wt_lh_status[]	    = L"Lastheard Cfg";
+const static wchar_t wt_lh_ts_off[]	    = L"LH TS Off";
+const static wchar_t wt_lh_ts_on[]          = L"LH TS On";
+const static wchar_t wt_lh_tstg_on[]        = L"LH TS/TG On";
+
 const static wchar_t wt_debug[]             = L"USB logging";
 const static wchar_t wt_experimental[]      = L"Experimental";
 const static wchar_t wt_cp_override[]       = L"CoPl Override";
@@ -905,7 +910,44 @@ void create_menu_ch_color(void)
 
 	mn_submenu_finalize();
 }
+
 //--------------------------------------------------------------------------------------------------------//
+
+void mn_option_lh_ts_off(void)
+{
+    mn_create_single_timed_ack(wt_lh_status, wt_lh_ts_off);
+    global_addl_config.lh_tsstat = 0;
+    cfg_save();
+}
+
+void mn_option_lh_ts_on(void)
+{
+    mn_create_single_timed_ack(wt_lh_status, wt_lh_ts_on);
+    global_addl_config.lh_tsstat = 1;
+    cfg_save();
+}
+
+void mn_option_lh_tstg_on(void)
+{
+    mn_create_single_timed_ack(wt_lh_status, wt_lh_tstg_on);
+    global_addl_config.lh_tsstat = 2;
+    cfg_save();
+}
+
+
+void create_menu_lh_status(void)
+{
+	mn_submenu_init(wt_lh_status);
+
+	md380_menu_entry_selected = global_addl_config.lh_tsstat;
+	mn_submenu_add(wt_lh_ts_off, mn_option_lh_ts_off);
+	mn_submenu_add(wt_lh_ts_on, mn_option_lh_ts_on);
+	mn_submenu_add(wt_lh_tstg_on, mn_option_lh_tstg_on);
+
+	mn_submenu_finalize();
+}
+//--------------------------------------------------------------------------------------------------------//
+
 
 
 //==========================================================================================================//
@@ -2589,6 +2631,9 @@ void create_menu_entry_display(void)
    mn_submenu_add_98(wt_radio_color, create_menu_radio_color);
    mn_submenu_add_98(wt_ch_status, create_menu_ch_status);
    mn_submenu_add_98(wt_ch_color, create_menu_ch_color);
+   if(     global_addl_config.datef >= 5 ) {		// show submenu selection only if LH & TA configured
+	   mn_submenu_add_98(wt_lh_status, create_menu_lh_status);
+   }
 
    mn_submenu_add_98(wt_bootopts, create_menu_entry_bootopts_screen);
 

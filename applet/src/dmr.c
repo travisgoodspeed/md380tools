@@ -290,7 +290,9 @@ void dmr_apply_squelch_hook(OS_EVENT *event, char * mode)
 
     //Promiscuous mode!
     if( *mode == 0x08 && global_addl_config.promtg == 1 ) {
-        printf("Applying monitor mode to a public call.\n");
+	if(global_addl_config.devmode_level >= 3) {				// verbose USB mode must be enabled to show debug messages
+        	printf("Applying monitor mode to a public call.\n");
+	}
         *mode = 0x09;
 
         /* I'm not quite sure what this function does, but it must be
@@ -326,7 +328,9 @@ void dmr_apply_privsquelch_hook(OS_EVENT *event, char *mode)
 
     //Promiscuous mode!
     if( *mode == 0x08 && global_addl_config.promtg == 1 ) {
-        printf("Applying monitor mode to a private call.\n");
+	if(global_addl_config.devmode_level >= 3) {				// verbose USB mode must be enabled to show debug messages
+	        printf("Applying monitor mode to a private call.\n");
+	}
         *mode = 0x09;
         dmr_before_squelch();
     }
@@ -348,12 +352,12 @@ void *dmr_handle_data_hook(char *pkt, int len)
        two bytes of C5000 overhead.
      */
 
-//    //Turn on the red LED to know that we're here.
-//    red_led(1);
-
-//    printf("Data:       ");
-//    printhex(pkt, len + 2);
-//    printf("\n");
+	if(global_addl_config.devmode_level >= 3) {				// verbose USB mode must be enabled to show debug messages
+		red_led(1);							// turn on the red LED to know that we're here.
+		printf("Data:       ");
+		printhex(pkt, len + 2);
+		printf("\n");
+	}
 
     {
         data_blk_t *data = (void*)(pkt + 2);
@@ -395,12 +399,12 @@ void *dmr_sms_arrive_hook(void *pkt)
          Data: 08 7a 76 00 63 00 7a 00 21 00 9e 21 5a 5c
      */
 
-    //Turn on the red LED to know that we're here.
-//    red_led(1);
-
-//    printf("SMS header: ");
-//    printhex(pkt, 12 + 2);
-//    printf("\n");
+	if(global_addl_config.devmode_level >= 3) {				// verbose USB mode must be enabled to show debug messages
+		red_led(1);							// turn on the red LED to know that we're here.
+		printf("SMS header: ");
+		printhex(pkt, 12 + 2);
+		printf("\n");
+	}
 
     {
         data_hdr_t *data = (pkt + 2);

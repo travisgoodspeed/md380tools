@@ -2,6 +2,7 @@
  *  netmon.c
  *
  */
+#define DEBUG
 
 #include "netmon.h"
 
@@ -10,6 +11,7 @@
 #include "tooldfu.h"
 #include "printf.h"
 #include "string.h"
+#include "debug.h"
 #include "dmesg.h"
 #include "dmr.h"
 #include "gfx.h"
@@ -31,6 +33,10 @@
 # include "irq_handlers.h" // stopwatch for periodic framebuffer updates
 #endif // CONFIG_APP_MENU ?
 
+#if defined(FW_D13_020) || defined(FW_S13_020)
+	#include "amenu_set_tg.h"
+#endif 
+
 uint8_t nm_screen = 0 ;
 uint8_t nm_started = 0 ;
 uint8_t nm_started5 = 0 ;
@@ -39,6 +45,9 @@ uint8_t rx_voice = 0 ;
 uint8_t lh_new = 0 ;
 uint8_t rx_new = 0 ;
 uint8_t ch_new = 0 ;
+uint8_t lh_cc;
+uint8_t lh_ts;
+uint8_t lh_tg;
 uint8_t call_start_state = 0;
 uint8_t previous_call_state = 0;
 
@@ -250,9 +259,9 @@ void netmon2_update()
         int cc = ( ci->cc_slot_flags >> 4 ) & 0xf ;
         int ts1 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;
         int ts2 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;
-        con_printf("cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
 
-        con_printf("cn:%S\n", ci->name ); // assume zero terminated.
+        con_printf("cc:%d ts1:%d ts2:%d\n", cc, ts1, ts2 );
+        con_printf("cn:%S\n", ci->name );			// assume zero terminated.
     }
 #else
     con_puts("D13 has more\n");
@@ -267,6 +276,8 @@ void netmon2_update()
 //        con_printf("%d %d\n", kb_handler_count, f4225_count);
 //    }
 }
+
+//#define IS_BIT1_SET(var) ( ((var) & 0x01) == 0x01 )
 
 void netmon3_update()
 {
@@ -345,6 +356,12 @@ void netmon4_update()
 void netmon5_update()
 {
 #if defined(FW_D13_020) || defined(FW_S13_020)
+    channel_info_t *ci = &current_channel_info ;
+
+    int cc = 0;					// initialize current CC for read only
+    int ts1 = 0;				// initialize current TS for read only
+    int ts2 = 0;				// initialize current TS for read only
+
     slog_draw_poll();
     slog_redraw();
     int src;
@@ -371,6 +388,15 @@ void netmon5_update()
     user_t usr;
 
     if( ( src != 0 ) && ( rx_new == 1 ) ) {
+	
+	cc = ( ci->cc_slot_flags >> 4 ) & 0xf ;		// this is not really what we want, because we read only from CP
+	ts1 = ( ci->cc_slot_flags >> 2 ) & 0x1 ;	// instead of current channel (i.e. during scan mode)
+	ts2 = ( ci->cc_slot_flags >> 3 ) & 0x1 ;	// but we have to use this for now!
+	if ( (ts1 == 1) & (ts2 == 0) ) {
+		lh_ts = 1;
+	} else if ( (ts1 == 0) & (ts2 == 1) ) {
+		lh_ts = 2;
+	}
 
         for (int i = 0; i < 20; i++)
            {
@@ -410,6 +436,8 @@ void netmon5_update()
                         slog_printf("%d %c\n", rst_dst, mode);
                 }
         }
+
+	if( global_addl_config.devmode_level >= 2 ) { PRINT("nm5> cc:%d ts1:%d ts2:%d lh:%d\n", cc, ts1, ts2, lh_ts ); }
         rx_new = 0 ; // call handled, wait until new voice call status received
         ch_new = 1 ; // status for netmon6
 	lh_new = 0 ; // status helper for netmon4
@@ -454,6 +482,7 @@ void netmon6_update()
                 wcscpy(ch_last_channel, curr_channel);
                 ch_cnt++;
           }
+
         ch_new = 0 ;                            // call handled, wait until new voice call status received
      }
 #else

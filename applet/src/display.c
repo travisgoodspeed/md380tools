@@ -52,6 +52,7 @@ char eye_pix[] = {
 };
 const gfx_pal eye_pal = {14, 0, eye_paltab};
 const gfx_bitmap bmp_eye = {12, 12, 6, 4, eye_pix, &eye_pal, 0};
+int ch_ts = 0;				// 20180104 current channel TS 
 
 #ifdef FW_D13_020
 #define D_ICON_EYE_X 65
@@ -248,10 +249,6 @@ void draw_rx_screen(unsigned int bg_color)
     gfx_set_fg_color(0x000000);
     gfx_select_font(gfx_font_small);
 
-//#if defined(FW_D13_020) || defined(FW_S13_020)
-//    channel_info_t *ci = &current_channel_info;			// 20170807 - DL2MF added info
-//#endif 
-
     user_t usr ;
     
     if( usr_find_by_dmrid(&usr,src) == 0 ) {
@@ -262,33 +259,41 @@ void draw_rx_screen(unsigned int bg_color)
         usr.state = "see README.md" ;
         usr.country = "on Github" ;
     }
-    
+
     int y_index = RX_POPUP_Y_START;
     int scr_row = RX_POPUP_Y_START;
 
     if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
     {
     	if( grp ) {
-   	     gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> TG %d", src, dst );        
- 	   } else {
- 	       gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> %d", src, dst );
- 	   }
-	    scr_row += GFX_FONT_SMALL_HEIGHT ;
+	    if( global_addl_config.lh_tsstat == 0 ) {
+			gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->TG%d", src, dst );
+		} else {
+			gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->TS%d TG%d", src, lh_ts, dst );
+		}
+	} else {
+	    if( global_addl_config.lh_tsstat == 0 ) {
+			gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d-> ID:%d", src, dst );
+		} else {
+	                gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->TS%d ID:%d", src, lh_ts, dst );
+		}
+	}
+	scr_row += GFX_FONT_SMALL_HEIGHT ;
 
-	    gfx_select_font(gfx_font_norm);
+	gfx_select_font(gfx_font_norm);
 
- 	   if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
- 	   {    
+ 	if ( global_addl_config.userscsv > 1 && talkerAlias.length > 0 )		// 2017-02-19 show Talker Alias depending on setup 0=CPS 1=DB 2=TA 3=TA & DB
+ 	{    
 		gfx_printf_pos2(RX_POPUP_X_START, scr_row, 10, "%s", talkerAlias.text );
  	        scr_row += GFX_FONT_NORML_HEIGHT; // previous line was in big font
- 	   } else {
+ 	} else {
 		gfx_printf_pos2(RX_POPUP_X_START, scr_row, 10, "DMRID: %d", src );
 		scr_row += GFX_FONT_NORML_HEIGHT; // previous line was in big font
- 	   }
+ 	}
 
-	   gfx_select_font(gfx_font_small);
+	gfx_select_font(gfx_font_small);
 
-	   switch( global_addl_config.userscsv ) {
+	switch( global_addl_config.userscsv ) {
 	        case 0 :
 		gfx_puts_pos(RX_POPUP_X_START, scr_row, "Userinfo: CPS mode");
             	break ;
@@ -329,9 +334,17 @@ void draw_rx_screen(unsigned int bg_color)
     
     gfx_select_font(gfx_font_small);
     if( grp ) {
-        gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> TG %d", src, dst );        
+	if( global_addl_config.lh_tsstat == 0 ) {
+		gfx_printf_pos( RX_POPUP_X_START, y_index, "%d->TG%d", src, dst );
+	} else {
+        	gfx_printf_pos( RX_POPUP_X_START, y_index, "%d->TS%d TG%d", src, lh_ts, dst );
+	}
     } else {
-        gfx_printf_pos( RX_POPUP_X_START, y_index, "%d -> %d", src, dst );
+	if( global_addl_config.lh_tsstat == 0 ) {
+        	gfx_printf_pos( RX_POPUP_X_START, y_index, "%d-> ID:%d", src, dst );
+	} else {
+        	gfx_printf_pos( RX_POPUP_X_START, y_index, "%d->TS%d ID:%d", src, lh_ts, dst );
+	}
     }
     y_index += GFX_FONT_SMALL_HEIGHT ;
 
@@ -391,9 +404,17 @@ void draw_ta_screen(unsigned int bg_color)
     
     gfx_select_font(gfx_font_small);
     if( grp ) {
-        gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> TG %d", src, dst );        
+	if( global_addl_config.lh_tsstat == 0 ) {
+        	gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->TG%d", src, dst );
+	} else {
+        	gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->TS%d TG%d", src, lh_ts, dst );
+	}
     } else {
-        gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d -> %d", src, dst );
+	if( global_addl_config.lh_tsstat == 0 ) {
+		gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->ID:%d", src, dst );
+	} else {
+		gfx_printf_pos( RX_POPUP_X_START, scr_row, "%d->TS%d ID:%d", src, lh_ts, dst );
+	}
     }
     scr_row += GFX_FONT_SMALL_HEIGHT ;
 
@@ -478,10 +499,13 @@ void draw_statusline_hook( uint32_t r0 )
     }
     draw_statusline( r0 );
 }
-
+	
 void draw_alt_statusline()
 {
     int src;
+    user_t usr;
+    user_t dst;
+    src = rst_src;
 
     gfx_set_fg_color(0);
     gfx_set_bg_color(0xff8032);
@@ -495,10 +519,6 @@ void draw_alt_statusline()
             mode = '!' ; // on other tg
         }
     }
-
-    user_t usr;
-    user_t dst;
-    src = rst_src;
     
     if( src == 0 ) {
 	if ( global_addl_config.datef == 5 )
@@ -510,21 +530,44 @@ void draw_alt_statusline()
     } else {
 	if ( global_addl_config.datef == 6 && talkerAlias.length > 0 )				// 2017-02-18 show talker alias in status if rcvd valid
 	{
-		gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA: %s", talkerAlias.text);
+		if( global_addl_config.lh_tsstat == 0 ) {
+			gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "TA:%s", talkerAlias.text);
+		} else {
+			gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] TA:%s", lh_ts, talkerAlias.text);
+		}
 	} else {										// 2017-02-18 otherwise show lastheard in status line
-	        if( usr_find_by_dmrid(&usr, src) == 0 ) {
-	                if( usr_find_by_dmrid(&usr, rst_dst) != 0 ) {
-				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%s %c", src, usr.callsign, mode);
-	                } else  {
-        	    		gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
-			}
-        	} else {
-	                if( usr_find_by_dmrid(&dst, rst_dst) != 0 ) {
-				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%s %c", usr.callsign, dst.callsign, mode);
-	                } else  {	
-				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
-			}
-	        }	
+										
+		switch ( usr_find_by_dmrid(&usr, src) ) {  					// lookup source DMRID from UserDB
+			case 0 :
+				if( usr_find_by_dmrid(&dst, rst_dst) != 0 ) {			// lookup destination DMRID from UserDB and show if found
+					if( global_addl_config.lh_tsstat == 0 ) {
+						gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%s %c", src, dst.callsign, mode);
+					} else {
+						gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%d->%s %c", lh_ts, src, dst.callsign, mode);
+					}
+				} else  {
+					if( global_addl_config.lh_tsstat == 0 ) {
+	        				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
+					} else {
+	        				gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%d->%d %c", lh_ts, src, rst_dst, mode);
+					}
+				}
+
+	    		case 1 : 
+		                if( usr_find_by_dmrid(&dst, rst_dst) != 0 ) {			// lookup destination DMRID from UserDB and show if found
+					if( global_addl_config.lh_tsstat == 0 ) {
+						gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%s %c", usr.callsign, dst.callsign, mode);
+					} else {
+						gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%s->%d %c", lh_ts, usr.callsign, rst_dst, mode);
+					}
+		                } else  {
+					if( global_addl_config.lh_tsstat == 0 ) {
+						gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%s->%d %c", usr.callsign, rst_dst, mode);
+					} else {
+						gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%s->%d %c", lh_ts, usr.callsign, rst_dst, mode);
+					}
+				}
+		}
 	}
     }
     
@@ -655,7 +698,7 @@ void draw_adhoc_statusline()
 	if (!fIsDigital) {								// DMR channel active
 	//========================================================================================================================//
 		int ch_cc = current_channel_info_E.CC;					// current color code
-		int ch_ts = current_channel_info_E.Slot;				// current timeslot
+		ch_ts = current_channel_info_E.Slot;					// current timeslot
 		int tgNum = (ad_hoc_tg_channel ? ad_hoc_talkgroup : current_TG());	// current talkgroup
 		int callType = (ad_hoc_tg_channel ? ad_hoc_call_type : contact.type);	// current calltype
 		//sprintf(dmr_cc, ch_cc);

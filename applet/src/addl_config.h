@@ -67,6 +67,8 @@ typedef struct addl_config {
     uint8_t mode_color;		// 0=off 1=on  Top statusline set different color
     uint8_t chan_stat;		// 0=off 1=on 2=rx_freq 3=tx_freq channel statusline with TS / TG info
     uint8_t chan_color;		// 0=off 1=on  channel statusline set different color
+//=== statusline options ==========================================================================================
+    uint8_t lh_tsstat;		// 0=off 1=on  show TS in lh statusline
 } addl_config_t ;
 
 #define CPO_BL1 0x1
