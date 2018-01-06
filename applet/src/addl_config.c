@@ -111,6 +111,7 @@ void cfg_load()
     R(global_addl_config.mode_color,1);		// 2017-08-08	0=off 1=on  Top statusline set different color
     R(global_addl_config.chan_stat,4);		// 2017-08-08	0=off 1=on 2=rx_freq 3=tx_freq 4=rx_tx channel statusline with TS / TG info
     R(global_addl_config.chan_color,1);		// 2017-08-08	0=off 1=on  channel statusline set different color
+    R(global_addl_config.lh_tsstat,2);		// 2018-01-04	0=off 1=TS on  2=TS/TG on  show TS/TG in lh statusline
     // restore dmrid
     if( ( global_addl_config.cp_override & CPO_DMR ) == CPO_DMR ) {
         md380_radio_config.dmrid = global_addl_config.dmrid ;

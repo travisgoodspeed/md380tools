@@ -108,6 +108,10 @@ void draw_datetime_row(); // in md380
 
 #define OPM2_MENU 10
 
+extern uint8_t lh_cc ;
+extern uint8_t lh_ts ;
+extern uint8_t lh_tg ;
+
 extern uint8_t gui_opmode2 ;
 extern uint8_t gui_opmode3 ;
 
