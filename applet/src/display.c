@@ -543,15 +543,16 @@ void draw_alt_statusline()
 					if( global_addl_config.lh_tsstat == 0 ) {
 						gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%s %c", src, dst.callsign, mode);
 					} else {
-						gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%d->%s %c", lh_ts, src, dst.callsign, mode);
+						gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%d->%s %c", lh_ts, rst_src, dst.callsign, mode);
 					}
 				} else  {
 					if( global_addl_config.lh_tsstat == 0 ) {
 	        				gfx_printf_pos2(RX_POPUP_X_START, 96, 157, "lh:%d->%d %c", src, rst_dst, mode);
 					} else {
-	        				gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%d->%d %c", lh_ts, src, rst_dst, mode);
+	        				gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%d->%d %c", lh_ts, rst_src, rst_dst, mode);
 					}
 				}
+				break;
 
 	    		case 1 : 
 		                if( usr_find_by_dmrid(&dst, rst_dst) != 0 ) {			// lookup destination DMRID from UserDB and show if found
@@ -567,6 +568,7 @@ void draw_alt_statusline()
 						gfx_printf_pos2(RX_POPUP_X_START - 7, 96, 157, "[%d] lh:%s->%d %c", lh_ts, usr.callsign, rst_dst, mode);
 					}
 				}
+				break;
 		}
 	}
     }
