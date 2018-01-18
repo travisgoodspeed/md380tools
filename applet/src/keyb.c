@@ -14,6 +14,7 @@
 #include "netmon.h"
 #include "mbox.h"
 #include "console.h"
+#include "gfx.h"
 #include "syslog.h"
 #include "lastheard.h"
 #include "radio_config.h"
@@ -149,13 +150,25 @@ void handle_hotkey( int keycode )
             nm_started6 = 0;    // reset nm_start flag used for some display handling
 
 	} else if ( (keycode) == (kc_sms_test) ) {
-            sms_test();
+		if (global_addl_config.sms_rpt != 0) {          
+			sms_rpt();
+		}
 
 	} else if ( (keycode) == (kc_talkgroup) ) {
-	    create_menu_entry_set_tg_screen();
+		if (global_addl_config.sms_wx != 0) {          
+			sms_wx();
+		}
+		else {
+			create_menu_entry_set_tg_screen();
+		}
 
 	} else if ( (keycode) == (kc_copy_contact) ) {
-            copy_dst_to_contact();
+		if (global_addl_config.sms_gps != 0) {          
+			sms_gps();
+		}
+		else {
+ 			copy_dst_to_contact();
+		}
 
 	} else if ( (keycode) == (kc_netmon1) ) {
             bp_send_beep(BEEP_TEST_2);
@@ -180,6 +193,11 @@ void handle_hotkey( int keycode )
 	} else if ( (keycode) == (kc_netmon6) ) {
             clog_redraw();
             switch_to_screen(6);
+
+	} else if ( (keycode) == (kc_redback) ) {
+	   if (is_netmon_visible() ) {
+		netmon_off();
+		}
 
 	} else if ( (keycode) == (kc_netmon_off) ) {
 	    netmon_off();
@@ -255,8 +273,76 @@ void evaluate_sidekey( int button_function) // This is where new functions for s
       narrator_repeat();
       break;
 #  endif
-    default:
-      return;
+    case 0x54 :    // toggle display
+
+	global_addl_config.chan_stat++;
+
+	switch ( global_addl_config.chan_stat ) {  // We are using 0x54 to avoid conflicting with any added functions by Tytera.
+	    case 1 : 
+		global_addl_config.mode_stat = 2;	// show cc and cts in status
+		cfg_save();
+		gfx_set_fg_color(0x000000);
+		gfx_set_bg_color(0xff8032);
+    		gfx_select_font(gfx_font_small); 
+		gfx_printf_pos2(35, 63, 120, "                     " ); 
+    		gfx_select_font(gfx_font_norm); 
+		break;
+	    case 2 :  
+		global_addl_config.chan_stat = 4;	// show rx/tx
+		global_addl_config.mode_stat = 3;	// show cc and cts in status
+		cfg_save();
+		break;
+	    case 5 :  
+		global_addl_config.chan_stat = 1;	// TS/TG&Tone display
+		global_addl_config.mode_stat = 2;	// show cc and cts in status
+		cfg_save();
+		gfx_set_fg_color(0x000000);
+		gfx_set_bg_color(0xff8032);
+    		gfx_select_font(gfx_font_small); 
+		gfx_printf_pos2(35, 63, 120, "                     " ); 
+    		gfx_select_font(gfx_font_norm); 
+		break;
+	default:
+		global_addl_config.chan_stat = 1;	// show rx/tx
+		global_addl_config.mode_stat = 2;	// show cc/ts/tg compact
+		cfg_save();
+		break;
+        }
+	break;
+
+    case 0x55 :    // Mic gain off/3dB/6dB - we are using 0x55 to avoid conflicting with any functions by Tytera.
+	switch ( global_addl_config.mic_gain ) {  
+		case 0 :
+		global_addl_config.mic_gain = 1;		// set mic gain 3dB
+		cfg_save();
+		break;    
+		case 1 :
+		global_addl_config.mic_gain = 2;		// set mic gain 6dB
+		cfg_save();
+		break;
+		case 2 :
+		global_addl_config.mic_gain = 0;		// set mic gain off
+		cfg_save();
+		break;
+	default:
+		break;
+        }
+	break;
+
+    case 0x56 :    // promiscuous mode on/off - we are using 0x56 to avoid conflicting with any functions by Tytera.
+	switch ( global_addl_config.promtg ) {
+		case 0 :
+		global_addl_config.promtg = 1;
+		cfg_save();
+		break;    
+		case 1 :
+		global_addl_config.promtg = 0;
+		cfg_save();
+		break;
+	default:
+		break;
+        }
+	break;
   }
 
   kb_keypressed = 8 ; // Sets the key as handled. The firmware will ignore this button press now.
@@ -320,8 +406,7 @@ void set_keyb(int keyb_mode)
 //   | NetMon1| NetMon2| NetMon3| NetMOff|
 //   |________|________|________|________|
 //
-// ------------------------------------------------------------------------
-//   Develop:
+// ------------------------------------------------------------------------/   Develop:
 //    ___________________________________    			
 //   | 'M'ENU | cursor | cursor | 'B'ACK |     \  may have to be used
 //   |(green) |  up, U | down,D | (red)  |     /  as 'A'..'D' for DTMF
@@ -541,7 +626,18 @@ void kb_handler_hook()
     int kp = kb_keypressed ;
     int kc = kb_keycode ;
 
-    if ( global_addl_config.keyb_mode == 2) {	// select keyb support for MD-446 in setup
+    if ( global_addl_config.keyb_mode == 1) {	// keyb layout = Modern
+
+    	switch( kc ) {
+        	case KC_BACK :
+		   if (is_netmon_visible() ) {
+			netmon_off();
+			}
+		break ;	
+	}
+    } 
+
+    if ( global_addl_config.keyb_mode == 2) {	// keyb layout = MD-446 (select in setup)
    /* ================================================================================= */
    /*     Tytera MD-446 Layout - supported since 20170524                               */
    /* ================================================================================= */

@@ -724,6 +724,9 @@ Dumps all the inbound and outbound text messages.
 Dumps all the keys.
     md380-tool keys
 
+Dump a screenshot.
+    md380-tool screenshot <filename.bmp>
+
 Prints the SPI Flash Type.
     md380-tool spiflashid
 Dump all of flash memory.

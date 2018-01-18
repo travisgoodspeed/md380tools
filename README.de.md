@@ -5,9 +5,9 @@ von Travis Goodspeed, KK4VCZ
 
 ## Vorwort
 
-Diese Seite versucht die experimentelle Firmware für das Tytera MD-380/MD-390/G/Retevis RT-3/RT-8 zu dokumentieren, die Features zu erläutern und die Installation zu erklären.
+Diese Seite versucht die experimentelle Firmware für das Tytera MD-380/MD-390/G/MD-446/Retevis RT-3/RT-8 zu dokumentieren, die Features zu erläutern und die Installation zu erklären.
 
-Übersetzung durch Kim - DG9VH - Ergänzungen: DL2MF / 20161025
+Übersetzung durch Kim - DG9VH - Ergänzungen: DL2MF / 20171230
 
 ### Unterstützte Geräte
 
@@ -16,9 +16,12 @@ Die experimentelle Firmware unterstützt die folgenden Geräte:
     Tytera/TYT MD380 (old vocoder)
     Tytera/TYT MD380 (new vocoder)
     Tytera/TYT MD390 (new vocoder, no gps)
-    Tytera/TYT MD390/G (new vocoder / GPS) - derzeit noch ohne NetMonitor!
+    Tytera/TYT MD390/G (new vocoder / GPS)
+    
+    Tytera/TYT MD446 (w/o numeric keypad)
+
     Retevis RT3
-    Retevis RT8 (new vocoder / GPS) - derzeit noch ohne NetMonitor!
+    Retevis RT8 (new vocoder / GPS)
 
 ## Installation
 
@@ -72,7 +75,7 @@ Möchte man nach der Übersetzung gleich die neue Firmware in das Funkgerät fla
  `make flash`         
  `make flash_D02` - für das MD-380 (flashen der älteren Firmware-Version)
  
- `make flash_D13` - für das MD-380  
+ `make flash_D13` - für das MD-380 und MD-446 (ohne 10er-Tastatur)
  `make flash_S13` - für das MD-390/G
 auf.
 
@@ -211,7 +214,18 @@ wc -c < db/users.csv > data ; cat db/users.csv >> data && md380-tool spiflashwri
 
 Die Firmware besitzt einen neuen Menüpunkt im Menü "Utilities" namens "MD380Tools". Diese Funktionen sind größtenteils nur in der UHF-Version (70 cm-Version) der Geräte nutzbar.
 
-Die dort aufgeführten Menüpunkte wären derzeit folgende (mit nachfolgender Beschreibung)
+
+Das Hauptmenü in der V2.0 enthält derzeit folgende Menüpunkte (mit nachfolgender Beschreibung):
+
+
+    1- Display
+    2- Radio
+    3- DMR Setup
+    4- SMS Service
+    5- Keyboard
+    6- Tones
+    7- Developer
+
 
 Menüpunkt | Funktion 
 --------- | -------
@@ -223,7 +237,11 @@ Promiscuous | Aktiviert/deaktiviert (aktuell noch nicht getestet von mir) die Mo
 Mic bargraph | Aktiviert die Modulations-Aussteuerungs-Anzeige
 Edit DMR-ID | Ändern der DMR-ID des Funkgerätes
 Experimental | Dieses Einstellung aktiviert experimentelle Funktionen welche nicht unbedingt funktionieren müssen. Zur Sicherheit ist diese Einstellung nicht Rebootfest.
-DevOnly!! / NetMon | Dieses Feature bietet 3 zusätzliche Monitor-Anzeigen, mit denen wie über die USB-Schnittstelle Paketdaten der Verbindung im Rohdatenformat dargestellt werden können (Anzeige im Empfangsmodus mit 8 / 9 / # - Deaktivierung mit 7). Derzeit nur für das MD-380, da die Daten beim MD-390/G an anderen Speicheradressen zu finden sind.
+DevOnly!! / NetMon | Dieses Feature bietet 3 zusätzliche Monitor-Anzeigen, mit denen wie über die USB-Schnittstelle Paketdaten der Verbindung im Rohdatenformat dargestellt werden können (Anzeige im Empfangsmodus mit 4 / 5 / 6 / 7 / 8 / 9 / - Deaktivierung mit 7, # oder roter Taste, je nach Version und gewählter Tastaturbelegung). Der Netmon-Modus funktioniert bei allen von der Firmware unterstützten Gerätemodellen.
+
+Eine aktuelle Beschreibung der erweiterten Funktionen der MD380Tools Version 2.0 ist zu finden unter:
+
+http://dl2mf.de/md380tools
 
 ### Aktivierung der User-Datenbank
 
