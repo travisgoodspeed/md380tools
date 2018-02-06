@@ -24,11 +24,11 @@ es: localize applet
 
 sr: localize applet
 	cat strings.txt | ./localize sr ../applet/merged.img D013.020-sr.img
-	
+
 fr: localize applet
 	cat strings.txt | ./localize fr ../applet/merged.img D013.020-fr.img
-        "${MAKE}" D013.020-fr.bin
-	
+	"${MAKE}" D013.020-fr.bin
+
 flash-hu: hu
 	../md380-dfu upgrade D013.020-hu.bin
 
@@ -40,13 +40,13 @@ flash-de: de
 
 flash-es: es
 	../md380-dfu upgrade D013.020-es.bin
-	
+
 flash-sr: sr
 	../md380-dfu upgrade D013.020-sr.bin
-	
+
 flash-fr: fr
-      ../md380-dfu upgrade D013.020-fr.bin
-      
+	../md380-dfu upgrade D013.020-fr.bin
+
 %.bin: %.img
 	../md380-fw --wrap $< $@
 run: test
