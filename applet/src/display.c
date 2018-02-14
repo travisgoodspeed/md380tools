@@ -632,6 +632,7 @@ void draw_adhoc_statusline()
 
 //	BOOL fIsAnalog = current_channel_info_E.bIsAnalog;
 	BOOL fIsDigital = current_channel_info_E.bIsDigital;
+     BOOL fIsCTSvalid = (strlen(current_channel_info_E.EncTone.text) <= 6 );
 
 	// the top statusline is build by the following strings:
 	// -----------------------------------------------------
@@ -765,11 +766,16 @@ void draw_adhoc_statusline()
 			strcat(bot_status, current_channel_info_E.EncTone.text);	// add DCS code
 			strcpy(tg_fill, "");
 		} else {
-			strcpy(fm_sql, "CTS");
-			strcpy(bot_status, fm_sql);					// init bottom string
-			strcat(bot_status, ":");
-			strcat(bot_status, current_channel_info_E.EncTone.text);	// add CTS tone freq
-			strcat(bot_status, "Hz");					// add CTS tone freq
+               if (! fIsCTSvalid ) {		
+				strcpy(fm_sql, "");			
+				strcpy(bot_status, fm_sql);
+			} else {	
+				strcpy(fm_sql, "CTS");
+				strcpy(bot_status, fm_sql);					// init bottom string
+				strcat(bot_status, ":");
+				strcat(bot_status, current_channel_info_E.EncTone.text);	// add CTS tone freq
+				strcat(bot_status, "Hz");					// add CTS tone freq
+			}
 			strcpy(tg_fill, "");
 		}
 
@@ -787,11 +793,13 @@ void draw_adhoc_statusline()
 			strcat(top_status, " [");					// space
 			strcat(top_status, fm_sql);					// add the tone type to status
 		} else {	
-			strcat(top_status, "[");					// less space in compact mode
-			strcat(top_status, fm_sql);					// add the tone type to status
 			if (*ch_tone_type != 'N') {					// if MODE/CC compact display set in config
-				strcat(top_status, ":");
-				strcat(top_status, current_channel_info_E.EncTone.text);// add DCS/CTS tone to topstatus in compact mode
+				if (fIsCTSvalid) {
+					strcat(top_status, "[");					// less space in compact mode
+					strcat(top_status, fm_sql);					// add the tone type to status
+					strcat(top_status, ":");
+					strcat(top_status, current_channel_info_E.EncTone.text);// add DCS/CTS tone to topstatus in compact mode
+				}
 			}
 		}
 
