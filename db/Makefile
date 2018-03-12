@@ -32,7 +32,7 @@ dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 	
 dmrmarc.tmp:
-	python2 get_dmrmarc_json.py >$@ 2>/dev/null
+	python2 get_dmrmarc_json.py >$@ 2>get_dmrmarc.errors
 
 reflector.tmp:
 	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
