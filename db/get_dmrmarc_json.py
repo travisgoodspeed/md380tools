@@ -3,8 +3,14 @@
 # KD4Z
 # dmr-marc decided to stop offering CSV output format, so json here we come
 
-import requests
 import sys
+
+try:
+	import requests
+except ImportError as e:
+	sys.stderr.write('\n' + str(e) + '\n')
+	sys.stderr.write('\nERROR: please install python-requests\n\n')
+	exit(127)
 
 def noCommas(field):
 	try:
