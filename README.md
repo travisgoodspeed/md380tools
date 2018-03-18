@@ -113,6 +113,9 @@ repository.  We use a heap-less printf library under the BSD license.
 * libusb 1.0: (0.4 does not work.)
   http://www.libusb.org/
 
+* python-requests
+  http://python-requests.org/
+
 This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.  A separate client, MD380Tool,
 is under development for Android.
