@@ -1,8 +1,9 @@
 #define MAIDENHEAD_TESTING
-/*#define LOUD*/
+#define LOUD
 
 #include "maidenhead.h"
 #include "math.h"
+#include "string.h"
 
 #ifdef MAIDENHEAD_TESTING
 #include <stdio.h>
@@ -17,11 +18,43 @@ latlon maidenhead_locator_to_latlon( char * loc ){
 
     return returnthis;
 }
-void latlon_to_maidenhead_locator( latlon xy_in, char * maidenhead_out, unsigned int maidenhead_out_max_len ){
+void maidenheadgriddiv(float thing, float maxthingval, int maxprecision, char * out ){
+    //supports extended arbitrary precision by continuing the 10, 24 pattern
+    int div;
+    char c;
+    int ifwearelat = maxthingval==180;
+    for(int i =0; i < maxprecision; i++ ){
+        int offset;
+        int t;
+        if(i==0){//first (field) is divisions of 18 with a capital letter
+            div=18;
+            c='A';
+        }else if(i%2==1){//squares and every odd precision level are divisions of 10 
+            div=10;
+            c='0';
+        } else { //and every even level that isn't 0 is divisions of 24
+            div=24;
+            c='a';//could be capital, but it's becoming more common to see these lowercase.
+        }
+        maxthingval /= div;
+        t = thing/maxthingval;
+        thing -= t*maxthingval;
+        offset = ifwearelat? i*2+1: i*2;
+        out[offset] = t + c;
+    }
+    return;
+}
+void latlon_to_maidenhead_locator( latlon in, char * maidenhead_out, int precision ){
+    float lon = in.lon + 180;
+    float lat = in.lat + 90;
+    maidenheadgriddiv(lon, 360, precision ,maidenhead_out);
+    maidenheadgriddiv(lat, 180, precision ,maidenhead_out);
+    return;
 }
 float distance_between_maidenhead_locators_in_km(char*a,char*b){
 }
 float distance_between_maidenhead_locators_in_subsquares(char*a,char*b){
+    //only supports down to subsquares
     /*
     -------------------------------------------
     |             |             |             |
@@ -50,7 +83,7 @@ float distance_between_maidenhead_locators_in_subsquares(char*a,char*b){
     int scale[]={240,24,1};
     int lonsubsquarediff=0;
     int latsubsquarediff=0;
-    for( int i =0; i < 6; i++){
+    for( int i =0; i < 6; i++){ //6 because 6 characters, 3 levels
         int chardiff = b[i] - a[i]; //so a->c should be positive 'motion'
         int subsquare_diff = chardiff * scale[i/2]; 
         if( i % 2 == 0 ){ // a[0,2,4] are the lon
@@ -70,6 +103,7 @@ int maidenhead_locators_are_adjacent( char *a, char *b){
     //includes diagonals? if we dont want diagonals change to == 1
 }
 
+#ifdef MAIDENHEAD_TESTING
 int test_maidenhead_distances(char * a,char * b,float expected_subsquare_distance){
     int errors = 0;
     float d = distance_between_maidenhead_locators_in_subsquares(a,b);
@@ -88,6 +122,26 @@ int test_maidenhead_distances(char * a,char * b,float expected_subsquare_distanc
 #ifdef LOUD
     printf("%s to %s: %f subsquares expected %f\n\tadjacent: %s\n",a,b,d,expected_subsquare_distance,maidenhead_locators_are_adjacent(a,b)?"true":"false");
 #endif
+    return errors;
+}
+int test_latlon_to_maidenhead_locator(latlon in, char * expected_maidenhead ){
+    int errors = 0;
+    char * out = malloc(strlen(expected_maidenhead) +1 );
+    int levels = strlen(expected_maidenhead)/2;
+    latlon_to_maidenhead_locator( in, out, levels );
+    if( strlen(out) != 2*levels ){
+        printf("Incorrect precision for latlon to maidenhead where expected_maidenhead == %s\n"
+                "\tGot %s\n",expected_maidenhead,out);
+        errors++;
+    }
+    if( strncmp(out,expected_maidenhead, levels*2) != 0 ){
+        printf("Bad maidenhead out for latlon to maidenhead where expected_maidenhead == %s\n",expected_maidenhead);
+        errors++;
+    }
+#ifdef LOUD
+    printf("latlon to maidenhead: %f,%f -> %s, expected %s\n",in.lat,in.lon,out,expected_maidenhead);
+#endif
+    free(out);
     return errors;
 }
 void test(){
@@ -110,11 +164,22 @@ void test(){
 
     errors += test_maidenhead_distances( "AA00aa", "AR09ax", 4319); 
         //max diff in latitude, but double check in morning
+    
+    latlon in;
+    in.lat = 0;
+    in.lon = 0;
+    errors += test_latlon_to_maidenhead_locator(in,"JJ00");
+    errors += test_latlon_to_maidenhead_locator(in,"JJ00aa");
+    in.lon = -71.32457;
+    in.lat = 42.65148;
+    errors += test_latlon_to_maidenhead_locator(in,"FN42");
+    errors += test_latlon_to_maidenhead_locator(in,"FN42ip");
+    errors += test_latlon_to_maidenhead_locator(in,"FN42ip16");
+    errors += test_latlon_to_maidenhead_locator(in,"FN42ip16bi");
         
     printf("\nCompleted tests with %d errors.\n",errors);
 }
 
-#ifdef MAIDENHEAD_TESTING
 void main(){
     /*
     (gcc maidenhead.c -o maidenhead -lm;./maidenhead)
