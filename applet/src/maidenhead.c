@@ -19,6 +19,8 @@ latlon maidenhead_locator_to_latlon( char * loc ){
     return returnthis;
 }
 void maidenheadgriddiv(float thing, float maxthingval, int maxprecision, char * out ){
+    //expects "out" to be 2*maxprecision in size
+    //determines whether this thing is lat or lon based on "maxthingval"
     //supports extended arbitrary precision by continuing the 10, 24 pattern
     int div;
     char c;
@@ -100,7 +102,7 @@ float distance_between_maidenhead_locators_in_subsquares(char*a,char*b){
 }
 int maidenhead_locators_are_adjacent( char *a, char *b){
     return distance_between_maidenhead_locators_in_subsquares(a,b) < 2; 
-    //includes diagonals? if we dont want diagonals change to == 1
+    //includes diagonals: if we dont want diagonals change to == 1
 }
 
 #ifdef MAIDENHEAD_TESTING
