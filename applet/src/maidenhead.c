@@ -10,34 +10,68 @@
 #include <stdlib.h>
 #endif
 
+int maidenhead_precision_div(int precision){
+    int div;
+    if(precision==0){//first (field) is divisions of 18 with a capital letter
+        div=18;
+    }else if(precision%2==1){//squares and every odd precision level are divisions of 10 
+        div=10;
+    } else { //and every even level that isn't 0 is divisions of 24
+        div=24;
+    }
+    return div;
+}
+int maidenhead_precision_char(int precision){
+    char c;
+    if(precision==0){//first (field) is divisions of 18 with a capital letter
+        c='A';
+    }else if(precision%2==1){//squares and every odd precision level are divisions of 10 
+        c='0';
+    } else { //and every even level that isn't 0 is divisions of 24
+        c='a';//could be capital, but it's becoming more common to see these lowercase.
+    }
+    return c;
+}
 latlon maidenhead_locator_to_latlon( char * loc ){
-    latlon returnthis;
+    latlon out;
 
-    returnthis.lat = 0;
-    returnthis.lon = 0;
+    out.lat = 0;
+    out.lon = 0;
+    int loclen = strlen(loc);
+    int max_precision = loclen/2;
 
-    return returnthis;
+    int latdiv = 1;
+    int londiv = 1;
+    for( int i = 0; i < loclen; i++){
+        int precision = i/2;
+        int div = maidenhead_precision_div(precision);
+        char c = maidenhead_precision_char(precision);
+        if( i%2 == 0){
+            int charval = loc[i] - c;
+            londiv *= div;
+            out.lon += ((float)charval / (float)londiv) * 360;
+        } else {
+            int charval = loc[i] - c;
+            latdiv *= div;
+            out.lat += ((float)charval / (float)latdiv) * 180;
+        }
+
+    }
+    out.lon -= 180;
+    out.lat -= 90;
+
+    return out;
 }
 void maidenheadgriddiv(float thing, float maxthingval, int maxprecision, char * out ){
     //expects "out" to be 2*maxprecision in size
     //determines whether this thing is lat or lon based on "maxthingval"
     //supports extended arbitrary precision by continuing the 10, 24 pattern
-    int div;
-    char c;
     int ifwearelat = maxthingval==180;
     for(int i =0; i < maxprecision; i++ ){
         int offset;
         int t;
-        if(i==0){//first (field) is divisions of 18 with a capital letter
-            div=18;
-            c='A';
-        }else if(i%2==1){//squares and every odd precision level are divisions of 10 
-            div=10;
-            c='0';
-        } else { //and every even level that isn't 0 is divisions of 24
-            div=24;
-            c='a';//could be capital, but it's becoming more common to see these lowercase.
-        }
+        int div = maidenhead_precision_div(i);
+        char c = maidenhead_precision_char(i);
         maxthingval /= div;
         t = thing/maxthingval;
         thing -= t*maxthingval;
@@ -146,6 +180,26 @@ int test_latlon_to_maidenhead_locator(latlon in, char * expected_maidenhead ){
     free(out);
     return errors;
 }
+
+int latlon_within_maidenhead_locator(latlon in, char * loc){
+    return 0;
+}
+int maidenhead_locator_within_maidenhead_square(){
+    return 0;
+}
+int test_maidenhead_locator_to_latlon(char * in, latlon expected ){
+    int errors = 0;
+    latlon out = maidenhead_locator_to_latlon(in);
+    printf("test_maidenhead_locator_to_latlon not implemented yet\n");
+    return 1;
+    if( ! latlon_within_maidenhead_locator(expected, in) ){
+    }
+
+#ifdef LOUD
+    printf("maidenhead to latlon: %s -> %f,%f, target %f,%f expected within bounds\n",in, out.lat, out.lon, expected.lat, expected.lon );
+#endif
+    return errors;
+}
 void test(){
     int errors = 0;
     errors += test_maidenhead_distances( "FN42aa", "FN42ab", 1);
@@ -166,6 +220,7 @@ void test(){
 
     errors += test_maidenhead_distances( "AA00aa", "AR09ax", 4319); 
         //max diff in latitude, but double check in morning
+    printf("\n\n");
     
     latlon in;
     in.lat = 0;
@@ -178,6 +233,14 @@ void test(){
     errors += test_latlon_to_maidenhead_locator(in,"FN42ip");
     errors += test_latlon_to_maidenhead_locator(in,"FN42ip16");
     errors += test_latlon_to_maidenhead_locator(in,"FN42ip16bi");
+    printf("\n\n");
+    errors += test_maidenhead_locator_to_latlon("JJ00",in);
+    errors += test_maidenhead_locator_to_latlon("FN",in);
+    errors += test_maidenhead_locator_to_latlon("FN42",in);
+    errors += test_maidenhead_locator_to_latlon("FN42ip",in);
+    errors += test_maidenhead_locator_to_latlon("FN42ip16",in);
+    errors += test_maidenhead_locator_to_latlon("FN42ip16bi",in);
+    errors += test_maidenhead_locator_to_latlon("FN42ip16bi25js47",in);
         
     printf("\nCompleted tests with %d errors.\n",errors);
 }
