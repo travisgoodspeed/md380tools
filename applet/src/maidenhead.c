@@ -91,6 +91,16 @@ void latlon_to_maidenhead_locator( latlon in, char * maidenhead_out, int precisi
     return;
 }
 float distance_between_maidenhead_locators_in_km(char*a,char*b){
+    return 0;
+}
+float m_sqrt(float in){
+    //https://stackoverflow.com/a/29019938
+    float root =in/3;
+    int i;
+    if (in <= 0) return 0;
+    for (i=0; i<32; i++)
+        root = (root + in / root) / 2;
+    return root;
 }
 float distance_between_maidenhead_locators_in_subsquares(char*a,char*b){
     //only supports down to subsquares
@@ -134,7 +144,7 @@ float distance_between_maidenhead_locators_in_subsquares(char*a,char*b){
     if( lonsubsquarediff >= 2160 ){
         lonsubsquarediff -= 4320; //double check this in morning
     }
-    return sqrt( (float)latsubsquarediff*latsubsquarediff + (float)lonsubsquarediff*lonsubsquarediff);
+    return m_sqrt( (float)latsubsquarediff*latsubsquarediff + (float)lonsubsquarediff*lonsubsquarediff);
 
 }
 int maidenhead_locators_are_adjacent( char *a, char *b){
