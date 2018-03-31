@@ -1,5 +1,5 @@
-#define MAIDENHEAD_TESTING
-#define LOUD
+/*#define MAIDENHEAD_TESTING*/
+/*#define LOUD*/
 
 #include "maidenhead.h"
 #include "math.h"
@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #endif
+
+// write a function to generate adjacent gridsquares by mangling an existing one
+
 
 int maidenhead_precision_div(int precision){
     int div;
@@ -139,6 +142,16 @@ int maidenhead_locators_are_adjacent( char *a, char *b){
     //includes diagonals: if we dont want diagonals change to == 1
 }
 
+
+
+
+
+
+/* code above, tests below */
+
+
+
+
 #ifdef MAIDENHEAD_TESTING
 int test_maidenhead_distances(char * a,char * b,float expected_subsquare_distance){
     int errors = 0;
@@ -175,7 +188,7 @@ int test_latlon_to_maidenhead_locator(latlon in, char * expected_maidenhead ){
         errors++;
     }
 #ifdef LOUD
-    printf("latlon to maidenhead: %f,%f -> %s, expected %s\n",in.lat,in.lon,out,expected_maidenhead);
+    printf("latlon to maidenhead: %f, %f -> %s, expected %s\n",in.lat,in.lon,out,expected_maidenhead);
 #endif
     free(out);
     return errors;
@@ -247,7 +260,7 @@ void test(){
 
 void main(){
     /*
-    (gcc maidenhead.c -o maidenhead -lm;./maidenhead)
+    (gcc -DLOUD -DMAIDENHEAD_TESTING maidenhead.c -o maidenhead -lm;./maidenhead)
     */
     test();
 }
