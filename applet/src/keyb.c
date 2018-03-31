@@ -19,6 +19,7 @@
 #include "lastheard.h"
 #include "radio_config.h"
 #include "sms.h"
+#include "gps.h"
 #include "beep.h"
 #include "codeplug.h"
 #include "radiostate.h"
@@ -32,6 +33,7 @@
 # include "app_menu.h"
 #endif
 #include <stdint.h>
+
 
 uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
 // Other keyboard-related variables belong to the original firmware,
@@ -139,6 +141,7 @@ void handle_hotkey( int keycode )
 	PRINT("handle hotkey: %d\n", keycode );
     
     reset_backlight();
+    gps_dump_dmesg();
   
 	if ( (keycode) == (kc_netmon_clear) ) {
             syslog_clear();
