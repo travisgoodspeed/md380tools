@@ -41,7 +41,7 @@ latlon maidenhead_locator_to_latlon( char * loc ){
     out.lat = 0;
     out.lon = 0;
     int loclen = strlen(loc);
-    int max_precision = loclen/2;
+    /*int max_precision = loclen/2;*/
 
     int latdiv = 1;
     int londiv = 1;
