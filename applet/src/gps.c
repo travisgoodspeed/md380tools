@@ -17,6 +17,7 @@ float degrees_and_decimal_minutes_to_decimal_degrees(int degrees, int minutes, i
   /*printf("%d* %d' +%d\n",degrees,minutes,mindec);*/
   return out;
 }
+
 #if defined(FW_S13_020)
 void gps_dump_dmesg(){
   printf("\ngps_data");

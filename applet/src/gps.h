@@ -12,6 +12,11 @@
 extern "C" {
 #endif
 
+typedef struct latlon {
+	float lat;
+	float lon;
+} latlon;
+
 // ringbuffer 
 typedef struct {
     uint8_t buf[100];
