@@ -26,14 +26,6 @@ extern gps_ring_t gps_ringbuf ;
 #endif
 
 typedef struct {
-    //00 01 00 01 00 
-    //2a 2a 00 c7 26 
-    //47 19 a1 02 03 
-    //00
-    //00 01 00 01 00 
-    //2a 2a 00 da 26 
-    //47 19 77 02 03 
-    //00
     uint8_t off0 ;  // [0] 0x0  S=0 N=1
     uint8_t off1 ;  // [1] 0x1  
     uint8_t off2 ;  // [2] 0x2  W=0 E=1
@@ -46,18 +38,22 @@ typedef struct {
     
     uint8_t latdeg;   // [5]
     uint8_t latmin;   // [6]
-    uint8_t unk1;
-
+    uint8_t alwayszero; //?
     uint16_t latmindec;
-    //unsigned int latmindec : 24; //le 
+
     uint8_t londeg ;
     uint8_t lonmin ;
 
-    uint8_t unk2;
-    uint16_t lonmindec ;
-    //unsigned int lonmindec : 24; //le
+    uint16_t lonmindec;
+    uint8_t unknown;
+            //06 
+    uint8_t unknown2; //probably part of unknown?
+            //00 
     uint8_t altitude_m;
-    uint8_t unk4;
+            //4b
+    uint8_t unknown3;//maybe part of altitude?
+            //00
+
 } gps_t ; //want 18 bytes according to original
 
 #if defined(FW_S13_020)
