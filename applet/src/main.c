@@ -27,7 +27,6 @@
 #include "util.h"
 #include "spiflash.h"
 #include "irq_handlers.h" 
-#include "maidenhead.h"
 
 						  
 GPIO_InitTypeDef  GPIO_InitStructure;
@@ -180,13 +179,6 @@ int main(void) {
                        RTC_TimeTypeTime.RTC_Minutes,
                        RTC_TimeTypeTime.RTC_Seconds);
   */
-  latlon heregps;
-  heregps.lat = 42.65148;
-  heregps.lon = -71.32457;
-  char hereloc[7] = {0};
-
-  latlon_to_maidenhead_locator(heregps, hereloc, 3);
-  printf("I am in subsquare %s\n",hereloc);
      
   //Done with the blinking, so start the radio application.
   printf("Starting main()\n");

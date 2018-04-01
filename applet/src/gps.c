@@ -1,12 +1,11 @@
-#ifndef GPS_TESTING
-#include "dmesg.h"
-#include "printf.h"
-#endif
-
 #include "gps.h"
+
 #ifdef GPS_TESTING
 #include "string.h"
 #include <stdio.h>
+#else
+#include "dmesg.h"
+#include "printf.h"
 #endif
 
 
@@ -14,7 +13,7 @@ float degrees_and_decimal_minutes_to_decimal_degrees(int degrees, int minutes, i
   float out = (float)degrees + ((float)minutes+(float)minuteparts/10000)/60;
   return out;
 }
-#ifndef GPS_TESTING
+#if defined(FW_S13_020)
 void gps_dump_dmesg(){
   printf("\ngps_data");
   printhex((char *) &gps_data, 18);
@@ -25,6 +24,10 @@ void gps_dump_dmesg(){
   int lonint = lon;
   int lonrem = (lon - lonint)*1000000;
   printf("\nlat = %d.%d\nlon = %d.%d\nalt = %d",latint,latrem,lonint,lonrem,gps_data.altitude_m);
+}
+#else
+void gps_dump_dmesg(){
+  printf("This device does not have GPS.");
 }
 #endif
 #ifdef GPS_TESTING
