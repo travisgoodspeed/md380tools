@@ -141,7 +141,6 @@ void handle_hotkey( int keycode )
 	PRINT("handle hotkey: %d\n", keycode );
     
     reset_backlight();
-    gps_dump_dmesg();
   
 	if ( (keycode) == (kc_netmon_clear) ) {
             syslog_clear();
