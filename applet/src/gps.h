@@ -38,8 +38,12 @@ typedef struct {
     uint8_t off1 ;  // [1] 0x1  
     uint8_t off2 ;  // [2] 0x2  W=0 E=1
     uint8_t status ; // [3] 0x3  (0...?)
+    // 00 01
+    // 00 01
 
     uint8_t off4 ;   // [4]
+    // 00
+    
     uint8_t latdeg;   // [5]
     uint8_t latmin;   // [6]
     uint8_t unk1;
@@ -52,10 +56,9 @@ typedef struct {
     uint8_t unk2;
     uint16_t lonmindec ;
     //unsigned int lonmindec : 24; //le
-    uint8_t off15 ;
-
-    uint16_t altitude_m;
-} gps_t ; //want 18 bytes
+    uint8_t altitude_m;
+    uint8_t unk4;
+} gps_t ; //want 18 bytes according to original
 
 #if defined(FW_S13_020)
 // S13 @ 0x2001e4a4    
