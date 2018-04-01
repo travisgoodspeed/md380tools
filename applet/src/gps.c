@@ -17,6 +17,12 @@ float degrees_and_decimal_minutes_to_decimal_degrees(int degrees, int minutes, i
   /*printf("%d* %d' +%d\n",degrees,minutes,mindec);*/
   return out;
 }
+latlon get_current_position( gps_t gps ){
+  latlon here;
+  here.lat = degrees_and_decimal_minutes_to_decimal_degrees( gps.latdeg, gps.latmin, gps.latmindec);
+  here.lon = degrees_and_decimal_minutes_to_decimal_degrees( gps.londeg, gps.lonmin, gps.lonmindec);
+  return here;
+}
 
 #if defined(FW_S13_020)
 void gps_dump_dmesg(){
@@ -37,17 +43,35 @@ void gps_dump_dmesg(){
 }
 #endif
 #ifdef GPS_TESTING
+int test_get_current_position(gps_t testdata, latlon expected_latlon){
+  int errors =0;
+  latlon out = get_current_position(testdata);
+  if( out.lat != expected_latlon.lat || out.lon != expected_latlon.lon ){
+    printf("Got \t\t%f, %f\nexpected \t%f, %f\n",out.lat,out.lon,expected_latlon.lat,expected_latlon.lon);
+    errors++;
+  }
+  return errors;
+}
 void main(){
   //(gcc gps.c -o gps -DGPS_TESTING; ./gps)
-  gps_t test;
+  gps_t gps;
   char *testdata="\x00\x01\x00\x01\x00\x0A\x2a\x00\x32\x25\x0A\x19\x87\x02\x06\x00\x4B\x00";
   /*printf("sizeof(gps_t) == %d\n", sizeof(gps_t));*/
-  memcpy((void *)&test,testdata,sizeof(gps_t));
-  float lat = degrees_and_decimal_minutes_to_decimal_degrees( test.latdeg, test.latmin, test.latmindec);
-  float lon = degrees_and_decimal_minutes_to_decimal_degrees( test.londeg, test.lonmin, test.lonmindec);
-  printf("Got:    \tlat = %f lon = %f\n",lat,lon);
-  printf("Expect~: \tlat = %f lon = %f\n",10.71584833333333,10.41774333333333);
-  printf("alt = %d, expect 75\n",test.altitude_m);
+  memcpy((void *)&gps,testdata,sizeof(gps_t));
+  latlon expected;
+  expected.lat = 10.715870;
+  expected.lon = -10.417745;
+
+  /*float lat = degrees_and_decimal_minutes_to_decimal_degrees( gps.latdeg, gps.latmin, gps.latmindec);*/
+  /*float lon = degrees_and_decimal_minutes_to_decimal_degrees( gps.londeg, gps.lonmin, gps.lonmindec);*/
+  /*printf("Got:    \tlat = %f lon =  %f\n",lat,lon);*/
+  /*printf("Expect~: \tlat = %f lon = %f\n",10.71584833333333,-10.41774333333333);*/
+  /*printf("alt = %d, expect 75\n",gps.altitude_m);*/
+
+  int errors =0;
+  errors += test_get_current_position( gps, expected );
+
+  printf("Completed with %d errors\n",errors);
 
 }
 #endif
