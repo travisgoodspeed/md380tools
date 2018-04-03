@@ -75,6 +75,8 @@ extern gps_t gps_data ;
 // q_struct_1[0] flags?
 
 void gps_dump_dmesg();
+float degrees_and_decimal_minutes_to_decimal_degrees(int degrees, int minutes, int mindec);
+latlon get_current_position( gps_t gps );
 
 
 #ifdef __cplusplus
