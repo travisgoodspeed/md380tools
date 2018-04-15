@@ -35,7 +35,9 @@ void gps_dump_dmesg(){
   int lonint = lon;
   int lonrem = (lon - lonint)*1000000;
   // %f appears not implemented?
-  printf("\nlat = %d.%d\nlon = %d.%d\nalt = %d",latint,latrem,lonint,lonrem,gps_data.altitude_m);
+  printf("\nlat = %d.%d\nlon = %d.%d\nalt = %d\n",latint,latrem,lonint,lonrem,gps_data.altitude_m);
+  printf("speed = %d knots\n",gps_data.speed_knots);
+  printf("speed = %d mph\n",(int)(gps_data.speed_knots*1.15078));
 }
 #else
 void gps_dump_dmesg(){

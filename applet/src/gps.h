@@ -38,7 +38,7 @@ typedef struct {
     // 00 01
     // 00 01
 
-    uint8_t off4 ;   // [4]
+    uint8_t speed_knots;   // [4] speed in knots
     // 00
     
     uint8_t latdeg;   // [5]

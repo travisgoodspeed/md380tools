@@ -482,6 +482,26 @@ def dump(dfu, filename, address):
         f.write(buf)
         f.close()
 
+def selfgps(dfu):
+    buf = dfu.peek(0x2001e4a4, 18) #only tested with GPS-capable radios
+    print(buf)
+    #[0, 1, 0, 1, 55, 41, 39, 0, 244, 3, 72, 51, 209, 14, 7, 0, 60, 0]
+    def parse_gps(buf):
+        deg, degminint, degmindec = buf[5], buf[6], buf[9]<<8|buf[8]
+        lat = float(deg) + float(degminint + float(degmindec)/10000)/60
+        deg, degminint, degmindec = buf[10], buf[11], buf[13]<<8|buf[12]
+        lon = float(deg) + float(degminint + float(degmindec)/10000)/60
+        speed_knots = buf[4]
+        altitude = buf[16]
+        fix = any(buf)
+        return {"fix":fix,"lat":lat,"lon":lon,"speed_knots":speed_knots,"speed_mph":speed_knots*1.15078,"altitude":altitude}
+    gps = parse_gps(buf)
+    import pprint
+    pprint.pprint(gps)
+    print("https://www.google.com/maps/place/%f,-%f"%(gps["lat"],gps["lon"]))
+
+
+
 
 def flashgetid(dfu):
     size = 0
@@ -781,6 +801,9 @@ def main():
             elif sys.argv[1] == 'c5000':
                 dfu = init_dfu()
                 c5000(dfu)
+            elif sys.argv[1] == 'selfgps':
+                dfu = init_dfu()
+                selfgps(dfu)
             elif sys.argv[1] == 'rssi':
                 dfu = init_dfu()
                 rssi(dfu)
