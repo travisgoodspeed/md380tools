@@ -5,7 +5,7 @@
 #### Debian Stretch: ####
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
-                    libusb-1.0 python-usb make curl
+                    libusb-1.0 python-usb python-requests make curl
 
 #### Debian Jessie (using backports.debian.org): ####
 
@@ -23,7 +23,7 @@ Install python-usb from backports, the rest from Jessie
 
      apt -t jessie-backports install python-usb
      apt install gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi \
-                 libusb-1.0 make curl
+                 libusb-1.0 make curl python-requests
 
 #### Debian Jessie (using python-pip): ####
 
