@@ -32,8 +32,8 @@ dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 	
 dmrmarc.tmp:
-	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
-	
+	python2 get_dmrmarc_json.py >$@ 2>get_dmrmarc.errors
+
 reflector.tmp:
 	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 		
