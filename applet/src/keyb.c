@@ -152,6 +152,10 @@ void handle_hotkey( int keycode )
 	} else if ( (keycode) == (kc_sms_test) ) {
 		if (global_addl_config.sms_rpt != 0) {          
 			sms_rpt();
+		} else {
+#if (ZONE123SWITCH)	//optional quick zone switch feature, see config.h
+			ZoneList_SetZoneByIndex(0);
+#endif
 		}
 
 	} else if ( (keycode) == (kc_talkgroup) ) {
@@ -159,7 +163,11 @@ void handle_hotkey( int keycode )
 			sms_wx();
 		}
 		else {
+#if (ZONE123SWITCH)	//optional quick zone switch feature, see config.h
+			ZoneList_SetZoneByIndex(1);
+#else
 			create_menu_entry_set_tg_screen();
+#endif
 		}
 
 	} else if ( (keycode) == (kc_copy_contact) ) {
@@ -167,7 +175,11 @@ void handle_hotkey( int keycode )
 			sms_gps();
 		}
 		else {
+#if (ZONE123SWITCH)	//optional quick zone switch feature, see config.h
+			ZoneList_SetZoneByIndex(2);
+#else
  			copy_dst_to_contact();
+#endif
 		}
 
 	} else if ( (keycode) == (kc_netmon1) ) {

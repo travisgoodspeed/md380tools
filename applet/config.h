@@ -42,3 +42,7 @@
 //#define AMBEUNCORRECTEDPRINT
 
 //#define I2CPRINT
+
+//Turn on switch first 3 zones by [1][2][3] keys (in modern keyboard layout) feature
+//if sms rpt/gps shortcuts are off. Feature by UR6LKW.
+#define ZONE123SWITCH 1
