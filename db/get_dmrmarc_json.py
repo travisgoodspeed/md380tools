@@ -4,6 +4,7 @@
 # dmr-marc decided to stop offering CSV output format, so json here we come
 
 import sys
+import logging
 
 try:
 	import requests
@@ -11,6 +12,9 @@ except ImportError as e:
 	sys.stderr.write('\n' + str(e) + '\n')
 	sys.stderr.write('\nERROR: please install python-requests\n\n')
 	exit(127)
+
+DMRMARC_JSON_URL = "https://www.radioid.net/static/users.json"
+LOGGER = logging.getLogger(__name__)
 
 def noCommas(field):
 	try:
@@ -23,7 +27,7 @@ def noCommas(field):
 		
 		
 	except (UnicodeEncodeError, TypeError, AttributeError):
-		pass
+		LOGGER.exception("Failed to decode/encode field")
 		
 	return removeSubstr(field,",")
 
@@ -34,17 +38,19 @@ def removeSubstr(field, subfield):
 		field = field.replace(","," ").strip()
 		
 	except (UnicodeEncodeError, TypeError, AttributeError):
-		pass
+		LOGGER.exception("Failed to strip/replace field")
 		
 	return field
 	
 def dmrmarc_json():
 	
 	
-	myreq = requests.get('http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json')
+	LOGGER.info("Requesting DMRMARC users database from %s", DMRMARC_JSON_URL)
+	myreq = requests.get(DMRMARC_JSON_URL)
 
 	dmrmarc = myreq.json()
 
+	LOGGER.info("Processing JSON")
 	for user in dmrmarc['users']:
 
 		try:
@@ -65,15 +71,17 @@ def dmrmarc_json():
 			
 			 
 		except (UnicodeEncodeError, TypeError, AttributeError):
+			LOGGER.exception("Failed to process user")
 			sys.exc_clear()
 			
 			
 def main():
+	logging.basicConfig(level=logging.INFO)
 	try:
 		dmrmarc_json()()
 	
 	except Exception:
-		pass
+		LOGGER.exception("Overall failure")
 
 	
 if __name__ == '__main__':
