@@ -63,7 +63,8 @@ flash_original_D03: original_D03
 
 flash: image_D13
 	./md380-dfu upgrade applet/experiment.bin
-
+settime:
+	./md380-dfu settime
 flash_D02: image_D02
 	./md380-dfu upgrade applet/experiment.bin
 
