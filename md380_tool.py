@@ -802,6 +802,8 @@ def main():
             elif sys.argv[1] == 'screenshot':
                 dfu = init_dfu()
                 screenshot(dfu)
+            else:
+                usage()
 
         elif len(sys.argv) == 3:
             if sys.argv[1] == 'flashdump':
@@ -840,6 +842,8 @@ def main():
             elif sys.argv[1] == 'screenshot':
                 dfu = init_dfu()
                 screenshot(dfu, sys.argv[2])
+            else:
+                usage()
 
         elif len(sys.argv) == 4:
             if sys.argv[1] == 'spiflashwrite':
@@ -854,6 +858,8 @@ def main():
                 print("Dumping memory from %s." % sys.argv[3])
                 dfu = init_dfu()
                 dump(dfu, sys.argv[2], sys.argv[3])
+            else:
+                usage()
 
         else:
             usage()
