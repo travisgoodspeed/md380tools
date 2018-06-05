@@ -32,8 +32,8 @@ dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 	
 dmrmarc.tmp:
-	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=csv&header=0' | perl -pe 's,<br/>,,' >$@
-	
+	wget --timeout=120 --no-check-certificate --wait=3 'https://www.radioid.net/static/users.csv' -O $@
+
 reflector.tmp:
 	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 		
@@ -41,7 +41,7 @@ special.tmp:
 	python2 get_special_IDs.py
 	
 users.json:
-	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=users&format=json&header=0' >$@
+	curl $(CURL_FLAGS) 'https://www.radioid.net/static/users.json' >$@
 
 repeaters.json:
 	curl $(CURL_FLAGS) 'http://www.dmr-marc.net/cgi-bin/trbo-database/datadump.cgi?table=repeaters&format=json&header=0' >$@

@@ -435,7 +435,19 @@ const char *getmfgstr(int speed, long *len){
 
 void loadfirmwareversion_hook()
 {
-    memcpy(print_buffer, VERSIONDATE, 22);
+    static int version_state = 0;
+    switch (version_state) {
+      default:
+        version_state = 0;
+      case 0:
+        snprintfw(print_buffer, 18, GIT_VERSION);
+        version_state++;
+        break;
+      case 1:
+        memcpy(print_buffer, VERSIONDATE, 24);
+        version_state++;
+        break;
+    }
     return;
 }
 

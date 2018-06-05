@@ -80,31 +80,11 @@ In some VHF Radios is only an 1 MByte SPI Flash installed.
   * RT3 = MD-380 (old)
   * RT8 = MD-390G
 
-### The md380tools have D13.020 as basic now. ###
-
-<strike>
-to build the "old" d02.32 version
-
-	make flash_D02
-
-These tools are all wrapped into `Makefile`, which will download the
-official firmware, patch and flash it.  Run `make flash` after booting
-into the recovery bootloader by holding PTT and the button just above
-it during power-on.  Once device has been powered on, run `make flashdb`
-to write the DMR MARC user's database to SPI Flash memory. This works only
-with Radios that have 16 MByte SPI Flash memory chip installed.
-</strike>
-
 ## License: ##
 
-The majority of this software is licensed in exchange for two liters
-of India Pale Ale, to be delivered at a neighborly bar, preferably one
-without a god-damned squary-stary-box.
-
-The DFU tools are GPL licensed, forked from old examples in the
-Ubertooth Project.  If you want md380-dfu or stm32-dfu under different
-terms, you should probably discuss it with the Great Scott Gadgets
-folks over some beer.
+This software is licensed in exchange for two liters of India Pale
+Ale, to be delivered at a neighborly bar, preferably one without
+televisions.
 
 Tytera's firmware is of unknown license and is not included in this
 repository.  We use a heap-less printf library under the BSD license.
@@ -132,6 +112,9 @@ repository.  We use a heap-less printf library under the BSD license.
 
 * libusb 1.0: (0.4 does not work.)
   http://www.libusb.org/
+
+* python-requests
+  http://python-requests.org/
 
 This project should work across Linux, Mac OS, and Windows, but has
 not been tested on all platforms.  A separate client, MD380Tool,

@@ -36,18 +36,19 @@ Ebenso sind zur Nutzung folgende Pakete erforderlich:
 * Python 2.7 or newer: http://www.python.org
 * PyUSB 1.0: (0.4 does not work.) http://sourceforge.net/apps/mediawiki/pyusb/
 * libusb 1.0: (0.4 does not work.) http://www.libusb.org/
+* python-requests: http://python-requests.org/
 
 #### Automatische Installation der benötigten Pakete
 
 Debian Stretch:
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi \
-            libnewlib-arm-none-eabi libusb-1.0 python-usb
+            libnewlib-arm-none-eabi libusb-1.0 python-usb python-requests
 
 Debian Jessie / Ubuntu 16.04 LTS:
 
     apt-get install gcc-arm-none-eabi binutils-arm-none-eabi libusb-1.0 git \
-                    libnewlib-arm-none-eabi make curl python-pip unzip
+                    libnewlib-arm-none-eabi make curl python-pip python-requests unzip
     pip install pyusb -U # update PyUSB to 1.0
 
 
