@@ -32,6 +32,7 @@
 #include "lcd_driver.h"
 #include "irq_handlers.h"
 #include "keyb.h"
+#include "stm32f4xx_flash.h"
 
 
 int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
@@ -324,7 +325,10 @@ int usb_dnld_hook(){
        kb_OnRemoteKeyEvent( md380_packet[1]/*key_ascii*/, md380_packet[2]/*key_down_flag*/ ); 
        break;
 #endif // can poll keys ?
-    
+
+    case TDFU_REBOOT_TO_BOOTLOADER:
+       reboot_into_bootloader();
+       break; 
     default:
       printf("Unhandled DFU packet type 0x%02x.\n",md380_packet[0]);
     }
@@ -449,6 +453,31 @@ void loadfirmwareversion_hook()
         break;
     }
     return;
+}
+typedef void (*void_func_ptr)(void);
+void reboot_into_bootloader(){
+  /*from #193: 
+   * travis says:
+    There's a nice generic way to do it:
+
+    Disable interrupts.
+    Erase the block at 0x0800C000, so that the interrupt table is empty and the bootloader won't start the main application.
+    Branch to the address stored in 0x08000004, which is the bootloader's RESET vector.
+    The bootloader will then launch and wait for comms, rather than branch into the main application.
+
+   */
+  __disable_irq(); //disable interrupts
+  // from STM32F4xx_DSP_StdPeriph_Lib/Project/STM32F4xx_StdPeriph_Examples/FLASH/FLASH_Program/main.h
+  //#define ADDR_FLASH_SECTOR_3     ((uint32_t)0x0800C000) /* Base address of Sector 3, 16 Kbytes   */
+  //this is just copied here so I can remember why I chose sector 3 -mike
+  //
+  int *reset_handler_ptr = (int *) 0x08000004; 
+  int * reset_handler = * reset_handler_ptr;
+  FLASH_Unlock();
+  //no idea on the voltage range, but 3 works for me - mike
+  FLASH_EraseSector(FLASH_Sector_3, VoltageRange_3 ); //just erased that sector
+  (*(void_func_ptr)(reset_handler))(); //branch to address kept at 0x08000004
+  //bootloader should be ready and waiting, good to go
 }
 
 //Must be const, because globals will be wacked.

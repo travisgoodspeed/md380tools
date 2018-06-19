@@ -281,6 +281,15 @@ class Tool(DFU):
         # time.sleep(0.1);
         status = self.get_status()  # this gets the status
 
+    def reboot_to_bootloader(self):
+        """Reboot into the bootloader with a DFU command. 
+        This will erase (part of) the firmware from flash, 
+        so you must reprogram the firmware afterwards if you'd like a working radio.
+        """
+        cmd = 0x86  # reboot_to_bootloader
+        self._device.ctrl_transfer(0x21, Request.DNLOAD, 1, 0, chr(cmd))
+        self.get_status()  # this changes state
+
     def getdmesg(self):
         """Returns the 1024 byte DMESG buffer."""
         cmd = 0x00  # DMESG
@@ -394,7 +403,6 @@ def dmesg(dfu):
     """Prints the dmesg log from main memory."""
     # dfu.drawtext("Dumping dmesg",160,50);
     print(dfu.getdmesg())
-
 
 def parse_calibration(dfu):
     dfu.md380_custom(0xA2, 0x05)
@@ -745,6 +753,8 @@ Dump 1kB from arbitrary address
     md380-tool dump <filename.bin> <address>
 Dump calibration data 
     md380-tool calibration
+Reboot into the bootloader (erases application, you _must_ reflash firmware afterwards):
+    md380-tool reboot_to_bootloader
 
 Copy File to SPI flash.
     md380-tool spiflashwrite <filename> <address>"
@@ -778,6 +788,13 @@ def main():
             #             elif sys.argv[1] == 'channel':
             #                 dfu=init_dfu();
             #                 getchannel(dfu);
+            elif sys.argv[1] == "reboot_to_bootloader":
+                dfu = init_dfu()
+                print("It's okay to get a pipe error here, "
+                "as long as it reboots into bootloader and "
+                "has the red/green alternating LED.")
+                dfu.reboot_to_bootloader()
+                print("Now go reflash your firmware!")
             elif sys.argv[1] == 'c5000':
                 dfu = init_dfu()
                 c5000(dfu)
