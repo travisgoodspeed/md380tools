@@ -34,6 +34,7 @@
 #include "keyb.h"
 #include "stm32f4xx_flash.h"
 
+void reboot_into_bootloader();
 
 int usb_upld_hook(void* iface, char *packet, int bRequest, int something){
   /* This hooks the USB Device Firmware Update upload function,
