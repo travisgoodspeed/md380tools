@@ -473,7 +473,7 @@ void reboot_into_bootloader(){
   //this is just copied here so I can remember why I chose sector 3 -mike
   //
   int *reset_handler_ptr = (int *) 0x08000004; 
-  int * reset_handler = * reset_handler_ptr;
+  int * reset_handler = (int *) * reset_handler_ptr;
   FLASH_Unlock();
   //no idea on the voltage range, but 3 works for me - mike
   FLASH_EraseSector(FLASH_Sector_3, VoltageRange_3 ); //just erased that sector
