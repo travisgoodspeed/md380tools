@@ -57,7 +57,7 @@ $(BINDIR)/%.bin: $(DLDIR)/%.bin | $(BINDIR)
 	@test $$(shasum -a 256 $@ | awk '{print $$1}') "=" $(FIRMWARE_SHA256) || (rm -f $@ && echo "$@: SHA256 mismatch" && false)
 
 $(DLDIR)/%: | $(DLDIR)
-	@which curl >>/dev/null #Check that we have curl.
+	@which curl >>/dev/null || (echo "ERROR: Curl is missing.  Please install it." && false) #Check that we have curl.
 	@-echo $(FIRMWARE_URL) \=\> $@
 	@curl $(CURL_FLAGS) $(FIRMWARE_URL) -o $@
 	@test $$(find $@ -size +0c) || (rm -f $@ && echo "FATAL ERROR: $@ downloaded as a zero byte file" && false)
