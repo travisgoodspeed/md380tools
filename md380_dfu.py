@@ -354,6 +354,65 @@ def init_dfu(alt=0):
 
     return dfu
 
+def auto_upgrade(firmware_data):
+    errors = []
+    dfu = init_dfu()
+    mfg = dfu.get_string(1)
+    if mfg != u'AnyRoad Technology':
+        print("Radio not in bootloader: attempting automatic reboot into bootloader")
+        try:
+            dfu.wait_till_ready()
+            del dfu
+        except usb.core.USBError as e:
+            #we expect a pipe error here (errno 32)
+            print("detach dfu")
+            if e.errno != 32: 
+                print(e)
+                errors.append(e)
+        time.sleep(1)
+        try:
+            tooldfu = md380_tool.init_dfu()
+            tooldfu.reboot_to_bootloader()
+            del tooldfu
+        except usb.core.USBError as e:
+            #we expect a pipe error here (errno 32)
+            print("tooldfu")
+            if e.errno != 32: 
+                print(e)
+                errors.append(e)
+        time.sleep(10) #wait for bootloader to be ready
+        status = None
+        while status != Status.OK: #stay here until bootloader actually ready
+            try:
+                dfu = init_dfu()
+                status = dfu.get_status()[0]
+            except usb.core.USBError as e:
+                #busy device is okay here, but the time.sleep should be enough to handle that
+                print(e)
+                status = None
+            time.sleep(.5)
+    download_firmware(dfu, firmware_data)
+    dfu.wait_till_ready()
+    try:
+        del dfu
+    except usb.core.USBError as e:
+        #we expect a pipe error here (errno 32)
+        print("detach dfu2")
+        if e.errno != 32: 
+            print(e)
+            errors.append(e)
+    time.sleep(1)
+    try:
+        stm32dfu = stm32_dfu.init_dfu()
+        stm32dfu.go() #has a default address that works
+        del stm32dfu
+    except usb.core.USBError as e:
+        #we expect a pipe error here (errno 32)
+        print("stm32dfu go")
+        if e.errno != 32: 
+            print(e)
+            errors.append(e)
+    return errors
 
 def usage():
     print("""
@@ -393,6 +452,7 @@ Upgrade to new firmware:
 """)
 
 
+
 def main():
     try:
         if len(sys.argv) == 3:
@@ -408,58 +468,12 @@ def main():
             elif sys.argv[1] == "upgrade":
                 with open(sys.argv[2], 'rb') as f:
                     data = f.read()
-                    dfu = init_dfu()
-                    mfg = dfu.get_string(1)
-                    if mfg != u'AnyRoad Technology':
-                        print("Radio not in bootloader: attempting automatic reboot into bootloader")
-                        try:
-                            dfu.wait_till_ready()
-                            del dfu
-                        except usb.core.USBError as e:
-                        #we expect a pipe error here (errno 32)
-                            print("detach dfu")
-                            if e.errno != 32: 
-                                print(e)
-                        time.sleep(1)
-                        try:
-                            tooldfu = md380_tool.init_dfu()
-                            tooldfu.reboot_to_bootloader()
-                            del tooldfu
-                        except usb.core.USBError as e:
-                        #we expect a pipe error here (errno 32)
-                            print("tooldfu")
-                            if e.errno != 32: 
-                                print(e)
-                        time.sleep(10) #wait for bootloader to be ready
-                        status = None
-                        while status != Status.OK: #stay here until bootloader actually ready
-                            try:
-                                dfu = init_dfu()
-                                status = dfu.get_status()[0]
-                            except usb.core.USBError as e:
-                                #busy device is okay here, but the time.sleep should be enough to handle that
-                                print(e)
-                                status = None
-                            time.sleep(.5)
-                    download_firmware(dfu, data)
-                    dfu.wait_till_ready()
-                    try:
-                        del dfu
-                    except usb.core.USBError as e:
-                        #we expect a pipe error here (errno 32)
-                        print("detach dfu2")
-                        if e.errno != 32: 
+                    errors = auto_upgrade(data)
+                    if errors:
+                        print("Encountered following unexpected errors during upgrade:")
+                        for e in errors:
                             print(e)
-                    time.sleep(1)
-                    try:
-                        stm32dfu = stm32_dfu.init_dfu()
-                        stm32dfu.go() #has a default address that works
-                        del stm32dfu
-                    except usb.core.USBError as e:
-                        #we expect a pipe error here (errno 32)
-                        print("stm32dfu go")
-                        if e.errno != 32: 
-                            print(e)
+                        print("This means the upgrade (probably) failed. Try again.")
 
             elif sys.argv[1] == 'write':
                 f = open(sys.argv[2], 'rb')
