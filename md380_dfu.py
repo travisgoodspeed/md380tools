@@ -19,7 +19,9 @@ import time
 import usb.core
 
 import dfu_suffix
-from DFU import DFU, State
+from DFU import DFU, State, Status
+import md380_tool
+import stm32_dfu
 
 # The tricky thing is that *THREE* different applications all show up
 # as this same VID/PID pair.
@@ -395,25 +397,71 @@ def main():
     try:
         if len(sys.argv) == 3:
             if sys.argv[1] == 'read':
-                import usb.core
                 dfu = init_dfu()
                 upload_codeplug(dfu, sys.argv[2])
                 print('Read complete')
             elif sys.argv[1] == 'readboot':
                 print("This only works from OS X.  Use the one in md380-tool with patched firmware for other bootloaders.")
-                import usb.core
                 dfu = init_dfu()
                 upload_bootloader(dfu, sys.argv[2])
 
             elif sys.argv[1] == "upgrade":
-                import usb.core
                 with open(sys.argv[2], 'rb') as f:
                     data = f.read()
                     dfu = init_dfu()
+                    mfg = dfu.get_string(1)
+                    if mfg != u'AnyRoad Technology':
+                        print("Radio not in bootloader: attempting automatic reboot into bootloader")
+                        try:
+                            dfu.wait_till_ready()
+                            del dfu
+                        except usb.core.USBError as e:
+                        #we expect a pipe error here (errno 32)
+                            print("detach dfu")
+                            if e.errno != 32: 
+                                print(e)
+                        time.sleep(1)
+                        try:
+                            tooldfu = md380_tool.init_dfu()
+                            tooldfu.reboot_to_bootloader()
+                            del tooldfu
+                        except usb.core.USBError as e:
+                        #we expect a pipe error here (errno 32)
+                            print("tooldfu")
+                            if e.errno != 32: 
+                                print(e)
+                        time.sleep(10) #wait for bootloader to be ready
+                        status = None
+                        while status != Status.OK: #stay here until bootloader actually ready
+                            try:
+                                dfu = init_dfu()
+                                status = dfu.get_status()[0]
+                            except usb.core.USBError as e:
+                                #busy device is okay here, but the time.sleep should be enough to handle that
+                                print(e)
+                                status = None
+                            time.sleep(.5)
                     download_firmware(dfu, data)
+                    dfu.wait_till_ready()
+                    try:
+                        del dfu
+                    except usb.core.USBError as e:
+                        #we expect a pipe error here (errno 32)
+                        print("detach dfu2")
+                        if e.errno != 32: 
+                            print(e)
+                    time.sleep(1)
+                    try:
+                        stm32dfu = stm32_dfu.init_dfu()
+                        stm32dfu.go() #has a default address that works
+                        del stm32dfu
+                    except usb.core.USBError as e:
+                        #we expect a pipe error here (errno 32)
+                        print("stm32dfu go")
+                        if e.errno != 32: 
+                            print(e)
 
             elif sys.argv[1] == 'write':
-                import usb.core
                 f = open(sys.argv[2], 'rb')
                 data = f.read()
                 f.close()
@@ -454,7 +502,6 @@ def main():
                 print("Signed file written: %s" % dfu_file)
 
             elif sys.argv[1] == 'settime':
-                import usb.core
                 dfu = init_dfu()
                 dfu.set_time()
             else:
@@ -462,20 +509,16 @@ def main():
 
         elif len(sys.argv) == 2:
             if sys.argv[1] == 'detach':
-                import usb.core
                 dfu = init_dfu()
                 dfu.set_address(0x08000000)  # Radio Application
                 detach(dfu)
             elif sys.argv[1] == 'time':
-                import usb.core
                 dfu = init_dfu()
                 print(dfu.get_time())
             elif sys.argv[1] == 'settime':
-                import usb.core
                 dfu = init_dfu()
                 dfu.set_time()
             elif sys.argv[1] == 'reboot':
-                import usb.core
                 dfu = init_dfu()
                 dfu.md380_custom(0x91, 0x01)  # Programming Mode
                 dfu.md380_custom(0x91, 0x01)  # Programming Mode
@@ -483,7 +526,6 @@ def main():
                 # dfu.drawtext("Rebooting",160,50);
                 dfu.md380_reboot()
             elif sys.argv[1] == 'abort':
-                import usb.core
                 dfu = init_dfu()
                 dfu.abort()
             else:
