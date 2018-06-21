@@ -1,7 +1,7 @@
 +++
 date = "2018-06-20T22:56:00-04:00"
 draft = false
-title = "Application Menu->Quick TG Change"
+title = "Quick TG Change"
 
 [menu.main]
 parent = "amenu"

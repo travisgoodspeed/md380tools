@@ -1,7 +1,7 @@
 +++
 date = "2018-06-20T22:56:00-04:00"
 draft = false
-title = "Application Menu->Test/Setup"
+title = "Test/Setup"
 
 [menu.main]
 parent = "amenu"
