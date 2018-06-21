@@ -20,4 +20,7 @@ traffic comes in on your selected timeslot.  You can then quickly jot
 down the settings to update your codeplug.
 
 
-
+Enable the feature in the menus under:
+Menu -> Utilities -> MD380Tools -> DMR Setup -> Promiscuous
+![promiscuous menu entry](promiscuous_menu_entry.bmp)
+![promiscuous menu entry](promiscuous_enable.bmp)
