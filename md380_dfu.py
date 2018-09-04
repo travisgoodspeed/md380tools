@@ -418,19 +418,25 @@ def main():
                 data = f.read()
                 f.close()
 
+                firmware = None
+
                 if sys.argv[2][-4:] == '.dfu':
                     suf_len, vendor, product = dfu_suffix.check_suffix(data)
                     dfu = init_dfu()
                     firmware = data[:-suf_len]
-                elif sys.argv[2][-4:] == '.rdt' and len(data) == 262709 and data[0:5] == 'DfuSe':
-                    dfu = init_dfu()
-                    firmware = data[549:len(data) - 16]
+                elif sys.argv[2][-4:] == '.rdt':
+                    if len(data) == 262709 and data[0:5] == 'DfuSe':
+                        dfu = init_dfu()
+                        firmware = data[549:len(data) - 16]
+                    else:
+                        print('%s not a valid codeplug (wrong size, or wrong magic).' % sys.argv[2])
                 else:
                     dfu = init_dfu()
                     firmware = data
 
-                download_codeplug(dfu, firmware)
-                print('Write complete')
+                if firmware is not None:
+                    download_codeplug(dfu, firmware)
+                    print('Write complete')
 
             elif sys.argv[1] == 'sign':
                 filename = sys.argv[2]
