@@ -7,6 +7,12 @@
     sudo apt-get update
     sudo apt-get dist-upgrade
     sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi make curl
+    
+#### Ubuntu Bionic (18.04.1): ####
+
+    sudo apt-get update
+    sudo apt-get dist-upgrade
+    sudo apt-get install git gcc-arm-none-eabi binutils-arm-none-eabi python-usb libnewlib-arm-none-eabi make curl zip unzip
 
 For reverse engineering:
 
