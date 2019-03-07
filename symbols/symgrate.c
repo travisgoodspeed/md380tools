@@ -70,7 +70,7 @@ int loadbuffer(char *buf, const char *filename){
   //FIXME hardcoded size
   len=fread(buf, 1024, 1024, f);
   
-  return 0;
+  return len;
 }
 
 //! Allocate the buffers.
@@ -96,8 +96,8 @@ int scorematch(int sadr, int dadr){
 	  src16(sadr+i)==dst16(dadr+i)
 
 	  //or halfwords partially agree and might be a BL.
-	  || ( src16(sadr+i)&0xF000 == 0xF000 &&
-	       dst16(dadr+1)&0xF000 == 0xF000)
+	  || ( (src16(sadr+i)&0xF000) == 0xF000 &&
+	       (dst16(dadr+1)&0xF000) == 0xF000)
 	  )
 	 && i<1024);
 
@@ -128,7 +128,6 @@ int findsymbol(const char *name, int adr){
      anything that matches a few bytes.  The decision of whether to
      accept the match comes later.
    */
-  short tofind=src16(adr);
   int dadr=0, dscore=0;
   for(int i=0;i<(MAXLEN);i+=2){
     if(src16(adr)==dst16(BASE+i)){
@@ -192,7 +191,7 @@ int parseloop(){
   
   static char name[1024];
   int adr;
-  memset(name,1024,0);
+  memset(name,0,1024);
   
   while(!feof(stdin)){
     //Read the line.

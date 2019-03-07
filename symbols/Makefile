@@ -1,5 +1,6 @@
 .SECONDEXPANSION:
 
+
 UNWRAPPED=../firmware/unwrapped
 GOLD=../firmware/unwrapped/D013.020.img
 GOLDSYM=../applet/src/symbols_d13.020
@@ -18,7 +19,7 @@ $(UNWRAPPED)/%:
 	cd ../firmware && "${MAKE}" unwrapped/$*
 
 symgrate: symgrate.c
-	cc -std=c99 symgrate.c -o symgrate
+	cc -Wall -std=c99 symgrate.c -o symgrate
 
 test: all $(GOLD) $(TEST) $(GOLDSYM)
 	./symgrate $(GOLD) $(TEST) <$(GOLDSYM)
