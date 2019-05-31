@@ -20,7 +20,7 @@ md380tools@googlegroups.com. So feel free to put in your questions into it!
 
 A few of us are also on the #md380 IRC channel on Freenode.
 
-A helpful site is available at http://md380.tools/
+A helpful site is available at http://md380tools.org/
 
 There are also some related groups you may find interesting:
 - https://www.facebook.com/groups/KD4ZToolkit/
