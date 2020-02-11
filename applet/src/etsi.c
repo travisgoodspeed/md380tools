@@ -77,7 +77,7 @@ void dump_full_lc( lc_t *lc )
     {
         memset(&taContext, 0, sizeof(taContext)); //Clear TA context
         memset(&talkerAlias, 0, sizeof(talkerAlias)); //Clear TA context
-        taContext.src = (uint32_t)get_adr(lc->src);
+        taContext.src = get_adr(lc->src);
     }
 
     //Read TA Header from full LC
@@ -117,6 +117,22 @@ void dump_full_lc( lc_t *lc )
                 {
                     talkerAlias = taContext;
                 }
+            } else if (taContext.format == 3)
+            {
+                if (talkerAlias.src != taContext.src)
+                {
+                    // poor man's iconv
+                    int i = 0;
+                    for (i = 0;i < taContext.length; i++)
+                    {
+                        if (taContext.text[i * 2] == 0)
+                            talkerAlias.text[i] = taContext.text[i * 2 + 1];
+                        else
+                            talkerAlias.text[i] = '?';
+                    }
+                    talkerAlias.text[i] = 0;
+                    talkerAlias.length = taContext.length;
+                }
             }
             else
             {
@@ -146,6 +162,23 @@ void dump_full_lc( lc_t *lc )
                 if (talkerAlias.src != taContext.src)
                 {
                     talkerAlias = taContext;
+                }
+            }
+            else if (taContext.format == 3)
+            {
+                if (talkerAlias.src != taContext.src)
+                {
+                    // poor man's iconv, again.
+                    int i = 0;
+                    for (i = 0;i < taContext.length; i++)
+                    {
+                        if (taContext.text[i * 2] == 0)
+                            talkerAlias.text[i] = taContext.text[i * 2 + 1];
+                        else
+                            talkerAlias.text[i] = '?';
+                    }
+                    talkerAlias.text[i] = 0;
+                    talkerAlias.length = taContext.length;
                 }
             }
             else
