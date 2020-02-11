@@ -73,7 +73,7 @@ void dump_full_lc( lc_t *lc )
     
     PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
 
-    if (flco == 0 && fid == 0x00 && taContext.src != get_adr(lc->src))
+    if ((flco == 0 || flco == 3) && fid == 0x00 && taContext.src != get_adr(lc->src))
     {
         memset(&taContext, 0, sizeof(taContext)); //Clear TA context
         memset(&talkerAlias, 0, sizeof(talkerAlias)); //Clear TA context
