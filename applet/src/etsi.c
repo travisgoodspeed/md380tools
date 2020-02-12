@@ -7,10 +7,14 @@
 
 #include "etsi.h"
 #include "debug.h"
+#include "syslog.h"
 #include <string.h>
 
 struct TAContext taContext;
-struct TAContext talkerAlias;
+struct TAContext talkerAlias = {
+    .src = 0,
+    .length = 0
+};
 
 
 inline const char* get_flco_str( lc_t *lc )
@@ -62,8 +66,6 @@ inline const char* get_ta_type_str(uint8_t taFormat)
     }
 }
 
-
-
 // Full Link Control PDU
 void dump_full_lc( lc_t *lc )
 {
@@ -72,17 +74,28 @@ void dump_full_lc( lc_t *lc )
     uint8_t opts = lc->svc_opts ;
     
     PRINT("flco=%02x %s fid=%d svc=%d src=%d dst=%d\n",flco,get_flco_str(lc), fid,opts,get_adr(lc->src),get_adr(lc->dst));
+    return;
+}
 
-    if ((flco == 0 || flco == 3) && fid == 0x00 && taContext.src != get_adr(lc->src))
-    {
-        memset(&taContext, 0, sizeof(taContext)); //Clear TA context
-        memset(&talkerAlias, 0, sizeof(talkerAlias)); //Clear TA context
-        taContext.src = get_adr(lc->src);
-    }
+// TA Decode
+void decode_ta( lc_t *lc )
+{
+    uint8_t flco = get_flco(lc);
+
+    if (!(flco >=4 && flco <= 7))
+        return;
+
+    // decode ta once, ta length will be reset to 0 when call is started (or after the later-entry header is received).
+    if (talkerAlias.length > 0)
+        return;
 
     //Read TA Header from full LC
-    if (flco == 4 && fid == 0x00)
+    if (flco == 4)
     {
+        // LOGR("decode ta head %d\n", talkerAlias.src);
+        memset(&taContext, 0, sizeof(taContext)); //Clear TA context
+        taContext.src = get_adr( lc->src );
+
         struct TAHeader* header = (struct TAHeader*)lc; //Copy LC over TA struct
         taContext.format = (header->options >> 6) & 0x03;
         taContext.length = (header->options >> 1) & 0x1f;
@@ -106,45 +119,10 @@ void dump_full_lc( lc_t *lc )
             ((length > row[1]) << 2) |
             ((length > row[2]) << 3);
         taContext.marked |= 0b0001; 
-
-        //Print TA if no more blocks
-        if (taContext.blocks == taContext.marked)
-        {
-            if (taContext.format == 1 || taContext.format == 2)
-            {
-                PRINT("TA %d (%d): %s\n", taContext.src, taContext.length, taContext.text);
-                if (talkerAlias.src != taContext.src)
-                {
-                    talkerAlias = taContext;
-                }
-            } else if (taContext.format == 3)
-            {
-                if (talkerAlias.src != taContext.src)
-                {
-                    // poor man's iconv
-                    int i = 0;
-                    for (i = 0;i < taContext.length; i++)
-                    {
-                        if (taContext.text[i * 2] == 0)
-                            talkerAlias.text[i] = taContext.text[i * 2 + 1];
-                        else
-                            talkerAlias.text[i] = '?';
-                    }
-                    talkerAlias.text[i] = 0;
-                    talkerAlias.length = taContext.length;
-                }
-            }
-            else
-            {
-                PRINT("TA Unsupported format: %s", get_ta_type_str(taContext.format));
-                talkerAlias.length = 0;
-            }
-        }
     }
-
-    //Read TA Block from the full LC header
-    if (flco > 4 && flco < 8 && fid == 0x00)
+    else
     {
+        // LOGR("decode ta block%d, %d\n", flco - 4, talkerAlias.src);
         struct TABlock* block = (struct TABlock*)lc;
         
         //Copy TA block to context
@@ -152,40 +130,34 @@ void dump_full_lc( lc_t *lc )
         destination += 6 + 7 * (flco - 5);
         memcpy(destination, block->text, 7);
         taContext.marked |= 1 << (flco - 4);
+    }
 
-        //Print TA if no more blocks
-        if (taContext.blocks == taContext.marked)
+    // decode if all blocks received
+    if (taContext.blocks == taContext.marked) {
+        if (taContext.format == 1 || taContext.format == 2)
         {
-            if (taContext.format == 1 || taContext.format == 2)
+            PRINT("TA %d (%d): %s\n", taContext.src, taContext.length, taContext.text);
+            talkerAlias = taContext;
+            LOGR("TA: %s, %d\n", talkerAlias.text, talkerAlias.length);
+        }
+        else if (taContext.format == 3)
+        {
+            // poor man's iconv.
+            int i = 0;
+            for (i = 0;i < taContext.length; i++)
             {
-                PRINT("TA %d (%d): %s\n", taContext.src, taContext.length, taContext.text);
-                if (talkerAlias.src != taContext.src)
-                {
-                    talkerAlias = taContext;
-                }
+                if (taContext.text[i * 2] == 0)
+                    talkerAlias.text[i] = taContext.text[i * 2 + 1];
+                else
+                    talkerAlias.text[i] = '?';
             }
-            else if (taContext.format == 3)
-            {
-                if (talkerAlias.src != taContext.src)
-                {
-                    // poor man's iconv, again.
-                    int i = 0;
-                    for (i = 0;i < taContext.length; i++)
-                    {
-                        if (taContext.text[i * 2] == 0)
-                            talkerAlias.text[i] = taContext.text[i * 2 + 1];
-                        else
-                            talkerAlias.text[i] = '?';
-                    }
-                    talkerAlias.text[i] = 0;
-                    talkerAlias.length = taContext.length;
-                }
-            }
-            else
-            {
-                PRINT("TA Unsupported format: %s", get_ta_type_str(taContext.format));
-                talkerAlias.length = 0;
-            }
+            talkerAlias.text[i] = 0;
+            talkerAlias.length = taContext.length;
+            LOGR("TA: %s, %d\n", talkerAlias.text, talkerAlias.length);
+        }
+        else
+        {
+            PRINT("TA Unsupported format: %s", get_ta_type_str(taContext.format));
         }
     }
 }
