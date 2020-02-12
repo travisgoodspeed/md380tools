@@ -65,35 +65,65 @@ void updateSrcDst(int src, int dst)
 
 void rst_voice_lc_header(lc_t *lc)
 {
-    int src = get_adr( lc->src );
-    int dst = get_adr( lc->dst );
+    //
+    // DMR FULL_LC DATA CALLBCK
+    //
+    // This callback method will be called when a FULL_LC data is decoded,
+    // it LC data will be a DT_VOICE_HEADER_LC DMRData frame,
+    // or reassembled FULL_LC data from DMR Voice EmbeddedData.
+    //
+    // Please see ETSI doc for the all above concepts/details.
+    //
+    // - BG5HHP
+    //
     int flco = get_flco( lc );
-    
-    int groupcall = flco == 0;
-	if(groupcall)
-		g_src = src;
 
-    if(( !rst_voice_active || rst_src != src || rst_dst != dst)) {
-		updateSrcDst(src, dst);
-        rst_flco = flco ;
+    if (flco == 0 || flco == 3) {                       // FULL_LC for LC Header - BG5HHP
+        int src = get_adr( lc->src );
+        int dst = get_adr( lc->dst );
 
-        PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
+        int groupcall = flco == 0;
+        if(groupcall)
+            g_src = src;
 
-        PRINT("cs " );
-        dump_full_lc(lc);
-        
-        char grp_c = 'U' ;        
-        if( flco == 0 ) {
-            grp_c = 'G' ;
-            rst_grp = 1 ;
-        } else {
-            rst_grp = 0 ;            
+        if(( !rst_voice_active || rst_src != src || rst_dst != dst)) {
+            updateSrcDst(src, dst);
+            rst_flco = flco ;
+
+            PRINT("\n* Call from %d to %s%d started.\n", src, groupcall ? "group ":"", dst);
+
+            PRINT("cs " );
+
+            if (talkerAlias.src == 0) {
+                // mark call start.
+                // we'd better store the call state in a global LCHeader structure
+                // and remove the redundant variables.
+                // - BG5HHP
+                talkerAlias.src = src;
+                talkerAlias.length = 0;
+            }
+
+            char grp_c = 'U' ;
+            if( flco == 0 ) {
+                grp_c = 'G' ;
+                rst_grp = 1 ;
+            } else {
+                rst_grp = 0 ;
+            }
+
+            LOGR("cs %c %d->%d\n", grp_c, src, dst );
+            rst_voice_active = 1 ;
+            rx_voice = 1 ;				// flag for new voice call received
         }
-        
-        LOGR("cs %c %d->%d\n", grp_c, src, dst );
 
-        rst_voice_active = 1 ;
-        rx_voice = 1 ;				// flag for new voice call received    
+    } else if (flco >=4 && flco <=7 ) {                 // FULL_LC for TalkerAlias - BG5HHP
+        LOGR("ta %d %d->%d\n", flco - 4, rst_src, rst_dst);
+        decode_ta(lc);
+    } else if (flco == 8) {                             // FULL_LC for GPS - BG5HHP
+        LOGR("gps %c %d->%d\n", rst_grp?'G':'U', rst_src, rst_dst);
+    } else {
+        // Unknown type,
+        LOGR("unknown %c %d->%d\n", rst_grp?'G':'U', rst_src, rst_dst);
     }
 }
 
@@ -102,14 +132,18 @@ void rst_term_with_lc(lc_t *lc)
     int src = get_adr( lc->src );
     int dst = get_adr( lc->dst );
     int flco = get_flco( lc );
-    
-    int groupcall = flco == 0;
+
+    int groupcall = (flco == 0);
 	if(groupcall)
 		g_src = src;
+
     if( rst_voice_active) {
 		updateSrcDst(src, dst);
         PRINT("\n* Call from %d to %s%d ended.\n", src, groupcall ? "group ":"", dst);
-        
+
+        // mark call terminate - BG5HHP
+        talkerAlias.src = 0;
+
         PRINT("ce " );
         dump_full_lc(lc);
         
@@ -118,7 +152,7 @@ void rst_term_with_lc(lc_t *lc)
             grp_c = 'G' ;
         }
 
-        LOGR("ce %c %d->%d\n", grp_c, src, dst );
+        LOGR("ce %c %d->%d\n", grp_c, src, dst);
 
         rst_voice_active = 0 ;
         rx_voice = 0 ;				// flag for voice call ended
