@@ -279,8 +279,10 @@ radio will be radio to accept this firmware update.""")
             # if dfu.verbose: sys.stdout.write('_\n'); sys.stdout.flush()
             address_idx += 1
         print("100% complete, now safe to disconnect and/or reboot radio")
+        return True
     except Exception as e:
         print(e)
+        return False
 
 
 def upload(dfu, flash_address, length, path):
@@ -342,7 +344,7 @@ def init_dfu(alt=0):
         raise RuntimeError('Device not found')
 
     dfu = DFU(dev, alt)
-    dev.default_timeout = 3000
+    dev.default_timeout = 6000
 
     try:
         dfu.enter_dfu_mode()
@@ -355,34 +357,41 @@ def init_dfu(alt=0):
     return dfu
 
 def auto_upgrade(firmware_data):
+    print("Beginning firmware auto_upgrade. This supports forcing a fully-booted radio into the bootloader, if it has a recent experimental firmware.\n"
+    "Stock firmware and older experimental firmware will still require the usual buttons (PTT+button above) held during power-on.\n"
+    )
     errors = []
     dfu = init_dfu()
     mfg = dfu.get_string(1)
     if mfg != u'AnyRoad Technology':
         print("Radio not in bootloader: attempting automatic reboot into bootloader")
         try:
-            dfu.wait_till_ready()
+            dfu.wait_till_ready() #make sure it's safe to reboot radio
             del dfu
         except usb.core.USBError as e:
             #we expect a pipe error here (errno 32)
-            print("detach dfu")
-            if e.errno != 32: 
+            #or an input/output error (errno 5)
+            # print("detach dfu")
+            if e.errno not in [5,32]:
                 print(e)
                 errors.append(e)
         time.sleep(1)
         try:
-            tooldfu = md380_tool.init_dfu()
+            tooldfu = md380_tool.init_dfu() #prepare to and then reboot radio
             tooldfu.reboot_to_bootloader()
             del tooldfu
         except usb.core.USBError as e:
             #we expect a pipe error here (errno 32)
+            #or an input/output error (errno 5)
             print("tooldfu")
-            if e.errno != 32: 
+            if e.errno not in  [5,32]: 
                 print(e)
                 errors.append(e)
+        print("Waiting 10 seconds for bootloader")
         time.sleep(10) #wait for bootloader to be ready
         status = None
         while status != Status.OK: #stay here until bootloader actually ready
+            print("Checking bootloader is okay:")
             try:
                 dfu = init_dfu()
                 status = dfu.get_status()[0]
@@ -391,14 +400,20 @@ def auto_upgrade(firmware_data):
                 print(e)
                 status = None
             time.sleep(.5)
-    download_firmware(dfu, firmware_data)
+    else:
+        print("Radio is already in bootloader, or we can't tell (old firmware versions can do this sometimes)")
+        print("If this fails, boot the radio into the bootloader yourself (You've succeeded when the status light flashes between red and green) and try again")
+    result = download_firmware(dfu, firmware_data)
+    if result is True:
+        errors = []
     dfu.wait_till_ready()
+
+    #now we boot the full application
     try:
         del dfu
     except usb.core.USBError as e:
-        #we expect a pipe error here (errno 32)
-        print("detach dfu2")
-        if e.errno != 32: 
+        if e.errno not in [5,32]: 
+            print("detach bootloader dfu")
             print(e)
             errors.append(e)
     time.sleep(1)
@@ -407,9 +422,8 @@ def auto_upgrade(firmware_data):
         stm32dfu.go() #has a default address that works
         del stm32dfu
     except usb.core.USBError as e:
-        #we expect a pipe error here (errno 32)
-        print("stm32dfu go")
-        if e.errno != 32: 
+        if e.errno not in [5,32]: 
+            print("stm32dfu go")
             print(e)
             errors.append(e)
     return errors
@@ -466,6 +480,12 @@ def main():
                 upload_bootloader(dfu, sys.argv[2])
 
             elif sys.argv[1] == "upgrade":
+                dfu = init_dfu()
+                with open(sys.argv[2], 'rb') as f:
+                    data = f.read()
+                    result = download_firmware(dfu, data)
+
+            elif sys.argv[1] == "auto-upgrade":
                 with open(sys.argv[2], 'rb') as f:
                     data = f.read()
                     errors = auto_upgrade(data)
