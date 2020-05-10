@@ -51,10 +51,10 @@ class MD380View(BinaryView):
         hdr = data.read(0, 0x160)
         if len(hdr) < 0x160 or len(hdr)>0x100000:
             return False
-        if ord(hdr[0x3]) != 0x20:
+        if hdr[0x3] != 0x20:
             # First word is the initial stack pointer, must be in SRAM around 0x20000000.
             return False
-        if ord(hdr[0x7]) != 0x08:
+        if hdr[0x7] != 0x08:
             # Second word is the reset vector, must be in Flash around 0x08000000.
             return False
         #if struct.unpack("<H", hdr[0x15c:0x15e])[0] != crc16(hdr[0xc0:0x15c]):
@@ -65,7 +65,7 @@ class MD380View(BinaryView):
         self.platform = Architecture["thumb2"].standalone_platform
         #self.hdr = self.raw.read(0, 0x200)
         self.hdr = self.raw.read(0, 0x100001)
-        print "Loaded %d bytes." % len(self.hdr)
+        print("Loaded %d bytes." % len(self.hdr))
 
 
 
@@ -78,13 +78,9 @@ class MD380View(BinaryView):
             self.thumb2_size = len(self.hdr);
 
             # Add segment for SRAM, not backed by file contents
-	    self.add_auto_segment(0x20000000, 0x20000, #128K at address 0x20000000.
-                                  0, 0,
-                                  SegmentFlag.SegmentReadable | SegmentFlag.SegmentWritable | SegmentFlag.SegmentExecutable)
+            self.add_auto_segment(0x20000000, 0x20000, 0, 0, SegmentFlag.SegmentReadable | SegmentFlag.SegmentWritable | SegmentFlag.SegmentExecutable)
             # Add segment for TCRAM, not backed by file contents
-	    self.add_auto_segment(0x10000000, 0x10000, #64K at address 0x10000000.
-                                  0, 0,
-                                  SegmentFlag.SegmentReadable | SegmentFlag.SegmentWritable)
+            self.add_auto_segment(0x10000000, 0x10000, 0, 0, SegmentFlag.SegmentReadable | SegmentFlag.SegmentWritable)
             
             #Add a segment for this Flash application.
             self.add_auto_segment(self.thumb2_load_addr, self.thumb2_size,
@@ -147,9 +143,9 @@ def importldsymbols(bv,filename):
             #Data symbols are in SRAM or TCRAM with unpredictable alignment.
             elif adr&0xC0000000==0:
                 bv.define_auto_symbol(Symbol(SymbolType.DataSymbol, adr, name));
-                print("Imported data symbol %s at 0x%x"%(name,adr));
+                print("Imported data symbol %s at 0x%x" % (name,adr));
             else:
-                print "Uncategorized adr=0x%08x."%adr;
+                print("Uncategorized adr=0x%08x." % adr)
         except:
             # Print warnings when our janky parser goes awry.
             if len(words)>0 and words[0]!="/*" and words[0]!="*/":
@@ -211,10 +207,10 @@ def importr2symbols(bv,filename):
                     print("Imported data symbol %s at 0x%x"%(name,adr));
                 
             else:
-                print "Ignoring: ",words;
+                print("Ignoring: %s" % words)
         except:
             if len(words)>3:
-                print("Ignoring: %s\n"%words);
+                print("Ignoring: %s\n" % words);
                 #log_error(traceback.format_exc())
 
 
@@ -222,7 +218,7 @@ def md380r2symbols(view):
     """This loads an MD380Tools symbols file in Radare2 format."""
     filename=get_open_filename_input("Select GNU LD symbols file from MD380Tools.")
     if filename:
-        print("Opening: %s"%filename);
+        print("Opening: %s" % filename);
         importr2symbols(view,filename);
     else:
         print("Aborting.");
