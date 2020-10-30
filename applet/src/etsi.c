@@ -7,6 +7,7 @@
 
 #include "etsi.h"
 #include "debug.h"
+#include "md380.h"
 #include "syslog.h"
 #include <string.h>
 
@@ -160,4 +161,11 @@ void decode_ta( lc_t *lc )
             PRINT("TA Unsupported format: %s", get_ta_type_str(taContext.format));
         }
     }
+
+    if (talkerAlias.length > 0) {
+      if( global_addl_config.userscsv > 1) {
+        gui_opmode1 |= 0x80; // redraw hack
+      }
+    }
+
 }
