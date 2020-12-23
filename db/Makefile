@@ -31,7 +31,7 @@ dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 
 dmrmarc.tmp:
-	wget --timeout=120 --no-check-certificate --wait=3 'https://ham-digital.org/status/users.csv' -O $@
+	wget --timeout=120 --no-check-certificate --wait=3 'https://database.radioid.net/static/user.csv' -O $@
 
 reflector.tmp:
 	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
