@@ -144,6 +144,7 @@ sudo cp 99-md380.rules /etc/udev/rules.d/
 ### Flash updated firmware for linux based installations ###
 
 Turn on radio in DFU mode to begin firmware update with USB cable:
+* change your MD380 language setting to English
 * insert cable into USB.
 * connect cable to MD380.
 * power-on MD380 by turning volume knob, while holding PTT button and button above PTT.
@@ -210,6 +211,7 @@ using the respective .bin file with the Tytera Windows firmware
 upgrade tool, `upgrade.exe`, available inside their firmware upgrade
 downloads. Here are the steps:
 
+* Change your MD380 language setting to English
 * Turn off your MD380 using the volume knob.
 * Attach the Tytera USB cable to the SP and MIC ports of your MD380.
 * Attach the Tytera USB cable to your host computer.
