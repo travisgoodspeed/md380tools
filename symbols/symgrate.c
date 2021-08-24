@@ -97,7 +97,7 @@ int scorematch(int sadr, int dadr){
 
 	  //or halfwords partially agree and might be a BL.
 	  || ( (src16(sadr+i)&0xF000) == 0xF000 &&
-	       (dst16(dadr+1)&0xF000) == 0xF000)
+	       (dst16(dadr+i)&0xF000) == 0xF000)
 	  )
 	 && i<1024);
 
