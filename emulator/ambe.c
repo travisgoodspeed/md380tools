@@ -24,6 +24,10 @@ void decode_amb_file(char *infilename,
 
   int ambfd=STDIN_FILENO;
   int wavfd=STDOUT_FILENO;
+
+  if(mprotect((void*)0x800c000, 0xf2c00, PROT_EXEC)){
+	fprintf(stderr, "Failed to set firmware section executable, vocoding will probably fail.\n");
+  }
     
   if (infilename)
     ambfd=open(infilename,0);
