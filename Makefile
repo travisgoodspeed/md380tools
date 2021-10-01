@@ -93,9 +93,16 @@ user.bin: db/stripped.csv
 	wc -c < db/stripped.csv > user.bin
 	cat db/stripped.csv >> user.bin
 
+indexeduser.bin: db/stripped.csv
+	./lineardb_to_indexeddb.py db/stripped.csv indexeduser.bin
+
 .PHONY: flashdb
 flashdb: user.bin
 	./md380-tool spiflashwrite user.bin 0x100000
+
+.PHONY: flashidb
+flashidb: indexeduser.bin
+	./md380-tool spiflashwrite indexeduser.bin 0x100000
 
 .PHONY: release
 release:

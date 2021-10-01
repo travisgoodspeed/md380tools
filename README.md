@@ -180,6 +180,28 @@ make updatedb flashdb
 with `make updatedb`, otherwise it will continue using any already-existing 
 `users.csv` file when running `make flashdb`.)
 
+### Flash updated indexed users database for linux based installations ###
+
+The indexed users database format only works with very recent md380tools firmware.
+
+Turn radio normally on to begin database loading with USB cable
+
+For European users:
+```
+make updatedb_eur flashidb
+```
+Note: for European users it is probably illegal to use the other method for updating, due to privacy laws.
+(This is no legal advice, please consult your lawyer to be sure.)
+
+For the rest of the world:
+```
+make updatedb flashidb
+```
+
+(The `users.csv` file located in the db directory must be refreshed this way, 
+with `make updatedb`, otherwise it will continue using any already-existing 
+`users.csv` file when running `make flashdb`.)
+
 ## Convenient Usage: ##
 
 Anything with `md380-tool` requires a recent version of our patched
