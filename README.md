@@ -1,6 +1,12 @@
-# MD380 USB Tools #
+# MD380Tools -- Firmware Patches for the Tytera MD380 #
 
 by Travis Goodspeed, KK4VCZ
+
+The Tytera MD-380 is handheld radio transceiver for DMR and FM.  In
+2015, this project began patching that firmware by replacing the byte
+of the Chinese font with our own code, fixing bugs in the original
+firmware and adding new features that are useful to the amateur radio
+community.
 
 # More documentation #
 
@@ -12,19 +18,21 @@ by Travis Goodspeed, KK4VCZ
 
 # Support #
 
-To support users by using the md380tools or the resulting patched firmware 
-a Google Group is public opened and reachable via 
-https://groups.google.com/forum/#!forum/md380tools. No extra registration 
-should be necessary. You could also feed it via e-mail at 
-md380tools@googlegroups.com. So feel free to put in your questions into it!
+To support users by using the md380tools or the resulting patched
+firmware a Google Group is public opened and reachable via
+https://groups.google.com/forum/#!forum/md380tools. No extra
+registration should be necessary. You could also feed it via e-mail at
+md380tools@googlegroups.com. So feel free to put in your questions
+into it!
 
-A few of us are also on the #md380 IRC channel on Freenode.
+A few of us are also on the `#md380` IRC channel on Freenode.
 
 A helpful site is available at http://md380.org/
 
 There are also some related groups you may find interesting:
 - https://www.facebook.com/groups/KD4ZToolkit/
 - https://www.facebook.com/groups/DMRTrack/
+
 
 # Introduction #
 
@@ -119,8 +127,9 @@ repository.  We use a heap-less printf library under the BSD license.
   http://python-requests.org/
 
 This project should work across Linux, Mac OS, and Windows, but has
-not been tested on all platforms.  A separate client, MD380Tool,
-is under development for Android.
+not been tested on all platforms.  A separate client,
+[MD380Tool](https://github.com/travisgoodspeed/MD380Tool), was under
+development for Android.
 
 ### Preparation of build environment ###
 
@@ -139,7 +148,10 @@ git clone https://github.com/travisgoodspeed/md380tools.git
 cd md380tools
 sudo cp 99-md380.rules /etc/udev/rules.d/ 
 ```
-(The 99-md380.rules file is copied to /etc/udev/rules.d/ in order to allow users to access the radio over USB without having to use sudo or root permissions.)
+
+(The `99-md380.rules` file is copied to `/etc/udev/rules.d/` in order to
+allow users to access the radio over USB without having to use sudo or
+root permissions.)
 
 ### Flash updated firmware for linux based installations ###
 
@@ -168,8 +180,10 @@ For European users:
 ```
 make updatedb_eur flashdb
 ```
-Note: for European users it is probably illegal to use the other method for updating, due to privacy laws.
-(This is no legal advice, please consult your lawyer to be sure.)
+
+Note: for European users it is probably illegal to use the other
+method for updating, due to privacy laws.  (This is no legal advice,
+please consult your lawyer to be sure.)
 
 For the rest of the world:
 ```
@@ -188,9 +202,7 @@ Info/Version.  If it's a recent date you're good; if it's a number,
 you need to upgrade.
 
 
-To dump the recent dmesg log:
-
-    md380-tool dmesg
+To dump the recent dmesg log, run `md380-tool dmesg`.
 
 ## Firmware Compilation ##
 
@@ -226,53 +238,36 @@ downloads. Here are the steps:
 * Disconnect the USB cable from your MD380 and host computer.
 * Turn the MD380 back on, and you should see the "PoC||GTFO" welcome screen. You're running patched firmware!
 
-## Chirp Driver: ##
+## Codeplug Programming: ##
 
-Also included is a partial driver for the MD380 in Chirp.  This driver
-doesn't yet support the essential DMR features, but it does handle
-analog channels and banks well enough to load analog repeaters into
-your radio.
+Reading and writing of raw Codeplug images is supported with the
+`md380-dfu` command.  For graphical editing of codeplugs, you should
+probably use Tytera's MD80 CPS program or Dale Farnsworth's
+[EditCP](https://www.farnsworth.org/dale/codeplug/editcp/).
 
-This driver can't yet communicate with the radio, so use `md380-dfu
-read foo.img` to read an image out of the radio, then open it in Chirp
-after installing `chirp/md380.py` as a driver.  Once you've made your
-changes, you can load the image back in by running `md380-dfu write
-foo.img`.
-
+The beginnings of a plugin for [CHIRP](https://chirp.danplanet.com/)
+are also in this repository, but they were never completed.
 
 ## More Info ##
 
-Some articles:
-* Jailbreaking the MD380, PoC||GTFO 10:8 ([pocorgtfo10.pdf](https://archive.org/details/pocorgtfo10) page 76.) by Travis Goodspeed
-* Running AMBE Firmware in Linux, PcC||GTFO 13:5 ([pocorgtfo13.pdf](https://archive.org/details/pocorgtfo13) page 38.) by Travis Goodspeed  
+Some articles from [PoC||GTFO Volume 2](https://nostarch.com/gtfo2)
+* Jailbreaking the MD380, PoC||GTFO 10:8
+  ([pocorgtfo10.pdf](https://archive.org/details/pocorgtfo10) page
+  76.) by Travis Goodspeed
+* Running AMBE Firmware in Linux, PoC||GTFO 13:5
+  ([pocorgtfo13.pdf](https://archive.org/details/pocorgtfo13) page
+  38.) by Travis Goodspeed
 
 Pat Hickey has some notes and tools up in his own repository,
 https://github.com/pchickey/md380-re
 
+The [OpenRTX](https://openrtx.org/) project is making from-scratch
+firmware for the MD380 and other radios with the [M17
+Mode](https://m17project.org/).
+
 
 ## Customization ##
 
-Temponary not avaible, see https://github.com/travisgoodspeed/md380tools/issues/221
+Previously we customized firmware images with new startup
+screens.  This is [presently broken](https://github.com/travisgoodspeed/md380tools/issues/221).
 
-
-<strike>
-Images extracted from the firmware have comments at the beginning of
-the file, telling md380-gfx where they came from. Comments begin with a '#', and end with a new line.
-
-Image editors like GIMP will discard the original comments, but you can
-replace them by opening the file in a text editor and copy-pasting the
-comment lines from the original extracted file to your custom image.
-
-
-#### Boot logo ####
-
-There are several boot logos provided that you can choose from by editing
-`patches/2.032/Makefile`, and commenting/uncommenting as you see fit.
-
-The original boot logo is 160x40 pixels, and only 2 colors.  This means
-an image that has the same properties can be written into the firmware
-as a direct replacement, as seen in the Makefile.
-
-An image with more than two colors requires the "relocate" argument to
-md380-gfx. There are examples of this in the Makefile as well.
-</strike>
