@@ -105,7 +105,7 @@ const char* getmotorolabasickey(int i){
      return "\x1E\x0D\x1E\x2D\x1E\x2D\x00";
   case 42:
      return "\xE2\x0D\xE2\x2D\xE2\x2D\x01";
-  case 43
+  case 43:
      return "\xFD\x0D\xFD\x2D\xFD\x2D\x01";
   case 44:
      return "\x24\x0E\x24\x2E\x24\x2E\x00";
@@ -160,7 +160,7 @@ const char* getmotorolabasickey(int i){
   case 69:
      return "\x11\x0A\x11\x4A\x11\x4A\x00";
   case 70:
-     return "\xED\x0A\xED\x4A\xED\x4A\x01"
+     return "\xED\x0A\xED\x4A\xED\x4A\x01";
   case 71:
      return "\xF2\x0A\xF2\x4A\xF2\x4A\x01";
   case 72:
@@ -327,7 +327,7 @@ const char* getmotorolabasickey(int i){
      return "\x21\x04\x21\x94\x21\x94\x00";
    case 153:
      return "\x3E\x04\x3E\x94\x3E\x94\x00";
-   case: 154:
+   case 154:
      return "\xC2\x04\xC2\x94\xC2\x94\x01";
    case 155:
      return "\xDD\x04\xDD\x94\xDD\x94\x01";
@@ -411,7 +411,7 @@ const char* getmotorolabasickey(int i){
      return "\x85\x00\x85\xC0\x85\xC0\x01";
    case 195:
      return "\x9A\x00\x9A\xC0\x9A\xC0\x01";
-   case 196
+   case 196:
      return "\x43\x03\x43\xC3\x43\xC3\x00";
    case 197:
      return "\x5C\x03\x5C\xC3\x5C\xC3\x00";
@@ -529,7 +529,7 @@ const char* getmotorolabasickey(int i){
      return "\x7B\x06\x7B\xF6\x7B\xF6\x00";
    case 254:
      return "\x87\x06\x87\xF6\x87\xF6\x01";
-   case 255:x
+   case 255:
      return "\x98\x06\x98\xF6\x98\xF6\x01";
   default:
     printf("\nERROR: Motorola Basic Key %d is unknown.\n",i);
