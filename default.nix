@@ -3,7 +3,7 @@ with import <nixpkgs> { }; {
     name = "md380toolsEnv";
     buildInputs = [
       curl
-      gcc-arm-embedded
+      gcc-arm-embedded-9
       gnumake
       libusb1
       perl
