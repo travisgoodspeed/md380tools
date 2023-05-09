@@ -66,6 +66,8 @@ SRCS += amenu_set_tg.o
 SRCS += amenu_channels.o
 SRCS += amenu_codeplug.o
 SRCS += timer.o
+SRCS += maidenhead.o
+SRCS += gps.o
 
 ifdef INC_DISPFLIP
 SRCS +=  dispflip.o  # display flip is included @ d13.020

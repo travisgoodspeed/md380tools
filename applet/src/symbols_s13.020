@@ -120,6 +120,7 @@ md380_usbstring                          = 0x2001d504 ;
 md380_menu_memory                        = 0x2001d5cc ;
 gps_ringbuf                              = 0x2001d950 ;
 gps_inputbuf                             = 0x2001da24 ;
+gps_data                                 = 0x2001e4a4 ;
 gfx_info                                 = 0x2001daec ;
 md380_radio_config                       = 0x2001dbac ;
 struct_channel_info2                     = 0x2001df48 ;
