@@ -148,6 +148,10 @@ void encode_wav_file(char *infilename,
   short *inbuf1 = (short*) &wav_inbuffer1;
   short *ambe   = (short*) &ambe_outbuffer;
 
+  if(mprotect((void*)0x800c000, 0xf2c00, PROT_EXEC)){
+	fprintf(stderr, "Failed to set firmware section executable, vocoding will probably fail.\n");
+  }
+
   write(ambfd,".amb",4); // write dsd header
 
   short inbuf[160];
