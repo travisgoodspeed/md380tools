@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
@@ -24,6 +24,7 @@ class TYTFW(object):
         assert header[0].startswith(self.magic)
         assert header[1].startswith(self.jst)
         assert header[3].startswith(self.foo)
+        
         assert header[4] == self.bar
         assert 0x8000000 <= header[6] < 0x8200000
         assert header[7] == len(img) - 512
@@ -34,16 +35,23 @@ class TYTFW(object):
     @staticmethod
     def xor(a, b):
         # FIXME: optimized version
-        out = b''
+        print(type(a))
+        print(type(b))
+        out = bytearray()
         l = max(len(a), len(b))
         for i in range(l):
-            out += chr(ord(a[i % len(a)]) ^ ord(b[i % len(b)]))
+            val=a[i%len(a)]^b[i%len(b)]
+            out.append(val);
+
+        # Length better match.
+        assert len(out)==l
+        
         return out
 
 class MD2017FW(TYTFW):
     #Many thanks to KG5RKI
     #https://github.com/travisgoodspeed/md380tools/issues/789
-    key = ('00aa89891f4beccf424514540065eb66417d4c88495a210df2f5c8e638edbcb9'
+    key = bytes.fromhex('00aa89891f4beccf424514540065eb66417d4c88495a210df2f5c8e638edbcb9'
           'fb357133010a7f9e3b2903b6493e42b83f9f90bdaa3a7146cecdfd183255894a'
           '5fc8839ce4069e0a9d0d2fa1356dd792eafd638590cbf02fd9595327d306b8f5'
           'b2ca886cd026913bf25b61becddbf21ac9fd8d8804f4e8f19a0292bc24e990e4'
@@ -74,21 +82,17 @@ class MD2017FW(TYTFW):
           'd93d76d21bd5d28bc49d730584171b04db4ffc0723c9d8d5d0b86759f770f9af'
           '0d1e5c7ff2b7008a2d2e59827aea851f82772f6fe97cb36e8ded82d60d81c938'
           '89674d4ca9359986e1215ce9f3730d20b53ad0cb143e9d1759379f91ab3cda3c'
-          'd57e11e04a36e7a666dc44e2f79afa30fc00a9c2adf9e0f8bbfe8431d88976e2').decode('hex')
+          'd57e11e04a36e7a666dc44e2f79afa30fc00a9c2adf9e0f8bbfe8431d88976e2')
 
     def __init__(self, base_address=0x800c000):
         self.magic = b'OutSecurityBin'
         self.jst = b'MD-9600\x00\x00'
-        self.foo = '\x30\x02\x00\x30\x00\x40\x00\x47'
-        self.bar = ('\x02\x19\x0C\x03\x04\x05\x06\x07'
-                    '\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f'
-                    '\x10\x11\x12\x13\x14\x15\x16\x17'
-                    '\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f'
-                    '\x20')
-        self.foob = ('\x02\x00\x00\x00\x00\x00\x06\x00')
+        self.foo = bytes.fromhex('3002003000400047')
+        self.bar = bytes.fromhex('02190C030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20')
+        self.foob = bytes.fromhex('0200000000000600')
         self.start = base_address
         self.app = None
-        self.footer = 'OutputBinDataEnd'
+        self.footer = b'OutputBinDataEnd'
         self.header_fmt = '<16s9s7s16s33s43s8sLLL112s'
         self.footer_fmt = '<240s16s'
         self.rsrcSize = 0x5D400
@@ -118,84 +122,79 @@ class MD2017FW(TYTFW):
 class MD380FW(TYTFW):
     # The stream cipher of MD-380 OEM firmware updates boils down
     # to a cyclic, static XOR key block, and here it is:
-    key = (
-        '\x2e\xdf\x40\xb5\xbd\xda\x91\x35\x21\x42\xe3\xe2\x6d\xa9\x0b\x90'
-        '\x31\x30\x3a\xfa\x4f\x05\x74\x64\x0a\x29\x44\x7e\x60\x77\xad\x8c'
-        '\x9a\xe2\x63\xc4\x21\xfe\x3c\xf7\x93\xc2\xe1\x74\x16\x8c\xc9\x2a'
-        '\xed\x65\x68\x0c\x49\x86\xa3\xba\x61\x1c\x88\x5d\xc4\x49\x3c\xd2'
-        '\xee\x6b\x34\x0c\x1a\xa0\xa8\xb3\x58\x8a\x45\x11\xdf\x4f\x23\x2f'
-        '\xa4\xe4\xf6\x3b\x2c\x8c\x88\x2d\x9e\x9b\x67\xab\x1c\x80\xda\x29'
-        '\x53\x02\x1a\x54\x51\xca\xbf\xb1\x97\x22\x79\x81\x70\xfc\x00\xe9'
-        '\x81\x36\x4e\x4f\xa0\x1c\x0b\x07\xea\x2f\x49\x2f\x0f\x25\x71\xd7'
-        '\xf1\x30\x7d\x66\x6e\x83\x68\x38\x79\x13\xe3\x8c\x70\x9a\x4a\x9e'
-        '\xa9\xe2\xd6\x10\x4f\x40\x14\x8e\x6c\x5e\x96\xb2\x46\x3e\xe8\x25'
-        '\xef\x7c\xc5\x08\x18\xd4\x8b\x92\x26\xe3\xed\xfa\x88\x32\xe8\x97'
-        '\x47\x70\xf8\x46\xde\xff\x8b\x0c\x4d\xb3\xb6\xfc\x69\xd6\x27\x5b'
-        '\x76\x6f\x5b\x03\xf7\xc3\x11\x05\xc5\x1d\xfe\x92\x5f\xcb\xc2\x1c'
-        '\x81\x69\x1b\xb8\xf8\x62\x58\xc7\xb4\xb3\x11\xd5\x1f\xf2\x16\xc1'
-        '\xad\x8f\xa5\x1e\xb4\x5b\xe0\xda\x7f\x46\x7d\x1d\x9e\x6d\xc0\x74'
-        '\x7f\x54\xa6\x2f\x43\x6f\x64\x08\xca\xe8\x0f\x05\x10\x9c\x9d\x9f'
-        '\xbd\x67\x0c\x23\xf7\xa1\xe1\x59\x7b\xe8\xd4\x64\xec\x20\xca\xe9'
-        '\x6a\xb9\x03\x73\x67\x30\x95\x16\xb6\xd9\x19\x53\xe5\xdb\xa4\x3c'
-        '\xcd\x7c\xf9\xd8\x67\x9f\xfc\xc9\xe2\x8a\x6a\x2c\xf2\xed\xc8\xc1'
-        '\x6a\x20\x99\x4c\x0d\xad\xd4\x3b\xa1\x0e\x95\x88\x46\xb8\x13\xe1'
-        '\x06\x58\xd2\x07\xad\x5c\x1a\x74\xdb\xb5\xa7\x40\x57\xdb\xa2\x45'
-        '\xa6\x12\xd0\x82\xdd\xed\x0a\xbd\xb3\x10\xed\x6c\xda\x39\xd2\xd6'
-        '\x90\x82\x00\x76\x71\xe0\x21\xa0\x8f\xf0\xf3\x67\xc4\xf3\x40\xbd'
-        '\x47\x16\x10\xdc\x7e\xf8\x1d\xe5\x13\x66\x87\xc7\x4a\x69\xc9\x63'
-        '\x92\x82\xec\xee\x5a\x34\xfb\x96\x25\xc3\xb6\x68\xe1\x3c\x8a\x71'
-        '\x74\xb5\xc1\x23\x99\xd6\xf7\xfb\xea\x98\xcd\x61\x3d\x4d\xe1\xd0'
-        '\x34\xe1\xfd\x36\x10\x5f\x8e\x9e\xc6\xb6\x58\x0c\x55\xbe\x69\xa8'
-        '\x56\x76\x4b\x1f\xd5\x90\x7e\x47\x5f\x2f\x25\x02\x5c\xef\x00\x64'
-        '\xa0\x26\x9a\x18\x3c\x69\xc4\xff\x9a\x52\x41\x1b\xc9\x81\xc3\xac'
-        '\x15\xe1\x17\x98\xdb\x2c\x9c\x10\x9b\xb2\xf9\x71\x4f\x56\x0f\x68'
-        '\xfb\xd9\x2d\x5a\x86\x5b\x83\x03\xc8\x1e\xda\x5d\xe4\x8e\x82\xc3'
-        '\xd8\x7e\x8b\x56\x52\xb5\x38\xa0\xc6\xa9\xb0\x77\xbd\x8a\xf7\x24'
-        '\x70\x82\x1d\xc5\x95\x3c\xb5\xf0\x79\xa3\x89\x99\x4f\xec\x8c\x36'
-        '\xc7\xd6\x10\x20\xe3\x30\x39\x3d\x07\x9c\xb2\xdc\x4f\x94\x9e\xe0'
-        '\x24\xaa\xd2\x21\x12\x14\x41\x0f\xd4\x67\xb7\x99\xb1\xa3\xcb\x4d'
-        '\x0c\x70\x0f\xc0\x36\xa7\x89\x30\x86\x14\x67\x68\xac\x7b\xee\xe4'
-        '\x42\xd8\xb4\x36\xa4\xeb\x0f\xa8\x02\xf4\xcd\x23\xb3\xbc\x25\x4f'
-        '\xcc\xd4\xee\xfc\xf2\x21\x0f\xc1\x6c\x99\x37\xe2\x7c\x47\xce\x77'
-        '\xf0\x95\x2b\xcb\xf4\xca\x07\x03\x2a\xd2\x31\x00\xfd\x3e\x84\x86'
-        '\x32\x8b\x17\x9d\xbf\xa7\xb3\x37\xe1\xb1\x8a\x14\x69\x00\x25\xe3'
-        '\x56\x68\x9f\xaa\xa9\xb8\x11\x67\x75\x87\x4d\xf8\x36\x31\xcf\x38'
-        '\x63\x1c\xf0\x6b\x47\x40\x5d\xdc\x0c\xe6\xc8\xc4\x19\xaf\xdd\x6e'
-        '\x9e\xd9\x78\x99\x6c\xbe\x15\x1e\x0b\x9d\x88\xd2\x06\x9d\xee\xae'
-        '\x8a\x0f\xe3\x2d\x2f\xf4\xf5\xf6\x16\xbf\x59\xbb\x34\x5c\xdd\x61'
-        '\xed\x70\x1e\x61\xe5\xe3\xfb\x6e\x13\x9c\x49\x58\x17\x8b\xc8\x30'
-        '\xcd\xed\x56\xad\x22\xcb\x63\xce\x26\xc4\xa5\xc1\x63\x0d\x0d\x04'
-        '\x6e\xb6\xf9\xca\xbb\x2f\xab\xa0\xb5\x0a\xfa\x50\x0e\x02\x47\x05'
-        '\x54\x3d\xb3\xb1\xc6\xce\x8f\xac\x65\x7e\x15\x9e\x4e\xcc\x55\x9e'
-        '\x46\x32\x71\x9b\x97\xaa\x0d\xfb\x1b\x71\x02\x83\x96\x0b\x52\x77'
-        '\x48\x87\x61\x02\xc3\x04\x62\xd7\xfb\x74\x0f\x19\x9c\xa0\x9d\x79'
-        '\xa0\x6d\xef\x9e\x20\x5d\x0a\xc9\x6a\x58\xc9\xb9\x55\xad\xd1\xcc'
-        '\xd1\x54\xc8\x68\xc2\x76\xc2\x99\x0f\x2e\xfc\xfb\xf5\x92\xcd\xdb'
-        '\xa2\xed\xd9\x99\xff\x4f\x88\x50\xcd\x48\xb7\xb9\xf3\xf0\xad\x4d'
-        '\x16\x2a\x50\xaa\x6b\x2a\x98\x38\xc9\x35\x45\x0c\x03\xa8\xcd\x0d'
-        '\x74\x3c\x99\x55\xdb\x88\x70\xda\x6a\xc8\x34\x4d\x19\xdc\xcc\x42'
-        '\x40\x94\x61\x92\x65\x2a\xcd\xfd\x52\x10\x50\x14\x6b\xec\x85\x57'
-        '\x3f\xe2\x95\x9a\x5d\x11\xab\xad\x69\x60\xa8\x3b\x6f\x7a\x17\xf3'
-        '\x76\x17\x63\xe6\x59\x7e\x47\x30\xd2\x47\x87\xdb\xd8\x66\xde\x00'
-        '\x2b\x65\x37\x2f\x2d\xf1\x20\x11\xf3\x98\x7b\x4c\x9c\xd1\x76\xa7'
-        '\xe1\x3d\xbe\x6f\xee\x2c\xf0\x19\x70\x63\x51\x28\xf0\x1d\xbe\x52'
-        '\x5f\x4f\xe6\xde\xf2\x30\xb6\x50\x30\xf9\x15\x48\x49\xe9\xd2\xa8'
-        '\xa9\x8d\xda\xf5\xcd\x3e\xaf\x00\x55\xeb\x15\xc5\x5b\x19\x0f\x93'
-        '\x04\x27\x09\x6d\x54\xd7\x57\xb1\x47\x0a\xde\xf7\x1d\xcb\x11\x3c'
-        '\xf5\x8f\x20\x40\x9d\xbb\x6b\x2c\xa9\x67\x3d\x78\xc2\x62\xb7\x0c')
-
+    key = bytes.fromhex(
+        '2edf40b5bdda91352142e3e26da90b90'
+        '31303afa4f0574640a29447e6077ad8c'
+        '9ae263c421fe3cf793c2e174168cc92a'
+        'ed65680c4986a3ba611c885dc4493cd2'
+        'ee6b340c1aa0a8b3588a4511df4f232f'
+        'a4e4f63b2c8c882d9e9b67ab1c80da29'
+        '53021a5451cabfb19722798170fc00e9'
+        '81364e4fa01c0b07ea2f492f0f2571d7'
+        'f1307d666e8368387913e38c709a4a9e'
+        'a9e2d6104f40148e6c5e96b2463ee825'
+        'ef7cc50818d48b9226e3edfa8832e897'
+        '4770f846deff8b0c4db3b6fc69d6275b'
+        '766f5b03f7c31105c51dfe925fcbc21c'
+        '81691bb8f86258c7b4b311d51ff216c1'
+        'ad8fa51eb45be0da7f467d1d9e6dc074'
+        '7f54a62f436f6408cae80f05109c9d9f'
+        'bd670c23f7a1e1597be8d464ec20cae9'
+        '6ab9037367309516b6d91953e5dba43c'
+        'cd7cf9d8679ffcc9e28a6a2cf2edc8c1'
+        '6a20994c0dadd43ba10e958846b813e1'
+        '0658d207ad5c1a74dbb5a74057dba245'
+        'a612d082dded0abdb310ed6cda39d2d6'
+        '9082007671e021a08ff0f367c4f340bd'
+        '471610dc7ef81de5136687c74a69c963'
+        '9282ecee5a34fb9625c3b668e13c8a71'
+        '74b5c12399d6f7fbea98cd613d4de1d0'
+        '34e1fd36105f8e9ec6b6580c55be69a8'
+        '56764b1fd5907e475f2f25025cef0064'
+        'a0269a183c69c4ff9a52411bc981c3ac'
+        '15e11798db2c9c109bb2f9714f560f68'
+        'fbd92d5a865b8303c81eda5de48e82c3'
+        'd87e8b5652b538a0c6a9b077bd8af724'
+        '70821dc5953cb5f079a389994fec8c36'
+        'c7d61020e330393d079cb2dc4f949ee0'
+        '24aad2211214410fd467b799b1a3cb4d'
+        '0c700fc036a7893086146768ac7beee4'
+        '42d8b436a4eb0fa802f4cd23b3bc254f'
+        'ccd4eefcf2210fc16c9937e27c47ce77'
+        'f0952bcbf4ca07032ad23100fd3e8486'
+        '328b179dbfa7b337e1b18a14690025e3'
+        '56689faaa9b8116775874df83631cf38'
+        '631cf06b47405ddc0ce6c8c419afdd6e'
+        '9ed978996cbe151e0b9d88d2069deeae'
+        '8a0fe32d2ff4f5f616bf59bb345cdd61'
+        'ed701e61e5e3fb6e139c4958178bc830'
+        'cded56ad22cb63ce26c4a5c1630d0d04'
+        '6eb6f9cabb2faba0b50afa500e024705'
+        '543db3b1c6ce8fac657e159e4ecc559e'
+        '4632719b97aa0dfb1b710283960b5277'
+        '48876102c30462d7fb740f199ca09d79'
+        'a06def9e205d0ac96a58c9b955add1cc'
+        'd154c868c276c2990f2efcfbf592cddb'
+        'a2edd999ff4f8850cd48b7b9f3f0ad4d'
+        '162a50aa6b2a9838c935450c03a8cd0d'
+        '743c9955db8870da6ac8344d19dccc42'
+        '40946192652acdfd521050146bec8557'
+        '3fe2959a5d11abad6960a83b6f7a17f3'
+        '761763e6597e4730d24787dbd866de00'
+        '2b65372f2df12011f3987b4c9cd176a7'
+        'e13dbe6fee2cf01970635128f01dbe52'
+        '5f4fe6def230b65030f9154849e9d2a8'
+        'a98ddaf5cd3eaf0055eb15c55b190f93'
+        '0427096d54d757b1470adef71dcb113c'
+        'f58f20409dbb6b2ca9673d78c262b70c')
     def __init__(self, base_address=0x800c000):
         self.magic = b'OutSecurityBin'
         self.jst = b'JST51'
-        self.foo = '\x30\x02\x00\x30\x00\x40\x00\x47'
-        self.bar = ('\x01\x0d\x02\x03\x04\x05\x06\x07'
-                    '\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f'
-                    '\x10\x11\x12\x13\x14\x15\x16\x17'
-                    '\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f'
-                    '\x20')
+        self.foo = bytes.fromhex('3002003000400047')
+        self.bar = bytes.fromhex('010d02030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20')
         self.start = base_address
         self.app = None
-        self.footer = 'OutputBinDataEnd'
+        self.footer = b'OutputBinDataEnd'
         self.header_fmt = '<16s7s9s16s33s47sLL120s'
         self.footer_fmt = '<240s16s'
 
@@ -218,7 +217,7 @@ def radioFW(name):
             "MD2017":MD2017FW,
             "MD380":MD380FW
             }
-    for k in radios.iterkeys():
+    for k in radios.keys():
         if name.upper() in k:
             return radios[k]
     raise KeyError
@@ -280,11 +279,11 @@ def main():
             md.unwrap(input)
         except AssertionError:
             sys.stderr.write('WARNING: Funky header:\n')
-            for i in range(0, 256, 16):
-                hl = binascii.hexlify(input[i:i + 16])
-                hl = ' '.join(hl[i:i + 2] for i in range(0, 32, 2))
-                sys.stderr.write(hl + '\n')
-            sys.stderr.write('Trying anyway.\n')
+            #for i in range(0, 256, 16):
+            #    hl = binascii.hexlify(input[i:i + 16])
+            #    hl = ' '.join(hl[i:i + 2] for i in range(0, 32, 2))
+            #    sys.stderr.write(hl + '\n')
+            sys.stderr.write('Trying anyway.  This works on S013.020.bin.\n')
         output = md.app
         #print('INFO: base address 0x{0:x}'.format(md.start))
         print('INFO: length 0x{0:x}'.format(len(md.app)))

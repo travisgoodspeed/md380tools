@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
@@ -18,9 +18,10 @@ class Memory(object):
     def __init__(self, data, base_address=0x800c000):
         # expecting a byte-like data object
         # makes for efficient read, but inefficient write
-        assert type(data) == str
+        print(type(data))
+        assert type(data) == bytes
         self.addr = base_address
-        self.mem = bytes(data)
+        self.mem = data
 
     def rb(self, addr):
         """Read unsigned byte"""
@@ -92,7 +93,7 @@ class Memory(object):
         # TODO: masking instead of padding
         bitdata += b'0' * ((8 - len(bitdata)) % 8)  # pad to full bytes
         hexdata = hex(int(b'1' + bitdata, 2))[3:]  # 1+...[3:] to preserve leading zeros
-        # Throw away python2.7's trailing long int marker
+        # Throw away python3.7's trailing long int marker
         if hexdata.endswith('L'):
             hexdata = hexdata[:-1]
         bytedata = binascii.unhexlify(hexdata)
@@ -151,7 +152,10 @@ class MD380Graphics(Memory):
     @staticmethod
     def gfxchecksum(gfx):
         data = '%d:%d:%s:%s' % (gfx['width'], gfx['height'], repr(gfx['pixels']), repr(gfx['palette']))
-        return binascii.crc32(data)
+        # FIXME: Broken types in checksum.
+        print("ERROR: I'm faking an image checksum.");
+        return 0;
+#        return binascii.crc32(bytes(data))
 
     def glyphreplace(self, gfx, addr):
         """Overwrite existing glyph structure - must be same byte width."""
@@ -233,24 +237,24 @@ class MD380Graphics(Memory):
         new_bitsperpixel = int(math.ceil(math.log(len(gfx['palette'])) / math.log(2)))
         new_bytesperline = int(math.ceil(new_bitsperpixel * new_width / 8.0))
         new_pixptr = location
-        pixbytes = b''
+        pixbytes = bytearray()
         for line in gfx['pixels']:
             padding = new_width - len(line)
             line += [0] * padding
             linebits = [bin(c + 0x10000)[-new_bitsperpixel:] for c in line]
             linebits = ''.join(linebits)
             for i in range(0, len(linebits), 8):
-                pixbytes += chr(int(linebits[i:i + 8], 2))
+                pixbytes.append(int(linebits[i:i + 8], 2))
         self.write(new_pixptr, pixbytes)
 
         new_colptr = location + len(pixbytes) + (16 - (len(pixbytes) % 16))
-        palbytes = b''
+        palbytes = bytearray()
         for color in gfx['palette']:
             r, g, b, a = color
-            palbytes += chr(r)
-            palbytes += chr(g)
-            palbytes += chr(b)
-            palbytes += chr(a)
+            palbytes.append(r)
+            palbytes.append(g)
+            palbytes.append(b)
+            palbytes.append(a)
         self.write(new_colptr, palbytes)
 
         new_palptr = new_colptr + len(palbytes) + (16 - (len(palbytes) % 16))
@@ -316,17 +320,17 @@ class MD380Graphics(Memory):
     def ppmparse(ppm):
         """Convert PPM(P6) image to sprite object"""
         ppml = ppm.splitlines()
-        assert ppml[0] == 'P6'
+        assert ppml[0] == b'P6'
         i = 1
         addr = 0
         oldpalette = None
         oldchecksum = None
-        while ppml[i].startswith('#'):
-            if ppml[i].startswith('# MD380 address: '):
+        while ppml[i].startswith(b'#'):
+            if ppml[i].startswith(b'# MD380 address: '):
                 addr = int(ppml[i][17:], 16)
-            if ppml[i].startswith('# MD380 checksum: '):
+            if ppml[i].startswith(b'# MD380 checksum: '):
                 oldchecksum = int(ppml[i][18:])
-            if ppml[i].startswith('# MD380 palette: '):
+            if ppml[i].startswith(b'# MD380 palette: '):
                 # CAVE: arbitrary command execution there
                 oldpalette = eval(ppml[i][17:])
             i += 1
@@ -335,16 +339,16 @@ class MD380Graphics(Memory):
         height = int(height)
         maxc = int(ppml[i + 1])
         assert maxc == 255
-        data = '\n'.join(ppml[i + 2:])
+        data = b'\n'.join(ppml[i + 2:])
         paletteidx = {}
         pixels = []
         palette = []
         for y in range(height):
             line = []
             for x in range(width):
-                r = ord(data[y * width * 3 + x * 3])
-                g = ord(data[y * width * 3 + x * 3 + 1])
-                b = ord(data[y * width * 3 + x * 3 + 2])
+                r = data[y * width * 3 + x * 3]
+                g = data[y * width * 3 + x * 3 + 1]
+                b = data[y * width * 3 + x * 3 + 2]
                 a = 0
                 key = '%d,%d,%d,%d' % (r, g, b, a)
                 if key in paletteidx:
@@ -379,7 +383,7 @@ class MD380Graphics(Memory):
             # Hex ouput (P4) - OSX doesn't render non-byte widths correctly (like all latin fonts)
             # bitline += '0' * ((8 - len(bitline)) % 8)  # pad to full byte
             # hexline = hex(int('1'+bitline, 2))[3:]
-            # # Throw away python2.7's trailing long int marker
+            # # Throw away python3.7's trailing long int marker
             # if hexline.endswith('L'):
             #    hexline = hexline[:-1]
             # byteline = binascii.unhexlify(hexline)

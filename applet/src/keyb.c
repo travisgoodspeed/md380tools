@@ -46,6 +46,24 @@ uint8_t kb_backlight=0; // flag to disable backlight via sidekey.
 // 8 = rearm
 // 0 = none pressed
 
+uint8_t kc_netmon1;
+uint8_t kc_netmon2;
+uint8_t kc_netmon3;
+uint8_t kc_netmon4;
+uint8_t kc_netmon5;
+uint8_t kc_netmon6;
+uint8_t kc_sms_test;
+uint8_t kc_talkgroup;
+uint8_t kc_copy_contact;
+uint8_t kc_netmon_clear;
+uint8_t kc_netmon_off;
+uint8_t kc_syslog_dump;
+uint8_t kc_cursor_up;
+uint8_t kc_cursor_down;
+uint8_t kc_greenmenu;
+uint8_t kc_redback;
+uint8_t kc_lastmode;
+
 
 #if defined(FW_D13_020) || defined(FW_S13_020)
 inline int get_main_mode()

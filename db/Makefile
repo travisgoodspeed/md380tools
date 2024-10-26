@@ -37,6 +37,6 @@ reflector.tmp:
 	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
 
 special.tmp:
-	python2 get_special_IDs.py
+	python3 get_special_IDs.py
 
 ci: clean all
