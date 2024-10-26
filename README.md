@@ -114,7 +114,7 @@ repository.  We use a heap-less printf library under the BSD license.
 
 ## Requirements: ##
 
-* Python 2.7 or newer:
+* Python 3.10 or newer:
   http://www.python.org
 
 * PyUSB 1.0:  (0.4 does not work.)

@@ -18,7 +18,6 @@ class Memory(object):
     def __init__(self, data, base_address=0x800c000):
         # expecting a byte-like data object
         # makes for efficient read, but inefficient write
-        print(type(data))
         assert type(data) == bytes
         self.addr = base_address
         self.mem = data

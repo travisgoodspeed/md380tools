@@ -34,9 +34,6 @@ class TYTFW(object):
 
     @staticmethod
     def xor(a, b):
-        # FIXME: optimized version
-        print(type(a))
-        print(type(b))
         out = bytearray()
         l = max(len(a), len(b))
         for i in range(l):
