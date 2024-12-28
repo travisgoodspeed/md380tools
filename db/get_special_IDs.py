@@ -60,8 +60,11 @@ for idx, item in enumerate(data):
         except socket.error:
             print("Socket Error...\n")
         else:
+            # Handle servers which answer with an empty file
+            if not content:
+                print("List with special IDs empty!\n")
             # Handle servers which answer with HTTP 200 but give file not found
-            if "DOCTYPE" in content:
+            elif "DOCTYPE" in content:
                 print("List with special IDs not found!\n")
             else:
                 print(content)
