@@ -11,6 +11,19 @@ from __future__ import print_function
 
 import sys
 import os
+import io
+import unicodedata
+
+def to_ascii_safe(text):
+    """Convert unicode/UTF-8 text to ASCII by removing accents."""
+    if isinstance(text, bytes):
+        text = text.decode('utf-8', errors='replace')
+    # Normalize to NFD (decomposes e.g. e-acute into e + combining accent)
+    normalized = unicodedata.normalize('NFD', text)
+    # Remove combining characters (the accent marks)
+    ascii_text = ''.join(c for c in normalized if unicodedata.category(c) != 'Mn')
+    # Encode to ASCII, replacing any remaining non-ASCII with '?'
+    return ascii_text.encode('ascii', errors='replace').decode('ascii')
 
 class LinearDB(object):
 
@@ -20,20 +33,22 @@ class LinearDB(object):
 
         self.users = {}
 
+        if filename is None:
+            filename = sys.path[0] + '/user.bin'
         try:
-            if filename is None:
-                filename = sys.path[0] + '/user.bin'
             with open(filename, 'rb') as csvfile:
-                reader = csv.reader(csvfile)
-                for row in reader:
-                    if len(row) > 1:
-                        self.users[int(row[0])] = row
+                text = csvfile.read()
         except:
             print("Can't open %s" % filename)
+            return
 
+        text = to_ascii_safe(text)
+        f = io.StringIO(text)
 
-            # print("WARNING: Unable to load user.bin.")
-            pass
+        reader = csv.reader(f)
+        for row in reader:
+            if len(row) > 1:
+                self.users[int(row[0])] = row
 
 class IndexedDB(object):
     MAGIC         = 0x300a01
