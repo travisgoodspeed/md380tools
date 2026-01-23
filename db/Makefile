@@ -31,7 +31,8 @@ dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 
 dmrmarc.tmp:
-	wget --timeout=120 --no-check-certificate --wait=3 'https://database.radioid.net/static/user.csv' -O $@
+	wget --timeout=120 --no-check-certificate --wait=3 'https://database.radioid.net/static/user.csv' -O - | \
+		awk 'NR > 1' >$@ # remove the radioid.net CSV header line
 
 special.tmp:
 	python2 get_special_IDs.py
