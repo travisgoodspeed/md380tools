@@ -24,17 +24,14 @@ ICONV=iconv -c -f UTF-8 -t ascii//TRANSLIT
 custom.csv:
 	touch custom.csv
 
-stripped.csv: custom.csv special.tmp fixed.csv dmrmarc2.tmp reflector.tmp
+stripped.csv: custom.csv special.tmp fixed.csv dmrmarc2.tmp
 	awk -F, -f combine.awk $^ | $(ICONV)  | sort -t ',' -k1g,1 | awk -F, -f strip.awk >stripped.csv
 
 dmrmarc2.tmp: dmrmarc.tmp
 	awk -F, -f insert_nick.awk <$< >$@
 
 dmrmarc.tmp:
-	wget --timeout=120 --no-check-certificate --wait=3 'https://ham-digital.org/status/users.csv' -O $@
-
-reflector.tmp:
-	curl $(CURL_FLAGS) 'http://registry.dstar.su/reflector.db' | perl -pe '$$_ = "" if ( $$. == 1 ); s#@#,#; s#@.*#,,,,,,#' >$@
+	wget --timeout=120 --no-check-certificate --wait=3 'https://database.radioid.net/static/user.csv' -O $@
 
 special.tmp:
 	python2 get_special_IDs.py
