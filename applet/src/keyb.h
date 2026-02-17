@@ -50,24 +50,26 @@ extern uint16_t backlight_timer;   // seems to be a COUNTDOWN, decremented every
 extern uint8_t kb_top_side_key_press_time;
 extern uint8_t kb_bot_side_key_press_time;
 extern uint8_t kb_side_key_max_time;
+
+
 // define keycodes for variable assignment
-uint8_t kc_netmon1;
-uint8_t kc_netmon2;
-uint8_t kc_netmon3;
-uint8_t kc_netmon4;
-uint8_t kc_netmon5;
-uint8_t kc_netmon6;
-uint8_t kc_sms_test;
-uint8_t kc_talkgroup;
-uint8_t kc_copy_contact;
-uint8_t kc_netmon_clear;
-uint8_t kc_netmon_off;
-uint8_t kc_syslog_dump;
-uint8_t kc_cursor_up;
-uint8_t kc_cursor_down;
-uint8_t kc_greenmenu;
-uint8_t kc_redback;
-uint8_t kc_lastmode;
+extern uint8_t kc_netmon1;
+extern uint8_t kc_netmon2;
+extern uint8_t kc_netmon3;
+extern uint8_t kc_netmon4;
+extern uint8_t kc_netmon5;
+extern uint8_t kc_netmon6;
+extern uint8_t kc_sms_test;
+extern uint8_t kc_talkgroup;
+extern uint8_t kc_copy_contact;
+extern uint8_t kc_netmon_clear;
+extern uint8_t kc_netmon_off;
+extern uint8_t kc_syslog_dump;
+extern uint8_t kc_cursor_up;
+extern uint8_t kc_cursor_down;
+extern uint8_t kc_greenmenu;
+extern uint8_t kc_redback;
+extern uint8_t kc_lastmode;
 
 void evaluate_sidekey(int);
 void kb_handle(int);

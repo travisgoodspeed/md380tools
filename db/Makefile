@@ -35,6 +35,6 @@ dmrmarc.tmp:
 		awk 'NR > 1' >$@ # remove the radioid.net CSV header line
 
 special.tmp:
-	python2 get_special_IDs.py
+	python3 get_special_IDs.py
 
 ci: clean all

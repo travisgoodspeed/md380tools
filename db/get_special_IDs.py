@@ -1,21 +1,13 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function
 
 import json
 import socket
 import sys
 
-try:
-    from urllib2 import URLError, HTTPError  # Py2
-except ImportError:
-    from urllib.error import URLError, HTTPError  # Py3
-
-try:
-    from urllib2 import Request, urlopen  # Py2
-except ImportError:
-    from urllib.request import Request, urlopen  # Py3
+from urllib.error import URLError, HTTPError  # Py3
+from urllib.request import Request, urlopen  # Py3
 
 from ssl import SSLError, CertificateError
 
@@ -64,11 +56,11 @@ for idx, item in enumerate(data):
             if not content:
                 print("List with special IDs empty!\n")
             # Handle servers which answer with HTTP 200 but give file not found
-            elif "DOCTYPE" in content:
+            elif b"DOCTYPE" in content:
                 print("List with special IDs not found!\n")
             else:
                 print(content)
-                file.write(content)
+                file.write(str(content,'ascii'))
 
 file.close()
 sys.exit(0)

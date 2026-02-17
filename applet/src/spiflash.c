@@ -84,7 +84,7 @@ int check_spi_flash_size(void) {
   static int size=0;
   if (size) {
     //If the size is known, we return it.
-    printf("Size is known to be %08x\n",
+    printf("SPI Flash size is %08x\n",
 	   size);
     return size;
   } else {

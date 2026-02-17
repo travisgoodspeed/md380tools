@@ -47,32 +47,32 @@ original_D03:
 	"${MAKE}" -C firmware unwrapped/D003.020.img
 
 flash_original_D13: original_D13
-	./md380-dfu upgrade firmware/bin/D013.020.bin
+	dfuexplorer -A --md380-reboot --md380-download  firmware/bin/D013.020.bin
 
 flash_original_D13.34: original_D13.34
-	./md380-dfu upgrade firmware/bin/D013.034.bin
+	dfuexplorer -A --md380-reboot --md380-download  firmware/bin/D013.034.bin
 
 flash_original_S13: original_S13
-	./md380-dfu upgrade firmware/bin/S013.020.bin
+	dfuexplorer -A --md380-reboot --md380-download  firmware/bin/S013.020.bin
 
 flash_original_D02: original_D02
-	./md380-dfu upgrade firmware/bin/D002.032.bin
+	dfuexplorer -A --md380-reboot --md380-download  firmware/bin/D002.032.bin
 
 flash_original_D03: original_D03
-	./md380-dfu upgrade firmware/bin/D003.020.bin
+	dfuexplorer -A --md380-reboot --md380-download  firmware/bin/D003.020.bin
 
 flash: image_D13
-	./md380-dfu upgrade applet/experiment.bin
+	dfuexplorer -A --md380-reboot --md380-download  applet/experiment.bin
 settime:
 	./md380-dfu settime
 flash_D02: image_D02
-	./md380-dfu upgrade applet/experiment.bin
+	dfuexplorer -A --md380-reboot --md380-download  applet/experiment.bin
 
 flash_D13: image_D13
-	./md380-dfu upgrade applet/experiment.bin
+	dfuexplorer -A --md380-reboot --md380-download  applet/experiment.bin
 
 flash_S13: image_S13
-	./md380-dfu upgrade applet/experiment.bin
+	dfuexplorer -A --md380-reboot --md380-download  applet/experiment.bin
 
 sync:
 	"${MAKE}" -C annotations sync

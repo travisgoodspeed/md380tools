@@ -1,4 +1,4 @@
-#! python2.7
+#! python3
 # -*- coding: utf-8 -*-
 
 
@@ -7,7 +7,6 @@
 # fewer explicit addresses, so that we can target our patches to more
 # than one version of the MD380 firmware.
 
-from __future__ import print_function
 
 import sys
 

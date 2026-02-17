@@ -111,17 +111,17 @@ void  md380_create_menu_entry(int, const wchar_t *, void (*green_key)(), void  (
 void*  md380_menu_entry_programradio(void);
 void*  md380_menu_numerical_input(void);
 
-uint8_t   md380_menu_0x200011e4;
-uint8_t   md380_menu_0x2001d3c1;
-uint8_t   md380_menu_0x2001d3ed;
-uint8_t   md380_menu_0x2001d3ee;
-uint8_t   md380_menu_0x2001d3ef;
-uint8_t   md380_menu_0x2001d3f0;
-uint8_t   md380_menu_0x2001d3f1;
-uint8_t   md380_menu_0x2001d3f4;
-uint8_t   md380_menu_depth;
-uint8_t   md380_menu_entry_selected;
-uint8_t   md380_menu_id;
+extern uint8_t   md380_menu_0x200011e4;
+extern uint8_t   md380_menu_0x2001d3c1;
+extern uint8_t   md380_menu_0x2001d3ed;
+extern uint8_t   md380_menu_0x2001d3ee;
+extern uint8_t   md380_menu_0x2001d3ef;
+extern uint8_t   md380_menu_0x2001d3f0;
+extern uint8_t   md380_menu_0x2001d3f1;
+extern uint8_t   md380_menu_0x2001d3f4;
+extern uint8_t   md380_menu_depth;
+extern uint8_t   md380_menu_entry_selected;
+extern uint8_t   md380_menu_id;
 
 extern wchar_t          md380_wt_programradio[];  // menutext <- menu_entry_programradio
 
@@ -184,16 +184,16 @@ void md380_copy_spiflash_security_bank2_to_ram(void);
 
 // rtc_timer process stuff ( user interface task)
 // menu no exit ....
-uint8_t gui_opmode1;
+extern uint8_t gui_opmode1;
 
 
 // debug and training stuff
-void md380_f_4137();
-void md380_f_4520();
-void md380_f_4098();
-void md380_f_4102();
-void f_4225();
+extern void md380_f_4137();
+extern void md380_f_4520();
+extern void md380_f_4098();
+extern void md380_f_4102();
+extern void f_4225();
 
 // major display driver for popup during RX/TX
-void F_4315();
+extern void F_4315();
 
