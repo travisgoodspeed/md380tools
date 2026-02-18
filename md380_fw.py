@@ -31,10 +31,10 @@ class TYTFW(object):
 
     @staticmethod
     def xor(a, b):
-        out = b''
         l = max(len(a), len(b))
+        out = bytearray(l)
         for i in range(l):
-            out += bytes([a[i % len(a)] ^ b[i % len(b)]]);
+            out[i] = a[i % len(a)] ^ b[i % len(b)]
         return out
 
 class MD2017FW(TYTFW):
