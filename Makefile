@@ -61,6 +61,8 @@ flash_original_D02: original_D02
 flash_original_D03: original_D03
 	dfuexplorer -A --md380-reboot --md380-download  firmware/bin/D003.020.bin
 
+dmesg:
+	dfuexplorer -A --md380-dmesg
 flash: image_D13
 	dfuexplorer -A --md380-reboot --md380-download  applet/experiment.bin
 settime:
