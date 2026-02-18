@@ -119,7 +119,7 @@ OBJS = $(SRCS:.c=.o)
 .PHONY: lib proj pre
 
 all: mark experiment.bin
-	
+
 .PHONY: mark
 mark:
 ifeq "$(PROBLEM)" "1"
@@ -138,7 +138,7 @@ lib: src/version.h config.h
 .PHONY: base.img
 base.img:
 	"${MAKE}" -C ../patches/$(PATCHDIR) patched.img
-	
+
 merged.img: applet.img base.img   
 	cp ../patches/$(PATCHDIR)/patched.img ./merged.img
 	python3 merge_$(SRCVERSION).py merged.img applet.img $(MERGEBASE)
@@ -153,15 +153,22 @@ wrapped.bin: merged.img
 
 experiment.bin: wrapped.bin
 	cp wrapped.bin experiment.bin
-	
+
 ##This flashes from unix. (deprecated)
 #flash: wrapped
 #	../md380-dfu upgrade experiment.bin
 
 $(SRCS): config.h src/*.h | lib	
 applet.elf: $(SRCS)
-	$(CC) $(CFLAGS) -Wl,--no-wchar-size-warning -Wl,-Map,$(basename $@).map $^ -o $@ -Llib -lstm32f4 -Xlinker --just-symbols=src/symbols_$(SRCVERSION)
-	
+	$(CC) $(CFLAGS) \
+		-Wl,--no-wchar-size-warning \
+		-Wl,-Map,$(basename $@).map \
+		-Wl,-nostdlib \
+		$^ -o $@ \
+		-Llib -lstm32f4 \
+		-nodefaultlibs -nolibc -nostdlib \
+		-Xlinker --just-symbols=src/symbols_$(SRCVERSION)
+
 %.img: %.elf	
 	$(OBJDUMP) -t $< >$(basename $@).img.sym
 	$(OBJCOPY) -O binary $< $@
@@ -182,7 +189,7 @@ image_D02:
 
 image_D13:
 	"${MAKE}" FW=D13_020 all  
-	
+
 image_S13:
 	"${MAKE}" FW=S13_020 all  
 

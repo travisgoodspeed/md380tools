@@ -363,3 +363,35 @@ int snprintf(char* buf, int sz, const char* fmt, ...)
     
     return 0 ; // TODO if we want to be compatible.
 }
+
+
+
+/* New versions of newlib require additional stubs.  These are empty
+   ones that at most log the failed attempt.
+*/
+
+int _lseek(int file, int offset, int whence) {
+  return 0;
+}
+
+int _read (int fd, char *buf, int count) {
+  return 0;
+}
+
+int _close(int fd) {
+  return -1;
+}
+
+
+void *_sbrk(int incr) {
+  //printf("Someone is trying to use a heap?\n");
+  return 0;
+}
+
+int _write (int fd, char *buf, int count) {
+  //printf("Someone is trying to call write?\n");
+}
+
+void _init(){
+  //printf("init()\n");
+}
