@@ -84,4 +84,21 @@ if __name__ == '__main__':
     patcher.setstring(0x080cfff4,
                       "Patched MD380")
 
+    
+
+    # This patches D013.020 to use ADC1 settings from D14.07.  Doing
+    # so fixes three bugs that feel unrelated:
+    # 1. The green light doesn't light on receiving traffic
+    # 2. The radio becomes deaf to incoming signals except for a few seconds after transmission.
+    # 3. The battery indicator shows very low voltage.
+    
+    patcher.sethword(0x08044a0c, 0x2307); # movs r3, #7
+    patcher.sethword(0x08044a1a, 0x2307);
+    patcher.sethword(0x08044a28, 0x2307);
+    patcher.sethword(0x08044a36, 0x2307);
+    patcher.sethword(0x08044a44, 0x2307);
+    patcher.sethword(0x08044a52, 0x2307);
+    
+
+    # This must come last!
     patcher.export("patched.img")
