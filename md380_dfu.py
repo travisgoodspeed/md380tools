@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 
@@ -51,7 +51,7 @@ def download(dfu, data, flash_address):
         while len(data) > 0:
             packet, data = data[:block_size], data[block_size:]
             if len(packet) < block_size:
-                packet += '\xFF' * (block_size - len(packet))
+                packet += b'\xFF' * (block_size - len(packet))
             dfu.download(block_number, packet)
             status, timeout, state, discarded = dfu.get_status()
             sys.stdout.write('.')
@@ -95,7 +95,7 @@ def download_codeplug(dfu, data):
         while len(data) > 0:
             packet, data = data[:block_size], data[block_size:]
             if len(packet) < block_size:
-                packet += '\xFF' * (block_size - len(packet))
+                packet += b'\xFF' * (block_size - len(packet))
             dfu.download(block_number, packet)
             state = 11
             while state != State.dfuDNLOAD_IDLE:
@@ -240,7 +240,7 @@ radio will be radio to accept this firmware update.""")
         block_start = 2
         address_idx = 0
 
-        if data[0:14] == "OutSecurityBin":  # skip header if present
+        if data[0:14] == b"OutSecurityBin":  # skip header if present
             if dfu.verbose:
                 print("Skipping 0x100 byte header in data file")
             header, data = data[:0x100], data[0x100:]
@@ -268,7 +268,7 @@ radio will be radio to accept this firmware update.""")
                 packet, data = data[:block_size], data[block_size:]
 
                 if len(packet) < block_size:
-                    packet += '\xFF' * (block_size - len(packet))
+                    packet += b'\xFF' * (block_size - len(packet))
 
                 dfu.download(block_number, packet)
                 dfu.wait_till_ready()
@@ -507,7 +507,7 @@ def main():
                     dfu = init_dfu()
                     firmware = data[:-suf_len]
                 elif sys.argv[2][-4:] == '.rdt':
-                    if len(data) == 262709 and data[0:5] == 'DfuSe':
+                    if len(data) == 262709 and data[0:5] == b'DfuSe':
                         dfu = init_dfu()
                         firmware = data[549:len(data) - 16]
                     else:
