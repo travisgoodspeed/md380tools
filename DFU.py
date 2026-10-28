@@ -17,6 +17,8 @@ class Enumeration(object):
     def __int__(self):
         return self.id
 
+    __index__ = __int__
+
     def __repr__(self):
         return self.name
 
