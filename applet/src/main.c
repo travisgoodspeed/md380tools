@@ -149,9 +149,10 @@ void splash_hook_handler(void)
     
 //    test_mbox();
 
+    // The bottom boot line holds 10 characters, the same as the stock
+    // firmware and CPS allow, so it can fit a full 10-digit phone number.
+    // Don't zero-terminate botlinetext[9]; that drops the 10th character.
     md380_spiflash_read(botlinetext, FLASH_OFFSET_BOOT_BOTTONLINE, 20);
-    // possibly botlinetext does not need to be zero-terminated, but we dont know yet
-    botlinetext[9] = 0 ; // safety
     
     boot_splash_set_topline();
     boot_splash_set_bottomline();
